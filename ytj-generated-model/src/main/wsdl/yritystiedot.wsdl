@@ -1,0 +1,3341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.ytj.fi/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.ytj.fi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.ytj.fi/">
+      <s:element name="wmTestiMetodi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmTestiMetodiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmTestiMetodiResult" type="tns:YritysMuotoDTO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YritysMuotoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Koodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Selite" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TunnistusTiedot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AsiakasNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tiketti" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PyyntojenMaara" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PyyntoPvm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TunnistusStatus" type="tns:LoginStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="LoginStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="SUCCESS" />
+          <s:enumeration value="INVALID_VOUCHER" />
+          <s:enumeration value="INVALID_HASHVALUE" />
+          <s:enumeration value="INVALID_TIMESTAMP" />
+          <s:enumeration value="INVALID_INPUT_DATA" />
+          <s:enumeration value="OTHER_ERROR" />
+          <s:enumeration value="ACCOUNT_INACTIVE" />
+          <s:enumeration value="TEST_ACCOUNT_MAX_EXCEEDED" />
+          <s:enumeration value="CUSTOMER_NOT_FOUND" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="wmYritysMuodot">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="Kieli">
+        <s:restriction base="s:string">
+          <s:enumeration value="fi" />
+          <s:enumeration value="sv" />
+          <s:enumeration value="en" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="wmYritysMuodotResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysMuodotResult" type="tns:YritysMuodotDTO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YritysMuodotDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Yritysmuodot" type="tns:ArrayOfYritysMuotoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYritysMuotoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YritysMuotoDTO" nillable="true" type="tns:YritysMuotoDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VirheTiedot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmYritysHaku">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="hakusana" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="yritysmuoto" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="sanahaku" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="voimassaolevat" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysHakuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysHakuResult" type="tns:YritysHakutulos" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YritysHakutulos">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YritysHaku" type="tns:ArrayOfYritysHakuDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYritysHakuDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YritysHakuDTO" nillable="true" type="tns:YritysHakuDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YritysHakuDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YTunnus" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Yritysavain" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Yritysnimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Yritysmuoto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Loppupvm" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tarkiste" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmYritysTiedot">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysTiedotResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysTiedotResult" type="tns:YritysTiedotDTO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YritysTiedotDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenHenkilo" type="tns:YrityksenHenkiloDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenPostiOsoite" type="tns:YrityksenOsoiteDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenKayntiOsoite" type="tns:YrityksenOsoiteDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenUlkomainenOsoite" type="tns:YrityksenOsoiteDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenRekisterit" type="tns:ArrayOfYrityksenRekisteri" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenRekisteriHistoria" type="tns:ArrayOfYrityksenRekisteri" />
+          <s:element minOccurs="1" maxOccurs="1" name="YritysEnnakkoperintaRekisterissa" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenSeuraavaTarkistusPvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YritysTunnus" type="tns:YTunnusDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Konkurssitieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Saneeraustieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Selvitystilatieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Keskeytystieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Yritysmuoto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Kotipaikka" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toimiala" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenKieli" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="ElinkeinoToiminta" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toiminimi" type="tns:ToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Rinnakkaistoiminimet" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Aputoiminimet" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="AputoiminimenKaannokset" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YritystunnusHistoria" type="tns:ArrayOfYritysTunnusHistoriaDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenYhteystiedot" type="tns:ArrayOfYrityksenYhteystietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenHenkiloDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Nimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tietolahde" type="tns:ArrayOfTietoLahdeDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Hetu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi_Hetu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm_Hetu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi_Nimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm_Nimi" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTietoLahdeDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TietoLahdeDTO" nillable="true" type="tns:TietoLahdeDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TietoLahdeDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Nimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Koodi" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenOsoiteDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Versio" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Kieli" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CoNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Katu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Postilokero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Talo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Porras" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Huoneisto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Jakokirjain" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Postinumero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Maa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ulkomaanosoite" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Lisatieto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toimipaikka" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Aktiivinen" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tietolahde" type="tns:ArrayOfTietoLahdeDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYrityksenRekisteri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YrityksenRekisteri" nillable="true" type="tns:YrityksenRekisteri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenRekisteri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Viranomainen" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Rekisteri" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Paatosstatus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Rekisterikoodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Paatospvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tila" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RekisteriSeloste" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YTunnusDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YTunnus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="YritysLopetettu" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenLopettamisenSyy" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenLopettaminenTietolahde" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenTietoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Seloste" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Aktiivinen" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tietolahde" type="tns:ArrayOfTietoLahdeDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Koodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ToiminimiDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Toiminimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AlkuPvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LoppuPvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TietoLahde" type="tns:ArrayOfTietoLahdeDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfToiminimiDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ToiminimiDTO" nillable="true" type="tns:ToiminimiDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYritysTunnusHistoriaDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YritysTunnusHistoriaDTO" nillable="true" type="tns:YritysTunnusHistoriaDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YritysTunnusHistoriaDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YTunnusVanha" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YTunnusUusi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Syy" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Muutospvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Muutostyyppi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Teksti" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tietolahde" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tapahtuma" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Selite" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYrityksenYhteystietoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YrityksenYhteystietoDTO" nillable="true" type="tns:YrityksenYhteystietoDTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenYhteystietoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YhteysTieto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TietoLahde" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Seloste" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TietolahdeTeksti" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Laji" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmYritysTiedotV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysTiedotV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysTiedotV2Result" type="tns:YritysTiedotV2DTO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YritysTiedotV2DTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenHenkilo" type="tns:YrityksenHenkiloDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenPostiOsoite" type="tns:YrityksenOsoiteV2DTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenKayntiOsoite" type="tns:YrityksenOsoiteV2DTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenRekisterit" type="tns:ArrayOfYrityksenRekisteri" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenRekisteriHistoria" type="tns:ArrayOfYrityksenRekisteri" />
+          <s:element minOccurs="1" maxOccurs="1" name="YritysEnnakkoperintaRekisterissa" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenSeuraavaTarkistusPvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YritysTunnus" type="tns:YTunnusDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Konkurssitieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Saneeraustieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Selvitystilatieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Keskeytystieto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Yritysmuoto" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Kotipaikka" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toimiala" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenKieli" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="ElinkeinoToiminta" type="tns:YrityksenTietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toiminimi" type="tns:ToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Rinnakkaistoiminimet" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Aputoiminimet" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="AputoiminimenKaannokset" type="tns:ArrayOfToiminimiDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YritystunnusHistoria" type="tns:ArrayOfYritysTunnusHistoriaDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="YrityksenYhteystiedot" type="tns:ArrayOfYrityksenYhteystietoDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YrityksenOsoiteV2DTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Versio" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Kieli" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CoNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Katu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Postilokero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Talo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Porras" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Huoneisto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Jakokirjain" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Postinumero" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Maa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Maakoodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ulkomaanosoite" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UlkomainenPTP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Lisatieto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Toimipaikka" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Aktiivinen" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tietolahde" type="tns:ArrayOfTietoLahdeDTO" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="Salkdi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalkdiPvm" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmYritysTiedotMassahaku">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="kieli" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysTiedotMassahakuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysTiedotMassahakuResult" type="tns:ArrayOfYritysTiedotV2DTO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfYritysTiedotV2DTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YritysTiedotV2DTO" nillable="true" type="tns:YritysTiedotV2DTO" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmToiminimi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToiminimiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmToiminimiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Tiedot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="YTunnus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YritysNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ingressi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TiedonNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NykyinenTieto" type="tns:ArrayOfYTieto" />
+          <s:element minOccurs="0" maxOccurs="1" name="EdellinenTieto" type="tns:ArrayOfYTieto" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYTieto">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YTieto" nillable="true" type="tns:YTieto" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YTieto">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Tieto" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Alkupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Loppupvm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TietoLahdeKoodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TietoLahdeTeksti" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VirheTiedot" type="tns:VirheTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="wmKonkurssitieto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKonkurssitietoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKonkurssitietoResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSaneeraustieto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSaneeraustietoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmSaneeraustietoResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSelvitystila">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSelvitystilaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmSelvitystilaResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmRinnakkaistoiminimi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmRinnakkaistoiminimiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmRinnakkaistoiminimiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmAputoiminimi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmAputoiminimiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmAputoiminimiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmAputoiminimenkaannos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmAputoiminimenkaannosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmAputoiminimenkaannosResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysmuoto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmYritysmuotoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmYritysmuotoResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKotipaikka">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKotipaikkaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKotipaikkaResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimiala">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimialaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmToimialaResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimialaKoodi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimialaKoodiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmToimialaKoodiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKieli">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKieliResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKieliResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKeskeytystieto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKeskeytystietoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKeskeytystietoResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmElinkeinotoiminta">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmElinkeinotoimintaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmElinkeinotoimintaResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKayntiosoite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKayntiosoiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKayntiosoiteResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPostiosoite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPostiosoiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmPostiosoiteResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPuhelinnumero">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPuhelinnumeroResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmPuhelinnumeroResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmFaksinumero">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmFaksinumeroResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmFaksinumeroResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSahkopostiosoite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmSahkopostiosoiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmSahkopostiosoiteResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmWWWOsoite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmWWWOsoiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmWWWOsoiteResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmMatkapuhelinnumero">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmMatkapuhelinnumeroResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmMatkapuhelinnumeroResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmTunnusMitatoity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmTunnusMitatoityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmTunnusMitatoityResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimintaLakannut">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmToimintaLakannutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmToimintaLakannutResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKayntiosoitteenMaakoodi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmKayntiosoitteenMaakoodiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmKayntiosoitteenMaakoodiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPostiosoitteenMaakoodi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ytunnus" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="kieli" type="tns:Kieli" />
+            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="wmPostiosoitteenMaakoodiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wmPostiosoitteenMaakoodiResult" type="tns:Tiedot" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="YritysMuotoDTO" nillable="true" type="tns:YritysMuotoDTO" />
+      <s:element name="YritysMuodotDTO" nillable="true" type="tns:YritysMuodotDTO" />
+      <s:element name="YritysHakutulos" nillable="true" type="tns:YritysHakutulos" />
+      <s:element name="YritysTiedotDTO" nillable="true" type="tns:YritysTiedotDTO" />
+      <s:element name="YritysTiedotV2DTO" nillable="true" type="tns:YritysTiedotV2DTO" />
+      <s:element name="ArrayOfYritysTiedotV2DTO" nillable="true" type="tns:ArrayOfYritysTiedotV2DTO" />
+      <s:element name="Tiedot" nillable="true" type="tns:Tiedot" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="wmTestiMetodiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmTestiMetodi" />
+  </wsdl:message>
+  <wsdl:message name="wmTestiMetodiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmTestiMetodiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotSoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysMuodot" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotSoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysMuodotResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuSoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysHaku" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuSoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysHakuResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotSoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotSoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedotResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2SoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedotV2" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2SoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedotV2Response" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuSoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedotMassahaku" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuSoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysTiedotMassahakuResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmToiminimi" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmToiminimiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKonkurssitieto" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKonkurssitietoResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoSoapIn">
+    <wsdl:part name="parameters" element="tns:wmSaneeraustieto" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoSoapOut">
+    <wsdl:part name="parameters" element="tns:wmSaneeraustietoResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaSoapIn">
+    <wsdl:part name="parameters" element="tns:wmSelvitystila" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaSoapOut">
+    <wsdl:part name="parameters" element="tns:wmSelvitystilaResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmRinnakkaistoiminimi" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmRinnakkaistoiminimiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmAputoiminimi" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmAputoiminimiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosSoapIn">
+    <wsdl:part name="parameters" element="tns:wmAputoiminimenkaannos" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosSoapOut">
+    <wsdl:part name="parameters" element="tns:wmAputoiminimenkaannosResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoSoapIn">
+    <wsdl:part name="parameters" element="tns:wmYritysmuoto" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoSoapOut">
+    <wsdl:part name="parameters" element="tns:wmYritysmuotoResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKotipaikka" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKotipaikkaResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaSoapIn">
+    <wsdl:part name="parameters" element="tns:wmToimiala" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaSoapOut">
+    <wsdl:part name="parameters" element="tns:wmToimialaResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmToimialaKoodi" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmToimialaKoodiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKieli" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKieliResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKeskeytystieto" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKeskeytystietoResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaSoapIn">
+    <wsdl:part name="parameters" element="tns:wmElinkeinotoiminta" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaSoapOut">
+    <wsdl:part name="parameters" element="tns:wmElinkeinotoimintaResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKayntiosoite" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKayntiosoiteResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteSoapIn">
+    <wsdl:part name="parameters" element="tns:wmPostiosoite" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteSoapOut">
+    <wsdl:part name="parameters" element="tns:wmPostiosoiteResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroSoapIn">
+    <wsdl:part name="parameters" element="tns:wmPuhelinnumero" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroSoapOut">
+    <wsdl:part name="parameters" element="tns:wmPuhelinnumeroResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroSoapIn">
+    <wsdl:part name="parameters" element="tns:wmFaksinumero" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroSoapOut">
+    <wsdl:part name="parameters" element="tns:wmFaksinumeroResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteSoapIn">
+    <wsdl:part name="parameters" element="tns:wmSahkopostiosoite" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteSoapOut">
+    <wsdl:part name="parameters" element="tns:wmSahkopostiosoiteResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteSoapIn">
+    <wsdl:part name="parameters" element="tns:wmWWWOsoite" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteSoapOut">
+    <wsdl:part name="parameters" element="tns:wmWWWOsoiteResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroSoapIn">
+    <wsdl:part name="parameters" element="tns:wmMatkapuhelinnumero" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroSoapOut">
+    <wsdl:part name="parameters" element="tns:wmMatkapuhelinnumeroResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoitySoapIn">
+    <wsdl:part name="parameters" element="tns:wmTunnusMitatoity" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoitySoapOut">
+    <wsdl:part name="parameters" element="tns:wmTunnusMitatoityResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutSoapIn">
+    <wsdl:part name="parameters" element="tns:wmToimintaLakannut" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutSoapOut">
+    <wsdl:part name="parameters" element="tns:wmToimintaLakannutResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmKayntiosoitteenMaakoodi" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmKayntiosoitteenMaakoodiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiSoapIn">
+    <wsdl:part name="parameters" element="tns:wmPostiosoitteenMaakoodi" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiSoapOut">
+    <wsdl:part name="parameters" element="tns:wmPostiosoitteenMaakoodiResponse" />
+  </wsdl:message>
+  <wsdl:message name="wmTestiMetodiHttpGetIn">
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmTestiMetodiHttpGetOut">
+    <wsdl:part name="Body" element="tns:YritysMuotoDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotHttpGetIn">
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotHttpGetOut">
+    <wsdl:part name="Body" element="tns:YritysMuodotDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuHttpGetIn">
+    <wsdl:part name="hakusana" type="s:string" />
+    <wsdl:part name="yritysmuoto" type="s:string" />
+    <wsdl:part name="sanahaku" type="s:string" />
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="voimassaolevat" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuHttpGetOut">
+    <wsdl:part name="Body" element="tns:YritysHakutulos" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotHttpGetOut">
+    <wsdl:part name="Body" element="tns:YritysTiedotDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2HttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2HttpGetOut">
+    <wsdl:part name="Body" element="tns:YritysTiedotV2DTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfYritysTiedotV2DTO" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoityHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoityHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiHttpGetIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiHttpGetOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmTestiMetodiHttpPostIn">
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmTestiMetodiHttpPostOut">
+    <wsdl:part name="Body" element="tns:YritysMuotoDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotHttpPostIn">
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysMuodotHttpPostOut">
+    <wsdl:part name="Body" element="tns:YritysMuodotDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuHttpPostIn">
+    <wsdl:part name="hakusana" type="s:string" />
+    <wsdl:part name="yritysmuoto" type="s:string" />
+    <wsdl:part name="sanahaku" type="s:string" />
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="voimassaolevat" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysHakuHttpPostOut">
+    <wsdl:part name="Body" element="tns:YritysHakutulos" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotHttpPostOut">
+    <wsdl:part name="Body" element="tns:YritysTiedotDTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2HttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotV2HttpPostOut">
+    <wsdl:part name="Body" element="tns:YritysTiedotV2DTO" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysTiedotMassahakuHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfYritysTiedotV2DTO" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToiminimiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKonkurssitietoHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSaneeraustietoHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSelvitystilaHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmRinnakkaistoiminimiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmAputoiminimenkaannosHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmYritysmuotoHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKotipaikkaHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimialaKoodiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKieliHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKeskeytystietoHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmElinkeinotoimintaHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoiteHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoiteHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPuhelinnumeroHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmFaksinumeroHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmSahkopostiosoiteHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmWWWOsoiteHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmMatkapuhelinnumeroHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoityHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmTunnusMitatoityHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmToimintaLakannutHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmKayntiosoitteenMaakoodiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiHttpPostIn">
+    <wsdl:part name="ytunnus" type="s:string" />
+    <wsdl:part name="kieli" type="s:string" />
+    <wsdl:part name="asiakastunnus" type="s:string" />
+    <wsdl:part name="aikaleima" type="s:string" />
+    <wsdl:part name="tarkiste" type="s:string" />
+    <wsdl:part name="tiketti" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="wmPostiosoitteenMaakoodiHttpPostOut">
+    <wsdl:part name="Body" element="tns:Tiedot" />
+  </wsdl:message>
+  <wsdl:portType name="YritysTiedotSoap">
+    <wsdl:operation name="wmTestiMetodi">
+      <wsdl:input message="tns:wmTestiMetodiSoapIn" />
+      <wsdl:output message="tns:wmTestiMetodiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <wsdl:input message="tns:wmYritysMuodotSoapIn" />
+      <wsdl:output message="tns:wmYritysMuodotSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <wsdl:input message="tns:wmYritysHakuSoapIn" />
+      <wsdl:output message="tns:wmYritysHakuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <wsdl:input message="tns:wmYritysTiedotSoapIn" />
+      <wsdl:output message="tns:wmYritysTiedotSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <wsdl:input message="tns:wmYritysTiedotV2SoapIn" />
+      <wsdl:output message="tns:wmYritysTiedotV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <wsdl:input message="tns:wmYritysTiedotMassahakuSoapIn" />
+      <wsdl:output message="tns:wmYritysTiedotMassahakuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <wsdl:input message="tns:wmToiminimiSoapIn" />
+      <wsdl:output message="tns:wmToiminimiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <wsdl:input message="tns:wmKonkurssitietoSoapIn" />
+      <wsdl:output message="tns:wmKonkurssitietoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <wsdl:input message="tns:wmSaneeraustietoSoapIn" />
+      <wsdl:output message="tns:wmSaneeraustietoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <wsdl:input message="tns:wmSelvitystilaSoapIn" />
+      <wsdl:output message="tns:wmSelvitystilaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <wsdl:input message="tns:wmRinnakkaistoiminimiSoapIn" />
+      <wsdl:output message="tns:wmRinnakkaistoiminimiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <wsdl:input message="tns:wmAputoiminimiSoapIn" />
+      <wsdl:output message="tns:wmAputoiminimiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <wsdl:input message="tns:wmAputoiminimenkaannosSoapIn" />
+      <wsdl:output message="tns:wmAputoiminimenkaannosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <wsdl:input message="tns:wmYritysmuotoSoapIn" />
+      <wsdl:output message="tns:wmYritysmuotoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <wsdl:input message="tns:wmKotipaikkaSoapIn" />
+      <wsdl:output message="tns:wmKotipaikkaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <wsdl:input message="tns:wmToimialaSoapIn" />
+      <wsdl:output message="tns:wmToimialaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <wsdl:input message="tns:wmToimialaKoodiSoapIn" />
+      <wsdl:output message="tns:wmToimialaKoodiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <wsdl:input message="tns:wmKieliSoapIn" />
+      <wsdl:output message="tns:wmKieliSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <wsdl:input message="tns:wmKeskeytystietoSoapIn" />
+      <wsdl:output message="tns:wmKeskeytystietoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <wsdl:input message="tns:wmElinkeinotoimintaSoapIn" />
+      <wsdl:output message="tns:wmElinkeinotoimintaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <wsdl:input message="tns:wmKayntiosoiteSoapIn" />
+      <wsdl:output message="tns:wmKayntiosoiteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <wsdl:input message="tns:wmPostiosoiteSoapIn" />
+      <wsdl:output message="tns:wmPostiosoiteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <wsdl:input message="tns:wmPuhelinnumeroSoapIn" />
+      <wsdl:output message="tns:wmPuhelinnumeroSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <wsdl:input message="tns:wmFaksinumeroSoapIn" />
+      <wsdl:output message="tns:wmFaksinumeroSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <wsdl:input message="tns:wmSahkopostiosoiteSoapIn" />
+      <wsdl:output message="tns:wmSahkopostiosoiteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <wsdl:input message="tns:wmWWWOsoiteSoapIn" />
+      <wsdl:output message="tns:wmWWWOsoiteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <wsdl:input message="tns:wmMatkapuhelinnumeroSoapIn" />
+      <wsdl:output message="tns:wmMatkapuhelinnumeroSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <wsdl:input message="tns:wmTunnusMitatoitySoapIn" />
+      <wsdl:output message="tns:wmTunnusMitatoitySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <wsdl:input message="tns:wmToimintaLakannutSoapIn" />
+      <wsdl:output message="tns:wmToimintaLakannutSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmKayntiosoitteenMaakoodiSoapIn" />
+      <wsdl:output message="tns:wmKayntiosoitteenMaakoodiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmPostiosoitteenMaakoodiSoapIn" />
+      <wsdl:output message="tns:wmPostiosoitteenMaakoodiSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="YritysTiedotHttpGet">
+    <wsdl:operation name="wmTestiMetodi">
+      <wsdl:input message="tns:wmTestiMetodiHttpGetIn" />
+      <wsdl:output message="tns:wmTestiMetodiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <wsdl:input message="tns:wmYritysMuodotHttpGetIn" />
+      <wsdl:output message="tns:wmYritysMuodotHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <wsdl:input message="tns:wmYritysHakuHttpGetIn" />
+      <wsdl:output message="tns:wmYritysHakuHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <wsdl:input message="tns:wmYritysTiedotHttpGetIn" />
+      <wsdl:output message="tns:wmYritysTiedotHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <wsdl:input message="tns:wmYritysTiedotV2HttpGetIn" />
+      <wsdl:output message="tns:wmYritysTiedotV2HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <wsdl:input message="tns:wmYritysTiedotMassahakuHttpGetIn" />
+      <wsdl:output message="tns:wmYritysTiedotMassahakuHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <wsdl:input message="tns:wmToiminimiHttpGetIn" />
+      <wsdl:output message="tns:wmToiminimiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <wsdl:input message="tns:wmKonkurssitietoHttpGetIn" />
+      <wsdl:output message="tns:wmKonkurssitietoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <wsdl:input message="tns:wmSaneeraustietoHttpGetIn" />
+      <wsdl:output message="tns:wmSaneeraustietoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <wsdl:input message="tns:wmSelvitystilaHttpGetIn" />
+      <wsdl:output message="tns:wmSelvitystilaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <wsdl:input message="tns:wmRinnakkaistoiminimiHttpGetIn" />
+      <wsdl:output message="tns:wmRinnakkaistoiminimiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <wsdl:input message="tns:wmAputoiminimiHttpGetIn" />
+      <wsdl:output message="tns:wmAputoiminimiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <wsdl:input message="tns:wmAputoiminimenkaannosHttpGetIn" />
+      <wsdl:output message="tns:wmAputoiminimenkaannosHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <wsdl:input message="tns:wmYritysmuotoHttpGetIn" />
+      <wsdl:output message="tns:wmYritysmuotoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <wsdl:input message="tns:wmKotipaikkaHttpGetIn" />
+      <wsdl:output message="tns:wmKotipaikkaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <wsdl:input message="tns:wmToimialaHttpGetIn" />
+      <wsdl:output message="tns:wmToimialaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <wsdl:input message="tns:wmToimialaKoodiHttpGetIn" />
+      <wsdl:output message="tns:wmToimialaKoodiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <wsdl:input message="tns:wmKieliHttpGetIn" />
+      <wsdl:output message="tns:wmKieliHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <wsdl:input message="tns:wmKeskeytystietoHttpGetIn" />
+      <wsdl:output message="tns:wmKeskeytystietoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <wsdl:input message="tns:wmElinkeinotoimintaHttpGetIn" />
+      <wsdl:output message="tns:wmElinkeinotoimintaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <wsdl:input message="tns:wmKayntiosoiteHttpGetIn" />
+      <wsdl:output message="tns:wmKayntiosoiteHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <wsdl:input message="tns:wmPostiosoiteHttpGetIn" />
+      <wsdl:output message="tns:wmPostiosoiteHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <wsdl:input message="tns:wmPuhelinnumeroHttpGetIn" />
+      <wsdl:output message="tns:wmPuhelinnumeroHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <wsdl:input message="tns:wmFaksinumeroHttpGetIn" />
+      <wsdl:output message="tns:wmFaksinumeroHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <wsdl:input message="tns:wmSahkopostiosoiteHttpGetIn" />
+      <wsdl:output message="tns:wmSahkopostiosoiteHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <wsdl:input message="tns:wmWWWOsoiteHttpGetIn" />
+      <wsdl:output message="tns:wmWWWOsoiteHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <wsdl:input message="tns:wmMatkapuhelinnumeroHttpGetIn" />
+      <wsdl:output message="tns:wmMatkapuhelinnumeroHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <wsdl:input message="tns:wmTunnusMitatoityHttpGetIn" />
+      <wsdl:output message="tns:wmTunnusMitatoityHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <wsdl:input message="tns:wmToimintaLakannutHttpGetIn" />
+      <wsdl:output message="tns:wmToimintaLakannutHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmKayntiosoitteenMaakoodiHttpGetIn" />
+      <wsdl:output message="tns:wmKayntiosoitteenMaakoodiHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmPostiosoitteenMaakoodiHttpGetIn" />
+      <wsdl:output message="tns:wmPostiosoitteenMaakoodiHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="YritysTiedotHttpPost">
+    <wsdl:operation name="wmTestiMetodi">
+      <wsdl:input message="tns:wmTestiMetodiHttpPostIn" />
+      <wsdl:output message="tns:wmTestiMetodiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <wsdl:input message="tns:wmYritysMuodotHttpPostIn" />
+      <wsdl:output message="tns:wmYritysMuodotHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <wsdl:input message="tns:wmYritysHakuHttpPostIn" />
+      <wsdl:output message="tns:wmYritysHakuHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <wsdl:input message="tns:wmYritysTiedotHttpPostIn" />
+      <wsdl:output message="tns:wmYritysTiedotHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <wsdl:input message="tns:wmYritysTiedotV2HttpPostIn" />
+      <wsdl:output message="tns:wmYritysTiedotV2HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <wsdl:input message="tns:wmYritysTiedotMassahakuHttpPostIn" />
+      <wsdl:output message="tns:wmYritysTiedotMassahakuHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <wsdl:input message="tns:wmToiminimiHttpPostIn" />
+      <wsdl:output message="tns:wmToiminimiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <wsdl:input message="tns:wmKonkurssitietoHttpPostIn" />
+      <wsdl:output message="tns:wmKonkurssitietoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <wsdl:input message="tns:wmSaneeraustietoHttpPostIn" />
+      <wsdl:output message="tns:wmSaneeraustietoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <wsdl:input message="tns:wmSelvitystilaHttpPostIn" />
+      <wsdl:output message="tns:wmSelvitystilaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <wsdl:input message="tns:wmRinnakkaistoiminimiHttpPostIn" />
+      <wsdl:output message="tns:wmRinnakkaistoiminimiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <wsdl:input message="tns:wmAputoiminimiHttpPostIn" />
+      <wsdl:output message="tns:wmAputoiminimiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <wsdl:input message="tns:wmAputoiminimenkaannosHttpPostIn" />
+      <wsdl:output message="tns:wmAputoiminimenkaannosHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <wsdl:input message="tns:wmYritysmuotoHttpPostIn" />
+      <wsdl:output message="tns:wmYritysmuotoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <wsdl:input message="tns:wmKotipaikkaHttpPostIn" />
+      <wsdl:output message="tns:wmKotipaikkaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <wsdl:input message="tns:wmToimialaHttpPostIn" />
+      <wsdl:output message="tns:wmToimialaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <wsdl:input message="tns:wmToimialaKoodiHttpPostIn" />
+      <wsdl:output message="tns:wmToimialaKoodiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <wsdl:input message="tns:wmKieliHttpPostIn" />
+      <wsdl:output message="tns:wmKieliHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <wsdl:input message="tns:wmKeskeytystietoHttpPostIn" />
+      <wsdl:output message="tns:wmKeskeytystietoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <wsdl:input message="tns:wmElinkeinotoimintaHttpPostIn" />
+      <wsdl:output message="tns:wmElinkeinotoimintaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <wsdl:input message="tns:wmKayntiosoiteHttpPostIn" />
+      <wsdl:output message="tns:wmKayntiosoiteHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <wsdl:input message="tns:wmPostiosoiteHttpPostIn" />
+      <wsdl:output message="tns:wmPostiosoiteHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <wsdl:input message="tns:wmPuhelinnumeroHttpPostIn" />
+      <wsdl:output message="tns:wmPuhelinnumeroHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <wsdl:input message="tns:wmFaksinumeroHttpPostIn" />
+      <wsdl:output message="tns:wmFaksinumeroHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <wsdl:input message="tns:wmSahkopostiosoiteHttpPostIn" />
+      <wsdl:output message="tns:wmSahkopostiosoiteHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <wsdl:input message="tns:wmWWWOsoiteHttpPostIn" />
+      <wsdl:output message="tns:wmWWWOsoiteHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <wsdl:input message="tns:wmMatkapuhelinnumeroHttpPostIn" />
+      <wsdl:output message="tns:wmMatkapuhelinnumeroHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <wsdl:input message="tns:wmTunnusMitatoityHttpPostIn" />
+      <wsdl:output message="tns:wmTunnusMitatoityHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <wsdl:input message="tns:wmToimintaLakannutHttpPostIn" />
+      <wsdl:output message="tns:wmToimintaLakannutHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmKayntiosoitteenMaakoodiHttpPostIn" />
+      <wsdl:output message="tns:wmKayntiosoitteenMaakoodiHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <wsdl:input message="tns:wmPostiosoitteenMaakoodiHttpPostIn" />
+      <wsdl:output message="tns:wmPostiosoitteenMaakoodiHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="YritysTiedotSoap" type="tns:YritysTiedotSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="wmTestiMetodi">
+      <soap:operation soapAction="http://www.ytj.fi/wmTestiMetodi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysMuodot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysHaku" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedotV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedotMassahaku" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <soap:operation soapAction="http://www.ytj.fi/wmToiminimi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <soap:operation soapAction="http://www.ytj.fi/wmKonkurssitieto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <soap:operation soapAction="http://www.ytj.fi/wmSaneeraustieto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <soap:operation soapAction="http://www.ytj.fi/wmSelvitystila" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <soap:operation soapAction="http://www.ytj.fi/wmRinnakkaistoiminimi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <soap:operation soapAction="http://www.ytj.fi/wmAputoiminimi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <soap:operation soapAction="http://www.ytj.fi/wmAputoiminimenkaannos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <soap:operation soapAction="http://www.ytj.fi/wmYritysmuoto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <soap:operation soapAction="http://www.ytj.fi/wmKotipaikka" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <soap:operation soapAction="http://www.ytj.fi/wmToimiala" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <soap:operation soapAction="http://www.ytj.fi/wmToimialaKoodi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <soap:operation soapAction="http://www.ytj.fi/wmKieli" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <soap:operation soapAction="http://www.ytj.fi/wmKeskeytystieto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <soap:operation soapAction="http://www.ytj.fi/wmElinkeinotoiminta" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <soap:operation soapAction="http://www.ytj.fi/wmKayntiosoite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <soap:operation soapAction="http://www.ytj.fi/wmPostiosoite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <soap:operation soapAction="http://www.ytj.fi/wmPuhelinnumero" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <soap:operation soapAction="http://www.ytj.fi/wmFaksinumero" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <soap:operation soapAction="http://www.ytj.fi/wmSahkopostiosoite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <soap:operation soapAction="http://www.ytj.fi/wmWWWOsoite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <soap:operation soapAction="http://www.ytj.fi/wmMatkapuhelinnumero" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <soap:operation soapAction="http://www.ytj.fi/wmTunnusMitatoity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <soap:operation soapAction="http://www.ytj.fi/wmToimintaLakannut" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <soap:operation soapAction="http://www.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <soap:operation soapAction="http://www.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="YritysTiedotSoap12" type="tns:YritysTiedotSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="wmTestiMetodi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmTestiMetodi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysMuodot" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysHaku" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedot" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedotV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedotMassahaku" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmToiminimi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKonkurssitieto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <soap12:operation soapAction="http://www.ytj.fi/wmSaneeraustieto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <soap12:operation soapAction="http://www.ytj.fi/wmSelvitystila" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmRinnakkaistoiminimi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmAputoiminimi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <soap12:operation soapAction="http://www.ytj.fi/wmAputoiminimenkaannos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <soap12:operation soapAction="http://www.ytj.fi/wmYritysmuoto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKotipaikka" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <soap12:operation soapAction="http://www.ytj.fi/wmToimiala" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmToimialaKoodi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKieli" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKeskeytystieto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <soap12:operation soapAction="http://www.ytj.fi/wmElinkeinotoiminta" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKayntiosoite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <soap12:operation soapAction="http://www.ytj.fi/wmPostiosoite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <soap12:operation soapAction="http://www.ytj.fi/wmPuhelinnumero" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <soap12:operation soapAction="http://www.ytj.fi/wmFaksinumero" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <soap12:operation soapAction="http://www.ytj.fi/wmSahkopostiosoite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <soap12:operation soapAction="http://www.ytj.fi/wmWWWOsoite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <soap12:operation soapAction="http://www.ytj.fi/wmMatkapuhelinnumero" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <soap12:operation soapAction="http://www.ytj.fi/wmTunnusMitatoity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <soap12:operation soapAction="http://www.ytj.fi/wmToimintaLakannut" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <soap12:operation soapAction="http://www.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="YritysTiedotHttpGet" type="tns:YritysTiedotHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="wmTestiMetodi">
+      <http:operation location="/wmTestiMetodi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <http:operation location="/wmYritysMuodot" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <http:operation location="/wmYritysHaku" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <http:operation location="/wmYritysTiedot" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <http:operation location="/wmYritysTiedotV2" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <http:operation location="/wmYritysTiedotMassahaku" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <http:operation location="/wmToiminimi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <http:operation location="/wmKonkurssitieto" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <http:operation location="/wmSaneeraustieto" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <http:operation location="/wmSelvitystila" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <http:operation location="/wmRinnakkaistoiminimi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <http:operation location="/wmAputoiminimi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <http:operation location="/wmAputoiminimenkaannos" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <http:operation location="/wmYritysmuoto" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <http:operation location="/wmKotipaikka" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <http:operation location="/wmToimiala" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <http:operation location="/wmToimialaKoodi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <http:operation location="/wmKieli" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <http:operation location="/wmKeskeytystieto" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <http:operation location="/wmElinkeinotoiminta" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <http:operation location="/wmKayntiosoite" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <http:operation location="/wmPostiosoite" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <http:operation location="/wmPuhelinnumero" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <http:operation location="/wmFaksinumero" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <http:operation location="/wmSahkopostiosoite" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <http:operation location="/wmWWWOsoite" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <http:operation location="/wmMatkapuhelinnumero" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <http:operation location="/wmTunnusMitatoity" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <http:operation location="/wmToimintaLakannut" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <http:operation location="/wmKayntiosoitteenMaakoodi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <http:operation location="/wmPostiosoitteenMaakoodi" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="YritysTiedotHttpPost" type="tns:YritysTiedotHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="wmTestiMetodi">
+      <http:operation location="/wmTestiMetodi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysMuodot">
+      <http:operation location="/wmYritysMuodot" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysHaku">
+      <http:operation location="/wmYritysHaku" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedot">
+      <http:operation location="/wmYritysTiedot" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotV2">
+      <http:operation location="/wmYritysTiedotV2" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysTiedotMassahaku">
+      <http:operation location="/wmYritysTiedotMassahaku" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToiminimi">
+      <http:operation location="/wmToiminimi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKonkurssitieto">
+      <http:operation location="/wmKonkurssitieto" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSaneeraustieto">
+      <http:operation location="/wmSaneeraustieto" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSelvitystila">
+      <http:operation location="/wmSelvitystila" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmRinnakkaistoiminimi">
+      <http:operation location="/wmRinnakkaistoiminimi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimi">
+      <http:operation location="/wmAputoiminimi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmAputoiminimenkaannos">
+      <http:operation location="/wmAputoiminimenkaannos" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmYritysmuoto">
+      <http:operation location="/wmYritysmuoto" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKotipaikka">
+      <http:operation location="/wmKotipaikka" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimiala">
+      <http:operation location="/wmToimiala" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimialaKoodi">
+      <http:operation location="/wmToimialaKoodi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKieli">
+      <http:operation location="/wmKieli" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKeskeytystieto">
+      <http:operation location="/wmKeskeytystieto" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmElinkeinotoiminta">
+      <http:operation location="/wmElinkeinotoiminta" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoite">
+      <http:operation location="/wmKayntiosoite" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoite">
+      <http:operation location="/wmPostiosoite" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPuhelinnumero">
+      <http:operation location="/wmPuhelinnumero" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmFaksinumero">
+      <http:operation location="/wmFaksinumero" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmSahkopostiosoite">
+      <http:operation location="/wmSahkopostiosoite" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmWWWOsoite">
+      <http:operation location="/wmWWWOsoite" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmMatkapuhelinnumero">
+      <http:operation location="/wmMatkapuhelinnumero" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmTunnusMitatoity">
+      <http:operation location="/wmTunnusMitatoity" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmToimintaLakannut">
+      <http:operation location="/wmToimintaLakannut" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmKayntiosoitteenMaakoodi">
+      <http:operation location="/wmKayntiosoitteenMaakoodi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="wmPostiosoitteenMaakoodi">
+      <http:operation location="/wmPostiosoitteenMaakoodi" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="YritysTiedot">
+    <wsdl:port name="YritysTiedotSoap" binding="tns:YritysTiedotSoap">
+      <soap:address location="http://www.ytj.fi/yritystiedot.asmx" />
+    </wsdl:port>
+    <wsdl:port name="YritysTiedotSoap12" binding="tns:YritysTiedotSoap12">
+      <soap12:address location="http://www.ytj.fi/yritystiedot.asmx" />
+    </wsdl:port>
+    <wsdl:port name="YritysTiedotHttpGet" binding="tns:YritysTiedotHttpGet">
+      <http:address location="http://www.ytj.fi/yritystiedot.asmx" />
+    </wsdl:port>
+    <wsdl:port name="YritysTiedotHttpPost" binding="tns:YritysTiedotHttpPost">
+      <http:address location="http://www.ytj.fi/yritystiedot.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
