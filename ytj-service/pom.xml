@@ -6,17 +6,13 @@
     <parent>
         <groupId>fi.vm.sade.rajapinnat</groupId>
         <artifactId>ytj-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>3.1-SNAPSHOT</version>
     </parent>
 
     <groupId>fi.vm.sade.rajapinnat</groupId>
     <artifactId>ytj-service</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>Rajapinnat :: YTJ :: SERVICE</name>
+    <name>Rajapinnat :: YTJ :: Service - ${version}</name>
     <packaging>jar</packaging>
-    
-    
-  
 
     <properties>
         <env>development</env>

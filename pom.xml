@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>fi.vm.sade.rajapinnat</groupId>
+  <artifactId>ytj-parent</artifactId>
+  <packaging>pom</packaging>
+  <name>Rajapinnat :: YTJ :: parent - ${version}</name>
+  
+  <parent>
+    <artifactId>rajapinnat</artifactId>
     <groupId>fi.vm.sade.rajapinnat</groupId>
-    <artifactId>ytj-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>Rajapinnat :: YTJ :: parent</name>
-
-    <parent>
-        <groupId>fi.vm.sade.generic</groupId>
-        <artifactId>build-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
-    <modules>
+    <version>3.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+  
+  <modules>
     <module>ytj-api</module>
     <module>ytj-generated-model</module>
     <module>ytj-service</module>
   </modules>
-
+  
 </project>
