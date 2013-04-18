@@ -15,11 +15,17 @@ import java.util.List;
  */
 public class YtjDtoMapperHelper {
 
+    public static final String KIELI_SV = "Svenska";
+
+
     public YTJDTO mapYritysTiedotV2DTOtoYTJDTO(YritysTiedotV2DTO vastaus) {
         YTJDTO ytj = new YTJDTO();
-        //Dont know if it is needed to get YrityksenHenkilo nimi if toiminimi does not exist
+        if (vastaus.getYrityksenKieli() != null && vastaus.getYrityksenKieli().getSeloste() != null && vastaus.getYrityksenKieli().getSeloste().equalsIgnoreCase(KIELI_SV)) {
+            ytj.setSvNimi(vastaus.getToiminimi().getToiminimi());
+        } else {
         ytj.setNimi(vastaus.getToiminimi().getToiminimi() != null ? vastaus.getToiminimi().getToiminimi() 
         : (vastaus.getYrityksenHenkilo() != null ? vastaus.getYrityksenHenkilo().getNimi() : null));
+        }
         ytj.setYtunnus(vastaus.getYritysTunnus().getYTunnus());
         ytj.setPostiOsoite(vastaus.getYrityksenPostiOsoite() != null ? mapYtjOsoite(vastaus.getYrityksenPostiOsoite()) : null);
         ytj.setKotiPaikka(vastaus.getKotipaikka() != null ? vastaus.getKotipaikka().getSeloste() : null);
@@ -81,6 +87,10 @@ public class YtjDtoMapperHelper {
 
             kokoKatuOsoite = osoiteParam.getKatu() + " " + (osoiteParam.getTalo() != null ? osoiteParam.getTalo() : "") + " " 
             + (osoiteParam.getPorras() != null ? osoiteParam.getPorras() : "") +  " " + (osoiteParam.getHuoneisto() != null ? osoiteParam.getHuoneisto() : "");
+
+            if(kokoKatuOsoite == null || kokoKatuOsoite.trim().length() < 1) {
+                kokoKatuOsoite = osoiteParam.getUlkomaanosoite();
+            }
 
             return kokoKatuOsoite;
         } else if (osoiteParam.getPostilokero() != null) {

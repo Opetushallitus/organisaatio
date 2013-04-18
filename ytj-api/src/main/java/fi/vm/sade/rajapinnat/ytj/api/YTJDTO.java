@@ -20,6 +20,7 @@ public class YTJDTO {
     private Integer versio = 1;
 
     private String nimi;
+    private String svNimi;
     private String ytunnus;
     private String yritysmuoto;
     private String yritysmuotoKoodi;
@@ -220,5 +221,13 @@ public class YTJDTO {
      */
     public void setKotiPaikka(String kotiPaikka) {
         this.kotiPaikka = kotiPaikka;
+    }
+
+    public String getSvNimi() {
+        return svNimi;
+    }
+
+    public void setSvNimi(String svNimi) {
+        this.svNimi = svNimi;
     }
 }

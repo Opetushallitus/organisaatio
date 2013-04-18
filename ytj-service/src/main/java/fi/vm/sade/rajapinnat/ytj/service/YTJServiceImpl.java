@@ -108,8 +108,9 @@ public class YTJServiceImpl implements YTJService {
                       + " tunnistustiedot " + vastaus.getTunnistusTiedot().getTunnistusStatus().value());  
           }
         } 
-        
-        return mapper.mapYritysHakuDTOListToDtoList(vastaus.getYritysHaku().getYritysHakuDTO());
+        List<YritysHakuDTO> ytjObjects =  vastaus.getYritysHaku().getYritysHakuDTO();
+        List<YTJDTO> dtos = mapper.mapYritysHakuDTOListToDtoList(ytjObjects);
+        return dtos;
 
 
     }
