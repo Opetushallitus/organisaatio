@@ -155,14 +155,16 @@ public class YTJServiceImpl implements YTJService {
                 tiketti);
 
         } catch (SOAPFaultException exp) {
-
+            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString());
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
         } catch (Exception commonExp) {
+            LOG.error("Unknown exception in YTJ-service : " + commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
         if (vastaus == null) {
+            LOG.error("YTJ service returned null reply");
             throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");  
         }
 
