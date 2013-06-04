@@ -42,7 +42,7 @@ public class YtjDtoMapperHelper {
         YTJOsoiteDTO osoite = new YTJOsoiteDTO();
 
         
-
+        osoite.setKieli(osoiteParam.getKieli());
         osoite.setKatu(getKatuOsoite(osoiteParam));
         osoite.setPostinumero(osoiteParam.getPostinumero());
         osoite.setToimipaikka(osoiteParam.getToimipaikka());

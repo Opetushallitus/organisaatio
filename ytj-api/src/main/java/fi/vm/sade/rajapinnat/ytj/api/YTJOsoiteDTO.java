@@ -18,6 +18,7 @@ public class YTJOsoiteDTO {
     private String maakoodi;
     private String lisatieto;
     private String coNimi;
+    private int kieli;
     /**
      * @return the katu
      */
@@ -115,7 +116,13 @@ public class YTJOsoiteDTO {
     public void setCoNimi(String coNimi) {
         this.coNimi = coNimi;
     }
-    
-    
-    
+
+
+    public int getKieli() {
+        return kieli;
+    }
+
+    public void setKieli(int kieli) {
+        this.kieli = kieli;
+    }
 }
