@@ -57,13 +57,17 @@ public class YtjDtoMapperHelper {
     private void mapYhteysTiedot(YritysTiedotV2DTO yritysParam, YTJDTO yritys) {
         if (yritysParam.getYrityksenYhteystiedot() != null) {
         for (YrityksenYhteystietoDTO yhtTieto:yritysParam.getYrityksenYhteystiedot().getYrityksenYhteystietoDTO()) {
-            //Yhteystieto lajit = 4 : www, 3 : email, 5 : matkapuhelin
+            //Yhteystieto lajit = 4 : www, 3 : email, 5 : matkapuhelin, 1 : puhelin, 2 : faksi
             if (yhtTieto.getLaji().trim().equals("4")) {
                 yritys.setWww(yhtTieto.getYhteysTieto());
             } else if (yhtTieto.getLaji().trim().equals("3")) {
                 yritys.setSahkoposti(yhtTieto.getYhteysTieto());
             } else if (yhtTieto.getLaji().trim().equals("5")) {
                 yritys.setPuhelin(yhtTieto.getYhteysTieto());
+            }  else if (yhtTieto.getLaji().trim().equals("1")) {
+                yritys.setPuhelin(yhtTieto.getYhteysTieto());
+            }  else if (yhtTieto.getLaji().trim().equals("2")) {
+                yritys.setFaksi(yhtTieto.getYhteysTieto());
             }
             //Add other if's if needed
         }
@@ -83,7 +87,7 @@ public class YtjDtoMapperHelper {
 
     private String getKatuOsoite(YrityksenOsoiteV2DTO osoiteParam) {
 
-        if (osoiteParam.getKatu() != null) {
+        if (osoiteParam.getKatu() != null && osoiteParam.getKatu().trim().length() > 1) {
             String kokoKatuOsoite;
 
             kokoKatuOsoite = osoiteParam.getKatu() + " " + (osoiteParam.getTalo() != null ? osoiteParam.getTalo() : "") + " " 
@@ -95,7 +99,7 @@ public class YtjDtoMapperHelper {
 
             return kokoKatuOsoite;
         } else if (osoiteParam.getPostilokero() != null) {
-            return osoiteParam.getPostilokero();
+            return "PL " + osoiteParam.getPostilokero();
         } else {
             return null;
         }
