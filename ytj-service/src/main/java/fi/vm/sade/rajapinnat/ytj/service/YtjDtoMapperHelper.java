@@ -87,7 +87,7 @@ public class YtjDtoMapperHelper {
 
     private String getKatuOsoite(YrityksenOsoiteV2DTO osoiteParam) {
 
-        if (osoiteParam.getKatu() != null && osoiteParam.getKatu().trim().length() > 1) {
+        if (osoiteParam.getKatu() != null && osoiteParam.getKatu().trim().length() > 0 ||osoiteParam.getUlkomaanosoite() != null && osoiteParam.getUlkomaanosoite().trim().length() > 0) {
             String kokoKatuOsoite;
 
             kokoKatuOsoite = osoiteParam.getKatu() + " " + (osoiteParam.getTalo() != null ? osoiteParam.getTalo() : "") + " " 
@@ -98,7 +98,7 @@ public class YtjDtoMapperHelper {
             }
 
             return kokoKatuOsoite;
-        } else if (osoiteParam.getPostilokero() != null) {
+        } else if (osoiteParam.getPostilokero() != null && osoiteParam.getPostilokero().trim().length() > 0) {
             return "PL " + osoiteParam.getPostilokero();
         } else {
             return null;
