@@ -35,6 +35,7 @@ public class YTJDTO {
     private String faksi;
     private String kotiPaikka;
     private String kotiPaikkaKoodi;
+    private String aloitusPvm;
 
     public Integer getVersio() {
         return versio;
@@ -238,5 +239,13 @@ public class YTJDTO {
 
     public void setKotiPaikkaKoodi(String kotiPaikkaKoodi) {
         this.kotiPaikkaKoodi = kotiPaikkaKoodi;
+    }
+
+    public String getAloitusPvm() {
+        return aloitusPvm;
+    }
+
+    public void setAloitusPvm(String aloitusPvm) {
+        this.aloitusPvm = aloitusPvm;
     }
 }

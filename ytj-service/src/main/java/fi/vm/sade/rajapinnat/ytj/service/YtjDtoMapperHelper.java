@@ -30,6 +30,12 @@ public class YtjDtoMapperHelper {
         ytj.setKotiPaikkaKoodi(vastaus.getKotipaikka() != null ? vastaus.getKotipaikka().getKoodi() : null);
         ytj.setPostiOsoite(vastaus.getYrityksenPostiOsoite() != null ? mapYtjOsoite(vastaus.getYrityksenPostiOsoite()) : null);
         ytj.setKotiPaikka(vastaus.getKotipaikka() != null ? vastaus.getKotipaikka().getSeloste() : null);
+        if (vastaus.getToiminimi() != null ) {
+        ytj.setAloitusPvm(vastaus.getToiminimi().getAlkuPvm() != null ? vastaus.getToiminimi().getAlkuPvm() : null);
+        }
+        if (vastaus.getYrityksenKieli() != null) {
+        ytj.setYrityksenKieli(vastaus.getYrityksenKieli().getSeloste() != null ? vastaus.getYrityksenKieli().getSeloste() : "");
+        }
         //If kayntiosoite-katu or postilokero is not null then try to map it
         ytj.setKayntiOsoite( vastaus.getYrityksenKayntiOsoite() != null ?  mapYtjOsoite(vastaus.getYrityksenKayntiOsoite()) : null);
         mapYhteysTiedot(vastaus, ytj);
