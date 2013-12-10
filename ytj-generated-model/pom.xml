@@ -6,7 +6,7 @@
     <parent>
         <groupId>fi.vm.sade.rajapinnat</groupId>
         <artifactId>ytj-parent</artifactId>
-        <version>7.0</version>
+        <version>8.0</version>
     </parent>
 
     <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
