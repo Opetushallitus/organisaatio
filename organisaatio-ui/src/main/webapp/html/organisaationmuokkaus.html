@@ -174,11 +174,11 @@
 
     <!--div ng-include src="'osoitteenmuokkaus.html'" ng-init="model.label='Organisaationtarkastelu.kayntiosoite'"></div-->
     <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="model.osoitemuoto"
-                  addressmodelfi="model.organisaatio.kayntiosoite" 
-                  addressmodelsv="model.organisaatio.ruotsiKayntiOsoite"
-                  addressmodelkv="model.organisaatio.kvKayntiOsoite"
+                  addressmodelfi="model.yhteystiedot.kaynti" 
+                  addressmodelsv="model.yhteystiedot.ruotsi_kaynti"
+                  addressmodelkv="model.yhteystiedot.kv_kaynti"
                   addresstype="'kaynti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
-                  postcodefi="model.koodisto.nimetFI.kayntiosoite" postcodesv="model.koodisto.nimetSV.kayntiosoite"
+                  postcodefi="model.yhteystiedot.postinumerot.kaynti" postcodesv="model.yhteystiedot.postinumerot.ruotsi_kaynti"
                   setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
 
     <div class="view-row">
@@ -189,12 +189,12 @@
     </div>
 
     <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="model.osoitemuoto"
-                  addressmodelfi="model.organisaatio.postiosoite" 
-                  addressmodelsv="model.organisaatio.ruotsiPostiOsoite"
-                  addressmodelkv="model.organisaatio.kvPostiOsoite"
+                  addressmodelfi="model.yhteystiedot.posti" 
+                  addressmodelsv="model.yhteystiedot.ruotsi_posti"
+                  addressmodelkv="model.yhteystiedot.kv_posti"
                   addresstype="'posti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                   disabled="model.samaosoite"
-                  postcodefi="model.koodisto.nimetFI.postiosoite" postcodesv="model.koodisto.nimetSV.postiosoite"
+                  postcodefi="model.yhteystiedot.postinumerot.posti" postcodesv="model.yhteystiedot.postinumerot.ruotsi_posti"
                   setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>   
 
     <div class="view-row">
@@ -203,15 +203,14 @@
         </div>
     </div>
 
-    <div ng-repeat="osoite in model.organisaatio.muutOsoitteet">
+    <div ng-repeat="osoite in model.yhteystiedot.muu">
         <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.osoitemuoto"
-                      addressmodelfi="osoite.suomiOsoite" 
-                      addressmodelsv="osoite.ruotsiOsoite"
-                      addressmodelkv="osoite.kvOsoite"
+                      addressmodelfi="model.yhteystiedot.muu[$index]"                   
+                      addressmodelkv="model.yhteystiedot.kv_muu[$index]"
                       index='{{$index}}' remove="model.removeAddress"
                       addresstype="'muu'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
-                      postcodefi="model.koodisto.nimetFI['muuosoite{{$index}}']" postcodesv="model.koodisto.nimetSV['muuosoite{{$index}}']"
-                      setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
+                      postcodefi="model.yhteystiedot.postinumerot.muu[$index]" 
+                      setpostcodefi="model.setPostinumero" ></edit-address>
     </div>
 
     <div class="view-row">
@@ -222,7 +221,7 @@
         </div>
         <div class="view-column cols-1 last">
             <input id="puhelinnumero" type="text" name="puhelinnumero" 
-                   ng-model="model.organisaatio.puhelinnumero"
+                   ng-model="model.yhteystiedot.puhelin.numero"
                    placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-required="false" codes-combined-field/>
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -237,7 +236,7 @@
         </div>
         <div class="view-column cols-1 last">
             <input id="faksinumero" type="text" maxlength="20" name="faksinumero" 
-                   ng-model="model.organisaatio.faksinumero"
+                   ng-model="model.yhteystiedot.faksi.numero"
                    placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-required="false" codes-combined-field/>
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -252,7 +251,7 @@
         </div>
         <div class="view-column cols-1 last">
             <input id="sahkopostiosoite" type="text" name="sahkopostiosoite" 
-                   ng-model="model.organisaatio.emailOsoite"
+                   ng-model="model.yhteystiedot.email.email"
                    placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}" ng-required="true" codes-combined-field/>
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -267,7 +266,7 @@
         </div>
         <div class="view-column cols-1 last">
             <input id="wwwosoite" type="text" name="wwwosoite" 
-                   ng-model="model.organisaatio.wwwosoite"
+                   ng-model="model.yhteystiedot.www.www"
                    placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -343,7 +342,7 @@
         </div>
     </div>
 
-    <div ng-if="ktexpanded">
+    <div ng-show="ktexpanded">
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
@@ -393,11 +392,11 @@
         </div>
 
         <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="model.ktosoitemuoto"
-                      addressmodelfi="model.organisaatio.yhteystiedot.kaynti" 
-                      addressmodelsv="model.organisaatio.yhteystiedot.ruotsiKaynti"
-                      addressmodelkv="model.organisaatio.yhteystiedot.kvKaynti"
+                      addressmodelfi="model.mdyhteystiedot.kaynti" 
+                      addressmodelsv="model.mdyhteystiedot.ruotsi_kaynti"
+                      addressmodelkv="model.mdyhteystiedot.kv_kaynti"
                       addresstype="'kaynti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
-                      postcodefi="model.koodisto.nimetFI.ktkayntiosoite" postcodesv="model.koodisto.nimetSV.ktkayntiosoite"
+                      postcodefi="model.mdyhteystiedot.postinumerot.kaynti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_kaynti"
                       setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
 
         <div class="view-row">
@@ -408,31 +407,32 @@
         </div>
 
         <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="model.ktosoitemuoto"
-                      addressmodelfi="model.organisaatio.yhteystiedot.posti" 
-                      addressmodelsv="model.organisaatio.yhteystiedot.ruotsiPosti"
-                      addressmodelkv="model.organisaatio.yhteystiedot.kvPosti"
+                      addressmodelfi="model.mdyhteystiedot.posti" 
+                      addressmodelsv="model.mdyhteystiedot.ruotsi_posti"
+                      addressmodelkv="model.mdyhteystiedot.kv_posti"
                       addresstype="'posti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                       disabled="model.ktsamaosoite"
-                      postcodefi="model.koodisto.nimetFI.ktpostiosoite" postcodesv="model.koodisto.nimetSV.ktpostiosoite"
+                      postcodefi="model.mdyhteystiedot.postinumerot.posti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_posti"
                       setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>   
 
         <div class="view-row">
             <div class="view-column col-indent-1 cols-2 first last">     
                 <button type="button" class="button small width-80" ng-click="model.addKtAddress()">{{ 'Organisaationmuokkaus.lisaamuuosoite' | i18n}}</button>
             </div>
-        </div>
+        </div>        
 
-        <div ng-repeat="osoite in model.organisaatio.ktMuutOsoitteet">
-            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.ktosoitemuoto"
-                          addressmodelfi="osoite.suomiOsoite" 
-                          addressmodelsv="osoite.ruotsiOsoite"
-                          addressmodelkv="osoite.kvOsoite"
+
+        <div ng-repeat="osoite in model.mdyhteystiedot.muu">
+            FI:{{model.mdyhteystiedot.muu[$index]}}
+            Kv:{{model.mdyhteystiedot.kv_muu[$index]}}
+            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.osoitemuoto"
+                          addressmodelfi="model.mdyhteystiedot.muu[$index]"                      
+                          addressmodelkv="model.mdyhteystiedot.kv_muu[$index]"
                           index='{{$index}}' remove="model.removeKtAddress"
                           addresstype="'muu'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
-                          postcodefi="model.koodisto.nimetFI['ktmuuosoite{{$index}}']" postcodesv="model.koodisto.nimetSV['ktmuuosoite{{$index}}']"
-                          setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
+                          postcodefi="model.mdyhteystiedot.postinumerot.muu[$index]" 
+                          setpostcodefi="model.setPostinumero" ></edit-address>
         </div>
-
 
         <div class="view-row">
             <div class="view-column cols-1 first">
@@ -484,10 +484,11 @@
                     {{'Organisaationmuokkaus.lisatiedot'| i18n}}
                 </div>
             </div>
-            
-            
-            
+
+
+
         </div>
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
@@ -495,9 +496,10 @@
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.YLEISKUVAUS.kielivalikoima_fi"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.YLEISKUVAUS"></textarea>  
             </div>
         </div>
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
@@ -505,13 +507,111 @@
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.ESTEETOMYYS"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.ESTEETOMYYS"></textarea>  
             </div>
         </div>
 
-    </div>            
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.oppimisymparisto'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPPIMISYMPARISTO"></textarea>  
+            </div>
+        </div>
         
-    
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.vuosikello'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VUOSIKELLO"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.vastuuhenkilot'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VASTUUHENKILOT"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.valintamenettely'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VALINTAMENETTELY"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.ahot'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.AIEMMIN_HANKITTU_OSAAMINEN"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.kieliopinnot'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.KIELIOPINNOT"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.tyoharjoittelu'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.TYOHARJOITTELU"></textarea>  
+            </div>
+        </div>
+        
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.opiskelijaliikkuvuus'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPISKELIJALIIKKUVUUS"></textarea>  
+            </div>
+        </div>
+        <div class="view-row">
+            <div class="view-column cols-1 first">
+                <div class="view-row-label">
+                    {{'Organisaationtarkastelu.kansainvalisyys'| i18n}}
+                </div>
+            </div>
+            <div class="view-column cols-5 last">
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.KANSAINVALISET_KOULUTUSOHJELMAT"></textarea>  
+            </div>
+        </div>
+        
+    </div>            
+
+
 
     <div class="view-row">&nbsp;</div>
     <div class="view-row">&nbsp;</div>

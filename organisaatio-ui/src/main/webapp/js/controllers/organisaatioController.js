@@ -7,7 +7,6 @@ function OrganisaatioController($scope, $location, $routeParams, OrganisaatioMod
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
     } else if (/edit$/.test($location.path())) {
-        console.log("EDIT");
         $scope.model.mode = "edit";
         $scope.model.refreshKoodisto($scope.oid);
     }

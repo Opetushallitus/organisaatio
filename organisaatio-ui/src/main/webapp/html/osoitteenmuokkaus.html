@@ -13,7 +13,7 @@
         <span class="text-error" ng-show="form.osoitefi.$error.codescombinedrequired">
             {{'codes.validation.codescombinedrequired'| i18n}}</span>
     </div>
-    <div class="view-column cols-2" ng-show="addressformat === 'suomalainen'">
+    <div class="view-column cols-2" ng-show="addressformat === 'suomalainen' && addressmodelsv!==undefined">
         <input id="osoitesv" type="text" maxlength="20" name="osoitesv" 
                ng-model="addressmodelsv.osoite" ng-disabled="disabled"
                placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" ng-required="false" codes-combined-field/>
@@ -37,26 +37,24 @@
     <div class="view-column cols-1">
         <select id="posti" ng-model="postcodefi" ng-disabled="disabled"
                 ng-options="nro for nro in postcodes" ng-required="false"
-                ng-click="setpostcodefi(addressmodelfi,postcodefi)">
-            <!-- ng-model="addressmodelfi.postinumeroUri" -->
-            <!-- ng-options="nro.uri as nro.arvo for nro in postcodes" -->
-            <!--option ng-repeat="arvo in postcodes">{{arvo}}</option-->
+                ng-click="setpostcodefi(addressmodelfi,postcodefi)">            
             <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
         </select>
     </div>
-    <div class="view-column cols-1">{{addressmodelfi.postitoimipaikka}}&nbsp;</div>
-    
     <div class="view-column cols-1">
+        {{addressmodelfi.postitoimipaikka}}&nbsp;
+    </div>
+    
+    <div class="view-column cols-1" ng-show='addressmodelsv!==undefined'>
         <select id="ruotsiposti" ng-model="postcodesv" ng-disabled="disabled"
                 ng-options="nro for nro in postcodes" ng-required="false"
                 ng-click="setpostcodesv(addressmodelsv,postcodesv)">
-            <!-- ng-model="addressmodelsv.postinumeroUri" -->
-            <!-- ng-options="nro.uri as nro.arvosv for nro in postcodes" -->
-            <!--option ng-repeat="arvo in postcodes">{{arvo}}</option-->
             <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
         </select>
     </div>
-    <div class="view-column cols-1">{{addressmodelsv.postitoimipaikka}}&nbsp;</div>
+    <div class="view-column cols-1" ng-show='addressmodelsv!==undefined'>
+        {{addressmodelsv.postitoimipaikka}}&nbsp;
+    </div>
             
 </div>
 
@@ -70,7 +68,7 @@
                    ng-model="addressmodelfi.osavaltio" ng-disabled="disabled"
                    placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />                
         </div>
-        <div class="view-column cols-2 last">
+        <div class="view-column cols-2 last" ng-show='addressmodelsv!==undefined'>
             <input id="osavaltiosv" type="text" maxlength="20" name="osavaltiosv" 
                    ng-model="addressmodelsv.osavaltio" ng-disabled="disabled"
                    placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />                
@@ -87,7 +85,7 @@
                    ng-model="addressmodelfi.extraRivi" ng-disabled="disabled"
                    placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />                
         </div>
-        <div class="view-column cols-2 last">
+        <div class="view-column cols-2 last" ng-show='addressmodelsv!==undefined'>
             <input id="extrarivisv" type="text" maxlength="20" name="extrarivisv" 
                    ng-model="addressmodelsv.extraRivi" ng-disabled="disabled"
                    placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />                
