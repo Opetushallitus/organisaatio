@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+    ">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
+    <context:component-scan base-package="fi.vm.sade.security" />
+    
+    <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
+
+
+    <bean id="organisaatioConverter" class="fi.vm.sade.organisaatio.service.converter.ConverterFactory"/>
+
+    <bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper">
+        <property name="mappingFiles">
+            <list>
+                <value>dozer-mapping.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="koulutustarjoajaPublicService" class="fi.vm.sade.tarjoaja.service.KoulutustarjoajaPublicServiceImpl">
+    </bean>
+
+
+    <!-- Conversion service, note: Old converters are not using spring conversion framework -->
+    <bean id="conversionService"
+          class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <!--
+        Enable @Scheduled annotations
+    -->
+    <task:annotation-driven />
+
+    <bean scope="singleton" class="fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService"/>
+
+</beans>

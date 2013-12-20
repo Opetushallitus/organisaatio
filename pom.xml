@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fi.vm.sade.organisaatio</groupId>
+    <artifactId>organisaatio</artifactId>
+    <version>8.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Organisaatio :: Parent</name>
+
+
+    <parent>
+        <groupId>fi.vm.sade.generic</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>8.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+        <authentication.api.version>7.0-SNAPSHOT</authentication.api.version>
+        <generic.version>8.0-SNAPSHOT</generic.version>
+        <sade-generic.version>8.0-SNAPSHOT</sade-generic.version>
+        <koodisto.api.version>7.0-SNAPSHOT</koodisto.api.version>
+        <koodisto.widget.version>7.0-SNAPSHOT</koodisto.widget.version>
+        <log.client.version>7.0-SNAPSHOT</log.client.version>
+        <oid.api.version>8.0-SNAPSHOT</oid.api.version>
+        <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
+        <vaadin.theme.version>7.0-SNAPSHOT</vaadin.theme.version>
+    </properties>
+
+    <modules>
+        <module>organisaatio-api</module>
+        <module>organisaatio-shared</module>
+        <module>organisaatio-solr-client</module>
+        <module>organisaatio-service</module>
+        <module>organisaatio-ui-widgets</module>
+        <module>organisaatio-app</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>oph-sade-artifactory-snapshots</id>
+            <url>http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>oph-sade-artifactory-releases</id>
+            <url>http://penaali.hard.ware.fi/artifactory/oph-sade-release-local</url>
+        </repository>
+    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[1.6,1.7)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
