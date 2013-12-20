@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/organisaatio-service">
+    <Resource name="jdbc/organisaatio" auth="Container" type="javax.sql.DataSource"
+              maxActive="250" maxIdle="30" maxWait="10000"
+              username="oph" password="oph" driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/organisaatio"/>
+</Context>

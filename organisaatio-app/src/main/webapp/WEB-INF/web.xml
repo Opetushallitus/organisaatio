@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"
+         metadata-complete="true">
+
+  <absolute-ordering>
+    <!--
+     Empty absolute ordering is necessary to completely desactivate classpath scanning
+      -->
+  </absolute-ordering>
+
+    <display-name>Organisaatio Web Application</display-name>
+
+    <!--
+        Adjust session timeout to be really short - saves memeory by cleaning "unused" session quickly.
+        See "MainWindow.java" / refresher in init() which creates poller to keep active sessions alive.
+    -->
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
+
+    <context-param>
+        <description>Vaadin production mode</description>
+        <param-name>productionMode</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/application-context.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter>
+        <filter-name>MDCFilter</filter-name>
+        <filter-class>fi.vm.sade.generic.common.UserToMDCFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MDCFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/organisaatioapp/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/yhteystietotyyppiapp/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>Vaadin Application Servlet</servlet-name>
+        <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <init-param>
+            <description>Vaadin application class to start</description>
+            <param-name>application</param-name>
+            <param-value>fi.vm.sade.organisaatio.ui.OrganisaatioWebApplication</param-value>
+            <!--
+              <param-value>fi.vm.sade.organisaatio.ui.sandbox.SampleApplication</param-value>
+              <param-value>fi.vm.sade.organisaatio.ui.ComponentTestApplication</param-value>
+            -->
+        </init-param>
+        <init-param>
+            <description>Widget Set to Use</description>
+            <param-name>widgetset</param-name>
+            <param-value>fi.vm.sade.widgetset.OPH</param-value>
+        </init-param>
+        <!-- should help with jmeter testing -->
+        <init-param>
+            <param-name>disable-xsrf-protection</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <!-- standalone -->
+    <servlet>
+        <servlet-name>organisaatioapp</servlet-name>
+        <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>fi.vm.sade.organisaatio.ui.OrganisaatioWebApplication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>widgetset</param-name>
+            <param-value>fi.vm.sade.widgetset.OPH</param-value>
+        </init-param>
+        <init-param>
+            <param-name>disable-xsrf-protection</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet>
+        <servlet-name>yhteystietotyyppiapp</servlet-name>
+        <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>fi.vm.sade.organisaatio.ui.OrganisaatioYhteystietotyyppienHallintaWebApplication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>widgetset</param-name>
+            <param-value>fi.vm.sade.widgetset.OPH</param-value>
+        </init-param>
+        <init-param>
+            <param-name>disable-xsrf-protection</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>yhteystietotyyppiapp</servlet-name>
+        <url-pattern>/yhteystietotyyppiapp/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>organisaatioapp</servlet-name>
+        <url-pattern>/organisaatioapp/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>organisaatioapp</servlet-name>
+        <url-pattern>/VAADIN/*</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/errorPage.jsp</location>
+    </error-page>
+
+</web-app>
