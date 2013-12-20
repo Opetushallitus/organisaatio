@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="organisaatio">
+
+<head>
+    <!-- libs -->
+    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../jslib/jquery-ui-1.9.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.nestable.js"></script>
+    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.mjs.nestedSortable.js"></script>
+    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.i18n.properties-min-1.0.9.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.5/angular.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.5/angular-resource.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.5/angular-route.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.5/angular-sanitize.js"></script>
+    <script type="text/javascript" src="../jslib/tinymce-4.0.11/tinymce.min.js"></script>
+    <script type="text/javascript" src="../jslib/angular-ui-tinymce-1a3c618/tinymce.js"></script>
+    <script type="text/javascript" src="../jslib/ui-bootstrap-0.7.0/ui-bootstrap-tpls-0.7.0.js"></script>
+
+    <!--conf -->
+    <script type="text/javascript"  src="../configuration/configuration.js"></script>
+
+    <!-- app js-->
+    <script type="text/javascript" src="../js/app.js"></script>
+    <script type="text/javascript" src="../js/services/organisaatioModel.js"></script>
+    <script type="text/javascript" src="../js/services/yritysValintaModel.js"></script>
+    <script type="text/javascript" src="../js/controllers/organisaatioController.js"></script>
+    <script type="text/javascript" src="../js/controllers/yritysValintaController.js"></script>
+    <script type="text/javascript" src="../js/organisaatioTree.js"></script>
+    <script type="text/javascript" src="../js/directives/organisaatioDirectives.js"></script>
+    
+    <script type="text/javascript" src="../js/loading.js"></script>
+
+    <!--Virkailija layout script -->
+    <script type="text/javascript" src="/virkailija-raamit/apply-raamit.js"></script>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <!-- virkailija css -->
+    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../css/virkailija.css" rel="stylesheet" type="text/css" />
+    <link href="../css/virkailija-raamit-standalone.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/organisaatio.css" rel="stylesheet" type="text/css" />
+
+    <title ng-bind-template="{{'Organisaatiot.title' | i18n}}"></title>
+</head>
+<body>
+    <div id="application-wrapper">
+        <div id="angularbox" ng-view=""></div>  
+        <div>
+            <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
+        </div>    
+    </div>
+
+    <div ng-controller="LoadingCtrl">
+        <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
+    </div>    
+</body>
+
+</html>

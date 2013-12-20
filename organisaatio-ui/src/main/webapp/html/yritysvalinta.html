@@ -1,0 +1,33 @@
+<!-- YritysValinta -->
+<div class="modal-header">
+    {{'YritysValinta.otsikko' | i18n}}
+</div>
+
+<div class="modal-body">
+    <form novalidate ng-submit="search()">
+        <div class="form-row">
+            <input class="" type="text" ng-model="model.hakuString" placeholder="{{'YritysValinta.ytunnusTaiNimi' | i18n}}">
+            <input class="button small" type="submit" value="{{'YritysValinta.hae' | i18n}}">
+        </div>    
+    </form>
+    <div ng-hide="model.yritykset.length" class="form-row">
+        {{'YritysValinta.ohjeteksti' | i18n}}
+    </div> 
+    <table>
+        <tr ng-repeat="yritys in model.yritykset | orderBy:'nimi'">
+            <td>{{yritys.nimi}}</td>
+            <td>{{yritys.ytunnus}}</td>
+        </tr>
+    </table> 
+    <div>
+        <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="alert.type" close="alert.close()">{{ alert.msg }}</alert>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-row">
+        <input class="button small" ng-click="cancel()" value="{{'YritysValinta.peruuta' | i18n}}">
+        <input class="button small" ng-click="continueWithouSelect()" value="{{'YritysValinta.jatkaValitsematta' | i18n}}">
+    </div>    
+</div>
+
+

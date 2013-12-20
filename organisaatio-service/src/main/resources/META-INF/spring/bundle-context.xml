@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:property-placeholder
+        location="classpath:organisaatio-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/organisaatio-service.properties, file:///${user.home:''}/oph-configuration/override.properties"
+        ignore-resource-not-found="true" properties-ref="defaultProps"/>
+    <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <util:properties local-override="true">
+                <prop key="cas_key">organisaatio-service</prop>
+                <prop key="cas_service">${cas.service.organisaatio-service}</prop>
+                <!--<prop key="spring_security_default_access">hasRole('ROLE_APP_ORGANISAATIOHALLINTA')</prop>-->
+                <!-- must be permitall by default because some methods in are completely open -->
+                <prop key="spring_security_default_access">permitAll</prop>
+            </util:properties>
+        </property>
+    </bean>
+    <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/>
+
+    <context:annotation-config />
+
+    <!-- Use @Component annotations for bean definitions -->
+    <context:component-scan base-package="fi.vm.sade.organisaatio" />
+
+    <!-- Configure AOP and aspect to handle and wrap exceptions to GenericFault -->
+    <aop:aspectj-autoproxy>
+        <aop:include name="organisaatioServiceExceptionWrapper"/>
+        <aop:include name="auditLogAspect"/>
+    </aop:aspectj-autoproxy>
+
+    <bean id="organisaatioServiceExceptionWrapper"  class="fi.vm.sade.organisaatio.service.aspects.OrganisaatioServiceExceptionWrapperAspect"/>
+
+    <bean id="auditLogAspect" class="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect"/>
+
+    <bean id="ytjService" class="fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock" />
+<!-- 
+    <bean id="ytjService" class="fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl">
+        <property name="asiakastunnus" value="${rajapinnat.ytj.asiakastunnus:YTJ_ASIAKASTUNNUS_UNKNOWN}"/>
+        <property name="salainenavain" value="${rajapinnat.ytj.avain:YTJ_SALAINEN_AVAIN_UNKNOWN}"/>
+    </bean>
+-->
+    <import resource="classpath:META-INF/spring/context/service-context.xml"/>
+    <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
+    <import resource="classpath:META-INF/spring/context/ws-context.xml" />
+    <import resource="classpath:/META-INF/spring/logger-context.xml"/>
+
+    <!-- <bean id="auditLogger" class="fi.vm.sade.log.client.LoggerMock"/>  -->
+</beans>

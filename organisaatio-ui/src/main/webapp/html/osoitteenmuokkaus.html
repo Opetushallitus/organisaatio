@@ -1,0 +1,96 @@
+
+<div class="view-row">
+    <div class="view-column cols-1 first">
+        <div class="view-row-label">
+            {{label| i18n}}*
+        </div>
+    </div>
+
+    <div class="view-column cols-2" ng-show="addressformat === 'suomalainen'">
+        <input id="osoitefi" type="text" maxlength="20" name="osoitefi" 
+               ng-model="addressmodelfi.osoite" ng-disabled="disabled"
+               placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" ng-required="false" codes-combined-field/>
+        <span class="text-error" ng-show="form.osoitefi.$error.codescombinedrequired">
+            {{'codes.validation.codescombinedrequired'| i18n}}</span>
+    </div>
+    <div class="view-column cols-2" ng-show="addressformat === 'suomalainen'">
+        <input id="osoitesv" type="text" maxlength="20" name="osoitesv" 
+               ng-model="addressmodelsv.osoite" ng-disabled="disabled"
+               placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" ng-required="false" codes-combined-field/>
+        <span class="text-error" ng-show="form.osoitesv.$error.codescombinedrequired">
+            {{'codes.validation.codescombinedrequired'| i18n}}</span>
+    </div>    
+    <div ng-if="addressformat === 'kansainvalinen'">
+        <div class="view-column cols-2">
+            <textarea id="kvosoite" name="kvosoite" rows="6" ng-model="addressmodelkv.osoite" ng-disabled="disabled"></textarea>
+        </div>
+    </div>
+    <div class="view-column cols-1" ng-show="index >= 0">
+        <button type="button" class="button small width-80" ng-click="remove(index)">{{ 'Organisaationmuokkaus.poistaosoite' | i18n}}</button>
+    </div>
+</div>
+
+<div class="view-row" ng-show="addressformat === 'suomalainen'">
+    <div class="view-column cols-1 first">
+        &nbsp;
+    </div>
+    <div class="view-column cols-1">
+        <select id="posti" ng-model="postcodefi" ng-disabled="disabled"
+                ng-options="nro for nro in postcodes" ng-required="false"
+                ng-click="setpostcodefi(addressmodelfi,postcodefi)">
+            <!-- ng-model="addressmodelfi.postinumeroUri" -->
+            <!-- ng-options="nro.uri as nro.arvo for nro in postcodes" -->
+            <!--option ng-repeat="arvo in postcodes">{{arvo}}</option-->
+            <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
+        </select>
+    </div>
+    <div class="view-column cols-1">{{addressmodelfi.postitoimipaikka}}&nbsp;</div>
+    
+    <div class="view-column cols-1">
+        <select id="ruotsiposti" ng-model="postcodesv" ng-disabled="disabled"
+                ng-options="nro for nro in postcodes" ng-required="false"
+                ng-click="setpostcodesv(addressmodelsv,postcodesv)">
+            <!-- ng-model="addressmodelsv.postinumeroUri" -->
+            <!-- ng-options="nro.uri as nro.arvosv for nro in postcodes" -->
+            <!--option ng-repeat="arvo in postcodes">{{arvo}}</option-->
+            <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
+        </select>
+    </div>
+    <div class="view-column cols-1">{{addressmodelsv.postitoimipaikka}}&nbsp;</div>
+            
+</div>
+
+<div ng-if="country !== 'maatjavaltiot1_fin'">
+    <div class="view-row">
+        <div class="view-column cols-1 first">
+            &nbsp;
+        </div>
+        <div class="view-column cols-2">
+            <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi" 
+                   ng-model="addressmodelfi.osavaltio" ng-disabled="disabled"
+                   placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />                
+        </div>
+        <div class="view-column cols-2 last">
+            <input id="osavaltiosv" type="text" maxlength="20" name="osavaltiosv" 
+                   ng-model="addressmodelsv.osavaltio" ng-disabled="disabled"
+                   placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />                
+        </div>
+    </div>
+</div>
+<div ng-if="country !== 'maatjavaltiot1_fin'">
+    <div class="view-row">
+        <div class="view-column cols-1 first">
+            &nbsp;
+        </div>
+        <div class="view-column cols-2">
+            <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi" 
+                   ng-model="addressmodelfi.extraRivi" ng-disabled="disabled"
+                   placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />                
+        </div>
+        <div class="view-column cols-2 last">
+            <input id="extrarivisv" type="text" maxlength="20" name="extrarivisv" 
+                   ng-model="addressmodelsv.extraRivi" ng-disabled="disabled"
+                   placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />                
+        </div>
+    </div>
+</div>        

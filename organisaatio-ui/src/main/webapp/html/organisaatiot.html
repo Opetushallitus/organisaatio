@@ -1,0 +1,86 @@
+<!-- Organisaatiot -->
+
+<script type="text/ng-template" id="organisaatio_node.html">
+    <div class="view-row state-disabled" ng-class="{collapsed: !data.expanded}">
+	<span class="disclose icon collapse"
+          ng-click="model.expand(data)"
+          ng-hide="model.isLeaf(data)">
+        </span>
+        <div class="view-column cols-3 first">
+        <span class="dropdown">
+          <a class="dropmenu dropdown-toggle"></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="choice in menuItems">
+              <a ng-click="menuClicked(data, choice.url)">{{choice.name}}</a>
+            </li>
+          </ul>
+        </span>
+        <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
+        </div>
+        <div class="view-column cols-1">
+           {{data.tunnus}}
+        </div>
+        <divn class="view-column cols-1 last">
+           {{data.tyyppi}}
+        </div>
+    </div>
+    <ol ng-if="data.expanded">
+        <li ng-repeat="data in data.children | orderBy:'i18nNimi'"
+            ng-include="'organisaatio_node.html'"></li>
+    </ol>
+</script>
+
+<form novalidate ng-submit="search()">
+    <div class="form-row">
+        <input class="width-20" type="text" ng-model="hakuehdot.nimiTaiTunnus" placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
+        <input class="button small primary" type="submit" value="{{'Organisaatiot.hae' | i18n}}">
+        <input class="button small" type="reset" ng-click="resetHakuehdot()" value="{{'Organisaatiot.tyhjenna' | i18n}}">
+    </div>
+</form>
+
+<div ng-hide="tarkemmatHakuehdotVisible" class="form-row">
+    <a class="" href="" ng-click="showTarkemmatHakuehdot()">{{'Organisaatiot.naytaTarkennettuHaku' | i18n}}</a>
+</div>
+
+<div ng-show="tarkemmatHakuehdotVisible" class="">
+    <div class="form-row">
+        <a class="" href="" ng-click="hideTarkemmatHakuehdot()">{{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}</a>
+    </div>
+    <form>
+        <div class="form-row">
+            <!-- Kotipaikka -->
+            <select class="width-20" ng-model="hakuehdot.kunta" ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">
+                <option value="">{{'Organisaatiot.kotipaikka' | i18n}}</option>
+            </select>
+
+            <!-- Organisaatiotyyppi -->
+            <select class="width-20" ng-model="hakuehdot.organisaatiotyyppi" ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'nimi'">
+                <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
+            </select>
+
+            <!-- Oppilaitostyyppi -->
+            <select class="width-20" ng-model="hakuehdot.oppilaitostyyppi" ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
+                <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <!-- Näytä lakkautetut -->
+            {{'Organisaatiot.naytaLakkautetut' | i18n}}<input type="checkbox" ng-model="hakuehdot.naytaLakkautetut">
+
+            <!-- Näytä suunnitellut -->
+            {{'Organisaatiot.naytaSuunnitellut' | i18n}}<input type="checkbox" ng-model="hakuehdot.naytaSuunnitellut">
+        </div>
+    </form>
+</div>
+
+<div class="form-row">
+    <span class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</span>
+    <input class="button small" ng-click="luoYlinTaso()" value="{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}">
+</div>
+
+<div class="">
+    <ol class="sortable treelist collapsible">
+        <li ng-repeat="data in model.getRootNodes() | orderBy:'i18nNimi'"
+            ng-include="'organisaatio_node.html'"></li>
+    </ol>
+</div>
