@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Turn on AspectJ @Configurable support -->
+    <context:spring-configured />
+    <context:annotation-config />
+    <context:component-scan base-package="fi.vm.sade.organisaatio.ui" />
+
+    <!-- Turn on @Autowired, @PostConstruct etc support -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+    <!--
+      Load configuration settings
+    -->        
+    <context:property-placeholder
+        location="classpath:organisaatio-app.properties" 
+        ignore-resource-not-found="true"/>
+
+    
+    <bean id="koodistoUri" class="fi.vm.sade.organisaatio.KoodistoURI">
+        <property name="kieliUri" value="${organisaatio-app.koodisto-uris.kieli-uri:http://kieli}" />
+        <property name="yritysUri" value="${organisaatio-app.koodisto-uris.yritys-uri:http://yritys}" />
+        <property name="kotipaikkaUri" value="${organisaatio-app.koodisto-uris.kotipaikka-uri:http://kotipaikka}" />
+        <property name="maaUri" value="${organisaatio-app.koodisto-uris.maa-uri:http://maa}" />
+        <property name="oppilaitostyyppiUri" value="${organisaatio-app.koodisto-uris.oppilaitostyyppi-uri:http://oppilaitostyyppi}" />
+        <property name="postinumeroUri" value="${organisaatio-app.koodisto-uris.postinumero-uri:http://postinumero}" />
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:i18n/messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="useCodeAsDefaultMessage" value="true" />
+    </bean>
+
+    <import resource="application-context-service.xml"/>
+    <!--<import resource="file:///${user.home:''}/oph-configuration/cache-context.xml"/>-->
+
+    <!--
+      UI role testing, see "organisaato-app.properties"
+    -->    
+    <bean id="debugProperties" class="fi.vm.sade.organisaatio.ui.config.DebugProperties" />
+    
+</beans>

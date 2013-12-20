@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!-- ~ Copyright (c) 2012 The Finnish Board of Education - Opetushallitus 
+	~ ~ This program is free software: Licensed under the EUPL, Version 1.1 or 
+	- as ~ soon as they will be approved by the European Commission - subsequent 
+	versions ~ of the EUPL (the "Licence"); ~ ~ You may not use this work except 
+	in compliance with the Licence. ~ You may obtain a copy of the Licence at: 
+	http://www.osor.eu/eupl/ ~ ~ This program is distributed in the hope that 
+	it will be useful, ~ but WITHOUT ANY WARRANTY; without even the implied warranty 
+	of ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the ~ European 
+	Union Public Licence for more details. -->
+
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>fi.vm.sade.organisaatio</groupId>
+		<artifactId>organisaatio</artifactId>
+		<version>8.0</version>
+	</parent>
+
+	<artifactId>organisaatio-api</artifactId>
+	<name>Organisaatio :: API</name>
+	<packaging>jar</packaging>
+	<!-- <packaging>jar</packaging> -->
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>2.6.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jvnet.jaxb2_commons</groupId>
+						<artifactId>jaxb2-value-constructor</artifactId>
+						<version>3.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jvnet.jaxb2_commons</groupId>
+						<artifactId>jaxb2-basics</artifactId>
+						<version>0.6.2</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>generate-organisaatio-api</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
+							<defaultOptions>
+								<bindingFiles>
+									<bindingFile>${basedir}/src/main/resources/wsdl/binding.xjb</bindingFile>
+								</bindingFiles>
+
+								<extraargs>
+									<extraarg>-frontend</extraarg>
+									<extraarg>jaxws21</extraarg>
+									<extraarg>-xjc-Xvalue-constructor</extraarg>
+								</extraargs>
+							</defaultOptions>
+							<wsdlOption>
+								<wsdl>${basedir}/src/main/resources/wsdl/organisaatioService.wsdl</wsdl>
+							</wsdlOption>
+							<wsdlOption>
+								<wsdl>${basedir}/src/main/resources/wsdl/koulutustarjoajaPublicService.wsdl</wsdl>
+							</wsdlOption>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,640 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="../../../../../../../build-parent/trunk/build-utilities/src/main/resources/wsdl2html-oph.xsl"?>
+<wsdl:definitions name="organisaatioService"
+                  targetNamespace="http://model.api.organisaatio.sade.vm.fi/"
+                  xmlns:ns1="http://model.api.organisaatio.sade.vm.fi/types"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://model.api.organisaatio.sade.vm.fi/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://model.api.organisaatio.sade.vm.fi/">
+            <xsd:import namespace="http://model.api.organisaatio.sade.vm.fi/types" schemaLocation="organisaatioService.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="ping">
+        <wsdl:part name="parameters" element="ns1:ping"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="pingResponse">
+        <wsdl:part element="ns1:pingResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createOrganisaatio">
+        <wsdl:part element="ns1:createOrganisaatio" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createOrganisaatioResponse">
+        <wsdl:part element="ns1:createOrganisaatioResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateOrganisaatio">
+        <wsdl:part element="ns1:updateOrganisaatio" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateOrganisaatioResponse">
+        <wsdl:part element="ns1:updateOrganisaatioResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findParentsTo">
+        <wsdl:part element="ns1:findParentsTo" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findParentsToResponse">
+        <wsdl:part element="ns1:findParentsToResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findChildrenTo">
+        <wsdl:part element="ns1:findChildrenTo" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findChildrenToResponse">
+        <wsdl:part element="ns1:findChildrenToResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchOrganisaatios">
+        <wsdl:part element="ns1:searchOrganisaatios" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchOrganisaatiosResponse">
+        <wsdl:part element="ns1:searchOrganisaatiosResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeByOid">
+        <wsdl:part element="ns1:removeByOid" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeByOidResponse">
+        <wsdl:part element="ns1:removeByOidResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findByOid">
+        <wsdl:part element="ns1:findByOid" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findByOidResponse">
+        <wsdl:part element="ns1:findByOidResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findByOidList">
+        <wsdl:part element="ns1:findByOidList" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findByOidListResponse">
+        <wsdl:part element="ns1:findByOidListResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findParentsByOidList">
+        <wsdl:part element="ns1:findParentsByOidList" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findParentsByOidListResponse">
+        <wsdl:part element="ns1:findParentsByOidListResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+
+
+    <wsdl:message name="getOrganizationStructure">
+        <wsdl:part element="ns1:getOrganizationStructure" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getOrganizationStructureResponse">
+        <wsdl:part element="ns1:getOrganizationStructureResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+
+
+
+    <wsdl:message name="genericFault">
+        <wsdl:part name="fault" element="ns1:genericFaultInfo"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="organisaatioOidListRequest">
+        <wsdl:part name="parameters" element="ns1:organisaatioOidListRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="organisaatioOidListResponse">
+        <wsdl:part name="parameters" element="ns1:organisaatioOidListResponse">
+        </wsdl:part>
+    </wsdl:message>
+
+    <!-- YhteystietojenTyyppi related messages -->
+    <wsdl:message name="findYhteystietojenTyyppis">
+        <wsdl:part element="ns1:findYhteystietojenTyyppis" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietojenTyyppisResponse">
+        <wsdl:part element="ns1:findYhteystietojenTyyppisResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createYhteystietojenTyyppi">
+        <wsdl:part element="ns1:createYhteystietojenTyyppi" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createYhteystietojenTyyppiResponse">
+        <wsdl:part element="ns1:createYhteystietojenTyyppiResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateYhteystietojenTyyppi">
+        <wsdl:part element="ns1:updateYhteystietojenTyyppi" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateYhteystietojenTyyppiResponse">
+        <wsdl:part element="ns1:updateYhteystietojenTyyppiResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="readYhteystietojenTyyppi">
+        <wsdl:part element="ns1:readYhteystietojenTyyppi" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="readYhteystietojenTyyppiResponse">
+        <wsdl:part element="ns1:readYhteystietojenTyyppiResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietoMetadataForOrganisaatio">
+        <wsdl:part element="ns1:findYhteystietoMetadataForOrganisaatio" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietoMetadataForOrganisaatioResponse">
+        <wsdl:part element="ns1:findYhteystietoMetadataForOrganisaatioResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietoArvosForOrganisaatio">
+        <wsdl:part element="ns1:findYhteystietoArvosForOrganisaatio" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietoArvosForOrganisaatioResponse">
+        <wsdl:part element="ns1:findYhteystietoArvosForOrganisaatioResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+
+    <!-- Yhteystieto related messages -->
+    <wsdl:message name="findYhteystietos">
+        <wsdl:part element="ns1:findYhteystietos" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findYhteystietosResponse">
+        <wsdl:part element="ns1:findYhteystietosResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createYhteystieto">
+        <wsdl:part element="ns1:createYhteystieto" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createYhteystietoResponse">
+        <wsdl:part element="ns1:createYhteystietoResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeYhteystietojenTyyppiByOid">
+        <wsdl:part element="ns1:removeYhteystietojenTyyppiByOid" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeYhteystietojenTyyppiByOidResponse">
+        <wsdl:part element="ns1:removeYhteystietojenTyyppiByOidResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateYhteystieto">
+        <wsdl:part element="ns1:updateYhteystieto" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateYhteystietoResponse">
+        <wsdl:part element="ns1:updateYhteystietoResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="readYhteystieto">
+        <wsdl:part element="ns1:readYhteystieto" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="readYhteystietoResponse">
+        <wsdl:part element="ns1:readYhteystietoResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:message name="findBasicOrganisaatioChildsToOidParameter">
+        <wsdl:part name="parameters" element="ns1:findBasicOrganisaatioChildsToOidParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findBasicOrganisaatioChildsToOidResponse">
+        <wsdl:part name="parameters" element="ns1:findBasicOrganisaatioChildsToOidResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findBasicParentOrganisaatioParameter">
+        <wsdl:part name="parameters" element="ns1:findBasicParentOrganisaatioParameter"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findBasicParentOrganisaatioResponse">
+        <wsdl:part name="parameters" element="ns1:findBasicParentOrganisaatioResponse"></wsdl:part>
+    </wsdl:message>
+
+    <!-- Operations -->
+    <wsdl:portType name="OrganisaatioService">
+        <wsdl:documentation>
+            Palvelu Organisaatioiden, yhteystietojen ja yhteystietojen arvojen hallintaan.
+        </wsdl:documentation>
+        <wsdl:operation name="ping">
+            <wsdl:documentation>
+                Ping.
+            </wsdl:documentation>
+            <wsdl:input message="tns:ping" name="ping">
+            </wsdl:input>
+            <wsdl:output message="tns:pingResponse" name="pingResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createOrganisaatio">
+            <wsdl:documentation>
+                Organisaation luominen.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createOrganisaatio" name="createOrganisaatio">
+            </wsdl:input>
+            <wsdl:output message="tns:createOrganisaatioResponse" name="createOrganisaatioResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeOrganisaatioByOid">
+            <wsdl:documentation>
+                Poistaa annetun organisaation (identifioidaan OID:lla) ja sen lapset.
+            </wsdl:documentation>
+            <wsdl:input message="tns:removeByOid" name="removeByOid">
+            </wsdl:input>
+            <wsdl:output message="tns:removeByOidResponse" name="removeByOidResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateOrganisaatio">
+            <wsdl:documentation>
+                Organisaation tietojen päivittäminen.
+            </wsdl:documentation>
+            <wsdl:input message="tns:updateOrganisaatio" name="updateOrganisaatio">
+            </wsdl:input>
+            <wsdl:output message="tns:updateOrganisaatioResponse" name="updateOrganisaatioResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="findParentsTo">
+            <wsdl:documentation>
+                Palauttaa listan organisaatioita, jotka ovat annetun organisaation "vanhempia" - eli "polku juuresta"
+                annettuun organisaatioon.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findParentsTo" name="findParentsTo">
+            </wsdl:input>
+            <wsdl:output message="tns:findParentsToResponse" name="findParentsToResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findChildrenTo">
+            <wsdl:documentation>
+                Palauttaa organisaation lapset / ali-organisaatiot.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findChildrenTo" name="findChildrenTo">
+            </wsdl:input>
+            <wsdl:output message="tns:findChildrenToResponse" name="findChildrenToResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="searchOrganisaatios">
+            <wsdl:documentation>
+                Organisaatioden hakeminen annettujen hakuehtojen mukaan.
+            </wsdl:documentation>
+            <wsdl:input message="tns:searchOrganisaatios" name="searchOrganisaatios">
+            </wsdl:input>
+            <wsdl:output message="tns:searchOrganisaatiosResponse" name="searchOrganisaatiosResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findByOid">
+            <wsdl:documentation>
+                Lataa organisaation tiedot OID:lla.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findByOid" name="findByOid">
+            </wsdl:input>
+            <wsdl:output message="tns:findByOidResponse" name="findByOidResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findByOidList">
+            <wsdl:documentation>
+                Lataa kaikkien annettujen OID:n mukaan lista organisaatioita.
+                HUOM. lataa rekursiivisesti myös aliorganisaatiot.
+                Koska haku voi olla SUURI, voi hakua rajoittaa "maxResuts"-parametrilla, joka rajoittaa palautettavien OKSIEN
+                lukumäärää.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findByOidList" name="findByOidList">
+            </wsdl:input>
+            <wsdl:output message="tns:findByOidListResponse" name="findByOidListResponse">
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getOrganizationStructure">
+            <wsdl:documentation>
+                Palauttaa organisaatiorakenteen
+            </wsdl:documentation>
+            <wsdl:input message="tns:getOrganizationStructure" name="getOrganizationStructure">
+            </wsdl:input>
+            <wsdl:output message="tns:getOrganizationStructureResponse" name="getOrganizationStructureResponse">
+            </wsdl:output>
+        </wsdl:operation>
+
+
+
+
+
+
+
+
+
+
+        <wsdl:operation name="findParentsByOidList">
+            <wsdl:documentation>
+                Lataa VAIN annetut organisaatiot. FindByOIDList muuten sama, mutta palauttaa myös lapsia rekursiolla.
+                TODO nimeämisten tarkistaminen!
+            </wsdl:documentation>
+            <wsdl:input message="tns:findParentsByOidList" name="findParentsByOidList">
+            </wsdl:input>
+            <wsdl:output message="tns:findParentsByOidListResponse" name="findParentsByOidListResponse">
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="findBasicOrganisaatioChildsToOid">
+            <wsdl:documentation>
+                Hakee kevyet perustiedot annetun Organisaation (oid) lapsille.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findBasicOrganisaatioChildsToOidParameter" name="findBasicOrganisaatioChildsToOidParameter">
+            </wsdl:input>
+            <wsdl:output message="tns:findBasicOrganisaatioChildsToOidResponse" name="findBasicOrganisaatioChildsToOidResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findBasicParentOrganisaatios">
+            <wsdl:documentation>
+                Palauttaa "polun juureen" listana kevyitä perustietoja annetulle Organisaatiolle (oid).
+            </wsdl:documentation>
+            <wsdl:input message="tns:findBasicParentOrganisaatioParameter" name="findBasicParentOrganisaatioParameter">
+            </wsdl:input>
+            <wsdl:output message="tns:findBasicParentOrganisaatioResponse" name="findBasicParentOrganisaatioResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findChildrenOidsByOid">
+            <wsdl:documentation>
+                Palauttaa listan kaikkien lasten OIDja annettujen "äitien" alla.
+            </wsdl:documentation>
+            <wsdl:input message="tns:organisaatioOidListRequest" name="organisaatioOidListRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:organisaatioOidListResponse" name="organisaatioOidListResponse">
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!-- YhteystietojenTyyppi related operations -->
+
+        <wsdl:operation name="findYhteystietojenTyyppis">
+            <wsdl:documentation>
+                Hae kakki YhteystietojenTyyppi-objektit.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findYhteystietojenTyyppis" name="findYhteystietojenTyyppis">
+            </wsdl:input>
+            <wsdl:output message="tns:findYhteystietojenTyyppisResponse" name="findYhteystietojenTyyppisResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createYhteystietojenTyyppi">
+            <wsdl:documentation>
+                Luo uusi yhteystietojenTyyppi-objekti.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createYhteystietojenTyyppi" name="createYhteystietojenTyyppi">
+            </wsdl:input>
+            <wsdl:output message="tns:createYhteystietojenTyyppiResponse" name="createYhteystietojenTyyppiResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateYhteystietojenTyyppi">
+            <wsdl:documentation>
+                Päivitä annettu yhteystietojenTyyppi-objekti.
+            </wsdl:documentation>
+            <wsdl:input message="tns:updateYhteystietojenTyyppi" name="updateYhteystietojenTyyppi">
+            </wsdl:input>
+            <wsdl:output message="tns:updateYhteystietojenTyyppiResponse" name="updateYhteystietojenTyyppiResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeYhteystietojenTyyppiByOid">
+            <wsdl:documentation>
+                Poistaa halutun yhteystietojen tyyppi - olion annetulla OID:lla.
+            </wsdl:documentation>
+            <wsdl:input message="tns:removeYhteystietojenTyyppiByOid" name="removeYhteystietojenTyyppiByOid">
+            </wsdl:input>
+            <wsdl:output message="tns:removeYhteystietojenTyyppiByOidResponse" name="removeYhteystietojenTyyppiByOidResponse">
+            </wsdl:output>
+            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="readYhteystietojenTyyppi">
+            <wsdl:documentation>
+                Lataa yhteystietojen tyyppi objekti.
+            </wsdl:documentation>
+            <wsdl:input message="tns:readYhteystietojenTyyppi" name="readYhteystietojenTyyppi">
+            </wsdl:input>
+            <wsdl:output message="tns:readYhteystietojenTyyppiResponse" name="readYhteystietojenTyyppiResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findYhteystietoMetadataForOrganisaatio">
+            <wsdl:documentation>
+                Lataa annetun organisaation yhteystieto "metadatan".
+            </wsdl:documentation>
+            <wsdl:input message="tns:findYhteystietoMetadataForOrganisaatio" name="findYhteystietoMetadataForOrganisaatio">
+            </wsdl:input>
+            <wsdl:output message="tns:findYhteystietoMetadataForOrganisaatioResponse" name="findYhteystietoMetadataForOrganisaatioResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findYhteystietoArvosForOrganisaatio">
+            <wsdl:documentation>
+                Lataa annetulle organisaatiolle yhteystietojen arvot.
+            </wsdl:documentation>
+            <wsdl:input message="tns:findYhteystietoArvosForOrganisaatio" name="findYhteystietoArvosForOrganisaatio">
+            </wsdl:input>
+            <wsdl:output message="tns:findYhteystietoArvosForOrganisaatioResponse" name="findYhteystietoArvosForOrganisaatioResponse">
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!--
+        <wsdl:operation name="listOrganisaatioByParentOids">
+            <wsdl:input message="tns:listOrganisaatioByParentOidsRequest"></wsdl:input>
+            <wsdl:output message="tns:listOrganisaatioByParentOidsResponse"></wsdl:output>
+        </wsdl:operation>
+        -->
+    </wsdl:portType>
+
+    <wsdl:binding name="OrganisaatioServiceSoapBinding" type="tns:OrganisaatioService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="ping">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="ping">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="pingResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createOrganisaatio">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="createOrganisaatio">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="createOrganisaatioResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateOrganisaatio">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="updateOrganisaatio">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="updateOrganisaatioResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findParentsTo">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findParentsTo">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findParentsToResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findChildrenTo">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findChildrenTo">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findChildrenToResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="searchOrganisaatios">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="searchOrganisaatios">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="searchOrganisaatiosResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findByOid">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findByOid">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findByOidResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findByOidList">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findByOidList">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findByOidListResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getOrganizationStructure">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="getOrganizationStructure">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="getOrganizationStructureResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+
+        <wsdl:operation name="findParentsByOidList">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findParentsByOidList">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findParentsByOidListResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+          <wsdl:operation name="findChildrenOidsByOid">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="organisaatioOidListRequest">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="organisaatioOidListResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <!-- Yhteystietojen tyyppi related operations -->
+        <wsdl:operation name="findYhteystietojenTyyppis">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findYhteystietojenTyyppis">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findYhteystietojenTyyppisResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createYhteystietojenTyyppi">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="createYhteystietojenTyyppi">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="createYhteystietojenTyyppiResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateYhteystietojenTyyppi">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="updateYhteystietojenTyyppi">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="updateYhteystietojenTyyppiResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="readYhteystietojenTyyppi">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="readYhteystietojenTyyppi">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="readYhteystietojenTyyppiResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findYhteystietoMetadataForOrganisaatio">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findYhteystietoMetadataForOrganisaatio">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findYhteystietoMetadataForOrganisaatioResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findYhteystietoArvosForOrganisaatio">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findYhteystietoArvosForOrganisaatio">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findYhteystietoArvosForOrganisaatioResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findBasicOrganisaatioChildsToOid">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findBasicOrganisaatioChildsToOidParameter">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findBasicOrganisaatioChildsToOidResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findBasicParentOrganisaatios">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findBasicParentOrganisaatioParameter">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findBasicParentOrganisaatioResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+    <wsdl:service name="OrganisaatioService">
+        <wsdl:port name="OrganisaatioServicePort" binding="tns:OrganisaatioServiceSoapBinding">
+            <soap:address location="http://localhost:8181/cxf/organisaatioService" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

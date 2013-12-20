@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://service.tarjoaja.sade.vm.fi/types"
+           targetNamespace="http://service.tarjoaja.sade.vm.fi/types"
+           elementFormDefault="qualified">
+
+    <!--
+      WSDL operation messages
+    -->
+    <xs:element name="findByOrganizationOidRequest" type="FindByOrganizationOidRequestType"/>
+    <xs:element name="findByOrganizationOidResponse" type="FindByOrganizationOidResponseType"/>
+
+    <xs:element name="genericFaultInfo" type="GenericFaultInfoType"></xs:element>
+
+    <xs:simpleType name="MetatietoAvainTyyppi">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Metatiedolla on avain, tämä määrittelee "esimääritelly" avaimet.</xs:documentation>
+        </xs:annotation>
+
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Unknown"/>
+            <xs:enumeration value="EsteettomyysPalvelut"/>
+            <xs:enumeration value="Oppimisymparistot"/>
+            <xs:enumeration value="Kustannukset"/>
+            <xs:enumeration value="Ruokailu"/>
+            <xs:enumeration value="Terveydenhuolto"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="KielistettyTekstiTyyppi">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Monikielinen teksti, "lang" attribuutti kertoo kielen. Lang-attribuutin arvo
+            mahdollisesti koodistosta.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="MetatietoArvoTyyppi">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Metatiedon arvo annetulla kielikoodilla.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="kieliKoodi" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Kielikoodi jolla arvo on annettu.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="1" maxOccurs="1" name="arvo" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Arvo annetulla kielellä.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MetatietoTyyppi">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Metatiedon tyyppi</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="avain" type="MetatietoAvainTyyppi">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Metatiedon "avain", esim. "Esteettömyyspalvelu"</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="arvos" type="MetatietoArvoTyyppi">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Metatieto kielistettynä</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="KoulutustarjoajaTyyppi">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Koulutustarjoaja - Organisaation "facet". Liittyy aina organisaatioon.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Nimi" type="KielistettyTekstiTyyppi" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">
+                        Koulutustarjoajan nimi eri kielilla.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element minOccurs="1" maxOccurs="1" name="version" type="xs:long"/>
+
+            <xs:element minOccurs="1" maxOccurs="1" name="organisaatioOid" type="xs:string"/>
+            <xs:element minOccurs="0" name="luontiPvm" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="muokkausPvm" type="xs:dateTime"/>
+
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="metatieto" nillable="true" type="MetatietoTyyppi"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+      WSDL operation parameters and return values
+    -->
+    <xs:complexType name="FindByOrganizationOidRequestType">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">LOP tiedot haetaan aina Organisaation OID:lla</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="oid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FindByOrganizationOidResponseType">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Paluuarvo</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="KoulutustarjoajaTyyppi"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GenericFaultInfoType">
+        <xs:annotation>
+            <xs:documentation xml:lang="fi">Yleinen virhe. Error code ja explanation antavat lisatietoja virheesta.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="errorCode" type="xs:string"></xs:element>
+            <xs:element name="explanation" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+</xs:schema>
