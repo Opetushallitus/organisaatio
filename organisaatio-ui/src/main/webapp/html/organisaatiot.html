@@ -13,6 +13,9 @@
             <li ng-repeat="choice in menuItems">
               <a ng-click="menuClicked(data, choice.url)">{{choice.name}}</a>
             </li>
+            <li ng-if="isDeleteAllowed(data)">
+              <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
+            </li>
           </ul>
         </span>
         <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>

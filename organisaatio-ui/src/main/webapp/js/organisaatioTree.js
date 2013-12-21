@@ -311,7 +311,7 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
 
 
 function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
-                                    $modal, Alert, HakuehdotModel,
+                                    $modal, Alert, Organisaatio, HakuehdotModel,
                                     OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
@@ -319,22 +319,41 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
     $scope.menuItems = [
         {"name": $filter('i18n')("Organisaatiot.tarkastele",         ""), "url": ""},
         {"name": $filter('i18n')("Organisaatiot.muokkaa",            ""), "url": "/edit"},
-        {"name": $filter('i18n')("Organisaatiot.luoAliorganisaatio", ""), "url": "/new"},
-        {"name": $filter('i18n')("Organisaatiot.poista",             ""), "url": "/delete"}
+        {"name": $filter('i18n')("Organisaatiot.luoAliorganisaatio", ""), "url": "/new"}
     ];
 
     $scope.tarkemmatHakuehdotVisible = false;
-    
-    $scope.addClass = function (cssClass, ehto) {
-        if (ehto) {
-            return cssClass;
-        } else {
-            return "";
-        }
+
+    $scope.isDeleteAllowed = function(node) {
+        // TODO: Tarkistetaan myös onko oikeuksia poistaa organisaatio
+        return $scope.model.isLeaf(node);
     };
     
     $scope.menuClicked = function(node, path) {
         $location.path($location.path() + "/" + node.oid + path);
+    };
+
+    $scope.deleteOrganisaatio = function (node) {
+        var modalInstance = $modal.open({
+            templateUrl: 'organisaationpoisto.html'
+        });
+        
+        modalInstance.result.then(function () {
+            console.log('Organisaatio poisto vahvistettu: ' + node.oid);
+                        
+            Organisaatio.delete({oid: node.oid}, function(result) {
+                console.log(result);
+                // TODO: Pitäskö tehdä refresh
+            }, 
+            // Error case
+            function(response) {
+                console.log("Organisaatio delete response: " + response.status);
+                Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", ""), true);
+            });
+            
+        }, function () {
+            console.log('Organisaation poistoa ei vahvistettu: ' + node.oid);
+        });
     };
     
     $scope.search = function() {
