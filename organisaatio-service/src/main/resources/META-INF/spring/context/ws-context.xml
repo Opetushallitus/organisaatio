@@ -30,6 +30,9 @@
         REST Services
     -->
 
+    <!-- NON SERVICE VERSION -->
+    <bean id="oidService" class="fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl" />
+
     <!-- object to json -->
     <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

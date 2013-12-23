@@ -25,6 +25,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.oid.service.ExceptionMessage;
+import fi.vm.sade.oid.service.OIDService;
+import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -34,6 +37,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.LearningInstitutionExistsException;
 import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
@@ -90,6 +94,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private KoodiService koodiService;
     @Autowired
     private KoodistoService koodistoService;
+    @Autowired
+    private OIDService oidService;
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -577,7 +583,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
         //Tarkistetaan OID
-        if (model.getOid() == null) {
+        if (model.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
         } else if (!updating) {
             if ((model.getOid() != null) && (organisaatioDAO.findByOid(model.getOid()) != null)) {
@@ -611,6 +617,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             entity.setId(orgEntity.getId());
+        }
+        try {
+            generateOids(entity);
+            generateOidsMetadata(entity.getMetadata());
+        }
+        catch (ExceptionMessage em) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         createParentPath(entity, model.getParentOid());
 
@@ -729,17 +742,33 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
-        throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, "not implemented");
-        /*
+        //throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, "not implemented");
         try {
-
             Organisaatio org = save(ordto, false, false);
             OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
             return ret;
         } catch (ValidationException ex) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, ex.toString());
         }
-        */
+    }
+
+    public void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
+        if (organisaatio.getOid() == null) {
+            organisaatio.setOid(oidService.newOid(NodeClassCode.TOIMIPAIKAT));
+        }
+        for (Yhteystieto curYt : organisaatio.getYhteystiedot()) {
+            if (curYt.getYhteystietoOid() == null) {
+                curYt.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
+            }
+        }
+    }
+
+    public void generateOidsMetadata(OrganisaatioMetaData omd) throws ExceptionMessage {
+        for (Yhteystieto curYt : omd.getYhteystiedot()) {
+            if (curYt.getYhteystietoOid() == null) {
+                curYt.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
+            }
+        }
     }
 
 }

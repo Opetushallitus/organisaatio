@@ -300,6 +300,12 @@
             <artifactId>koodisto-api</artifactId>
             <version>${koodisto.api.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>fi.vm.sade.oid</groupId>
+            <artifactId>oid-api</artifactId>
+            <version>${oid.api.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>

@@ -101,14 +101,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             Yhteystieto y = convertYhteystietoGeneric(m);
             if (y != null) {
                 yhteystietos.add(y);
-            } else {
-                if (m != null) {
-                    for (Map.Entry<String, String> e : m.entrySet()) {
-                        LOG.info("-.-.-.-.-.-.-.-.-. " + e.getKey() + " -> " + e.getValue());
-                    }
-                } else {
-                    LOG.info("-.-.-.-.-.-.-.-.-. m is null");
-                }
             }
         }
         s.setYhteystiedot(yhteystietos);
@@ -258,24 +250,31 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             try {
                 if (s.containsKey("email")) {
                     Email v = convertEmail(s.get("email"));
-                    v.setId(Long.parseLong(s.get("id")));
-                    v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    if (s.containsKey("yhteystietoOid")) {
+                        v.setId(Long.parseLong(s.get("id")));
+                        v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    }
                     return v;
                 } else if (s.containsKey("www")) {
                     Www v = convertWww(s.get("www"));
-                    v.setId(Long.parseLong(s.get("id")));
-                    v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    if (s.containsKey("yhteystietoOid")) {
+                        v.setId(Long.parseLong(s.get("id")));
+                        v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    }
                     return v;
                 } else if (s.containsKey("numero")) {
                     Puhelinnumero v = convertPuhelinnumero(s.get("numero"), s.get("tyyppi"));
-                    v.setId(Long.parseLong(s.get("id")));
-                    v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    if (s.containsKey("yhteystietoOid")) {
+                        v.setId(Long.parseLong(s.get("id")));
+                        v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    }
                     return v;
                 } else if (s.containsKey("osoite")) {
-                    LOG.error("id = " + s.get("id"));
-                    Long id = Long.parseLong(s.remove("id"));
                     Osoite v = convertMapToOsoite(s, null);
-                    v.setId(id);
+                    if (s.containsKey("yhteystietoOid")) {
+                        Long id = Long.parseLong(s.remove("id"));
+                        v.setId(id);
+                    }
                     return v;
                 }
             }
