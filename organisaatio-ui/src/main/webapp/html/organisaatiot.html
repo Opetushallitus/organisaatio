@@ -10,8 +10,14 @@
         <span class="dropdown">
           <a class="dropmenu dropdown-toggle"></a>
           <ul class="dropdown-menu">
-            <li ng-repeat="choice in menuItems">
-              <a ng-click="menuClicked(data, choice.url)">{{choice.name}}</a>
+            <li>
+              <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
+            </li>
+            <li ng-if="access.update">
+              <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
+            </li>
+            <li ng-if="access.create">
+              <a ng-click="createAliOrganisaatio(data)">{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
             </li>
             <li ng-if="isDeleteAllowed(data)">
               <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>

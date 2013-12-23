@@ -311,26 +311,44 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
 
 
 function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
-                                    $modal, Alert, Organisaatio, HakuehdotModel,
-                                    OrganisaatioTreeModel) {
+                                    $modal, Alert, Organisaatio, AuthService,
+                                    HakuehdotModel, OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
-
-    $scope.menuItems = [
-        {"name": $filter('i18n')("Organisaatiot.tarkastele",         ""), "url": ""},
-        {"name": $filter('i18n')("Organisaatiot.muokkaa",            ""), "url": "/edit"},
-        {"name": $filter('i18n')("Organisaatiot.luoAliorganisaatio", ""), "url": "/new"}
-    ];
-
     $scope.tarkemmatHakuehdotVisible = false;
 
-    $scope.isDeleteAllowed = function(node) {
-        // TODO: Tarkistetaan myös onko oikeuksia poistaa organisaatio
-        return $scope.model.isLeaf(node);
+    $scope.access = {
+      'create' : false,
+      'update' : false,
+      'delete' : false
     };
-    
-    $scope.menuClicked = function(node, path) {
-        $location.path($location.path() + "/" + node.oid + path);
+
+    AuthService.updateOrg("APP_ORGANISAATIOHALLINTA").then(function(){
+        $scope.access.update = true;
+    });
+
+    AuthService.updateOph("APP_ORGANISAATIOHALLINTA").then(function(){
+        $scope.access.update = true;
+    });
+
+    AuthService.crudOrg("APP_ORGANISAATIOHALLINTA").then(function(){
+        $scope.access.create = true;
+        $scope.access.update = true;
+    });
+
+    AuthService.crudOph("APP_ORGANISAATIOHALLINTA").then(function(){
+        $scope.access.create = true;
+        $scope.access.update = true;
+        $scope.access.delete = true;
+    });
+
+    $scope.isDeleteAllowed = function(node) {
+        // Tarkistetaan onko oikeuksia poistaa organisaatio
+        if ($scope.access.delete === false) {
+            return false;
+        }
+        
+        return $scope.model.isLeaf(node);
     };
 
     $scope.deleteOrganisaatio = function (node) {
@@ -354,6 +372,11 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
         }, function () {
             console.log('Organisaation poistoa ei vahvistettu: ' + node.oid);
         });
+    };
+
+    $scope.createAliOrganisaatio = function (node) {
+        console.log("Aliorganisaation luontia ei toteutettu: " + node.oid);
+        Alert.add("warning", "Aliorganisaation luontia ei ole vielä toteutettu", true);
     };
     
     $scope.search = function() {
