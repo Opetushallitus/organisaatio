@@ -318,25 +318,27 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
     $scope.tarkemmatHakuehdotVisible = false;
 
     $scope.access = {
+      'createTopLevel' : false,
       'create' : false,
       'update' : false,
       'delete' : false
     };
 
-    AuthService.updateOrg("APP_ORGANISAATIOHALLINTA").then(function(){
+    AuthService.updateOrg("APP_ORGANISAATIOHALLINTA").then(function() {
         $scope.access.update = true;
     });
 
-    AuthService.updateOph("APP_ORGANISAATIOHALLINTA").then(function(){
+    AuthService.updateOph("APP_ORGANISAATIOHALLINTA").then(function() {
         $scope.access.update = true;
     });
 
-    AuthService.crudOrg("APP_ORGANISAATIOHALLINTA").then(function(){
+    AuthService.crudOrg("APP_ORGANISAATIOHALLINTA").then(function() {
         $scope.access.create = true;
         $scope.access.update = true;
     });
 
-    AuthService.crudOph("APP_ORGANISAATIOHALLINTA").then(function(){
+    AuthService.crudOph("APP_ORGANISAATIOHALLINTA").then(function() {
+        $scope.access.createTopLevel = true;
         $scope.access.create = true;
         $scope.access.update = true;
         $scope.access.delete = true;

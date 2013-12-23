@@ -84,7 +84,9 @@
 
 <div class="form-row">
     <span class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</span>
-    <input class="button small" ng-click="luoYlinTaso()" value="{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}">
+    <span ng-if="access.createTopLevel">
+        <input class="button small" ng-click="luoYlinTaso()" value="{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}">
+    </span>        
 </div>
 
 <div class="">
