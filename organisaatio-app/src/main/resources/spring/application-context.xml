@@ -29,6 +29,7 @@
                 <prop key="cas_mode">front</prop>
                 <prop key="cas_key">organisaatio-app</prop>
                 <prop key="cas_service">${cas.service.organisaatio-app}</prop>
+                <prop key="cas_callback_url">${cas.callback.organisaatio-app}</prop>
                 <prop key="spring_security_default_access">hasRole('ROLE_APP_ORGANISAATIOHALLINTA')</prop>
             </util:properties>
         </property>
