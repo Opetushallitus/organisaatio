@@ -237,7 +237,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         for (Map.Entry<String, Map<String, String>> e : t.getData().entrySet()) {
             NamedMonikielinenTeksti nmt = new NamedMonikielinenTeksti();
             nmt.setKey(e.getKey());
-            nmt.setName(convertMapToMonikielinenTeksti(e.getValue()));
+            nmt.setValue(convertMapToMonikielinenTeksti(e.getValue()));
             nmtSet.add(nmt);
         }
         s.setValues(nmtSet);
