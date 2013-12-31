@@ -352,7 +352,7 @@
 
             <div class="view-column cols-2 last">
                 <input id="nimifi" type="text" name="nimifi" 
-                       ng-model="model.organisaatio.nimi.fi"
+                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_fi"
                        placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" codes-combined-field/>
                 <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -361,7 +361,7 @@
         <div class="view-row">
             <div class="view-column col-indent-1 cols-2 last">
                 <input id="nimisv" type="text" name="nimisv" 
-                       ng-model="model.organisaatio.nimi.sv"
+                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_sv"
                        placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" codes-combined-field/>
                 <span class="text-error" ng-show="form.nimisv.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -370,7 +370,7 @@
         <div class="view-row">
             <div class="view-column col-indent-1 cols-2 last">
                 <input id="nimise" type="text" name="nimien" 
-                       ng-model="model.organisaatio.nimi.en"
+                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_en"
                        placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" codes-combined-field/>
                 <span class="text-error" ng-show="form.nimien.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -484,132 +484,250 @@
                     {{'Organisaationmuokkaus.lisatiedot'| i18n}}
                 </div>
             </div>
-
-
-
         </div>
 
+        <!-- TODO: lisää välilehdet eri kielille -->
+        <div ng-init="ktlang='fi'">
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.yleiskuvaus'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.YLEISKUVAUS['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.esteettomyys'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.YESTEETOMYYS['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.oppimisymparisto'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.OPPIMISYMPARISTO['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.vuosikello'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.VUOSIKELLO['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.vastuuhenkilot'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.VASTUUHENKILOT['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.valintamenettely'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.VALINTAMENETTELY['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.ahot'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.AIEMMIN_HANKITTU_OSAAMINEN['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.kieliopinnot'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.KIELIOPINNOT['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.tyoharjoittelu'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.TYOHARJOITTELU['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.opiskelijaliikkuvuus'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.OPISKELIJALIIKKUVUUS['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+            <div class="view-row">
+                <div class="view-column cols-1 first">
+                    <div class="view-row-label">
+                        {{'Organisaationtarkastelu.kansainvalisyys'| i18n}}
+                    </div>
+                </div>
+                <div class="view-column cols-5 last">
+                    <textarea ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data.KANSAINVALISET_KOULUTUSOHJELMAT['kielivalikoima_'+ktlang]"></textarea>  
+                </div>
+            </div>
+        </div> <!-- ktlang -->
+
+    </div> <!-- ktexpanded -->         
+
+    <div class="view-row">
+        <div class="view-column cols-2 first last">
+            <div class="view-row-label">
+                <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
+                    <div class="expandable collapsed" ng-show="!oeexpanded">
+                        {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+                    </diV>
+                    <div class="expandable expanded" ng-show="oeexpanded">
+                        {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                    </diV>
+                </a>
+            </div>
+        </div>
+    </div>      
+
+    <div ng-show="oeexpanded">
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.yleiskuvaus'| i18n}}
+                    {{'Organisaationtarkastelu.kustannukset'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.YLEISKUVAUS"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.KUSTANNUKSET"></textarea>  
             </div>
         </div>
 
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.esteettomyys'| i18n}}
+                    {{'Organisaationtarkastelu.asuminen'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.ESTEETOMYYS"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.TIETOA_ASUMISESTA"></textarea>  
             </div>
         </div>
 
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.oppimisymparisto'| i18n}}
+                    {{'Organisaationtarkastelu.rahoitus'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPPIMISYMPARISTO"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.RAHOITUS"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.vuosikello'| i18n}}
+                    {{'Organisaationtarkastelu.ruokailu'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VUOSIKELLO"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPISKELIJARUOKAILU"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.vastuuhenkilot'| i18n}}
+                    {{'Organisaationtarkastelu.terveydenhuolto'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VASTUUHENKILOT"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.TERVEYDENHUOLTOPALVELUT"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.valintamenettely'| i18n}}
+                    {{'Organisaationtarkastelu.vakuutukset'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VALINTAMENETTELY"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VAKUUTUKSET"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.ahot'| i18n}}
+                    {{'Organisaationtarkastelu.opiskelijaliikunta'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.AIEMMIN_HANKITTU_OSAAMINEN"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPISKELIJALIIKUNTA"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.kieliopinnot'| i18n}}
+                    {{'Organisaationtarkastelu.vapaaaika'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.KIELIOPINNOT"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.VAPAA_AIKA"></textarea>  
             </div>
         </div>
-        
+
         <div class="view-row">
             <div class="view-column cols-1 first">
                 <div class="view-row-label">
-                    {{'Organisaationtarkastelu.tyoharjoittelu'| i18n}}
+                    {{'Organisaationtarkastelu.opiskelijajarjestot'| i18n}}
                 </div>
             </div>
             <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.TYOHARJOITTELU"></textarea>  
+                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPISKELIJA_JARJESTOT"></textarea>  
             </div>
         </div>
-        
-        <div class="view-row">
-            <div class="view-column cols-1 first">
-                <div class="view-row-label">
-                    {{'Organisaationtarkastelu.opiskelijaliikkuvuus'| i18n}}
-                </div>
-            </div>
-            <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.OPISKELIJALIIKKUVUUS"></textarea>  
-            </div>
-        </div>
-        <div class="view-row">
-            <div class="view-column cols-1 first">
-                <div class="view-row-label">
-                    {{'Organisaationtarkastelu.kansainvalisyys'| i18n}}
-                </div>
-            </div>
-            <div class="view-column cols-5 last">
-                <textarea ui-tinymce='{menubar:"false"}' ng-model="model.uriLocalizedNames.KANSAINVALISET_KOULUTUSOHJELMAT"></textarea>  
-            </div>
-        </div>
-        
-    </div>            
+
+    </div> <!-- oeexpanded --> 
 
 
 

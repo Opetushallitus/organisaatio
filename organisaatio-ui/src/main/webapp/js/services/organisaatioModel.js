@@ -33,87 +33,69 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         // Päätason yhteystiedot mäpättynä tyypin perusteella
         this.yhteystiedot = {};
-
-        // Sosiaaline media
+        
+        // Sosiaalinen media
         this.sometext = {};
         this.some = [];
-        sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
-        for (var st in sometypes) {
-            this.some.push({'type': sometypes[st], 'nimi': $filter('i18n')('Organisaationtarkastelu.' + sometypes[st])});
+        this.sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
+        for (var st in this.sometypes) {
+            this.some.push({'type': this.sometypes[st], 'nimi': $filter('i18n')('Organisaationtarkastelu.' + this.sometypes[st])});
         }
+
+        // koulutustarjoajatietojen monikielinen teksti
+        this.lop = {};
 
         // TODO: Add also parent needed possibly for moving organisaatio
 
-        // Palauta lokalisoitu arvo tai ensimmäinen jos lokaalia ei löydy
+        // Palauta lokalisoitu arvo.
+        // Jos lokalisoitua arvoa ei löydy, 
+        //     palautetaan ensimmäinen löydetty arvo jos create==false
+        //     tai luodaan uusi tyhjä arvo ja palautetaan se jos create==true
         // fi-lokaalilla esim:
         //   func({ "fi" : "Suomenkielinen nimi"}, "") => "Suomenkielinen nimi"
         //   func({ "kielivalikoima_fi" : "Suomenkielinen nimi"}, "kielivalikoima_") => "Suomenkielinen nimi"
         // sv-lokaalilla esim:
         //   func({ "fi" : "Suomenkielinen nimi"}, "") => "Suomenkielinen nimi"
         //   func({ "fi" : "Suomenkielinen nimi" , "sv" : "Samma på svenska"}, "") => "Samma på svenska"
-        getLocalizedValue = function(res, prefix) {
-            var lang = KoodistoKoodi.getLanguage().toLowerCase();
+        getLocalizedValue = function(res, prefix, create, language) {
+            var lang = (language ? language : KoodistoKoodi.getLanguage().toLowerCase());
             var ret = "";
             if (res) {
                 ret = res[prefix + lang];
                 if (!ret) {
-                    for (i in res) {
-                        return res[i];
+                    if (create) {
+                        res[prefix + lang] = "";
+                        return res[prefix + lang];
+                    } else {
+                        // Palauta ensimmäinen arvo
+                        for (i in res) {
+                            return res[i];
+                        }
                     }
                 }
             }
             return ret;
         };
 
+        isMonikielinenTeksti = function(key) {
+            return model.sometypes.indexOf(key) === -1;
+        };
+
         refreshKoulutustarjoajatiedot = function(result) {
             if (result.metadata) {
                 model.uriLocalizedNames["hakutoimistonNimi"] =
-                        getLocalizedValue(result.metadata.hakutoimistonNimi, "kielivalikoima_");
-
-                if (result.metadata.data.YLEISKUVAUS) {
-                    model.uriLocalizedNames["YLEISKUVAUS"] =
-                            getLocalizedValue(result.metadata.data.YLEISKUVAUS, "kielivalikoima_");
+                        getLocalizedValue(result.metadata.hakutoimistonNimi, "kielivalikoima_", false);
+                
+                model.lop["fi"] = {};
+                
+                for (var k in result.metadata.data) {
+                    if (isMonikielinenTeksti(k)) {
+                        // TODO: eri kielet omiin indekseihin
+                        model.uriLocalizedNames[k] = getLocalizedValue(result.metadata.data[k], "kielivalikoima_", true, "fi");
+                        model.lop["fi"] = result.metadata.data[k];
+                    }
                 }
-                if (result.metadata.data.ESTEETOMYYS) {
-                    model.uriLocalizedNames["ESTEETOMYYS"] =
-                            getLocalizedValue(result.metadata.data.ESTEETOMYYS, "kielivalikoima_");
-                }
-                if (result.metadata.data.OPPIMISYMPARISTO) {
-                    model.uriLocalizedNames["OPPIMISYMPARISTO"] =
-                            getLocalizedValue(result.metadata.data.OPPIMISYMPARISTO, "kielivalikoima_");
-                }
-                if (result.metadata.data.VASTUUHENKILOT) {
-                    model.uriLocalizedNames["VASTUUHENKILOT"] =
-                            getLocalizedValue(result.metadata.data.VASTUUHENKILOT, "kielivalikoima_");
-                }
-                if (result.metadata.data.AIEMMIN_HANKITTU_OSAAMINEN) {
-                    model.uriLocalizedNames["AIEMMIN_HANKITTU_OSAAMINEN"] =
-                            getLocalizedValue(result.metadata.data.AIEMMIN_HANKITTU_OSAAMINEN, "kielivalikoima_");
-                }
-                if (result.metadata.data.VALINTAMENETTELY) {
-                    model.uriLocalizedNames["VALINTAMENETTELY"] =
-                            getLocalizedValue(result.metadata.data.VALINTAMENETTELY, "kielivalikoima_");
-                }
-                if (result.metadata.data.VUOSIKELLO) {
-                    model.uriLocalizedNames["VUOSIKELLO"] =
-                            getLocalizedValue(result.metadata.data.VUOSIKELLO, "kielivalikoima_");
-                }
-                if (result.metadata.data.KIELIOPINNOT) {
-                    model.uriLocalizedNames["KIELIOPINNOT"] =
-                            getLocalizedValue(result.metadata.data.KIELIOPINNOT, "kielivalikoima_");
-                }
-                if (result.metadata.data.OPISKELIJALIIKKUVUUS) {
-                    model.uriLocalizedNames["OPISKELIJALIIKKUVUUS"] =
-                            getLocalizedValue(result.metadata.data.OPISKELIJALIIKKUVUUS, "kielivalikoima_");
-                }
-                if (result.metadata.data.KANSAINVALISET_KOULUTUSOHJELMAT) {
-                    model.uriLocalizedNames["KANSAINVALISET_KOULUTUSOHJELMAT"] =
-                            getLocalizedValue(result.metadata.data.KANSAINVALISET_KOULUTUSOHJELMAT, "kielivalikoima_");
-                }
-                if (result.metadata.data.TYOHARJOITTELU) {
-                    model.uriLocalizedNames["TYOHARJOITTELU"] =
-                            getLocalizedValue(result.metadata.data.TYOHARJOITTELU, "kielivalikoima_");
-                }
+                result.metadata.data.YLEISKUVAUS.kielivalikoima_fi = "footer";
             }
         };
 
@@ -121,6 +103,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.uriLocalizedNames.opiskelijanedut = {};
 
             if (result.metadata) {
+                // mäppäys tehdään jo refreshKoulutustarjoajatiedot -funktiossa
+                
+                /*
                 if (result.metadata.data.KUSTANNUKSET) {
                     model.uriLocalizedNames.opiskelijanedut.KUSTANNUKSET =
                             getLocalizedValue(result.metadata.data.KUSTANNUKSET, "kielivalikoima_");
@@ -157,6 +142,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.uriLocalizedNames.opiskelijanedut.OPISKELIJA_JARJESTOT =
                             getLocalizedValue(result.metadata.data.OPISKELIJA_JARJESTOT, "kielivalikoima_");
                 }
+                */
             }
         };
 
@@ -223,7 +209,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         refresh = function(oid) {
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
-                model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "");
+                model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
 
                 if (model.mode === 'edit') {
                     finishModel();
