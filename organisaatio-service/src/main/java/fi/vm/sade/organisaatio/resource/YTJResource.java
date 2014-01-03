@@ -38,6 +38,7 @@ import fi.vm.sade.rajapinnat.ytj.api.YTJService;
 import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import java.util.ArrayList;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/ytj")
 @Component("ytjResource")
@@ -68,9 +69,7 @@ public class YTJResource {
             ex.printStackTrace();
             logger.error("YtjConnectionException : " + ex.toString());
             
-            // TODO: 
-            // Mitä palautetaan virhetilanteessa
-            //showMessage(I18N.getMessage("OrganisaatioTable.virheViesti"));
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
         }
         
         return ytj; 
@@ -89,9 +88,7 @@ public class YTJResource {
                 ex.printStackTrace();
                 logger.warn("YtjConnectionException : " + ex.toString());
 
-                // TODO: 
-                // Mitä palautetaan virhetilanteessa
-                //showMessage(I18N.getMessage("OrganisaatioTable.virheViesti"));
+                throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
             }
         }
         return ytjList;
