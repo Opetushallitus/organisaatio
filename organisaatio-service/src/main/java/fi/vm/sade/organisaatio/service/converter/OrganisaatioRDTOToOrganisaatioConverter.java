@@ -230,7 +230,10 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
 
         for (Map<String, String> yhteystieto : t.getYhteystiedot()) {
-            s.getYhteystiedot().add(convertYhteystietoGeneric(yhteystieto));
+            Yhteystieto y = convertYhteystietoGeneric(yhteystieto);
+            if (y != null) {
+                s.getYhteystiedot().add(y);
+            }
         }
 
         Set<NamedMonikielinenTeksti> nmtSet = new HashSet<NamedMonikielinenTeksti>();
@@ -248,28 +251,28 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
     private Yhteystieto convertYhteystietoGeneric(Map<String, String> s) {
         if (s != null) {
             try {
-                if (s.containsKey("email")) {
+                if (s.get("email") != null) {
                     Email v = convertEmail(s.get("email"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     return v;
-                } else if (s.containsKey("www")) {
+                } else if (s.get("www") != null) {
                     Www v = convertWww(s.get("www"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     return v;
-                } else if (s.containsKey("numero")) {
+                } else if (s.get("numero") != null) {
                     Puhelinnumero v = convertPuhelinnumero(s.get("numero"), s.get("tyyppi"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     return v;
-                } else if (s.containsKey("osoite")) {
+                } else if (s.get("osoite") != null) {
                     Osoite v = convertMapToOsoite(s, null);
                     if (s.containsKey("yhteystietoOid")) {
                         Long id = Long.parseLong(s.remove("id"));

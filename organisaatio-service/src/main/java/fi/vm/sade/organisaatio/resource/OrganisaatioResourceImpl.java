@@ -765,7 +765,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     public void generateOidsMetadata(OrganisaatioMetaData omd) throws ExceptionMessage {
         for (Yhteystieto curYt : omd.getYhteystiedot()) {
-            if (curYt.getYhteystietoOid() == null) {
+            if (curYt != null && curYt.getYhteystietoOid() == null) {
                 curYt.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
             }
         }
