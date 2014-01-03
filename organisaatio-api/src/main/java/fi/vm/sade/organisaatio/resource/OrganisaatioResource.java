@@ -143,18 +143,21 @@ public interface OrganisaatioResource {
     @POST
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Päivittää organisaation oid:llä", notes = "Operaatio päivittää organisaation tiedot annetulla oid:llä.", response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO updateOrganisaatio(@PathParam("oid") String oid, OrganisaatioRDTO ordto);
 
     @DELETE
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Poistaa organisaation oid:llä", notes = "Operaatio poistaa organisaation annetulla oid:llä.", response = String.class)
     public String deleteOrganisaatio(@PathParam("oid") String oid);
 
     @PUT
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Luo uuden organisaation", notes = "Operaatio luo uuden organisaation annetusta JSON:sta.", response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
 }
