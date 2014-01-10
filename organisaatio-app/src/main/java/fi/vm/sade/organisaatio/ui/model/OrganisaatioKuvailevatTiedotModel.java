@@ -63,6 +63,10 @@ public class OrganisaatioKuvailevatTiedotModel {
     
     private OsoiteDTO postiosoite;
     private OsoiteDTO kayntiosoite;
+    private OsoiteDTO ruotsiPostiOsoite;
+    private OsoiteDTO ruotsiKayntiOsoite;
+    private OsoiteDTO englantiPostiOsoite;
+    private OsoiteDTO englantiKayntiOsoite;    
     private PuhelinnumeroDTO puhelin;
     private PuhelinnumeroDTO faksi;
     private EmailDTO email;
@@ -100,9 +104,13 @@ public class OrganisaatioKuvailevatTiedotModel {
         	}
         }
 
-        
-        postiosoite = getOsoiteByTyyppi(OsoiteTyyppi.POSTI);
+        postiosoite  = getOsoiteByTyyppi(OsoiteTyyppi.POSTI);
         kayntiosoite = getOsoiteByTyyppi(OsoiteTyyppi.KAYNTI);
+        ruotsiPostiOsoite  = getOsoiteByTyyppi(OsoiteTyyppi.RUOTSI_POSTI);
+        ruotsiKayntiOsoite = getOsoiteByTyyppi(OsoiteTyyppi.RUOTSI_KAYNTI);
+        englantiPostiOsoite  = getOsoiteByTyyppi(OsoiteTyyppi.ULKOMAINEN_POSTI);
+        englantiKayntiOsoite = getOsoiteByTyyppi(OsoiteTyyppi.ULKOMAINEN_KAYNTI);
+        
         puhelin = getPuhelinnumeroByTyyppi(PuhelinNumeroTyyppi.PUHELIN);
         faksi = getPuhelinnumeroByTyyppi(PuhelinNumeroTyyppi.FAKSI);
         email = getEmailFromYts();
@@ -246,6 +254,18 @@ public class OrganisaatioKuvailevatTiedotModel {
         }
         if (kayntiosoite!=null && !Strings.isNullOrEmpty(kayntiosoite.getOsoite())) {
         	toimisto.getOpintotoimistoYhteystiedot().add(kayntiosoite);
+        }
+        if (ruotsiPostiOsoite!=null && !Strings.isNullOrEmpty(ruotsiPostiOsoite.getOsoite())) {
+        	toimisto.getOpintotoimistoYhteystiedot().add(ruotsiPostiOsoite);
+        }
+        if (ruotsiKayntiOsoite!=null && !Strings.isNullOrEmpty(ruotsiKayntiOsoite.getOsoite())) {
+        	toimisto.getOpintotoimistoYhteystiedot().add(ruotsiKayntiOsoite);
+        }
+        if (englantiPostiOsoite!=null && !Strings.isNullOrEmpty(englantiPostiOsoite.getOsoite())) {
+        	toimisto.getOpintotoimistoYhteystiedot().add(englantiPostiOsoite);
+        }
+        if (englantiKayntiOsoite!=null && !Strings.isNullOrEmpty(englantiKayntiOsoite.getOsoite())) {
+        	toimisto.getOpintotoimistoYhteystiedot().add(englantiKayntiOsoite);
         }
         if (faksi!=null && !Strings.isNullOrEmpty(faksi.getPuhelinnumero())) {
         	toimisto.getOpintotoimistoYhteystiedot().add(faksi);
@@ -457,6 +477,38 @@ public class OrganisaatioKuvailevatTiedotModel {
         this.kayntiosoite = kayntiosoite;
     }
 
+    public OsoiteDTO getRuotsiKayntiOsoite() {
+        return ruotsiKayntiOsoite;
+    }
+
+    public void setRuotsiKayntiOsoite(OsoiteDTO ruotsiKayntiOsoite) {
+        this.ruotsiKayntiOsoite = ruotsiKayntiOsoite;
+    }
+
+    public OsoiteDTO getRuotsiPostiOsoite() {
+        return ruotsiPostiOsoite;
+    }
+
+    public void setRuotsiPostiOsoite(OsoiteDTO ruotsiPostiOsoite) {
+        this.ruotsiPostiOsoite = ruotsiPostiOsoite;
+    }
+    
+    public OsoiteDTO getEnglantiKayntiOsoite() {
+        return englantiKayntiOsoite;
+    }
+
+    public void setEnglantiKayntiOsoite(OsoiteDTO englantiKayntiOsoite) {
+        this.englantiKayntiOsoite = englantiKayntiOsoite;
+    }
+
+    public OsoiteDTO getEnglantiPostiOsoite() {
+        return englantiPostiOsoite;
+    }
+
+    public void setEnglantiPostiOsoite(OsoiteDTO englantiPostiOsoite) {
+        this.englantiPostiOsoite = englantiPostiOsoite;
+    }
+    
     public PuhelinnumeroDTO getPuhelin() {
         return puhelin;
     }
