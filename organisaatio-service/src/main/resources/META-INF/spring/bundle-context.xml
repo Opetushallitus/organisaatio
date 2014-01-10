@@ -16,6 +16,7 @@
             <util:properties local-override="true">
                 <prop key="cas_key">organisaatio-service</prop>
                 <prop key="cas_service">${cas.service.organisaatio-service}</prop>
+                <prop key="cas_callback_url">${cas.callback.organisaatio-service}</prop>
                 <!--<prop key="spring_security_default_access">hasRole('ROLE_APP_ORGANISAATIOHALLINTA')</prop>-->
                 <!-- must be permitall by default because some methods in are completely open -->
                 <prop key="spring_security_default_access">permitAll</prop>
