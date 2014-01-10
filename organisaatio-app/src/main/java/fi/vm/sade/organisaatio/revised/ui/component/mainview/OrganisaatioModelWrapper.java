@@ -193,7 +193,20 @@ public class OrganisaatioModelWrapper {
 		}
 		return null;
 	}
-	
+
+        public OsoiteDTO getHakutoimistoOsoite(OsoiteTyyppi tp) {
+            for (YhteystietoDTO ytd : org.getKuvailevatTiedot().getHakutoimisto().getOpintotoimistoYhteystiedot()) {
+                if (ytd instanceof OsoiteDTO) {
+                    OsoiteDTO o = (OsoiteDTO) ytd;
+                    if (tp==o.getOsoiteTyyppi()) {
+                        return o;
+                    }
+                }
+            }
+            return null;
+        }
+
+        
 	private static class Tuple<K, V> implements Entry<K, V> {
 		
 		private final K key;

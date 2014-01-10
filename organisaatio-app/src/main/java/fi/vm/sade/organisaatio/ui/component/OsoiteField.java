@@ -260,8 +260,8 @@ public class OsoiteField extends CustomField {
 
     public void reCreateForeignLayout(boolean emptyField) {
         OsoiteDTO osoite = (OsoiteDTO)getValue();
-        if (osoite.getYtjPaivitysPvm() == null && emptyField) {
-        emptyFields();
+        if (osoite != null && osoite.getYtjPaivitysPvm() == null && emptyField) {
+            emptyFields();
         }
         mainLayout.removeAllComponents();
         mainLayout.setSizeFull();

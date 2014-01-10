@@ -402,7 +402,7 @@ public class OrganisaatioMainViewImpl extends AbstractOrganisaatioMainView imple
 
         tkKoodiLbl.setValue(organisaatioParam.getOppilaitosKoodi() != null ? organisaatioParam.getOppilaitosKoodi() : "");
 
-        bindKuvailevatTiedot(organisaatioParam.getKuvailevatTiedot());
+        bindKuvailevatTiedot(orgm, organisaatioParam.getKuvailevatTiedot());
         
         orgm.setDescendants(presenter.fetchChildOrganisaatios(organisaatioParam.getOid()));
         
@@ -455,7 +455,7 @@ public class OrganisaatioMainViewImpl extends AbstractOrganisaatioMainView imple
         }
     }
 
-    private void bindKuvailevatTiedot(OrganisaatioKuvailevatTiedotTyyppi kt) {
+    private void bindKuvailevatTiedot(OrganisaatioModelWrapper orgm, OrganisaatioKuvailevatTiedotTyyppi kt) {
 
     	if (kt==null) {
     		return;
@@ -489,24 +489,44 @@ public class OrganisaatioMainViewImpl extends AbstractOrganisaatioMainView imple
         		? null
     			: getTeksti(kt.getHakutoimisto().getOpintotoimistoNimi()));
 
+        oktPostiOsoite.setContentMode(Label.CONTENT_PREFORMATTED);
+        oktPostiOsoite.setValue(formatOsoitteet(
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.POSTI),
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.RUOTSI_POSTI),
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.ULKOMAINEN_POSTI)                        
+        		));
+        
+        oktKayntiOsoite.setContentMode(Label.CONTENT_PREFORMATTED);
+        oktKayntiOsoite.setValue(formatOsoitteet(
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.KAYNTI),
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.RUOTSI_KAYNTI),
+        		orgm.getHakutoimistoOsoite(OsoiteTyyppi.ULKOMAINEN_KAYNTI)                        
+        		));
+        
         for (YhteystietoDTO yt : kt.getHakutoimisto().getOpintotoimistoYhteystiedot()) {
         	if (yt instanceof EmailDTO) {
         		oktEmail.setValue(((EmailDTO) yt).getEmail());
         	} else if (yt instanceof OsoiteDTO) {
         		OsoiteDTO od = (OsoiteDTO) yt;
         		switch (od.getOsoiteTyyppi()) {
-        		case KAYNTI:
-        			oktKayntiOsoite.setCaption(OrganisaatioDisplayHelper.formatOsoiteAsString(od));
-        			break;
-        		case POSTI:
-        			oktPostiOsoite.setCaption(OrganisaatioDisplayHelper.formatOsoiteAsString(od));
-        			break;
-        		case MUU:
-        			oktMuuOsoite.setCaption(OrganisaatioDisplayHelper.formatOsoiteAsString(od));
-        			break;
-    			default:
-    				throw new NotImplementedException("Ei tuettu: "+od.getOsoiteTyyppi());
-        		}
+                            case KAYNTI:
+                                break;
+                            case POSTI:
+                                break;
+                            case RUOTSI_KAYNTI:
+                                break;
+                            case RUOTSI_POSTI:
+                                break;
+                            case ULKOMAINEN_KAYNTI:
+                                break;
+                            case ULKOMAINEN_POSTI:
+                                break;
+                            case MUU:
+                                oktMuuOsoite.setCaption(OrganisaatioDisplayHelper.formatOsoiteAsString(od));
+                                break;
+                            default:
+                                throw new NotImplementedException("Ei tuettu: "+od.getOsoiteTyyppi());
+                        }
         	} else if (yt instanceof PuhelinnumeroDTO) {
         		PuhelinnumeroDTO pd = (PuhelinnumeroDTO) yt;
         		switch (pd.getTyyppi()) {
