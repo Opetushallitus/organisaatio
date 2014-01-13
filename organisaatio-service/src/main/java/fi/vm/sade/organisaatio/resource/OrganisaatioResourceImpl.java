@@ -45,6 +45,7 @@ import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.service.OrganizationDateException;
 import fi.vm.sade.organisaatio.service.YtunnusException;
+import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -77,6 +79,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
+@PreAuthorize("isAuthenticated()")
 public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);
@@ -104,6 +107,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Value("${koodisto-uris.yhteishaunkoulukoodi}")
     private String yhKoulukoodiKoodisto;
+
+    @Autowired
+    PermissionChecker permissionChecker;
 
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
@@ -392,8 +398,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
-        //Organisaatio org = conversionService.convert(ordto, Organisaatio.class);
-        //createParentPath(org, ordto.getParentOid());
+        permissionChecker.checkSaveOrganisation(ordto, true);
         Organisaatio savedOrg = save(ordto, true, true);
         OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
         return ret;
@@ -728,6 +733,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     public String deleteOrganisaatio(String oid) {
+        permissionChecker.checkRemoveOrganisation(oid);
         Set<String> reindex = new HashSet<String>();
         Organisaatio po = removeOrganisaatioByOid(oid, reindex);
 
@@ -742,7 +748,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
-        //throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, "not implemented");
+        permissionChecker.checkSaveOrganisation(ordto, false);
         try {
             Organisaatio org = save(ordto, false, false);
             OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
@@ -764,9 +770,11 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     public void generateOidsMetadata(OrganisaatioMetaData omd) throws ExceptionMessage {
-        for (Yhteystieto curYt : omd.getYhteystiedot()) {
-            if (curYt != null && curYt.getYhteystietoOid() == null) {
-                curYt.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
+        if (omd != null) {
+            for (Yhteystieto curYt : omd.getYhteystiedot()) {
+                if (curYt != null && curYt.getYhteystietoOid() == null) {
+                    curYt.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
+                }
             }
         }
     }
