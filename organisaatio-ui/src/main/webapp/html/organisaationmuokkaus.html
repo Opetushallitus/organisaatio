@@ -815,8 +815,8 @@
     <b>{{model.uriLocalizedNames["nimi"]}}</b>
     <br>&nbsp;<br>
     <div class="align-right ">
-        <button type="button" auth="updateAny" auth-service="APP_ORGANISAATIOHALLINTA" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
-        <button type="button" auth="updateAny" auth-service="APP_ORGANISAATIOHALLINTA" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+        <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
+        <button type="button" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
     </div>
     <p>
 </div>

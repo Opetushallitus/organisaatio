@@ -2,7 +2,7 @@ var READ = "_READ";
 var UPDATE = "_READ_UPDATE";
 var CRUD = "_CRUD";
 var OPH_ORG = "1.2.246.562.10.00000000001";
-var ORGANISAATIO_URL_BASE = SERVICE_URL_BASE + "rest/";
+var ORGANISAATIO_URL_BASE = SERVICE_URL_BASE;
 var CAS_URL = CAS_URL || "/cas/myroles";
 
 app.factory('MyRolesModel', function ($q, $http) {
