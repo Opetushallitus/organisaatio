@@ -230,6 +230,8 @@
             <xs:enumeration value="kaynti"/>
             <xs:enumeration value="ruotsi_posti"/>
             <xs:enumeration value="ruotsi_kaynti"/>
+            <xs:enumeration value="ulkomainen_posti"/>
+            <xs:enumeration value="ulkomainen_kaynti"/>
             <xs:enumeration value="muu"/>
         </xs:restriction>
     </xs:simpleType>

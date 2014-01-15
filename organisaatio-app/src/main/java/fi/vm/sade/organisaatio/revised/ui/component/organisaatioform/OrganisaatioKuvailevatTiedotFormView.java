@@ -114,6 +114,27 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
     @PropertyId("postiosoite")
     private OsoiteField otPostiOsoite;
     
+    @PropertyId("ruotsiKayntiOsoite")
+    private OsoiteField ruotsiKayntiOsoite;
+
+    @PropertyId("ruotsiPostiOsoite")
+    private OsoiteField ruotsiPostiOsoite;
+
+    @PropertyId("englantiKayntiOsoite")
+    private OsoiteField englantiKayntiOsoite;
+
+    @PropertyId("englantiPostiOsoite")
+    private OsoiteField englantiPostiOsoite;
+
+    
+    private Label koRuotsiLbl;
+    private Label poRuotsiLbl;
+    private Label koSuomiLbl;
+    private Label poSuomiLbl;
+    private Label koEnglantiLbl;
+    private Label poEnglantiLbl;
+    
+
     /**
      * Hakutoimisto phone
      */
@@ -282,7 +303,7 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         VerticalLayout placeholder = UiUtil.verticalLayout();
         placeholder.setHeight("30px");
         addComponent(placeholder);
-        mainFormGrid = new GridLayout(4, 15);
+        mainFormGrid = new GridLayout(4, 21);
         mainFormGrid.setSpacing(true);
         mainFormGrid.setSizeUndefined();
         
@@ -293,14 +314,13 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         
         //Building the hakutoimisto ui layout.
         buildOpintotoimistoLayout();
-        VerticalLayout vl = UiUtil.verticalLayout();
-        vl.setHeight("20px");
-        mainFormGrid.addComponent(vl, 0, 7);
+        
+        mainFormGrid.addComponent(buildSplitPanel(), 0, 13, 3, 13);
         
         //Building the yhteyshenkilo ui layout
         buildYhteyshenkiloLayout();
         
-        mainFormGrid.addComponent(buildSplitPanel(), 0, 9, 3, 9);
+        mainFormGrid.addComponent(buildSplitPanel(), 0, 15, 3, 15);
         
         //building the SoMe ui layout
         buildSoMeLayout();
@@ -322,13 +342,13 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         hl.setMargin(false, false, false, true);
         Label soMeLabel = UiUtil.label(hl, T("soMeLabel"));
         soMeLabel.addStyleName(Oph.LABEL_H2);
-        mainFormGrid.addComponent(hl, 0, 10);
+        mainFormGrid.addComponent(hl, 0, 16);
         
-        facebookLink = createLeftSomeField("facebook", 11);
+        facebookLink = createLeftSomeField("facebook", 17);
         facebookLink.setSizeFull();
-        linkedInLink = createLeftSomeField("linkedIn", 12);
+        linkedInLink = createLeftSomeField("linkedIn", 18);
         linkedInLink.setSizeFull();
-        muuLink1 = createLeftSomeField("muu", 13);
+        muuLink1 = createLeftSomeField("muu", 19);
         muuLink1.setSizeFull();
 
         GridLayout ytVl = new GridLayout(2,3);
@@ -342,7 +362,7 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         muuLink2 = createRightSomeField("muu", ytVl, 2);
         muuLink2.setSizeFull();
 
-        this.mainFormGrid.addComponent(ytVl, 2,11,2,13);
+        this.mainFormGrid.addComponent(ytVl, 2, 17, 2, 19);
         mainFormGrid.setComponentAlignment(ytVl, Alignment.TOP_LEFT);
     }
     
@@ -395,8 +415,13 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         createNimiLayout();
         
         //Creation of the address and other contact components.
-        createOsoiteLayout();
+        createKayntiOsoitteetLayout();
+        createPostiOsoitteetLayout();
         
+        createEnglantiKayntiOsoitteetLayout();
+        createEnglantiPostiOsoitteetLayout();
+        
+        createMuutYhteystiedotLayout();
     }
     
 
@@ -404,56 +429,135 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
     /**
      * Creation of the address and other contact components.
      */
-    private void createOsoiteLayout() {
-       
-        otKayntiOsoite = createOsoiteField("otKayntiOsoite", 5);
-        otPostiOsoite = createOsoiteField("otPostiOsoite", 6);
-        
-        GridLayout ytVl = new GridLayout(2,4);
-        ytVl.setSizeUndefined();
-        ytVl.setSpacing(true);
-        
-        otPuhelin = createYhteystietoField("otPuhelin", ytVl, 0); 
-        otEmail = createYhteystietoField("otEmail", ytVl, 1);
-        otFax = createYhteystietoField("otFax", ytVl, 2);
-        otWww = createYhteystietoField("otWww", ytVl, 3);
-        
-        mainFormGrid.addComponent(ytVl, 2, 5, 2, 6);
-        mainFormGrid.setComponentAlignment(ytVl, Alignment.TOP_LEFT);
-        
+    private void createMuutYhteystiedotLayout() {
+        otPuhelin = createMuuYhteystietoFieldLayout("otPuhelin", 9); 
+        otFax = createMuuYhteystietoFieldLayout("otFax", 10);
+        otEmail = createMuuYhteystietoFieldLayout("otEmail", 11);
+        otEmail.setWidth("327px");
+        otWww = createMuuYhteystietoFieldLayout("otWww", 12);
+        otWww.setWidth("327px");
     }
-    
-    private OsoiteField createOsoiteField(String osoiteKey, int row) {
-        VerticalLayout osoiteLabel = createLabelLayout(T(osoiteKey));
-        mainFormGrid.addComponent(osoiteLabel, 0, row);
-        mainFormGrid.setComponentAlignment(osoiteLabel, Alignment.TOP_RIGHT);
-        VerticalLayout osoiteLayout = new VerticalLayout();
-        osoiteLayout.setSizeUndefined();
-        osoiteLayout.setWidth("450px");
-        OsoiteField osoiteField = new OsoiteField();
-        osoiteLayout.addComponent(osoiteField);
-        mainFormGrid.addComponent(osoiteLayout, 1, row);
-        mainFormGrid.setComponentAlignment(osoiteLayout, Alignment.MIDDLE_LEFT);
-        osoiteField.addListener(this.changeListener);
-        return osoiteField;
-    }
-    
-    private TextField createYhteystietoField(String labelKey, GridLayout ytVl, int row) {
-        VerticalLayout ytLabel = createLabelLayout(T(labelKey));
-        ytLabel.setWidth("100px");
-        ytLabel.setSpacing(true);
-        ytVl.addComponent(ytLabel, 0,row);
-        ytVl.setComponentAlignment(ytLabel, Alignment.MIDDLE_RIGHT);
+
+    private TextField createMuuYhteystietoFieldLayout(String labelKey, int row) {
+        VerticalLayout fieldLabel = createLabelLayout(T(labelKey));
+        mainFormGrid.addComponent(fieldLabel, 0, row);
+        mainFormGrid.setComponentAlignment(fieldLabel, Alignment.MIDDLE_RIGHT);
+ 
         VerticalLayout ytLayout = new VerticalLayout();
         ytLayout.setHeight("40px");
         ytLayout.setWidth("450px");
         ytLayout.setSpacing(false);
         TextField ytField = UiUtil.textField(ytLayout, "", "", false);
         ytLayout.setComponentAlignment(ytField, Alignment.MIDDLE_LEFT);
-        ytVl.addComponent(ytLayout, 1, row);
-        ytVl.setComponentAlignment(ytLayout, Alignment.MIDDLE_LEFT);
+        mainFormGrid.addComponent(ytLayout, 1, row);
+        mainFormGrid.setComponentAlignment(ytLayout, Alignment.MIDDLE_LEFT);
         ytField.addListener(this.changeListener);
+        
         return ytField;
+    }
+    
+    private void createKayntiOsoitteetLayout()  {
+        VerticalLayout kayntiOsoiteLabel = createLabelLayout(T("otKayntiOsoite"));
+        mainFormGrid.addComponent(kayntiOsoiteLabel, 0, 5);
+        mainFormGrid.setComponentAlignment(kayntiOsoiteLabel, Alignment.TOP_RIGHT);
+        
+        VerticalLayout koVl1 = new VerticalLayout();
+        
+        koSuomiLbl = new Label(T("suomeksi"));
+        HorizontalLayout hlMarginWrapper = new HorizontalLayout();
+        otKayntiOsoite = new OsoiteField();
+        otKayntiOsoite.setImmediate(true);
+        otKayntiOsoite.addListener(this.changeListener);
+        hlMarginWrapper.addComponent(otKayntiOsoite);
+        hlMarginWrapper.setMargin(false, true, false, false);
+
+        koVl1.addComponent(koSuomiLbl);
+        koVl1.addComponent(hlMarginWrapper);
+
+        mainFormGrid.addComponent(koVl1, 1, 5, 1, 5);
+
+        VerticalLayout koVl2 = new VerticalLayout();
+        
+        koRuotsiLbl = new Label(T("ruotsiksi"));
+        ruotsiKayntiOsoite = new OsoiteField();
+        ruotsiKayntiOsoite.setImmediate(true);
+        ruotsiKayntiOsoite.addListener(this.changeListener);
+        ruotsiKayntiOsoite.setArSvensk(true);
+        koVl2.addComponent(koRuotsiLbl);
+        koVl2.addComponent(ruotsiKayntiOsoite);
+
+        otKayntiOsoite.setAlternative(ruotsiKayntiOsoite);
+
+        mainFormGrid.addComponent(koVl2, 2, 5, 2, 5);
+    }
+
+    private void createPostiOsoitteetLayout() {
+        VerticalLayout postiOsoiteLabel = createLabelLayout(T("otPostiOsoite"));
+        mainFormGrid.addComponent(postiOsoiteLabel, 0, 6);
+        mainFormGrid.setComponentAlignment(postiOsoiteLabel, Alignment.TOP_RIGHT);
+        
+        VerticalLayout poVl1 = new VerticalLayout();
+        poSuomiLbl = new Label(T("suomeksi"));
+        HorizontalLayout hlPostiMarginWrapper = new HorizontalLayout();
+        otPostiOsoite = new OsoiteField();
+        otPostiOsoite.setImmediate(true);
+        otPostiOsoite.addListener(this.changeListener);
+        hlPostiMarginWrapper.addComponent(otPostiOsoite);
+        hlPostiMarginWrapper.setMargin(false,true,false,false);
+        poVl1.addComponent(poSuomiLbl);
+        poVl1.addComponent(hlPostiMarginWrapper);
+
+        mainFormGrid.addComponent(poVl1, 1, 6, 1, 6);
+        
+        VerticalLayout poVl2 = new VerticalLayout();
+        poRuotsiLbl = new Label(T("ruotsiksi"));
+        ruotsiPostiOsoite = new OsoiteField();
+        ruotsiPostiOsoite.setImmediate(true);
+        ruotsiPostiOsoite.addListener(this.changeListener);
+        ruotsiPostiOsoite.setArSvensk(true);
+
+        poVl2.addComponent(poRuotsiLbl);
+        poVl2.addComponent(ruotsiPostiOsoite);
+        
+        otPostiOsoite.setAlternative(ruotsiPostiOsoite);
+
+        mainFormGrid.addComponent(poVl2, 2, 6, 2, 6);   
+    }
+
+    private void createEnglantiKayntiOsoitteetLayout()  {
+        VerticalLayout kayntiOsoiteLabel = createLabelLayout(T("otKayntiOsoite"));
+        mainFormGrid.addComponent(kayntiOsoiteLabel, 0, 7);
+        mainFormGrid.setComponentAlignment(kayntiOsoiteLabel, Alignment.TOP_RIGHT);
+        
+        VerticalLayout enKoVl = new VerticalLayout();
+        
+        koEnglantiLbl = new Label(T("englanniksi"));
+        englantiKayntiOsoite = new OsoiteField();
+        englantiKayntiOsoite.setImmediate(true);
+        englantiKayntiOsoite.addListener(this.changeListener);
+        englantiKayntiOsoite.reCreateForeignLayout(false);
+        enKoVl.addComponent(koEnglantiLbl);
+        enKoVl.addComponent(englantiKayntiOsoite);
+
+        mainFormGrid.addComponent(enKoVl, 1, 7, 1, 7);
+    }
+
+    private void createEnglantiPostiOsoitteetLayout()  {
+        VerticalLayout postiOsoiteLabel = createLabelLayout(T("otPostiOsoite"));
+        mainFormGrid.addComponent(postiOsoiteLabel, 0, 8);
+        mainFormGrid.setComponentAlignment(postiOsoiteLabel, Alignment.TOP_RIGHT);
+        
+        VerticalLayout enPoVl = new VerticalLayout();
+        
+        poEnglantiLbl = new Label(T("englanniksi"));
+        englantiPostiOsoite = new OsoiteField();
+        englantiPostiOsoite.setImmediate(true);
+        englantiPostiOsoite.addListener(this.changeListener);
+        englantiPostiOsoite.reCreateForeignLayout(false);
+        enPoVl.addComponent(poEnglantiLbl);
+        enPoVl.addComponent(englantiPostiOsoite);
+
+        mainFormGrid.addComponent(enPoVl, 1, 8, 1, 8);
     }
     
     /**
@@ -556,10 +660,13 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
      * The yhteyshenkilo fields are a separate form which is added to the main layout.
      */
     private void buildYhteyshenkiloLayout() {
+        HorizontalLayout hl = UiUtil.horizontalLayout();
+        hl.setMargin(false, false, false, true);
+        Label koordLabel = UiUtil.label(hl, T("koordLabel"));
+        koordLabel.addStyleName(Oph.LABEL_H2);
+        mainFormGrid.addComponent(hl, 0, 14);
+        mainFormGrid.setComponentAlignment(hl, Alignment.TOP_LEFT);
         
-        
-        VerticalLayout koordLabel = this.createLabelLayout(T("koordLabel"));
-        mainFormGrid.addComponent(koordLabel, 0,8);
         yhFormView = new YhteyshenkiloFormView(this.model.getEctsYhteyshenkilo(), parentOid, this, this.changeListener);
         
         BeanItem<YhteyshenkiloModel> bItem = new BeanItem<YhteyshenkiloModel>(yhFormView.getModel());
@@ -571,9 +678,7 @@ class OrganisaatioKuvailevatTiedotFormView extends VerticalLayout {
         yhForm.setValidationVisibleOnCommit(false);
         yhForm.setWidth("100%");
                                                                                                                                                                                                                                                                                                                                                                                                                                           
-        mainFormGrid.addComponent(yhForm, 1, 8);
-        
-        
+        mainFormGrid.addComponent(yhForm, 1, 14);        
     }
     
     private VerticalSplitPanel buildSplitPanel() {
