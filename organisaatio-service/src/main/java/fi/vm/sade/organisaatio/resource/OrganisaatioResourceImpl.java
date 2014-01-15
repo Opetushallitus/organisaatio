@@ -69,6 +69,7 @@ import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -396,7 +397,10 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return null;
     }
 
+
+
     @Override
+    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         permissionChecker.checkSaveOrganisation(ordto, true);
         Organisaatio savedOrg = save(ordto, true, true);
@@ -732,6 +736,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
+    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public String deleteOrganisaatio(String oid) {
         permissionChecker.checkRemoveOrganisation(oid);
         Set<String> reindex = new HashSet<String>();
@@ -747,6 +752,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
+    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
         permissionChecker.checkSaveOrganisation(ordto, false);
         try {

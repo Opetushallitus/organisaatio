@@ -6,17 +6,9 @@ app.directive('auth', function($animate, $timeout, AuthService) {
             element.addClass('ng-hide');
 
             var success = function() {
-                //if(additionalCheck()) {
-                    element.removeClass('ng-hide');
-                //}
+                element.removeClass('ng-hide');
             };
-            var additionalCheck = function() {
-                if(attrs.authAdditionalCheck) {
-                    var temp = $scope.$eval(attrs.authAdditionalCheck);
-                    return temp;
-                }
-                return true;
-            };
+
             $timeout(function() {
                 switch(attrs.auth) {
 
@@ -46,23 +38,24 @@ app.directive('auth', function($animate, $timeout, AuthService) {
                 }
             },0);
 
-//            attrs.$observe('authOrgs', function() {
-//                if(attrs.authOrgs) {
-//                    switch(attrs.auth) {
-//                        case "crud":
-//                            AuthService.crudOrg(attrs.authService, attrs.authOrg).then(success);
-//                            break;
-//
-//                        case "update":
-//                            AuthService.updateOrg(attrs.authService, attrs.authOrg).then(success);
-//                            break;
-//
-//                        case "read":
-//                            AuthService.readOrg(attrs.authService, attrs.authOrg).then(success);
-//                            break;
-//                    }
-//                }
-//            });
+            attrs.$observe('authOrg', function() {
+                if(attrs.authOrg) {
+                    console.log("auth-org: " + attrs.authOrg);
+                    switch(attrs.auth) {
+                        case "crudOrg":
+                            AuthService.crudOrg(attrs.authService, [attrs.authOrg]).then(success);
+                            break;
+
+                        case "updateOrg":
+                            AuthService.updateOrg(attrs.authService, [attrs.authOrg]).then(success);
+                            break;
+
+                        case "readOrg":
+                            AuthService.readOrg(attrs.authService, [attrs.authOrg]).then(success);
+                            break;
+                    }
+                }
+            });
 
         }
     };

@@ -59,19 +59,21 @@ app.factory('AuthService', function ($q, $http, $timeout, MyRolesModel) {
             MyRolesModel.then(function (model) {
                 if (orgs && orgs.length > 0) {
                     orgs.forEach(function(orgOid) {
-                        $http.get(ORGANISAATIO_URL_BASE + "organisaatio/" + orgOid + "/parentoids", { cache: true}).success(function (result) {
-                            var found = false;
-                            result.split("/").forEach(function (org) {
-                                if (accessFunction(service, org, model)) {
-                                    found = true;
+                        if (orgOid !== '') {
+                            $http.get(ORGANISAATIO_URL_BASE + "organisaatio/" + orgOid + "/parentoids", { cache: true}).success(function (result) {
+                                var found = false;
+                                result.split("/").forEach(function (org) {
+                                    if (accessFunction(service, org, model)) {
+                                        found = true;
+                                    }
+                                });
+                                if (found) {
+                                    deferred.resolve();
+                                } else {
+                                    deferred.reject();
                                 }
                             });
-                            if (found) {
-                                deferred.resolve();
-                            } else {
-                                deferred.reject();
-                            }
-                        });
+                        }
                     });
                 } else {
                     if (accessFunction(service, "", model)) {
