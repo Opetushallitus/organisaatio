@@ -293,8 +293,6 @@ class OrganisaatioViewPresenterImpl implements OrganisaatioViewPresenter {
     public List<OrganisaatioPerustieto> fetchChildOrganisaatios(String oid) {
         OrganisaatioSearchCriteria criteria = new OrganisaatioSearchCriteria();
         criteria.getOidRestrictionList().add(oid);
-        criteria.setLakkautetut(true);
-        criteria.setSuunnitellut(true);
 
         List<OrganisaatioPerustieto> childOrganisaatios = organisaatioSearchService.searchBasicOrganisaatios(criteria);
         return childOrganisaatios;

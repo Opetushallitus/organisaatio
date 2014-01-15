@@ -65,8 +65,8 @@ class SearchPanel extends VerticalLayout {
     private KoodistoComponent oppilaitosTyyppi;
     private Button searchButton;
     private Button clearButton;
-    private CheckBox lakkautetut;
-    private CheckBox suunnitellut;
+    private CheckBox vainLakkautetut;
+    private CheckBox vainAktiiviset;
     //private CheckBox oikeudet;
     private OrganisaatioSearchCriteria searchCriteria;
     private KoodistoHelper koodistoHelper;
@@ -188,8 +188,8 @@ class SearchPanel extends VerticalLayout {
         organisaatioTyyppi.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "organisaatioTyyppi"));
         oppilaitosTyyppi.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "oppilaitosTyyppi"));
         //oikeudet.setPropertyDataSource(new NestedMethodProperty(model, "oikeudet"));
-        lakkautetut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "lakkautetut"));
-        suunnitellut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "suunnitellut"));
+        vainLakkautetut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "vainLakkautetut"));
+        vainAktiiviset.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "vainAktiiviset"));
     }
 
     /**
@@ -198,8 +198,8 @@ class SearchPanel extends VerticalLayout {
     private void clearSelections() {
 
         searchBox.setImmediate(false);
-        searchCriteria.setLakkautetut(false);
-        searchCriteria.setSuunnitellut(false);
+        searchCriteria.setVainAktiiviset(false);
+        searchCriteria.setVainLakkautetut(false);
         searchCriteria.setOppilaitosTyyppi(null);
         searchCriteria.setOrganisaatioTyyppi(null);
         searchCriteria.setSearchStr(null);
@@ -223,12 +223,10 @@ class SearchPanel extends VerticalLayout {
         //oikeudet = new CheckBox(I18N.getMessage("c_oikeudet"));
 
         //lowerRow.addComponent(oikeudet);
-        lakkautetut = new CheckBox(I18N.getMessage("c_lakkautetut"));
-
-        lowerRow.addComponent(lakkautetut);
-        suunnitellut = new CheckBox(I18N.getMessage("c_suunnitellut"));
-
-        lowerRow.addComponent(suunnitellut);
+        vainLakkautetut = new CheckBox(I18N.getMessage("c_vainLakkautetut"));
+        lowerRow.addComponent(vainLakkautetut);
+        vainAktiiviset = new CheckBox(I18N.getMessage("c_vainAktiiviset"));
+        lowerRow.addComponent(vainAktiiviset);
 
         lowerRow.setSpacing(true);
         lowerRow.setMargin(false,false,true,false);
@@ -309,20 +307,20 @@ class SearchPanel extends VerticalLayout {
         this.clearButton = clearButton;
     }
 
-    public CheckBox getLakkautetut() {
-        return lakkautetut;
+    public CheckBox getVainLakkautetut() {
+        return vainLakkautetut;
     }
 
-    public void setLakkautetut(CheckBox lakkautetut) {
-        this.lakkautetut = lakkautetut;
+    public void setVainLakkautetut(CheckBox vainLakkautetut) {
+        this.vainLakkautetut = vainLakkautetut;
     }
 
-    public CheckBox getSuunnitellut() {
-        return suunnitellut;
+    public CheckBox getVainaktiiviset() {
+        return vainAktiiviset;
     }
 
-    public void setSuunnitellut(CheckBox suunnitellut) {
-        this.suunnitellut = suunnitellut;
+    public void setVainAktiiviset(CheckBox vainAktiiviset) {
+        this.vainAktiiviset = vainAktiiviset;
     }
 
     public OrganisaatioSearchCriteria getSearchCriteria() {
