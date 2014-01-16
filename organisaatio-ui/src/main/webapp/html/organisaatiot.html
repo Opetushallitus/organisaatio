@@ -8,18 +8,18 @@
         </span>
         <div class="view-column cols-3 first">
         <span class="dropdown">
-          <a class="dropmenu dropdown-toggle"></a>
-          <ul class="dropdown-menu">
+          <a class="dropmenu dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
+          <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
             <li>
               <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
             </li>
-            <li ng-if="access.update">
+            <li auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
               <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
             </li>
-            <li ng-if="access.create">
+            <li auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
               <a ng-click="createAliOrganisaatio(data)">{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
             </li>
-            <li ng-if="isDeleteAllowed(data)">
+            <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
               <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
             </li>
           </ul>
@@ -84,7 +84,7 @@
 
 <div class="form-row">
     <span class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</span>
-    <span ng-if="access.createTopLevel">
+    <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
         <input class="button small" ng-click="luoYlinTaso()" value="{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}">
     </span>        
 </div>

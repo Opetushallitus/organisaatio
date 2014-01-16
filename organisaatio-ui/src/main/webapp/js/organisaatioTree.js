@@ -311,45 +311,23 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
 
 
 function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
-                                    $modal, Alert, Organisaatio, AuthService,
+                                    $modal, Alert, Organisaatio, 
                                     HakuehdotModel, OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
+    $scope.currentOid = '';
 
-    $scope.access = {
-      'createTopLevel' : false,
-      'create' : false,
-      'update' : false,
-      'delete' : false
+    $scope.setCurrentOid = function(oid) {
+        $scope.currentOid = oid;
     };
 
-    AuthService.updateOrg("APP_ORGANISAATIOHALLINTA").then(function() {
-        $scope.access.update = true;
-    });
-
-    AuthService.updateOph("APP_ORGANISAATIOHALLINTA").then(function() {
-        $scope.access.update = true;
-    });
-
-    AuthService.crudOrg("APP_ORGANISAATIOHALLINTA").then(function() {
-        $scope.access.create = true;
-        $scope.access.update = true;
-    });
-
-    AuthService.crudOph("APP_ORGANISAATIOHALLINTA").then(function() {
-        $scope.access.createTopLevel = true;
-        $scope.access.create = true;
-        $scope.access.update = true;
-        $scope.access.delete = true;
-    });
+    $scope.isCurrentOid = function(oid) {
+        return $scope.currentOid === oid;
+    };
 
     $scope.isDeleteAllowed = function(node) {
-        // Tarkistetaan onko oikeuksia poistaa organisaatio
-        if ($scope.access.delete === false) {
-            return false;
-        }
-        
+        // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.isLeaf(node);
     };
 
