@@ -162,17 +162,15 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
             if (model.organisaatio.metadata && model.organisaatio.metadata.yhteystiedot) {
                 initYhteystiedot(model.organisaatio.metadata.yhteystiedot, model.mdyhteystiedot);
-            }
-        }
+            }            
+        };
 
         refresh = function(oid) {
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
                 model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
 
-                if (model.mode === 'edit') {
-                    finishModel();
-                }
+                finishModel();
                 refreshMetadata(result);
 
                 // Hae kaikki koodi-urit kerralla

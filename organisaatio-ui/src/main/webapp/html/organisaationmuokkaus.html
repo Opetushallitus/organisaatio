@@ -18,7 +18,7 @@
         </div>
         <div ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
             <div class="view-column cols-1">
-                <input type='checkbox' name="orgtyyppi{{$index}}"
+                <input type='checkbox' name="orgtyyppi"
                        ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1" 
                        ng-click="model.toggleCheck(tyyppi)">{{tyyppi}}
             </div>
@@ -41,16 +41,15 @@
         <div class="view-column cols-1">
             <input id="oppilaitoskoodi" type="text" maxlength="20" name="oppilaitoskoodi" 
                    ng-model="model.organisaatio.oppilaitosKoodi"
-                   placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d+$/"/>   
+                   placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d{5}$/"/>   
         </div>
         <div class="view-column cols-2 last">
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.required">
                 {{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}
                 {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
             </span>
-            <span class="text-error" ng-show="form.oppilaitoskoodi.$error.pattern">
-                {{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}
-                {{'Organisaationmuokkaus.validointi.numero'| i18n}}
+            <span class="text-error" ng-show="form.oppilaitoskoodi.$error.pattern">                
+                {{'Organisaationmuokkaus.validointi.oppilaitoskoodi'| i18n}}
             </span>
         </div> 
     </div>
