@@ -71,6 +71,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -785,4 +788,20 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
+    @Override
+    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    public String getRoles() {
+        StringBuilder ret = new StringBuilder("[");
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        for (GrantedAuthority ga : auth.getAuthorities()) {
+            ret.append("\"");
+            ret.append(ga.getAuthority().replace("ROLE_", ""));
+            ret.append("\",");
+        }
+        ret.setCharAt(ret.length()-1, ']');
+        return ret.toString();
+    }
+    
 }

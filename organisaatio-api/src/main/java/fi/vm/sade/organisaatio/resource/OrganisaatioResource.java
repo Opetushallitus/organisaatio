@@ -160,4 +160,9 @@ public interface OrganisaatioResource {
     @ApiOperation(value = "Luo uuden organisaation", notes = "Operaatio luo uuden organisaation annetusta JSON:sta.", response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
+    @GET
+    @Path("/myroles")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Palauttaa autentikoituneen käyttäjän roolit", notes = "Pitäisi testikäyttöön samat kuin /cas/myroles.", response = String.class)
+    public String getRoles();
 }
