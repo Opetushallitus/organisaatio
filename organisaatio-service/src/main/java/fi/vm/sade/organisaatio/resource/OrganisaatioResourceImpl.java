@@ -40,6 +40,7 @@ import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.service.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
@@ -405,7 +406,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
-        permissionChecker.checkSaveOrganisation(ordto, true);
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, true);
+        }
+        catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
         Organisaatio savedOrg = save(ordto, true, true);
         OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
         return ret;
@@ -741,7 +747,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public String deleteOrganisaatio(String oid) {
-        permissionChecker.checkRemoveOrganisation(oid);
+        try {
+            permissionChecker.checkRemoveOrganisation(oid);
+        }
+        catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
         Set<String> reindex = new HashSet<String>();
         Organisaatio po = removeOrganisaatioByOid(oid, reindex);
 
@@ -757,7 +768,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
-        permissionChecker.checkSaveOrganisation(ordto, false);
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, false);
+        }
+        catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
         try {
             Organisaatio org = save(ordto, false, false);
             OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
