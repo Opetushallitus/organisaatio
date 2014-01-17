@@ -196,6 +196,10 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-aop</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -271,7 +275,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>fi.vm.sade.rajapinnat</groupId>
             <artifactId>kela-opti</artifactId>
@@ -283,7 +286,27 @@
             <artifactId>koodisto-api</artifactId>
             <version>${koodisto.api.version}</version>
         </dependency>
+
+        <!-- CAS ticket cache replication -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-jgroupsreplication</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+        </dependency>
     </dependencies>
+
 
     <profiles>
 
