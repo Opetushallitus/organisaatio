@@ -172,9 +172,12 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
     }
 
     private MonikielinenTeksti convertMapToMonikielinenTeksti(Map<String, String> m) {
-        MonikielinenTeksti mt = new MonikielinenTeksti();
-        for (Map.Entry<String, String> e : m.entrySet()) {
-            mt.addString(e.getKey(), e.getValue());
+        MonikielinenTeksti mt = null;
+        if (m != null) {
+            mt = new MonikielinenTeksti();
+            for (Map.Entry<String, String> e : m.entrySet()) {
+                mt.addString(e.getKey(), e.getValue());
+            }
         }
         return mt;
     }
@@ -236,14 +239,16 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             }
         }
 
-        Set<NamedMonikielinenTeksti> nmtSet = new HashSet<NamedMonikielinenTeksti>();
-        for (Map.Entry<String, Map<String, String>> e : t.getData().entrySet()) {
-            NamedMonikielinenTeksti nmt = new NamedMonikielinenTeksti();
-            nmt.setKey(e.getKey());
-            nmt.setValue(convertMapToMonikielinenTeksti(e.getValue()));
-            nmtSet.add(nmt);
+        if (t.getData() != null) {
+            Set<NamedMonikielinenTeksti> nmtSet = new HashSet<NamedMonikielinenTeksti>();
+            for (Map.Entry<String, Map<String, String>> e : t.getData().entrySet()) {
+                NamedMonikielinenTeksti nmt = new NamedMonikielinenTeksti();
+                nmt.setKey(e.getKey());
+                nmt.setValue(convertMapToMonikielinenTeksti(e.getValue()));
+                nmtSet.add(nmt);
+            }
+            s.setValues(nmtSet);
         }
-        s.setValues(nmtSet);
 
         return s;
     }
