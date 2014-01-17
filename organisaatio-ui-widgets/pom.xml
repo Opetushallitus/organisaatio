@@ -19,6 +19,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -40,6 +41,7 @@
         <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-test-support</artifactId>
+            <version>${sade-generic.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -18,8 +18,6 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <!-- kela-opti -->
-    <!--<import resource="classpath:META-INF/spring/context/bundle-context.xml" />-->
-    
         <jaxws:client id="koodiPublicService"
                   serviceClass="fi.vm.sade.koodisto.service.KoodiService"
                   address="${koodi.public.webservice.url.backend}"/>
@@ -31,11 +29,6 @@
     <!--
         REST Services
     -->
-
-<!--    <bean id="organisaatioExceptionMapper" class="fi.vm.sade.tarjonta.service.impl.TarjontaPublicationExceptionMapper"/> -->
-
-    <!-- CORS (cross domain) support for rest services -->
-    <bean id="cors-filter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
 
     <!-- object to json -->
     <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
@@ -62,18 +55,6 @@
     </bean>
 
 
-<!--
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="organisaatioObjectMapper"/>
-        <property name="targetMethod" value="configure"/>
-        <property name="arguments">
-            <util:list>
-                <util:constant static-field="org.codehaus.jackson.map.SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS"/>
-                <util:constant static-field="java.lang.Boolean.FALSE"/>
-            </util:list>
-        </property>
-    </bean>
--->
     <bean id="organisaatioJacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider">
         <property name="mapper" ref="organisaatioObjectMapper"/>
     </bean>
@@ -85,8 +66,6 @@
             <ref bean="kelaResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="cors-filter" />
-<!--            <ref bean="organisaatioExceptionMapper"/> -->
             <ref bean="organisaatioJacksonJsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>

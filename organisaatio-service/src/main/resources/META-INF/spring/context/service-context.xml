@@ -15,8 +15,6 @@
     
     <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
 
-    <!--<bean id="yhteystietojenTyyppiServiceImplBean" class="fi.vm.sade.organisaatio.service.YhteystietojenTyyppiServiceImpl" />-->
-    <!--<bean id="yhteystietoServiceImplBean" class="fi.vm.sade.organisaatio.service.YhteystietoServiceImpl" />-->
 
     <bean id="organisaatioConverter" class="fi.vm.sade.organisaatio.service.converter.ConverterFactory"/>
 
@@ -24,8 +22,6 @@
         <property name="mappingFiles">
             <list>
                 <value>dozer-mapping.xml</value>
-                <!--<value>dozer-bean-mappings.xml</value>-->
-                <!--<value>more-dozer-bean-mappings.xml</value>-->
             </list>
         </property>
     </bean>

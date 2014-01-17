@@ -3,10 +3,6 @@
 
     <target name="deploy-to-remote-tomcat">
 		
-<!--
-	deploy to luokka shell command:
-	#ant -Dtomcat-host=luokka -Dtomcat-port=8301
--->
 		<property name="oph.name" value="organisaatio"/>
 		<property name="pom.version" value="8.0"/>
 		
@@ -17,11 +13,11 @@
 		<property name="ssh.keypass" value=""/>
 
         <echo>Stop Tomcat</echo>
-		<sshexec command="/data00/oph/tomcat/ophtomcat ${oph.name} stop"
-                 host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
-                 passphrase="${ssh.keypass}" trust="true" failonerror="false" />
+        <sshexec command="/data00/oph/tomcat/ophtomcat ${oph.name} stop"
+                         host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
+                         passphrase="${ssh.keypass}" trust="true" failonerror="false" />
 
-		<echo>Wait Tomcat to stop...</echo>
+        <echo>Wait Tomcat to stop...</echo>
         <waitfor maxwait="30000" checkevery="500">
             <not>
                 <socket server="${tomcat-host}" port="${tomcat-port}" />
@@ -35,18 +31,18 @@
                  passphrase="${ssh.keypass}" trust="true" failonerror="false" />
 
         <echo>Copy files to server...</echo>
-		<scp todir="tomcat@${tomcat-host}:${tomcat.home}/webapps/"
-               keyfile="${ssh.keyfile}" passphrase="${ssh.keypass}" >
+        <scp todir="tomcat@${tomcat-host}:${tomcat.home}/webapps/"
+                     keyfile="${ssh.keyfile}" passphrase="${ssh.keypass}" >
 		   
-			<fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-service/${pom.version}">
-				<include name="*-${pom.version}.war"/>
-			</fileset>
-			<fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-app/${pom.version}">
-				<include name="*-${pom.version}.war"/>
-			</fileset>
-		</scp>
+            <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-service/${pom.version}">
+                <include name="*-${pom.version}.war"/>
+            </fileset>
+            <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-app/${pom.version}">
+                <include name="*-${pom.version}.war"/>
+            </fileset>
+        </scp>
 
-		<echo>unzip organisaatio-service.war</echo>
+        <echo>unzip organisaatio-service.war</echo>
         <sshexec command="
 				mkdir ${tomcat.home}/webapps/organisaatio-service;
 				mkdir ${tomcat.home}/webapps/organisaatio-app;
@@ -59,37 +55,37 @@
                  host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
                  passphrase="${ssh.keypass}" trust="true" failonerror="false" />
 
-		<echo>Remove extra log4j config-files</echo>
-		<sshexec command="find ${tomcat.home} -name 'log4j.properties' -exec rm -rf {} \;"
-                 host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
-                 passphrase="${ssh.keypass}" trust="true" failonerror="false" />
+        <echo>Remove extra log4j config-files</echo>
+        <sshexec command="find ${tomcat.home} -name 'log4j.properties' -exec rm -rf {} \;"
+                         host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
+                         passphrase="${ssh.keypass}" trust="true" failonerror="false" />
 				 
-		<echo>Start Tomcat</echo>
-		<sshexec command="/data00/oph/tomcat/ophtomcat ${oph.name} start"
-                 host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
-                 passphrase="${ssh.keypass}" trust="true" failonerror="false" />
+        <echo>Start Tomcat</echo>
+        <sshexec command="/data00/oph/tomcat/ophtomcat ${oph.name} start"
+                         host="${tomcat-host}" username="tomcat" keyfile="${ssh.keyfile}"
+                         passphrase="${ssh.keypass}" trust="true" failonerror="false" />
 
-		<echo>Wait for service http-url</echo>
-		<waitfor maxwait="30000" checkevery="500" >
-			<and>
-			<http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service"/>
-			<http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app"/>
-			</and>
-		</waitfor>
-		<fail message="organisaatio-service -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
-			<condition>
-				<not>
-					<http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service" />
-				</not>
-			</condition>
-		</fail>
-		<fail message="organisaatio-app -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
-			<condition>
-				<not>
-					<http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app" />
-				</not>
-			</condition>
-		</fail>
+        <echo>Wait for service http-url</echo>
+        <waitfor maxwait="30000" checkevery="500" >
+            <and>
+                <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service"/>
+                <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app"/>
+            </and>
+        </waitfor>
+        <fail message="organisaatio-service -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
+            <condition>
+                <not>
+                    <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service" />
+                </not>
+            </condition>
+        </fail>
+        <fail message="organisaatio-app -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
+            <condition>
+                <not>
+                    <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app" />
+                </not>
+            </condition>
+        </fail>
 		
         <echo>Successfully deployed to ${tomcat-host}</echo>
 
