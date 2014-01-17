@@ -117,30 +117,42 @@
 </div>
 
 <!-- TODO: näytä ruotsiKayntiOsoite ja ruotsiPostiOsoite jos lang===SV ? -->
-<div class="view-row" ng-show="model.organisaatio.kayntiosoite">
+<div class="view-row" ng-repeat="yht in model.organisaatio.yhteystiedot | filter:{osoiteTyyppi:'kaynti'}:true">
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.kayntiosoite' | i18n}}
         </div>
     </div>
     <div class="view-column cols-2 last">
-        {{model.organisaatio.kayntiosoite["osoite"]}},
-        {{model.uriKoodit[model.organisaatio.kayntiosoite.postinumeroUri].koodiArvo}},
-        {{model.organisaatio.kayntiosoite["postitoimipaikka"]}}
+        {{yht.osoite}},
+        {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+        {{yht.postitoimipaikka}}
     </div>
 </div>
 
-
-<div class="view-row" ng-show="model.organisaatio.postiosoite">
+<div class="view-row" ng-repeat="yht in model.organisaatio.yhteystiedot | filter:{osoiteTyyppi:'posti'}:true">
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.postiosoite' | i18n}}
         </div>
     </div>
     <div class="view-column cols-2 last">
-        {{model.organisaatio.postiosoite["osoite"]}},
-        {{model.uriKoodit[model.organisaatio.postiosoite.postinumeroUri].koodiArvo}},
-        {{model.organisaatio.postiosoite["postitoimipaikka"]}}
+        {{yht.osoite}},
+        {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+        {{yht.postitoimipaikka}}
+    </div>
+</div>
+
+<div class="view-row" ng-repeat="yht in model.organisaatio.yhteystiedot | filter:{osoiteTyyppi:'muu'}:true">
+    <div class="view-column cols-1 first">
+        <div class="view-row-label">
+            {{'Organisaationtarkastelu.muuosoite' | i18n}}
+        </div>
+    </div>
+    <div class="view-column cols-2 last">
+        {{yht.osoite}},
+        {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+        {{yht.postitoimipaikka}}
     </div>
 </div>
 
@@ -319,6 +331,7 @@ model.organisaatio.metadata.data.MUU">
         {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
     </div>
 </div>
+
 
 <div class="view-row" ng-show="model.organisaatio.metadata.data.YLEISKUVAUS">
     <div class="view-column cols-1 first">

@@ -2,7 +2,10 @@
     <div class="view-row">
 
         <div class="view-column cols-1 first">
-            <div class="view-row-label">
+            <div class="view-row-label" ng-if="optional">
+                {{label| i18n}}
+            </div>
+            <div class="view-row-label" ng-if="!optional">
                 {{label| i18n}}*
             </div>
         </div>
@@ -19,7 +22,6 @@
             <input id="osoitesv" type="text" maxlength="20" name="osoitesv" 
                    ng-model="addressmodelsv.osoite" ng-disabled="disabled"
                    placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" address-combined-field/>
-
         </div>    
         <div ng-show="addressformat === 'kansainvalinen'">
             <div class="view-column cols-2">

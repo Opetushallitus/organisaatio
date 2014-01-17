@@ -458,7 +458,7 @@
             </div>
         </div>
 
-        <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="model.ktosoitemuoto"
+        <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="model.ktosoitemuoto" optional="true"
                       addressmodelfi="model.mdyhteystiedot.kaynti" 
                       addressmodelsv="model.mdyhteystiedot.ruotsi_kaynti"
                       addressmodelkv="model.mdyhteystiedot.kv_kaynti"
@@ -473,7 +473,7 @@
             </div>
         </div>
 
-        <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="model.ktosoitemuoto"
+        <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="model.ktosoitemuoto" optional="true"
                       addressmodelfi="model.mdyhteystiedot.posti" 
                       addressmodelsv="model.mdyhteystiedot.ruotsi_posti"
                       addressmodelkv="model.mdyhteystiedot.kv_posti"
@@ -490,9 +490,7 @@
 
 
         <div ng-repeat="osoite in model.mdyhteystiedot.muu">
-            FI:{{model.mdyhteystiedot.muu[$index]}}
-            Kv:{{model.mdyhteystiedot.kv_muu[$index]}}
-            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.osoitemuoto"
+            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.osoitemuoto" optional="true"
                           addressmodelfi="model.mdyhteystiedot.muu[$index]"                      
                           addressmodelkv="model.mdyhteystiedot.kv_muu[$index]"
                           index='{{$index}}' remove="model.removeKtAddress"
@@ -558,7 +556,7 @@
                  active="tab.active"
                  select="model.ktlang=tab.lang">
                 <tab-heading>
-                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeKtLang($index)" href=''><span class='icon-remove'>&nbsp;&nbsp;x</span></a>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeKtLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
                 </tab-heading>
             </tab>
             <tab heading="{{'Organisaationmuokkaus.lisaakieli'| i18n}}" select="model.ktlang='+'"></tab>            
@@ -731,7 +729,7 @@
                  active="tab.active"
                  select="model.oelang=tab.lang">
                 <tab-heading>
-                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeOeLang($index)" href=''><span class='icon-remove'>&nbsp;&nbsp;x</span></a>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeOeLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
                 </tab-heading>                
             </tab>
             <tab heading="{{'Organisaationmuokkaus.lisaakieli'| i18n}}" select="model.oelang='+'"></tab>            

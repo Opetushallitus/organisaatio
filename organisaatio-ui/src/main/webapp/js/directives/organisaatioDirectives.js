@@ -2,6 +2,7 @@ app.directive('editAddress', function() {
     return {
         restrict: 'E',
         scope: {
+            optional: '=',
             form: '=',
             label: '=',
             addressmodelfi: '=',
@@ -68,7 +69,9 @@ app.directive('addressCombinedField', function() {
             ctrl.$parsers.unshift(function(viewValue) {
                 var returnUndefined = false;
                 scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', true);
-                                
+                if (scope.optional) {
+                   return viewValue; 
+                }               
                 if (!(scope.innerForm.osoitefi.$viewValue && scope.innerForm.postifi.$viewValue) 
                         && !(scope.innerForm.osoitesv.$viewValue && scope.innerForm.postisv.$viewValue )
                         && !scope.innerForm.kvosoite.$viewValue) {

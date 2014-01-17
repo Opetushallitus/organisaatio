@@ -160,9 +160,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (model.organisaatio.yhteystiedot) {
                 initYhteystiedot(model.organisaatio.yhteystiedot, model.yhteystiedot);
             }
-            if (model.organisaatio.metadata && model.organisaatio.metadata.yhteystiedot) {
-                initYhteystiedot(model.organisaatio.metadata.yhteystiedot, model.mdyhteystiedot);
-            }            
+            if (!model.organisaatio.metadata) {
+                model.organisaatio.metadata = {};
+            }
+            if (!model.organisaatio.metadata.yhteystiedot) {
+                model.organisaatio.metadata.yhteystiedot = [];
+            }
+            initYhteystiedot(model.organisaatio.metadata.yhteystiedot, model.mdyhteystiedot);
         };
 
         refresh = function(oid) {
@@ -187,16 +191,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         koodiUris[param] = true;
                     }
                 }
-                if (result["kayntiosoite"]) {
-                    if (result["kayntiosoite"]["postinumeroUri"]) {
-                        koodiUris[result["kayntiosoite"]["postinumeroUri"]] = true;
+                
+                for (yht in result.yhteystiedot) {
+                    if (result.yhteystiedot[yht].postinumeroUri) {
+                        koodiUris[result.yhteystiedot[yht].postinumeroUri] = true;
                     }
                 }
-                if (result["postiosoite"]) {
-                    if (result["postiosoite"]["postinumeroUri"]) {
-                        koodiUris[result["postiosoite"]["postinumeroUri"]] = true;
-                    }
-                }
+                
                 if (result.metadata && result.metadata.yhteystiedot) {
                     for (var i = 0; i < result.metadata.yhteystiedot.length; i++) {
                         var osoite = result.metadata.yhteystiedot[i];
