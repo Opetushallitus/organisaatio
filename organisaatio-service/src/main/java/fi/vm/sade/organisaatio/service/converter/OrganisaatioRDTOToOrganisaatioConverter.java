@@ -69,8 +69,8 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
         // t.set(s.getNimiLyhenne());
-        t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
-        s.setOppilaitosKoodi(s.getOppilaitosKoodi());
+        s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
+        s.setOppilaitosKoodi(t.getOppilaitosKoodi());
         s.setOppilaitosTyyppi(t.getOppilaitosTyyppiUri());
         // t.set(s.getOrganisaatiotyypitStr());
         // s.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
