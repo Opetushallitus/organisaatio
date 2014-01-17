@@ -178,38 +178,28 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                     converter));
 
             // Filteröidään vanhentuneet organisaatiot pois
-            System.out.println("===");
-            System.out.println("Filtering for query: " + q.getQuery() + " " + Arrays.toString(q.getFilterQueries()));
-            System.out.println("Vain  aktiiviset:" + organisaatioSearchCriteria.isVainAktiiviset());
-            System.out.println("Vain lakkautetut:" + organisaatioSearchCriteria.isVainLakkautetut());
             final List<OrganisaatioPerustieto> result = Lists.newArrayList();
             Date now = new Date();
-            System.out.println("Now: " + now);
             if (!organisaatioSearchCriteria.isVainLakkautetut() && !organisaatioSearchCriteria.isVainAktiiviset()) {
-                System.out.println("1");
                 for (OrganisaatioPerustieto op : tempResult) {
                     if (op.getLakkautusPvm() == null || op.getLakkautusPvm().after(now)) {
                         result.add(op);
                     }
                 }
             } else if (organisaatioSearchCriteria.isVainLakkautetut()) {
-                System.out.println("2");
                 for (OrganisaatioPerustieto op : tempResult) {
                     if (op.getLakkautusPvm() != null && op.getLakkautusPvm().before(now)) {
                         result.add(op);
                     }
                 }
             } else if (organisaatioSearchCriteria.isVainAktiiviset()) {
-                System.out.println("3");
                 for (OrganisaatioPerustieto op : tempResult) {
                     if ((op.getLakkautusPvm() == null || op.getLakkautusPvm().after(now))
                             && ((op.getAlkuPvm() == null) || op.getAlkuPvm().before(now))) { // TODO: Päteekö null alku?
                         result.add(op);
-                    } else if ((op.getAlkuPvm() != null) && op.getAlkuPvm().after(now))
-                        System.out.println("Filtered " + op.getNimi("fi") + op.getAlkuPvm() + op.getLakkautusPvm());
+                    }
                 }
             }
-            System.out.println("===");
 
             LOG.debug("Total time :{} ms.", (System.currentTimeMillis() - time));
             return result;
