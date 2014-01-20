@@ -12,7 +12,7 @@ function OrganisaatioController($scope, $location, $routeParams, OrganisaatioMod
     }
 
     $scope.save = function() {
-        $scope.model.persistOrganisaatio();
+        $scope.model.persistOrganisaatio($scope.form);
     }
     $scope.cancel = function() {
         $location.path("/");

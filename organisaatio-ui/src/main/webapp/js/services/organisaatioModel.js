@@ -366,8 +366,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-        this.persistOrganisaatio = function() {
+        this.persistOrganisaatio = function(orgForm) {
             model.organisaatio.$post();
+            orgForm.$setPristine();
         };
 
         this.toggleCheck = function(organisaatiotyyppi) {
@@ -437,11 +438,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.addSome = function() {
             if (model.organisaatio.metadata) {
-                if (!model.organisaatio.metadata.data[model.organisaatio.someplaceholder]) {
-                    model.organisaatio.metadata.data[model.organisaatio.someplaceholder] = {'0': model.sometext[model.organisaatio.someplaceholder]};
+                if (!model.organisaatio.metadata.data[model.someplaceholder]) {
+                    model.organisaatio.metadata.data[model.someplaceholder] = {'0': model.sometext[model.someplaceholder]};
                 }
             }
-            model.organisaatio.someplaceholder = $filter('i18n')("lisaasosiaalinenmedia");
+            model.someplaceholder = $filter('i18n')("lisaasosiaalinenmedia");
         };
 
         this.removeSome = function(some) {
