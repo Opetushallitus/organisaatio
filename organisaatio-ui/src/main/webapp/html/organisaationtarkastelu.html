@@ -226,16 +226,16 @@
     <div class="view-row">
         <div class="view-column cols-1 first">
             <div class="view-row-label">
-                <div ng-show="tieto.osoiteTyyppi=='kaynti'">
+                <div ng-show="tieto.osoiteTyyppi==='kaynti' && tieto.osoite">
                     {{'Organisaationtarkastelu.kayntiosoite' | i18n}}
                 </div>
-                <div ng-show="tieto.osoiteTyyppi=='posti'">
+                <div ng-show="tieto.osoiteTyyppi==='posti' && tieto.osoite">
                     {{'Organisaationtarkastelu.postiosoite' | i18n}}
                 </div>
-                <div ng-show="tieto.tyyppi=='puhelin'">
+                <div ng-show="tieto.tyyppi==='puhelin' && tieto.numero">
                     {{'Organisaationtarkastelu.puhelinnumero' | i18n}}
                 </div>
-                <div ng-show="tieto.tyyppi=='faksi'">
+                <div ng-show="tieto.tyyppi==='faksi' && tieto.numero">
                     {{'Organisaationtarkastelu.faksinumero' | i18n}}
                 </div>
                 <div ng-show="tieto.email">
@@ -246,7 +246,7 @@
                 </div>
             </div>
         </div>
-        <div class="view-column cols-2 last" ng-show="tieto.osoiteTyyppi">
+        <div class="view-column cols-2 last" ng-show="tieto.osoite">
             {{tieto.osoite}},
             {{model.uriKoodit[tieto.postinumeroUri].koodiArvo}},
             {{tieto.postitoimipaikka}}
