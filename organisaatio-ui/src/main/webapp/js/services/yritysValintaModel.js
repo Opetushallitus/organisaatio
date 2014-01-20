@@ -1,4 +1,4 @@
-app.factory('YritysValintaModel', function($filter, Alert,
+app.factory('YritysValintaModel', function($filter, $log, Alert,
                                            YTJYritysTiedot, YTJYritystenTiedot) {
     var model = {
         hakuString: "",
@@ -22,14 +22,14 @@ app.factory('YritysValintaModel', function($filter, Alert,
                     
         
         refresh: function() {
-            console.log('refresh()');
+            $log.log('refresh()');
             var start = +new Date();
 
             if (this.isYTunnus(model.hakuString)) {
                 YTJYritysTiedot.get({ytunnus: model.hakuString}, function(result) {
                     var end = +new Date();  // log end timestamp
                     var diff = end - start;
-                    console.log("Haku kesti: " +diff);
+                    $log.log("Haku kesti: " +diff);
                     model.yritykset.length = 0;
                     model.yritykset.push(result);
                     
@@ -39,7 +39,7 @@ app.factory('YritysValintaModel', function($filter, Alert,
                 }, 
                 // Error case
                 function(response) {
-                    console.log("YTJYritysTiedot response: " + response.status);
+                    $log.error("YTJYritysTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });
             }
@@ -47,7 +47,7 @@ app.factory('YritysValintaModel', function($filter, Alert,
                 YTJYritystenTiedot.get({nimi: model.hakuString}, function(result) {
                     var end = +new Date();  // log end timestamp
                     var diff = end - start;
-                    console.log("Haku kesti: " +diff);
+                    $log.log("Haku kesti: " +diff);
                     model.yritykset = result;
                     
                     if (model.yritykset.length === 0) {
@@ -56,7 +56,7 @@ app.factory('YritysValintaModel', function($filter, Alert,
                 }, 
                 // Error case
                 function(response) {
-                    console.log("YTJYritystenTiedot response: " + response.status);
+                    $log.error("YTJYritystenTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });
             }

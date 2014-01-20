@@ -1,4 +1,4 @@
-app.factory('HakuehdotModel', function($filter, Alert,
+app.factory('HakuehdotModel', function($filter, $log, Alert,
                                        KoodistoPaikkakunnat,
                                        KoodistoOrganisaatiotyypit,
                                        KoodistoOppilaitostyypit,
@@ -16,7 +16,7 @@ app.factory('HakuehdotModel', function($filter, Alert,
         oppilaitostyypit: [],
 
         refresh: function() {
-            console.log('refresh()');
+            $log.log('refresh()');
             model.refreshed = false;
             model.refreshIfNeeded();
         },
@@ -32,7 +32,7 @@ app.factory('HakuehdotModel', function($filter, Alert,
         },
         
         refreshIfNeeded: function() {
-            console.log('refreshIfNeeded()');
+            $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
                 model.refreshed = true;
                 KoodistoPaikkakunnat.get(function(result) {
@@ -43,11 +43,11 @@ app.factory('HakuehdotModel', function($filter, Alert,
                         paikkakunta.nimi = KoodistoKoodi.getLocalizedName(kuntaKoodi);
                         model.paikkakunnat.push(paikkakunta);
                     });
-                    console.log('paikkakunnat: ' +  model.paikkakunnat.length);
+                    $log.log('paikkakunnat: ' +  model.paikkakunnat.length);
                 }, 
                 // Error case
                 function(response) {
-                    console.log("KoodistoPaikkakunnat response: " + response.status);
+                    $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
@@ -60,11 +60,11 @@ app.factory('HakuehdotModel', function($filter, Alert,
                         organisaatioTyyppi.nimi = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                         model.organisaatiotyypit.push(organisaatioTyyppi);
                     });
-                    console.log('organisaatiotyypit: ' +  model.organisaatiotyypit.length);
+                    $log.log('organisaatiotyypit: ' +  model.organisaatiotyypit.length);
                 }, 
                 // Error case
                 function(response) {
-                    console.log("KoodistoPaikkakunnat response: " + response.status);
+                    $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
@@ -77,11 +77,11 @@ app.factory('HakuehdotModel', function($filter, Alert,
                         oppilaitosTyyppi.nimi = KoodistoKoodi.getLocalizedName(oplTyyppiKoodi);
                         model.oppilaitostyypit.push(oppilaitosTyyppi);
                     });
-                    console.log('oppilaitostyypit: ' +  model.oppilaitostyypit.length);
+                    $log.log('oppilaitostyypit: ' +  model.oppilaitostyypit.length);
                 }, 
                 // Error case
                 function(response) {
-                    console.log("KoodistoPaikkakunnat response: " + response.status);
+                    $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
@@ -91,14 +91,14 @@ app.factory('HakuehdotModel', function($filter, Alert,
         },
 
         resetTarkemmatEhdot: function () {
-            console.log('resetTarkemmatEhdot()');
+            $log.log('resetTarkemmatEhdot()');
             model.kunta= "";
             model.organisaatiotyyppi= "";
             model.oppilaitostyyppi= "";
         },
 
         resetAll: function () {
-            console.log('resetAll()');
+            $log.log('resetAll()');
             model.nimiTaiTunnus="";
             model.kunta= "";
             model.organisaatiotyyppi= "";
@@ -110,7 +110,7 @@ app.factory('HakuehdotModel', function($filter, Alert,
 });
 
 
-app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
+app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatiot) {
 // organisaatiot[]
 //     {
 //        "oid" : "1.2.246.562.10.71103955986",
@@ -207,7 +207,7 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
         },
         
         buildHakuParametrit: function(hakuehdot) {
-            console.log('buildHakuParametrit()');
+            $log.log('buildHakuParametrit()');
 
             var hakuParametrit = {};
 
@@ -241,13 +241,13 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
 
             // TODO: oidrestrictionlist??
 
-            console.log(hakuParametrit);
+            $log.log(hakuParametrit);
 
             return hakuParametrit;
         },
 
         updateTree: function(numHits, organisaatiot) {
-            console.log('updateTree()');
+            $log.log('updateTree()');
             this.count = numHits;
             tree.children = organisaatiot;
             
@@ -284,23 +284,23 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
         },
 
         refresh: function(hakuehdot) {
-            console.log('refresh()');
+            $log.log('refresh()');
             var start = +new Date();
             
             var parametrit = this.buildHakuParametrit(hakuehdot);
 
             Organisaatiot.get(parametrit, function(result) {
-                //console.log("Solar returned: " + result.response.numFound + " entries for query: " + '"' + query + '"');
+                //$log.log("Solar returned: " + result.response.numFound + " entries for query: " + '"' + query + '"');
 
                 var end = +new Date();  // log end timestamp
                 var diff = end - start;
-                console.log("Haku kesti: " +diff);
+                $log.log("Haku kesti: " +diff);
 
                 model.updateTree(result.numHits, result.organisaatiot);
             }, 
             // Error case
             function(response) {
-                console.log("Organisaatiot response: " + response.status);
+                $log.error("Organisaatiot response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
             });
         }
@@ -311,7 +311,7 @@ app.factory('OrganisaatioTreeModel', function($filter, Alert, Organisaatiot) {
 
 
 function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
-                                    $modal, Alert, Organisaatio, 
+                                    $modal, $log, Alert, Organisaatio, 
                                     HakuehdotModel, OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
@@ -337,30 +337,31 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
         });
         
         modalInstance.result.then(function () {
-            console.log('Organisaatio poisto vahvistettu: ' + node.oid);
+            $log.info('Organisaatio poisto vahvistettu: ' + node.oid);
                         
             Organisaatio.delete({oid: node.oid}, function(result) {
-                console.log(result);
+                $log.log(result);
                 // TODO: Pitäskö tehdä refresh
             }, 
             // Error case
             function(response) {
-                console.log("Organisaatio delete response: " + response.status);
+                $log.error("Organisaatio delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", ""), true);
             });
             
         }, function () {
-            console.log('Organisaation poistoa ei vahvistettu: ' + node.oid);
+            $log.info('Organisaation poistoa ei vahvistettu: ' + node.oid);
         });
     };
 
     $scope.createAliOrganisaatio = function (node) {
-        console.log("Aliorganisaation luontia ei toteutettu: " + node.oid);
+        $log.warn("Aliorganisaation luontia ei toteutettu: " + node.oid);
         Alert.add("warning", "Aliorganisaation luontia ei ole vielä toteutettu", true);
     };
     
     $scope.search = function() {
         if ($scope.hakuehdot.isEmpty()) {
+            $log.warn("Hakuehdon tyhjät!");
             Alert.add("warning", $filter('i18n')("Organisaatiot.tarkennaHakuehtoja", ""), true);
             return;
         }
@@ -390,9 +391,9 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
         });
         
         modalInstance.result.then(function (Ytunnus) {
-            console.log('YritysValinta YTynnus: ' + Ytunnus);
+            $log.log('YritysValinta YTynnus: ' + Ytunnus);
         }, function () {
-            console.log('Modal dismissed at: ' + new Date());
+            $log.log('Modal dismissed at: ' + new Date());
         });
     };
    

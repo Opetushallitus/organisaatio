@@ -24,13 +24,13 @@ app.directive('editAddress', function() {
     };
 });
 
-app.directive('testField', function() {
+app.directive('testField', function($log) {
     return {
         require: 'ngModel',
         
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
-                console.log("ret " + viewValue);
+                $log.log("ret " + viewValue);
                 return viewValue;
             });
         }

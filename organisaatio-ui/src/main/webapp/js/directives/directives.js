@@ -1,5 +1,4 @@
-
-app.directive('auth', function($animate, $timeout, AuthService) {
+app.directive('auth', function($animate, $timeout, $log, AuthService) {
     return {
         link : function($scope, element, attrs) {
 
@@ -40,7 +39,7 @@ app.directive('auth', function($animate, $timeout, AuthService) {
 
             attrs.$observe('authOrg', function() {
                 if(attrs.authOrg) {
-                    console.log("auth-org: " + attrs.authOrg);
+                    $log.log("auth-org: " + attrs.authOrg);
                     switch(attrs.auth) {
                         case "crudOrg":
                             AuthService.crudOrg(attrs.authService, [attrs.authOrg]).then(success);
@@ -56,7 +55,6 @@ app.directive('auth', function($animate, $timeout, AuthService) {
                     }
                 }
             });
-
         }
     };
 });
