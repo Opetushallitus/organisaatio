@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>8.0</version>
+    <version>8.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
 
@@ -12,25 +12,21 @@
     <parent>
         <groupId>fi.vm.sade.generic</groupId>
         <artifactId>build-parent</artifactId>
-        <version>8.0</version>
+        <version>8.0-SNAPSHOT</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
-        <authentication.api.version>7.0</authentication.api.version>
-        <generic.version>8.0</generic.version>
-        <sade-generic.version>8.0</sade-generic.version>
-        <koodisto.api.version>7.0</koodisto.api.version>
-        <koodisto.widget.version>7.0</koodisto.widget.version>
-        <log.client.version>8.0</log.client.version>
-        <oid.api.version>8.0</oid.api.version>
-        <rajapinnat.ytj.version>8.0</rajapinnat.ytj.version>
-        <vaadin.theme.version>8.0</vaadin.theme.version>
-
-        <ehcache.version>2.5.0</ehcache.version>
-        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
-        <jgroups.version>2.10.0.GA</jgroups.version>
+        <authentication.api.version>7.0-SNAPSHOT</authentication.api.version>
+        <generic.version>9.0-SNAPSHOT</generic.version>
+        <sade-generic.version>9.0-SNAPSHOT</sade-generic.version>
+        <koodisto.api.version>7.0-SNAPSHOT</koodisto.api.version>
+        <koodisto.widget.version>7.0-SNAPSHOT</koodisto.widget.version>
+        <log.client.version>7.0-SNAPSHOT</log.client.version>
+        <oid.api.version>8.0-SNAPSHOT</oid.api.version>
+        <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
+        <vaadin.theme.version>7.0-SNAPSHOT</vaadin.theme.version>
     </properties>
 
     <modules>
@@ -41,28 +37,6 @@
         <module>organisaatio-ui-widgets</module>
         <module>organisaatio-app</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-core</artifactId>
-                <version>${ehcache.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-jgroupsreplication</artifactId>
-                <version>${ehcache-jgroupsreplication.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jgroups</groupId>
-                <artifactId>jgroups</artifactId>
-                <version>${jgroups.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <repositories>
         <repository>
