@@ -59,7 +59,7 @@ app.config(function($routeProvider) {
         when('/organisaatiot/:oid/edit', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
         // create new
-        when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationluonti.html'}).
+        when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
         //else
         otherwise({redirectTo:'/organisaatiot'});
@@ -180,10 +180,10 @@ app.factory('Organisaatio', function($resource) {
 });
 
 // Hae aliorganisaatiot organisaatiopalvelulta
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.59347432821/children
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
 app.factory('Aliorganisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/:oid/children", {oid: "@oid"}, {
-        get: {method: "GET", isArray: true}
+    return $resource(SERVICE_URL_BASE + "organisaatio/hae?oidRestrictionList=:oid", {oid: "@oid"}, {
+        get: {method: "GET"}
     });
 });
 

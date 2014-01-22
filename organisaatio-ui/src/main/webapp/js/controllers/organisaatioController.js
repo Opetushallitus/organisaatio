@@ -6,6 +6,7 @@ function OrganisaatioController($scope, $location, $routeParams, OrganisaatioMod
     
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
+        $scope.model.createOrganisaatio($routeParams.parentoid);
     } else if (/edit$/.test($location.path())) {
         $scope.model.mode = "edit";
         $scope.model.refreshKoodisto($scope.oid);
@@ -14,14 +15,13 @@ function OrganisaatioController($scope, $location, $routeParams, OrganisaatioMod
     $scope.save = function() {
         $scope.model.persistOrganisaatio($scope.form);
     }
+
     $scope.cancel = function() {
         $location.path("/");
     }
 
     $scope.edit = function () {
-      $scope.model.mode = "edit";
-      $scope.model.refreshKoodisto($scope.oid);  
       $location.path($location.path() + "/edit");
     };
-    
+
 }

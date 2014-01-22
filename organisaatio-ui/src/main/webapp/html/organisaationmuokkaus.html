@@ -64,7 +64,7 @@
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'" 
                     required>
-                    <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
+                <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>    
         </div>
         <div class="view-column cols-2 last" ng-if="!model.organisaatio.oppilaitosTyyppiUri">
@@ -83,14 +83,13 @@
             </div>
         </div>
         <div class="view-column cols-2">
-            <input  type="text" name="nimifi" 
-                    ng-model="model.organisaatio.nimi.fi"
-                    placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" names-combined-field/>
+            <input type="text" name="nimifi"
+                   ng-model="model.organisaatio.nimi.fi"
+                   placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" names-combined-field/>
         </div>
-        <div class="view-column cols-2 last">            
+        <div class="view-column cols-2 last">
             <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
-                {{'Organisaationtarkastelu.nimi'| i18n}}
-                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
             </span>
         </div>
     </div>
@@ -139,6 +138,14 @@
                 {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
             <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
                 {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
+        </div>        
+    </div>
+    <div class="view-row">
+        <div class="view-column cols-1 first">
+            &nbsp;
+        </div>
+        <div class="view-column cols-4 last">
+            <span class="text-help">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</span>
         </div>
     </div>
 
@@ -183,7 +190,15 @@
             </span>
         </div>
     </div>
-
+    <div class="view-row">
+        <div class="view-column cols-1 first">
+            &nbsp;
+        </div>
+        <div class="view-column cols-4 last">
+            <span class="text-help">{{'Organisaationmuokkaus.ohje.maa'| i18n}}</span>
+        </div>
+    </div>
+    
     <div class="view-row">
         <div class="view-column cols-1 first">
             <div class="view-row-label">
@@ -203,7 +218,7 @@
                 <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
             </select>    
         </div>
-        <div class="view-column cols-2 last" ng-if="model.organisaatio.kieletUris.length===0">
+        <div class="view-column cols-2 last" ng-if="model.organisaatio.kieletUris.length === 0">
             <input type="hidden" name="kielivirhe" ng-model="kielivirhe" required>
             <span class="text-error" ng-show="form.kielivirhe.$error.required">
                 {{'Organisaationtarkastelu.kieli'| i18n}} 
@@ -226,7 +241,7 @@
             </select>
         </div>       
     </div>
-    
+
     <div class="view-row">
         <div class="view-column cols-1 first">
             &nbsp;
@@ -243,7 +258,7 @@
                   addresstype="'kaynti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                   postcodefi="model.yhteystiedot.postinumerot.kaynti" postcodesv="model.yhteystiedot.postinumerot.ruotsi_kaynti"
                   setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
-    
+
     <div class="view-row">
         <div class="view-column col-indent-1 cols-3 first last">    
             <input type='checkbox' ng-model="model.samaosoite" ng-init="model.samaosoite = false"
@@ -282,10 +297,12 @@
                 {{'Organisaationtarkastelu.puhelinnumero'| i18n}}*
             </div>
         </div>
-        <div class="view-column cols-1 last">
+        <div class="view-column cols-1">
             <input id="puhelinnumero" type="text" name="puhelinnumero" 
                    ng-model="model.yhteystiedot.puhelin.numero"
                    placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" required ng-pattern="/^[\d \-\+]+$/"/>
+        </div>
+        <div class="view-column cols-2">
             <span class="text-error" ng-show="form.puhelinnumero.$error.required">
                 {{'Organisaationtarkastelu.puhelinnumero'| i18n}} 
                 {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
@@ -303,10 +320,12 @@
                 {{'Organisaationtarkastelu.faksinumero'| i18n}}
             </div>
         </div>
-        <div class="view-column cols-1 last">
+        <div class="view-column cols-1">
             <input id="faksinumero" type="text" maxlength="20" name="faksinumero" 
                    ng-model="model.yhteystiedot.faksi.numero"
                    placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+        </div>
+        <div class="view-column cols-2">
             <span class="text-error" ng-show="form.faksinumero.$error.pattern">
                 {{'Organisaationtarkastelu.faksinumero'| i18n}} 
                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
@@ -320,10 +339,12 @@
                 {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}*
             </div>
         </div>
-        <div class="view-column cols-2 last">
+        <div class="view-column cols-2">
             <input id="sahkopostiosoite" type="email" name="sahkopostiosoite" 
                    ng-model="model.yhteystiedot.email.email"
                    placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}" required/>
+        </div>
+        <div class="view-column cols-2">
             <span class="text-error" ng-show="form.sahkopostiosoite.$error.required || form.sahkopostiosoite.$error.email">
                 {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}} 
                 {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
@@ -337,10 +358,12 @@
                 {{'Organisaationtarkastelu.wwwosoite'| i18n}}
             </div>
         </div>
-        <div class="view-column cols-1 last">
+        <div class="view-column cols-2">
             <input id="wwwosoite" type="text" name="wwwosoite" 
                    ng-model="model.yhteystiedot.www.www"
                    placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+        </div>
+        <div class="view-column cols-2">
             <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
         </div> 
@@ -874,11 +897,19 @@
 </div>
 -->
 
-<div class="view-row fixed-right" ng-show="model.organisaatio.nimi">
-    Muokataan organisaatiota:
-    <br>&nbsp;<br>
-    <b>{{model.uriLocalizedNames["nimi"]}}</b>    
-    <br>&nbsp;<br>
+<div class="view-row fixed-right">
+    <div ng-show="model.mode === 'edit'">
+        {{'Organisaationmuokkaus.muokkaus'| i18n}}:
+        <br>&nbsp;<br>
+        <b>{{model.uriLocalizedNames["nimi"]}}</b>
+        <br>&nbsp;<br>
+    </div>
+    <div ng-show="model.mode === 'new'">
+        {{'Organisaationmuokkaus.uudenluonti'| i18n}}:
+        <br>&nbsp;<br>
+        <b>{{model.uriLocalizedNames["parentnimi"]}}</b>
+        <br>&nbsp;<br>
+    </div>
     <div class="align-right ">
         <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
         <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>

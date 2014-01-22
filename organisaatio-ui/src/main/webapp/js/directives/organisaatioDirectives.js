@@ -27,7 +27,6 @@ app.directive('editAddress', function() {
 app.directive('testField', function($log) {
     return {
         require: 'ngModel',
-        
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
                 $log.log("ret " + viewValue);
@@ -40,23 +39,24 @@ app.directive('testField', function($log) {
 app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
-
         link: function(scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function(viewValue) {
+            var validator = function(viewValue) {
                 var returnUndefined = false;
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
-                
+
                 if (!scope.form.nimifi.$viewValue && !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                     returnUndefined = true;
-                }                
+                }
                 if (returnUndefined === true) {
                     return undefined;
                 } else {
                     return viewValue;
                 }
 
-            });
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
         }
     };
 });
@@ -64,26 +64,27 @@ app.directive('namesCombinedField', function() {
 app.directive('addressCombinedField', function() {
     return {
         require: 'ngModel',
-        
         link: function(scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function(viewValue) {
+            var validator = function(viewValue) {
                 var returnUndefined = false;
                 scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', true);
                 if (scope.optional) {
-                   return viewValue; 
-                }               
-                if (!(scope.innerForm.osoitefi.$viewValue && scope.innerForm.postifi.$viewValue) 
-                        && !(scope.innerForm.osoitesv.$viewValue && scope.innerForm.postisv.$viewValue )
+                    return viewValue;
+                }
+                if (!(scope.innerForm.osoitefi.$viewValue && scope.innerForm.postifi.$viewValue)
+                        && !(scope.innerForm.osoitesv.$viewValue && scope.innerForm.postisv.$viewValue)
                         && !scope.innerForm.kvosoite.$viewValue) {
                     scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', false);
                     returnUndefined = true;
-                }                
+                }
                 if (returnUndefined === true) {
                     return viewValue; //return undefined;
                 } else {
                     return viewValue;
                 }
-            });
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
         }
     };
 });
