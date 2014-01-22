@@ -9,7 +9,9 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteria {
 
-    private boolean lakkautetut;
+    private boolean vainLakkautetut;
+
+    private boolean vainAktiiviset;
 
     private String oppilaitostyyppi;
 
@@ -35,22 +37,6 @@ public class OrganisaatioSearchCriteria {
 
     public void setOidRestrictionList(List<String> oidRestrictionList) {
         this.oidResctrictionList.addAll(oidResctrictionList);
-    }
-
-    /**
-     * Gets the value of the lakkautetut property.
-     */
-    @ApiModelProperty(value = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
-    public boolean getLakkautetut() {
-        return lakkautetut;
-    }
-
-    /**
-     * Sets the value of the lakkautetut property.
-     * 
-     */
-    public void setLakkautetut(boolean value) {
-        this.lakkautetut = value;
     }
 
     /**
@@ -164,4 +150,35 @@ public class OrganisaatioSearchCriteria {
         this.searchStr = searchStr;
     }
 
+    /**
+     * Gets the value of the vainLakkautetut property.
+     */
+    @ApiModelProperty(value = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    public boolean getVainLakkautetut() {
+        return vainLakkautetut;
+    }
+
+    /**
+     * Sets the value of the vainLakkautetut property.
+     * 
+     */
+    public void setVainLakkautetut(boolean value) {
+        this.vainLakkautetut = value;
+    }
+
+    /**
+     * Gets the value of the vainAktiiviset property.
+     */
+    @ApiModelProperty(value = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    public boolean getVainAktiiviset() {
+        return vainAktiiviset;
+    }
+
+    /**
+     * Sets the value of the vainLakkautetut property.
+     * 
+     */
+    public void setVainAktiiviset(boolean vainAktiiviset) {
+        this.vainAktiiviset = vainAktiiviset;
+    }   
 }

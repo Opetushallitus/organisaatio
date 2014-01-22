@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <authentication.api.version>7.0-SNAPSHOT</authentication.api.version>
-        <generic.version>8.0-SNAPSHOT</generic.version>
+        <generic.version>9.0-SNAPSHOT</generic.version>
         <sade-generic.version>8.0-SNAPSHOT</sade-generic.version>
         <koodisto.api.version>7.0-SNAPSHOT</koodisto.api.version>
         <koodisto.widget.version>7.0-SNAPSHOT</koodisto.widget.version>
@@ -27,6 +27,10 @@
         <oid.api.version>8.0-SNAPSHOT</oid.api.version>
         <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
         <vaadin.theme.version>7.0-SNAPSHOT</vaadin.theme.version>
+
+        <ehcache.version>2.5.0</ehcache.version>
+        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
+        <jgroups.version>2.10.0.GA</jgroups.version>
     </properties>
 
     <modules>
@@ -38,6 +42,28 @@
         <module>organisaatio-app</module>
         <module>organisaatio-ui</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-jgroupsreplication</artifactId>
+                <version>${ehcache-jgroupsreplication.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${jgroups.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
