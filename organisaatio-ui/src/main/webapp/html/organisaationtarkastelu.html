@@ -68,18 +68,18 @@
         {{model.organisaatio.yritysmuoto}}
     </div>
 </div>
-<div class="view-row" ng-show="model.organisaatio.yTunnus">
+<div class="view-row" ng-show="model.organisaatio.ytunnus" ng-if='model.isKoulutustoimija()'>
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.ytunnus' | i18n}}
         </div>
     </div>
     <div class="view-column cols-2 last">
-        {{model.organisaatio.yTunnus}}
+        {{model.organisaatio.ytunnus}}
     </div>
 </div>
 
-<div class="view-row" ng-show="model.organisaatio.virastotunnus">
+<div class="view-row" ng-show="model.organisaatio.virastotunnus" ng-if='model.isKoulutustoimija()'>
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.virastotunnus' | i18n}}
@@ -108,9 +108,7 @@
         </div>
     </div>
     <div class="view-column cols-2 last">
-        <!-- Näytä kaikki kielet pilkulla erotettuna -->
-        <div ng-repeat="kieli in model.organisaatio.kieletUris" ng-show="$first">
-            <span ng-show="!$first">,</span>
+        <div ng-repeat="kieli in model.organisaatio.kieletUris">
             {{model.uriLocalizedNames[kieli]}}
         </div>
     </div>
@@ -169,15 +167,13 @@
         </div>
     </div>
     <div class="view-column cols-2 last">
-        <!-- Näytä kaikki tyypit pilkulla erotettuna -->
-        <div ng-repeat="tyyppi in model.organisaatio.tyypit" ng-show="$first">
-            <span ng-show="!$first">,</span>
+        <div ng-repeat="tyyppi in model.organisaatio.tyypit">
             {{tyyppi}}
         </div>
     </div>
 </div>
 
-<div class="view-row" ng-show="model.organisaatio.oppilaitosKoodi">
+<div class="view-row" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.tkkoodi' | i18n}}
@@ -188,7 +184,7 @@
     </div>
 </div>
 
-<div class="view-row" ng-show="model.organisaatio.oppilaitosTyyppiUri">
+<div class="view-row" ng-show="model.organisaatio.oppilaitosTyyppiUri" ng-if='model.isOppilaitos()'>
     <div class="view-column cols-1 first">
         <div class="view-row-label">
             {{'Organisaationtarkastelu.oppilaitostyyppi' | i18n}}
@@ -196,6 +192,19 @@
     </div>
     <div class="view-column cols-2 last">
         {{model.uriLocalizedNames[model.organisaatio.oppilaitosTyyppiUri]}}
+    </div>
+</div>
+
+<div class="view-row" ng-show="model.organisaatio.vuosiluokat" ng-if="model.hasVuosiluokat()">
+    <div class="view-column cols-1 first">
+        <div class="view-row-label">
+            {{'Organisaationtarkastelu.vuosiluokat' | i18n}}
+        </div>
+    </div>
+    <div class="view-column cols-2 last">
+        <div ng-repeat="vl in model.organisaatio.vuosiluokat">
+            {{model.uriLocalizedNames[vl]}}
+        </div>
     </div>
 </div>
 

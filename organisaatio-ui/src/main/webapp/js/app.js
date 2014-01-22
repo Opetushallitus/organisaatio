@@ -266,3 +266,11 @@ return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
     get: {method: "GET", isArray: true}
   });
 });
+ 
+// Vuosiluokkien haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/vuosiluokat/koodi
+app.factory('KoodistoVuosiluokat', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
+    get: {method: "GET", isArray: true}
+  });
+});

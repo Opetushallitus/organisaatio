@@ -40,7 +40,7 @@ app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
-            var validator = function(viewValue) {
+            var parserValidator = function(viewValue) {
                 var returnUndefined = false;
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
@@ -49,14 +49,21 @@ app.directive('namesCombinedField', function() {
                     returnUndefined = true;
                 }
                 if (returnUndefined === true) {
-                    return undefined;
+                    return viewValue;
                 } else {
                     return viewValue;
                 }
 
             };
-            ctrl.$parsers.unshift(validator);
-            ctrl.$formatters.unshift(validator);
+            ctrl.$parsers.unshift(parserValidator);
+
+            var formatterValidator = function(viewValue) {
+                if (scope.mode==="new") {
+                    scope.form.nimifi.$setValidity('namescombinedrequired', false);
+                }
+                return viewValue;
+            };
+            ctrl.$formatters.unshift(formatterValidator);
         }
     };
 });
@@ -65,7 +72,7 @@ app.directive('addressCombinedField', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
-            var validator = function(viewValue) {
+            var parserValidator = function(viewValue) {
                 var returnUndefined = false;
                 scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', true);
                 if (scope.optional) {
@@ -78,13 +85,20 @@ app.directive('addressCombinedField', function() {
                     returnUndefined = true;
                 }
                 if (returnUndefined === true) {
-                    return viewValue; //return undefined;
+                    return viewValue;
                 } else {
                     return viewValue;
                 }
             };
-            ctrl.$parsers.unshift(validator);
-            ctrl.$formatters.unshift(validator);
+            ctrl.$parsers.unshift(parserValidator);
+
+            var formatterValidator = function(viewValue) {
+                if (scope.mode==="new") {
+                    scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', false);
+                }
+                return viewValue;
+            };
+            ctrl.$formatters.unshift(formatterValidator);
         }
     };
 });
