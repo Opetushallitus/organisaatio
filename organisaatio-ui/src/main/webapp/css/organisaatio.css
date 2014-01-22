@@ -2,6 +2,10 @@
   color: gray;
 }
 
+input.greyed[type="text"] {
+    color: gray;
+}
+
 img.col-indent-4 {
     position: absolute;
     left: 640px;
