@@ -936,16 +936,20 @@
         <br>&nbsp;<br>
         <b>{{model.uriLocalizedNames["nimi"]}}</b>
         <br>&nbsp;<br>
+        <div class="align-right ">
+            <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+        </div>
     </div>
     <div ng-show="model.mode === 'new'">
         {{'Organisaationmuokkaus.uudenluonti'| i18n}}:
         <br>&nbsp;<br>
         <b>{{model.uriLocalizedNames["parentnimi"]}}</b>
         <br>&nbsp;<br>
-    </div>
-    <div class="align-right ">
-        <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
-        <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+        <div class="align-right ">
+            <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentoid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+        </div>
     </div>
     <p>
 </div>

@@ -1,6 +1,6 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
-        KoodistoPosti, KoodistoVuosiluokat, Alert, $filter, $log) {
+        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, Alert, $filter, $log) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -271,7 +271,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (aliOrgList) {
                 for (var j = 0; j < aliOrgList.length; j++) {
                     if (!aliOrgList[j].lakkautusPvm) {
-                        model.aliorganisaatiot.push({nimi:aliOrgList[j].nimi.fi, oid:aliOrgList[j].oid, level:level});
+                        model.aliorganisaatiot.push({nimi:getLocalizedValue(aliOrgList[j].nimi, ""), oid:aliOrgList[j].oid, level:level});
                         addAliorganisaatio(aliOrgList[j].children, level+1);
                     }
                 }
@@ -428,7 +428,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.persistOrganisaatio = function(orgForm) {
-            model.organisaatio.$post();
+            if (model.organisaatio.$post) {
+                model.organisaatio.$post();
+            } else {
+                UusiOrganisaatio.put({}, function(result) {
+                    console.log(result);
+            });
+            }
             orgForm.$setPristine();
         };
 

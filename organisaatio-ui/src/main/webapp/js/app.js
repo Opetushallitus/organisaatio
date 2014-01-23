@@ -179,6 +179,14 @@ app.factory('Organisaatio', function($resource) {
     });
 });
 
+// Organisaation haku / tallennus organisaatiopalvelulta
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
+app.factory('UusiOrganisaatio', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio", {}, {
+        put: {method:   "PUT"}
+    });
+});
+
 // Hae aliorganisaatiot organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
 app.factory('Aliorganisaatiot', function($resource) {
