@@ -31,14 +31,20 @@ import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAOImpl;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.YhteystietoArvo;
+import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.LearningInstitutionExistsException;
 import fi.vm.sade.organisaatio.service.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
@@ -94,6 +100,10 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private OrganisaatioDAOImpl organisaatioDAO;
     @Autowired
     private OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    @Autowired
+    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
+    @Autowired
+    protected YhteystietoArvoDAOImpl yhteystietoArvoDAO;
     @Autowired
     private ConversionService conversionService;
     @Autowired
@@ -687,14 +697,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
         entity.setOrganisaatiotyypitStr(tyypitStr);
 
-        // TODO
-        //validateLisatiedot(model.getYhteystietoArvos(), orgTypes);
-
-
-
-        // filtteröi organisaatiotyypin mukaan
-        //entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, converterFactory.convertYhteystietoArvosToJPA(model.getYhteystietoArvos(), YhteystietoArvo.class, true)));
-
+        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos()));
 
         // Tarkistetaan organisaatio hierarkia
         checkOrganisaatioHierarchy(entity, model.getParentOid());
@@ -804,13 +807,57 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
+    private boolean isAllowed(Organisaatio org, YhteystietoArvo yad) {
+        if (org.getOppilaitosTyyppi() != null
+                && yad.getKentta().getYhteystietojenTyyppi().getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
+            return true;
+        }
+        for (String otype : org.getTyypit()) {
+            if (yad.getKentta().getYhteystietojenTyyppi().getSovellettavatOrganisaatioTyyppis().contains(otype)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, List<YhteystietoArvo> nys) {
+
+        Map<String, YhteystietoArvo> ov = new HashMap<String, YhteystietoArvo>();
+
+        for (YhteystietoArvo ya : yhteystietoArvoDAO.findByOrganisaatio(org)) {
+            if (!isAllowed(org, ya)) {
+                yhteystietoArvoDAO.remove(ya);
+            } else {
+                ov.put(ya.getKentta().getOid(), ya);
+            }
+        }
+
+        List<YhteystietoArvo> ret = new ArrayList<YhteystietoArvo>();
+
+        for (YhteystietoArvo ya : nys) {
+            if (!isAllowed(org, ya)) {
+                continue;
+            }
+            YhteystietoArvo o = ov.get(ya.getKentta().getOid());
+            if (o != null) {
+                o.setArvoText(ya.getArvoText());
+                yhteystietoArvoDAO.update(o);
+                ret.add(o);
+            } else {
+                ya.setOrganisaatio(org);
+                ret.add(ya);
+            }
+        }
+
+        return ret;
+    }
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public String getRoles() {
         StringBuilder ret = new StringBuilder("[");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+
         for (GrantedAuthority ga : auth.getAuthorities()) {
             ret.append("\"");
             ret.append(ga.getAuthority().replace("ROLE_", ""));
@@ -819,5 +866,21 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         ret.setCharAt(ret.length()-1, ']');
         return ret.toString();
     }
-    
+
+    @Override
+    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
+        if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
+            return new ArrayList<YhteystietojenTyyppiRDTO>();
+        }
+        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(organisaatioTyyppi);
+        if (entitys == null) {
+            return null;
+        }
+        List<YhteystietojenTyyppiRDTO> result = new ArrayList<YhteystietojenTyyppiRDTO>();
+        for (YhteystietojenTyyppi entity : entitys) {
+            result.add(conversionService.convert(entity, YhteystietojenTyyppiRDTO.class));
+        }
+        return result;
+    }
+
 }

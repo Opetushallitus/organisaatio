@@ -23,6 +23,9 @@ import fi.vm.sade.organisaatio.model.Osoite;
 import fi.vm.sade.organisaatio.model.Puhelinnumero;
 import fi.vm.sade.organisaatio.model.Www;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.YhteystietoArvo;
+import fi.vm.sade.organisaatio.model.YhteystietoElementti;
+import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.model.lop.BinaryData;
 import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
@@ -93,9 +96,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setYtunnus(t.getYTunnus());
         s.setVirastoTunnus(t.getVirastoTunnus());
 
-        // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
-        //List<Map<String, String>> yhteystietoArvos = new ArrayList<Map<String, String>>();
-        //t.setYhteystietoArvos(yhteystietoArvos);
+        s.setYhteystietoArvos(convertYhteystietoArvos(t.getYhteystietoArvos()));
 
         for (Map<String, String> m : t.getYhteystiedot()) {
             Yhteystieto y = convertYhteystietoGeneric(m);
@@ -106,6 +107,27 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setYhteystiedot(yhteystietos);
 
         return s;
+    }
+
+    private List<YhteystietoArvo> convertYhteystietoArvos(List<Map<String, String>> arvoMaps) {
+        ArrayList<YhteystietoArvo> arvos = new ArrayList<YhteystietoArvo>(arvoMaps.size());
+        for (Map<String, String> arvoMap : arvoMaps) {
+            YhteystietoArvo arvo = new YhteystietoArvo();
+            YhteystietoElementti ye = arvo.getKentta();
+            ye.setNimi(arvoMap.get("YhteystietoElementti.nimi"));
+            ye.setNimiSv(arvoMap.get("YhteystietoElementti.nimisv"));
+            ye.setOid(arvoMap.get("YhteystietoElementti.oid"));
+            ye.setTyyppi(arvoMap.get("YhteystietoElementti.tyyppi"));
+            ye.setKaytossa(Boolean.parseBoolean(arvoMap.get("YhteystietoElementti.kaytossa")));
+            ye.setPakollinen(Boolean.parseBoolean(arvoMap.get("YhteystietoElementti.pakollinen")));
+            if (arvoMap.get("YhteystietojenTyyppi.oid") != null) {
+                YhteystietojenTyyppi yt = new YhteystietojenTyyppi();
+                yt.setOid(arvoMap.get("YhteystietojenTyyppi.oid"));
+                yt.setNimi(convertYATToMonikielinenTeksti(arvoMap));
+            }
+            arvos.add(arvo);
+        }
+        return arvos;
     }
 
     private Osoite convertMapToOsoite(Map<String, String> s, String tyyppi) {
@@ -169,6 +191,19 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         }
 
         return t;
+    }
+
+    private MonikielinenTeksti convertYATToMonikielinenTeksti(Map<String, String> m) {
+        MonikielinenTeksti mt = null;
+        if (m != null) {
+            mt = new MonikielinenTeksti();
+            for (Map.Entry<String, String> e : m.entrySet()) {
+                if (e.getKey().startsWith("YhteystietojenTyyppi.nimi.")) {
+                    mt.addString(e.getKey().substring("YhteystietojenTyyppi.nimi.".length()), e.getValue());
+                }
+            }
+        }
+        return mt;
     }
 
     private MonikielinenTeksti convertMapToMonikielinenTeksti(Map<String, String> m) {

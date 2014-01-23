@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 
@@ -165,4 +166,10 @@ public interface OrganisaatioResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Palauttaa autentikoituneen käyttäjän roolit", notes = "Pitäisi testikäyttöön samat kuin /cas/myroles.", response = String.class)
     public String getRoles();
+
+    @GET
+    @Path("/yhteystietometadata")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Palauttaa sallitut yhteystietotyypit", notes = "Palauttaa sallitut yhteystietotyypit", response = List.class)
+    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@QueryParam("organisaatioTyyppi") List<String> organisaatioTyyppi);
 }
