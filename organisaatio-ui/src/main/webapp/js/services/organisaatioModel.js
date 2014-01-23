@@ -283,7 +283,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.refreshIfNeeded = function(oid) {
-            if (oid !== model.organisaatio.oid) {
+            if (oid && (oid !== model.organisaatio.oid)) {
                 refresh(oid);
             }
         };
@@ -419,6 +419,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];
+            model.yhteystiedot = {};
+            model.mdyhteystiedot = {};
             finishModel();
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);

@@ -17,7 +17,7 @@
               <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
             </li>
             <li auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-              <a ng-click="createAliOrganisaatio(data)">{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
+              <a href='#/organisaatiot/{{data.oid}}/new'>{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
             </li>
             <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
               <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
