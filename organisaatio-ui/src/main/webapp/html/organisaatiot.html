@@ -2,26 +2,26 @@
 <script type="text/ng-template" id="organisaatio_node.html">
     <div class="view-row">
         <div class="view-column cols-3 first">
-        <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
-           ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
-        <span class="dropdown">
-          <a href="" class="icon-list dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
-          <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
-            <li>
-              <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
-            </li>
-            <li auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-              <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
-            </li>
-            <li auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-              <a href='#/organisaatiot/{{data.oid}}/new'>{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
-            </li>
-            <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-              <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
-            </li>
-          </ul>
-        </span>
-        <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
+            <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
+               ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
+            <span class="dropdown">
+                <a href="" class="icon-list dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
+                <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
+                    <li>
+                        <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
+                    </li>
+                    <li auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
+                    </li>
+                    <li auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a href='#/organisaatiot/{{data.oid}}/new'>{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
+                    </li>
+                    <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
+                    </li>
+                </ul>
+            </span>
+            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
         </div>
         <div class="view-column cols-1">
            {{data.tunnus}}
@@ -38,17 +38,23 @@
 
 <form class="form-search" novalidate ng-submit="search()">
     <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
-    <input class="btn btn-primary" type="submit" value="{{'Organisaatiot.hae' | i18n}}">
-    <input class="btn" type="reset" ng-click="resetHakuehdot()" value="{{'Organisaatiot.tyhjenna' | i18n}}">
+    <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>
+    <button class="btn" type="reset" ng-click="resetHakuehdot()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
 </form>
 
 <p ng-hide="tarkemmatHakuehdotVisible">
-    <a class="" href="" ng-click="showTarkemmatHakuehdot()">{{'Organisaatiot.naytaTarkennettuHaku' | i18n}}</a>
+    <a href="" ng-click="showTarkemmatHakuehdot()">
+        <i class="icon-chevron-right"></i>
+        {{'Organisaatiot.naytaTarkennettuHaku' | i18n}}
+    </a>
 </p>
 
 <div ng-show="tarkemmatHakuehdotVisible" class="">
     <p>
-        <a class="" href="" ng-click="hideTarkemmatHakuehdot()">{{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}</a>
+        <a href="" ng-click="hideTarkemmatHakuehdot()">
+            <i class="icon-chevron-down"></i>
+            {{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}
+        </a>
     </p>
     <form>
         <div class="form-fluid">
@@ -77,14 +83,16 @@
     </form>
 </div>
 
-<div class="form-inline">
-    <span class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</span>
+<div class="row-fluid">
+    <h3 class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</h3>
     <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
-        <input class="btn" ng-click="luoYlinTaso()" value="{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}">
+        <button class="btn" ng-click="luoYlinTaso()">{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}</button>
     </span>        
 </div>
 
-<div class="">
+<br>
+
+<div class="well" ng-if="model.count">
     <ol class="unstyled">
         <li ng-repeat="data in model.getRootNodes() | orderBy:'i18nNimi'"
             ng-include="'organisaatio_node.html'"></li>
