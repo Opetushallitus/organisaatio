@@ -260,8 +260,9 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                 if (model.getStatus(node)) {
                     node.i18nNimi += " (" + model.getStatus(node) + ")";
                 }
-                node.tunnus   = model.getTunnus(node);
-                node.tyyppi   = model.getTyyppi(node);
+                node.tunnus = model.getTunnus(node);
+                node.tyyppi = model.getTyyppi(node);
+                node.level  = level;
 
                 if (level === 2 && model.count > 20) {
                     expanded = false;
@@ -317,7 +318,11 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
     $scope.currentOid = '';
-
+   
+    $scope.getTimes=function(n){
+        return new Array(n);
+    };   
+   
     $scope.setCurrentOid = function(oid) {
         $scope.currentOid = oid;
     };
