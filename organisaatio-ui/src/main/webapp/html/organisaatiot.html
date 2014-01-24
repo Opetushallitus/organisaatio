@@ -1,14 +1,11 @@
 <!-- Organisaatiot -->
-
 <script type="text/ng-template" id="organisaatio_node.html">
-    <div class="view-row state-disabled" ng-class="{collapsed: !data.expanded}">
-	<span class="disclose icon collapse"
-          ng-click="model.expand(data)"
-          ng-hide="model.isLeaf(data)">
-        </span>
+    <div class="view-row">
         <div class="view-column cols-3 first">
+        <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
+           ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
         <span class="dropdown">
-          <a class="dropmenu dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
+          <a href="" class="icon-list dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
           <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
             <li>
               <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
@@ -54,7 +51,7 @@
         <a class="" href="" ng-click="hideTarkemmatHakuehdot()">{{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}</a>
     </p>
     <form>
-        <div class="form-row">
+        <div class="form-fluid">
             <!-- Kotipaikka -->
             <select class="input-xlarge" ng-model="hakuehdot.kunta" ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">
                 <option value="">{{'Organisaatiot.kotipaikka' | i18n}}</option>
@@ -88,7 +85,7 @@
 </div>
 
 <div class="">
-    <ol class="sortable treelist collapsible">
+    <ol class="unstyled">
         <li ng-repeat="data in model.getRootNodes() | orderBy:'i18nNimi'"
             ng-include="'organisaatio_node.html'"></li>
     </ol>
