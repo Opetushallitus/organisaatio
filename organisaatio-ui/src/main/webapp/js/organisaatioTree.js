@@ -175,6 +175,26 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
            return null;
         },
 
+        getTila: function(node) {
+           var today = +new Date(); 
+           
+           if ('alkuPvm' in node) {
+              var alkuPvm = new Date(node.alkuPvm);
+              
+              if (alkuPvm > today) {
+                  return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+              }
+          }
+           if ('lakkautusPvm' in node) {
+              var lakkautusPvm = new Date(node.lakkautusPvm);
+              
+              if (lakkautusPvm < today) {
+                  return ($filter('i18n')("Organisaatiot.passivoitu",""));
+              }
+           }
+           return ($filter('i18n')("Organisaatiot.aktiivinen",""));
+        },
+
         getNimi: function (node) {
             if ('fi' in node.nimi) {
                 return node.nimi.fi;
@@ -205,7 +225,7 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
             }
             return "\u00A0";
         },
-        
+              
         buildHakuParametrit: function(hakuehdot) {
             $log.log('buildHakuParametrit()');
 
@@ -262,6 +282,7 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                 }
                 node.tunnus = model.getTunnus(node);
                 node.tyyppi = model.getTyyppi(node);
+                node.tila   = model.getTila(node);
                 node.level  = level;
 
                 if (level === 2 && model.count > 20) {
