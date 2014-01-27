@@ -83,13 +83,16 @@
                 <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
             </select>
         </div>
-        <label class="checkbox-inline">
-            <!-- Näytä lakkautetut -->
-            <input type="checkbox" ng-model="hakuehdot.naytaLakkautetut">{{'Organisaatiot.naytaLakkautetut' | i18n}}
+        <div>
+            <!-- Näytä kaikki -->
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.kaikki">{{'Organisaatiot.naytaKaikki' | i18n}}
 
-            <!-- Näytä suunnitellut -->
-            <input type="checkbox" ng-model="hakuehdot.naytaSuunnitellut">{{'Organisaatiot.naytaSuunnitellut' | i18n}}
-        </label>
+            <!-- Näytä vain aktiiviset -->           
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainAktiiviset">{{'Organisaatiot.naytaVainAktiiviset' | i18n}}
+
+            <!-- Näytä vain lakkautetut -->           
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainLakkautetut">{{'Organisaatiot.naytaVainLakkautetut' | i18n}}
+        </div>
     </form>
 </div>
 

@@ -9,8 +9,10 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
         kunta: "",
         organisaatiotyyppi: "",
         oppilaitostyyppi: "",
-        naytaLakkautetut: false,
-        naytaSuunnitellut: false,
+        tila: "kaikki",
+        kaikki: "kaikki",
+        vainAktiiviset: "vainAkviiviset",
+        vainLakkautetut: "vainLakkautetut",
         paikkakunnat: [],
         organisaatiotyypit: [],
         oppilaitostyypit: [],
@@ -85,9 +87,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-            }
-
-            
+            }          
         },
 
         resetTarkemmatEhdot: function () {
@@ -95,6 +95,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
             model.kunta= "";
             model.organisaatiotyyppi= "";
             model.oppilaitostyyppi= "";
+            model.tila = "kaikki";
         },
 
         resetAll: function () {
@@ -103,6 +104,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
             model.kunta= "";
             model.organisaatiotyyppi= "";
             model.oppilaitostyyppi= "";
+            model.tila = "kaikki";
         }
     };
 
@@ -249,14 +251,12 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                 hakuParametrit.oppilaitostyyppi = hakuehdot.oppilaitostyyppi + "#*";
             }
 
-            // Poista hausta lakkautetut (ellei erikseen haluta)
-            if (hakuehdot.naytaLakkautetut === true) {
-                hakuParametrit.lakkautetut = true;
+            // Vain aktiiviset tain vain lakkautetut
+            if (hakuehdot.tila === hakuehdot.vainAktiiviset) {
+                hakuParametrit.vainAktiiviset = true;
             }
-
-            // Poista hausta suunnitellut (ellei erikseen haluta)
-            if (hakuehdot.naytaSuunnitellut === true) {
-                hakuParametrit.suunnitellut = true;
+            else if (hakuehdot.tila === hakuehdot.vainLakkautetut) {
+                hakuParametrit.vainLakkautetut = true;
             }
 
             // TODO: oidrestrictionlist??
