@@ -181,7 +181,7 @@
             <div class="text-help">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</div>
         </div>
         <div class="view-column cols-1">
-            <input type="text" name="lakkautuspvm" datepicker-popup="yyyy-MM-dd" ng-model="model.organisaatio.lakkautuspvm" 
+            <input type="text" name="lakkautuspvm" datepicker-popup="yyyy-MM-dd" ng-model="model.organisaatio.lakkautusPvm" 
                    datepicker-options="dateOptions" 
                    close-on-date-selection="true" placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                    close-text="{{'Organisaationmuokkaus.sulje'| i18n}}" 
@@ -948,7 +948,7 @@
         <br>&nbsp;<br>
         <div class="align-right ">
             <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentoid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
     </div>
     <p>
