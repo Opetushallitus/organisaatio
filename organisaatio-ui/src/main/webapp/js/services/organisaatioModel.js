@@ -292,7 +292,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.refreshIfNeeded = function(oid) {
-            if (oid && (oid !== model.organisaatio.oid)) {
+            if (oid) {// && (oid !== model.organisaatio.oid)) {
                 refresh(oid);
             }
         };

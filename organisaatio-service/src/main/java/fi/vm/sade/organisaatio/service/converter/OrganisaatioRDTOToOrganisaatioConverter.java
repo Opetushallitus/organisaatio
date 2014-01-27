@@ -96,7 +96,9 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setYtunnus(t.getYTunnus());
         s.setVirastoTunnus(t.getVirastoTunnus());
 
-        s.setYhteystietoArvos(convertYhteystietoArvos(t.getYhteystietoArvos()));
+        if (t.getYhteystietoArvos()!=null) {
+            s.setYhteystietoArvos(convertYhteystietoArvos(t.getYhteystietoArvos()));
+        }
 
         for (Map<String, String> m : t.getYhteystiedot()) {
             Yhteystieto y = convertYhteystietoGeneric(m);
@@ -263,8 +265,12 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setHakutoimistoNimi(convertMapToMonikielinenTeksti(t.getHakutoimistonNimi()));
         s.setKoodi(t.getKoodi());
         s.setKuva(decodeFromUUENCODED(t.getKuvaEncoded()));
-        s.setLuontiPvm(t.getLuontiPvm());
-        s.setMuokkausPvm(t.getMuokkausPvm());
+        if (t.getLuontiPvm()!=null) {
+            s.setLuontiPvm(t.getLuontiPvm());
+        }
+        if (t.getMuokkausPvm()!=null) {
+            s.setMuokkausPvm(t.getMuokkausPvm());
+        }
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
 
         for (Map<String, String> yhteystieto : t.getYhteystiedot()) {
