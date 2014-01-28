@@ -1,3 +1,7 @@
+input[type="checkbox"] {
+    box-shadow: none;
+}
+
 .greyed {
   color: gray;
 }

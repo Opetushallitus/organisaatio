@@ -94,12 +94,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         }
 
         refreshMetadata = function(result) {
+            model.kttabs = [];
+            model.oetabs = [];
             if (result.metadata) {
                 model.uriLocalizedNames["hakutoimistonNimi"] =
                         getLocalizedValue(result.metadata.hakutoimistonNimi, "kielivalikoima_", false);
-
-                model.kttabs = [];
-                model.oetabs = [];
 
                 if (result.metadata.data && result.metadata.data.YLEISKUVAUS) {
                     // TODO: hae kielet kaikista kentistä
@@ -497,6 +496,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.yhteystiedot = {};
                 model.mdyhteystiedot = {};
                 finishModel();
+                refreshMetadata(model.organisaatio);
             }, function(response) {
                 // postinumeroita ei löytynyt
                 showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
@@ -577,44 +577,60 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.addKtLang = function() {
-            var lang = model.koodisto.ktkieliplaceholder;
-            model.koodisto.ktkieliplaceholder = null;
-            if (lang) {
-                for (var i in model.kttabs) {
-                    if (model.kttabs[i].lang === lang) {
-                        return;
+            if (model.koodisto.ktkieliplaceholder !== $filter('i18n')("lisaakieli")) {
+                var lang = model.koodisto.ktkieliplaceholder;
+                model.koodisto.ktkieliplaceholder = null;
+                if (lang) {
+                    for (var i in model.kttabs) {
+                        if (model.kttabs[i].lang === lang) {
+                            return;
+                        }
                     }
+                    model.kttabs.push({lang: lang, active: true});
                 }
-                model.kttabs.push({lang: lang, active: true});
-            }
-            for (field in model.kttypes) {
-                if (!model.organisaatio.metadata.data[model.kttypes[field]]) {
-                    model.organisaatio.metadata.data[model.kttypes[field]] = {};
+                for (field in model.kttypes) {
+                    if (!model.organisaatio.metadata.data[model.kttypes[field]]) {
+                        model.organisaatio.metadata.data[model.kttypes[field]] = {};
+                    }
                 }
             }
         };
 
         this.removeKtLang = function(index) {
+            for (field in model.kttypes) {
+                if (model.organisaatio.metadata.data[model.kttypes[field]]) {
+                    if (model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[i].lang]) {
+                        delete model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[i].lang];
+                    }
+                }
+            }
             model.kttabs.splice(index, 1);
-            //TODO: remove from metadata 
         };
 
         this.addOeLang = function() {
-            var lang = model.koodisto.oekieliplaceholder;
-            model.koodisto.oekieliplaceholder = null;
-            if (lang) {
-                for (var i in model.oetabs) {
-                    if (model.oetabs[i].lang === lang) {
-                        return;
+            if (model.koodisto.oekieliplaceholder !== $filter('i18n')("lisaakieli")) {
+                var lang = model.koodisto.oekieliplaceholder;
+                model.koodisto.oekieliplaceholder = null;
+                if (lang) {
+                    for (var i in model.oetabs) {
+                        if (model.oetabs[i].lang === lang) {
+                            return;
+                        }
                     }
+                    model.oetabs.push({lang: lang, active: true});
                 }
-                model.oetabs.push({lang: lang, active: true});
             }
         };
 
         this.removeOeLang = function(index) {
+            for (field in model.oetypes) {
+                if (model.organisaatio.metadata.data[model.oetypes[field]]) {
+                    if (model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[i].lang]) {
+                        delete model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[i].lang];
+                    }
+                }
+            }
             model.oetabs.splice(index, 1);
-            //TODO: remove from metadata 
         };
 
         this.addSome = function() {
@@ -661,14 +677,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.setPostinumero = function(addressmodel, postcode) {
-            if (addressmodel && postcode  && model.koodisto.nimetFI[postcode]) {
+            if (addressmodel && postcode && model.koodisto.nimetFI[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetFI[postcode].paikka;
             }
         };
 
         this.setRuotsiPostinumero = function(addressmodel, postcode) {
-            if (addressmodel && postcode  && model.koodisto.nimetSV[postcode]) {
+            if (addressmodel && postcode && model.koodisto.nimetSV[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetSV[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetSV[postcode].paikka;
             }
