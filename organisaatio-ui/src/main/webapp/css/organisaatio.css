@@ -6,6 +6,10 @@ input.greyed[type="text"] {
     color: gray;
 }
 
+.modal.modal-wide {
+    width: 700px;
+}
+
 img.col-indent-4 {
     position: absolute;
     left: 640px;

@@ -413,7 +413,8 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
     $scope.luoYlinTaso = function () {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
-            controller: YritysValintaController
+            controller: YritysValintaController,
+            windowClass:'modal-wide'
         });
         
         modalInstance.result.then(function (Ytunnus) {

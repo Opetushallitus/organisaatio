@@ -1,10 +1,9 @@
-function YritysValintaController($scope, $modalInstance, $location, YritysValintaModel) {
+function YritysValintaController($scope, $modalInstance, $location, $log, YritysValintaModel) {
     $scope.model = YritysValintaModel;
     
-    $scope.Ytunnus = "";
-    
-    $scope.select = function () {
-        $modalInstance.close($scope.Ytunnus);
+    $scope.select = function (yritys) {
+        $log.info(yritys);
+        $modalInstance.close(yritys.ytunnus);
     };
     
     $scope.search = function() {
