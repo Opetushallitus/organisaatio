@@ -332,7 +332,7 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
 });
 
 
-function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
+function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, Alert, Organisaatio, 
                                     HakuehdotModel, OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
@@ -380,11 +380,6 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
         });
     };
 
-    $scope.createAliOrganisaatio = function (node) {
-        $log.warn("Aliorganisaation luontia ei toteutettu: " + node.oid);
-        Alert.add("warning", "Aliorganisaation luontia ei ole vielä toteutettu", true);
-    };
-    
     $scope.search = function() {
         if ($scope.hakuehdot.isEmpty()) {
             $log.warn("Hakuehdon tyhjät!");
@@ -417,8 +412,10 @@ function OrganisaatioTreeController($scope, $location, $routeParams, $filter,
             windowClass:'modal-wide'
         });
         
-        modalInstance.result.then(function (Ytunnus) {
-            $log.log('YritysValinta YTynnus: ' + Ytunnus);
+        modalInstance.result.then(function (ytunnus) {
+            $log.log('Luodaan uusi organisaatio YTynnuksella: ' + ytunnus);
+            $location.search('ytunnus',ytunnus).path($location.path() + 
+                    "/" + ROOT_ORGANISAATIO_OID +"/new");
         }, function () {
             $log.log('Modal dismissed at: ' + new Date());
         });
