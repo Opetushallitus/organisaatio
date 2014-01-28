@@ -661,14 +661,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.setPostinumero = function(addressmodel, postcode) {
-            if (addressmodel && postcode) {
+            if (addressmodel && postcode  && model.koodisto.nimetFI[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetFI[postcode].paikka;
             }
         };
 
         this.setRuotsiPostinumero = function(addressmodel, postcode) {
-            if (addressmodel && postcode) {
+            if (addressmodel && postcode  && model.koodisto.nimetSV[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetSV[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetSV[postcode].paikka;
             }

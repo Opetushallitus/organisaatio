@@ -39,22 +39,20 @@
             &nbsp;
         </div>
         <div class="view-column cols-1">
-            <select id="postifi" name="postifi" ng-model="postcodefi" ng-disabled="disabled"
-                    ng-options="nro for nro in postcodes" address-combined-field
-                    ng-click="setpostcodefi(addressmodelfi, postcodefi)">            
-                <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
-            </select>
+            <input id="postifi" name="postifi" type="text" ng-model="postcodefi" ng-disabled="disabled"
+                   typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
+                   placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
+                   typeahead-on-select="setpostcodefi(addressmodelfi, postcodefi)">
         </div>
         <div class="view-column cols-1">
             {{addressmodelfi.postitoimipaikka}}&nbsp;
         </div>
 
         <div class="view-column cols-1" ng-show='addressmodelsv !== undefined'>
-            <select id="postisv" name="postisv" ng-model="postcodesv" ng-disabled="disabled"
-                    ng-options="nro for nro in postcodes" address-combined-field
-                    ng-click="setpostcodesv(addressmodelsv, postcodesv)">
-                <option value="">{{'Organisaationmuokkaus.postinumero'| i18n}}</option>
-            </select>
+            <input id="postisv" name="postisv" type="text" ng-model="postcodesv" ng-disabled="disabled"
+                   typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
+                   placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
+                   typeahead-on-select="setpostcodesv(addressmodelsv, postcodesv)">
         </div>
         <div class="view-column cols-1" ng-show='addressmodelsv !== undefined'>
             {{addressmodelsv.postitoimipaikka}}&nbsp;
