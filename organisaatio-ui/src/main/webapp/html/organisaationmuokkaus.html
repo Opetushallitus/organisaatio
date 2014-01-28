@@ -940,6 +940,8 @@
             <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
+        <br>&nbsp;
+        <span class="muted"><em>{{model.savestatus}}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         {{'Organisaationmuokkaus.uudenluonti'| i18n}}:
@@ -950,6 +952,8 @@
             <button type="button" class="button small" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="button small" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
+        <br>&nbsp;
+        <span class="muted"><em>{{model.savestatus}}</em></span>
     </div>
     <p>
 </div>
