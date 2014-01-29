@@ -1,11 +1,17 @@
-function OrganisaatioController($scope, $location, $routeParams, OrganisaatioModel) {
+function OrganisaatioController($scope, $location, $routeParams, $log, OrganisaatioModel) {
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     
     $scope.model.mode = "show";
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
-        $scope.model.createOrganisaatio($routeParams.parentoid);
+        if ('ytunnus' in $routeParams) {
+            $log.log("Uusi organisaatio Ytunnuksella: " + $routeParams.ytunnus);
+            $scope.model.createOrganisaatioYTunnuksella($routeParams.parentoid, $routeParams.ytunnus);
+        }
+        else {
+            $scope.model.createOrganisaatio($routeParams.parentoid);
+        }
     } else if (/edit$/.test($location.path())) {
         $scope.model.mode = "edit";
     }

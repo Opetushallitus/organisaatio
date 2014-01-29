@@ -1,6 +1,6 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
-        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, Alert, $filter, $log) {
+        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert, $filter, $log) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -49,6 +49,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             this.some.push({'type': this.sometypes[st], 'nimi': $filter('i18n')('Organisaationtarkastelu.' + this.sometypes[st])});
         }
 
+        // YTJ rajapinnan kautta saadut yrityksen tiedot
+        this.ytjTiedot = {};
+
         this.OPHOid = "1.2.246.562.10.00000000001";
 
         this.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
@@ -91,7 +94,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 ret.push(k);
             }
             return ret;
-        }
+        };
 
         refreshMetadata = function(result) {
             model.kttabs = [];
@@ -396,10 +399,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.koodisto.kielet.length = 0;
                     result.forEach(function(kieliKoodi) {
                         if (KoodistoKoodi.isValid(kieliKoodi)) {
-                            model.koodisto.kielet.push({uri: kieliKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
+                            model.koodisto.kielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
                             model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
                         }
                     });
+                    // jos ytj:stä saatu organisaatioon liittyvää tietoa --> päivitetään kieli
+                    model.addYtjLang();
                 }, function(response) {
                     // kieliä ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
@@ -478,7 +483,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-        this.createOrganisaatio = function(parentoid) {
+        this.createOrganisaatio = function(parentoid, yritystiedot) {
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
                 model.parenttype = result.tyypit[0];
@@ -497,10 +502,94 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.mdyhteystiedot = {};
                 finishModel();
                 refreshMetadata(model.organisaatio);
+                
+                // Jos yritystiedot on mukana --> täytetään tiedot
+                if (typeof yritystiedot !== "undefined") {
+                    model.fillYritysTiedot(yritystiedot);
+                }
+                
             }, function(response) {
                 // postinumeroita ei löytynyt
                 showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
             });
+        };
+
+        this.createOrganisaatioYTunnuksella = function(parentoid, ytunnus) {
+            YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
+//                esimerkkiYritysTiedot = {
+//                    versio : 1,
+//                    nimi : "Esimerkki organisaatio",
+//                    svNimi : "Exampel organisation",
+//                    ytunnus : "2183469-6",
+//                    yritysmuoto : "Osakeyhtiö",
+//                    yritysmuotoKoodi : "oy", // mitäköhän tää pitäis olla
+//                    toimiala : "Kartokiteollisuus",
+//                    toimialaKoodi : "paper industri",
+//                    yrityksenKieli : "ruotsi",
+//                    postiOsoite : {
+//                        katu : "Tie 1",
+//                        postinumero : "00100",
+//                        toimipaikka : "Helsinki",
+//                        maa : "Suami",
+//                        maakoodi : "FI",
+//                        kieli : 0
+//                    },
+//                    kayntiOsoite : {
+//                        katu : "Tie 1",
+//                        postinumero : "00100",
+//                        toimipaikka : "Helsinki",
+//                        maa : "Suami",
+//                        maakoodi : "FI",
+//                        kieli : 0
+//                    },
+//                    sahkoposti: "esimerkki@organisaatio.fi",
+//                    www: "www.esimerkki.com",
+//                    puhelin: "0400-801092",
+//                    faksi: "021-100111",
+//                    kotiPaikka: "patikoikka", // mitäköhän tässä pitäis olla
+//                    kotiPaikkaKoodi: "paikkakoodi", // mitäköhän tässä pitäis olla
+//                    aloitusPvm: "12.11.1974"
+//                };
+//
+//                model.createOrganisaatio(parentoid, esimerkkiYritysTiedot);
+//                model.ytjTiedot = esimerkkiYritysTiedot;
+                
+                model.ytjTiedot = result;
+                model.createOrganisaatio(parentoid, result);
+            }, function(response) {
+                // yritystietoa ei löytynyt
+                showAndLogError("Organisaationtarkastelu.ytunnushakuvirhe", response);
+                model.createOrganisaatio(parentoid);
+            });
+        };
+        
+        this.fillYritysTiedot = function(yritystiedot) {
+            // parse a date in dd.MM.yyyy format
+            parseDate = function(input) {
+                if (!input) {
+                    return;
+                }
+                var parts = input.split('.');
+                // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+                return new Date(parts[2], parts[1]-1, parts[0]); // Note: months are 0-based
+            };
+
+            model.organisaatio.nimi.fi = yritystiedot.nimi;
+            model.organisaatio.nimi.sv = yritystiedot.svNimi;
+            model.organisaatio.ytunnus = yritystiedot.ytunnus;
+            model.organisaatio.yritysmuoto = yritystiedot.yritysmuoto;
+            //yrityksenKieli, sitten kun koodiston kielet saatu
+            //postiOsoite
+            //kayntiOsoite
+            model.yhteystiedot.email.email = yritystiedot.sahkoposti;
+            model.yhteystiedot.www.www = yritystiedot.www;
+            model.yhteystiedot.puhelin.numero = yritystiedot.puhelin;
+            model.yhteystiedot.faksi.numero = yritystiedot.faksi;
+            //model.organisaatio.kotipaikkaUri = getKotipaikkaUri(yritystiedot.kotipaikka);
+            model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
+            
+            // asetetaan päivitys timestamp
+            model.organisaatio.ytjPaivitysPvm = new Date();
         };
 
         // Konvertoi päivämäärät rajapinnan hyväksymään muotoon yyyy-mm-dd
@@ -518,6 +607,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 curr_month = 100 + d.getMonth() + 1;
                 curr_year = d.getFullYear();
                 model.organisaatio.lakkautusPvm = curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
+            }
+            if (model.organisaatio.ytjPaivitysPvm) {
+                d = new Date(model.organisaatio.ytjPaivitysPvm);
+                curr_date = 100 + d.getDate();
+                curr_month = 100 + d.getMonth() + 1;
+                curr_year = d.getFullYear();
+                model.organisaatio.ytjPaivitysPvm = curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
             }
         };
 
@@ -567,6 +663,51 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
             }
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
+        };
+
+        this.addYtjLang = function() {
+            // Tämä tehdään vasta kun koodiston kielet on saatu ja ytj tiedot on olemassa
+            if (!model.ytjTiedot) {
+                return;
+            }
+            getKieliUri = function(kieli) {
+                if (!kieli) {
+                    $log.debug("fillYritysTiedot.getKieliUri(), tyhjä kieli");
+                    return;
+                }
+                
+                // yritystietojen mukana kieli tulee "suomeksi" --> muutetaan se kieliArvoksi
+                var kieliArvo = null;
+                switch (kieli.trim().toLowerCase()) {
+                    case "suomi":
+                        kieliArvo = "FI";
+                        break;
+                    case "ruotsi":
+                        kieliArvo = "SV";
+                        break;
+                    case "englanti":
+                        kieliArvo = "EN";
+                        break;
+                    default:
+                        $log.warn("Failed to get kieli uri for language: " + kieli);
+                        return;
+                }
+                
+                // etsitään koodiston kielistä kieliArvoa ja palautetaan vastaava uri jos löytyy
+                var found = $filter('filter')(model.koodisto.kielet, {arvo: kieliArvo}, true);
+                if (found.length) {
+                    return found[0].uri;
+                } 
+                else {
+                    $log.warn("Failed to found uri for kieli: " + kieli + " arvo: " + kieliArvo);
+                }
+                return;
+            };
+            kieliUri = getKieliUri(model.ytjTiedot.yrityksenKieli);
+            if (kieliUri) {
+                model.organisaatio.kieletUris.push(kieliUri);
+            }
+
         };
 
         this.removeLang = function(lang) {
