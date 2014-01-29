@@ -2,6 +2,11 @@ input[type="checkbox"] {
     box-shadow: none;
 }
 
+.form-horizontal .controls .control-label {
+  text-align: left;
+  width:500px;
+}
+
 .greyed {
   color: gray;
 }
@@ -14,7 +19,7 @@ input.greyed[type="text"] {
     width: 700px;
 }
 
-img.col-indent-4 {
+img.absolute {
     position: absolute;
     left: 640px;
     top: inherit;
