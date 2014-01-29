@@ -397,19 +397,16 @@
             </select>
             <div ng-repeat="(k,v) in model.organisaatio.metadata.data">
                 <div ng-if="['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'].indexOf(k) > -1">
-                    <div>
                         <div ng-repeat="(k2,v2) in v">
-                            <span class="span2">
-                                {{'Organisaationtarkastelu.' + k| i18n }}:
-                            </span>
-                            <span>
+                                <br />{{'Organisaationtarkastelu.' + k| i18n }}:<br />
+                                <div class="input-append">
                                 <input id="some_{{k}}" type="text" name="some_{{k}}"
                                        ng-model="model.organisaatio.metadata.data[k][k2]"
                                        placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
-                            </span>
-                            <button type="button" class="btn" ng-click="model.removeSome(k)">{{ 'Organisaationmuokkaus.poistasome' | i18n}}</button>
+                            <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
+                                <button type="button" class="btn" ng-click="model.removeSome(k)"><i class="icon-remove"></i></button>
+                                </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
