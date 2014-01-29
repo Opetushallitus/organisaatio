@@ -190,6 +190,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         refresh = function(oid) {
+            // tyhjennetään mahdolliset vanhat ytj tiedot
+            model.ytjTiedot = {};
+            
+            // haetaan organisaation tiedot
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
                 model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
@@ -667,7 +671,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.addYtjLang = function() {
             // Tämä tehdään vasta kun koodiston kielet on saatu ja ytj tiedot on olemassa
-            if (!model.ytjTiedot) {
+            if ('yrityksenKieli' in model.ytjTiedot === false) {
                 return;
             }
             getKieliUri = function(kieli) {
