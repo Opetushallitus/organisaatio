@@ -382,8 +382,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 KoodistoPaikkakunnat.get({}, function(result) {
                     model.koodisto.kotipaikat.length = 0;
                     result.forEach(function(kpKoodi) {
-                        model.koodisto.kotipaikat.push({uri: kpKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(kpKoodi)});
+                        model.koodisto.kotipaikat.push({uri: kpKoodi.koodiUri, arvo: kpKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kpKoodi)});
                     });
+                    // jos ytj:stä saatu organisaatioon liityvää tietoa --> päivitetään kotipaikka
+                    model.addYtjKotipaikka();
                 }, function(response) {
                     // paikkakuntia ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
@@ -776,6 +778,23 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
             }
             model.oetabs.splice(index, 1);
+        };
+
+        this.addYtjKotipaikka = function() {
+            // Tämä tehdään vasta kun koodiston kotipaikat on saatu ja ytj tiedot on olemassa
+            if ('kotiPaikkaKoodi' in model.ytjTiedot === false) {
+                return;
+            }
+
+            // etsitään koodiston kotipaikoista kieliArvoa ja palautetaan vastaava uri jos löytyy
+            found = $filter('filter')(model.koodisto.kotipaikat, {arvo: model.ytjTiedot.kotiPaikkaKoodi}, true);
+            if (found.length) {
+                model.organisaatio.kotipaikkaUri = found[0].uri;
+            } 
+            else {
+                $log.warn("Failed to found uri for kotipaikka: " + model.ytjTiedot.kotiPaikkaKoodi);
+            }
+            return;
         };
 
         this.addSome = function() {
