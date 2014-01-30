@@ -305,6 +305,26 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     background-repeat: repeat;
 }
 
+
+/* korjaa checkboxin ympärillä olevan ikävän laatikon */
+/* sekä ongelman jossa checbox, radiobutton ja label eivät asetu pystysuunnassa samaan linjaan */
+/* testattu mac chrome,safari,firefox, w7 IE11,chrome,firefox */
+input[type="checkbox"], input[type="radio"] {
+    box-shadow: none;
+    height:13px;
+    width:13px;
+    padding:0;
+    margin:0;
+    position:relative;
+    top:4px;
+}
+
+/* radiobuttonin ja labelin asemoinnin hienosäätöä */
+input[type="radio"] {
+    top:3px;
+}
+
+=======
 /* Sivutus */
 
 .pagination{
@@ -364,6 +384,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     -moz-border-radius-bottomright:3px;
     border-bottom-right-radius:3px;
 }
+
 
 
 
