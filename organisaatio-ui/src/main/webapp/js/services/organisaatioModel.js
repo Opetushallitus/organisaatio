@@ -519,7 +519,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.createOrganisaatio = function(parentoid, yritystiedot) {
             // tyhjennetään mahdolliset vanhat ytj tiedot
-            model.ytjTiedot = {};
+            if (typeof yritystiedot !== "undefined") {
+                model.ytjTiedot = yritystiedot;
+            } else {
+                model.ytjTiedot = {};
+            }
 
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
@@ -589,9 +593,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 //                };
 //
 //                model.createOrganisaatio(parentoid, esimerkkiYritysTiedot);
-//                model.ytjTiedot = esimerkkiYritysTiedot;
 
-                model.ytjTiedot = result;
                 model.createOrganisaatio(parentoid, result);
             }, function(response) {
                 // yritystietoa ei löytynyt
