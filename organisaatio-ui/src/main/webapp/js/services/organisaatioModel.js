@@ -508,6 +508,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             }
                         }
                     }
+                    // jos ytj:stä saatu organisaatioon osoite tietoa --> päivitetään osoitteet
+                    model.addYtjOsoite();
                 }, function(response) {
                     // postinumeroita ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
@@ -516,6 +518,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.createOrganisaatio = function(parentoid, yritystiedot) {
+            // tyhjennetään mahdolliset vanhat ytj tiedot
+            model.ytjTiedot = {};
+
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
                 model.parenttype = result.tyypit[0];
@@ -610,14 +615,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.nimi.sv = yritystiedot.svNimi;
             model.organisaatio.ytunnus = yritystiedot.ytunnus;
             model.organisaatio.yritysmuoto = yritystiedot.yritysmuoto;
-            //yrityksenKieli, sitten kun koodiston kielet saatu
-            //postiOsoite
-            //kayntiOsoite
+            // yrityksenKieli, sitten kun koodiston kielet on saatu
+            // postiOsoite, sitten kun koodiston postinumerot on saatu
+            // kayntiOsoite, sitten kun koodiston postinumerot on saatu
             model.yhteystiedot.email.email = yritystiedot.sahkoposti;
             model.yhteystiedot.www.www = yritystiedot.www;
             model.yhteystiedot.puhelin.numero = yritystiedot.puhelin;
             model.yhteystiedot.faksi.numero = yritystiedot.faksi;
-            //model.organisaatio.kotipaikkaUri = getKotipaikkaUri(yritystiedot.kotipaikka);
+            // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
 
             // asetetaan päivitys timestamp
@@ -833,7 +838,41 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 return false;
             }
             return true;
-        }
+        };
+
+        this.addYtjOsoite = function() {
+            // Tämä tehdään vasta kun koodiston postinumerot on saatu ja ytj tiedot on olemassa
+            if ('postiOsoite' in model.ytjTiedot) {
+                if (model.ytjTiedot.postiOsoite.kieli === 1) {
+                    model.yhteystiedot.posti.osoite = model.ytjTiedot.postiOsoite.katu;
+                }
+                else if (model.ytjTiedot.postiOsoite.kieli === 2) {
+                    model.yhteystiedot.ruotsi_posti.osoite = model.ytjTiedot.postiOsoite.katu;
+                }
+                else {
+                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.postiOsoite);
+                }
+
+            }
+
+            if ('kayntiOsoite' in model.ytjTiedot) {
+                if (model.ytjTiedot.kayntiOsoite.kieli === 1) {
+                    model.yhteystiedot.kaynti.osoite = model.ytjTiedot.kayntiOsoite.katu;
+                }
+                else if (model.ytjTiedot.kayntiOsoite.kieli === 2) {
+                    model.yhteystiedot.ruotsi_kaynti.osoite = model.ytjTiedot.kayntiOsoite.katu;
+                }
+                else {
+                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.kayntiOsoite);                    
+                }
+            }
+
+//            model.yhteystiedot.kaynti.postitoimipaikka
+//            model.yhteystiedot.postinumerot.kaynti
+//            model.yhteystiedot.kaynti.ytjPaivitysPvm
+//            model.yhteystiedot.kaynti.maaUri
+//            postinumeroUri
+        };
 
         this.addSome = function() {
             if (model.organisaatio.metadata) {
@@ -860,7 +899,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
             }
             return false;
-        }
+        };
 
         this.isOppilaitos = function() {
             if (model.organisaatio.tyypit) {
