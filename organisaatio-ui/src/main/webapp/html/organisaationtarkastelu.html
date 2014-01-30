@@ -221,8 +221,8 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="model.organisaatio.metadata.yhteystiedot">
             <div ng-repeat="tieto in model.organisaatio.metadata.yhteystiedot">
+        <div class="control-group" ng-show="tieto.osoite || tieto.numero || tieto.email || tieto.www">
                 <label class="control-label" ng-show="tieto.osoiteTyyppi === 'kaynti' && tieto.osoite">
                     {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                 </label>
@@ -260,10 +260,7 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="model.organisaatio.metadata.data.FACEBOOK ||
-                    model.organisaatio.metadata.data.GOOGLE_PLUS ||
-                    model.organisaatio.metadata.data.LINKED_IN || model.organisaatio.metadata.data.TWITTER ||
-                    model.organisaatio.metadata.data.MUU">
+        <div class="control-group" ng-show="model.hasSome()">
             <label class="control-label">
                 {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
             </label>
@@ -303,11 +300,11 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.kttabs && (model.kttabs.length > 0)">
             <label class="control-label">
                 {{'Organisaationmuokkaus.lisatiedot'| i18n}}
             </label>
-            <div class="controls" ng-if="model.kttabs && (model.kttabs.length > 0)">
+            <div class="controls">
                 <ul class="nav nav-tabs" ng-init="model.ktlang = model.kttabs[0].lang">
                     <li ng-repeat="tab in model.kttabs" ng-class="{active: model.ktlang === tab.lang}">
                         <a ng-click="model.ktlang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
@@ -340,11 +337,11 @@
 
     <div ng-if="oeexpanded">
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.oetabs && (model.oetabs.length > 0)">
             <label class="control-label">
                 {{'Organisaationmuokkaus.lisatiedot'| i18n}}
             </label>
-            <div class="controls" ng-if="model.oetabs && (model.oetabs.length > 0)">
+            <div class="controls">
                 <ul class="nav nav-tabs" ng-init="model.oelang = model.oetabs[0].lang">
                     <li ng-repeat="tab in model.oetabs" ng-class="{active: model.oelang === tab.lang}">
                         <a ng-click="model.oelang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
