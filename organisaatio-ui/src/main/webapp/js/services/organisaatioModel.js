@@ -628,7 +628,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
 
             // asetetaan päivitys timestamp
-            model.organisaatio.ytjPaivitysPvm = new Date();
+            model.organisaatio.ytjPaivitysPvm = model.formatDate(new Date());
         };
 
         // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
@@ -840,37 +840,54 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.addYtjOsoite = function() {
+            mapOsoiteYhteystieto = function(ytjOsoite, yhteystieto, postinumeroField) {
+                yhteystieto.osoite     = ytjOsoite.katu;
+
+                // asetetaam postinumero input kenttään
+                model.yhteystiedot.postinumerot[postinumeroField] = ytjOsoite.postinumero;
+                // asettaa postinumeroUrin ja toimipaikan
+                model.setPostinumero(yhteystieto, ytjOsoite.postinumero);
+
+                // Todo: Pitäisikö asettaa yhteystiedon maa
+                // model.yhteystiedot.kaynti.maaUri --> yhteystieto.maaUri = getMaaUri(ytjOsoite.maa);
+
+                // asetetaan päivitys timestamp
+                yhteystieto.ytjPaivitysPvm = model.formatDate(new Date());
+                return;
+            };
+
             // Tämä tehdään vasta kun koodiston postinumerot on saatu ja ytj tiedot on olemassa
             if ('postiOsoite' in model.ytjTiedot) {
                 if (model.ytjTiedot.postiOsoite.kieli === 1) {
-                    model.yhteystiedot.posti.osoite = model.ytjTiedot.postiOsoite.katu;
+                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite, 
+                                         model.yhteystiedot.posti, 
+                                         "posti");
                 }
                 else if (model.ytjTiedot.postiOsoite.kieli === 2) {
-                    model.yhteystiedot.ruotsi_posti.osoite = model.ytjTiedot.postiOsoite.katu;
+                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite, 
+                                         model.yhteystiedot.ruotsi_posti,
+                                         "ruotsi_posti");
                 }
                 else {
                     $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.postiOsoite);
                 }
 
             }
-
             if ('kayntiOsoite' in model.ytjTiedot) {
                 if (model.ytjTiedot.kayntiOsoite.kieli === 1) {
-                    model.yhteystiedot.kaynti.osoite = model.ytjTiedot.kayntiOsoite.katu;
+                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite, 
+                                         model.yhteystiedot.kaynti,
+                                         "kaynti");
                 }
                 else if (model.ytjTiedot.kayntiOsoite.kieli === 2) {
-                    model.yhteystiedot.ruotsi_kaynti.osoite = model.ytjTiedot.kayntiOsoite.katu;
+                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite, 
+                                         model.yhteystiedot.ruotsi_kaynti,
+                                         "ruotsi_kaynti");
                 }
                 else {
                     $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.kayntiOsoite);                    
                 }
             }
-
-//            model.yhteystiedot.kaynti.postitoimipaikka
-//            model.yhteystiedot.postinumerot.kaynti
-//            model.yhteystiedot.kaynti.ytjPaivitysPvm
-//            model.yhteystiedot.kaynti.maaUri
-//            postinumeroUri
         };
 
         this.addSome = function() {
