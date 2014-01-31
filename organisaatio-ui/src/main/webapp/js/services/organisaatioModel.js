@@ -628,7 +628,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
 
             // asetetaan päivitys timestamp
-            model.organisaatio.ytjPaivitysPvm = model.formatDate(new Date());
+            model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
         };
 
         // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
