@@ -631,28 +631,25 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.ytjPaivitysPvm = new Date();
         };
 
+        // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
+        this.formatDate = function(dateToFormat) {
+            if (dateToFormat) {
+                d = new Date(dateToFormat);
+                curr_date = 100 + d.getDate();
+                curr_month = 100 + d.getMonth() + 1;
+                curr_year = d.getFullYear();
+                return curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
+            }
+            return;
+        };
+
         // Konvertoi päivämäärät rajapinnan hyväksymään muotoon yyyy-mm-dd
         formatDates = function() {
             if (model.organisaatio.alkuPvm) {
-                d = new Date(model.organisaatio.alkuPvm);
-                curr_date = 100 + d.getDate();
-                curr_month = 100 + d.getMonth() + 1;
-                curr_year = d.getFullYear();
-                model.organisaatio.alkuPvm = curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
+                model.organisaatio.alkuPvm = model.formatDate(model.organisaatio.alkuPvm);
             }
             if (model.organisaatio.lakkautusPvm) {
-                d = new Date(model.organisaatio.lakkautusPvm);
-                curr_date = 100 + d.getDate();
-                curr_month = 100 + d.getMonth() + 1;
-                curr_year = d.getFullYear();
-                model.organisaatio.lakkautusPvm = curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
-            }
-            if (model.organisaatio.ytjPaivitysPvm) {
-                d = new Date(model.organisaatio.ytjPaivitysPvm);
-                curr_date = 100 + d.getDate();
-                curr_month = 100 + d.getMonth() + 1;
-                curr_year = d.getFullYear();
-                model.organisaatio.ytjPaivitysPvm = curr_year + "-" + curr_month.toString().slice(1) + "-" + curr_date.toString().slice(1);
+                model.organisaatio.lakkautusPvm = model.formatDate(model.organisaatio.lakkautusPvm);
             }
         };
 
