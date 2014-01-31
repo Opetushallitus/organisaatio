@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  *
  */
-public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTO extends AbstractFromDomainConverter<YhteystietojenTyyppi, YhteystietojenTyyppiRDTO>{
+public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends AbstractFromDomainConverter<YhteystietojenTyyppi, YhteystietojenTyyppiRDTO>{
 
     @Override
     public YhteystietojenTyyppiRDTO convert(YhteystietojenTyyppi s) {
