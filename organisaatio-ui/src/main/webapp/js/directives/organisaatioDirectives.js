@@ -41,24 +41,19 @@ app.directive('namesCombinedField', function() {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var parserValidator = function(viewValue) {
-                var returnUndefined = false;
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
                 if (!scope.form.nimifi.$viewValue && !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
-                    returnUndefined = true;
                 }
-                if (returnUndefined === true) {
-                    return viewValue;
-                } else {
-                    return viewValue;
-                }
-
+                return viewValue;
             };
             ctrl.$parsers.unshift(parserValidator);
 
             var formatterValidator = function(viewValue) {
-                if (scope.mode==="new") {
+                scope.form.nimifi.$setValidity('namescombinedrequired', true);
+
+                if (!scope.form.nimifi.$viewValue && !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                 }
                 return viewValue;

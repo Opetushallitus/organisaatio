@@ -588,22 +588,25 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.ytjTiedot = {};
             }
 
+            // tyhjennetään mahdolliset vanhat kentät
+            model.organisaatio = {};
+            model.organisaatio.tyypit = [];
+            model.organisaatio.nimi = null;
+            model.organisaatio.nimi = {};
+            model.organisaatio.nimi.fi = "";
+            model.organisaatio.kieletUris = [];
+            model.organisaatio.yhteystiedot = [];
+            model.organisaatio.vuosiluokat = [];
+            model.yhteystiedot = {};
+            model.mdyhteystiedot = {};
+
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
                 model.parenttype = result.tyypit[0];
                 model.parent = result;
 
-                model.organisaatio = {};
                 model.refreshKoodisto(null);
-                model.organisaatio.tyypit = [];
-                model.organisaatio.nimi = {};
-                model.organisaatio.nimi.fi = "";
                 model.organisaatio.parentOid = parentoid;
-                model.organisaatio.kieletUris = [];
-                model.organisaatio.yhteystiedot = [];
-                model.organisaatio.vuosiluokat = [];
-                model.yhteystiedot = {};
-                model.mdyhteystiedot = {};
                 finishModel();
                 refreshMetadata(model.organisaatio);
 
