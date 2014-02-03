@@ -20,7 +20,7 @@
             <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
                 <input type='checkbox' name="orgtyyppi"
                        ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
-                       ng-click="model.toggleCheck(tyyppi)">{{tyyppi}}
+                       ng-click="model.toggleCheckOrganisaatio(tyyppi)">{{tyyppi}}
 
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
@@ -91,7 +91,7 @@
         <div class="controls">
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
-                    required>
+                    ng-change="model.selectOppilaitosTyyppi()" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.oppilaitosTyyppiUri">
@@ -411,6 +411,31 @@
             </div>
         </div>
     </div>
+
+    <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
+        <label class="control-label">
+            {{yttyyppi.nimi}}
+        </label>
+        <div class="controls well">
+            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
+                 ng-form="ytForm">
+                <label class="control-label">
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                </label>
+                <div class="controls">
+                    <input type="text" name="name"
+                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]==="true"'>
+                    <div>
+                        <span class="text-error" ng-show="ytForm.name.$error.required">
+                            {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                            {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <hr>
     <div class="row">
         <div class="span4">
@@ -585,7 +610,7 @@
                                 {{'Organisaationtarkastelu.' + field| i18n}}
                             </label>
                             <div class="controls">
-                            <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                                <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
                             </div>
                         </div>
                     </div>

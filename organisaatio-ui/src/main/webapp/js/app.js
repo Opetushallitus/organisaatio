@@ -27,7 +27,8 @@ angular.module('localization', [])
 
 app.filter('fixHttpLink',function () {
     return function (text) {
-        return "http://" + text.replace("http://", "");
+        proto = text.split("://");
+        return (proto.length>1 ? proto[0] : "http") + "://" + proto[proto.length-1];
     };
 });
 
@@ -281,4 +282,12 @@ app.factory('KoodistoVuosiluokat', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
     get: {method: "GET", isArray: true}
   });
+});
+
+// Muokattavien yhteystietojen haku organisaatiopalvelulta
+// Esim. https://localhost:8180/organisaatio-service/rest/organisaatio/yhteystietometadata?organisaatioTyyppi=Oppilaitos
+app.factory('YhteystietoMetadata', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/yhteystietometadata/:orgTyyppi", { orgTyyppi: "@orgTyyppi"}, {
+        get: {method: 'GET', isArray: true}
+    });
 });
