@@ -409,13 +409,24 @@ function OrganisaatioTreeController($scope, $location, $filter,
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
             controller: YritysValintaController,
-            windowClass:'modal-wide'
+            windowClass:'modal-wide',
+            resolve: {
+                // return undefined --> ei ytunnuksen esivalintaa
+                ytunnus: function () {
+                    return;
+                }
+            }
         });
         
         modalInstance.result.then(function (ytunnus) {
-            $log.log('Luodaan uusi organisaatio YTynnuksella: ' + ytunnus);
-            $location.search('ytunnus',ytunnus).path($location.path() + 
-                    "/" + ROOT_ORGANISAATIO_OID +"/new");
+            if (ytunnus) {
+                $log.log('Luodaan uusi organisaatio YTynnuksella: ' + ytunnus);
+                $location.search('ytunnus',ytunnus).path($location.path() + 
+                        "/" + ROOT_ORGANISAATIO_OID +"/new");
+            }
+            else {
+                $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/new");  
+            }
         }, function () {
             $log.log('Modal dismissed at: ' + new Date());
         });

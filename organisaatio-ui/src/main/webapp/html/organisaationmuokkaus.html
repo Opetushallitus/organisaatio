@@ -1,17 +1,13 @@
-<!-- Fixed header ei näytä hyvältä virkailija framessa...
-<div class="view-row fixed-header" ng-show="model.organisaatio.nimi">
-    <div class="view-column cols-2 col-indent-1 first">
-        <h2>{{model.uriLocalizedNames["nimi"]}}</h2>
-    </div>
-    <hr>
-</div>
-<div class="view-row">&nbsp;</div>
--->
-<div class="view-row">&nbsp;</div>
-
 <form name="form" class="form-horizontal" novalidate>
-    <div class="control-group">
+    <div class="control-group" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()">
+        <div class="controls">
+            <button class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)">
+                {{'Organisaationmuokkaus.paivitaYtj' | i18n}}
+            </button>
+        </div>            
+    </div>
 
+    <div class="control-group">
         <label class="control-label">
             {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}*
         </label>
@@ -700,7 +696,7 @@
 </div>
 -->
 
-<div class="row fixed-right">
+<div class="row fixed-right" ng-if="modalOpen == false">
     <div ng-show="model.mode === 'edit'">
         {{'Organisaationmuokkaus.muokkaus'| i18n}}:
         <br>&nbsp;<br>

@@ -1,5 +1,10 @@
-function YritysValintaController($scope, $modalInstance, $location, $log, YritysValintaModel) {
+function YritysValintaController($scope, $modalInstance, $location, $log, YritysValintaModel, ytunnus) {
     $scope.model = YritysValintaModel;
+    
+    if (ytunnus) {
+        $log.debug("Yritysvalinta ytunnuksella: " + ytunnus);
+        $scope.model.hakuString = ytunnus;
+    }
     
     $scope.select = function (yritys) {
         $log.info(yritys);
@@ -15,7 +20,6 @@ function YritysValintaController($scope, $modalInstance, $location, $log, Yritys
     };
     
     $scope.continueWithouSelect = function () {
-        $modalInstance.dismiss('continue');
-        $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/new");  
+        $modalInstance.close();
     };
 }

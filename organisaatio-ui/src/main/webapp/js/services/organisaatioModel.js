@@ -668,6 +668,24 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             });
         };
 
+        this.updateOrganisaatioYTunnuksella = function(ytunnus) {
+            YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
+                model.ytjTiedot = result;
+                
+                // Täytetään yritystiedot, niiltä osin kun koodistosta saatuja tietoja ei tarvitse käyttää
+                model.fillYritysTiedot(result);
+                
+                // Täytetään yritystiedot, koodiston tietoja käyttävältä osalta
+                model.addYtjLang();
+                model.addYtjOsoite();
+                model.addYtjKotipaikka();
+            }, function(response) {
+                // yritystietoa ei löytynyt
+                showAndLogError("Organisaationtarkastelu.ytunnushakuvirhe", response);
+                model.createOrganisaatio(parentoid);
+            });
+        };
+        
         this.fillYritysTiedot = function(yritystiedot) {
             // parse a date in dd.MM.yyyy format
             parseDate = function(input) {
@@ -679,19 +697,38 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
             };
 
-            model.organisaatio.nimi.fi = yritystiedot.nimi;
-            model.organisaatio.nimi.sv = yritystiedot.svNimi;
-            model.organisaatio.ytunnus = yritystiedot.ytunnus;
-            model.organisaatio.yritysmuoto = yritystiedot.yritysmuoto;
+            // Tarkistetaan "kenttien" olemassaolo, sillä yritystiedot voidaan täyttää myöhemminkin
+            if (yritystiedot.nimi) {
+                model.organisaatio.nimi.fi = yritystiedot.nimi;
+            }
+            if (yritystiedot.svNimi) {
+                model.organisaatio.nimi.sv = yritystiedot.svNimi;
+            }
+            if (yritystiedot.ytunnus) {
+                model.organisaatio.ytunnus = yritystiedot.ytunnus;
+            }
+            if (yritystiedot.yritysmuoto) {
+                model.organisaatio.yritysmuoto = yritystiedot.yritysmuoto;
+            }
             // yrityksenKieli, sitten kun koodiston kielet on saatu
             // postiOsoite, sitten kun koodiston postinumerot on saatu
             // kayntiOsoite, sitten kun koodiston postinumerot on saatu
-            model.yhteystiedot.email.email = yritystiedot.sahkoposti;
-            model.yhteystiedot.www.www = yritystiedot.www;
-            model.yhteystiedot.puhelin.numero = yritystiedot.puhelin;
-            model.yhteystiedot.faksi.numero = yritystiedot.faksi;
+            if (yritystiedot.sahkoposti) {
+                model.yhteystiedot.email.email = yritystiedot.sahkoposti;
+            }
+            if (yritystiedot.www) {
+                model.yhteystiedot.www.www = yritystiedot.www;
+            }
+            if (yritystiedot.puhelin) {
+                model.yhteystiedot.puhelin.numero = yritystiedot.puhelin;
+            }
+            if (yritystiedot.faksi) {
+                model.yhteystiedot.faksi.numero = yritystiedot.faksi;
+            }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
-            model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
+            if (yritystiedot.aloitusPvm) {
+                model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
+            }
 
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
