@@ -210,6 +210,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         refresh = function(oid) {
+            $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
             model.ytjTiedot = {};
 
@@ -307,6 +308,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     });
                     model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
                     model.koodisto.localizedOppilaitos = "Oppilaitos";
+                    model.lisayhteystiedot = {};
+                    updateLisayhteystietoArvos(model.organisaatio.yhteystietoArvos);
                 }, function(response) {
                     // parenttia ei löytynyt
                     showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
@@ -352,6 +355,35 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+        updateLisayhteystietoArvos = function(lisatietos) {
+            if (!model.organisaatio.yhteystietoArvos) {
+                model.organisaatio.yhteystietoArvos = [];
+            }
+            lisatietos.forEach(function(yt) {
+                // Lisätään jos arvoa ei ole
+                var arvoFound = false;
+                for (var arvo in model.organisaatio.yhteystietoArvos) {
+                    if (yt['YhteystietoElementti.oid'] === model.organisaatio.yhteystietoArvos[arvo]['YhteystietoElementti.oid']) {
+                        arvoFound = true;
+                    }
+                }
+                // Jos arvoa ei vielä ole, lisätään muokkaus/uudenluontinäkymään bindausta varten
+                if (!arvoFound) {
+                    yt["YhteystietoArvo.arvoText"] = null;
+                    model.organisaatio.yhteystietoArvos.push(yt);
+                }
+                // Mäpätään oidista nimeen. Mäppäys on oikeasti 1-1 vaikka nimi toistuu joka tietueessa.
+                lan = (KoodistoKoodi.getLanguage() === "SV" ? "sv" : "fi");
+                model.lisayhteystiedot[yt["YhteystietojenTyyppi.oid"]] =
+                        {
+                            nimi: yt["YhteystietojenTyyppi.nimi." + lan],
+                            oid: yt["YhteystietojenTyyppi.oid"]
+                        };
+                model.uriLocalizedNames[yt["YhteystietoElementti.oid"]] =
+                        (KoodistoKoodi.getLanguage() === "SV" ? yt["YhteystietoElementti.nimiSv"] : yt["YhteystietoElementti.nimi"]);
+            });
+        };
+
         // Lisätään organisaatiorakenteeseen puuttuvat yhteystiedot nykyisen organisaatio- ja mahdollisen
         // oppilaitostyypin mukaisesti. Organisaatiorakenne pitää päivittää jos muokattaessa muutetaan
         // kumpaakaan tyyppiä
@@ -365,33 +397,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         // vain jos oppilaitostyypit vastaa yhteystiedolle määriteltyä
                         if (model.organisaatio.tyypit.indexOf('Oppilaitos') === -1 ||
                                 (yhteystietoTyyppi.sovellettavatOppilaitosTyyppis && model.organisaatio.oppilaitosTyyppiUri &&
-                                ((yhteystietoTyyppi.sovellettavatOppilaitosTyyppis.indexOf(model.organisaatio.oppilaitosTyyppiUri) !== -1) ||
-                                (yhteystietoTyyppi.sovellettavatOppilaitosTyyppis.indexOf(model.organisaatio.oppilaitosTyyppiUri+ "#1") !== -1)))) {
-                            yhteystietoTyyppi.lisatietos.forEach(function(yt) {
-                                if (!model.organisaatio.yhteystietoArvos) {
-                                    model.organisaatio.yhteystietoArvos = [];
-                                }
-                                // Lisätään jos arvoa ei ole
-                                var arvoFound = false;
-                                for (var arvo in model.organisaatio.yhteystietoArvos) {
-                                    if (yt['YhteystietoElementti.oid']===model.organisaatio.yhteystietoArvos[arvo]['YhteystietoElementti.oid']) {
-                                        arvoFound = true;
-                                    }
-                                }
-                                if (!arvoFound) {
-                                    yt["YhteystietoArvo.arvoText"] = null;
-                                    model.organisaatio.yhteystietoArvos.push(yt);
-                                }
-                                // Mäpätään oidista nimeen. Mäppäys on oikeasti 1-1 vaikka nimi toistuu joka tietueessa.
-                                lan = (KoodistoKoodi.getLanguage() === "SV" ? "sv" : "fi");
-                                model.lisayhteystiedot[yt["YhteystietojenTyyppi.oid"]] =
-                                        {
-                                            nimi: yt["YhteystietojenTyyppi.nimi." + lan],
-                                            oid: yt["YhteystietojenTyyppi.oid"]
-                                        };
-                                model.uriLocalizedNames[yt["YhteystietoElementti.oid"]] =
-                                        (KoodistoKoodi.getLanguage() === "SV" ? yt["YhteystietoElementti.nimiSv"] : yt["YhteystietoElementti.nimi"]);
-                            });
+                                        ((yhteystietoTyyppi.sovellettavatOppilaitosTyyppis.indexOf(model.organisaatio.oppilaitosTyyppiUri) !== -1) ||
+                                                (yhteystietoTyyppi.sovellettavatOppilaitosTyyppis.indexOf(model.organisaatio.oppilaitosTyyppiUri + "#1") !== -1)))) {
+                            updateLisayhteystietoArvos(yhteystietoTyyppi.lisatietos);
                         }
                     }
                 }
@@ -642,10 +650,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.updateOrganisaatioYTunnuksella = function(ytunnus) {
             YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
                 model.ytjTiedot = result;
-                
+
                 // Täytetään yritystiedot, niiltä osin kun koodistosta saatuja tietoja ei tarvitse käyttää
                 model.fillYritysTiedot(result);
-                
+
                 // Täytetään yritystiedot, koodiston tietoja käyttävältä osalta
                 model.addYtjLang();
                 model.addYtjOsoite();
@@ -656,7 +664,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.createOrganisaatio(parentoid);
             });
         };
-        
+
         this.fillYritysTiedot = function(yritystiedot) {
             // parse a date in dd.MM.yyyy format
             parseDate = function(input) {
@@ -929,7 +937,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.addYtjOsoite = function() {
             mapOsoiteYhteystieto = function(ytjOsoite, yhteystieto, postinumeroField) {
-                yhteystieto.osoite     = ytjOsoite.katu;
+                yhteystieto.osoite = ytjOsoite.katu;
 
                 // asetetaam postinumero input kenttään
                 model.yhteystiedot.postinumerot[postinumeroField] = ytjOsoite.postinumero;
@@ -947,14 +955,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             // Tämä tehdään vasta kun koodiston postinumerot on saatu ja ytj tiedot on olemassa
             if ('postiOsoite' in model.ytjTiedot) {
                 if (model.ytjTiedot.postiOsoite.kieli === 1) {
-                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite, 
-                                         model.yhteystiedot.posti, 
-                                         "posti");
+                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite,
+                            model.yhteystiedot.posti,
+                            "posti");
                 }
                 else if (model.ytjTiedot.postiOsoite.kieli === 2) {
-                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite, 
-                                         model.yhteystiedot.ruotsi_posti,
-                                         "ruotsi_posti");
+                    mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite,
+                            model.yhteystiedot.ruotsi_posti,
+                            "ruotsi_posti");
                 }
                 else {
                     $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.postiOsoite);
@@ -963,14 +971,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
             if ('kayntiOsoite' in model.ytjTiedot) {
                 if (model.ytjTiedot.kayntiOsoite.kieli === 1) {
-                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite, 
-                                         model.yhteystiedot.kaynti,
-                                         "kaynti");
+                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite,
+                            model.yhteystiedot.kaynti,
+                            "kaynti");
                 }
                 else if (model.ytjTiedot.kayntiOsoite.kieli === 2) {
-                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite, 
-                                         model.yhteystiedot.ruotsi_kaynti,
-                                         "ruotsi_kaynti");
+                    mapOsoiteYhteystieto(model.ytjTiedot.kayntiOsoite,
+                            model.yhteystiedot.ruotsi_kaynti,
+                            "ruotsi_kaynti");
                 }
                 else {
                     $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.kayntiOsoite);

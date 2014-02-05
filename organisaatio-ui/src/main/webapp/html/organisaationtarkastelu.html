@@ -197,6 +197,25 @@
         </div>
     </div>
 
+    <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
+        <label class="control-label">
+            {{yttyyppi.nimi}}
+        </label>
+        <div class="controls well">
+            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
+                 ng-form="ytForm">
+                <label class="control-label">
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{yt['YhteystietoArvo.arvoText']}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <hr>
 
     <div class="control-group">
