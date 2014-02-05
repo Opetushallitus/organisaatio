@@ -37,6 +37,7 @@ app.filter('fixHttpLink',function () {
 // Configuration from config/properties files
 //
 ////////////
+var UI_URL_BASE = UI_URL_BASE || "http://localhost:8180/organisaatio-ui/";
 var SERVICE_URL_BASE = SERVICE_URL_BASE || "";
 var TEMPLATE_URL_BASE = TEMPLATE_URL_BASE || "";
 var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
@@ -64,6 +65,10 @@ app.config(function($routeProvider) {
 
         //else
         otherwise({redirectTo:'/organisaatiot'});
+});
+
+app.run(function(BuildVersion) {
+    BuildVersion.update();
 });
 
 ////////////
@@ -163,6 +168,24 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
         };
     }
 ]);
+
+app.factory('BuildVersion', ['$rootScope', '$http', function($rootScope, $http) {
+        var versionService;
+        $rootScope.buildTime = "";
+
+        return versionService = {
+            update: function() {
+                $http.get(UI_URL_BASE + 'buildversion.txt').success(function(str) {
+                    oph_bv = angular.fromJson("{" + str.replace(/^/g, '"')/*sol*/.replace(/(\r\n|\n|\r)/g, '",\n"')/*eol*/.replace(/=/g, '": "')/*=*/.replace(/$/, '"')/*eof*/.replace(/""/, '"valid": "ate"') /*make sure is valid*/ + "}");
+                    console.log(oph_bv);
+                    $rootScope.buildTime = oph_bv.buildTtime;
+                    console.log($rootScope.buildTime);
+                });
+            }
+        };
+    }
+]);
+
 
 ////////////
 //

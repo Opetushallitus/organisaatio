@@ -58,8 +58,9 @@
         <div>
             <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
         </div>    
+        <!-- This is for helping testing to identify version -->
+        <div style="color: #808080; font-size: smaller; text-align: center;" ng-cloak>Build Time: {{buildTime}}</div>    
     </div>
-
     <div ng-controller="LoadingCtrl">
         <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
     </div>    

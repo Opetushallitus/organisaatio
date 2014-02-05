@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class ConfigController {
-
+    @Value("${organisaatio-ui.organisaatio-ui-url}")
+    private String organisaatioUiURL;
+    
     @Value("${organisaatio-ui.organisaatio-service-url.rest}")
     private String organisaatioServiceRestURL;
 
@@ -31,6 +33,7 @@ public class ConfigController {
     @ResponseBody
     public String index() {
         StringBuilder b = new StringBuilder();
+        append(b, "UI_URL_BASE", organisaatioUiURL);
         append(b, "SERVICE_URL_BASE", organisaatioServiceRestURL);
         append(b, "KOODISTO_URL_BASE", koodistoServiceRestURL);
         append(b, "ROOT_ORGANISAATIO_OID", rootOrganisaatioOid);
