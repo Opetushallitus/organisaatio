@@ -31,16 +31,17 @@ import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAOImpl;
+import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
+import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
@@ -105,6 +106,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     protected YhteystietoArvoDAOImpl yhteystietoArvoDAO;
     @Autowired
+    protected YhteystietoElementtiDAOImpl yhteystietoElementtiDAO;
+    @Autowired
     private ConversionService conversionService;
     @Autowired
     private IndexerResource solrIndexer;
@@ -133,16 +136,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        if(s.getOppilaitosTyyppi()!=null && s.getOppilaitosTyyppi().length()==0) {
+        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
             s.setOppilaitosTyyppi(null);
         }
 
-        if(s.getOrganisaatioTyyppi()!=null && s.getOrganisaatioTyyppi().length()==0) {
+        if (s.getOrganisaatioTyyppi() != null && s.getOrganisaatioTyyppi().length() == 0) {
             s.setOrganisaatioTyyppi(null);
         }
 
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-
         List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(s);
 
         //sorttaa
@@ -150,7 +152,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             public Comparable<String> apply(OrganisaatioPerustieto input) {
                 return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
 
-            };
+            }
+        ;
         });
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
@@ -161,9 +164,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         tulos.setNumHits(organisaatiot.size());
         return tulos;
     }
-
-
-
 
     /**
      * Luo puumaisen organisaatiohierarkian. palauttaa listan juuritason
@@ -274,7 +274,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
-
         // Search order
         // 1. OID
         // 2. Y-TUNNUS
@@ -316,7 +315,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Organisaatio parentOl = null;
         if (o.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             olkoodi = o.getOppilaitosKoodi();
-        } else if ((parentOl = getParentOl(o)) != null){
+        } else if ((parentOl = getParentOl(o)) != null) {
             olkoodi = parentOl.getOppilaitosKoodi();
         }
         if (!isEmpty(olkoodi)) {
@@ -380,7 +379,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             SearchKoodistosCriteriaType koodistoSearchCriteria = KoodistoServiceSearchCriteriaBuilder.latestKoodistoByUri(koodistoUri);
 
             List<KoodistoType> koodistoResult = koodistoService.searchKoodistos(koodistoSearchCriteria);
-            if(koodistoResult.size() != 1) {
+            if (koodistoResult.size() != 1) {
                 // FIXME: Throw something other than RuntimeException?
                 throw new RuntimeException("No koodisto found for koodisto URI " + koodistoUri);
             }
@@ -411,15 +410,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return null;
     }
 
-
-
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
-        }
-        catch (NotAuthorizedException nae) {
+        } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
         }
         Organisaatio savedOrg = save(ordto, true, true);
@@ -480,7 +476,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     private void getDescendantSuhteet(Organisaatio parentE,
-                                      List<OrganisaatioSuhde> children) {
+            List<OrganisaatioSuhde> children) {
         if (parentE == null) {
             return;
         }
@@ -499,7 +495,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
      * + 1.
      */
     private String generateOpetuspisteenJarjNro(Organisaatio entity,
-                                                OrganisaatioRDTO model) {
+            OrganisaatioRDTO model) {
         //Opetuspisteen jarjestysnumero is only generated to opetuspiste which is not also an oppilaitos
         if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) && !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
@@ -565,7 +561,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     /**
      * Simple recursive operuspiste / toimipiste koodi calculation.
      *
-     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then append OPETUSPISTE order number(s).
+     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then
+     * append OPETUSPISTE order number(s).
      *
      * @param s
      * @return
@@ -649,8 +646,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             generateOids(entity);
             generateOidsMetadata(entity.getMetadata());
-        }
-        catch (ExceptionMessage em) {
+        } catch (ExceptionMessage em) {
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         createParentPath(entity, model.getParentOid());
@@ -672,8 +668,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         //Check if organization has parent and if it has check that passivation dates match to parent
         Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
                 ? organisaatioDAO.findByOid(model.getParentOid()) : null;
-
-
 
         //OVT-4765 do not validate start date against parent date when updating
         if (updating) {
@@ -697,7 +691,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
         entity.setOrganisaatiotyypitStr(tyypitStr);
 
-        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos()));
+        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
 
         // Tarkistetaan organisaatio hierarkia
         checkOrganisaatioHierarchy(entity, model.getParentOid());
@@ -752,8 +746,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public String deleteOrganisaatio(String oid) {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
-        }
-        catch (NotAuthorizedException nae) {
+        } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
         }
         Set<String> reindex = new HashSet<String>();
@@ -773,8 +766,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
-        }
-        catch (NotAuthorizedException nae) {
+        } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
         }
         try {
@@ -807,25 +799,26 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
-    private boolean isAllowed(Organisaatio org, YhteystietoArvo yad) {
+    private boolean isAllowed(Organisaatio org, YhteystietojenTyyppi yad) {
         if (org.getOppilaitosTyyppi() != null
-                && yad.getKentta().getYhteystietojenTyyppi().getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
+                && yad.getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
             return true;
         }
         for (String otype : org.getTyypit()) {
-            if (yad.getKentta().getYhteystietojenTyyppi().getSovellettavatOrganisaatioTyyppis().contains(otype)) {
+            if (yad.getSovellettavatOrganisaatioTyyppis().contains(otype)) {
                 return true;
             }
         }
         return false;
     }
 
-    private List<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, List<YhteystietoArvo> nys) {
+    private List<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, List<YhteystietoArvo> nys,
+            boolean updating) {
 
         Map<String, YhteystietoArvo> ov = new HashMap<String, YhteystietoArvo>();
 
         for (YhteystietoArvo ya : yhteystietoArvoDAO.findByOrganisaatio(org)) {
-            if (!isAllowed(org, ya)) {
+            if (!isAllowed(org, ya.getKentta().getYhteystietojenTyyppi())) {
                 yhteystietoArvoDAO.remove(ya);
             } else {
                 ov.put(ya.getKentta().getOid(), ya);
@@ -835,7 +828,16 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         List<YhteystietoArvo> ret = new ArrayList<YhteystietoArvo>();
 
         for (YhteystietoArvo ya : nys) {
-            if (!isAllowed(org, ya)) {
+            List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiDAO.findBy("oid", ya.getKentta().getYhteystietojenTyyppi().getOid());
+            if (yt.isEmpty()) {
+                continue;
+            }
+            List<YhteystietoElementti> kentat = yhteystietoElementtiDAO.findBy("oid", ya.getKentta().getOid());
+            if (kentat.isEmpty()) {
+                continue;
+            }
+            ya.setKentta(kentat.get(0));
+            if (!isAllowed(org, yt.get(0))) {
                 continue;
             }
             YhteystietoArvo o = ov.get(ya.getKentta().getOid());
@@ -845,12 +847,21 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                 ret.add(o);
             } else {
                 ya.setOrganisaatio(org);
+                try {
+                    ya.setYhteystietoArvoOid(oidService.newOid(NodeClassCode.TEKN_5));
+                } catch (ExceptionMessage em) {
+                    throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+                }
+                if (updating) {
+                    yhteystietoArvoDAO.insert(ya);
+                }
                 ret.add(ya);
             }
         }
 
         return ret;
     }
+
     @Override
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     public String getRoles() {
@@ -863,7 +874,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             ret.append(ga.getAuthority().replace("ROLE_", ""));
             ret.append("\",");
         }
-        ret.setCharAt(ret.length()-1, ']');
+        ret.setCharAt(ret.length() - 1, ']');
         return ret.toString();
     }
 

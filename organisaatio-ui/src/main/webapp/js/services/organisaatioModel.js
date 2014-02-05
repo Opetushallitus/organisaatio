@@ -371,8 +371,17 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                 if (!model.organisaatio.yhteystietoArvos) {
                                     model.organisaatio.yhteystietoArvos = [];
                                 }
-                                yt["YhteystietoArvo.arvoText"] = null;
-                                model.organisaatio.yhteystietoArvos.push(yt);
+                                // Lisätään jos arvoa ei ole
+                                var arvoFound = false;
+                                for (var arvo in model.organisaatio.yhteystietoArvos) {
+                                    if (yt['YhteystietoElementti.oid']===model.organisaatio.yhteystietoArvos[arvo]['YhteystietoElementti.oid']) {
+                                        arvoFound = true;
+                                    }
+                                }
+                                if (!arvoFound) {
+                                    yt["YhteystietoArvo.arvoText"] = null;
+                                    model.organisaatio.yhteystietoArvos.push(yt);
+                                }
                                 // Mäpätään oidista nimeen. Mäppäys on oikeasti 1-1 vaikka nimi toistuu joka tietueessa.
                                 lan = (KoodistoKoodi.getLanguage() === "SV" ? "sv" : "fi");
                                 model.lisayhteystiedot[yt["YhteystietojenTyyppi.oid"]] =
@@ -424,7 +433,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         'Opetuspiste': ["03", "04"],
                         'Oppisopimustoimipiste': ["03", "04"]
                     };
-                    model.organisaatio.yhteystietoArvos = [];
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
@@ -726,6 +734,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     //console.log(result);
                     orgForm.$setPristine();
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
+                    refresh(model.organisaatio.oid);
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
@@ -1052,6 +1061,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     if (kentta !== 'osoiteTyyppi') {
                         model.yhteystiedot.kv_posti[kentta] = model.yhteystiedot.kv_kaynti[kentta];
                     }
+                }
+                if (model.yhteystiedot.postinumerot.kaynti) {
+                    model.yhteystiedot.postinumerot.posti = model.yhteystiedot.postinumerot.kaynti;
+                }
+                if (model.yhteystiedot.postinumerot.ruotsi_kaynti) {
+                    model.yhteystiedot.postinumerot.ruotsi_posti = model.yhteystiedot.postinumerot.ruotsi_kaynti;
                 }
             }
         };

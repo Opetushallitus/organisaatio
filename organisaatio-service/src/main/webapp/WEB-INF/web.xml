@@ -42,7 +42,7 @@
     
     <filter-mapping>
         <filter-name>OpenEntityManagerInViewFilter</filter-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/rest/organisaatio/yhteystietometadata</url-pattern>
     </filter-mapping>
 
     <filter-mapping>

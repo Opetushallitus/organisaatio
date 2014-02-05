@@ -115,6 +115,8 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         ArrayList<YhteystietoArvo> arvos = new ArrayList<YhteystietoArvo>(arvoMaps.size());
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
+            arvo.setKentta(new YhteystietoElementti());
+            arvo.setArvoText(arvoMap.get("YhteystietoArvo.arvoText"));
             YhteystietoElementti ye = arvo.getKentta();
             ye.setNimi(arvoMap.get("YhteystietoElementti.nimi"));
             ye.setNimiSv(arvoMap.get("YhteystietoElementti.nimisv"));
@@ -126,6 +128,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
                 YhteystietojenTyyppi yt = new YhteystietojenTyyppi();
                 yt.setOid(arvoMap.get("YhteystietojenTyyppi.oid"));
                 yt.setNimi(convertYATToMonikielinenTeksti(arvoMap));
+                ye.setYhteystietojenTyyppi(yt);
             }
             arvos.add(arvo);
         }
