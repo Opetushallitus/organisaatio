@@ -40,13 +40,15 @@
 
     <bean id="auditLogAspect" class="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect"/>
 
+    <!-- Use following for testing purposes -->
+    <!-- 
     <bean id="ytjService" class="fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock" />
-<!-- 
+    -->
     <bean id="ytjService" class="fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl">
         <property name="asiakastunnus" value="${rajapinnat.ytj.asiakastunnus:YTJ_ASIAKASTUNNUS_UNKNOWN}"/>
         <property name="salainenavain" value="${rajapinnat.ytj.avain:YTJ_SALAINEN_AVAIN_UNKNOWN}"/>
     </bean>
--->
+
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
     <import resource="classpath:META-INF/spring/context/ws-context.xml" />

@@ -623,43 +623,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.createOrganisaatioYTunnuksella = function(parentoid, ytunnus) {
             YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
-//                esimerkkiYritysTiedot = {
-//                    versio : 1,
-//                    nimi : "Esimerkki organisaatio",
-//                    svNimi : "Exampel organisation",
-//                    ytunnus : "2183469-6",
-//                    yritysmuoto : "Osakeyhtiö",
-//                    yritysmuotoKoodi : "oy", // mitäköhän tää pitäis olla
-//                    toimiala : "Kartokiteollisuus",
-//                    toimialaKoodi : "paper industri",
-//                    yrityksenKieli : "ruotsi",
-//                    postiOsoite : {
-//                        katu : "Tie 1",
-//                        postinumero : "00100",
-//                        toimipaikka : "Helsinki",
-//                        maa : "Suami",
-//                        maakoodi : "FI",
-//                        kieli : 0
-//                    },
-//                    kayntiOsoite : {
-//                        katu : "Tie 1",
-//                        postinumero : "00100",
-//                        toimipaikka : "Helsinki",
-//                        maa : "Suami",
-//                        maakoodi : "FI",
-//                        kieli : 0
-//                    },
-//                    sahkoposti: "esimerkki@organisaatio.fi",
-//                    www: "www.esimerkki.com",
-//                    puhelin: "0400-801092",
-//                    faksi: "021-100111",
-//                    kotiPaikka: "patikoikka", // mitäköhän tässä pitäis olla
-//                    kotiPaikkaKoodi: "paikkakoodi", // mitäköhän tässä pitäis olla
-//                    aloitusPvm: "12.11.1974"
-//                };
-//
-//                model.createOrganisaatio(parentoid, esimerkkiYritysTiedot);
-
                 model.createOrganisaatio(parentoid, result);
             }, function(response) {
                 // yritystietoa ei löytynyt
