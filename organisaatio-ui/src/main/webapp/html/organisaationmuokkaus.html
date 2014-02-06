@@ -169,11 +169,12 @@
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
             </div>
             <span class="text-help">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</span>
-
-            <span class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
-                {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
-            <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
-                {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
+            <div>
+                <span class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
+                    {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
+                <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
+                    {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
+            </div>  
         </div>
     </div>
 
