@@ -20,7 +20,7 @@
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <authentication.api.version>7.0-SNAPSHOT</authentication.api.version>
         <generic.version>9.0-SNAPSHOT</generic.version>
-        <sade-generic.version>8.0-SNAPSHOT</sade-generic.version>
+        <sade-generic.version>9.0-SNAPSHOT</sade-generic.version>
         <koodisto.api.version>7.0-SNAPSHOT</koodisto.api.version>
         <koodisto.widget.version>7.0-SNAPSHOT</koodisto.widget.version>
         <log.client.version>7.0-SNAPSHOT</log.client.version>
@@ -45,6 +45,19 @@
 
     <dependencyManagement>
         <dependencies>
+
+	    <dependency>
+	   	<groupId>org.jasig.cas</groupId>
+   		<artifactId>cas-client-support-distributed-ehcache</artifactId>
+   		<version>3.1.10</version>
+		<exclusions>
+		        <exclusion>
+          			<groupId>net.sf.ehcache</groupId>
+          			<artifactId>ehcache</artifactId>
+        		</exclusion>
+      		</exclusions>
+	    </dependency>
+
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
