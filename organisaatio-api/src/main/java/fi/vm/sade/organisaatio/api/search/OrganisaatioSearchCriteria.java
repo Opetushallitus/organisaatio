@@ -25,7 +25,6 @@ public class OrganisaatioSearchCriteria  {
 
 
     public void setOidRestrictionList(List<String> oidRestrictionList) {
-        System.out.println("oid r list called");
         this.oidResctrictionList.addAll(oidResctrictionList);
     }
 
@@ -114,7 +113,6 @@ public class OrganisaatioSearchCriteria  {
     }
 
     public void setSearchStr(String searchStr) {
-        System.out.println("searchSrt:" + searchStr);
         this.searchStr = searchStr;
     }
 
