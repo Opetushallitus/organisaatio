@@ -1,17 +1,17 @@
 <!-- Organisaation Poisto -->
 <div class="modal-header">
-    {{'Organisaationpoisto.otsikko' | i18n}}
+    <h3>{{'Organisaationpoisto.otsikko' | i18n}}</h3>
 </div>
 
 <div class="modal-body">
-    <div class="form-row">
+    <div class="form-fluid">
         {{'Organisaationpoisto.vahvistus' | i18n}}
     </div> 
 </div>
 <div class="modal-footer">
-    <div class="form-row">
-        <input class="button small" ng-click="$dismiss()" value="{{'Organisaationpoisto.peruuta' | i18n}}">
-        <input class="button small" ng-click="$close()"   value="{{'Organisaationpoisto.ok' | i18n}}">
+    <div class="form-fluid">
+        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
+        <button class="btn" ng-click="$close()">{{'Organisaationpoisto.ok' | i18n}}</button>
     </div>    
 </div>
 
