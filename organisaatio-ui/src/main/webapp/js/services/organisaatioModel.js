@@ -1121,10 +1121,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.removeImage = function() {
+            model.imagefile = null;
             if (model.organisaatio.metadata) {
                 model.organisaatio.metadata.kuvaEncoded = undefined;
             }
         };
+
     };
 
     return model;

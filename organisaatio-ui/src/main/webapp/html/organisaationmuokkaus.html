@@ -4,7 +4,7 @@
             <button class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)">
                 {{'Organisaationmuokkaus.paivitaYtj' | i18n}}
             </button>
-        </div>            
+        </div>
     </div>
 
     <div class="control-group">
@@ -372,10 +372,10 @@
             <div ng-show="model.organisaatio.metadata.kuvaEncoded">
                 <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
             </div>
-            <div>
+            <div ng-controller="UploadController">
                 <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
                 <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
-                <input style="display: none;" type="file" name="upload" id="upload">
+                <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
                 <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="model.removeImage()">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
             </div>
         </div>

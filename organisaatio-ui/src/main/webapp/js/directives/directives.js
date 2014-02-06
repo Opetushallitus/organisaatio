@@ -58,3 +58,14 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
         }
     };
 });
+
+app.directive("ngFileSelect", function() {
+    return {
+        link: function($scope, el) {
+
+            el.bind("change", function(e) {
+                $scope.getFile((e.srcElement || e.target).files[0]);
+            });
+        }
+    };
+});
