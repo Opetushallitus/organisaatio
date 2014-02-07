@@ -414,7 +414,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 // vuosiluokkia ei löytynyt
                 showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
             });
-        }
+        };
 
         this.refreshKoodisto = function(oid) {
             if (oid === null || (oid !== model.koodisto.oid)) {
@@ -709,6 +709,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
             }
 
+            // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
+            this.toggleCheckOrganisaatio("Koulutustoimija");
+
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
         };
@@ -778,7 +781,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             for (tyyppi in model.koodisto.yhteystietoTyypit) {
                 updateLisayhteystiedot(model.koodisto.yhteystietoTyypit[tyyppi]);
             }
-        }
+        };
 
         this.toggleCheckVuosiluokka = function(vuosiluokka) {
             if (model.organisaatio.vuosiluokat.indexOf(vuosiluokka) === -1) {
