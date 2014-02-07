@@ -616,6 +616,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.yhteystiedot = {};
             model.mdyhteystiedot = {};
 
+            // oletusarvoisesti luodaan organisaatio Suomeen
+            model.organisaatio.maaUri = "maatjavaltiot1_fin";
+
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
                 model.parenttype = result.tyypit[0];
