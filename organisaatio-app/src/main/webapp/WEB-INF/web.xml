@@ -88,7 +88,7 @@
         <!-- should help with jmeter testing -->
         <init-param>
             <param-name>disable-xsrf-protection</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
     </servlet>
 
@@ -106,7 +106,7 @@
         </init-param>
         <init-param>
             <param-name>disable-xsrf-protection</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
     </servlet>
 
@@ -123,7 +123,7 @@
         </init-param>
         <init-param>
             <param-name>disable-xsrf-protection</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
     </servlet>
 
