@@ -37,7 +37,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
                 model.refreshed = true;
-                KoodistoPaikkakunnat.get(function(result) {
+                KoodistoPaikkakunnat.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(kuntaKoodi) {
                         var paikkakunta = {"uri": kuntaKoodi.koodiUri,
                             "arvo":kuntaKoodi.koodiArvo};
@@ -54,7 +54,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
                     model.refreshed = false;
                 });
                 
-                KoodistoOrganisaatiotyypit.get(function(result) {
+                KoodistoOrganisaatiotyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(orgTyyppiKoodi) {
                         var organisaatioTyyppi = {"uri": orgTyyppiKoodi.koodiUri,
                             "arvo":orgTyyppiKoodi.koodiArvo};
@@ -71,7 +71,7 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
                     model.refreshed = false;
                 });
                 
-                KoodistoOppilaitostyypit.get(function(result) {
+                KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(oplTyyppiKoodi) {
                         var oppilaitosTyyppi = {"uri": oplTyyppiKoodi.koodiUri,
                             "arvo":oplTyyppiKoodi.koodiArvo};
