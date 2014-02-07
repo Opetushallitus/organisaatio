@@ -43,6 +43,44 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
             return data.children.length === 0;
         },
 
+        deleteNode: function (node) {
+            // Etsitään noodin parent
+            findParent = function(parentNode) {
+                var parent;
+                for(var i=0; i < parentNode.children.length; i++) {
+                    if (node === parentNode.children[i]) {
+                        return parentNode;
+                    }
+                } 
+                for(var i=0; i < parentNode.children.length; i++) {
+                    parent = findParent(parentNode.children[i]);
+                    if (parent) {
+                        return parent;
+                    }
+                }
+                return;
+            };  
+
+            // Etsitään noodin parenttia, jotta voidaan poistaa se parentista
+            parent = findParent(tree);
+            
+            // Jos parent löytyi niin postetaan se children listalta
+            if (parent) {
+                var index = -1;
+                for(var i=0; i < parent.children.length; i++) {
+                    if (node === parent.children[i]) {
+                        index = i;
+                    }
+                } 
+                if (index > -1) {
+                    parent.children.splice(index, 1);
+                    
+                    // Vähennetään myös listalla olevien organisaatioiden määrää
+                    model.count = model.count-1;
+                }
+            }
+        },
+
         getStatus: function (node) {
            var today = +new Date(); 
            

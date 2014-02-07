@@ -42,7 +42,9 @@ function OrganisaatioTreeController($scope, $location, $filter,
                         
             Organisaatio.delete({oid: node.oid}, function(result) {
                 $log.log(result);
-                // TODO: Pitäskö tehdä refresh
+                
+                // Poistetaan organisaatio puumallista
+                $scope.model.deleteNode(node);
             }, 
             // Error case
             function(response) {
