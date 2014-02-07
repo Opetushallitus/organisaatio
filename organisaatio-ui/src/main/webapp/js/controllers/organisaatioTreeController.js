@@ -25,7 +25,16 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
     $scope.deleteOrganisaatio = function (node) {
         var modalInstance = $modal.open({
-            templateUrl: 'organisaationpoisto.html'
+            templateUrl: 'organisaationpoisto.html',
+            controller: OrganisaatioDeleteController,
+            resolve: {
+                nimi: function () {
+                    return $scope.model.getNimi(node);
+                },
+                tyyppi:  function () {
+                    return $scope.model.getTyyppi(node);
+                }
+            }
         });
         
         modalInstance.result.then(function () {
