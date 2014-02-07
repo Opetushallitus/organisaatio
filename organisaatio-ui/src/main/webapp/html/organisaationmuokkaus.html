@@ -35,7 +35,7 @@
         <div class="controls">
             <input id="ytunnus" type="text" maxlength="9" name="ytunnus"
                    ng-model="model.organisaatio.ytunnus"
-                   placeholder="{{'Organisaationtarkastelu.ytunnus'| i18n}}" ng-pattern="/^\d{7}-./"/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.ytunnus'| i18n}}" ng-pattern="/^\d{7}-./"/>
             <div>
                 <span class="text-error" ng-show="form.ytunnus.$error.pattern">
                     {{'Organisaationmuokkaus.validointi.ytunnus'| i18n}}
@@ -51,7 +51,7 @@
         <div class="controls">
             <input id="virastotunnus" type="text" maxlength="20" name="virastotunnus"
                    ng-model="model.organisaatio.virastoTunnus"
-                   placeholder="{{'Organisaationtarkastelu.virastotunnus'| i18n}}" ng-pattern="/^\d{6}.*/"/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.virastotunnus'| i18n}}" ng-pattern="/^\d{6}.*/"/>
             <div>
                 <span class="text-error" ng-show="form.virastotunnus.$error.pattern">
                     {{'Organisaationmuokkaus.validointi.virastotunnus'| i18n}}
@@ -67,7 +67,7 @@
         <div class="controls">
             <input id="oppilaitoskoodi" type="text" maxlength="20" name="oppilaitoskoodi"
                    ng-model="model.organisaatio.oppilaitosKoodi"
-                   placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d{5}$/"/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d{5}$/"/>
             <div>
                 <span class="text-error" ng-show="form.oppilaitoskoodi.$error.required">
                     {{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}
@@ -122,7 +122,7 @@
         <div class="controls">
             <input type="text" name="nimifi"
                    ng-model="model.organisaatio.nimi.fi"
-                   placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
                     {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
@@ -135,14 +135,14 @@
         <div class="controls">
             <input id="nimisv" type="text" name="nimisv"
                    ng-model="model.organisaatio.nimi.sv"
-                   placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
             <input id="nimise" type="text" name="nimien"
                    ng-model="model.organisaatio.nimi.en"
-                   placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
 
@@ -154,7 +154,7 @@
             <div>
                 <input type="text" name="alkupvm" datepicker-popup="yyyy-MM-dd" ng-model="model.organisaatio.alkuPvm"
                        datepicker-options="dateOptions"
-                       close-on-date-selection="true" placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
+                       close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
@@ -162,7 +162,7 @@
                 &nbsp;-&nbsp;
                 <input type="text" name="lakkautuspvm" datepicker-popup="yyyy-MM-dd" ng-model="model.organisaatio.lakkautusPvm"
                        datepicker-options="dateOptions"
-                       close-on-date-selection="true" placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
+                       close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
@@ -302,7 +302,7 @@
         <div class="controls">
             <input id="puhelinnumero" type="text" name="puhelinnumero"
                    ng-model="model.yhteystiedot.puhelin.numero"
-                   placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" required ng-pattern="/^[\d \-\+]+$/"/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" required ng-pattern="/^[\d \-\+]+$/"/>
             <div>
                 <span class="text-error" ng-show="form.puhelinnumero.$error.required">
                     {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
@@ -323,7 +323,7 @@
         <div class="controls">
             <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
                    ng-model="model.yhteystiedot.faksi.numero"
-                   placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
             <div>
                 <span class="text-error" ng-show="form.faksinumero.$error.pattern">
                     {{'Organisaationtarkastelu.faksinumero'| i18n}}
@@ -340,7 +340,7 @@
         <div class="controls">
             <input id="sahkopostiosoite" type="email" name="sahkopostiosoite"
                    ng-model="model.yhteystiedot.email.email"
-                   placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}" required/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}" required/>
             <div>
                 <span class="text-error" ng-show="form.sahkopostiosoite.$error.required || form.sahkopostiosoite.$error.email">
                     {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
@@ -357,7 +357,7 @@
         <div class="controls">
             <input id="wwwosoite" type="text" name="wwwosoite"
                    ng-model="model.yhteystiedot.www.www"
-                   placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
             <div>
                 <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -399,7 +399,7 @@
                         <div class="input-append">
                             <input id="some_{{k}}" type="text" name="some_{{k}}"
                                    ng-model="model.organisaatio.metadata.data[k][k2]"
-                                   placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
+                                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
                             <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
                             <button type="button" class="btn" ng-click="model.removeSome(k)"><i class="icon-remove"></i></button>
                         </div>
@@ -458,21 +458,21 @@
             <div class="controls">
                 <input id="htnimifi" type="text" name="htnimifi"
                        ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_fi"
-                       placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false"/>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="htnimisv" type="text" name="htnimisv"
                        ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_sv"
-                       placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false"/>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="htnimien" type="text" name="htnimien"
                        ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_en"
-                       placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false"/>
             </div>
         </div>
 
@@ -535,10 +535,10 @@
             <div class="controls">
                 <input id="ectsnimi" type="text" name="ectsnimi"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi"
-                       placeholder="{{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}" ng-required="false" codes-combined-field/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}" ng-required="false" codes-combined-field/>
                 <input id="ectsnimike" type="text" name="ectsnimike"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
-                       placeholder="{{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}" ng-required="false" codes-combined-field/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}" ng-required="false" codes-combined-field/>
             </div>
 
             <div>
@@ -552,7 +552,7 @@
             <div class="controls">
                 <input id="ectspuhelin" type="text" name="ectspuhelin"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin"
-                       placeholder="{{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}" ng-required="false" codes-combined-field/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}" ng-required="false" codes-combined-field/>
                 <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
             </div>
@@ -562,7 +562,7 @@
                 <div>
                     <input id="ectsemail" type="text" name="ectsemail"
                            ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail"
-                           placeholder="{{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}" ng-required="false" codes-combined-field/>
+                           ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}" ng-required="false" codes-combined-field/>
                     <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                         {{'codes.validation.codescombinedrequired'| i18n}}</span>
                 </div>

@@ -12,7 +12,7 @@
 
             <input id="osoitefi" type="text" maxlength="20" name="osoitefi"
                    ng-model="addressmodelfi.osoite" ng-disabled="disabled"
-                   placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" address-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" address-combined-field/>
             <button type="button" class="btn" ng-show="index >= 0" ng-click="remove(index)">{{ 'Organisaationmuokkaus.poistaosoite' | i18n}}</button>
 
         </div>
@@ -21,7 +21,7 @@
         <div class="controls">
             <input id="postifi" name="postifi" type="text" ng-model="postcodefi" ng-disabled="disabled"
                    typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
-                   placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                    typeahead-on-select="setpostcodefi(addressmodelfi, postcodefi)">
             &nbsp;{{addressmodelfi.postitoimipaikka}}
         </div>
@@ -32,14 +32,14 @@
             <div class="controls">
                 <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi"
                        ng-model="addressmodelfi.osavaltio" ng-disabled="disabled"
-                       placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi"
                        ng-model="addressmodelfi.extraRivi" ng-disabled="disabled"
-                       placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
         <div class="controls">
             <input id="osoitesv" type="text" maxlength="20" name="osoitesv"
                    ng-model="addressmodelsv.osoite" ng-disabled="disabled"
-                   placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" address-combined-field/>
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" address-combined-field/>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
         <div class="controls">
             <input id="postisv" name="postisv" type="text" ng-model="postcodesv" ng-disabled="disabled"
                    typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
-                   placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                    typeahead-on-select="setpostcodesv(addressmodelsv, postcodesv)">
             &nbsp;{{addressmodelsv.postitoimipaikka}}
         </div>
@@ -67,14 +67,14 @@
             <div class="controls">
                 <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi"
                        ng-model="addressmodelsv.osavaltio" ng-disabled="disabled"
-                       placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi"
                        ng-model="addressmodelsv.extraRivi" ng-disabled="disabled"
-                       placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
             </div>
         </div>
     </div>
