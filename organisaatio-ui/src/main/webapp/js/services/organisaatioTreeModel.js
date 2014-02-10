@@ -142,12 +142,8 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
         },
         
         getTyyppi: function (node) {
-            function capitalize (text) {
-                        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-            }
-
             if ('organisaatiotyypit' in node) {
-                return capitalize(node.organisaatiotyypit[0]);
+                return $filter('i18n')("Organisaatiot."+node.organisaatiotyypit[0], "");
             }
             return "\u00A0";
         },
