@@ -246,7 +246,7 @@
         </dependency>
 
         <!-- CAS ticket cache replication -->
-        <!-- dependency>
+        <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
         </dependency>
@@ -262,7 +262,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
-        </dependency -->
+        </dependency>
     </dependencies>
 
     <profiles>
