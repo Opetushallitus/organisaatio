@@ -92,7 +92,7 @@
             </select>
 
             <!-- Organisaatiotyyppi -->
-            <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi" ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'nimi'">
+            <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi" ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'">
                 <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
             </select>
 
