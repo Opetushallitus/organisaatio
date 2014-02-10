@@ -1,9 +1,13 @@
-app.factory('HakuehdotModel', function($filter, $log, Alert,
+app.factory('HakuehdotModel', function($filter, $log, AuthService, Alert,
                                        KoodistoPaikkakunnat,
                                        KoodistoOrganisaatiotyypit,
                                        KoodistoOppilaitostyypit,
                                        KoodistoKoodi) {
     var model = {
+        organisaatioRajausVisible: false,
+        organisaatioRajaus: false,
+        rajatutOrganisaatiot: [],
+        rajatutOrganisaatiotStr: "",
         refreshed: false,
         nimiTaiTunnus: "",
         kunta: "",
@@ -27,10 +31,28 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
             if (model.nimiTaiTunnus ||
                     model.kunta ||
                     model.organisaatiotyyppi ||
-                    model.oppilaitostyyppi) {
+                    model.oppilaitostyyppi ||
+                    model.organisaatioRajaus) {
                 return false;
             }   
             return true;
+        },
+        
+        getNimetRajatutOrganisaatiot: function() {
+            var organisaatiot = "";
+            
+            // TODO: Muutetaan oid organisaation nimeksi
+            
+            angular.forEach(model.rajatutOrganisaatiot, function(oid, index){
+                if (index === 0) {
+                   organisaatiot = oid;
+                }
+                else {
+                    organisaatiot = organisaatiot + ", " + oid;
+                }
+            });
+            
+            return organisaatiot;
         },
         
         refreshIfNeeded: function() {
@@ -107,6 +129,23 @@ app.factory('HakuehdotModel', function($filter, $log, Alert,
             model.tila = "kaikki";
         }
     };
+
+    AuthService.getOrganizations("APP_ORGANISAATIOHALLINTA").then(function(organisations){
+        "use strict";
+        $log.debug("Käyttäjän organisaatiot:" + organisations);
+        
+        // Jos OPH käyttäjä, niin ei näytetä organisaatiorajausta
+        if(!organisations || organisations.indexOf(ROOT_ORGANISAATIO_OID) > -1) {
+            model.organisaatioRajausVisible = false;
+            model.organisaatioRajaus = false;
+        }
+        else {
+            model.organisaatioRajausVisible = true;
+            model.organisaatioRajaus = true;
+            model.rajatutOrganisaatiot = organisations;
+            model.rajatutOrganisaatiotStr = model.getNimetRajatutOrganisaatiot();
+        }
+    });
 
     return model;
 });

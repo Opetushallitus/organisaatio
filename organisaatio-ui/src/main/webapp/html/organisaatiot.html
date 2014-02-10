@@ -46,6 +46,24 @@
     </ol>
 </script>
 
+<div class="row-fluid" ng-if="hakuehdot.organisaatioRajausVisible">
+    <p ng-show="hakuehdot.organisaatioRajaus">
+        {{'Organisaatiot.valittuOrganisaatio' | i18n}}
+        {{hakuehdot.organisaatiot}}
+        {{hakuehdot.rajatutOrganisaatiotStr}}
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
+            {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}
+        </a>
+    </p>
+    <p ng-hide="hakuehdot.organisaatioRajaus">
+        {{'Organisaatiot.kaikkiValittu' | i18n}}
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = true">
+            {{'Organisaatiot.palautaOletusOrganisaatioValinta' | i18n}}
+        </a>
+    </p>
+</div>
+
+
 <form class="form-search" novalidate ng-submit="search()">
     <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
     <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>

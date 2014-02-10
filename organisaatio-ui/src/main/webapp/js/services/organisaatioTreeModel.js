@@ -183,7 +183,10 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                 hakuParametrit.vainLakkautetut = true;
             }
 
-            // TODO: oidrestrictionlist??
+            // Haetaan vain rajatuista organisaatioista
+            if (hakuehdot.organisaatioRajaus) {
+                hakuParametrit.oidRestrictionList = hakuehdot.rajatutOrganisaatiot;
+            }
 
             $log.log(hakuParametrit);
 
