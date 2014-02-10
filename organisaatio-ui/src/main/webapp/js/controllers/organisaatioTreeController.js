@@ -6,6 +6,13 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.tarkemmatHakuehdotVisible = false;
     $scope.currentOid = '';
    
+    $scope.hakuehdot.init().then(function(){
+        "use strict";
+        if ($scope.hakuehdot.isEmpty() === false) {
+            $scope.model.refresh($scope.hakuehdot);
+        }
+    });
+   
     $scope.getTimes=function(n){
         return new Array(n);
     };   
