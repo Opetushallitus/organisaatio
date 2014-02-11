@@ -30,7 +30,7 @@
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
-                {{model.organisaatio.alkuPvm}} - {{model.organisaatio.lakkautusPvm}}
+                {{model.organisaatio.alkuPvm | date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm | date:'dd.MM.yyyy'}}
             </label>
         </div>
     </div>
