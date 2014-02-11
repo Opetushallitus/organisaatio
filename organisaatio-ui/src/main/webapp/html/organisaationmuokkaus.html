@@ -227,7 +227,7 @@
                 <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli)">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
-                    ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                    ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"
                     ng-click="model.addLang()">
                 <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
             </select>

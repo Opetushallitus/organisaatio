@@ -1,6 +1,7 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
-        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert, $filter, $log) {
+        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
+        KoodistoOpetuskielet, $filter, $log) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -12,6 +13,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             kotipaikat: [],
             maat: [],
             kielet: [],
+            opetuskielet: [],
             vuosiluokat: [],
             kieliplaceholder: $filter('i18n')("lisaakieli"),
             ktkieliplaceholder: $filter('i18n')("lisaakieli"),
@@ -218,6 +220,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
                 model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
+                convertToOpetuskieliKoodisto();
 
                 Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                     model.uriLocalizedNames["parentnimi"] = getLocalizedValue(parentResult.nimi, "", false);
@@ -515,6 +518,18 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
                         }
                     });
+                }, function(response) {
+                    // kieliä ei löytynyt
+                    showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+                });
+                KoodistoOpetuskielet.get({}, function(result) {
+                    model.koodisto.opetuskielet.length = 0;
+                    result.forEach(function(kieliKoodi) {
+                        if (KoodistoKoodi.isValid(kieliKoodi)) {
+                            model.koodisto.opetuskielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
+                            model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
+                        }
+                    });
                     // jos ytj:stä saatu organisaatioon liittyvää tietoa --> päivitetään kieli
                     model.addYtjLang();
                 }, function(response) {
@@ -794,9 +809,38 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+        // Korvaa kielivalikoima-koodiston mukaiset kieliurit opetuskieli-koodiston vastaavalla urilla jos löytyy
+        convertToOpetuskieliKoodisto = function() {
+            var kielivalikoimaToOpetuskieli = {
+                "kielivalikoima_fi" : "oppilaitoksenopetuskieli_1",
+                "kielivalikoima_sv" : "oppilaitoksenopetuskieli_2",
+                "kielivalikoima_en" : "oppilaitoksenopetuskieli_4",
+                "kielivalikoima_se" : "oppilaitoksenopetuskieli_5",
+                "kielivalikoima_xx" : "oppilaitoksenopetuskieli_9"
+            };
+            var muuLoydetty = false;
+            var len = model.organisaatio.kieletUris.length;
+            while (len--) {
+                vanhaKieli = model.organisaatio.kieletUris[len];
+                if (vanhaKieli.indexOf("kielivalikoima_")===0) {
+                    var uusiKieli = kielivalikoimaToOpetuskieli[vanhaKieli] || "oppilaitoksenopetuskieli_9";
+                    model.organisaatio.kieletUris[len] = uusiKieli;
+                    if (uusiKieli==="oppilaitoksenopetuskieli_9") {
+                        if (muuLoydetty) {
+                            // poistetaan koska muu kieli on jo listassa
+                            model.organisaatio.kieletUris.splice(len,1);
+                        } else {
+                            muuLoydetty = true;
+                        }
+                    }
+                }
+            }
+        };
+
         this.addLang = function() {
             if (model.organisaatio.kieletUris.indexOf(model.koodisto.kieliplaceholder) === -1) {
                 if (model.koodisto.kieliplaceholder && (model.koodisto.kieliplaceholder !== $filter('i18n')("lisaakieli"))) {
+                    convertToOpetuskieliKoodisto();
                     model.organisaatio.kieletUris.push(model.koodisto.kieliplaceholder);
                 }
             }

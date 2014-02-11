@@ -275,6 +275,14 @@ return $resource(KOODISTO_URL_BASE + "json/kielivalikoima/koodi", {}, {
   });
 });
 
+// Opetuskielten haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitoksenopetuskieli/koodi
+app.factory('KoodistoOpetuskielet', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi", {}, {
+    get: {method: "GET", isArray: true}
+  });
+});
+
 // YTJ tiedot yhden yrityksen osalta
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
 app.factory('YTJYritysTiedot', function($resource) {
