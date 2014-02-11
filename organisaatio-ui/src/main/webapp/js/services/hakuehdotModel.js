@@ -38,23 +38,6 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             return true;
         },
         
-        getNimetRajatutOrganisaatiot: function() {
-            var organisaatiot = "";
-            
-            // TODO: Muutetaan oid organisaation nimeksi
-            
-            angular.forEach(model.rajatutOrganisaatiot, function(oid, index){
-                if (index === 0) {
-                   organisaatiot = oid;
-                }
-                else {
-                    organisaatiot = organisaatiot + ", " + oid;
-                }
-            });
-            
-            return organisaatiot;
-        },
-        
         refreshIfNeeded: function() {
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
@@ -144,7 +127,6 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     model.organisaatioRajausVisible = true;
                     model.organisaatioRajaus = true;
                     model.rajatutOrganisaatiot = organisations;
-                    model.rajatutOrganisaatiotStr = model.getNimetRajatutOrganisaatiot();
                 }
                 deferred.resolve();
             });

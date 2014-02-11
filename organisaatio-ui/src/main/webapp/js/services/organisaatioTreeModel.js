@@ -1,4 +1,4 @@
-app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatiot) {
+app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisaatiot) {
 // organisaatiot[]
 //     {
 //        "oid" : "1.2.246.562.10.71103955986",
@@ -79,6 +79,32 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                     model.count = model.count-1;
                 }
             }
+        },
+
+        getNimiForOid: function (oid) {
+            // Etsitään noodi oidin perusteella
+            findOid = function(node) {
+                var tempNode;
+                if (node.oid && oid === node.oid) {
+                    return node;
+                }
+                for(var i=0; i < node.children.length; i++) {
+                    tempNode = findOid(node.children[i]);
+                    if (tempNode) {
+                        return tempNode;
+                    }
+                }
+                return;
+            };  
+            
+            // Etsitään noodia jonka oid on annettu oid
+            node = findOid(tree);
+            
+            // Jos parent löytyi niin postetaan se children listalta
+            if (node) {
+                return model.getNimi(node);
+            }
+            return "--";
         },
 
         getStatus: function (node) {
@@ -232,6 +258,7 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
             $log.log('refresh()');
             var start = +new Date();
             
+            var deferred = $q.defer();
             var parametrit = this.buildHakuParametrit(hakuehdot);
 
             Organisaatiot.get(parametrit, function(result) {
@@ -242,12 +269,17 @@ app.factory('OrganisaatioTreeModel', function($filter, $log, Alert, Organisaatio
                 $log.log("Haku kesti: " +diff);
 
                 model.updateTree(result.numHits, result.organisaatiot);
+                
+                deferred.resolve();
             }, 
             // Error case
             function(response) {
                 $log.error("Organisaatiot response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
+                
+                deferred.reject();
             });
+            return deferred.promise;
         }
     };
 

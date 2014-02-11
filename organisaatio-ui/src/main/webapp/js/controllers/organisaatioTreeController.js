@@ -5,14 +5,28 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
     $scope.currentOid = '';
-   
-    $scope.hakuehdot.init().then(function(){
-        "use strict";
+    
+    // Kun hakuehdot on initalisoitu, tarkastetaan onko ehdot tyhjät.
+    // Jos hakuehdoissa on jo jotain (käytännössä käyttäjän organisaatio), päivitetään näkymä
+    $scope.hakuehdot.init().then(function() {
         if ($scope.hakuehdot.isEmpty() === false) {
-            $scope.model.refresh($scope.hakuehdot);
+            $scope.model.refresh($scope.hakuehdot).then (function() {
+                
+                // Päivitetään organisaatiorajauksen organisaatioiden nimet mallista
+                var organisaatiot = "";
+                angular.forEach($scope.hakuehdot.rajatutOrganisaatiot, function(oid, index){
+                    if (index === 0) {
+                        organisaatiot = $scope.model.getNimiForOid(oid);
+                    }
+                    else {
+                        organisaatiot = organisaatiot + ", " + $scope.model.getNimiForOid(oid);
+                    }
+                });
+                $scope.hakuehdot.rajatutOrganisaatiotStr = organisaatiot;
+            });
         }
     });
-   
+    
     $scope.getTimes=function(n){
         return new Array(n);
     };   
