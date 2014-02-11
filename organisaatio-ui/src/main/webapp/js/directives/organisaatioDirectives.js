@@ -43,7 +43,8 @@ app.directive('namesCombinedField', function() {
             var parserValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
-                if (!scope.form.nimifi.$viewValue && !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
+                if (!viewValue && !scope.form.nimifi.$viewValue && 
+                        !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                 }
                 return viewValue;
@@ -52,8 +53,9 @@ app.directive('namesCombinedField', function() {
 
             var formatterValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
-
-                if (!scope.form.nimifi.$viewValue && !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
+                
+                if (!viewValue && !scope.form.nimifi.$viewValue && 
+                        !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                 }
                 return viewValue;
