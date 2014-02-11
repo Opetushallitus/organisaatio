@@ -45,8 +45,10 @@ app.directive("iePlaceholder", function($timeout) {
             }
             // Initialise placeholder
             $timeout(function() {
-                element.val(_placeholder);
-                element.addClass('greyed');
+                if (element.val() === '') {
+                    element.val(_placeholder);
+                    element.addClass('greyed');
+                }
             });
         }
     };
