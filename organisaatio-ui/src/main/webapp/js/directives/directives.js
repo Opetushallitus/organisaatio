@@ -1,6 +1,6 @@
 app.directive('auth', function($animate, $timeout, $log, AuthService) {
     return {
-        link : function($scope, element, attrs) {
+        link: function($scope, element, attrs) {
 
             element.addClass('ng-hide');
 
@@ -9,7 +9,7 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
             };
 
             $timeout(function() {
-                switch(attrs.auth) {
+                switch (attrs.auth) {
 
                     case "crudOph":
                         AuthService.crudOph(attrs.authService).then(success);
@@ -35,12 +35,12 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
                         AuthService.readOrg(attrs.authService, [attrs.authOrg]).then(success);
                         break;
                 }
-            },0);
+            }, 0);
 
             attrs.$observe('authOrg', function() {
-                if(attrs.authOrg) {
+                if (attrs.authOrg) {
                     $log.log("auth-org: " + attrs.authOrg);
-                    switch(attrs.auth) {
+                    switch (attrs.auth) {
                         case "crudOrg":
                             AuthService.crudOrg(attrs.authService, [attrs.authOrg]).then(success);
                             break;
@@ -64,7 +64,12 @@ app.directive("ngFileSelect", function() {
         link: function($scope, el) {
 
             el.bind("change", function(e) {
-                $scope.getFile((e.srcElement || e.target).files[0]);
+                if ((e.srcElement || e.target).files) {
+                    $scope.getFile((e.srcElement || e.target).files[0]);
+                } else {
+                    // IE
+                    $scope.getFile(e.srcElement.value);
+                }
             });
         }
     };

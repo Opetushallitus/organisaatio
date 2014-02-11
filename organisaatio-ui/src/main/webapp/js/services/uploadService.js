@@ -16,7 +16,15 @@ app.factory('uploadService', function($q, $log) {
     };
 
     var getReader = function(deferred, scope) {
-        var reader = new FileReader();
+        var reader = null;
+        if (window.FileReader) {
+            reader = new FileReader();
+        } else {
+            // TODO: IE9 has no File API. Use flash?
+            //  - http://aymkdn.github.io/FileToDataURI
+            //  - https://github.com/Jahdrien/FileReader
+            //  - https://github.com/mailru/FileAPI
+        }
         reader.onload = onLoad(reader, deferred, scope);
         reader.onerror = onError(reader, deferred, scope);
         return reader;
@@ -26,7 +34,11 @@ app.factory('uploadService', function($q, $log) {
         var deferred = $q.defer();
 
         var reader = getReader(deferred, scope);
-        reader.readAsDataURL(file);
+        if (window.FileReader) {
+            reader.readAsDataURL(file);
+        } else {
+            // TODO: IE9
+        }
 
         return deferred.promise;
     };
