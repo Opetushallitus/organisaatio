@@ -1,7 +1,7 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
-        KoodistoOpetuskielet, $filter, $log) {
+        KoodistoOpetuskielet, KoodistoPaikkakunta, $filter, $log) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -490,9 +490,22 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 });
                 KoodistoPaikkakunnat.get({}, function(result) {
                     model.koodisto.kotipaikat.length = 0;
+                    var kotipaikkaVoimassa = false;
                     result.forEach(function(kpKoodi) {
                         model.koodisto.kotipaikat.push({uri: kpKoodi.koodiUri, arvo: kpKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kpKoodi)});
+                        if (model.organisaatio.kotipaikkaUri && (model.organisaatio.kotipaikkaUri===kpKoodi.koodiUri)) {
+                            kotipaikkaVoimassa = true;
+                        }
                     });
+                    if (model.mode==='edit' && !kotipaikkaVoimassa) {
+                        // hae myös lakkautettu kotikunta
+                        KoodistoPaikkakunta.get({uri: model.organisaatio.kotipaikkaUri}, function(result) {
+                            model.koodisto.kotipaikat.push({uri: result.koodiUri, arvo: result.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(result)});
+                        }, function(response) {
+                            // paikkakuntaa ei löytynyt
+                            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+                        });
+                    }
                     // jos ytj:stä saatu organisaatioon liityvää tietoa --> päivitetään kotipaikka
                     model.addYtjKotipaikka();
                 }, function(response) {

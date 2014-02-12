@@ -230,8 +230,16 @@ app.factory('Organisaatiot', function($resource) {
 // Kuntien haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
 app.factory('KoodistoPaikkakunnat', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/kunta/koodi", {}, {
+return $resource(KOODISTO_URL_BASE + "json/kunta/koodi?onlyValidKoodis=true", {}, {
     get: {method: "GET", isArray: true}
+  });
+});
+
+// Kuntien haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
+app.factory('KoodistoPaikkakunta', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/kunta/koodi/:uri", {uri: "@uri"}, {
+    get: {method: "GET"}
   });
 });
 
