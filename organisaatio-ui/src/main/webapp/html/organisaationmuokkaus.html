@@ -116,7 +116,7 @@
                 <div>
                     <input type='checkbox' name="vuosiluokka"
                            ng-checked="model.organisaatio.vuosiluokat.indexOf(vl.uri) !== -1"
-                           ng-click="model.toggleCheckVuosiluokka(vl.uri)">{{model.uriLocalizedNames[vl.uri]}}
+                           ng-click="model.toggleCheckVuosiluokka(vl.uri); form.$dirty=true">{{model.uriLocalizedNames[vl.uri]}}
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
         <div class="controls">
             <span ng-repeat="kieli in model.organisaatio.kieletUris" >
                 <!--span class="removabletag">{{model.uriLocalizedNames[kieli]}}</span-->
-                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli)">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
+                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli); form.$dirty=true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
                     ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"

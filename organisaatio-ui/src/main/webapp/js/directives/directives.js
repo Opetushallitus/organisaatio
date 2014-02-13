@@ -3,7 +3,6 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
         link: function($scope, element, attrs) {
             var disable = false;
 
-            $log.log("auth-disable=" + attrs.authDisable);
             if (attrs.authDisable==="true") {
                 disable = true;
             }

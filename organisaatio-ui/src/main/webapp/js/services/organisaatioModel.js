@@ -940,8 +940,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.removeKtLang = function(index) {
             for (field in model.kttypes) {
                 if (model.organisaatio.metadata.data[model.kttypes[field]]) {
-                    if (model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[i].lang]) {
-                        delete model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[i].lang];
+                    if (model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[index].lang]) {
+                        delete model.organisaatio.metadata.data[model.kttypes[field]][model.kttabs[index].lang];
                     }
                 }
             }
@@ -971,8 +971,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.removeOeLang = function(index) {
             for (field in model.oetypes) {
                 if (model.organisaatio.metadata.data[model.oetypes[field]]) {
-                    if (model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[i].lang]) {
-                        delete model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[i].lang];
+                    if (model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[index].lang]) {
+                        delete model.organisaatio.metadata.data[model.oetypes[field]][model.oetabs[index].lang];
                     }
                 }
             }
