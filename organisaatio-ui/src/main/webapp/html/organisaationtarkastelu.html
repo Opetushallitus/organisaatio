@@ -3,7 +3,11 @@
     <div class="control-group">
         <div class="offset2 span6" ng-show="model.organisaatio.nimi">
             <h2>{{model.uriLocalizedNames["nimi"]}}
-                <button type="button" class="btn-primary" ng-click="edit()">{{'Organisaationtarkastelu.muokkaa'| i18n}}</button></h2>
+                <button type="button" class="btn-primary" ng-click="edit()"
+                        auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
+                        {{'Organisaationtarkastelu.muokkaa'| i18n}}
+                </button>
+            </h2>
         </div>
     </div>
 

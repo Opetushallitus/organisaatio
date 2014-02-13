@@ -1,7 +1,7 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
-        KoodistoOpetuskielet, KoodistoPaikkakunta, $filter, $log) {
+        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, $filter, $log) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -9,6 +9,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.koodisto = {
             oid: 0,
             organisaatiotyypit: [],
+            ophOrganisaatiot: [],
             oppilaitostyypit: [],
             kotipaikat: [],
             maat: [],
@@ -428,6 +429,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.koodisto.oekieliplaceholder = $filter('i18n')("lisaakieli");
                 KoodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
+                    model.koodisto.ophOrganisaatiot.length = 0;
                     /* Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
                      Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
@@ -462,6 +464,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             } else if (orgTyyppiKoodi.koodiArvo === "02") {
                                 model.koodisto.localizedOppilaitos = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                             }
+                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
+                                model.koodisto.ophOrganisaatiot.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
+                            }
 
                             localizedKoodistoOrgType = "";
                             if (orgTyyppiKoodi.koodiArvo === "03") {
@@ -493,11 +498,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     var kotipaikkaVoimassa = false;
                     result.forEach(function(kpKoodi) {
                         model.koodisto.kotipaikat.push({uri: kpKoodi.koodiUri, arvo: kpKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kpKoodi)});
-                        if (model.organisaatio.kotipaikkaUri && (model.organisaatio.kotipaikkaUri===kpKoodi.koodiUri)) {
+                        if (model.organisaatio.kotipaikkaUri && (model.organisaatio.kotipaikkaUri === kpKoodi.koodiUri)) {
                             kotipaikkaVoimassa = true;
                         }
                     });
-                    if (model.mode==='edit' && !kotipaikkaVoimassa) {
+                    if (model.mode === 'edit' && !kotipaikkaVoimassa) {
                         // hae myös lakkautettu kotikunta
                         KoodistoPaikkakunta.get({uri: model.organisaatio.kotipaikkaUri}, function(result) {
                             model.koodisto.kotipaikat.push({uri: result.koodiUri, arvo: result.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(result)});
@@ -825,23 +830,23 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // Korvaa kielivalikoima-koodiston mukaiset kieliurit opetuskieli-koodiston vastaavalla urilla jos löytyy
         convertToOpetuskieliKoodisto = function() {
             var kielivalikoimaToOpetuskieli = {
-                "kielivalikoima_fi" : "oppilaitoksenopetuskieli_1",
-                "kielivalikoima_sv" : "oppilaitoksenopetuskieli_2",
-                "kielivalikoima_en" : "oppilaitoksenopetuskieli_4",
-                "kielivalikoima_se" : "oppilaitoksenopetuskieli_5",
-                "kielivalikoima_xx" : "oppilaitoksenopetuskieli_9"
+                "kielivalikoima_fi": "oppilaitoksenopetuskieli_1",
+                "kielivalikoima_sv": "oppilaitoksenopetuskieli_2",
+                "kielivalikoima_en": "oppilaitoksenopetuskieli_4",
+                "kielivalikoima_se": "oppilaitoksenopetuskieli_5",
+                "kielivalikoima_xx": "oppilaitoksenopetuskieli_9"
             };
             var muuLoydetty = false;
             var len = model.organisaatio.kieletUris.length;
             while (len--) {
                 vanhaKieli = model.organisaatio.kieletUris[len];
-                if (vanhaKieli.indexOf("kielivalikoima_")===0) {
+                if (vanhaKieli.indexOf("kielivalikoima_") === 0) {
                     var uusiKieli = kielivalikoimaToOpetuskieli[vanhaKieli] || "oppilaitoksenopetuskieli_9";
                     model.organisaatio.kieletUris[len] = uusiKieli;
-                    if (uusiKieli==="oppilaitoksenopetuskieli_9") {
+                    if (uusiKieli === "oppilaitoksenopetuskieli_9") {
                         if (muuLoydetty) {
                             // poistetaan koska muu kieli on jo listassa
-                            model.organisaatio.kieletUris.splice(len,1);
+                            model.organisaatio.kieletUris.splice(len, 1);
                         } else {
                             muuLoydetty = true;
                         }

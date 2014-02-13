@@ -14,10 +14,17 @@
 
         <div class="controls">
             <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
+                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi)>-1">
+                <input class="" type='checkbox' name="orgtyyppi"
+                       auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                       ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
+                       ng-click="model.toggleCheckOrganisaatio(tyyppi); form.$dirty=true">{{tyyppi}}
+                </span>
+                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi)===-1">
                 <input type='checkbox' name="orgtyyppi"
                        ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
-                       ng-click="model.toggleCheckOrganisaatio(tyyppi)">{{tyyppi}}
-
+                       ng-click="model.toggleCheckOrganisaatio(tyyppi); form.$dirty=true">{{tyyppi}}
+                </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
                 <input type="hidden" name="orgtyypit" ng-model="orgtyypit" required>
@@ -87,7 +94,7 @@
         <div class="controls">
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
-                    ng-change="model.selectOppilaitosTyyppi()" required>
+                    ng-change="model.selectOppilaitosTyyppi(); form.$dirty=true" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.oppilaitosTyyppiUri">
@@ -174,7 +181,7 @@
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
-            </div>  
+            </div>
         </div>
     </div>
 

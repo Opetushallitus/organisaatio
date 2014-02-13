@@ -1,11 +1,25 @@
 app.directive('auth', function($animate, $timeout, $log, AuthService) {
     return {
         link: function($scope, element, attrs) {
+            var disable = false;
 
-            element.addClass('ng-hide');
+            $log.log("auth-disable=" + attrs.authDisable);
+            if (attrs.authDisable==="true") {
+                disable = true;
+            }
+
+            if (!disable) {
+                element.addClass("ng-hide");
+            } else {
+                $(element).attr("disabled","disabled");
+            }
 
             var success = function() {
-                element.removeClass('ng-hide');
+                if (!disable) {
+                    element.removeClass("ng-hide");
+                } else {
+                    $(element).removeAttr("disabled");
+                }
             };
 
             $timeout(function() {
