@@ -13,6 +13,11 @@
             <input id="osoitefi" type="text" maxlength="20" name="osoitefi"
                    ng-model="addressmodelfi.osoite" ng-disabled="disabled"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" address-combined-field/>
+            <span class="absolute offset7">
+                <input id="osoitesv" type="text" maxlength="20" name="osoitesv"
+                       ng-model="addressmodelsv.osoite" ng-disabled="disabled"
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" address-combined-field/>
+            </span>
             <button type="button" class="btn" ng-show="index >= 0" ng-click="remove(index)">{{ 'Organisaationmuokkaus.poistaosoite' | i18n}}</button>
 
         </div>
@@ -24,6 +29,14 @@
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                    typeahead-on-select="setpostcodefi(addressmodelfi, postcodefi)">
             &nbsp;{{addressmodelfi.postitoimipaikka}}
+
+            <span class="absolute offset7">
+                <input id="postisv" name="postisv" type="text" ng-model="postcodesv" ng-disabled="disabled"
+                       typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
+                       typeahead-on-select="setpostcodesv(addressmodelsv, postcodesv)">
+                &nbsp;{{addressmodelsv.postitoimipaikka}}</span>
+
         </div>
     </div>
 
@@ -33,6 +46,11 @@
                 <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi"
                        ng-model="addressmodelfi.osavaltio" ng-disabled="disabled"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
+                <span class="absolute offset7">
+                    <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi"
+                           ng-model="addressmodelsv.osavaltio" ng-disabled="disabled"
+                           ie-placeholder placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
+                </span>
             </div>
         </div>
         <div class="control-group">
@@ -40,41 +58,11 @@
                 <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi"
                        ng-model="addressmodelfi.extraRivi" ng-disabled="disabled"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group" ng-show="addressformat === 'suomalainen' && addressmodelsv !== undefined">
-        <div class="controls">
-            <input id="osoitesv" type="text" maxlength="20" name="osoitesv"
-                   ng-model="addressmodelsv.osoite" ng-disabled="disabled"
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}" address-combined-field/>
-        </div>
-    </div>
-
-    <div class="control-group" ng-show="addressformat === 'suomalainen' && addressmodelsv !== undefined">
-        <div class="controls">
-            <input id="postisv" name="postisv" type="text" ng-model="postcodesv" ng-disabled="disabled"
-                   typeahead="nro for nro in postcodes | filter:$viewValue | limitTo:10"
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                   typeahead-on-select="setpostcodesv(addressmodelsv, postcodesv)">
-            &nbsp;{{addressmodelsv.postitoimipaikka}}
-        </div>
-    </div>
-
-    <div ng-if="country && (country !== 'maatjavaltiot1_fin') && addressformat === 'suomalainen' && addressmodelsv !== undefined">
-        <div class="control-group">
-            <div class="controls">
-                <input id="osavaltiofi" type="text" maxlength="20" name="osavaltiofi"
-                       ng-model="addressmodelsv.osavaltio" ng-disabled="disabled"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osavaltio'| i18n}}" ng-required="false" />
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi"
-                       ng-model="addressmodelsv.extraRivi" ng-disabled="disabled"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
+                <span class="absolute offset7">
+                    <input id="extrarivifi" type="text" maxlength="20" name="extrarivifi"
+                           ng-model="addressmodelsv.extraRivi" ng-disabled="disabled"
+                           ie-placeholder placeholder="{{'Organisaationmuokkaus.extrarivi'| i18n}}" ng-required="false" />
+                </span>
             </div>
         </div>
     </div>
@@ -88,7 +76,8 @@
         </label>
         <div class="controls">
             <textarea id="kvosoite" name="kvosoite" rows="6" ng-model="addressmodelkv.osoite"
-                      ng-disabled="disabled" address-combined-field></textarea>
+                      ng-disabled="disabled" address-combined-field
+                      ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
         </div>
     </div>
 

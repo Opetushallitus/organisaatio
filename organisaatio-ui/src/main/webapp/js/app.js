@@ -169,7 +169,7 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     }
 ]);
 
-app.factory('BuildVersion', ['$rootScope', '$http', function($rootScope, $http) {
+app.factory('BuildVersion', ['$rootScope', '$http', '$log', function($rootScope, $http, $log) {
         var versionService;
         $rootScope.buildTime = "";
 
@@ -177,9 +177,9 @@ app.factory('BuildVersion', ['$rootScope', '$http', function($rootScope, $http) 
             update: function() {
                 $http.get(UI_URL_BASE + 'buildversion.txt').success(function(str) {
                     oph_bv = angular.fromJson("{" + str.replace(/^/g, '"')/*sol*/.replace(/(\r\n|\n|\r)/g, '",\n"')/*eol*/.replace(/=/g, '": "')/*=*/.replace(/$/, '"')/*eof*/.replace(/""/, '"valid": "ate"') /*make sure is valid*/ + "}");
-                    console.log(oph_bv);
+                    $log.log(oph_bv);
                     $rootScope.buildTime = oph_bv.buildTtime;
-                    console.log($rootScope.buildTime);
+                    $log.log($rootScope.buildTime);
                 });
             }
         };

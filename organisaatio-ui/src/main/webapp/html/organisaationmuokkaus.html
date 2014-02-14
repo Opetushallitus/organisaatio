@@ -2,7 +2,7 @@
     <div class="control-group" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()">
         <div class="controls">
             <button class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)">
-                {{'Organisaationmuokkaus.paivitaYtj' | i18n}}
+                {{'Organisaationmuokkaus.paivitaYtj'| i18n}}
             </button>
         </div>
     </div>
@@ -14,16 +14,18 @@
 
         <div class="controls">
             <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
-                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi)>-1">
-                <input class="" type='checkbox' name="orgtyyppi"
-                       auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
-                       ng-click="model.toggleCheckOrganisaatio(tyyppi); form.$dirty=true">{{tyyppi}}
+                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi) > -1">
+                    <input class="" type='checkbox' name="orgtyyppi"
+                           auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
+                           ng-click="model.toggleCheckOrganisaatio(tyyppi);
+                               form.$dirty = true">{{tyyppi}}
                 </span>
-                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi)===-1">
-                <input type='checkbox' name="orgtyyppi"
-                       ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
-                       ng-click="model.toggleCheckOrganisaatio(tyyppi); form.$dirty=true">{{tyyppi}}
+                <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === -1)">
+                    <input type='checkbox' name="orgtyyppi"
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
+                           ng-click="model.toggleCheckOrganisaatio(tyyppi);
+                               form.$dirty = true">{{tyyppi}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
@@ -94,7 +96,8 @@
         <div class="controls">
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
-                    ng-change="model.selectOppilaitosTyyppi(); form.$dirty=true" required>
+                    ng-change="model.selectOppilaitosTyyppi();
+                            form.$dirty = true" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.oppilaitosTyyppiUri">
@@ -116,7 +119,8 @@
                 <div>
                     <input type='checkbox' name="vuosiluokka"
                            ng-checked="model.organisaatio.vuosiluokat.indexOf(vl.uri) !== -1"
-                           ng-click="model.toggleCheckVuosiluokka(vl.uri); form.$dirty=true">{{model.uriLocalizedNames[vl.uri]}}
+                           ng-click="model.toggleCheckVuosiluokka(vl.uri);
+                                   form.$dirty = true">{{model.uriLocalizedNames[vl.uri]}}
                 </div>
             </div>
         </div>
@@ -231,7 +235,8 @@
         <div class="controls">
             <span ng-repeat="kieli in model.organisaatio.kieletUris" >
                 <!--span class="removabletag">{{model.uriLocalizedNames[kieli]}}</span-->
-                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli); form.$dirty=true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
+                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli);
+                        form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
                     ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"
@@ -484,7 +489,7 @@
         </div>
 
 
-        <div class="control-group">
+        <!--div class="control-group">
             <div class="controls">
                 <select id="osoitemuoto" ng-model="model.ktosoitemuoto"
                         ng-init="model.ktosoitemuoto = 'suomalainen'">
@@ -492,12 +497,12 @@
                     <option value='kansainvalinen'>{{'Organisaationmuokkaus.kansainvalinenosoitemuoto'| i18n}}</option>
                 </select>
             </div>
-        </div>
+        </div-->
 
-        <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="model.ktosoitemuoto" optional="true"
+        <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="'suomalainen'" optional="true"
                       addressmodelfi="model.mdyhteystiedot.kaynti"
                       addressmodelsv="model.mdyhteystiedot.ruotsi_kaynti"
-                      addressmodelkv="model.mdyhteystiedot.kv_kaynti"
+                      addressmodelkv="model.mdyhteystiedot.ulkomainen_kaynti"
                       addresstype="'kaynti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                       postcodefi="model.mdyhteystiedot.postinumerot.kaynti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_kaynti"
                       setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
@@ -509,10 +514,10 @@
             </div>
         </div>
 
-        <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="model.ktosoitemuoto" optional="true"
+        <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="'suomalainen'" optional="true"
                       addressmodelfi="model.mdyhteystiedot.posti"
                       addressmodelsv="model.mdyhteystiedot.ruotsi_posti"
-                      addressmodelkv="model.mdyhteystiedot.kv_posti"
+                      addressmodelkv="model.mdyhteystiedot.ulkomainen_posti"
                       addresstype="'posti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                       disabled="model.ktsamaosoite"
                       postcodefi="model.mdyhteystiedot.postinumerot.posti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_posti"
@@ -526,14 +531,31 @@
 
 
         <div ng-repeat="osoite in model.mdyhteystiedot.muu">
-            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="model.osoitemuoto" optional="true"
+            <edit-address label="'Organisaationtarkastelu.muuosoite'" addressformat="'suomalainen'" optional="true"
                           addressmodelfi="model.mdyhteystiedot.muu[$index]"
-                          addressmodelkv="model.mdyhteystiedot.kv_muu[$index]"
+                          addressmodelkv="model.mdyhteystiedot.ulkomainen_muu[$index]"
                           index='{{$index}}' remove="model.removeKtAddress"
                           addresstype="'muu'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
                           postcodefi="model.mdyhteystiedot.postinumerot.muu[$index]"
                           setpostcodefi="model.setPostinumero" ></edit-address>
         </div>
+
+        <edit-address label="'Organisaationtarkastelu.kayntiosoite'" addressformat="'kansainvalinen'" optional="true"
+                      addressmodelfi="model.mdyhteystiedot.kaynti"
+                      addressmodelsv="model.mdyhteystiedot.ruotsi_kaynti"
+                      addressmodelkv="model.mdyhteystiedot.ulkomainen_kaynti"
+                      addresstype="'kaynti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
+                      postcodefi="model.mdyhteystiedot.postinumerot.kaynti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_kaynti"
+                      setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
+
+        <edit-address label="'Organisaationtarkastelu.postiosoite'" addressformat="'kansainvalinen'" optional="true"
+                      addressmodelfi="model.mdyhteystiedot.posti"
+                      addressmodelsv="model.mdyhteystiedot.ruotsi_posti"
+                      addressmodelkv="model.mdyhteystiedot.ulkomainen_posti"
+                      addresstype="'posti'" country="model.organisaatio.maaUri" postcodes="model.koodisto.postinumerot"
+                      disabled="model.ktsamaosoite"
+                      postcodefi="model.mdyhteystiedot.postinumerot.posti" postcodesv="model.mdyhteystiedot.postinumerot.ruotsi_posti"
+                      setpostcodefi="model.setPostinumero" setpostcodesv="model.setRuotsiPostinumero"></edit-address>
 
         <div class="control-group">
             <label class="control-label">

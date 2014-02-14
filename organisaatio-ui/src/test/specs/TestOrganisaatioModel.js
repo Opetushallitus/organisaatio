@@ -5,7 +5,7 @@ describe("Testing OrganisaatioModel", function() {
     var mockOrganisaatio;
     var oid = "1.2.246.562.10.99999999999";
     var organisaatioResult = {
-        
+
   "yhteishaunKoulukoodi" : "",
   "version" : 35,
   "metadata" : {
@@ -190,8 +190,19 @@ describe("Testing OrganisaatioModel", function() {
     "maaUri" : null
   },
   "emailOsoite" : "testi@testi.fi"
-}
-    var koodistoResult = 
+};
+
+var parentResult = {
+  "version" : 35,
+  "oid" : "1.2.246.562.10.11111111111",
+  "parentOid" : "1.2.246.562.10.00000000001",
+  "tyypit" : [ "Koulutustoimija" ],
+  "nimi" : {
+    "fi" : "Testi-Koulutustoimija"
+  },
+};
+
+    var koodistoResult =
         [ {
   "koodiUri" : "maatjavaltiot1_fin",
   "resourceUri" : "http://koodistopalvelu.opintopolku.fi/maatjavaltiot1/koodi/maatjavaltiot1_fin",
@@ -400,9 +411,9 @@ describe("Testing OrganisaatioModel", function() {
     "kieli" : "SV"
   } ]
 } ]
-       
+
     beforeEach(function() { module('organisaatio'); });
-    
+
     beforeEach(function () {
         angular.mock.inject(function ($injector) {
             $httpBackend = $injector.get('$httpBackend');
@@ -412,34 +423,39 @@ describe("Testing OrganisaatioModel", function() {
         })
     });
 
-    
-    beforeEach(inject(function($rootScope, OrganisaatioModel) {  
+
+    beforeEach(inject(function($rootScope, OrganisaatioModel) {
         $scope.model = OrganisaatioModel;
-        
+
         // Olisi kivempi ladata data erillisestä tiedostosta, mutta ao. ei toimi:
         //jasmine.getJSONFixtures().fixturesPath='data';
-        //$httpBackend.expectGET("organisaatio/1.2.246.562.10.99999999999").respond(getJSONFixture('GET-organisaatio_1.2.246.562.10.99999999999'));;
-        
+
+        $httpBackend.expectGET("http://localhost:8180/organisaatio-ui/buildversion.txt").respond("");
+
+        $httpBackend.expectGET("/cas/myroles").respond("");
+
         $httpBackend.expectGET("organisaatio/1.2.246.562.10.99999999999").respond(organisaatioResult);
-        
-        $httpBackend.expectGET("organisaatio/1.2.246.562.10.99999999999/children").respond("");
-        
+
+        $httpBackend.expectGET("organisaatio/1.2.246.562.10.11111111111").respond(parentResult);
+
+        $httpBackend.expectGET("organisaatio/hae?oidRestrictionList=1.2.246.562.10.99999999999").respond("{}");
+
         $httpBackend.expectGET(/json\/searchKoodis?.*/).respond(koodistoResult);
-        
+
         spyOn($scope.model, "refreshIfNeeded").andCallThrough();
     }));
 
     it('should have a OrganisaatioModel', function() {
         expect($scope.model).toBeDefined();
     });
-    
+
     it('should GET organisaatio by OID', function() {
         $scope.model.refreshIfNeeded(oid);
         expect($scope.model.refreshIfNeeded).toHaveBeenCalled();
         $httpBackend.flush();
-        expect($scope.model.organisaatio.emailOsoite).toEqual("testi@testi.fi");     
+        expect($scope.model.organisaatio.emailOsoite).toEqual("testi@testi.fi");
     });
-    
+
     it('should GET koodisto and map it', function() {
         $scope.model.refreshIfNeeded(oid);
         expect($scope.model.refreshIfNeeded).toHaveBeenCalled();
@@ -448,7 +464,7 @@ describe("Testing OrganisaatioModel", function() {
         jasmine.log(JSON.stringify($scope.model.uriLocalizedNames));
         jasmine.log($scope.model.organisaatio.kotipaikkaUri);
         expect($scope.model.uriLocalizedNames.nimi).toEqual("Testi-Koulutus");
-        expect($scope.model.uriLocalizedNames[$scope.model.organisaatio.kotipaikkaUri]).toEqual("Seinäjoki");        
+        expect($scope.model.uriLocalizedNames[$scope.model.organisaatio.kotipaikkaUri]).toEqual("Seinäjoki");
     });
-    
+
 });
