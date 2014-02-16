@@ -162,7 +162,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         modelYhteystiedot.www = yt;
                     }
                 }
-                tyypit = ['kaynti', 'posti', 'ruotsi_kaynti', 'ruotsi_posti'];
+                tyypit = ['kaynti', 'posti', 'ruotsi_kaynti', 'ruotsi_posti', 'ulkomainen_posti', 'ulkomainen_kaynti'];
                 for (var i = 0; i < tyypit.length; ++i) {
                     if (!modelYhteystiedot[tyypit[i]]) {
                         var uusiYt = {osoiteTyyppi: tyypit[i]};
@@ -468,7 +468,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                 model.koodisto.ophOrganisaatiot.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
                             }
 
-                            localizedKoodistoOrgType = "";
+                            var localizedKoodistoOrgType = "";
                             if (orgTyyppiKoodi.koodiArvo === "03") {
                                 localizedKoodistoOrgType = 'Opetuspiste';
                             } else {

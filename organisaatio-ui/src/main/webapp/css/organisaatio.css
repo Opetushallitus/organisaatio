@@ -15,9 +15,9 @@ input.greyed[type="text"] {
     width: 700px;
 }
 
-img.absolute {
+.absolute {
     position: absolute;
-    left: 640px;
+    left: 0px;
     top: inherit;
 }
 

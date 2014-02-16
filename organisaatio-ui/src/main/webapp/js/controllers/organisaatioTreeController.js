@@ -1,17 +1,17 @@
 function OrganisaatioTreeController($scope, $location, $filter,
-                                    $modal, $log, Alert, Organisaatio, 
+                                    $modal, $log, Alert, Organisaatio,
                                     HakuehdotModel, OrganisaatioTreeModel) {
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
     $scope.currentOid = '';
-    
+
     // Kun hakuehdot on initalisoitu, tarkastetaan onko ehdot tyhjät.
     // Jos hakuehdoissa on jo jotain (käytännössä käyttäjän organisaatio), päivitetään näkymä
     $scope.hakuehdot.init().then(function() {
         if ($scope.hakuehdot.isEmpty() === false) {
             $scope.model.refresh($scope.hakuehdot).then (function() {
-                
+
                 // Päivitetään organisaatiorajauksen organisaatioiden nimet mallista
                 var organisaatiot = "";
                 angular.forEach($scope.hakuehdot.rajatutOrganisaatiot, function(oid, index){
@@ -26,11 +26,11 @@ function OrganisaatioTreeController($scope, $location, $filter,
             });
         }
     });
-    
+
     $scope.getTimes=function(n){
         return new Array(n);
-    };   
-   
+    };
+
     $scope.setCurrentOid = function(oid) {
         $scope.currentOid = oid;
     };
@@ -42,6 +42,13 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.isDeleteAllowed = function(node) {
         // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.isLeaf(node);
+    };
+
+    $scope.isCreateSubAllowed = function(node) {
+        // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle
+        return $scope.model.organisaatioRajausVisible ?
+                true :
+                node.tyyppi!=="Koulutustoimija" && node.tyyppi!=="Muu organisaatio";
     };
 
     $scope.deleteOrganisaatio = function (node) {
@@ -57,22 +64,22 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 }
             }
         });
-        
+
         modalInstance.result.then(function () {
             $log.info('Organisaatio poisto vahvistettu: ' + node.oid);
-                        
+
             Organisaatio.delete({oid: node.oid}, function(result) {
                 $log.log(result);
-                
+
                 // Poistetaan organisaatio puumallista
                 $scope.model.deleteNode(node);
-            }, 
+            },
             // Error case
             function(response) {
                 $log.error("Organisaatio delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", ""), true);
             });
-            
+
         }, function () {
             $log.info('Organisaation poistoa ei vahvistettu: ' + node.oid);
         });
@@ -102,7 +109,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
         $scope.hakuehdot.refreshIfNeeded();
         $scope.tarkemmatHakuehdotVisible = true;
     };
-   
+
     $scope.luoYlinTaso = function () {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
@@ -115,19 +122,19 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 }
             }
         });
-        
+
         modalInstance.result.then(function (ytunnus) {
             if (ytunnus) {
                 $log.log('Luodaan uusi organisaatio YTynnuksella: ' + ytunnus);
-                $location.search('ytunnus',ytunnus).path($location.path() + 
+                $location.search('ytunnus',ytunnus).path($location.path() +
                         "/" + ROOT_ORGANISAATIO_OID +"/new");
             }
             else {
-                $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/new");  
+                $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/new");
             }
         }, function () {
             $log.log('Modal dismissed at: ' + new Date());
         });
     };
-   
+
 }
