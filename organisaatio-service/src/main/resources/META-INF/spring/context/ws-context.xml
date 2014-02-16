@@ -92,6 +92,7 @@
                 <ref bean="indexerResource"/>
                 <ref bean="kelaResource"/>
                 <ref bean="ytjResource"/>
+                <ref bean="yhteystietojenTyyppiResource"/>
                 <ref bean="swaggerResourceJSON" />
             </list>
         </property>
