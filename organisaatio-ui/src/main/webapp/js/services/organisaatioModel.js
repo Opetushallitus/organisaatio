@@ -779,7 +779,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (model.organisaatio.$post) {
                 Organisaatio.post(model.organisaatio, function(result) {
                     //console.log(result);
-                    orgForm.$setPristine();
+                    if (orgForm) {
+                        orgForm.$setPristine();
+                    }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                     refresh(model.organisaatio.oid);
                 }, function(response) {
@@ -789,7 +791,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             } else {
                 UusiOrganisaatio.put(model.organisaatio, function(result) {
                     //console.log(result);
-                    orgForm.$setPristine();
+                    if (orgForm) {
+                        orgForm.$setPristine();
+                    }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);

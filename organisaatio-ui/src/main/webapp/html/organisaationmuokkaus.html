@@ -733,7 +733,8 @@
         <b>{{model.uriLocalizedNames["nimi"]}}</b>
         <br>&nbsp;<br>
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
+            <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <br>&nbsp;
@@ -745,7 +746,8 @@
         <b>{{model.uriLocalizedNames["parentnimi"]}}</b>
         <br>&nbsp;<br>
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta'| i18n}}</button>
+            <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <br>&nbsp;

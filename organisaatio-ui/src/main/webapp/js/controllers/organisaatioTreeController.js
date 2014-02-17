@@ -46,7 +46,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle
-        return $scope.model.organisaatioRajausVisible ?
+        return ($scope.hakuehdot.organisaatioRajausVisible===false) ?
                 true :
                 node.tyyppi!=="Koulutustoimija" && node.tyyppi!=="Muu organisaatio";
     };
