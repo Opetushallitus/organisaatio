@@ -270,7 +270,7 @@ app.factory('KoodistoSearchKoodis', function($resource) {
 // Maiden haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/maatjavaltiot1/koodi
 app.factory('KoodistoMaat', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi", {}, {
+return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });
@@ -278,7 +278,7 @@ return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi", {}, {
 // Kielten haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/kielivalikoima/koodi
 app.factory('KoodistoKielet', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/kielivalikoima/koodi", {}, {
+return $resource(KOODISTO_URL_BASE + "json/kielivalikoima/koodi?onlyValidKoodis=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });
@@ -286,7 +286,7 @@ return $resource(KOODISTO_URL_BASE + "json/kielivalikoima/koodi", {}, {
 // Opetuskielten haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitoksenopetuskieli/koodi
 app.factory('KoodistoOpetuskielet', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi", {}, {
+return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyValidKoodis=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });

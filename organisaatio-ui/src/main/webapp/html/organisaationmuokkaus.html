@@ -19,13 +19,13 @@
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                               form.$dirty = true">{{tyyppi}}
+                                   form.$dirty = true">{{tyyppi}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === -1)">
                     <input type='checkbox' name="orgtyyppi"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                               form.$dirty = true">{{tyyppi}}
+                                   form.$dirty = true">{{tyyppi}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
@@ -179,7 +179,9 @@
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
             </div>
-            <span class="text-help">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</span>
+            <div>
+                <em class="muted">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</em>
+            </div>
             <div>
                 <span class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
@@ -217,7 +219,9 @@
                     ng-options="maa.uri as maa.nimi for maa in model.koodisto.maat | orderBy:'nimi'" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
-            <div class="text-help">{{'Organisaationmuokkaus.ohje.maa'| i18n}}</div>
+            <div>
+                <em class="muted">{{'Organisaationmuokkaus.ohje.maa'| i18n}}</em>
+            </div>
             <div ng-if="!model.organisaatio.maaUri">
                 <input type="hidden" name="maavirhe" ng-model="maavirhe" required>
                 <span class="text-error" ng-show="form.maavirhe.$error.required">
@@ -263,7 +267,9 @@
                 <option value='suomalainen'>{{'Organisaationmuokkaus.suomalainenosoitemuoto'| i18n}}</option>
                 <option value='kansainvalinen'>{{'Organisaationmuokkaus.kansainvalinenosoitemuoto'| i18n}}</option>
             </select>
-            <div class="text-help">{{'Organisaationmuokkaus.ohje.osoitteet'| i18n}}</div>
+            <div>
+                <em class="muted">{{'Organisaationmuokkaus.ohje.osoitteet'| i18n}}</em>
+            </div>
         </div>
     </div>
 
@@ -377,50 +383,6 @@
         </div>
     </div>
 
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.kuva'| i18n}}
-        </label>
-        <div class="controls">
-            <div ng-show="model.organisaatio.metadata.kuvaEncoded">
-                <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
-            </div>
-            <div ng-controller="UploadController">
-                <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
-                <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
-                <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
-                <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="model.removeImage()">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
-        </label>
-        <div class="controls">
-            <select id="some" ng-model="model.someplaceholder"
-                    ng-options="some.type as some.nimi for some in model.some | orderBy:'some.nimi'" ng-required="false"
-                    ng-click="model.addSome()">
-                <option value="">{{'Organisaationmuokkaus.lisaasosiaalinenmedia'| i18n}}</option>
-            </select>
-            <div ng-repeat="(k,v) in model.organisaatio.metadata.data">
-                <div ng-if="['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'].indexOf(k) > -1">
-                    <div ng-repeat="(k2,v2) in v">
-                        <br />{{'Organisaationtarkastelu.' + k| i18n }}:<br />
-                        <div class="input-append">
-                            <input id="some_{{k}}" type="text" name="some_{{k}}"
-                                   ng-model="model.organisaatio.metadata.data[k][k2]"
-                                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
-                            <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
-                            <button type="button" class="btn" ng-click="model.removeSome(k)"><i class="icon-remove"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
         <label class="control-label">
             {{yttyyppi.nimi}}
@@ -450,11 +412,11 @@
         <div class="span4">
             <div>
                 <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
-                    <label class="expandable collapsed" ng-show="!ktexpanded">
-                        {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+                    <label ng-show="!ktexpanded">
+                        <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
                     </label>
-                    <label class="expandable expanded" ng-show="ktexpanded">
-                        {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+                    <label ng-show="ktexpanded">
+                        <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
                     </label>
                 </a>
             </div>
@@ -462,6 +424,24 @@
     </div>
 
     <div ng-show="ktexpanded">
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.kuva'| i18n}}
+            </label>
+            <div class="controls">
+                <div ng-show="model.organisaatio.metadata.kuvaEncoded">
+                    <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
+                </div>
+                <div ng-controller="UploadController">
+                    <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
+                    <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
+                    <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                    <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="model.removeImage()">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
+                </div>
+            </div>
+        </div>
+
         <div class="control-group">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
@@ -599,10 +579,50 @@
         </div>
         <div class="control-group">
             <label class="control-label">
+                {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+            </label>
+            <div class="controls">
+                <select id="some" ng-model="model.someplaceholder"
+                        ng-options="some.type as some.nimi for some in model.some | orderBy:'some.nimi'" ng-required="false"
+                        ng-click="model.addSome()">
+                    <option value="">{{'Organisaationmuokkaus.lisaasosiaalinenmedia'| i18n}}</option>
+                </select>
+                <div ng-repeat="(k,v) in model.organisaatio.metadata.data">
+                    <div ng-if="['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'].indexOf(k) > -1">
+                        <div ng-repeat="(k2,v2) in v">
+                            <br />{{'Organisaationtarkastelu.' + k| i18n }}:<br />
+                            <div class="input-append">
+                                <input id="some_{{k}}" type="text" name="some_{{k}}"
+                                       ng-model="model.organisaatio.metadata.data[k][k2]"
+                                       ie-placeholder placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
+                                <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
+                                <button type="button" class="btn" ng-click="model.removeSome(k)"><i class="icon-remove"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">
                 {{'Organisaationmuokkaus.lisatiedot'| i18n}}
             </label>
             <div class="controls">
                 <tabset>
+                    <tab select="model.ktlang='+'">
+                        <tab-heading>
+                            <span class="dropdown">
+                                <span class="icon-plus-sign dropdown-toggle"></span>
+                                <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                                    <li
+                                        ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                        <a href="" ng-click="model.koodisto.ktkieliplaceholder = kieli.uri;
+                                                model.addKtLang()">{{kieli.nimi}}</a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </tab-heading>
+                    </tab>
                     <tab ng-repeat="tab in model.kttabs"
                          active="tab.active"
                          select="model.ktlang=tab.lang">
@@ -610,22 +630,14 @@
                             {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeKtLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
                         </tab-heading>
                     </tab>
-                    <tab heading="{{'Organisaationmuokkaus.lisaakieli'| i18n}}" select="model.ktlang='+'"></tab>
                 </tabset>
-
                 <div ng-if="model.ktlang === '+'">
                     <div class="control-group">
-                        <label class="control-label">
-                            {{'Organisaationtarkastelu.kieli'| i18n}}
-                        </label>
-
-                        <div class="controls">
-                            <select id="maa" ng-model="model.koodisto.ktkieliplaceholder"
-                                    ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
-                                    ng-click="model.addKtLang()">
-                                <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
-                            </select>
-                        </div>
+                        <select id="maa" ng-model="model.koodisto.ktkieliplaceholder"
+                                ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                                ng-click="model.addKtLang()">
+                            <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
+                        </select>
                     </div>
                 </div>
                 <div ng-if="model.ktlang !== '+'" ng-repeat='tab in model.kttabs'>
@@ -635,6 +647,10 @@
                             <label class="control-label">
                                 {{'Organisaationtarkastelu.' + field| i18n}}
                             </label>
+                            <div class="controls">
+                                <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
+                            </div>
+                            <label class="control-label">&nbsp;</label>
                             <div class="controls">
                                 <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
                             </div>
@@ -652,11 +668,11 @@
         <div class="span4">
             <div class="view-row-label">
                 <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
-                    <label class="expandable collapsed" ng-show="!oeexpanded">
-                        {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                    <label  ng-show="!oeexpanded">
+                        <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
                     </label>
-                    <label class="expandable expanded" ng-show="oeexpanded">
-                        {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                    <label ng-show="oeexpanded">
+                        <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
                     </label>
                 </a>
             </div>
@@ -664,44 +680,61 @@
     </div>
 
     <div ng-show="oeexpanded">
+        <div class="control-group">
+            <div class="controls">
+                <div>
+                    <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
+                </div>
 
-        <tabset>
-            <tab ng-repeat="tab in model.oetabs"
-                 active="tab.active"
-                 select="model.oelang=tab.lang">
-                <tab-heading>
-                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeOeLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                </tab-heading>
-            </tab>
-            <tab heading="{{'Organisaationmuokkaus.lisaakieli'| i18n}}" select="model.oelang='+'"></tab>
-        </tabset>
+                <tabset>
+                    <tab select="model.oelang='+'">
+                        <tab-heading>
+                            <span class="dropdown">
+                                <span class="icon-plus-sign dropdown-toggle"></span>
+                                <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                                    <li
+                                        ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                        <a href="" ng-click="model.koodisto.oekieliplaceholder = kieli.uri;
+                                                model.addOeLang()">{{kieli.nimi}}</a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </tab-heading>
+                    </tab>
+                    <tab ng-repeat="tab in model.oetabs"
+                         active="tab.active"
+                         select="model.oelang=tab.lang">
+                        <tab-heading>
+                            {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeOeLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                        </tab-heading>
+                    </tab>
+                </tabset>
 
-        <div ng-if="model.oelang === '+'">
-            <div class="row">
-                <div class="span2">
-                    <div class="view-row-label">
-                        {{'Organisaationtarkastelu.kieli'| i18n}}
+                <div ng-if="model.oelang === '+'">
+                    <div class="control-group">
+                        <select id="maa" ng-model="model.koodisto.oekieliplaceholder"
+                                ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                                ng-click="model.addOeLang()">
+                            <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="span2">
-                    <select id="maa" ng-model="model.koodisto.oekieliplaceholder"
-                            ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
-                            ng-click="model.addOeLang()">
-                        <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.oetabs'>
-            <div ng-if='tab.lang === model.oelang'>
+                <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.oetabs'>
+                    <div ng-if='tab.lang === model.oelang'>
 
-                <div class="control-group" ng-repeat="field in model.oetypes">
-                    <label class="control-label">
-                        {{'Organisaationtarkastelu.' + field| i18n}}
-                    </label>
-                    <div class="controls">
-                        <textarea id="oe_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <div class="control-group" ng-repeat="field in model.oetypes">
+                            <label class="control-label">
+                                {{'Organisaationtarkastelu.' + field| i18n}}
+                            </label>
+                            <div class="controls">
+                                <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
+                            </div>
+                            <label class="control-label">&nbsp;</label>
+                            <div class="controls">
+                                <textarea id="oe_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -734,7 +767,7 @@
         <br>&nbsp;<br>
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <br>&nbsp;
@@ -747,7 +780,7 @@
         <br>&nbsp;<br>
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <br>&nbsp;

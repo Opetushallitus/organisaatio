@@ -1,7 +1,7 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
-        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, $filter, $log) {
+        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, $filter, $log, $timeout) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -124,6 +124,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     for (lang in ktlangs) {
                         model.kttabs.push({lang: lang, active: false});
                     }
+                    if (model.kttabs.length > 0) {
+                        $timeout(function() {
+                            model.kttabs[0].active = true;
+                        }, 0);
+                    }
                     var oelangs = {};
                     for (var key in model.oetypes) {
                         for (var lang in result.metadata.data[model.oetypes[key]]) {
@@ -135,6 +140,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
                     for (lang in oelangs) {
                         model.oetabs.push({lang: lang, active: false});
+                    }
+                    if (model.oetabs.length > 0) {
+                        $timeout(function() {
+                            model.oetabs[0].active = true;
+                        }, 0);
                     }
                 }
             }
@@ -520,9 +530,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 KoodistoMaat.get({}, function(result) {
                     model.koodisto.maat.length = 0;
                     result.forEach(function(maaKoodi) {
-                        if (KoodistoKoodi.isValid(maaKoodi)) {
-                            model.koodisto.maat.push({uri: maaKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(maaKoodi)});
-                        }
+                        model.koodisto.maat.push({uri: maaKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(maaKoodi)});
                     });
                 }, function(response) {
                     // maita ei löytynyt
@@ -531,7 +539,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 KoodistoKielet.get({}, function(result) {
                     model.koodisto.kielet.length = 0;
                     result.forEach(function(kieliKoodi) {
-                        if (KoodistoKoodi.isValid(kieliKoodi)) {
+                        if (['97', 'VK'].indexOf(kieliKoodi.koodiArvo) === -1) {
                             model.koodisto.kielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
                             model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
                         }
@@ -543,10 +551,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 KoodistoOpetuskielet.get({}, function(result) {
                     model.koodisto.opetuskielet.length = 0;
                     result.forEach(function(kieliKoodi) {
-                        if (KoodistoKoodi.isValid(kieliKoodi)) {
-                            model.koodisto.opetuskielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
-                            model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
-                        }
+                        model.koodisto.opetuskielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
+                        model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
                     });
                     // jos ytj:stä saatu organisaatioon liittyvää tietoa --> päivitetään kieli
                     model.addYtjLang();
@@ -924,20 +930,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.addKtLang = function() {
             if (model.koodisto.ktkieliplaceholder !== $filter('i18n')("lisaakieli")) {
                 var lang = model.koodisto.ktkieliplaceholder;
+                var tab = {lang: lang, active: true};
                 model.koodisto.ktkieliplaceholder = null;
                 if (lang) {
                     for (var i in model.kttabs) {
                         if (model.kttabs[i].lang === lang) {
+                            // Siirry olemassaolevalle välilehdelle
+                            $timeout(function() {
+                                model.kttabs[i].active = true;
+                            }, 0);
                             return;
                         }
+                        model.kttabs[i].active = false;
                     }
-                    model.kttabs.push({lang: lang, active: true});
+                    model.kttabs.push(tab);
                 }
                 for (field in model.kttypes) {
                     if (!model.organisaatio.metadata.data[model.kttypes[field]]) {
                         model.organisaatio.metadata.data[model.kttypes[field]] = {};
                     }
                 }
+                // Näytä juuri luotu uusi välilehti
+                $timeout(function() {
+                    tab.active = true;
+                }, 0);
             }
         };
 
@@ -955,20 +971,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.addOeLang = function() {
             if (model.koodisto.oekieliplaceholder !== $filter('i18n')("lisaakieli")) {
                 var lang = model.koodisto.oekieliplaceholder;
+                var tab = {lang: lang, active: true};
                 model.koodisto.oekieliplaceholder = null;
                 if (lang) {
                     for (var i in model.oetabs) {
                         if (model.oetabs[i].lang === lang) {
+                            // Siirry olemassaolevalle välilehdelle
+                            $timeout(function() {
+                                model.oetabs[i].active = true;
+                            }, 0);
                             return;
                         }
+                        model.oetabs[i].active = false;
                     }
-                    model.oetabs.push({lang: lang, active: true});
+                    model.oetabs.push(tab);
                 }
                 for (field in model.oetypes) {
                     if (!model.organisaatio.metadata.data[model.oetypes[field]]) {
                         model.organisaatio.metadata.data[model.oetypes[field]] = {};
                     }
                 }
+                // Näytä juuri luotu uusi välilehti
+                $timeout(function() {
+                    tab.active = true;
+                }, 0);
             }
         };
 

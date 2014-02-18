@@ -65,26 +65,3 @@ input.greyed[type="text"] {
     -ms-transition: 0.3s;
     transition: 0.3s;
 }
-
-.expandable {
-    position: relative;
-    text-indent:25px;
-    height:22px;
-    vertical-align: middle;
-}
-
-.expandable:before{
-    background: url(../img/itemtree-collapse-sprite.png);
-    content: " ";
-    position: absolute;
-    height:20px;
-    width:20px;
-    left: 0px;
-}
-
-.expanded:before {
-}
-
-.collapsed:before {
-    background-position: -20px 0;
-}
