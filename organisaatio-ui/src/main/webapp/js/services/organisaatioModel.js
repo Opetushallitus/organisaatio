@@ -153,49 +153,47 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // Alusta objektit joita ei vielä ole asetettu, luo mäppäys modelYhteystiedoista
         // organisaatioYhteystietoihin yhteystiedon tyypin perusteella
         initYhteystiedot = function(organisaatioYhteystiedot, modelYhteystiedot) {
-            if (organisaatioYhteystiedot) {
-                modelYhteystiedot.muu = [];
-                for (var ytindex in organisaatioYhteystiedot) {
-                    var yt = organisaatioYhteystiedot[ytindex];
-                    if (yt.osoite) {
-                        if (yt.osoiteTyyppi === 'muu') {
-                            // Muita osoitteita voi olla useita, lisää listaan
-                            modelYhteystiedot[yt.osoiteTyyppi].push(yt);
-                        } else {
-                            modelYhteystiedot[yt.osoiteTyyppi] = yt;
-                        }
-                    } else if (yt.numero) {
-                        modelYhteystiedot[yt.tyyppi] = yt;
-                    } else if (yt.email) {
-                        modelYhteystiedot.email = yt;
-                    } else if (yt.www) {
-                        modelYhteystiedot.www = yt;
+            modelYhteystiedot.muu = [];
+            for (var ytindex in organisaatioYhteystiedot) {
+                var yt = organisaatioYhteystiedot[ytindex];
+                if (yt.osoite) {
+                    if (yt.osoiteTyyppi === 'muu') {
+                        // Muita osoitteita voi olla useita, lisää listaan
+                        modelYhteystiedot[yt.osoiteTyyppi].push(yt);
+                    } else {
+                        modelYhteystiedot[yt.osoiteTyyppi] = yt;
                     }
+                } else if (yt.numero) {
+                    modelYhteystiedot[yt.tyyppi] = yt;
+                } else if (yt.email) {
+                    modelYhteystiedot.email = yt;
+                } else if (yt.www) {
+                    modelYhteystiedot.www = yt;
                 }
-                tyypit = ['kaynti', 'posti', 'ruotsi_kaynti', 'ruotsi_posti', 'ulkomainen_posti', 'ulkomainen_kaynti'];
-                for (var i = 0; i < tyypit.length; ++i) {
-                    if (!modelYhteystiedot[tyypit[i]]) {
-                        var uusiYt = {osoiteTyyppi: tyypit[i]};
-                        organisaatioYhteystiedot.push(uusiYt);
-                        modelYhteystiedot[tyypit[i]] = uusiYt;
-                    }
+            }
+            tyypit = ['kaynti', 'posti', 'ruotsi_kaynti', 'ruotsi_posti', 'ulkomainen_posti', 'ulkomainen_kaynti'];
+            for (var i = 0; i < tyypit.length; ++i) {
+                if (!modelYhteystiedot[tyypit[i]]) {
+                    var uusiYt = {osoiteTyyppi: tyypit[i]};
+                    organisaatioYhteystiedot.push(uusiYt);
+                    modelYhteystiedot[tyypit[i]] = uusiYt;
                 }
-                tyypit = ['email', 'www'];
-                for (var i = 0; i < tyypit.length; ++i) {
-                    if (!modelYhteystiedot[tyypit[i]]) {
-                        var uusiYt = {};
-                        uusiYt[tyypit[i]] = null;
-                        organisaatioYhteystiedot.push(uusiYt);
-                        modelYhteystiedot[tyypit[i]] = uusiYt;
-                    }
+            }
+            tyypit = ['email', 'www'];
+            for (var i = 0; i < tyypit.length; ++i) {
+                if (!modelYhteystiedot[tyypit[i]]) {
+                    var uusiYt = {};
+                    uusiYt[tyypit[i]] = null;
+                    organisaatioYhteystiedot.push(uusiYt);
+                    modelYhteystiedot[tyypit[i]] = uusiYt;
                 }
-                tyypit = ['puhelin', 'faksi'];
-                for (var i = 0; i < tyypit.length; ++i) {
-                    if (!modelYhteystiedot[tyypit[i]]) {
-                        var uusiYt = {tyyppi: tyypit[i]};
-                        organisaatioYhteystiedot.push(uusiYt);
-                        modelYhteystiedot[tyypit[i]] = uusiYt;
-                    }
+            }
+            tyypit = ['puhelin', 'faksi'];
+            for (var i = 0; i < tyypit.length; ++i) {
+                if (!modelYhteystiedot[tyypit[i]]) {
+                    var uusiYt = {tyyppi: tyypit[i]};
+                    organisaatioYhteystiedot.push(uusiYt);
+                    modelYhteystiedot[tyypit[i]] = uusiYt;
                 }
             }
         };
