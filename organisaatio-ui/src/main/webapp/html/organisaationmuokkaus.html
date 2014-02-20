@@ -39,6 +39,17 @@
     </div>
     <div class="control-group" ng-if="model.isKoulutustoimija()">
         <label class="control-label">
+            {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
+        </label>
+        <div class="controls">
+            <input id="ytunnus" type="text" maxlength="9" name="ytunnus"
+                   ng-model="model.organisaatio.yritysmuoto"
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.yritysmuoto'| i18n}}" disabled/>
+        </div>
+    </div>
+
+    <div class="control-group" ng-if="model.isKoulutustoimija()">
+        <label class="control-label">
             {{'Organisaationtarkastelu.ytunnus'| i18n}}
         </label>
         <div class="controls">
