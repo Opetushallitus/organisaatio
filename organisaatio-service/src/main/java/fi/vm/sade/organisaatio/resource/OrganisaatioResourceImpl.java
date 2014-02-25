@@ -879,6 +879,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
         if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
             return new ArrayList<YhteystietojenTyyppiRDTO>();
