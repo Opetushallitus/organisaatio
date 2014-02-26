@@ -252,7 +252,8 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         if (s != null) {
             result.put("id", "" + s.getId());
             result.put("yhteystietoOid", s.getYhteystietoOid());
-
+            result.put("kieli", s.getKieli());
+            
             if (s instanceof Email) {
                 Email v = (Email) s;
                 result.put("email", v.getEmail());

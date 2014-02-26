@@ -300,11 +300,19 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
     private Yhteystieto convertYhteystietoGeneric(Map<String, String> s) {
         if (s != null) {
             try {
+                if (s.containsKey("kieli") == false) {
+                    // TODO: Kieli missing, what to do
+                    // 1. raise exception, 2. only log, 3. use default 'kielivalikoima_fi'
+                    LOG.warn("missing kieli from yhteystieto");
+                }
                 if (s.get("email") != null) {
                     Email v = convertEmail(s.get("email"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
+                    }
+                    if (s.containsKey("kieli")) {
+                        v.setKieli(s.get("kieli"));
                     }
                     return v;
                 } else if (s.get("www") != null) {
@@ -313,6 +321,9 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
+                    if (s.containsKey("kieli")) {
+                        v.setKieli(s.get("kieli"));
+                    }
                     return v;
                 } else if (s.get("numero") != null) {
                     Puhelinnumero v = convertPuhelinnumero(s.get("numero"), s.get("tyyppi"));
@@ -320,12 +331,18 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
                         v.setId(Long.parseLong(s.get("id")));
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
+                    if (s.containsKey("kieli")) {
+                        v.setKieli(s.get("kieli"));
+                    }
                     return v;
                 } else if (s.get("osoite") != null) {
                     Osoite v = convertMapToOsoite(s, null);
                     if (s.containsKey("yhteystietoOid")) {
                         Long id = Long.parseLong(s.remove("id"));
                         v.setId(id);
+                    }
+                    if (s.containsKey("kieli")) {
+                        v.setKieli(s.get("kieli"));
                     }
                     return v;
                 }
