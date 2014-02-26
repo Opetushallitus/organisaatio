@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.service.search.it;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -57,8 +58,7 @@ import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 
 /**
- * Indexes set of orgs in a hierarchy, indexes org data, searches org data from
- * index and compares the result with current implementation.
+ * Indexes set of orgs in a hierarchy, indexes org data, searches org data from index and compares the result with current implementation.
  */
 @ContextConfiguration(locations = { "classpath:spring/test-context.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -124,19 +124,19 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         Organisaatio e = createOrganisaatio("EEE", root);
         Organisaatio f = createOrganisaatio("FFF", a);
         Organisaatio g = createOrganisaatio("GGG", d);
-        Organisaatio h = createOrganisaatio("HHH", root, null, new Date(System.currentTimeMillis()-1000*60*60*24));
-        Organisaatio i = createOrganisaatio("III", root, new Date(System.currentTimeMillis() + 1000*60*60*24));
-        Organisaatio j = createOrganisaatio("JJJ", e, null, new Date(System.currentTimeMillis()-1000*60*60*24));
+        Organisaatio h = createOrganisaatio("HHH", root, null, new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
+        Organisaatio i = createOrganisaatio("III", root, new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
+        Organisaatio j = createOrganisaatio("JJJ", e, null, new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
 
         indexer.reBuildIndex(true);
         OrganisaatioSearchCriteria searchCriteria = new OrganisaatioSearchCriteria();
         searchCriteria.setKunta(null);
         searchCriteria.setOppilaitosTyyppi(null);
         searchCriteria.setSearchStr(null);
-        //searchCriteria.setFirstResult(0); //default value, returns parents
+        // searchCriteria.setFirstResult(0); //default value, returns parents
 
         // test returns all (except oph), org search has changed and this is now impossible to test!
-        //assertResultMatches(searchCriteria, "AAA","BBB","CCC","DDD","EEE","FFF");
+        // assertResultMatches(searchCriteria, "AAA","BBB","CCC","DDD","EEE","FFF");
 
         // with restriction list (leaf, f)
         searchCriteria.getOidRestrictionList().clear();
@@ -147,15 +147,20 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(d.getOid());
         searchCriteria.getOidRestrictionList().add(e.getOid());
-        searchCriteria.setLakkautetut(false);
         assertResultMatches(searchCriteria, "DDD", "EEE", "GGG");
-        searchCriteria.setLakkautetut(true);
-        assertResultMatches(searchCriteria, "DDD", "EEE", "GGG", "JJJ");
+
+        searchCriteria.setVainLakkautetut(true);
+        assertResultMatches(searchCriteria, "JJJ");
+        searchCriteria.setVainLakkautetut(false);
+
+        searchCriteria.setVainAktiiviset(true);
+        assertResultMatches(searchCriteria, "DDD", "EEE", "GGG");
+        searchCriteria.setVainAktiiviset(false);
 
         // with restriction list (non leaf, c)
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(c.getOid());
-        assertResultMatches(searchCriteria, "CCC", "DDD","GGG");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG");
 
         // with restriction list (non leaf, c) and name
         searchCriteria.getOidRestrictionList().clear();
@@ -167,43 +172,30 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(c.getOid());
         searchCriteria.setSearchStr("ccc");
-        assertResultMatches(searchCriteria, "CCC", "DDD","GGG");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG");
 
         // without restriction list, name
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("ggg");
-        assertResultMatches(searchCriteria, "CCC", "DDD","GGG","BBB");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG", "BBB");
 
         // org expired
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("hhh");
-        searchCriteria.setLakkautetut(false);
         assertResultMatches(searchCriteria);
 
         // include expired
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("hhh");
-        searchCriteria.setLakkautetut(true);
+        searchCriteria.setVainLakkautetut(true);
         assertResultMatches(searchCriteria, "HHH");
+        searchCriteria.setVainLakkautetut(false);
 
-        // org planned
-        searchCriteria.getOidRestrictionList().clear();
-        searchCriteria.setSearchStr("iii");
-        searchCriteria.setSuunnitellut(false);
-        assertResultMatches(searchCriteria);
-
-        // include planned
-        searchCriteria.getOidRestrictionList().clear();
-        searchCriteria.setSearchStr("iii");
-        searchCriteria.setSuunnitellut(true);
-        assertResultMatches(searchCriteria, "III");
-        
-        
-        //"delete" org
+        // "delete" org
         deleteOrg(i.getOid());
         assertResultMatches(searchCriteria);
 
-        //XXXspecial search for tarjonta, currently hacked because no api change is possible in 4.2
+        // XXXspecial search for tarjonta, currently hacked because no api change is possible in 4.2
         searchCriteria = new OrganisaatioSearchCriteria();
         searchCriteria.setKunta(null);
         searchCriteria.setOppilaitosTyyppi(null);
@@ -211,7 +203,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.setSkipParents(true);
 
         // test returns all (except oph), org search has changed and this is now impossible to test!
-        //assertResultMatches(searchCriteria, "AAA","BBB","CCC","DDD","EEE","FFF");
+        // assertResultMatches(searchCriteria, "AAA","BBB","CCC","DDD","EEE","FFF");
 
         // with restriction list (leaf, f)
         searchCriteria.getOidRestrictionList().clear();
@@ -222,15 +214,12 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(d.getOid());
         searchCriteria.getOidRestrictionList().add(e.getOid());
-        searchCriteria.setLakkautetut(false);
         assertResultMatches(searchCriteria, "DDD", "EEE", "GGG");
-        searchCriteria.setLakkautetut(true);
-        assertResultMatches(searchCriteria, "DDD", "EEE", "GGG", "JJJ");
 
         // with restriction list (non leaf, c)
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(c.getOid());
-        assertResultMatches(searchCriteria, "CCC", "DDD","GGG");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG");
 
         // with restriction list (non leaf, c) and name
         searchCriteria.getOidRestrictionList().clear();
@@ -242,7 +231,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.getOidRestrictionList().add(c.getOid());
         searchCriteria.setSearchStr("ccc");
-        assertResultMatches(searchCriteria, "CCC", "DDD","GGG");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG");
 
         // without restriction list, name (no parents!)
         searchCriteria.getOidRestrictionList().clear();
@@ -251,47 +240,91 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
 
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("ddd");
-        assertResultMatches(searchCriteria, "DDD","GGG");
+        assertResultMatches(searchCriteria, "DDD", "GGG");
 
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("ccc");
-        assertResultMatches(searchCriteria, "CCC","DDD","GGG");
+        assertResultMatches(searchCriteria, "CCC", "DDD", "GGG");
 
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("bbb");
-        assertResultMatches(searchCriteria, "BBB", "CCC","DDD","GGG");
+        assertResultMatches(searchCriteria, "BBB", "CCC", "DDD", "GGG");
 
         // org expired
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("hhh");
-        searchCriteria.setLakkautetut(false);
         assertResultMatches(searchCriteria);
 
         // include expired
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("hhh");
-        searchCriteria.setLakkautetut(true);
+        searchCriteria.setVainLakkautetut(true);
         assertResultMatches(searchCriteria, "HHH");
+        searchCriteria.setVainLakkautetut(false);
 
-        // org planned
+        // vain aktiiviset
+        searchCriteria.setVainAktiiviset(true);
+
+        searchCriteria.getOidRestrictionList().clear();
+        searchCriteria.setSearchStr("aaa");
+        assertResultMatches(searchCriteria, "AAA", "FFF");
+
         searchCriteria.getOidRestrictionList().clear();
         searchCriteria.setSearchStr("iii");
-        searchCriteria.setSuunnitellut(false);
         assertResultMatches(searchCriteria);
+
+        searchCriteria.getOidRestrictionList().clear();
+        searchCriteria.setSearchStr("hhh");
+        assertResultMatches(searchCriteria);
+
+        searchCriteria.setVainAktiiviset(false);
+
+        // vain lakkautetut
+        searchCriteria.setVainLakkautetut(true);
+
+        searchCriteria.getOidRestrictionList().clear();
+        searchCriteria.setSearchStr("aaa");
+        assertResultMatches(searchCriteria);
+
+        searchCriteria.getOidRestrictionList().clear();
+        searchCriteria.setSearchStr("iii");
+        assertResultMatches(searchCriteria);
+
+        searchCriteria.getOidRestrictionList().clear();
+        searchCriteria.setSearchStr("hhh");
+        assertResultMatches(searchCriteria, "HHH");
+
+        searchCriteria.setVainLakkautetut(false);
+
     }
 
     /**
      * Compare result from solr with result from organisaatio service.
      * 
-     * @param results
+     * @param wantedResults
      */
-    private void assertResultMatches(OrganisaatioSearchCriteria searchCriteria, String... results) {
-        final int count = results.length;
+    private void assertResultMatches(OrganisaatioSearchCriteria searchCriteria, String... wantedResults) {
+        final int count = wantedResults.length;
         final List<OrganisaatioPerustieto> search = searchService.searchBasicOrganisaatios(searchCriteria);
-        final List<String> result = Lists.newArrayList(results);
+        final List<String> wantedResultsList = Lists.newArrayList(wantedResults);
 
-        Assert.assertEquals("search count mismatch", count, search.size());
-        assertContent(result, search);
+        Assert.assertEquals(createAssertMessage(searchCriteria, search, wantedResults), count, search.size());
+        assertContent(wantedResultsList, search);
+    }
+
+    private String createAssertMessage(OrganisaatioSearchCriteria searchCriteria, final List<OrganisaatioPerustieto> search, String... wantedResults) {
+        String resultsAsList = "[";
+        for (OrganisaatioPerustieto organisaatioPerustieto : search) {
+            resultsAsList += organisaatioPerustieto.getNimi("fi") + ", ";
+        }
+        resultsAsList += "]";
+
+        String searchStr = searchCriteria.getSearchStr();
+        String oidRestrictionsList = searchCriteria.getOidRestrictionList().toString();
+        String wanteResultsAsList = Arrays.toString(wantedResults);
+
+        return "search count mismatch for {" + searchStr + "," + oidRestrictionsList + "}. Wanted results: " + wanteResultsAsList + ". Got results: "
+                + resultsAsList;
     }
 
     private void assertContent(List<String> reference, List<OrganisaatioPerustieto> result) {
@@ -304,14 +337,6 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         Assert.assertEquals("Content mismatch:" + resultOids + "!=" + reference, 0, operate.size());
     }
 
-    private void printResult(String name, final List<OrganisaatioPerustieto> search) {
-        System.out.println(name + " result:");
-        for (OrganisaatioPerustieto perus : search) {
-            System.out.println(perus.getNimi("fi") + ":" + perus.getOid());
-        }
-    }
-    
-    
     private void deleteOrg(String oid) {
         RemoveByOidType type = new RemoveByOidType();
         type.setOid(oid);
@@ -341,14 +366,14 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         if (parent != null) {
             createParentPath(o, parent.getOid());
         }
-        
-		if (startStop.length > 0) {
-			o.setAlkuPvm(startStop[0]);
-		}
 
-		if (startStop.length > 1) {
-			o.setLakkautusPvm(startStop[1]);
-		}
+        if (startStop.length > 0) {
+            o.setAlkuPvm(startStop[0]);
+        }
+
+        if (startStop.length > 1) {
+            o.setLakkautusPvm(startStop[1]);
+        }
 
         List<Yhteystieto> oYhteystiedot = Lists.newArrayList(createOsoite());
         o.setYhteystiedot(oYhteystiedot);

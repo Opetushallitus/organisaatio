@@ -6,10 +6,10 @@ import java.util.List;
 
 public class OrganisaatioSearchCriteria  {
 
-    private boolean lakkautetut;
+    private boolean vainLakkautetut;
+    private boolean vainAktiiviset;
     private String oppilaitostyyppi;
     private String organisaatiotyyppi;
-    private boolean suunnitellut;
     private String kunta;
     private List<String> oidResctrictionList = new ArrayList<String>();
     private String searchStr;
@@ -26,22 +26,6 @@ public class OrganisaatioSearchCriteria  {
 
     public void setOidRestrictionList(List<String> oidRestrictionList) {
         this.oidResctrictionList.addAll(oidResctrictionList);
-    }
-
-    /**
-     * Gets the value of the lakkautetut property.
-     * 
-     */
-    public boolean isLakkautetut() {
-        return lakkautetut;
-    }
-
-    /**
-     * Sets the value of the lakkautetut property.
-     * 
-     */
-    public void setLakkautetut(boolean value) {
-        this.lakkautetut = value;
     }
 
     /**
@@ -86,23 +70,7 @@ public class OrganisaatioSearchCriteria  {
         this.organisaatiotyyppi = value;
     }
 
-    /**
-     * Gets the value of the suunnitellut property.
-     * 
-     */
-    public boolean isSuunnitellut() {
-        return suunnitellut;
-    }
 
-    /**
-     * Sets the value of the suunnitellut property.
-     * 
-     */
-    public void setSuunnitellut(boolean value) {
-        this.suunnitellut = value;
-    }
-
-    
     public boolean getSkipParents(){
         return skipParents;
     }
@@ -148,4 +116,26 @@ public class OrganisaatioSearchCriteria  {
         this.searchStr = searchStr;
     }
 
+
+    public boolean isVainLakkautetut() {
+        return vainLakkautetut;
+    }
+
+
+    public void setVainLakkautetut(boolean vainLakkautetut) {
+        this.vainLakkautetut = vainLakkautetut;
+    }
+
+
+    public boolean isVainAktiiviset() {
+        return vainAktiiviset;
+    }
+
+
+    public void setVainAktiiviset(boolean vainAktiiviset) {
+        this.vainAktiiviset = vainAktiiviset;
+    }
+
+    
+    
 }
