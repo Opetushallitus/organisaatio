@@ -220,6 +220,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             $log.error(msg + " (status: " + response.status + ")");
         };
 
+        showAndExitError = function(msg, response) {
+            Alert.add("error", $filter('i18n')(msg, ""), false);
+            $log.error(msg + " (status: " + response.status + ")");
+        };
+
         refresh = function(oid) {
             $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
@@ -1135,42 +1140,85 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             return false;
         };
 
-        this.setPostinumero = function(addressmodel, postcode) {
+        this.setPostinumero = function(md, addressmodel, postcode) {
+            sama = (md ? model.mdsamaosoite : model.samaosoite);
+            yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            if (sama===true) {
+                if (yt.postinumerot.kaynti) {
+                    yt.postinumerot.posti = yt.postinumerot.kaynti;
+                    yt.posti.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
+                    yt.posti.postitoimipaikka = model.koodisto.nimetFI[postcode].paikka;
+                }
+            }
             if (addressmodel && postcode && model.koodisto.nimetFI[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetFI[postcode].paikka;
             }
         };
 
-        this.setRuotsiPostinumero = function(addressmodel, postcode) {
+        this.setRuotsiPostinumero = function(md, addressmodel, postcode) {
+            sama = (md ? model.mdsamaosoitesv : model.samaosoitesv);
+            yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            if (sama===true) {
+                if (yt.postinumerot.ruotsi_kaynti) {
+                    yt.postinumerot.ruotsi_posti = yt.postinumerot.ruotsi_kaynti;
+                    yt.ruotsi_posti.postinumeroUri = model.koodisto.nimetSV[postcode].uri;
+                    yt.ruotsi_posti.postitoimipaikka = model.koodisto.nimetSV[postcode].paikka;
+                }
+            }
             if (addressmodel && postcode && model.koodisto.nimetSV[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetSV[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetSV[postcode].paikka;
             }
         };
 
-        this.copyAddress = function() {
-            if (model.samaosoite) {
-                for (kentta in model.yhteystiedot.kaynti) {
+        this.copyAddress = function(md) {
+            sama = (md ? model.mdsamaosoite : model.samaosoite);
+            yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            if (sama===true) {
+                if (!('posti' in yt)) {
+                    yt.posti = {};
+                }
+                for (kentta in yt.kaynti) {
                     if (kentta !== 'osoiteTyyppi') {
-                        model.yhteystiedot.posti[kentta] = model.yhteystiedot.kaynti[kentta];
+                        yt.posti[kentta] = yt.kaynti[kentta];
                     }
                 }
-                for (kentta in model.yhteystiedot.ruotsi_kaynti) {
+                if (yt.postinumerot.kaynti) {
+                    yt.postinumerot.posti = yt.postinumerot.kaynti;
+                }
+            }
+        };
+
+        this.copyAddressSv = function(md) {
+            sama = (md ? model.mdsamaosoitesv : model.samaosoitesv);
+            yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            if (sama===true) {
+                if (!('ruotsi_posti' in yt)) {
+                    yt.ruotsi_posti = {};
+                }
+                for (kentta in yt.ruotsi_kaynti) {
                     if (kentta !== 'osoiteTyyppi') {
-                        model.yhteystiedot.ruotsi_posti[kentta] = model.yhteystiedot.ruotsi_kaynti[kentta];
+                        yt.ruotsi_posti[kentta] = yt.ruotsi_kaynti[kentta];
                     }
                 }
-                for (kentta in model.yhteystiedot.kv_kaynti) {
+                if (yt.postinumerot.ruotsi_kaynti) {
+                    yt.postinumerot.ruotsi_posti = yt.postinumerot.ruotsi_kaynti;
+                }
+            }
+        };
+
+        this.copyAddressKv = function(md) {
+            sama = (md ? model.mdsamaosoitekv : model.samaosoitekv);
+            yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            if (sama===true) {
+                if (!('ulkomainen_posti' in yt)) {
+                    yt.ulkomainen_posti = {};
+                }
+                for (kentta in yt.ulkomainen_kaynti) {
                     if (kentta !== 'osoiteTyyppi') {
-                        model.yhteystiedot.kv_posti[kentta] = model.yhteystiedot.kv_kaynti[kentta];
+                        yt.ulkomainen_posti[kentta] = yt.ulkomainen_kaynti[kentta];
                     }
-                }
-                if (model.yhteystiedot.postinumerot.kaynti) {
-                    model.yhteystiedot.postinumerot.posti = model.yhteystiedot.postinumerot.kaynti;
-                }
-                if (model.yhteystiedot.postinumerot.ruotsi_kaynti) {
-                    model.yhteystiedot.postinumerot.ruotsi_posti = model.yhteystiedot.postinumerot.ruotsi_kaynti;
                 }
             }
         };

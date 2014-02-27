@@ -1,29 +1,3 @@
-app.directive('editAddress', function() {
-    return {
-        restrict: 'E',
-        scope: {
-            optional: '=',
-            form: '=',
-            label: '=',
-            addressmodelfi: '=',
-            addressmodelsv: '=',
-            addressmodelkv: '=',
-            addresstype: '=',
-            addressformat: '=',
-            country: '=',
-            postcodes: '=',
-            postcodefi: '=',
-            postcodesv: '=',
-            setpostcodefi: '=',
-            setpostcodesv: '=',
-            disabled: '=',
-            remove: '=',
-            index: '@'
-        },
-        templateUrl: 'osoitteenmuokkaus.html'
-    };
-});
-
 app.directive('testField', function($log) {
     return {
         require: 'ngModel',
@@ -71,14 +45,14 @@ app.directive('addressCombinedField', function() {
         link: function(scope, elm, attrs, ctrl) {
             var parserValidator = function(viewValue) {
                 var returnUndefined = false;
-                scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', true);
+                scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', true);
                 if (scope.optional) {
                     return viewValue;
                 }
-                if (!(scope.innerForm.osoitefi.$viewValue && scope.innerForm.postifi.$viewValue)
-                        && !(scope.innerForm.osoitesv.$viewValue && scope.innerForm.postisv.$viewValue)
-                        && !scope.innerForm.kvosoite.$viewValue) {
-                    scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', false);
+                if (!(scope.form.kayntiosoitefi.$viewValue && scope.form.postiosoitefi.$viewValue)
+                        && !(scope.form.kayntiosoitesv.$viewValue && scope.form.postiosoitesv.$viewValue)
+                        && !scope.form.kayntiosoitekv.$viewValue && scope.form.postiosoitekv.$viewValue) {
+                    scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', false);
                     returnUndefined = true;
                 }
                 if (returnUndefined === true) {
@@ -91,7 +65,7 @@ app.directive('addressCombinedField', function() {
 
             var formatterValidator = function(viewValue) {
                 if (scope.mode==="new") {
-                    scope.innerForm.osoitefi.$setValidity('addresscombinedrequired', false);
+                    scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', false);
                 }
                 return viewValue;
             };
