@@ -10,6 +10,17 @@ app.directive('testField', function($log) {
     };
 });
 
+app.directive('ophNullIfZeroLength', function($log) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function(viewValue) {
+                return ((viewValue.length === 0) ? null : viewValue);
+            });
+        }
+    };
+});
+
 app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
@@ -17,7 +28,7 @@ app.directive('namesCombinedField', function() {
             var parserValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
-                if (!viewValue && !scope.form.nimifi.$viewValue && 
+                if (!viewValue && !scope.form.nimifi.$viewValue &&
                         !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                 }
@@ -27,8 +38,8 @@ app.directive('namesCombinedField', function() {
 
             var formatterValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
-                
-                if (!viewValue && !scope.form.nimifi.$viewValue && 
+
+                if (!viewValue && !scope.form.nimifi.$viewValue &&
                         !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
                     scope.form.nimifi.$setValidity('namescombinedrequired', false);
                 }
@@ -64,7 +75,7 @@ app.directive('addressCombinedField', function() {
             ctrl.$parsers.unshift(parserValidator);
 
             var formatterValidator = function(viewValue) {
-                if (scope.mode==="new") {
+                if (scope.mode === "new") {
                     scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', false);
                 }
                 return viewValue;

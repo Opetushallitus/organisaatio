@@ -411,17 +411,13 @@
 
     <div class="control-group">
         <label class="control-label">
-            {{'Organisaationtarkastelu.puhelinnumero'| i18n}}*
+            {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
         </label>
         <div class="controls">
             <input id="puhelinnumero" type="text" name="puhelinnumero"
-                   ng-model="model.yhteystiedot.puhelin.numero"
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" required ng-pattern="/^[\d \-\+]+$/"/>
+                   ng-model="model.yhteystiedot.puhelin.numero" oph-null-if-zero-length
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
             <div>
-                <span class="text-error" ng-show="form.puhelinnumero.$error.required">
-                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                </span>
                 <span class="text-error" ng-show="form.puhelinnumero.$error.pattern">
                     {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
                     {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
@@ -436,7 +432,7 @@
         </label>
         <div class="controls">
             <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
-                   ng-model="model.yhteystiedot.faksi.numero"
+                   ng-model="model.yhteystiedot.faksi.numero" oph-null-if-zero-length
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
             <div>
                 <span class="text-error" ng-show="form.faksinumero.$error.pattern">
@@ -449,14 +445,14 @@
 
     <div class="control-group">
         <label class="control-label">
-            {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}*
+            {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
         </label>
         <div class="controls">
             <input id="sahkopostiosoite" type="email" name="sahkopostiosoite"
-                   ng-model="model.yhteystiedot.email.email"
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}" required/>
+                   ng-model="model.yhteystiedot.email.email" oph-null-if-zero-length
+                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
             <div>
-                <span class="text-error" ng-show="form.sahkopostiosoite.$error.required || form.sahkopostiosoite.$error.email">
+                <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
                     {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
@@ -470,7 +466,7 @@
         </label>
         <div class="controls">
             <input id="wwwosoite" type="text" name="wwwosoite"
-                   ng-model="model.yhteystiedot.www.www"
+                   ng-model="model.yhteystiedot.www.www" oph-null-if-zero-length
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
             <div>
                 <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">

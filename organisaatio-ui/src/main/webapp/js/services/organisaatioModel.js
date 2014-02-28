@@ -229,6 +229,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
             model.ytjTiedot = {};
+            modelYhteystiedot = {};
 
             // haetaan organisaation tiedot
             Organisaatio.get({oid: oid}, function(result) {
