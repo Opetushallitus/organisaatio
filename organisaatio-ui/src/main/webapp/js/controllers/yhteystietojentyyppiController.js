@@ -1,4 +1,4 @@
-function YhteystietojentyyppiController($scope, $window, $filter, YhteystietojentyyppiModel, Alert) {
+function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert) {
     var language = $window.navigator.userLanguage || $window.navigator.language;
     console.log(language);
     if (language) {
@@ -259,6 +259,43 @@ function YhteystietojentyyppiController($scope, $window, $filter, Yhteystietojen
         $scope.valittuYhteystietotyyppi = null;
         rajatutOppilaitostyypit = false;
         $scope.model.reload();
+    };
+
+    function addMuuYhteystieto(tyyppi, nimi) {
+        if ($scope.valittuYhteystietotyyppi !== null) {
+            $scope.valittuYhteystietotyyppi.allLisatietokenttas.push({
+                version: 0,
+                oid: null,
+                nimi: 'Muu: ' + nimi.fi,
+                nimiSv: 'Muu: ' + nimi.sv,
+                tyyppi: tyyppi,
+                kaytossa: false,
+                pakollinen: false
+            });
+        }
+    }
+
+    $scope.uusiMuuYhteystieto = function(tyyppi) {
+        var modalInstance = $modal.open({
+            templateUrl: 'muuyhteystieto.html',
+            controller: MuuYhteystietoController,
+            resolve: {}
+        });
+        $scope.modalOpen = true;
+
+        modalInstance.result.then(function(data) {
+            $scope.modalOpen = false;
+            addMuuYhteystieto(tyyppi, data);
+        }, function() {
+            $scope.modalOpen = false;
+        });
+    };
+
+    $scope.poistaMuuYhteystieto = function(myt) {
+        var ind = $scope.valittuYhteystietotyyppi.allLisatietokenttas.indexOf(myt);
+        if (ind !== -1) {
+            $scope.valittuYhteystietotyyppi.allLisatietokenttas.splice(ind, 1);
+        }
     };
 
 }

@@ -108,6 +108,12 @@ public class YhteystietojenTyyppiResource {
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
         }
+        try {
+            generateOids(dto);
+        }
+        catch (ExceptionMessage em) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+        }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(dto, true);
         if (entity == null) {
             throw new OrganisaatioResourceException(Response.Status.BAD_REQUEST, "Entity is null.");

@@ -81,6 +81,12 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <a ng-click="uusiMuuYhteystieto('OSOITE')">{{'YhteystietojenTyyppiForm.muuOsoiteAdd' | i18n}}</a>
         </div>
     </div>
 </form>
@@ -121,6 +127,12 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <a ng-click="uusiMuuYhteystieto('PUHELIN')">{{'YhteystietojenTyyppiForm.muuPuhelinAdd' | i18n}}</a>
         </div>
     </div>
 </form>
@@ -152,6 +164,12 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <a ng-click="uusiMuuYhteystieto('WWW')">{{'YhteystietojenTyyppiForm.muuSahkoinenAdd' | i18n}}</a>
         </div>
     </div>
 </form>
@@ -207,17 +225,3 @@
         <button class="btn btn-primary" ng-click="tallennaYhteystietotyyppi()">{{'c_tallenna' | i18n}}</button>
     </div>
 </div>
-
-<hr>
-<hr>
-<h3>valittu ytt</h3>
-<div>{{valittuYhteystietotyyppi}}</div>
-
-<hr>
-<h3>kaikki ytt:t</h3>
-<div>{{model.yhteystietotyypit}}</div>
-
-<hr>
-<h3>Oppilaitostyypit</h3>
-<div>{{model.oppilaitostyypit}}</div>
-
