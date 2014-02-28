@@ -1,0 +1,211 @@
+<h1>{{'YhteystietojenTyyppiForm.otsikko' | i18n}}</h1>
+
+<select ng-model="valittuYhteystietotyyppi"
+        ng-options="localizeYhteystietotyypinNimi(yt) for yt in model.yhteystietotyypit">
+    <option value="">{{'YhteystietojenTyyppiForm.valitseTyyppi' | i18n}}</option>
+</select>
+<hr>
+
+<h3>{{'YhteystietojenTyyppiForm.yttNimi' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.FI' | i18n}}</label>
+        <div class="controls">
+            <input type="text" ng-model="valittuYhteystietotyyppi.nimi.teksti[yttNimiLang('fi')].value">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.SE' | i18n}}</label>
+        <div class="controls">
+            <input type="text" ng-model="valittuYhteystietotyyppi.nimi.teksti[yttNimiLang('sv')].value">
+        </div>
+    </div>
+</form>
+
+<h3>{{'YhteystietojenTyyppiForm.yttNimitiedot' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.nimi' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'NIMI'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttTyyppi({tyyppi: 'NIMI'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.nimike' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'NIMIKE'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'NIMIKE'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+</form>
+
+
+<h3>{{'YhteystietojenTyyppiForm.yttOsoitteet' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.kayntiosoite' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Käyntiosoite'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Käyntiosoite'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.postiosoite' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Postiosoite'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Postiosoite'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.ulkomaanOsoite' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE_ULKOMAA'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'OSOITE_ULKOMAA'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group" ng-repeat="tyyppi in yttFindTyyppiAll({tyyppi: 'OSOITE', nimi: regexp('Muu: ')})">
+        <label class="control-label">{{localizeMuuYttNimi(tyyppi)}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="tyyppi.kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="tyyppi.pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+</form>
+
+<h3>{{'YhteystietojenTyyppiForm.yttPuhelinnumerot' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.mobiiliNumero' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Matkapuhelinnumero'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Matkapuhelinnumero'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.lankaNumero' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Puhelinnumero'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Puhelinnumero'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.faksiNumero' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'FAKSI'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'FAKSI'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group" ng-repeat="tyyppi in yttFindTyyppiAll({tyyppi: 'PUHELIN', nimi: regexp('Muu: ')})">
+        <label class="control-label">{{localizeMuuYttNimi(tyyppi)}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="tyyppi.kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="tyyppi.pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+</form>
+
+<h3>{{'YhteystietojenTyyppiForm.yttSahkoiset' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.spOsoite' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'EMAIL'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'EMAIL'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+        <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.wwwOsoite' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW'})].kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW'})].pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+    <div class="control-group" ng-repeat="tyyppi in yttFindTyyppiAll({tyyppi: 'WWW', nimi: regexp('Muu: ')})">
+        <label class="control-label">{{localizeMuuYttNimi(tyyppi)}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="tyyppi.kaytossa">
+            {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
+            <input type="checkbox" ng-model="tyyppi.pakollinen">
+            {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+        </div>
+    </div>
+</form>
+
+<h3>{{'YhteystietojenTyyppiForm.yttKayttavat' | i18n}}</h3>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.yttOrg' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.koulutustoimija">
+            {{'OrganisaatiotyyppiComponent.KOULUTUSTOIMIJA' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.opetuspiste">
+            {{'OrganisaatiotyyppiComponent.OPETUSPISTE' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.oppisopimuspiste">
+            {{'OrganisaatiotyyppiComponent.OPPISOPIMUSTOIMIPISTE' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.muuOrganisaatio">
+            {{'OrganisaatiotyyppiComponent.MUU_ORGANISAATIO' | i18n}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{'YhteystietojenTyyppiForm.yttOppilaitos' | i18n}}</label>
+        <div class="controls">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.kaikkiOppilaitostyypit">
+            {{'YhteystietojenTyyppiForm.kaikkiOppilaitokset' | i18n}}
+            <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.rajatutOppilaitostyypit">
+            {{'YhteystietojenTyyppiForm.rajatutOppilaitokset' | i18n}}
+            <select ng-if="valittuYhteystietotyyppiOrgTyypit.rajatutOppilaitostyypit"
+                    ng-model="valittuYhteystietotyyppiOrgTyypit.valitutOppilaitostyypit"
+                    ng-options="ot.nimi for ot in model.oppilaitostyypit">
+                <option value="">{{'YhteystietojenTyyppiForm.lisaaOppilaitostyyppi' | i18n}}</option>
+            </select>
+            <div ng-if="valittuYhteystietotyyppiOrgTyypit.rajatutOppilaitostyypit">
+                <button type="button" class="btn" ng-repeat="t in valittuYhteystietotyyppi.sovellettavatOppilaitostyyppis"
+                        ng-click="removeValittuYtt(t)">{{model.oppilaitostyypitMap[t]}}&nbsp;<i class="icon-remove"></i></button>
+                <span >{{t}}</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<hr>
+<hr>
+<h3>valittu ytt</h3>
+<div>{{valittuYhteystietotyyppi}}</div>
+
+<hr>
+<h3>kaikki ytt:t</h3>
+<div>{{model.yhteystietotyypit}}</div>
+
+<hr>
+<h3>organisaatiotyypit</h3>
+<div>{{model.organisaatiotyypit}}</div>
+
+<hr>
+<h3>Oppilaitostyypit</h3>
+<div>{{model.oppilaitostyypit}}</div>
+

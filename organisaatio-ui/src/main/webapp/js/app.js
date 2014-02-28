@@ -63,6 +63,9 @@ app.config(function($routeProvider) {
         // create new
         when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
+        // yhteytstietojen tyypit
+        when('/yhteystietojentyyppi', {controller:YhteystietojentyyppiController, templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
+
         //else
         otherwise({redirectTo:'/organisaatiot'});
 });
@@ -95,7 +98,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http) {
         });
         return nimi;
     };
-    
+
     // lang = FI tai SV
     this.getLangName = function(koodi, lang) {
         var nimi = koodi.metadata[0].nimi;
@@ -106,12 +109,12 @@ app.service('KoodistoKoodi', function($locale, $window, $http) {
         });
         return nimi;
     };
-    
+
     this.getLanguage = function() {
         return language;
     };
-    
-    this.isValid = function(koodi) {        
+
+    this.isValid = function(koodi) {
         if (koodi.voimassaAlkuPvm) {
             if (new Date() < new Date(koodi.voimassaAlkuPvm)) {
                 // Ei vielä voimassa
@@ -314,7 +317,7 @@ return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
     get: {method: "GET", isArray: true}
   });
 });
- 
+
 // Vuosiluokkien haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/vuosiluokat/koodi
 app.factory('KoodistoVuosiluokat', function($resource) {
@@ -328,5 +331,12 @@ return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
 app.factory('YhteystietoMetadata', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/yhteystietometadata/:orgTyyppi", { orgTyyppi: "@orgTyyppi"}, {
         get: {method: 'GET', isArray: true}
+    });
+});
+
+app.factory('Yhteystietojentyyppi', function($resource) {
+    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
+        get: {method: 'GET', isArray: true},
+        post: {method: 'POST'}
     });
 });
