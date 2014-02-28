@@ -29,7 +29,7 @@
         <div class="controls">
             <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'NIMI'})].kaytossa">
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
-            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttTyyppi({tyyppi: 'NIMI'})].pakollinen">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'NIMI'})].pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
         </div>
     </div>
@@ -199,12 +199,12 @@
 
 <div class="row">
     <div class="span6">
-        <button class="btn">{{'YhteystietojenTyyppiForm.poistaTyyppi' | i18n}}</button>
+        <button class="btn" ng-click="poistaYhteystietotyyppi()">{{'YhteystietojenTyyppiForm.poistaTyyppi' | i18n}}</button>
         <button class="btn" ng-click="uusiYhteystietotyyppi()">{{'YhteystietojenTyyppiForm.luoUusi' | i18n}}</button>
     </div>
     <div class="offset7">
         <button class="btn">{{'c_peruuta' | i18n}}</button>
-        <button class="btn btn-primary">{{'c_tallenna' | i18n}}</button>
+        <button class="btn btn-primary" ng-click="tallennaYhteystietotyyppi()">{{'c_tallenna' | i18n}}</button>
     </div>
 </div>
 

@@ -337,6 +337,13 @@ app.factory('YhteystietoMetadata', function($resource) {
 app.factory('Yhteystietojentyyppi', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
         get: {method: 'GET', isArray: true},
-        post: {method: 'POST'}
+        post: {method: 'POST'},
+        put: {method: 'PUT'}
+    });
+});
+
+app.factory('YhteystietojentyypinPoisto', function($resource) {
+    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid", { oid: "@oid" }, {
+        delete: {method: 'DELETE'}
     });
 });

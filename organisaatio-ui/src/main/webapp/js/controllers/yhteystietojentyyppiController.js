@@ -1,4 +1,4 @@
-function YhteystietojentyyppiController($scope, $window, $filter, YhteystietojentyyppiModel) {
+function YhteystietojentyyppiController($scope, $window, $filter, YhteystietojentyyppiModel, Alert) {
     var language = $window.navigator.userLanguage || $window.navigator.language;
     console.log(language);
     if (language) {
@@ -12,10 +12,6 @@ function YhteystietojentyyppiController($scope, $window, $filter, Yhteystietojen
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.valittuYhteystietotyyppi = null;
-
-    $scope.save = function() {
-        $scope.model.save();
-    };
 
     $scope.localizeYhteystietotyypinNimi = function(yt) {
         for (var k in yt.nimi.teksti) {
@@ -234,4 +230,34 @@ function YhteystietojentyyppiController($scope, $window, $filter, Yhteystietojen
     $scope.uusiYhteystietotyyppi = function() {
         $scope.valittuYhteystietotyyppi = $scope.model.uusiYtt();
     };
+
+    $scope.poistaYhteystietotyyppi = function() {
+        if ($scope.valittuYhteystietotyyppi !== null) {
+            $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+                var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
+                if (ind !== -1) {
+                    $scope.model.yhteystietotyypit.splice(i, 1);
+                    $scope.valittuYhteystietotyyppi = null;
+                }
+            }, function(virhe) {
+                Alert.add("error", virhe, false);
+            });
+        }
+    };
+
+    $scope.tallennaYhteystietotyyppi = function() {
+        if ($scope.valittuYhteystietotyyppi !== null) {
+            $scope.model.save($scope.valittuYhteystietotyyppi, function(tallennettuYtt) {
+                $scope.valittuYhteystietotyyppi = tallennettuYtt;
+            }, function(virhe) {
+                Alert.add("error", virhe, false);
+            });
+        }
+    };
+
+    $scope.peruuta = function() {
+        $scope.valittuYhteystietotyyppi = null;
+        $scope.model.reload();
+    };
+
 }

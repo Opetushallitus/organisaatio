@@ -1,6 +1,6 @@
 app.factory('YhteystietojentyyppiModel', function(
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoKoodi,
-        Yhteystietojentyyppi)  {
+        Yhteystietojentyyppi, YhteystietojentyypinPoisto)  {
 
     var model = new function() {
         var organisaatiotyypit = {},
@@ -35,7 +35,7 @@ app.factory('YhteystietojentyyppiModel', function(
 
         this.uusiYtt = function() {
             var obj = {
-                versio: 0,
+                version: 0,
                 oid: null,
                 nimi: {
                     teksti: [{
@@ -52,6 +52,31 @@ app.factory('YhteystietojentyyppiModel', function(
             };
             yhteystietotyypit.push(obj);
             return obj;
+        };
+
+        this.save = function(ytt, callback, virheCallback) {
+            var fn;
+            if (ytt.oid === null) {
+                fn = Yhteystietojentyyppi.put;
+            } else {
+                fn = Yhteystietojentyyppi.post;
+            }
+            fn(ytt, function(tyyppi) {
+                var ind = yhteystietotyypit.indexOf(ytt);
+                if (ind !== -1) {
+                    yhteystietotyypit.splice(ind, 1);
+                }
+                yhteystietotyypit.push(tyyppi);
+                callback(tyyppi);
+            }, virheCallback);
+        };
+
+        this.delete = function(ytt, callback, virheCallback) {
+            YhteystietojentyypinPoisto.delete({oid: ytt.oid}, callback, virheCallback);
+        };
+
+        this.reload = function() {
+            loadOppilaitostyypit();
         };
 
     };
