@@ -64,7 +64,7 @@ app.config(function($routeProvider) {
         when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
         // yhteytstietojen tyypit
-        when('/yhteystietojentyyppi', {controller:YhteystietojentyyppiController, templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
+        when('/yhteystietotyypit', {controller:YhteystietojentyyppiController, templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
 
         //else
         otherwise({redirectTo:'/organisaatiot'});

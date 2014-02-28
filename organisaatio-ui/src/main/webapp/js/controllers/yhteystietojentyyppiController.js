@@ -1,4 +1,4 @@
-function YhteystietojentyyppiController($scope, $window, YhteystietojentyyppiModel) {
+function YhteystietojentyyppiController($scope, $window, $filter, YhteystietojentyyppiModel) {
     var language = $window.navigator.userLanguage || $window.navigator.language;
     console.log(language);
     if (language) {
@@ -51,6 +51,23 @@ function YhteystietojentyyppiController($scope, $window, YhteystietojentyyppiMod
         return true;
     }
 
+    /* FIXME: käännökset jQueryllä */
+    function getNimiForTyyppi(tyyppi, nimi, locale) {
+        var tyypit = {
+            'EMAIL': { fi: 'Sähköpostiosoite', sv: 'Epostadress' },
+            'NIMI': { fi: 'Nimi', sv: 'Namn' },
+            'NIMIKE': { fi: 'Nimike', sv: 'Benämning' },
+            'OSOITEKäyntiosoite': { fi: 'Käyntiosoite', sv: 'Besöksadress' },
+            'OSOITEPostiosoite': { fi: 'Postiosoite', sv: 'Postadress' },
+            'OSOITE_ULKOMAA': { fi: 'Ulkomaan osoite', sv: 'Utrikes adress' },
+            'PUHELINMatkapuhelinnumero': { fi: 'Matkapuhelinnumero', sv: 'Mobiltelefonnummer' },
+            'PUHELINPuhelinnumero': { fi: 'Puhelinnumero', sv: 'Telefonnummer' },
+            'FAKSI': { fi: 'Faksinumero', sv: 'faxnummer' },
+            'WWW': { fi: 'Www-osoite', sv: 'Www-adress' }
+        };
+        return tyypit[tyyppi+nimi][locale];
+    }
+
     $scope.yttFindTyyppi = function(filt) {
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.allLisatietokenttas) {
@@ -58,6 +75,17 @@ function YhteystietojentyyppiController($scope, $window, YhteystietojentyyppiMod
                     return i;
                 }
             }
+            var obj = {
+                version: 0,
+                oid: null,
+                nimi: filt.nimi || getNimiForTyyppi(filt.tyyppi, filt.nimi || '', 'fi'),
+                nimiSv: getNimiForTyyppi(filt.tyyppi, filt.nimi || '', 'sv'),
+                tyyppi: filt.tyyppi,
+                kaytossa: false,
+                pakollinen: false
+            };
+            $scope.valittuYhteystietotyyppi.allLisatietokenttas.push(obj);
+            return obj;
         }
         return null;
     };
@@ -202,4 +230,8 @@ function YhteystietojentyyppiController($scope, $window, YhteystietojentyyppiMod
                     $scope.valittuYhteystietotyyppi.sovellettavatOppilaitostyyppis.length > 0;
         }
     });
+
+    $scope.uusiYhteystietotyyppi = function() {
+        $scope.valittuYhteystietotyyppi = $scope.model.uusiYtt();
+    };
 }

@@ -31,16 +31,28 @@ app.factory('YhteystietojentyyppiModel', function(
             });
         }
 
-        function loadOrganisaatiotyypit() {
-            KoodistoOrganisaatiotyypit.get({}, function(tyypit) {
-                tyypit.forEach(function(t) {
-                    organisaatiotyypit[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);
-                });
-                loadOppilaitostyypit();
-            });
-        }
+        loadOppilaitostyypit();
 
-        loadOrganisaatiotyypit();
+        this.uusiYtt = function() {
+            var obj = {
+                versio: 0,
+                oid: null,
+                nimi: {
+                    teksti: [{
+                        value: '',
+                        kieliKoodi: 'fi'
+                    }, {
+                       value: '',
+                       kieliKoodi: 'sv'
+                    }]
+                },
+                sovellettavatOrganisaatios: [],
+                sovellettavatOppilaitostyyppis: [],
+                allLisatietokenttas: []
+            };
+            yhteystietotyypit.push(obj);
+            return obj;
+        };
 
     };
 
