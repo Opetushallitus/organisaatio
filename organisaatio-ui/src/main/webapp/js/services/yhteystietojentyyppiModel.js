@@ -76,6 +76,9 @@ app.factory('YhteystietojentyyppiModel', function(
         };
 
         this.reload = function() {
+            yhteystietotyypit = [];
+            oppilaitostyypit = [];
+            oppilaitostyypitMap = {};
             loadOppilaitostyypit();
         };
 

@@ -257,6 +257,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, Yhteystietojen
 
     $scope.peruuta = function() {
         $scope.valittuYhteystietotyyppi = null;
+        rajatutOppilaitostyypit = false;
         $scope.model.reload();
     };
 
