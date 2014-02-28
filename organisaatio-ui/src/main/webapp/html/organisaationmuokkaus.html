@@ -283,7 +283,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                        typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.kaynti, model.yhteystiedot.postinumerot.kaynti)">
-                &nbsp;{{model.yhteystiedot.kaynti.postitoimipaikka}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.kaynti)}}
             </div>
         </div>
 
@@ -301,7 +301,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                        typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.posti, model.yhteystiedot.postinumerot.posti)">
-                &nbsp;{{model.yhteystiedot.posti.postitoimipaikka}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.posti)}}
                 <div>
                     <input type='checkbox' ng-model="model.samaosoite" ng-init="model.samaosoite = false"
                            ng-change="model.copyAddress(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
@@ -335,7 +335,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                        typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.ruotsi_kaynti, model.yhteystiedot.postinumerot.ruotsi_kaynti)">
-                &nbsp;{{model.yhteystiedot.ruotsi_kaynti.postitoimipaikka}}
+                &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_kaynti)}}
             </div>
         </div>
 
@@ -353,7 +353,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                        typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.ruotsi_posti, model.yhteystiedot.postinumerot.ruotsi_posti)">
-                &nbsp;{{model.yhteystiedot.ruotsi_posti.postitoimipaikka}}
+                &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_posti)}}
                 <div>
                     <input type='checkbox' ng-model="model.samaosoitesv" ng-init="model.samaosoitesv = false"
                            ng-change="model.copyAddressSv(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}

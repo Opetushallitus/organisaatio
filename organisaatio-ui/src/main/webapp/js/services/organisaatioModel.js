@@ -1143,7 +1143,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.setPostinumero = function(md, addressmodel, postcode) {
             sama = (md ? model.mdsamaosoite : model.samaosoite);
             yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
-            if (sama===true) {
+            if (sama === true) {
                 if (yt.postinumerot.kaynti) {
                     yt.postinumerot.posti = yt.postinumerot.kaynti;
                     yt.posti.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
@@ -1153,13 +1153,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (addressmodel && postcode && model.koodisto.nimetFI[postcode]) {
                 addressmodel.postinumeroUri = model.koodisto.nimetFI[postcode].uri;
                 addressmodel.postitoimipaikka = model.koodisto.nimetFI[postcode].paikka;
+                model.uriKoodit[addressmodel.postinumeroUri] = model.koodisto.nimetFI[postcode].paikka;
             }
         };
 
         this.setRuotsiPostinumero = function(md, addressmodel, postcode) {
             sama = (md ? model.mdsamaosoitesv : model.samaosoitesv);
             yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
-            if (sama===true) {
+            if (sama === true) {
                 if (yt.postinumerot.ruotsi_kaynti) {
                     yt.postinumerot.ruotsi_posti = yt.postinumerot.ruotsi_kaynti;
                     yt.ruotsi_posti.postinumeroUri = model.koodisto.nimetSV[postcode].uri;
@@ -1175,7 +1176,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.copyAddress = function(md) {
             sama = (md ? model.mdsamaosoite : model.samaosoite);
             yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
-            if (sama===true) {
+            if (sama === true) {
                 if (!('posti' in yt)) {
                     yt.posti = {};
                 }
@@ -1193,7 +1194,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.copyAddressSv = function(md) {
             sama = (md ? model.mdsamaosoitesv : model.samaosoitesv);
             yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
-            if (sama===true) {
+            if (sama === true) {
                 if (!('ruotsi_posti' in yt)) {
                     yt.ruotsi_posti = {};
                 }
@@ -1211,7 +1212,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.copyAddressKv = function(md) {
             sama = (md ? model.mdsamaosoitekv : model.samaosoitekv);
             yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
-            if (sama===true) {
+            if (sama === true) {
                 if (!('ulkomainen_posti' in yt)) {
                     yt.ulkomainen_posti = {};
                 }
@@ -1268,6 +1269,27 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.imagefile = null;
             if (model.organisaatio.metadata) {
                 model.organisaatio.metadata.kuvaEncoded = undefined;
+            }
+        };
+
+        this.getLocalizedPaikkaByUri = function(uri) {
+            if (uri in model.uriKoodit) {
+                var koodi = model.uriKoodit[uri];
+                if (typeof koodi !== 'undefined') {
+                    return KoodistoKoodi.getLocalizedName(koodi);
+                }
+            }
+        };
+
+        this.getLocalizedPaikka = function(postikoodi) {
+            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+                return model.koodisto.nimetFI[postikoodi].paikka;
+            }
+        };
+
+        this.getLocalizedPaikkaSv = function(postikoodi) {
+            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+                return model.koodisto.nimetSV[postikoodi].paikka;
             }
         };
 
