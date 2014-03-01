@@ -81,6 +81,7 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="muokkaaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.muokkaa' | i18n}}</a>
             &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
         </div>
     </div>
@@ -127,6 +128,7 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="muokkaaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.muokkaa' | i18n}}</a>
             &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
         </div>
     </div>
@@ -151,9 +153,9 @@
         <div class="control-group">
         <label class="control-label">{{'YhteystietojenTyyppiForm.wwwOsoite' | i18n}}</label>
         <div class="controls">
-            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW'})].kaytossa">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW', nimi: 'Www-osoite'})].kaytossa">
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
-            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW'})].pakollinen">
+            <input type="checkbox" ng-model="valittuYhteystietotyyppi.allLisatietokenttas[yttFindTyyppi({tyyppi: 'WWW', nimi: 'Www-osoite'})].pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
         </div>
     </div>
@@ -164,6 +166,7 @@
             {{'YhteystietojenTyyppiForm.kaytossaFull' | i18n}}
             <input type="checkbox" ng-model="tyyppi.pakollinen">
             {{'YhteystietojenTyyppiForm.pakollinenFull' | i18n}}
+            &nbsp;<a ng-click="muokkaaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.muokkaa' | i18n}}</a>
             &nbsp;<a ng-click="poistaMuuYhteystieto(tyyppi)">{{'YhteystietojenTyyppiForm.poista' | i18n}}</a>
         </div>
     </div>

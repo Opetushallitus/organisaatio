@@ -1,6 +1,5 @@
 function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert) {
     var language = $window.navigator.userLanguage || $window.navigator.language;
-    console.log(language);
     if (language) {
         language = language.substr(0,2).toUpperCase();
         if (language!=="FI" && language!=="SV") {
@@ -59,7 +58,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
             'PUHELINMatkapuhelinnumero': { fi: 'Matkapuhelinnumero', sv: 'Mobiltelefonnummer' },
             'PUHELINPuhelinnumero': { fi: 'Puhelinnumero', sv: 'Telefonnummer' },
             'FAKSI': { fi: 'Faksinumero', sv: 'faxnummer' },
-            'WWW': { fi: 'Www-osoite', sv: 'Www-adress' }
+            'WWWWww-osoite': { fi: 'Www-osoite', sv: 'Www-adress' }
         };
         return tyypit[tyyppi+nimi][locale];
     }
@@ -275,20 +274,37 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         }
     }
 
-    $scope.uusiMuuYhteystieto = function(tyyppi) {
+    function _muokkaaMuuYhteystieto(callback, data) {
         var modalInstance = $modal.open({
             templateUrl: 'muuyhteystieto.html',
             controller: MuuYhteystietoController,
-            resolve: {}
+            resolve: {
+                data: function() {
+                    return data;
+                }
+            }
         });
         $scope.modalOpen = true;
 
         modalInstance.result.then(function(data) {
             $scope.modalOpen = false;
-            addMuuYhteystieto(tyyppi, data);
+            callback(data);
         }, function() {
             $scope.modalOpen = false;
         });
+    }
+
+    $scope.uusiMuuYhteystieto = function(tyyppi) {
+        _muokkaaMuuYhteystieto(function(data) {
+            addMuuYhteystieto(tyyppi, data);
+        });
+    };
+
+    $scope.muokkaaMuuYhteystieto = function(tyyppi) {
+        _muokkaaMuuYhteystieto(function(data) {
+            tyyppi.nimi = 'Muu: ' + data.fi;
+            tyyppi.nimiSv = 'Muu: ' + data.sv;
+        }, {fi: tyyppi.nimi.split(': ')[1], sv: tyyppi.nimiSv.split(': ')[1]});
     };
 
     $scope.poistaMuuYhteystieto = function(myt) {
