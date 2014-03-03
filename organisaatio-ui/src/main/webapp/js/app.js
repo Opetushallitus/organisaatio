@@ -347,3 +347,11 @@ app.factory('YhteystietojentyypinPoisto', function($resource) {
         delete: {method: 'DELETE'}
     });
 });
+
+// Virkailijoiden haku käyttäjähallinnasta
+// Esim. https://localhost:8508/authentication-service/resources/henkilo?count=200&ht=VIRKAILIJA&index=0&org=1.2.246.562.10.67019405611
+app.factory('Henkilo', function($resource) {
+    return $resource(AUTHENTICATION_URL_BASE + "henkilo?count=200&ht=VIRKAILIJA&index=0&org=:oid", { oid: "@oid"}, {
+        get: {method: 'GET'}
+    });
+});

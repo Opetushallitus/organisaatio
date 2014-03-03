@@ -708,9 +708,10 @@
                 {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
             </label>
             <div class="controls">
-                <input id="ectsnimi" type="text" name="ectsnimi"
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}" ng-required="false" codes-combined-field/>
+                <input id="ectsnimi2" name="ectsnimi2" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi"                       
+                       typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}"
+                       typeahead-on-select="model.setEctsNimi(hlo)">                
                 <input id="ectsnimike" type="text" name="ectsnimike"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}" ng-required="false" codes-combined-field/>

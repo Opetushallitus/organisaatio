@@ -1,7 +1,7 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
-        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, $filter, $log, $timeout) {
+        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, Henkilo, $filter, $log, $timeout) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -24,6 +24,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             nimetFI: {},
             nimetSV: {},
             yhteystietoTyypit: {}
+        };
+
+        this.henkilot = {
+            virkailijat: []
         };
 
         // Koodin lokalisoitu nimi, avaimena uri
@@ -243,7 +247,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.parent = parentResult;
 
                     if (model.mode === 'edit') {
-                        model.refreshKoodisto();
+                        refreshKoodisto();
+                        refreshHenkilo();
                     }
                     finishModel();
                     refreshMetadata(result);
@@ -434,7 +439,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             });
         };
 
-        this.refreshKoodisto = function(oid) {
+        refreshKoodisto = function(oid) {
             if (oid === null || (oid !== model.koodisto.oid)) {
                 model.koodisto.localizedOppilaitos = "";
                 model.koodisto.localizedKoulutustoimija = "";
@@ -639,6 +644,21 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+        refreshHenkilo = function() {
+            Henkilo.get({oid: model.organisaatio.oid}, function(result) {
+                $log.debug("Henkilö count=" + result.totalCount);
+                for (var i = 0; i < result.totalCount; i++) {
+                    $log.debug("Result: " + result.results[i].sukunimi);
+                    model.henkilot.virkailijat.push({
+                        nimi: result.results[i].etunimet + " " + result.results[i].sukunimi,
+                        tiedot: result.results[i]});
+                }
+            }, function(response) {
+                // Henkilöitä ei löytynyt
+                $log.error($filter('i18n')("Organisaationtarkastelu.henkilohakuvirhe") + " (status: " + response.status + ")");
+            });
+        }
+
         this.createOrganisaatio = function(parentoid, yritystiedot) {
             // tyhjennetään mahdolliset vanhat ytj tiedot
             if (typeof yritystiedot !== "undefined") {
@@ -667,7 +687,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.parenttype = result.tyypit[0];
                 model.parent = result;
 
-                model.refreshKoodisto(null);
+                refreshKoodisto(null);
+                refreshHenkilo();
                 model.organisaatio.parentOid = parentoid;
                 finishModel();
                 refreshMetadata(model.organisaatio);
@@ -1292,6 +1313,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
                 return model.koodisto.nimetSV[postikoodi].paikka;
             }
+        };
+
+        this.setEctsNimi = function(henkilo) {
+            // TODO: Asetetaanko muita ects-tietoja valinnan perusteella?
         };
 
     };

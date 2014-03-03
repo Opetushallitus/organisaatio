@@ -20,6 +20,9 @@ public class ConfigController {
     @Value("${organisaatio-ui.koodisto-service-url.rest}")
     private String koodistoServiceRestURL;
 
+    @Value("${authentication-service.rest.url}")
+    private String authenticationServiceRestURL;
+
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -36,6 +39,7 @@ public class ConfigController {
         append(b, "UI_URL_BASE", organisaatioUiURL);
         append(b, "SERVICE_URL_BASE", organisaatioServiceRestURL);
         append(b, "KOODISTO_URL_BASE", koodistoServiceRestURL);
+        append(b, "AUTHENTICATION_URL_BASE", authenticationServiceRestURL);
         append(b, "ROOT_ORGANISAATIO_OID", rootOrganisaatioOid);
 
         append(b, "TEMPLATE_URL_BASE", "");
