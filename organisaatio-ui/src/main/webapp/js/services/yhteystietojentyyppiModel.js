@@ -75,10 +75,16 @@ app.factory('YhteystietojentyyppiModel', function(
             YhteystietojentyypinPoisto.delete({oid: ytt.oid}, callback, virheCallback);
         };
 
+        function clearOppilaitostyypitMap() {
+            for (var k in oppilaitostyypitMap) {
+                delete oppilaitostyypitMap[k];
+            }
+        }
+
         this.reload = function() {
-            yhteystietotyypit = [];
-            oppilaitostyypit = [];
-            oppilaitostyypitMap = {};
+            yhteystietotyypit.splice(0, yhteystietotyypit.length);
+            oppilaitostyypit.splice(0, oppilaitostyypit.length);
+            clearOppilaitostyypitMap();
             loadOppilaitostyypit();
         };
 

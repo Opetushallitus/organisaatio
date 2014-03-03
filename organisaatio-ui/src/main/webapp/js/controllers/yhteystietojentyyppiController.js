@@ -67,7 +67,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.allLisatietokenttas) {
                 if (_match($scope.valittuYhteystietotyyppi.allLisatietokenttas[i], filt)) {
-                    return i;
+                    return [$scope.valittuYhteystietotyyppi.allLisatietokenttas[i]];
                 }
             }
             var obj = {
@@ -80,7 +80,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                 pakollinen: false
             };
             $scope.valittuYhteystietotyyppi.allLisatietokenttas.push(obj);
-            return obj;
+            return [obj];
         }
         return null;
     };
@@ -232,15 +232,20 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
 
     $scope.poistaYhteystietotyyppi = function() {
         if ($scope.valittuYhteystietotyyppi !== null) {
-            $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
-                var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
-                if (ind !== -1) {
-                    $scope.model.yhteystietotyypit.splice(i, 1);
-                    $scope.valittuYhteystietotyyppi = null;
-                }
-            }, function(virhe) {
-                Alert.add("error", virhe, false);
-            });
+            if ($scope.valittuYhteystietotyyppi.oid !== null) {
+                $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+                    var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
+                    if (ind !== -1) {
+                        $scope.model.yhteystietotyypit.splice(i, 1);
+                        $scope.valittuYhteystietotyyppi = null;
+                    }
+                }, function(virhe) {
+                    Alert.add("error", virhe, false);
+                });
+            } else {
+                $scope.model.yhteystietotyypit.splice(i, 1);
+                $scope.valittuYhteystietotyyppi = null;
+            }
         }
     };
 
