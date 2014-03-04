@@ -1,7 +1,8 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielet,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
-        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, Henkilo, $filter, $log, $timeout) {
+        KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
+        HenkiloKayttooikeus, $filter, $log, $timeout) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -645,19 +646,19 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         refreshHenkilo = function() {
-            Henkilo.get({oid: model.organisaatio.oid}, function(result) {
-                $log.debug("Henkilö count=" + result.totalCount);
+            model.henkilot.virkailijatTooltip = "";
+            HenkiloVirkailijat.get({oid: model.organisaatio.oid}, function(result) {
                 for (var i = 0; i < result.totalCount; i++) {
-                    $log.debug("Result: " + result.results[i].sukunimi);
                     model.henkilot.virkailijat.push({
                         nimi: result.results[i].etunimet + " " + result.results[i].sukunimi,
                         tiedot: result.results[i]});
+                    model.henkilot.virkailijatTooltip += result.results[0].etunimet + " " + result.results[0].sukunimi + "<br>";
                 }
             }, function(response) {
                 // Henkilöitä ei löytynyt
                 $log.error($filter('i18n')("Organisaationtarkastelu.henkilohakuvirhe") + " (status: " + response.status + ")");
             });
-        }
+        };
 
         this.createOrganisaatio = function(parentoid, yritystiedot) {
             // tyhjennetään mahdolliset vanhat ytj tiedot
@@ -1316,7 +1317,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.setEctsNimi = function(henkilo) {
-            // TODO: Asetetaanko muita ects-tietoja valinnan perusteella?
+            Henkilo.get({hlooid: henkilo.tiedot.oidHenkilo}, function(result) {
+                if (result.yhteystiedotRyhma.length > 0) {
+                    for (var i=0; i<result.yhteystiedotRyhma[0].yhteystiedot.length; i++) {
+                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi==='YHTEYSTIETO_PUHELINNUMERO') {
+                            model.organisaatio.metadata.hakutoimistoEctsPuhelin = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                        }
+                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi==='YHTEYSTIETO_SAHKOPOSTI') {
+                            model.organisaatio.metadata.hakutoimistoEctsEmail = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                        }
+                    }
+                }
+            }, function(response) {
+                // Henkilöitä ei löytynyt
+                $log.error($filter('i18n')("Organisaationtarkastelu.henkilohakuvirhe") + " (status: " + response.status + ")");
+            });
+            HenkiloKayttooikeus.get({hlooid: henkilo.tiedot.oidHenkilo, orgoid: model.organisaatio.oid}, function(result2) {
+                if (result2.length > 0) {
+                    model.organisaatio.metadata.hakutoimistoEctsTehtavanimike = result2[0].tehtavanimike;
+                    // TODO: tarjoa käyttäjälle valintalista nimikkeistä (result[i].tehtavanimike) ?
+                }
+            }, function(response) {
+                // Henkilöitä ei löytynyt
+                $log.error($filter('i18n')("Organisaationtarkastelu.henkilohakuvirhe") + " (status: " + response.status + ")");
+            });
         };
 
     };

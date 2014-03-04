@@ -348,10 +348,26 @@ app.factory('YhteystietojentyypinPoisto', function($resource) {
     });
 });
 
-// Virkailijoiden haku käyttäjähallinnasta
+// Virkailijoiden haku organisaatiolle käyttäjähallinnasta
 // Esim. https://localhost:8508/authentication-service/resources/henkilo?count=200&ht=VIRKAILIJA&index=0&org=1.2.246.562.10.67019405611
-app.factory('Henkilo', function($resource) {
+app.factory('HenkiloVirkailijat', function($resource) {
     return $resource(AUTHENTICATION_URL_BASE + "henkilo?count=200&ht=VIRKAILIJA&index=0&org=:oid", { oid: "@oid"}, {
         get: {method: 'GET'}
+    });
+});
+
+// Henkilön haku käyttäjähallinnasta
+// Esim. https://localhost:8508/authentication-service/resources/henkilo/1.2.246.562.24.91121139885
+app.factory('Henkilo', function($resource) {
+    return $resource(AUTHENTICATION_URL_BASE + "henkilo/:hlooid", { hlooid: "@hlooid"}, {
+        get: {method: 'GET'}
+    });
+});
+
+// Käyttöoikeuden haku henkilölle organisaatiossa
+// Esim. https://localhost:8508/authentication-service/resources/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
+app.factory('HenkiloKayttooikeus', function($resource) {
+    return $resource(AUTHENTICATION_URL_BASE + "kayttooikeusryhma/henkilo/:hlooid?ooid=:orgoid", { hlooid: "@hlooid", orgoid: "@orgoid"}, {
+        get: {method: 'GET', isArray: true}
     });
 });
