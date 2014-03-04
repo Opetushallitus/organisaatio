@@ -756,6 +756,11 @@
                     <xs:documentation xml:lang="fi">Nimi ruotsiksi.</xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="nimiEn" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Nimi englanniksi.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element minOccurs="1" maxOccurs="1" name="tyyppi" type="yhteystietoElementtiTyyppi">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Elementin tyyppi; puhelin, faksi, nimi, nimike, ...
