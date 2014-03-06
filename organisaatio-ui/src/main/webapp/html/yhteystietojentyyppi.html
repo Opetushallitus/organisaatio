@@ -12,13 +12,19 @@
         <div class="control-group">
             <label class="control-label">{{'YhteystietojenTyyppiForm.FI'| i18n}}</label>
             <div class="controls">
-                <input type="text" ng-model="valittuYhteystietotyyppi.nimi.teksti[yttNimiLang('fi')].value">
+                <input type="text" ng-model="yttNimiLang('fi').value">
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">{{'YhteystietojenTyyppiForm.SE'| i18n}}</label>
             <div class="controls">
-                <input type="text" ng-model="valittuYhteystietotyyppi.nimi.teksti[yttNimiLang('sv')].value">
+                <input type="text" ng-model="yttNimiLang('sv').value">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">{{'YhteystietojenTyyppiForm.EN'| i18n}}</label>
+            <div class="controls">
+                <input type="text" ng-model="yttNimiLang('en').value">
             </div>
         </div>
     </form>

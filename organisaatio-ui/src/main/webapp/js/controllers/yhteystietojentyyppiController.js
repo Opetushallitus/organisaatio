@@ -24,11 +24,17 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.nimi.teksti) {
                 if ($scope.valittuYhteystietotyyppi.nimi.teksti[i].kieliKoodi === koodi) {
-                    return i;
+                    return $scope.valittuYhteystietotyyppi.nimi.teksti[i];
                 }
             }
+            var obj = {
+                value: '',
+                kieliKoodi: koodi
+            };
+            return $scope.valittuYhteystietotyyppi.nimi.teksti.push(obj);
+            return obj;
         }
-        return 0;
+        return null;
     };
 
     function _match(item, filt) {
@@ -49,16 +55,16 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
     /* FIXME: käännökset jQueryllä */
     function getNimiForTyyppi(tyyppi, nimi, locale) {
         var tyypit = {
-            'EMAIL': { fi: 'Sähköpostiosoite', sv: 'Epostadress' },
-            'NIMI': { fi: 'Nimi', sv: 'Namn' },
-            'NIMIKE': { fi: 'Nimike', sv: 'Benämning' },
-            'OSOITEKäyntiosoite': { fi: 'Käyntiosoite', sv: 'Besöksadress' },
-            'OSOITEPostiosoite': { fi: 'Postiosoite', sv: 'Postadress' },
-            'OSOITE_ULKOMAA': { fi: 'Ulkomaan osoite', sv: 'Utrikes adress' },
-            'PUHELINMatkapuhelinnumero': { fi: 'Matkapuhelinnumero', sv: 'Mobiltelefonnummer' },
-            'PUHELINPuhelinnumero': { fi: 'Puhelinnumero', sv: 'Telefonnummer' },
-            'FAKSI': { fi: 'Faksinumero', sv: 'faxnummer' },
-            'WWWWww-osoite': { fi: 'Www-osoite', sv: 'Www-adress' }
+            'EMAIL': { fi: 'Sähköpostiosoite', sv: 'Epostadress', en: 'Email' },
+            'NIMI': { fi: 'Nimi', sv: 'Namn', en: 'Name' },
+            'NIMIKE': { fi: 'Nimike', sv: 'Benämning', en: 'Title' },
+            'OSOITEKäyntiosoite': { fi: 'Käyntiosoite', sv: 'Besöksadress', en: 'Visiting Address' },
+            'OSOITEPostiosoite': { fi: 'Postiosoite', sv: 'Postadress', en: 'Postal Address' },
+            'OSOITE_ULKOMAA': { fi: 'Ulkomaan osoite', sv: 'Utrikes adress', en: 'Foreign Address' },
+            'PUHELINMatkapuhelinnumero': { fi: 'Matkapuhelinnumero', sv: 'Mobiltelefonnummer', en: 'Mobile' },
+            'PUHELINPuhelinnumero': { fi: 'Puhelinnumero', sv: 'Telefonnummer', en: 'Phone' },
+            'FAKSI': { fi: 'Faksinumero', sv: 'faxnummer', en: 'Fax' },
+            'WWWWww-osoite': { fi: 'Www-osoite', sv: 'Www-adress', en: 'WWW Address' }
         };
         return tyypit[tyyppi+nimi][locale];
     }
@@ -75,6 +81,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                 oid: null,
                 nimi: filt.nimi || getNimiForTyyppi(filt.tyyppi, filt.nimi || '', 'fi'),
                 nimiSv: getNimiForTyyppi(filt.tyyppi, filt.nimi || '', 'sv'),
+                nimiEn: getNimiForTyyppi(filt.tyyppi, filt.nimi || '', 'en'),
                 tyyppi: filt.tyyppi,
                 kaytossa: false,
                 pakollinen: false
@@ -305,11 +312,24 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         });
     };
 
+    function stripPrefix(s) {
+        try {
+            return s.split(': ')[1];
+        } catch (e) {
+            return '';
+        }
+    }
+
     $scope.muokkaaMuuYhteystieto = function(tyyppi) {
         _muokkaaMuuYhteystieto(function(data) {
             tyyppi.nimi = 'Muu: ' + data.fi;
             tyyppi.nimiSv = 'Muu: ' + data.sv;
-        }, {fi: tyyppi.nimi.split(': ')[1], sv: tyyppi.nimiSv.split(': ')[1]});
+            tyyppi.nimiEn = 'Muu: ' + data.en;
+        }, {
+            fi: stripPrefix(tyyppi.nimi), 
+            sv: stripPrefix(tyyppi.nimiSv), 
+            en: stripPrefix(tyyppi.nimiEn)
+        });
     };
 
     $scope.poistaMuuYhteystieto = function(myt) {

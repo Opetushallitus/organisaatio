@@ -58,6 +58,8 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
     private String nimi;
     @FilterXss
     private String nimiSv;
+    @FilterXss
+    private String nimiEn;
 
 
     @NotNull
@@ -142,5 +144,13 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
 //    public void setNimi2(MonikielinenTeksti nimi2) {
 //        this.nimi2 = nimi2;
 //    }
+
+    public String getNimiEn() {
+        return nimiEn;
+    }
+
+    public void setNimiEn(String nimiEn) {
+        this.nimiEn = nimiEn;
+    }
 
 }
