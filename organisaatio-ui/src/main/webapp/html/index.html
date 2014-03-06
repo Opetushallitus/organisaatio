@@ -64,6 +64,9 @@
 </head>
 <body>
     <div class="container-fluid" id="application-wrapper">
+        <div>
+            <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
+        </div>
         <div id="angularbox" ng-view=""></div>
         <div>
             <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
