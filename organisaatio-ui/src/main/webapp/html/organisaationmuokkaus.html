@@ -105,7 +105,7 @@
             {{'Organisaationtarkastelu.oppilaitostyyppi'| i18n}}*
         </label>
         <div class="controls">
-            <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri"
+            <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri" class="span6"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
                     ng-change="model.selectOppilaitosTyyppi();
                             form.$dirty = true" required>
@@ -142,7 +142,7 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
-            <input type="text" name="nimifi"
+            <input type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <div>
@@ -155,14 +155,14 @@
 
     <div class="control-group">
         <div class="controls">
-            <input id="nimisv" type="text" name="nimisv"
+            <input id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input id="nimise" type="text" name="nimien"
+            <input id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
@@ -207,7 +207,7 @@
             {{'Organisaationtarkastelu.kotipaikka'| i18n}}*
         </label>
         <div class="controls">
-            <select id="kotipaikka" ng-model="model.organisaatio.kotipaikkaUri"
+            <select id="kotipaikka" ng-model="model.organisaatio.kotipaikkaUri" class="span6"
                     ng-options="kp.uri as kp.nimi for kp in model.koodisto.kotipaikat | orderBy:'nimi'" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
@@ -268,316 +268,64 @@
         </div>
     </div>
 
-    <!-- TODO: käännä vertailu kun tabit tehty: model.yhteystietokieli === 'fi' -->
-    <div ng-if="model.yhteystietokieli !== 'fi'">
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi"
-                       ng-model="model.yhteystiedot.kaynti.osoite" ng-change="model.copyAddress(false)"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
-                &nbsp;&nbsp;&nbsp;
-                <input id="kayntipostifi" name="kayntipostifi" type="text" ng-model="model.yhteystiedot.postinumerot.kaynti"
-                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.kaynti, model.yhteystiedot.postinumerot.kaynti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.kaynti)}}
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.postiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi"
-                       ng-model="model.yhteystiedot.posti.osoite" ng-disabled="model.samaosoite === true"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
-                &nbsp;&nbsp;&nbsp;
-                <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot.posti"
-                       ng-disabled="model.samaosoite === true"
-                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.posti, model.yhteystiedot.postinumerot.posti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.posti)}}
-                <div>
-                    <input type='checkbox' ng-model="model.samaosoite" ng-init="model.samaosoite = false"
-                           ng-change="model.copyAddress(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group" ng-if="kayntiosoitefi.$error.addresscombinedrequired">
-            <div class="controls">
-                <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
-                <span class="text-error" ng-show="osoitevirhe.$error.required">
-                    {{label| i18n}}
-                    {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- TODO: käännä vertailu kun tabit tehty: model.yhteystietokieli === 'sv' -->
-    <div ng-if="model.yhteystietokieli !== 'sv'">
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="kayntiosoitesv" type="text" maxlength="30" name="kayntiosoitesv" ng-change="model.copyAddressSv(false)"
-                       ng-model="model.yhteystiedot.ruotsi_kaynti.osoite"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}"/>
-                &nbsp;&nbsp;&nbsp;
-                <input id="kayntipostisv" name="kayntipostisv" type="text" ng-model="model.yhteystiedot.postinumerot.ruotsi_kaynti"
-                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.ruotsi_kaynti, model.yhteystiedot.postinumerot.ruotsi_kaynti)">
-                &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_kaynti)}}
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.postiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="postiosoitesv" type="text" maxlength="30" name="postiosoitesv"
-                       ng-model="model.yhteystiedot.ruotsi_posti.osoite" ng-disabled="model.samaosoitesv === true"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}"/>
-                &nbsp;&nbsp;&nbsp;
-                <input id="postipostisv" name="postipostisv" type="text" ng-model="model.yhteystiedot.postinumerot.ruotsi_posti"
-                       ng-disabled="model.samaosoitesv === true"
-                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.ruotsi_posti, model.yhteystiedot.postinumerot.ruotsi_posti)">
-                &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_posti)}}
-                <div>
-                    <input type='checkbox' ng-model="model.samaosoitesv" ng-init="model.samaosoitesv = false"
-                           ng-change="model.copyAddressSv(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group" ng-if="kayntiosoitesv.$error.addresscombinedrequired">
-            <div class="controls">
-                <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
-                <span class="text-error" ng-show="osoitevirhe.$error.required">
-                    {{label| i18n}}
-                    {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div ng-if="model.yhteystietokieli !== 'fi' && model.yhteystietokieli !== 'sv'">
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <textarea id="kvkayntiosoite" name="kvkayntiosoite" rows="6" ng-model="model.yhteystiedot.ulkomainen_kaynti.osoite"
-                          ng-disabled="disabled" ng-change="model.copyAddressKv(false)"
-                          ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.postiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <textarea id="kvpostiosoite" name="kvpostiosoite" rows="6" ng-model="model.yhteystiedot.ulkomainen_posti.osoite"
-                          ng-disabled="model.samaosoitekv === true"
-                          ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
-                <div>
-                    <input type='checkbox' ng-model="model.samaosoitekv" ng-init="model.samaosoitekv = false"
-                           ng-change="model.copyAddressKv(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group" ng-if="kayntiosoitefi.$error.addresscombinedrequired">
-            <div class="controls">
-                <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
-                <span class="text-error" ng-show="osoitevirhe.$error.required">
-                    {{label| i18n}}
-                    {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                </span>
-            </div>
-        </div>
-    </div>
-
     <div class="control-group">
         <label class="control-label">
-            {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+            {{'Organisaationtarkastelu.kuva'| i18n}}
         </label>
         <div class="controls">
-            <input id="puhelinnumero" type="text" name="puhelinnumero"
-                   ng-model="model.yhteystiedot.puhelin.numero" oph-null-if-zero-length
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
-            <div>
-                <span class="text-error" ng-show="form.puhelinnumero.$error.pattern">
-                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
-                </span>
+            <div ng-show="model.organisaatio.metadata.kuvaEncoded">
+                <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
             </div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.faksinumero'| i18n}}
-        </label>
-        <div class="controls">
-            <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
-                   ng-model="model.yhteystiedot.faksi.numero" oph-null-if-zero-length
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
-            <div>
-                <span class="text-error" ng-show="form.faksinumero.$error.pattern">
-                    {{'Organisaationtarkastelu.faksinumero'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-        </label>
-        <div class="controls">
-            <input id="sahkopostiosoite" type="email" name="sahkopostiosoite"
-                   ng-model="model.yhteystiedot.email.email" oph-null-if-zero-length
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
-            <div>
-                <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
-                    {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.wwwosoite'| i18n}}
-        </label>
-        <div class="controls">
-            <input id="wwwosoite" type="text" name="wwwosoite"
-                   ng-model="model.yhteystiedot.www.www" oph-null-if-zero-length
-                   ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
-            <div>
-                <span class="text-error" ng-show="form.oppilaitoskoodi.$error.codescombinedrequired">
-                    {{'codes.validation.codescombinedrequired'| i18n}}</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
-        <label class="control-label">
-            {{yttyyppi.nimi}}
-        </label>
-        <div class="controls well">
-            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
-                 ng-form="ytForm">
-                <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
-                </label>
-                <div class="controls">
-                    <input type="text" name="name"
-                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]==="true"'>
-                    <div>
-                        <span class="text-error" ng-show="ytForm.name.$error.required">
-                            {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
-                            {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                        </span>
-                    </div>
-                </div>
+            <div ng-controller="UploadController">
+                <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
+                <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
+                <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="model.removeImage()">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
             </div>
         </div>
     </div>
 
     <hr>
+
+    <!-- YHTEYSTIEDOT --->
+
     <div class="row">
         <div class="span4">
-            <div>
-                <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
-                    <label ng-show="!ktexpanded">
-                        <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
-                    </label>
-                    <label ng-show="ktexpanded">
-                        <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+            <div class="view-row-label">
+                <a href="" ng-model="ytexpanded" ng-click="ytexpanded = !ytexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span> {{'Organisaationmuokkaus.yhteystiedot'| i18n}}
                     </label>
                 </a>
             </div>
         </div>
     </div>
 
-    <div ng-show="ktexpanded">
+    <div ng-show="ytexpanded">
 
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kuva'| i18n}}
-            </label>
-            <div class="controls">
-                <div ng-show="model.organisaatio.metadata.kuvaEncoded">
-                    <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
-                </div>
-                <div ng-controller="UploadController">
-                    <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
-                    <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
-                    <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
-                    <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="model.removeImage()">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
-                </div>
-            </div>
-        </div>
+        <tabset>
+            <tab ng-repeat="yttab in ['fi', 'sv', 'en']"
+                 heading="{{model.uriLocalizedNames['kielivalikoima_' + yttab]}}"
+                 select="model.ytlang=yttab">
+            </tab>
+        </tabset>
 
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
-            </label>
-
-            <div class="controls">
-                <input id="htnimifi" type="text" name="htnimifi"
-                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_fi"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input id="htnimisv" type="text" name="htnimisv"
-                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_sv"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input id="htnimien" type="text" name="htnimien"
-                       ng-model="model.organisaatio.metadata.hakutoimistonNimi.kielivalikoima_en"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false"/>
-            </div>
-        </div>
-
-
-
-        <!-- TODO: käännä vertailu kun tabit tehty: model.mdyhteystietokieli === 'fi' -->
-        <div ng-if="model.mdyhteystietokieli !== 'fi'">
+        <!-- TODO: käännä vertailu kun tabit tehty: model.yhteystietokieli === 'fi' -->
+        <div ng-if="model.ytlang === 'fi'">
             <div class="control-group">
                 <label class="control-label">
                     {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <input id="mdkayntiosoitekv" type="text" maxlength="30" name="mdkayntiosoitekv"
-                           ng-model="model.mdyhteystiedot.kaynti.osoite" ng-change="model.copyAddress(true)"
+                    <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6"
+                           ng-model="model.yhteystiedot.kielivalikoima_fi.kaynti.osoite" ng-change="model.copyAddress(false)"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                     &nbsp;&nbsp;&nbsp;
-                    <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot.kaynti"
+                    <input id="kayntipostifi" name="kayntipostifi" type="text" ng-model="model.yhteystiedot.postinumerot.kaynti" class="span2"
                            typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                           typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot.kaynti, model.mdyhteystiedot.postinumerot.kaynti)">
-                    &nbsp;{{model.mdyhteystiedot.kaynti.postitoimipaikka}}
+                           typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.kielivalikoima_fi.kaynti, model.yhteystiedot.postinumerot.kaynti)">
+                    &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.kaynti)}}
                 </div>
             </div>
 
@@ -586,19 +334,19 @@
                     {{'Organisaationtarkastelu.postiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <input id="mdpostiosoitefi" type="text" maxlength="30" name="mdpostiosoitefi"
-                           ng-model="model.mdyhteystiedot.posti.osoite" ng-disabled="model.mdsamaosoite === true"
+                    <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi" class="span6"
+                           ng-model="model.yhteystiedot.kielivalikoima_fi.posti.osoite" ng-disabled="model.samaosoite === true"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                     &nbsp;&nbsp;&nbsp;
-                    <input id="mdpostipostifi" name="mdpostipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot.posti"
-                           ng-disabled="model.mdsamaosoite === true"
+                    <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot.posti" class="span2"
+                           ng-disabled="model.samaosoite === true"
                            typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                           typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot.posti, model.mdyhteystiedot.postinumerot.posti)">
-                    &nbsp;{{model.mdyhteystiedot.posti.postitoimipaikka}}
+                           typeahead-on-select="model.setPostinumero(false, model.yhteystiedot.kielivalikoima_fi.posti, model.yhteystiedot.postinumerot.posti)">
+                    &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot.posti)}}
                     <div>
-                        <input type='checkbox' ng-model="model.mdsamaosoite" ng-init="model.mdsamaosoite = false"
-                               ng-change="model.copyAddress(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                        <input type='checkbox' ng-model="model.samaosoite" ng-init="model.samaosoite = false"
+                               ng-change="model.copyAddress(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
                     </div>
                 </div>
             </div>
@@ -614,22 +362,22 @@
             </div>
         </div>
 
-        <!-- TODO: käännä vertailu kun tabit tehty: model.mdyhteystietokieli === 'sv' -->
-        <div ng-if="model.mdyhteystietokieli !== 'sv'">
+        <!-- TODO: käännä vertailu kun tabit tehty: model.yhteystietokieli === 'sv' -->
+        <div ng-if="model.ytlang === 'sv'">
             <div class="control-group">
                 <label class="control-label">
                     {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <input id="mdkayntiosoitesv" type="text" maxlength="30" name="mdkayntiosoitesv" ng-change="model.copyAddressSv(true)"
-                           ng-model="model.mdyhteystiedot.ruotsi_kaynti.osoite"
+                    <input id="kayntiosoitesv" type="text" maxlength="30" name="kayntiosoitesv" ng-change="model.copyAddressSv(false)"
+                           ng-model="model.yhteystiedot.kielivalikoima_sv.ruotsi_kaynti.osoite" class="span6"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}"/>
                     &nbsp;&nbsp;&nbsp;
-                    <input id="mdkayntipostisv" name="mdkayntipostisv" type="text" ng-model="model.mdyhteystiedot.postinumerot.ruotsi_kaynti"
+                    <input id="kayntipostisv" name="kayntipostisv" type="text" ng-model="model.yhteystiedot.postinumerot.ruotsi_kaynti" class="span2"
                            typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                           typeahead-on-select="model.setRuotsiPostinumero(true, model.mdyhteystiedot.ruotsi_kaynti, model.mdyhteystiedot.postinumerot.ruotsi_kaynti)">
-                    &nbsp;{{model.mdyhteystiedot.ruotsi_kaynti.postitoimipaikka}}
+                           typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.kielivalikoima_sv.ruotsi_kaynti, model.yhteystiedot.postinumerot.ruotsi_kaynti)">
+                    &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_kaynti)}}
                 </div>
             </div>
 
@@ -638,19 +386,19 @@
                     {{'Organisaationtarkastelu.postiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <input id="mdpostiosoitesv" type="text" maxlength="30" name="mdpostiosoitesv"
-                           ng-model="model.mdyhteystiedot.ruotsi_posti.osoite" ng-disabled="model.mdsamaosoitesv === true"
+                    <input id="postiosoitesv" type="text" maxlength="30" name="postiosoitesv" class="span6"
+                           ng-model="model.yhteystiedot.kielivalikoima_sv.ruotsi_posti.osoite" ng-disabled="model.samaosoitesv === true"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteruotsiksi'| i18n}}"/>
                     &nbsp;&nbsp;&nbsp;
-                    <input id="mdpostipostisv" name="mdpostipostisv" type="text" ng-model="model.mdyhteystiedot.postinumerot.ruotsi_posti"
-                           ng-disabled="model.mdsamaosoitesv === true"
+                    <input id="postipostisv" name="postipostisv" type="text" ng-model="model.yhteystiedot.postinumerot.ruotsi_posti" class="span2"
+                           ng-disabled="model.samaosoitesv === true"
                            typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                            ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                           typeahead-on-select="model.setRuotsiPostinumero(true, model.mdyhteystiedot.ruotsi_posti, model.mdyhteystiedot.postinumerot.ruotsi_posti)">
-                    &nbsp;{{model.mdyhteystiedot.ruotsi_posti.postitoimipaikka}}
+                           typeahead-on-select="model.setRuotsiPostinumero(false, model.yhteystiedot.kielivalikoima_sv.ruotsi_posti, model.yhteystiedot.postinumerot.ruotsi_posti)">
+                    &nbsp;{{model.getLocalizedPaikkaSv(model.yhteystiedot.postinumerot.ruotsi_posti)}}
                     <div>
-                        <input type='checkbox' ng-model="model.mdsamaosoitesv" ng-init="model.mdsamaosoitesv = false"
-                               ng-change="model.copyAddressSv(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                        <input type='checkbox' ng-model="model.samaosoitesv" ng-init="model.samaosoitesv = false"
+                               ng-change="model.copyAddressSv(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
                     </div>
                 </div>
             </div>
@@ -666,14 +414,14 @@
             </div>
         </div>
 
-        <div ng-if="model.mdyhteystietokieli !== 'fi' && model.mdyhteystietokieli !== 'sv'">
+        <div ng-if="model.ytlang === 'en'">
             <div class="control-group">
                 <label class="control-label">
                     {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <textarea id="mdkvkayntiosoite" name="mdkvkayntiosoite" rows="6" ng-model="model.mdyhteystiedot.ulkomainen_kaynti.osoite"
-                              ng-disabled="disabled" ng-change="model.copyAddressKv(true)"
+                    <textarea id="kvkayntiosoite" name="kvkayntiosoite" rows="6" ng-model="model.yhteystiedot.kielivalikoima_en.ulkomainen_kaynti.osoite"
+                              ng-disabled="disabled" ng-change="model.copyAddressKv(false)" class="span6"
                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
                 </div>
             </div>
@@ -682,12 +430,12 @@
                     {{'Organisaationtarkastelu.postiosoite'| i18n}}
                 </label>
                 <div class="controls">
-                    <textarea id="mdkvpostiosoite" name="mdkvpostiosoite" rows="6" ng-model="model.mdyhteystiedot.ulkomainen_posti.osoite"
-                              ng-disabled="model.mdsamaosoitekv === true"
+                    <textarea id="kvpostiosoite" name="kvpostiosoite" rows="6" ng-model="model.yhteystiedot.kielivalikoima_en.ulkomainen_posti.osoite"
+                              ng-disabled="model.samaosoitekv === true" class="span6"
                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
                     <div>
-                        <input type='checkbox' ng-model="model.mdsamaosoitekv" ng-init="model.mdsamaosoitekv = false"
-                               ng-change="model.copyAddressKv(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                        <input type='checkbox' ng-model="model.samaosoitekv" ng-init="model.samaosoitekv = false"
+                               ng-change="model.copyAddressKv(false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
                     </div>
                 </div>
             </div>
@@ -705,18 +453,398 @@
 
         <div class="control-group">
             <label class="control-label">
-                {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+                {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
             </label>
             <div class="controls">
-                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi"
-                       typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}"
-                       typeahead-on-select="model.setEctsNimi($item)">
-                <input id="ectsnimike" type="text" name="ectsnimike"
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}" ng-required="false" codes-combined-field/>
+                <input id="puhelinnumero" type="text" name="puhelinnumero"
+                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].puhelin.numero" oph-null-if-zero-length
+                       ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+                <div>
+                    <span class="text-error" ng-show="form.puhelinnumero.$error.pattern">
+                        {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                    </span>
+                </div>
             </div>
+        </div>
 
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.faksinumero'| i18n}}
+            </label>
+            <div class="controls">
+                <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
+                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].faksi.numero" oph-null-if-zero-length
+                       ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+                <div>
+                    <span class="text-error" ng-show="form.faksinumero.$error.pattern">
+                        {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <input id="sahkopostiosoite" type="email" name="sahkopostiosoite" class="span6"
+                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].email.email" oph-null-if-zero-length
+                       ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
+                <div>
+                    <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
+                        {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <input id="wwwosoite" type="text" name="wwwosoite" class="span6"
+                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].www.www" oph-null-if-zero-length
+                       ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+                <div>
+                    <span class="text-error" ng-show="form.wwwosoite.$error.codescombinedrequired">
+                        {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
+            <label class="control-label">
+                {{yttyyppi.nimi}}
+            </label>
+            <div class="controls well">
+                <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
+                     ng-form="ytForm">
+                    <label class="control-label">
+                        {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                    </label>
+                    <div class="controls">
+                        <input type="text" name="name"
+                               ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]==="true"'>
+                        <div>
+                            <span class="text-error" ng-show="ytForm.name.$error.required">
+                                {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+    </div> <!-- ytexpanded -->
+
+    <!-- HAKIJAPALVELUT --->
+
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="hpexpanded" ng-click="hpexpanded = !hpexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span> {{'Organisaationmuokkaus.hakijapalvelut'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="hpexpanded">
+        <tabset>
+            <tab select="model.hplang='+'">
+                <tab-heading>
+                    <span class="dropdown">
+                        <span class="icon-plus-sign dropdown-toggle"></span>
+                        <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                            <li
+                                ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                <a href="" ng-click="model.mkSections.hp.placeholder = kieli.uri;
+                                        model.addMkLang('hp')">{{kieli.nimi}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </tab-heading>
+            </tab>
+            <tab ng-repeat="tab in model.mkSections.hp.tabs"
+                 active="tab.active"
+                 select="model.hplang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('hp', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                </tab-heading>
+            </tab>
+        </tabset>
+        <div ng-if="model.hplang === '+'">
+            <div class="control-group">
+                <select id="maa" ng-model="model.mkSections.hp.placeholder"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                        ng-click="model.addMkLang('hp')">
+                    <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
+                </select>
+            </div>
+        </div>
+        <div ng-if="model.hplang !== '+'" ng-repeat='tab in model.mkSections.hp.tabs'>
+            <div ng-if='tab.lang === model.hplang'>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
+                    </label>
+
+                    <div class="controls">
+                        <input id="htnimifi" type="text" name="htnimifi" class="span6"
+                               ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]"
+                               ng-required="false"/>
+                    </div>
+                </div>
+
+                <div ng-if="model.hplang === 'kielivalikoima_fi'">
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6"
+                                   ng-model="model.mdyhteystiedot.kielivalikoima_fi.kaynti.osoite" ng-change="model.copyAddress(true)"/>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="kayntipostifi" name="kayntipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot.kaynti" class="span2"
+                                   typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                                   typeahead-editable="false"
+                                   typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot.kielivalikoima_fi.kaynti, model.mdyhteystiedot.postinumerot.kaynti)">
+                            &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot.kaynti)}}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi" class="span6"
+                                   ng-model="model.mdyhteystiedot.kielivalikoima_fi.posti.osoite" ng-disabled="model.mdsamaosoite === true"/>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="postipostifi" name="postipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot.posti" class="span2"
+                                   ng-disabled="model.mdsamaosoite === true"
+                                   typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                                   typeahead-editable="false"
+                                   typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot.kielivalikoima_fi.posti, model.mdyhteystiedot.postinumerot.posti)">
+                            &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot.posti)}}
+                            <div>
+                                <input type='checkbox' ng-model="model.mdsamaosoite" ng-init="model.mdsamaosoite = false"
+                                       ng-change="model.copyAddress(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group" ng-if="kayntiosoitefi.$error.addresscombinedrequired">
+                        <div class="controls">
+                            <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
+                            <span class="text-error" ng-show="osoitevirhe.$error.required">
+                                {{label| i18n}}
+                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="model.hplang === 'kielivalikoima_sv'">
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <input id="kayntiosoitesv" type="text" maxlength="30" name="kayntiosoitesv" ng-change="model.copyAddressSv(true)" class="span6"
+                                   ng-model="model.mdyhteystiedot.kielivalikoima_sv.ruotsi_kaynti.osoite"/>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="kayntipostisv" name="kayntipostisv" type="text" ng-model="model.mdyhteystiedot.postinumerot.ruotsi_kaynti" class="span2"
+                                   typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                                   typeahead-editable="false"
+                                   typeahead-on-select="model.setRuotsiPostinumero(true, model.mdyhteystiedot.kielivalikoima_sv.ruotsi_kaynti, model.mdyhteystiedot.postinumerot.ruotsi_kaynti)">
+                            &nbsp;{{model.getLocalizedPaikkaSv(model.mdyhteystiedot.postinumerot.ruotsi_kaynti)}}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <input id="postiosoitesv" type="text" maxlength="30" name="postiosoitesv" class="span6"
+                                   ng-model="model.mdyhteystiedot.kielivalikoima_sv.ruotsi_posti.osoite" ng-disabled="model.mdsamaosoitesv === true"/>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="postipostisv" name="postipostisv" type="text" ng-model="model.mdyhteystiedot.postinumerot.ruotsi_posti" class="span2"
+                                   ng-disabled="model.mdsamaosoitesv === true"
+                                   typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                                   typeahead-editable="false"
+                                   typeahead-on-select="model.setRuotsiPostinumero(true, model.mdyhteystiedot.kielivalikoima_sv.ruotsi_posti, model.mdyhteystiedot.postinumerot.ruotsi_posti)">
+                            &nbsp;{{model.getLocalizedPaikkaSv(model.mdyhteystiedot.postinumerot.ruotsi_posti)}}
+                            <div>
+                                <input type='checkbox' ng-model="model.mdsamaosoitesv" ng-init="model.mdsamaosoitesv = false"
+                                       ng-change="model.copyAddressSv(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group" ng-if="kayntiosoitesv.$error.addresscombinedrequired">
+                        <div class="controls">
+                            <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
+                            <span class="text-error" ng-show="osoitevirhe.$error.required">
+                                {{label| i18n}}
+                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="(model.hplang !== 'kielivalikoima_fi') && (model.hplang !== 'kielivalikoima_sv')">
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <textarea id="kvkayntiosoite" name="kvkayntiosoite" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
+                                      ng-disabled="disabled" ng-change="model.copyAddressKv(true)" class="span6"
+                                      ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">
+                            {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                        </label>
+                        <div class="controls">
+                            <textarea id="kvpostiosoite" name="kvpostiosoite" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
+                                      ng-disabled="model.mdsamaosoitekv === true" class="span6"
+                                      ie-placeholder placeholder="{{'Organisaationmuokkaus.osoiteenglanniksi'| i18n}}"></textarea>
+                            <div>
+                                <input type='checkbox' ng-model="model.mdsamaosoitekv" ng-init="model.mdsamaosoitekv = false"
+                                       ng-change="model.copyAddressKv(true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group" ng-if="kayntiosoitefi.$error.addresscombinedrequired">
+                        <div class="controls">
+                            <input type="hidden" name="osoitevirhe" ng-model="osoitevirhemodel" required>
+                            <span class="text-error" ng-show="osoitevirhe.$error.required">
+                                {{label| i18n}}
+                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="mdpuhelinnumero" type="text" name="mdpuhelinnumero"
+                               ng-model="model.mdyhteystiedot[model.hplang].puhelin.numero" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+                        <div>
+                            <span class="text-error" ng-show="form.mdpuhelinnumero.$error.pattern">
+                                {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="mdfaksinumero" type="text" maxlength="20" name="mdfaksinumero"
+                               ng-model="model.mdyhteystiedot[model.hplang].faksi.numero" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
+                        <div>
+                            <span class="text-error" ng-show="form.mdfaksinumero.$error.pattern">
+                                {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="mdsahkopostiosoite" type="email" name="mdsahkopostiosoite" class="span6"
+                               ng-model="model.mdyhteystiedot[model.hplang].email.email" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
+                        <div>
+                            <span class="text-error" ng-show="form.mdsahkopostiosoite.$error.email">
+                                {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="mdwwwosoite" type="text" name="mdwwwosoite" class="span6"
+                               ng-model="model.mdyhteystiedot[model.hplang].www.www" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+                        <div>
+                            <span class="text-error" ng-show="form.mdwwwosoite.$error.codescombinedrequired">
+                                {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <!-- ECTS-KOORDINAATTORI --->
+
+    <div class="row">
+        <div class="span4">
+            <div>
+                <a href="" ng-model="ectsexpanded" ng-click="ectsexpanded = !ectsexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':ectsexpanded, 'icon-chevron-right':!ectsexpanded}"></span> {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="ectsexpanded">
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
+            </label>
+            <div class="controls">
+                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi" class="span6"
+                       typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
+                       typeahead-on-select="model.setEctsNimi($item)">
+            </div>
+            </div>
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}
+            </label>
+            <div class="controls">
+                <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
+                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
+                       ng-required="false" codes-combined-field/>
+            </div>
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
@@ -725,25 +853,49 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}
+            </label>
             <div class="controls">
                 <input id="ectspuhelin" type="text" name="ectspuhelin"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}" ng-required="false" codes-combined-field/>
+                       ng-required="false" codes-combined-field/>
                 <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                     {{'codes.validation.codescombinedrequired'| i18n}}</span>
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}
+            </label>
             <div class="controls">
                 <div>
-                    <input id="ectsemail" type="text" name="ectsemail"
+                    <input id="ectsemail" type="text" name="ectsemail" class="span6"
                            ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail"
-                           ie-placeholder placeholder="{{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}" ng-required="false" codes-combined-field/>
+                           ng-required="false" codes-combined-field/>
                     <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
                         {{'codes.validation.codescombinedrequired'| i18n}}</span>
                 </div>
             </div>
         </div>
+        <hr>
+    </div> <!-- ectsexpanded -->
+
+    <!-- SOSIAALINEN MEDIA --->
+
+    <div class="row">
+        <div class="span4">
+            <div>
+                <a href="" ng-model="someexpanded" ng-click="someexpanded = !someexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':someexpanded, 'icon-chevron-right':!someexpanded}"></span> {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="someexpanded">
         <div class="control-group">
             <label class="control-label">
                 {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
@@ -770,76 +922,89 @@
                 </div>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.lisatiedot'| i18n}}
-            </label>
-            <div class="controls">
-                <tabset>
-                    <tab select="model.ktlang='+'">
-                        <tab-heading>
-                            <span class="dropdown">
-                                <span class="icon-plus-sign dropdown-toggle"></span>
-                                <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
-                                    <li
-                                        ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
-                                        <a href="" ng-click="model.koodisto.ktkieliplaceholder = kieli.uri;
-                                                    model.addKtLang()">{{kieli.nimi}}</a>
-                                    </li>
-                                </ul>
-                            </span>
-                        </tab-heading>
-                    </tab>
-                    <tab ng-repeat="tab in model.kttabs"
-                         active="tab.active"
-                         select="model.ktlang=tab.lang">
-                        <tab-heading>
-                            {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeKtLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                        </tab-heading>
-                    </tab>
-                </tabset>
-                <div ng-if="model.ktlang === '+'">
-                    <div class="control-group">
-                        <select id="maa" ng-model="model.koodisto.ktkieliplaceholder"
-                                ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
-                                ng-click="model.addKtLang()">
-                            <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div ng-if="model.ktlang !== '+'" ng-repeat='tab in model.kttabs'>
-                    <div ng-if='tab.lang === model.ktlang'>
 
-                        <div class="control-group" ng-repeat="field in model.kttypes">
-                            <label class="control-label">
-                                {{'Organisaationtarkastelu.' + field| i18n}}
-                            </label>
-                            <div class="controls">
-                                <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
-                            </div>
-                            <label class="control-label">&nbsp;</label>
-                            <div class="controls">
-                                <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
-                            </div>
-                        </div>
+        <hr>
+    </div> <!-- someexpanded -->
+
+
+    <!-- ORGANISAATION ESITTELY --->
+
+    <div class="row">
+        <div class="span4">
+            <div>
+                <a href="" ng-model="oesexpanded" ng-click="oesexpanded = !oesexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':oesexpanded, 'icon-chevron-right':!oesexpanded}"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="oesexpanded">
+        <tabset>
+            <tab select="model.ktlang='+'">
+                <tab-heading>
+                    <span class="dropdown">
+                        <span class="icon-plus-sign dropdown-toggle"></span>
+                        <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                            <li
+                                ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                <a href="" ng-click="model.mkSections.kt.placeholder = kieli.uri;
+                                        model.addMkLang('kt')">{{kieli.nimi}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </tab-heading>
+            </tab>
+            <tab ng-repeat="tab in model.mkSections.kt.tabs"
+                 active="tab.active"
+                 select="model.ktlang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('kt', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                </tab-heading>
+            </tab>
+        </tabset>
+        <div ng-if="model.ktlang === '+'">
+            <div class="control-group">
+                <select id="maa" ng-model="model.mkSections.kt.placeholder"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                        ng-click="model.addMkLang('kt')">
+                    <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
+                </select>
+            </div>
+        </div>
+        <div ng-if="model.ktlang !== '+'" ng-repeat='tab in model.mkSections.kt.tabs'>
+            <div ng-if='tab.lang === model.ktlang'>
+
+                <div class="control-group" ng-repeat="field in model.kttypes">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.' + field| i18n}}
+                    </label>
+                    <div class="controls">
+                        <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
+                    </div>
+                    <label class="control-label">&nbsp;</label>
+                    <div class="controls">
+                        <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
                     </div>
                 </div>
             </div>
         </div>
+
         <hr>
-    </div> <!-- ktexpanded -->
+    </div> <!-- oesexpanded -->
 
     <div class="view-row"></div>
+
+    <!-- OPISKELIJAN EDUT -->
 
     <div class="row">
         <div class="span4">
             <div class="view-row-label">
                 <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
-                    <label  ng-show="!oeexpanded">
-                        <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
-                    </label>
-                    <label ng-show="oeexpanded">
-                        <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                    <label>
+                        <span ng-class="{'icon-chevron-down':oeexpanded, 'icon-chevron-right':!oeexpanded}"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
                     </label>
                 </a>
             </div>
@@ -847,8 +1012,7 @@
     </div>
 
     <div ng-show="oeexpanded">
-        <div class="control-group">
-            <div class="controls">
+
                 <div>
                     <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
                 </div>
@@ -861,33 +1025,33 @@
                                 <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
                                     <li
                                         ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
-                                        <a href="" ng-click="model.koodisto.oekieliplaceholder = kieli.uri;
-                                                    model.addOeLang()">{{kieli.nimi}}</a>
+                                        <a href="" ng-click="model.mkSections.oe.placeholder = kieli.uri;
+                                                model.addMkLang('oe')">{{kieli.nimi}}</a>
                                     </li>
                                 </ul>
                             </span>
                         </tab-heading>
                     </tab>
-                    <tab ng-repeat="tab in model.oetabs"
+                    <tab ng-repeat="tab in model.mkSections.oe.tabs"
                          active="tab.active"
                          select="model.oelang=tab.lang">
                         <tab-heading>
-                            {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeOeLang($index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                            {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('oe', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
                         </tab-heading>
                     </tab>
                 </tabset>
 
                 <div ng-if="model.oelang === '+'">
                     <div class="control-group">
-                        <select id="maa" ng-model="model.koodisto.oekieliplaceholder"
+                        <select id="maa" ng-model="model.mkSections.oe.placeholder"
                                 ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
-                                ng-click="model.addOeLang()">
+                                ng-click="model.addMkLang('oe')">
                             <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
                         </select>
                     </div>
                 </div>
 
-                <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.oetabs'>
+                <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
                     <div ng-if='tab.lang === model.oelang'>
 
                         <div class="control-group" ng-repeat="field in model.oetypes">
@@ -904,8 +1068,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+
         <hr>
     </div> <!-- oeexpanded -->
 
