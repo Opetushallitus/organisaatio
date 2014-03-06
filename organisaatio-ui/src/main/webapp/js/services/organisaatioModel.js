@@ -161,6 +161,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             model.mkSections.kt.tabs[0].active = true;
                         }, 0);
                     }
+                    for (field in model.mkSections.kt.types) {
+                        if (!model.organisaatio.metadata.data[model.mkSections.kt.types[field]]) {
+                            model.organisaatio.metadata.data[model.mkSections.kt.types[field]] = {};
+                        }
+                    }
+
                     var oelangs = {'kielivalikoima_fi': true, 'kielivalikoima_sv': true, 'kielivalikoima_en': true};
                     for (var key in model.oetypes) {
                         for (var lang in result.metadata.data[model.oetypes[key]]) {
@@ -177,6 +183,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         $timeout(function() {
                             model.mkSections.oe.tabs[0].active = true;
                         }, 0);
+                    }
+                    for (field in model.mkSections.oe.types) {
+                        if (!model.organisaatio.metadata.data[model.mkSections.oe.types[field]]) {
+                            model.organisaatio.metadata.data[model.mkSections.oe.types[field]] = {};
+                        }
                     }
                 }
                 if (result.metadata.yhteystiedot) {
@@ -199,7 +210,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // Alusta objektit joita ei vielä ole asetettu, luo mäppäys modelYhteystiedoista
         // organisaatioYhteystietoihin yhteystiedon tyypin perusteella
         initYhteystiedot = function(organisaatioYhteystiedot, modelYhteystiedot) {
-            modelYhteystiedot.muu = [];
+            //modelYhteystiedot.muu = [];
+            modelYhteystiedot.kielivalikoima_fi = {};
+            modelYhteystiedot.kielivalikoima_sv = {};
+            modelYhteystiedot.kielivalikoima_en = {};
             for (var ytindex in organisaatioYhteystiedot) {
                 var yt = organisaatioYhteystiedot[ytindex];
                 var kieli = (yt.kieli === null ? 'kielivalikoima_fi' : yt.kieli);
