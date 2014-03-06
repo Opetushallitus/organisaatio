@@ -18,7 +18,6 @@
             <util:properties local-override="true">
                 <prop key="cas_mode">front</prop>
                 <prop key="cas_key">organisaatio-ui</prop>
-                <!-- TODO muodosta cas.service.organisaatio-ui -->
                 <prop key="cas_service">${cas.service.organisaatio-ui}</prop>
                 <prop key="spring_security_default_access">hasAnyRole('ROLE_APP_ORGANISAATIOHALLINTA, ROLE_APP_ORGANISAATIOHALLINTA_CRUD, ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ, ROLE_APP_ORGANISAATIOHALLINTA_READ_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE, ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.10.00000000001')</prop>
             </util:properties>
