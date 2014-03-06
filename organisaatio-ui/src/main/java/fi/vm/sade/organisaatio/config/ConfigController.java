@@ -20,7 +20,7 @@ public class ConfigController {
     @Value("${organisaatio-ui.koodisto-service-url.rest}")
     private String koodistoServiceRestURL;
 
-    @Value("${authentication-service.rest.url}")
+    @Value("${organisaatio-ui.authentication-service-url.rest}")
     private String authenticationServiceRestURL;
 
     @Value("${root.organisaatio.oid}")
