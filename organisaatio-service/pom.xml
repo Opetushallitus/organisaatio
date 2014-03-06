@@ -104,9 +104,9 @@
     <dependencies>
 
 	<dependency>
-                <groupId>org.jasig.cas</groupId>
+                <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-support-distributed-ehcache</artifactId>
-        </dependency>
+    </dependency>
 
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
