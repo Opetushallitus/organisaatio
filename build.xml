@@ -39,15 +39,20 @@
             <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-app/${pom.version}">
                 <include name="*-${pom.version}.war"/>
             </fileset>
+            <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-ui/${pom.version}">
+                <include name="*-${pom.version}.war"/>
+            </fileset>
         </scp>
 
-        <echo>unzip organisaatio-service.war</echo>
+        <echo>unzip organisaatio-*.war</echo>
         <sshexec command="
 				mkdir ${tomcat.home}/webapps/organisaatio-service;
 				mkdir ${tomcat.home}/webapps/organisaatio-app;
+				mkdir ${tomcat.home}/webapps/organisaatio-ui;
 				
 				unzip -qo -d${tomcat.home}/webapps/organisaatio-service ${tomcat.home}/webapps/organisaatio-service-*.war;
 				unzip -qo -d${tomcat.home}/webapps/organisaatio-app ${tomcat.home}/webapps/organisaatio-app-*.war;
+				unzip -qo -d${tomcat.home}/webapps/organisaatio-ui ${tomcat.home}/webapps/organisaatio-ui-*.war;
 				
 				rm -rf ${tomcat.home}/webapps/*.war"
 				
@@ -69,6 +74,7 @@
             <and>
                 <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service"/>
                 <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app"/>
+                <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-ui"/>
             </and>
         </waitfor>
         <fail message="organisaatio-service -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
@@ -82,6 +88,13 @@
             <condition>
                 <not>
                     <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app" />
+                </not>
+            </condition>
+        </fail>
+        <fail message="organisaatio-ui -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
+            <condition>
+                <not>
+                    <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-ui" />
                 </not>
             </condition>
         </fail>
