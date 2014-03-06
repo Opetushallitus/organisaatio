@@ -78,7 +78,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -91,7 +90,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
-@PreAuthorize("isAuthenticated()")
 public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);
