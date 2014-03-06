@@ -36,9 +36,6 @@
             <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-service/${pom.version}">
                 <include name="*-${pom.version}.war"/>
             </fileset>
-            <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-app/${pom.version}">
-                <include name="*-${pom.version}.war"/>
-            </fileset>
             <fileset dir="${maven.repo}/fi/vm/sade/organisaatio/organisaatio-ui/${pom.version}">
                 <include name="*-${pom.version}.war"/>
             </fileset>
@@ -47,11 +44,9 @@
         <echo>unzip organisaatio-*.war</echo>
         <sshexec command="
 				mkdir ${tomcat.home}/webapps/organisaatio-service;
-				mkdir ${tomcat.home}/webapps/organisaatio-app;
 				mkdir ${tomcat.home}/webapps/organisaatio-ui;
 				
 				unzip -qo -d${tomcat.home}/webapps/organisaatio-service ${tomcat.home}/webapps/organisaatio-service-*.war;
-				unzip -qo -d${tomcat.home}/webapps/organisaatio-app ${tomcat.home}/webapps/organisaatio-app-*.war;
 				unzip -qo -d${tomcat.home}/webapps/organisaatio-ui ${tomcat.home}/webapps/organisaatio-ui-*.war;
 				
 				rm -rf ${tomcat.home}/webapps/*.war"
@@ -73,7 +68,6 @@
         <waitfor maxwait="30000" checkevery="500" >
             <and>
                 <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service"/>
-                <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app"/>
                 <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-ui"/>
             </and>
         </waitfor>
@@ -81,13 +75,6 @@
             <condition>
                 <not>
                     <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-service" />
-                </not>
-            </condition>
-        </fail>
-        <fail message="organisaatio-app -webapp did not come up.  Check your log files, fix and try again.  Good Luck :-).">     
-            <condition>
-                <not>
-                    <http url="http://${tomcat-host}:${tomcat-port}/organisaatio-app" />
                 </not>
             </condition>
         </fail>
