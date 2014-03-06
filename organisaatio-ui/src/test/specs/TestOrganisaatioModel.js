@@ -89,6 +89,7 @@ describe("Testing OrganisaatioModel", function() {
     "nimi" : {
     },
     "yhteystiedot" : [ {
+      "kieli" : "kielivalikoima_fi",
       "osoiteTyyppi" : "posti",
       "yhteystietoOid" : "1.2.246.562.5.55555555555",
       "postinumeroUri" : "posti_00002",
@@ -103,6 +104,7 @@ describe("Testing OrganisaatioModel", function() {
       "osavaltio" : null,
       "extraRivi" : null
     }, {
+      "kieli" : "kielivalikoima_fi",
       "osoiteTyyppi" : "kaynti",
       "yhteystietoOid" : "1.2.246.562.5.44444444444",
       "postinumeroUri" : "posti_00002",
@@ -117,17 +119,21 @@ describe("Testing OrganisaatioModel", function() {
       "osavaltio" : null,
       "extraRivi" : null
     }, {
+      "kieli" : "kielivalikoima_fi",
       "tyyppi" : "faksi",
       "id" : "125419",
       "numero" : "01-7654321"
     }, {
+      "kieli" : "kielivalikoima_fi",
       "tyyppi" : "puhelin",
       "id" : "125420",
       "numero" : "01-1234567"
     }, {
+      "kieli" : "kielivalikoima_fi",
       "id" : "125421",
       "email" : "HT@testi.fi"
     }, {
+      "kieli" : "kielivalikoima_fi",
       "id" : "125422",
       "www" : "www.testi.fi"
     } ],

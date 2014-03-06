@@ -262,7 +262,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
                 }
             }
-        }
+        };
 
         finishModel = function() {
             if (model.organisaatio.yhteystiedot) {
