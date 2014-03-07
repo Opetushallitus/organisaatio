@@ -77,7 +77,7 @@ import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -409,7 +409,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
@@ -740,7 +740,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatio(String oid) {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
@@ -760,7 +760,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
@@ -861,7 +861,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String getRoles() {
         StringBuilder ret = new StringBuilder("[");
 
