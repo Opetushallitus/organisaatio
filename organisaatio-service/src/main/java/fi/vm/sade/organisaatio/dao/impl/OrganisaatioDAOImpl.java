@@ -751,4 +751,140 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid)).singleResult(org);
     }
+
+    @Override
+    public List<Organisaatio> findBySearchCriteria(
+            List<String> kieliList, 
+            List<String> kuntaList, 
+            List<String> oppilaitostyyppiList, 
+            List<String> vuosiluokkaList,
+            List<String> ytunnusList, 
+            int limit) {
+        
+        log.debug("findBySearchCriteria()");
+
+        QOrganisaatio org = QOrganisaatio.organisaatio;
+
+        // Ei oteta mukaan oph organisaatiota
+        BooleanExpression whereExpression = org.oid.ne(ophOid);
+
+        // Ei oteta mukaan poistettuja organisaatioita
+        whereExpression = whereExpression.and(org.organisaatioPoistettu.isFalse());
+
+        // Ei oteta mukaan suunniteltuja ja lakkautettuja organisaatioita
+        BooleanExpression voimassaOloExpr = getVoimassaoloExpression(false, false, org);
+        whereExpression = (voimassaOloExpr != null) ? whereExpression.and(voimassaOloExpr) : whereExpression;
+        
+        // Otetaan mukaan vain organisaatiot, joiden kieli on annetussa kielilistassa
+        BooleanExpression kieliExpr = getKieliExpression(org, kieliList);
+        whereExpression = (kieliExpr != null) ? whereExpression.and(kieliExpr) : whereExpression;
+
+        // Otetaan mukaan vain organisaatiot, joiden kotikunta on annetussa kuntalistassa
+        BooleanExpression kuntaExpr = getKuntaExpression(org, kuntaList);
+        whereExpression = (kuntaExpr != null) ? whereExpression.and(kuntaExpr) : whereExpression;
+
+        // Otetaan mukaan vain organisaatiot, joiden oppilaitostyyppi on annetussa oppilaitostyyppilistassa
+        BooleanExpression oppilaitostyyppiExpr = getOppilaitostyyppiExpression(org, oppilaitostyyppiList);
+        whereExpression = (oppilaitostyyppiExpr != null) ? whereExpression.and(oppilaitostyyppiExpr) : whereExpression;
+
+        // Otetaan mukaan vain organisaatiot, joiden y-tunnus on annetussa ytunnuslistassa
+        BooleanExpression ytunnusExpr = getYtunnusExpression(org, ytunnusList);
+        whereExpression = (ytunnusExpr != null) ? whereExpression.and(ytunnusExpr) : whereExpression;
+
+        // Otetaan mukaan vain organisaatiot, joiden vuosiluokissa esiintyy jokin annetusta vuosiluokkalistasta
+        BooleanExpression vuosiluokkaExpr = getVuosiluokkaExpression(org, vuosiluokkaList);
+        whereExpression = (vuosiluokkaExpr != null) ? whereExpression.and(vuosiluokkaExpr) : whereExpression;
+
+        
+        long qstarted = System.currentTimeMillis();
+
+        List<Organisaatio> organisaatiot = new JPAQuery(getEntityManager())
+                .from(org)
+                .where(whereExpression)
+                .distinct()
+                .limit(limit + 1)
+                .list(org);
+        
+        log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
+
+        for (int i = 0; i < organisaatiot.size(); ++i) {
+            log.debug("Organisaatio " + i + 
+                    " " + organisaatiot.get(i).getKotipaikka() + " " + organisaatiot.get(i).getNimihaku() + 
+                    " oid: " + organisaatiot.get(i).getOid() +
+                    " luokat: " + organisaatiot.get(i).getVuosiluokat());
+        }
+
+        return organisaatiot;
+    }
+    
+    private BooleanExpression getKieliExpression(QOrganisaatio qOrganisaatio, List<String> kieliList) {
+        if (kieliList == null || kieliList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression kieliExpr = qOrganisaatio.kielet.contains(kieliList.get(0));
+        if (kieliList.size() > 1) {
+            for (int i = 1; i < kieliList.size(); ++i) {
+                kieliExpr = kieliExpr.or(qOrganisaatio.kielet.contains(kieliList.get(i)));
+            }
+        }
+        return kieliExpr;
+    }
+
+    private BooleanExpression getKuntaExpression(QOrganisaatio qOrganisaatio, List<String> kuntaList) {
+        if (kuntaList == null || kuntaList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression kuntaExpr = qOrganisaatio.kotipaikka.eq(kuntaList.get(0));
+        if (kuntaList.size() > 1) {
+            for (int i = 1; i < kuntaList.size(); ++i) {
+                kuntaExpr = kuntaExpr.or(qOrganisaatio.kotipaikka.eq(kuntaList.get(i)));
+            }
+        }
+        return kuntaExpr;
+    }
+
+    private BooleanExpression getOppilaitostyyppiExpression(QOrganisaatio qOrganisaatio, List<String> oppilaitostyyppiList) {
+        if (oppilaitostyyppiList == null || oppilaitostyyppiList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression oppilaitostyyppiExpr = qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%").or(null);
+        if (oppilaitostyyppiList.size() > 1) {
+            for (int i = 1; i < oppilaitostyyppiList.size(); ++i) {
+                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%"));
+            }
+        }
+        return oppilaitostyyppiExpr;
+    }
+
+    private BooleanExpression getYtunnusExpression(QOrganisaatio qOrganisaatio, List<String> ytunnusList) {
+        if (ytunnusList == null || ytunnusList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression ytunnusExpr = qOrganisaatio.ytunnus.eq(ytunnusList.get(0));
+        if (ytunnusList.size() > 1) {
+            for (int i = 1; i < ytunnusList.size(); ++i) {
+                ytunnusExpr = ytunnusExpr.or(qOrganisaatio.ytunnus.eq(ytunnusList.get(i)));
+            }
+        }
+        return ytunnusExpr;
+    }
+
+    private BooleanExpression getVuosiluokkaExpression(QOrganisaatio qOrganisaatio, List<String> vuosiluokkaList) {
+        if (vuosiluokkaList == null || vuosiluokkaList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression vuosiluokkaExpr = qOrganisaatio.vuosiluokat.contains(vuosiluokkaList.get(0));
+        if (vuosiluokkaList.size() > 1) {
+            for (int i = 1; i < vuosiluokkaList.size(); ++i) {
+                vuosiluokkaExpr = vuosiluokkaExpr.or(qOrganisaatio.vuosiluokat.contains(vuosiluokkaList.get(i)));
+            }
+        }
+        return vuosiluokkaExpr;
+    }
+    
 }
