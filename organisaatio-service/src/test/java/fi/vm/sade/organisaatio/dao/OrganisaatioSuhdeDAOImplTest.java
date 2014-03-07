@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.dao;
 
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.log.client.LoggerHelper;
 import fi.vm.sade.log.client.LoggerMock;
 import fi.vm.sade.log.model.Tapahtuma;

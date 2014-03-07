@@ -15,7 +15,7 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.organisaatio.dao;
+package fi.vm.sade.organisaatio.dao.impl;
 
 import java.util.Collections;
 import java.util.List;

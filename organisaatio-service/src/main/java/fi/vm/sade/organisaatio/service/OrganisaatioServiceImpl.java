@@ -16,6 +16,12 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -29,7 +35,6 @@ import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.GenericFault;
 import fi.vm.sade.organisaatio.api.model.types.*;
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
-import fi.vm.sade.organisaatio.dao.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.lop.BinaryData;

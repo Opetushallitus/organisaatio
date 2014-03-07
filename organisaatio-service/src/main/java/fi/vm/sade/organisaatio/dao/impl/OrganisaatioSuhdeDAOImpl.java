@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.dao;
+package fi.vm.sade.organisaatio.dao.impl;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;

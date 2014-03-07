@@ -4,8 +4,8 @@ import java.lang.reflect.ParameterizedType;
 
 import javax.persistence.EntityManager;
 
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.model.OrganisaatioBaseEntity;
 
 /**

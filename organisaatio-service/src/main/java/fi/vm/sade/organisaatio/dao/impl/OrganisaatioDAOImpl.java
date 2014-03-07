@@ -14,7 +14,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.dao;
+package fi.vm.sade.organisaatio.dao.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -23,6 +23,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
@@ -49,7 +50,7 @@ import org.hibernate.criterion.LikeExpression;
  * @author mlyly
  */
 @Repository
-public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> {
+public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> implements OrganisaatioDAO {
 
     @Value("${root.organisaatio.oid}")
     private String ophOid;
