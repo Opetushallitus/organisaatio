@@ -188,7 +188,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         addToMapIfNotNULL(t, "extraRivi", s.getExtraRivi());
         addToMapIfNotNULL(t, "maaUri", s.getMaa());
         addToMapIfNotNULL(t, "osavaltio", s.getOsavaltio());
-        addToMapIfNotNULL(t, "osoite", s.getOsoite());
+        addToMapIfNotNULL(t, "osoite", s.getOsoite().replace("<br />", "\n"));
         addToMapIfNotNULL(t, "osoiteTyyppi", s.getOsoiteTyyppi());
         addToMapIfNotNULL(t, "postinumeroUri", s.getPostinumero());
         addToMapIfNotNULL(t, "postitoimipaikka", s.getPostitoimipaikka());

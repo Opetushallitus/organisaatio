@@ -155,7 +155,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             t.setOsavaltio(s.get("osavaltio"));
         }
         if (s.containsKey("osoite")) {
-            t.setOsoite(s.get("osoite"));
+            t.setOsoite(s.get("osoite").replace("\n", "<br />"));
         }
         if (s.containsKey("osoiteTyyppi")) {
             t.setOsoiteTyyppi(s.get("osoiteTyyppi"));
