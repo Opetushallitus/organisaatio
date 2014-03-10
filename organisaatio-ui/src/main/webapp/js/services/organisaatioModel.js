@@ -102,7 +102,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 placeholder: $filter('i18n')("lisaakieli"),
                 tabs: [],
                 types: [],
-                fields: [ 'hakutoimistonNimi' ]
+                fields: ['hakutoimistonNimi']
             },
             oe: {
                 placeholder: $filter('i18n')("lisaakieli"),
@@ -744,7 +744,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         for (var ytindex in model.organisaatio.metadata.yhteystiedot) {
                             var yt = model.organisaatio.metadata.yhteystiedot[ytindex];
                             if (yt.osoite) {
-                                var lang = (yt.kieli === null ? "kielivalikoima_fi" : yt_kieli);
+                                var lang = (yt.kieli === null ? "kielivalikoima_fi" : yt.kieli);
                                 if (yt.osoiteTyyppi === 'muu') {
                                     // Muita osoitteita voi olla useita, lisää listaan
                                     model.mdyhteystiedot.postinumerot[yt.osoiteTyyppi].push(arvoByUri[yt.postinumeroUri]);
@@ -926,8 +926,43 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+        clearAddress = function(address) {
+            if (address) {
+                for (var f in address) {
+                    // Tyhjennä, vain tyyppi ja kieli jää placeholderiin
+                    if (address.hasOwnProperty(f) && (f!=='osoiteTyyppi') && (f!=='kieli')) {
+                        address[f] = null;
+                    }
+                }
+            }
+        };
+
+        // Poistaa osoitetiedoista muut kuin valitun tyyppiset
+        // Parametri:
+        //      md - true: käsittele hakijapalveluiden yhteystietoja (metadata),
+        //           false: käsittele organisaation yhteystietoja
+        selectAddressType = function(md) {
+            var ytt = (md ? model.mdyhteystiedot : model.yhteystiedot);
+            var langs = (md ? model.mkSections.hp.tabs : [{lang:'fi'}, {lang:'sv'}, {lang:'en'}]);
+            for (var tab in langs) {
+                var kv_lang = (md ? langs[tab].lang : 'kielivalikoima_' + langs[tab].lang);
+                var yt = ytt[kv_lang];
+                if (model.osoitemuoto.yt[langs[tab].lang] === 'suomalainen') {
+                    clearAddress(yt.ulkomainen_kaynti);
+                    clearAddress(yt.ulkomainen_posti);
+                } else {
+                    clearAddress(yt.kaynti);
+                    clearAddress(yt.posti);
+                    clearAddress(yt.ruotsi_kaynti);
+                    clearAddress(yt.ruotsi_posti);
+                }
+            }
+        };
+
         this.persistOrganisaatio = function(orgForm) {
             formatDates();
+            selectAddressType(false);
+            selectAddressType(true);
             if (model.organisaatio.$post) {
                 Organisaatio.post(model.organisaatio, function(result) {
                     //console.log(result);
@@ -1293,9 +1328,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             var sama = (md ? model.osoitemuoto.hpsamaosoite[model.hplang] : model.osoitemuoto.ytsamaosoite[model.ytlang]);
             var ytp = (md ? model.mdyhteystiedot : model.yhteystiedot);
             var lang = (md ? model.hplang : 'kielivalikoima_' + model.ytlang);
-            $log.debug(sama);
             if (sama === true) {
-                $log.debug(suomalainen);
                 if (suomalainen === true) {
                     // kopioi suomalainen osoitemuoto
                     if (!('posti' in ytp[lang])) {
@@ -1306,12 +1339,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             ytp[lang].posti[kentta] = ytp[lang].kaynti[kentta];
                         }
                     }
-                    $log.debug(ytp.postinumerot);
                     if (ytp.postinumerot[lang].kaynti) {
                         ytp.postinumerot[lang].posti = ytp.postinumerot[lang].kaynti;
                     }
-                } else {
-                    // kopioi kansainvälinen osoitemuoto
+                } else {                     // kopioi kansainvälinen osoitemuoto
                     if (!('ulkomainen_posti' in ytp[lang])) {
                         ytp[lang].ulkomainen_posti = {};
                     }
@@ -1327,8 +1358,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.addAddress = function() {
             if (model.organisaatio.yhteystiedot) {
                 var uusiYt = {
-                    osoiteTyyppi: 'muu',
-                    postinumeroUri: null, postitoimipaikka: null, osoite: null
+                    osoiteTyyppi: 'muu', postinumeroUri: null, postitoimipaikka: null, osoite: null
                 };
                 model.organisaatio.yhteystiedot.push(uusiYt);
                 model.yhteystiedot.muu.push(uusiYt);
@@ -1344,8 +1374,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.addKtAddress = function() {
             if (model.organisaatio.metadata && model.organisaatio.metadata.yhteystiedot) {
                 var uusiYt = {
-                    osoiteTyyppi: 'muu',
-                    postinumeroUri: null, postitoimipaikka: null, osoite: null
+                    osoiteTyyppi: 'muu', postinumeroUri: null, postitoimipaikka: null, osoite: null
                 };
                 model.organisaatio.metadata.yhteystiedot.push(uusiYt);
                 model.mdyhteystiedot.muu.push(uusiYt);

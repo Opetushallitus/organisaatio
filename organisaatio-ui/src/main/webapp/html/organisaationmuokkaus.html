@@ -335,7 +335,7 @@
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6"
                        ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
-                       ie-placeholder placeholder="{{model.ytlang}}"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="kayntipostifi" name="kayntipostifi" type="text"
                        ng-model="model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].kaynti" class="span2"
@@ -553,11 +553,12 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdkayntiosoitefi" type="text" maxlength="30" name="mdkayntiosoitefi" class="span6"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                               typeahead-editable="false"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                                typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
                         &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti)}}
                     </div>
@@ -572,12 +573,13 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdpostiosoitefi" type="text" maxlength="30" name="mdpostiosoitefi" class="span6"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdpostipostifi" name="mdpostipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
                                ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                               typeahead-editable="false"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
                                typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
                         &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti)}}
                         <div>
