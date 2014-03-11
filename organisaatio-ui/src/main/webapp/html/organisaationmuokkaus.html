@@ -310,8 +310,8 @@
     <div ng-show="ytexpanded">
 
         <tabset>
-            <tab ng-repeat="yttab in ['fi', 'sv', 'en']"
-                 heading="{{model.uriLocalizedNames['kielivalikoima_' + yttab]}}"
+            <tab ng-repeat="yttab in model.yttabs"
+                 heading="{{model.uriLocalizedNames[yttab]}}"
                  select="model.ytlang=yttab">
             </tab>
         </tabset>
@@ -334,18 +334,18 @@
             </label>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
+                       ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="kayntipostifi" name="kayntipostifi" type="text"
-                       ng-model="model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].kaynti" class="span2"
+                       ng-model="model.yhteystiedot.postinumerot[model.ytlang].kaynti" class="span2"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot['kielivalikoima_'+model.ytlang].kaynti, model.yhteystiedot.postinumerot['kielivalikoima_'+model.ytlang].kaynti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].kaynti)}}
+                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti)}}
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].ulkomainen_kaynti.osoite"
+                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
                           ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"/>
             </div>
         </div>
@@ -355,23 +355,23 @@
             </label>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi" class="span6"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].posti.osoite"
+                       ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
-                <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].posti" class="span2"
+                <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot['kielivalikoima_' + model.ytlang].posti, model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].posti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot['kielivalikoima_' + model.ytlang].posti)}}
+                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti)}}
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
                            ng-change="model.copyAddress(false, true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
                 </div>
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].ulkomainen_posti.osoite"
+                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"/>
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
