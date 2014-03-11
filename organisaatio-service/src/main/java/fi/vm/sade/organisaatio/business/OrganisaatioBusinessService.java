@@ -38,5 +38,6 @@ public interface OrganisaatioBusinessService {
             List<String> oppilaitostyyppiList,
             List<String> vuosiluokkaList,
             List<String> ytunnusList,
+            List<String> oidList,
             int limit);
 }

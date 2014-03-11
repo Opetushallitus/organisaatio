@@ -52,6 +52,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOppilaitostyyppiList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getVuosiluokkaList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getYtunnusList());
+        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
         
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
@@ -62,6 +63,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
                 hakuEhdot.getOppilaitostyyppiList(),
                 hakuEhdot.getVuosiluokkaList(),
                 hakuEhdot.getYtunnusList(),
+                hakuEhdot.getOidList(),
                 hakuEhdot.getLimit()), OrganisaatioYhteystiedotDTOV2.class);
     }
 

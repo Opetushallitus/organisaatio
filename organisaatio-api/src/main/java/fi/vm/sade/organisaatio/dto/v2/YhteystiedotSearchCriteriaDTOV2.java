@@ -48,6 +48,11 @@ public class YhteystiedotSearchCriteriaDTOV2 {
     // Esim. ["vuosiluokat_1","vuosiluokat_2"]
     private List<String> vuosiluokkaList = new ArrayList<String>();
 
+    // Palautettavien organisaatioiden oidit.
+    // Lista oid:ja.
+    // Esim. ["1.2.246.562.10.195703655110","1.2.246.562.10.22439399159"]
+    private List<String> oidList = new ArrayList<String>();
+
     // Hakutuloksen määrän rajoite.
     private int limit;
     
@@ -141,6 +146,20 @@ public class YhteystiedotSearchCriteriaDTOV2 {
      */
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    /**
+     * @return the oidList
+     */
+    public List<String> getOidList() {
+        return oidList;
+    }
+
+    /**
+     * @param oidList the oidList to set
+     */
+    public void setOidList(List<String> oidList) {
+        this.oidList = oidList;
     }
     
 }

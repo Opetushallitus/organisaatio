@@ -759,6 +759,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             List<String> oppilaitostyyppiList, 
             List<String> vuosiluokkaList,
             List<String> ytunnusList, 
+            List<String> oidList,
             int limit) {
         
         log.debug("findBySearchCriteria()");
@@ -795,23 +796,27 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         BooleanExpression vuosiluokkaExpr = getVuosiluokkaExpression(org, vuosiluokkaList);
         whereExpression = (vuosiluokkaExpr != null) ? whereExpression.and(vuosiluokkaExpr) : whereExpression;
 
+        // Otetaan mukaan vain organisaatiot, joiden oid  esiintyy annetussa oidlistassa
+        BooleanExpression oidExpr = getOidExpression(org, oidList);
+        whereExpression = (oidExpr != null) ? whereExpression.and(oidExpr) : whereExpression;        
         
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = new JPAQuery(getEntityManager())
                 .from(org)
                 .where(whereExpression)
-                .distinct()
+                //.distinct()
                 .limit(limit + 1)
                 .list(org);
         
         log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
         for (int i = 0; i < organisaatiot.size(); ++i) {
-            log.debug("Organisaatio " + i + 
+            log.debug("Organisaatio " + i + " " + organisaatiot.get(i).getNimi().getValues() +
                     " " + organisaatiot.get(i).getKotipaikka() + " " + organisaatiot.get(i).getNimihaku() + 
                     " oid: " + organisaatiot.get(i).getOid() +
-                    " luokat: " + organisaatiot.get(i).getVuosiluokat());
+                    " luokat: " + organisaatiot.get(i).getVuosiluokat() +
+                    " kielet: " + organisaatiot.get(i).getKielet());
         }
 
         return organisaatiot;
@@ -885,6 +890,20 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             }
         }
         return vuosiluokkaExpr;
+    }
+
+    private BooleanExpression getOidExpression(QOrganisaatio qOrganisaatio, List<String> oidList) {
+        if (oidList == null || oidList.isEmpty()) {
+            return null;
+        }
+        
+        BooleanExpression oidExpr = qOrganisaatio.oid.eq(oidList.get(0));
+        if (oidList.size() > 1) {
+            for (int i = 1; i < oidList.size(); ++i) {
+                oidExpr = oidExpr.or(qOrganisaatio.oid.eq(oidList.get(i)));
+            }
+        }
+        return oidExpr;
     }
     
 }

@@ -41,6 +41,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
             List<String> oppilaitostyyppiList,
             List<String> vuosiluokkaList,
             List<String> ytunnusList,
+            List<String> oidList,
             int limit);
     
 }

@@ -41,9 +41,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             List<String> oppilaitostyyppiList, 
             List<String> vuosiluokkaList, 
             List<String> ytunnusList,
+            List<String> oidList,
             int limit) {
         
-        return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, limit);
+        return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
     }
     
 }
