@@ -64,6 +64,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param parentId
      * @return
      */
+    @Override
     public List<Organisaatio> findChildren(Long parentId) {
         log.debug("findChildren({})", parentId);
 
@@ -118,6 +119,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return findBy("domainNimi", domainNimi);
     }
 
+    /**
+     *
+     * @param ytunnus
+     * @return
+     */
+    @Override
     public boolean isYtunnusAvailable(String ytunnus) {
         return ((Number) getEntityManager()
                 .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=? AND organisaatiopoistettu IS NOT NULL")
@@ -370,6 +377,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return voimassaoloExpr;
     }
 
+    @Override
     public Organisaatio findByOid(String oid) {
         log.debug("findByOid({})", oid);
 
@@ -657,8 +665,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * findParentsTo(g) -> a c
      * </pre>
      *
+     * @param oid
      * @return
      */
+    @Override
     public List<Organisaatio> findParentsTo(String oid) {
         log.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);

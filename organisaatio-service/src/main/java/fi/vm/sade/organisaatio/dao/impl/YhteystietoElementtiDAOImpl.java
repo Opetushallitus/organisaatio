@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 
 /**
@@ -35,11 +36,12 @@ import fi.vm.sade.organisaatio.model.YhteystietoElementti;
  * @author mlyly
  */
 @Repository
-public class YhteystietoElementtiDAOImpl extends AbstractJpaDAOImpl<YhteystietoElementti, Long> {
+public class YhteystietoElementtiDAOImpl extends AbstractJpaDAOImpl<YhteystietoElementti, Long> implements YhteystietoElementtiDAO {
     
     @Autowired
     private YhteystietojenTyyppiDAOImpl yttDao;
 
+    @Override
     public List<YhteystietoElementti> findAllKaytossa() {
 //        Query query = getEntityManager().createQuery("SELECT x FROM YhteystietoElementti x where x.kaytossa = true");
 //        return query.getResultList();
@@ -56,6 +58,7 @@ public class YhteystietoElementtiDAOImpl extends AbstractJpaDAOImpl<YhteystietoE
         return getEntityManager().createQuery(query).getResultList();
     }
 
+    @Override
     public List<YhteystietoElementti> findByLisatietoIdAndKentanNimi(String yhteystietojenTyyppiOid, String kentanNimi) {
         
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

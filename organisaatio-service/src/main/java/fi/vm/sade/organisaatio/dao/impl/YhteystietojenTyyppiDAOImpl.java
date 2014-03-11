@@ -25,13 +25,15 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 
 /**
  * @author Antti Salonen
  */
 @Repository
-public class YhteystietojenTyyppiDAOImpl extends AbstractJpaDAOImpl<YhteystietojenTyyppi, Long> {
+public class YhteystietojenTyyppiDAOImpl extends AbstractJpaDAOImpl<YhteystietojenTyyppi, Long> implements YhteystietojenTyyppiDAO {
 
     // TODO rename findLisatietoMetadataForOrganisaatioTyyppis
     
@@ -44,6 +46,7 @@ public class YhteystietojenTyyppiDAOImpl extends AbstractJpaDAOImpl<Yhteystietoj
             "SELECT distinct ol FROM YhteystietojenTyyppi ol " + 
             "join fetch ol.sovellettavatOppilaitostyyppis as so WHERE so in (:organisaatioTyyppis)";
     
+    @Override
     public List<YhteystietojenTyyppi> findLisatietoMetadataForOrganisaatio(Collection<String> organisaatioTyyppis) {
         
         // TODO: vaihda käyttämään criteria apia JPA2 jälkeen

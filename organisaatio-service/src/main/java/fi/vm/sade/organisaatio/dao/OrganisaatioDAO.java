@@ -43,5 +43,30 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
             List<String> ytunnusList,
             List<String> oidList,
             int limit);
+
+    public Organisaatio findByOid(String oid);
+
+    /**
+     * Return parent org oids to org, optimized for the auth use.
+     *
+     * Parents are returned in "root first" order.
+     * <pre>
+     * Example: a (b c (f g)) (d e)
+     * findParentsTo(g) -> a c
+     * </pre>
+     *
+     * @return
+     */
+    List<Organisaatio> findParentsTo(String oid);
+
+    /**
+     * Find the children of given parent organisation.
+     *
+     * @param parentId
+     * @return
+     */
+    List<Organisaatio> findChildren(Long parentId);
+
+    boolean isYtunnusAvailable(String ytunnus);
     
 }

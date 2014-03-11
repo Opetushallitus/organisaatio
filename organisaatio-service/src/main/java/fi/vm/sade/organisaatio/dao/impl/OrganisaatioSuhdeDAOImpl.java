@@ -12,11 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPASubQuery;
 import com.mysema.query.types.expr.BooleanExpression;
-
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +23,7 @@ import java.util.List;
  * @author mlyly
  */
 @Repository
-public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuhde, Long> {
+public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuhde, Long> implements OrganisaatioSuhdeDAO {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioSuhdeDAOImpl.class);
 
@@ -69,6 +66,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      * @param atTime  null == now
      * @return parent relation at given time - there can be only one.
      */
+    @Override
     public OrganisaatioSuhde findParentTo(Long childId, Date atTime) {
         if (atTime == null) {
             atTime = new Date();
@@ -99,6 +97,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      * @param atTime   null == now
      * @return list of child relations at given time
      */
+    @Override
     public List<OrganisaatioSuhde> findChildrenTo(Long parentId, Date atTime) {
         if (parentId == null) {
             throw new IllegalArgumentException("parentId == null");
@@ -143,6 +142,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      * @param startingFrom null == now
      * @return created relation
      */
+    @Override
     public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro) {
         LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
 
@@ -174,14 +174,14 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
     /**
-     * Updates exisiting parent-child relation for give parent-child.
+     * Updates existing parent-child relation for give parent-child.
      * If parent is null ANY valid relation for child will be dated to be ended.
      *
      * @param parentId
      * @param childId
      * @param removalDate
-     * @return terminated parent relation
      */
+    @Override
     public void removeChild(Long parentId, Long childId, Date removalDate) {
         LOG.info("removeChild(pId={}, cId={}, t={})", new Object[]{parentId, childId, removalDate});
 

@@ -25,10 +25,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
@@ -37,12 +37,10 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
  * @author Antti Salonen
  */
 @Repository
-public class YhteystietoArvoDAOImpl extends AbstractJpaDAOImpl<YhteystietoArvo, Long> {
-    
-    @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
+public class YhteystietoArvoDAOImpl extends AbstractJpaDAOImpl<YhteystietoArvo, Long> implements YhteystietoArvoDAO {
     
     @SuppressWarnings("unchecked")
+    @Override
 	public List<YhteystietoArvo> findByOrganisaatio(Organisaatio org) {
     	if (org.getId()==null) {
     		return Collections.emptyList();
@@ -52,6 +50,7 @@ public class YhteystietoArvoDAOImpl extends AbstractJpaDAOImpl<YhteystietoArvo, 
     		.getResultList();
     }
     
+    @Override
     public YhteystietoArvo findByOrganisaatioAndNimi(String organisaatioOid, String nimi) {
         
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -81,6 +80,7 @@ public class YhteystietoArvoDAOImpl extends AbstractJpaDAOImpl<YhteystietoArvo, 
      * @param yhteystietojenTyyppi the yhteystietojen tyyppi given
      * @return the yhteystietoarvo objects matching the given yhteystietojen tyyppi
      */
+    @Override
 	public List<YhteystietoArvo> findByYhteystietojenTyyppi(
 			YhteystietojenTyyppi yhteystietojenTyyppi) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
