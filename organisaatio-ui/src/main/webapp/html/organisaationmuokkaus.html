@@ -386,7 +386,7 @@
             </label>
             <div class="controls">
                 <input id="puhelinnumero" type="text" name="puhelinnumero"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].puhelin.numero" oph-null-if-zero-length
+                       ng-model="model.yhteystiedot[model.ytlang].puhelin.numero" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                 <div>
                     <span class="text-error" ng-show="form.puhelinnumero.$error.pattern">
@@ -403,7 +403,7 @@
             </label>
             <div class="controls">
                 <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].faksi.numero" oph-null-if-zero-length
+                       ng-model="model.yhteystiedot[model.ytlang].faksi.numero" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                 <div>
                     <span class="text-error" ng-show="form.faksinumero.$error.pattern">
@@ -420,7 +420,7 @@
             </label>
             <div class="controls">
                 <input id="sahkopostiosoite" type="email" name="sahkopostiosoite" class="span6"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].email.email" oph-null-if-zero-length
+                       ng-model="model.yhteystiedot[model.ytlang].email.email" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
                 <div>
                     <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
@@ -437,7 +437,7 @@
             </label>
             <div class="controls">
                 <input id="wwwosoite" type="text" name="wwwosoite" class="span6"
-                       ng-model="model.yhteystiedot['kielivalikoima_' + model.ytlang].www.www" oph-null-if-zero-length
+                       ng-model="model.yhteystiedot[model.ytlang].www.www" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
                 <div>
                     <span class="text-error" ng-show="form.wwwosoite.$error.codescombinedrequired">

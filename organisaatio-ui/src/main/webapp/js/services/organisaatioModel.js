@@ -364,7 +364,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
                 model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
-                convertToOpetuskieliKoodisto();
 
                 Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                     model.uriLocalizedNames["parentnimi"] = getLocalizedValue(parentResult.nimi, "", false);
@@ -681,8 +680,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 KoodistoOpetuskielet.get({}, function(result) {
                     model.koodisto.opetuskielet.length = 0;
                     result.forEach(function(kieliKoodi) {
-                        model.koodisto.opetuskielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
-                        model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
+                        var uri = kieliKoodi.koodiUri + "#" + kieliKoodi.versio;
+                        model.koodisto.opetuskielet.push({uri: uri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
+                        model.uriLocalizedNames[uri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
                     });
                     // jos ytj:stä saatu organisaatioon liittyvää tietoa --> päivitetään kieli
                     model.addYtjLang();
@@ -1031,38 +1031,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-        // Korvaa kielivalikoima-koodiston mukaiset kieliurit opetuskieli-koodiston vastaavalla urilla jos löytyy
-        convertToOpetuskieliKoodisto = function() {
-            var kielivalikoimaToOpetuskieli = {
-                "kielivalikoima_fi": "oppilaitoksenopetuskieli_1",
-                "kielivalikoima_sv": "oppilaitoksenopetuskieli_2",
-                "kielivalikoima_en": "oppilaitoksenopetuskieli_4",
-                "kielivalikoima_se": "oppilaitoksenopetuskieli_5",
-                "kielivalikoima_xx": "oppilaitoksenopetuskieli_9"
-            };
-            var muuLoydetty = false;
-            var len = model.organisaatio.kieletUris.length;
-            while (len--) {
-                vanhaKieli = model.organisaatio.kieletUris[len];
-                if (vanhaKieli.indexOf("kielivalikoima_") === 0) {
-                    var uusiKieli = kielivalikoimaToOpetuskieli[vanhaKieli] || "oppilaitoksenopetuskieli_9";
-                    model.organisaatio.kieletUris[len] = uusiKieli;
-                    if (uusiKieli === "oppilaitoksenopetuskieli_9") {
-                        if (muuLoydetty) {
-                            // poistetaan koska muu kieli on jo listassa
-                            model.organisaatio.kieletUris.splice(len, 1);
-                        } else {
-                            muuLoydetty = true;
-                        }
-                    }
-                }
-            }
-        };
-
         this.addLang = function() {
             if (model.organisaatio.kieletUris.indexOf(model.koodisto.kieliplaceholder) === -1) {
                 if (model.koodisto.kieliplaceholder && (model.koodisto.kieliplaceholder !== $filter('i18n')("lisaakieli"))) {
-                    convertToOpetuskieliKoodisto();
                     model.organisaatio.kieletUris.push(model.koodisto.kieliplaceholder);
                 }
             }
