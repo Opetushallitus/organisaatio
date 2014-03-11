@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
 
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
@@ -131,7 +132,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     
     @Override
     public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
-        //Tarkistetaan OID
+        // Tarkistetaan OID
         if (model.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
         } else if (!updating) {
@@ -161,7 +162,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("validation.Organisaatio.virastotunnus");
         }
         
-        //Setting the parent paths
+        // Validointi: koodistoureissa pitää olla versiotieto
+        checkVersionInKoodistoUris(model);
+        
+        // Setting the parent paths
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
@@ -175,7 +179,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         createParentPath(entity, model.getParentOid());
         
-        //Generating the opetuspiteenJarjNro
+        // Generating the opetuspiteenJarjNro
         String opJarjNro = null;
         if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, model);
@@ -183,22 +187,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             opJarjNro = model.getOpetuspisteenJarjNro();
         }
         
-        //If inserting, check if ytunnus allready exists in the database
+        // If inserting, check if ytunnus allready exists in the database
         if (!updating && entity.getYtunnus() != null) {
             checkYtunnusIsUniqueAndNotUsed(entity.getYtunnus());
         }
         
         entity.setOrganisaatioPoistettu(false);
-        //Check if organization has parent and if it has check that passivation dates match to parent
+        
+        // Check if organization has parent and if it has check that passivation dates match to parent
         Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
                 ? organisaatioDAO.findByOid(model.getParentOid()) : null;
         
-        //OVT-4765 do not validate start date against parent date when updating
+        // OVT-4765 do not validate start date against parent date when updating
         if (updating) {
             LOG.info("this is an update, not validating parent dates.");
             skipParentDateValidation = true;
         }
-        //OH-116
+        
+        // OH-116
         if (parentOrg != null) {
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(skipParentDateValidation);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
@@ -239,9 +245,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity = organisaatioDAO.insert(entity);
         }
         
-        /*
-        * Saving the parent relationship
-        */
+        // Saving the parent relationship
         if (parentOrg == null) {
             // Koulutustoimija in root level is stored under OPH
             Organisaatio uberParent = organisaatioDAO.findByOid(rootOrganisaatioOid);
@@ -253,7 +257,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
         
-        //index to solr
+        // Index to solr
         solrIndexer.index(Lists.newArrayList(entity));
         
         return entity;
@@ -531,6 +535,28 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
+    }
+
+    private void checkVersionInKoodistoUris(OrganisaatioRDTO model) {
+        // kotipaikka
+        
+        // maa
+        
+        // kielet
+        for (int i = 0; i < model.getKieletUris().size(); ++i) {
+            if (model.getKieletUris().get(i).matches("^.*#[0-9]+$") == false) {
+                LOG.warn("KoodistoUri versiotieto puuttuu organisaation kieleltä: " + model.getKieletUris().get(i));
+                throw new NoVersionInKoodistoUriException();
+            }
+        }
+                
+        // oppilaitostyyppi
+        
+        // yhteystieto.postinumer
+        
+        // yhteystieto.kieli
+        
+        
     }
     
 }
