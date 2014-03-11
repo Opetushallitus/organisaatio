@@ -267,20 +267,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                 muoto[kieli] = 'suomalainen';
                             }
                         }
-                        if (osoiteTyyppi.indexOf('ruotsi_') !== -1) {
-                            // vanhat ruotsi_* osoitetyypit liittyvät aina
-                            // ruotsinkieliseen osoitteeseen
-                            // Konvertoidaan uuteen muotoon
-                            yt.kieli = 'kielivalikoima_sv';
-                            modelYhteystiedot[yt.kieli][osoiteTyyppi] = yt;
-                            osoiteTyyppi = osoiteTyyppi.substr(osoiteTyyppi.indexOf("_")+1);
-                        } else if (yt.kieli === null) {
-                            // Uudella UI:lla tallennetussa osoitteessa voi
-                            // tyyppinä olla posti/käynti/ulkomainen_* ja
-                            // kielenä muu kuin suomi, joten aseta kieli vain
-                            // jos ei ole jo asetettu (vanhat yhteystiedot)
-                            yt.kieli = 'kielivalikoima_fi';
-                        }
                         modelYhteystiedot[yt.kieli][osoiteTyyppi] = yt;
                     }
                 } else if (yt.numero) {
@@ -740,9 +726,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                 // Muita osoitteita voi olla useita, lisää listaan
                                 model.yhteystiedot.postinumerot.kielivalikoima_fi[yt.osoiteTyyppi].push(arvoByUri[yt.postinumeroUri]);
                             } else {
-                                if (yt.osoiteTyyppi.indexOf('ruotsi_') !== -1) {
-                                    lang = "kielivalikoima_sv";
-                                }
                                 model.yhteystiedot.postinumerot[lang][yt.osoiteTyyppi] = arvoByUri[yt.postinumeroUri];
                             }
                         }
@@ -762,9 +745,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                     // Muita osoitteita voi olla useita, lisää listaan
                                     model.mdyhteystiedot.postinumerot[yt.osoiteTyyppi].push(arvoByUri[yt.postinumeroUri]);
                                 } else {
-                                    if (yt.osoiteTyyppi.indexOf('ruotsi_') !== -1) {
-                                        lang = "kielivalikoima_sv";
-                                    }
                                     model.mdyhteystiedot.postinumerot[lang][yt.osoiteTyyppi] = arvoByUri[yt.postinumeroUri];
                                 }
                             }
@@ -966,8 +946,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 } else {
                     clearAddress(yt.kaynti);
                     clearAddress(yt.posti);
-                    clearAddress(yt.ruotsi_kaynti);
-                    clearAddress(yt.ruotsi_posti);
                 }
             }
         };
