@@ -205,7 +205,18 @@ public class OrganisationHierarchyValidatorTest {
     @Test
     public void testToplevelOppilaitos() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                null,
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderOPH() {
+        assertResult(
+                root,
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
                 false,
                 validator,
