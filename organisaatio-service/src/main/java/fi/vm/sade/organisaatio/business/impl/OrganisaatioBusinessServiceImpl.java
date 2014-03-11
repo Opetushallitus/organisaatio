@@ -555,6 +555,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // yhteystieto.postinumer
         
         // yhteystieto.kieli
+        for (int i = 0; i < model.getYhteystiedot().size(); ++i) {
+            if (model.getYhteystiedot().get(i).containsKey("kieli")) {
+                if (model.getYhteystiedot().get(i).get("kieli").matches("^.*#[0-9]+$") == false) {
+                    LOG.warn("KoodistoUri versiotieto puuttuu yhteystiedon kieleltä: " + model.getKieletUris().get(i));
+                    throw new NoVersionInKoodistoUriException();
+                }
+            }
+        }
         
         
     }
