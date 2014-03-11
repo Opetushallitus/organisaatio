@@ -114,7 +114,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
-    
+    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
     
     @Override
     @Transactional(readOnly = true)
@@ -544,21 +544,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         
         // kielet
         for (int i = 0; i < model.getKieletUris().size(); ++i) {
-            if (model.getKieletUris().get(i).matches("^.*#[0-9]+$") == false) {
-                LOG.warn("KoodistoUri versiotieto puuttuu organisaation kieleltä: " + model.getKieletUris().get(i));
+            if (model.getKieletUris().get(i).matches(uriWithVersionRegExp) == false) {
+                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + model.getKieletUris().get(i));
                 throw new NoVersionInKoodistoUriException();
             }
         }
                 
         // oppilaitostyyppi
+        if (isEmpty(model.getOppilaitosTyyppiUri()) == false) {
+            if (model.getOppilaitosTyyppiUri().matches(uriWithVersionRegExp) == false) {
+                LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + model.getOppilaitosTyyppiUri());
+                throw new NoVersionInKoodistoUriException();
+            }
+        }
         
-        // yhteystieto.postinumer
+        // yhteystieto.postinumero
         
         // yhteystieto.kieli
         for (int i = 0; i < model.getYhteystiedot().size(); ++i) {
             if (model.getYhteystiedot().get(i).containsKey("kieli")) {
-                if (model.getYhteystiedot().get(i).get("kieli").matches("^.*#[0-9]+$") == false) {
-                    LOG.warn("KoodistoUri versiotieto puuttuu yhteystiedon kieleltä: " + model.getKieletUris().get(i));
+                if (model.getYhteystiedot().get(i).get("kieli").matches(uriWithVersionRegExp) == false) {
+                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + model.getYhteystiedot().get(i).get("kieli"));
                     throw new NoVersionInKoodistoUriException();
                 }
             }
