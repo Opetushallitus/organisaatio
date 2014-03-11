@@ -42,6 +42,8 @@
         </property>
     </bean>
 
+    <bean id="modelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
+
     <!--
         Enable @Scheduled annotations
     -->

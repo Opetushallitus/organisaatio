@@ -17,13 +17,17 @@ package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import fi.vm.sade.generic.service.conversion.SadeConversionService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
+import java.lang.reflect.Type;
 import java.util.Date;
 
 import java.util.List;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,10 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     @Autowired
     private SadeConversionService conversionService;
         
+    @Autowired
+    private OrganisaatioModelMapper modelMapper;
+
+    
     @Override
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getKieliList());
@@ -57,14 +65,20 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
         
-        return conversionService.convertAll(organisaatioBusinessService.findBySearchCriteria(
+        List<Organisaatio> organisaatiot = organisaatioBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
                 hakuEhdot.getOppilaitostyyppiList(),
                 hakuEhdot.getVuosiluokkaList(),
                 hakuEhdot.getYtunnusList(),
                 hakuEhdot.getOidList(),
-                hakuEhdot.getLimit()), OrganisaatioYhteystiedotDTOV2.class);
+                hakuEhdot.getLimit());
+
+        // Define the target list type for mapping
+        Type organisaatioYhteystiedotDTOV2ListType = new TypeToken<List<OrganisaatioYhteystiedotDTOV2>>() {}.getType();
+
+        // Map domain type to DTO
+        return modelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
     }
 
     @Override

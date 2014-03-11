@@ -15,11 +15,140 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author simok
  */
 public class OrganisaatioYhteystiedotDTOV2 {
     
-    protected String oid;
+    private String oid;
+    
+    private Map<String, String> nimi;
+    
+    private List<String> tyypit;
+
+    private List<String> kielet; 
+    
+    private String kotipaikka;
+    
+    // Organisaatiotunniste saadaan vaikka näin --> CONCAT(oppilaitoskoodi, ytunnus, toimipistekoodi) as organisaatio_nro,
+    private String oppilaitosKoodi;
+    private String ytunnus;
+    private String toimipisteKoodi;
+
+    
+    /**
+     * @return the oid
+     */
+    public String getOid() {
+        return oid;
+    }
+
+    /**
+     * @param oid the oid to set
+     */
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
+    /**
+     * @return the nimi
+     */
+    public Map<String, String> getNimi() {
+        return nimi;
+    }
+
+    /**
+     * @param nimi the nimi to set
+     */
+    public void setNimi(Map<String, String> nimi) {
+        this.nimi = nimi;
+    }
+
+    /**
+     * @return the tyypit
+     */
+    public List<String> getTyypit() {
+        return tyypit;
+    }
+
+    /**
+     * @param tyypit the tyypit to set
+     */
+    public void setTyypit(List<String> tyypit) {
+        this.tyypit = tyypit;
+    }
+
+    /**
+     * @return the kotipaikka
+     */
+    public String getKotipaikka() {
+        return kotipaikka;
+    }
+
+    /**
+     * @param kotipaikka the kotipaikka to set
+     */
+    public void setKotipaikka(String kotipaikka) {
+        this.kotipaikka = kotipaikka;
+    }
+
+    /**
+     * @return the toimipistekoodi
+     */
+    public String getToimipisteKoodi() {
+        return toimipisteKoodi;
+    }
+
+    /**
+     * @param toimipisteKoodi the toimipistekoodi to set
+     */
+    public void setToimipisteKoodi(String toimipisteKoodi) {
+        this.toimipisteKoodi = toimipisteKoodi;
+    }
+
+    /**
+     * @return the kielet
+     */
+    public List<String> getKielet() {
+        return kielet;
+    }
+
+    /**
+     * @param kielet the kielet to set
+     */
+    public void setKielet(List<String> kielet) {
+        this.kielet = kielet;
+    }
+
+    /**
+     * @return the ytunnus
+     */
+    public String getYtunnus() {
+        return ytunnus;
+    }
+
+    /**
+     * @param ytunnus the ytunnus to set
+     */
+    public void setYtunnus(String ytunnus) {
+        this.ytunnus = ytunnus;
+    }
+
+    /**
+     * @return the oppilaitosKoodi
+     */
+    public String getOppilaitosKoodi() {
+        return oppilaitosKoodi;
+    }
+
+    /**
+     * @param oppilaitosKoodi the oppilaitosKoodi to set
+     */
+    public void setOppilaitosKoodi(String oppilaitosKoodi) {
+        this.oppilaitosKoodi = oppilaitosKoodi;
+    }
 }

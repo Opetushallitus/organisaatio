@@ -277,6 +277,11 @@
             <artifactId>querydsl-apt</artifactId>
             <version>${querydsl.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
 
         <!-- todo: depsukat, pelkän jettyn takia tämän joutuu urheilemaan näin.. -->
         <dependency>
