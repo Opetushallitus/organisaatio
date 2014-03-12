@@ -566,11 +566,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      */
                     sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["01", "05"],
-                        'Koulutustoimija': ["02", "03", "04"],
-                        'Oppilaitos': ["03", "04"],
-                        'Opetuspiste': ["03", "04"],
-                        'Oppisopimustoimipiste': ["03", "04"]};
+                        'Muu organisaatio': ["05", "03"],
+                        'Koulutustoimija': ["02", "04"],
+                        'Oppilaitos': ["03"],
+                        'Opetuspiste': ["03"],
+                        'Oppisopimustoimipiste': []};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
@@ -582,6 +582,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                                     model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
                                     localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                                 }
+                            } else if (model.organisaatio.parentOid === model.OPHOid
+                                    && orgTyyppiKoodi.koodiArvo === "01") {
+                                model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
+                                localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                             }
 
                             if (orgTyyppiKoodi.koodiArvo === "01") {
