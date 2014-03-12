@@ -254,8 +254,7 @@
             {{'Organisaationtarkastelu.kieli'| i18n}}*
         </label>
         <div class="controls">
-            <span ng-repeat="kieli in model.organisaatio.kieletUris" >
-                <!--span class="removabletag">{{model.uriLocalizedNames[kieli]}}</span-->
+            <span ng-repeat="kieli in model.organisaatio.kieletUris">
                 <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli);
                                 form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
@@ -491,16 +490,7 @@
         <tabset>
             <tab select="model.hplang='+'">
                 <tab-heading>
-                    <span class="dropdown">
-                        <span class="icon-plus-sign dropdown-toggle"></span>
-                        <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
-                            <li
-                                ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
-                                <a href="" ng-click="model.mkSections.hp.placeholder = kieli.uri;
-                                                model.addMkLang('hp')">{{kieli.nimi}}</a>
-                            </li>
-                        </ul>
-                    </span>
+                    <span class="icon-plus-sign"></span>
                 </tab-heading>
             </tab>
             <tab ng-repeat="tab in model.mkSections.hp.tabs"
@@ -514,7 +504,7 @@
         <div ng-if="model.hplang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.hp.placeholder"
-                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.isokielet | orderBy:'nimi'" ng-required="false"
                         ng-click="model.addMkLang('hp')">
                     <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
                 </select>

@@ -279,10 +279,18 @@ return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=
   });
 });
 
-// Kielten haku koodistopalvelulta
+// Kielivalikoiman haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/kielivalikoima/koodi
-app.factory('KoodistoKielet', function($resource) {
+app.factory('KoodistoKielivalikoima', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/kielivalikoima/koodi?onlyValidKoodis=true", {}, {
+    get: {method: "GET", isArray: true}
+  });
+});
+
+// ISO-kielilistan haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/kieli/koodi
+app.factory('KoodistoKieli', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/kieli/koodi?onlyValidKoodis=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });
