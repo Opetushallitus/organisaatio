@@ -385,7 +385,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') and isAuthenticated()")
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
@@ -404,7 +404,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') and isAuthenticated()")
     public String deleteOrganisaatio(String oid) {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
@@ -424,7 +424,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') and isAuthenticated()")
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
