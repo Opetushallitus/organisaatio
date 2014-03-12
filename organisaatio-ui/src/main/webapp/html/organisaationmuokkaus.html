@@ -796,7 +796,7 @@
                         <span class="icon-plus-sign dropdown-toggle"></span>
                         <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
                             <li
-                                ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.kt.placeholder = kieli.uri;
                                                 model.addMkLang('kt')">{{kieli.nimi}}</a>
                             </li>
@@ -815,7 +815,7 @@
         <div ng-if="model.ktlang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.kt.placeholder"
-                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.isokielet | orderBy:'nimi'" ng-required="false"
                         ng-click="model.addMkLang('kt')">
                     <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
                 </select>
@@ -871,7 +871,7 @@
                         <span class="icon-plus-sign dropdown-toggle"></span>
                         <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
                             <li
-                                ng-repeat="kieli in model.koodisto.kielet| orderBy:'nimi'">
+                                ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.oe.placeholder = kieli.uri;
                                                 model.addMkLang('oe')">{{kieli.nimi}}</a>
                             </li>
@@ -891,7 +891,7 @@
         <div ng-if="model.oelang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.oe.placeholder"
-                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.kielet | orderBy:'nimi'" ng-required="false"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.isokielet | orderBy:'nimi'" ng-required="false"
                         ng-click="model.addMkLang('oe')">
                     <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
                 </select>

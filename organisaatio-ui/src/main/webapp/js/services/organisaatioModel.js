@@ -1,5 +1,5 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
-        KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat, KoodistoKielivalikoima,
+        KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, YhteystietoMetadata, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
         HenkiloKayttooikeus, KoodistoKieli, $filter, $log, $timeout) {
@@ -14,7 +14,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             oppilaitostyypit: [],
             kotipaikat: [],
             maat: [],
-            kielet: [],
+            //kielet: [],
             isokielet: [],
             opetuskielet: [],
             vuosiluokat: [],
@@ -128,18 +128,19 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // fi-lokaalilla esim:
         //   func({ "fi" : "Suomenkielinen nimi"}, "") => "Suomenkielinen nimi"
         //   func({ "kielivalikoima_fi" : "Suomenkielinen nimi"}, "kielivalikoima_") => "Suomenkielinen nimi"
+        //   func({ "kieli_fi#1" : "Suomenkielinen nimi"}, "kielivalikoima_", "#1") => "Suomenkielinen nimi"
         // sv-lokaalilla esim:
         //   func({ "fi" : "Suomenkielinen nimi"}, "") => "Suomenkielinen nimi"
         //   func({ "fi" : "Suomenkielinen nimi" , "sv" : "Samma på svenska"}, "") => "Samma på svenska"
-        getLocalizedValue = function(res, prefix, create, language) {
+        getLocalizedValue = function(res, prefix, suffix, create, language) {
             var lang = (language ? language : KoodistoKoodi.getLanguage().toLowerCase());
             var ret = "";
             if (res) {
-                ret = res[prefix + lang];
+                ret = res[prefix + lang + suffix];
                 if (!ret) {
                     if (create) {
-                        res[prefix + lang] = "";
-                        return res[prefix + lang];
+                        res[prefix + lang + suffix] = "";
+                        return res[prefix + lang + suffix];
                     } else {
                         // Palauta ensimmäinen arvo
                         for (i in res) {
@@ -165,19 +166,19 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.mkSections.oe.tabs.length = 0;
             if (result.metadata) {
                 model.uriLocalizedNames["hakutoimistonNimi"] =
-                        getLocalizedValue(result.metadata.hakutoimistonNimi, "kielivalikoima_", false);
+                        getLocalizedValue(result.metadata.hakutoimistonNimi, "kieli_", "#1", false);
                 // Alusta nimikentät jos ei asetettu
                 if (!result.metadata.hakutoimistonNimi) {
                     result.metadata.hakutoimistonNimi = {};
                 }
-                var nlangs = {'kielivalikoima_fi': true, 'kielivalikoima_sv': true, 'kielivalikoima_en': true};
+                var nlangs = {'kieli_fi#1': true, 'kieli_sv#1': true, 'kieli_en#1': true};
                 for (var lang in nlangs) {
                     if (!result.metadata.hakutoimistonNimi[lang]) {
                         result.metadata.hakutoimistonNimi[lang] = null;
                     }
                 }
                 if (result.metadata.data) {
-                    var ktlangs = {'kielivalikoima_fi': true, 'kielivalikoima_sv': true, 'kielivalikoima_en': true};
+                    var ktlangs = {'kieli_fi#1': true, 'kieli_sv#1': true, 'kieli_en#1': true};
                     for (var key in model.kttypes) {
                         for (var lang in result.metadata.data[model.kttypes[key]]) {
                             if (result.metadata.data[model.kttypes[key]].hasOwnProperty(lang)) {
@@ -200,7 +201,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         }
                     }
 
-                    var oelangs = {'kielivalikoima_fi': true, 'kielivalikoima_sv': true, 'kielivalikoima_en': true};
+                    var oelangs = {'kieli_fi#1': true, 'kieli_sv#1': true, 'kieli_en#1': true};
                     for (var key in model.oetypes) {
                         for (var lang in result.metadata.data[model.oetypes[key]]) {
                             if (result.metadata.data[model.oetypes[key]].hasOwnProperty(lang)) {
@@ -348,10 +349,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             // haetaan organisaation tiedot
             Organisaatio.get({oid: oid}, function(result) {
                 model.organisaatio = result;
-                model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", false);
+                model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", "", false);
 
                 Organisaatio.get({oid: result.parentOid}, function(parentResult) {
-                    model.uriLocalizedNames["parentnimi"] = getLocalizedValue(parentResult.nimi, "", false);
+                    model.uriLocalizedNames["parentnimi"] = getLocalizedValue(parentResult.nimi, "", "", false);
                     model.parenttype = parentResult.tyypit[0];
                     model.parent = parentResult;
 
@@ -402,7 +403,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             if (result.metadata.data.hasOwnProperty(key)) {
                                 for (var lang in result.metadata.data[key]) {
                                     if (result.metadata.data[key].hasOwnProperty(lang)) {
-                                        koodiUris[lang] = (lang.indexOf("kielivalikoima_") === 0);
+                                        koodiUris[lang] = (lang.indexOf("kieli_") === 0);
                                     }
                                 }
                             }
@@ -469,7 +470,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (aliOrgList) {
                 for (var j = 0; j < aliOrgList.length; j++) {
                     if (!aliOrgList[j].lakkautusPvm) {
-                        model.aliorganisaatiot.push({nimi: getLocalizedValue(aliOrgList[j].nimi, ""), oid: aliOrgList[j].oid, level: level});
+                        model.aliorganisaatiot.push({nimi: getLocalizedValue(aliOrgList[j].nimi, "", ""), oid: aliOrgList[j].oid, level: level});
                         addAliorganisaatio(aliOrgList[j].children, level + 1);
                     }
                 }
@@ -650,18 +651,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     // maita ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-                KoodistoKielivalikoima.get({}, function(result) {
-                    model.koodisto.kielet.length = 0;
-                    result.forEach(function(kieliKoodi) {
-                        if (['97', 'VK'].indexOf(kieliKoodi.koodiArvo) === -1) {
-                            model.koodisto.kielet.push({uri: kieliKoodi.koodiUri, arvo: kieliKoodi.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(kieliKoodi)});
-                            model.uriLocalizedNames[kieliKoodi.koodiUri] = KoodistoKoodi.getLocalizedName(kieliKoodi);
-                        }
-                    });
-                }, function(response) {
-                    // kieliä ei löytynyt
-                    showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
-                });
                 KoodistoKieli.get({}, function(result) {
                     model.koodisto.isokielet.length = 0;
                     result.forEach(function(kieliKoodi) {
@@ -811,7 +800,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.maaUri = "maatjavaltiot1_fin";
 
             Organisaatio.get({oid: parentoid}, function(result) {
-                model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", false);
+                model.uriLocalizedNames["parentnimi"] = getLocalizedValue(result.nimi, "", "", false);
                 model.parenttype = result.tyypit[0];
                 model.parent = result;
 

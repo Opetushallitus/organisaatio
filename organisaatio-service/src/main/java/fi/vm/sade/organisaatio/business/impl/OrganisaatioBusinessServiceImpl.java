@@ -542,6 +542,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         
         // maa
         
+        // metadata.hakutoimistonNimi
+        // metadata.data
+
         // kielet
         for (int i = 0; i < model.getKieletUris().size(); ++i) {
             if (model.getKieletUris().get(i).matches(uriWithVersionRegExp) == false) {
