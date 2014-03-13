@@ -332,12 +332,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
         showAndLogError = function(msg, response) {
-            Alert.add("error", $filter('i18n')(msg, ""), false);
-            $log.error(msg + " (status: " + response.status + ")");
-        };
-
-        showAndExitError = function(msg, response) {
-            Alert.add("error", $filter('i18n')(msg, ""), false);
+            model.alert = Alert.add("error", $filter('i18n')(msg, ""), false);
             $log.error(msg + " (status: " + response.status + ")");
         };
 
@@ -967,6 +962,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         orgForm.$setPristine();
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
+                    Alert.closeAlert(model.alert);
                     refresh(model.organisaatio.oid);
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
@@ -979,6 +975,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         orgForm.$setPristine();
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
+                    Alert.closeAlert(model.alert);
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
