@@ -47,9 +47,6 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioBusinessService organisaatioBusinessService;
     
     @Autowired
-    private SadeConversionService conversionService;
-        
-    @Autowired
     private OrganisaatioModelMapper modelMapper;
 
     
