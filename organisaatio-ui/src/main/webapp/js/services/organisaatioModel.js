@@ -410,8 +410,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         }
                     }
                     if (result.oppilaitosTyyppiUri) {
-                        koodiUris[result.oppilaitosTyyppiUri] = true;                     // Poistetaan lopusta #x jotta editointi toimii
-                        model.organisaatio.oppilaitosTyyppiUri = model.organisaatio.oppilaitosTyyppiUri.split("#")[0];
+                        koodiUris[result.oppilaitosTyyppiUri] = true;
                     }
 
                     // Poistetaan versiotieto vuosiluokat-listasta
@@ -615,7 +614,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.koodisto.oppilaitostyypit.length = 0;
                     result.forEach(function(olTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(olTyyppiKoodi)) {
-                            model.koodisto.oppilaitostyypit.push({uri: olTyyppiKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(olTyyppiKoodi)});
+                            model.koodisto.oppilaitostyypit.push({uri: olTyyppiKoodi.koodiUri + "#" + olTyyppiKoodi.versio, nimi: KoodistoKoodi.getLocalizedName(olTyyppiKoodi)});
                         }
                     });
                 }, function(response) {
@@ -1260,7 +1259,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 if (model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1) {
                     tyyppi = model.organisaatio.oppilaitosTyyppiUri;
                     if (tyyppi) {
-                        return (tyyppi === "oppilaitostyyppi_11" || tyyppi === "oppilaitostyyppi_12" || tyyppi === "oppilaitostyyppi_19");
+                        return (tyyppi === "oppilaitostyyppi_11#1" || tyyppi === "oppilaitostyyppi_12#1" || tyyppi === "oppilaitostyyppi_19#1");
                     }
                 }
             }
