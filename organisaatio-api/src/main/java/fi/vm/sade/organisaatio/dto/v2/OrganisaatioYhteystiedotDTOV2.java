@@ -39,6 +39,10 @@ public class OrganisaatioYhteystiedotDTOV2 {
     private String ytunnus;
     private String toimipisteKoodi;
 
+    private List<OsoiteDTOV2> postiosoite;
+
+    private List<OsoiteDTOV2> kayntiosoite;
+
     
     /**
      * @return the oid
@@ -150,5 +154,33 @@ public class OrganisaatioYhteystiedotDTOV2 {
      */
     public void setOppilaitosKoodi(String oppilaitosKoodi) {
         this.oppilaitosKoodi = oppilaitosKoodi;
+    }
+
+    /**
+     * @return the postiosoite
+     */
+    public List<OsoiteDTOV2> getPostiosoite() {
+        return postiosoite;
+    }
+
+    /**
+     * @param postiosoite the postiosoite to set
+     */
+    public void setPostiosoite(List<OsoiteDTOV2> postiosoite) {
+        this.postiosoite = postiosoite;
+    }
+
+    /**
+     * @return the kayntiosoite
+     */
+    public List<OsoiteDTOV2> getKayntiosoite() {
+        return kayntiosoite;
+    }
+
+    /**
+     * @param kayntiosoite the kayntiosoite to set
+     */
+    public void setKayntiosoite(List<OsoiteDTOV2> kayntiosoite) {
+        this.kayntiosoite = kayntiosoite;
     }
 }

@@ -15,7 +15,6 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
-import fi.vm.sade.generic.service.conversion.SadeConversionService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
@@ -32,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -49,8 +49,8 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     @Autowired
     private OrganisaatioModelMapper modelMapper;
 
-    
     @Override
+    @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getKieliList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getKuntaList());
