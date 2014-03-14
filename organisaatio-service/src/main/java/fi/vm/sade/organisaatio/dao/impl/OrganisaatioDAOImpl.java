@@ -831,7 +831,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         return organisaatiot;
     }
-    
+
     private BooleanExpression getKieliExpression(QOrganisaatio qOrganisaatio, List<String> kieliList) {
         if (kieliList == null || kieliList.isEmpty()) {
             return null;
@@ -865,10 +865,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             return null;
         }
         
-        BooleanExpression oppilaitostyyppiExpr = qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%").or(null);
+        BooleanExpression oppilaitostyyppiExpr = qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%");
         if (oppilaitostyyppiList.size() > 1) {
             for (int i = 1; i < oppilaitostyyppiList.size(); ++i) {
-                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%"));
+                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(i) + "#%"));
             }
         }
         return oppilaitostyyppiExpr;
