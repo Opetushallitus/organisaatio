@@ -17,13 +17,18 @@ package fi.vm.sade.organisaatio.dto.mapping;
 
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OsoiteDTOV2;
+import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Osoite;
+import fi.vm.sade.organisaatio.model.Puhelinnumero;
+import fi.vm.sade.organisaatio.model.Www;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.service.util.YhteystietoUtil;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -73,6 +78,73 @@ public class OrganisaatioModelMapper extends ModelMapper {
             }
         };
 
+        // wwwOsoiteConverter
+        final Converter<List<Yhteystieto>, Map<String, String>> wwwOsoiteConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
+            @Override
+            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
+                List<Www> wwwOsoitteet = YhteystietoUtil.getWwwOsoitteet(mc.getSource());
+
+                // Tehdään map, jossa avaimena kieli ja arvone www osoite
+                Map<String, String> wwwOsoiteMap = new HashMap<String, String>();
+
+                for (Www www : wwwOsoitteet) {
+                    wwwOsoiteMap.put(www.getKieli(), www.getWwwOsoite());
+                }                
+                
+                return wwwOsoiteMap;
+            }
+        };
+
+        // wwwOsoiteConverter
+        final Converter<List<Yhteystieto>, Map<String, String>> emailOsoiteConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
+            @Override
+            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
+                List<Email> emailOsoitteet = YhteystietoUtil.getEmailOsoitteet(mc.getSource());
+
+                // Tehdään map, jossa avaimena kieli ja arvona email osoite
+                Map<String, String> emailOsoiteMap = new HashMap<String, String>();
+
+                for (Email email : emailOsoitteet) {
+                    emailOsoiteMap.put(email.getKieli(), email.getEmail());
+                }                
+                
+                return emailOsoiteMap;
+            }
+        };
+
+        // puhelinnumeroConverter
+        final Converter<List<Yhteystieto>, Map<String, String>> puhelinnumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
+            @Override
+            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
+                List<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
+
+                // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
+                Map<String, String> puhelinnumeroMap = new HashMap<String, String>();
+
+                for (Puhelinnumero numero : puhelinnumerot) {
+                    puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
+                }                
+                
+                return puhelinnumeroMap;
+            }
+        };
+        
+        // faksinumeroConverter
+        final Converter<List<Yhteystieto>, Map<String, String>> faksinumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
+            @Override
+            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
+                List<Puhelinnumero> faksinumerot = YhteystietoUtil.getFaksinumerot(mc.getSource());
+
+                // Tehdään map, jossa avaimena kieli ja arvone faksinumero
+                Map<String, String> faksinumeroMap = new HashMap<String, String>();
+
+                for (Puhelinnumero numero : faksinumerot) {
+                    faksinumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
+                }                
+                
+                return faksinumeroMap;
+            }
+        };
         
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
@@ -85,6 +157,19 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 // Käyntiosoite
                 using(kayntiOsoiteConverter).map(source.getYhteystiedot()).setKayntiosoite(null);
+                
+                // Puhelinnumero
+                using(puhelinnumeroConverter).map(source.getYhteystiedot()).setPuhelinnumero(null);
+
+                // Puhelinnumero
+                using(faksinumeroConverter).map(source.getYhteystiedot()).setFaksinumero(null);
+
+                // WWW-osoite
+                using(wwwOsoiteConverter).map(source.getYhteystiedot()).setWwwOsoite(null);
+
+                // Email-osoite
+                using(emailOsoiteConverter).map(source.getYhteystiedot()).setEmailOsoite(null);
+
             }
         });
     }

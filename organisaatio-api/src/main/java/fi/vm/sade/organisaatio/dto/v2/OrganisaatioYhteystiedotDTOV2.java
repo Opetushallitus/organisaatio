@@ -43,6 +43,14 @@ public class OrganisaatioYhteystiedotDTOV2 {
 
     private List<OsoiteDTOV2> kayntiosoite;
 
+    private Map<String, String> puhelinnumero;
+
+    private Map<String, String> faksinumero;
+
+    private Map<String, String> wwwOsoite;
+
+    private Map<String, String> emailOsoite;
+    
     
     /**
      * @return the oid
@@ -182,5 +190,61 @@ public class OrganisaatioYhteystiedotDTOV2 {
      */
     public void setKayntiosoite(List<OsoiteDTOV2> kayntiosoite) {
         this.kayntiosoite = kayntiosoite;
+    }
+
+    /**
+     * @return the puhelinnumero
+     */
+    public Map<String, String> getPuhelinnumero() {
+        return puhelinnumero;
+    }
+
+    /**
+     * @param puhelinnumero the puhelinnumero to set
+     */
+    public void setPuhelinnumero(Map<String, String> puhelinnumero) {
+        this.puhelinnumero = puhelinnumero;
+    }
+
+    /**
+     * @return the faksinumero
+     */
+    public Map<String, String> getFaksinumero() {
+        return faksinumero;
+    }
+
+    /**
+     * @param faksinumero the faksinumero to set
+     */
+    public void setFaksinumero(Map<String, String> faksinumero) {
+        this.faksinumero = faksinumero;
+    }
+
+    /**
+     * @return the wwwOsoite
+     */
+    public Map<String, String> getWwwOsoite() {
+        return wwwOsoite;
+    }
+
+    /**
+     * @param wwwOsoite the wwwOsoite to set
+     */
+    public void setWwwOsoite(Map<String, String> wwwOsoite) {
+        this.wwwOsoite = wwwOsoite;
+    }
+
+    /**
+     * @return the emailOsoite
+     */
+    public Map<String, String> getEmailOsoite() {
+        return emailOsoite;
+    }
+
+    /**
+     * @param emailOsoite the emailOsoite to set
+     */
+    public void setEmailOsoite(Map<String, String> emailOsoite) {
+        this.emailOsoite = emailOsoite;
     }
 }
