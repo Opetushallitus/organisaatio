@@ -15,6 +15,9 @@ app.directive('ophNullIfZeroLength', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
+                if (viewValue===null) {
+                    return viewValue;
+                }
                 return ((viewValue.length === 0) ? null : viewValue);
             });
         }

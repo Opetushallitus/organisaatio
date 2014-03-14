@@ -118,6 +118,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
             yhteystietoArvos.add(val);
 
             val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
+            val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
 
             yElementti = yhteystietoArvo.getKentta();
 

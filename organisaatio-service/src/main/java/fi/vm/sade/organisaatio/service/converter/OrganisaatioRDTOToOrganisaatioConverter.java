@@ -116,6 +116,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
             arvo.setKentta(new YhteystietoElementti());
+            arvo.setKieli(arvoMap.get("YhteystietoArvo.kieli"));
             arvo.setArvoText(arvoMap.get("YhteystietoArvo.arvoText"));
             YhteystietoElementti ye = arvo.getKentta();
             ye.setNimi(arvoMap.get("YhteystietoElementti.nimi"));

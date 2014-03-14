@@ -474,7 +474,7 @@
                     {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]?"*":""}}
                 </label>
                 <div class="controls">
-                    <input type="text" name="name" class="span6"
+                    <input type="text" name="name" class="span6" oph-null-if-zero-length
                            ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]'>
                     <div>
                         <span class="text-error" ng-show="ytForm.name.$error.required">

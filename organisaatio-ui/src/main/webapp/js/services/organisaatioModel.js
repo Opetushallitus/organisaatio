@@ -540,6 +540,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         updateLisayhteystiedot = function() {
+            model.lisayhteystiedot = {};
             var kaikkiTyypit = model.organisaatio.tyypit.concat(model.organisaatio.oppilaitosTyyppiUri);
             for (tyyppi in kaikkiTyypit) {
                 if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
@@ -969,10 +970,19 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+        checkLisayhteystiedot = function() {
+            for (var i = model.organisaatio.yhteystietoArvos.length - 1; i >= 0; i--) {
+                if (model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.arvoText']===null) {
+                    model.organisaatio.yhteystietoArvos.splice(i, 1);
+                }
+            }
+        };
+
         this.persistOrganisaatio = function(orgForm) {
             formatDates();
             selectAddressType(false);
             selectAddressType(true);
+            checkLisayhteystiedot();
             if (model.organisaatio.$post) {
                 Organisaatio.post(model.organisaatio, function(result) {
                     //console.log(result);
@@ -1128,7 +1138,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 if (!model.mdyhteystiedot.postinumerot[lang]) {
                     model.mdyhteystiedot.postinumerot[lang] = {};
                 }
-                $log.debug(model.organisaatio.metadata);
                 // Näytä juuri luotu uusi välilehti
                 $timeout(function() {
                     tab.active = true;
