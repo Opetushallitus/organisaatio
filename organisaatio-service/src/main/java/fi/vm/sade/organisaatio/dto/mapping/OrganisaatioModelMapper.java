@@ -1,8 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
+*
+* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+* soon as they will be approved by the European Commission - subsequent versions
+* of the EUPL (the "Licence");
+*
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*/
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
@@ -36,7 +45,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
         final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> postiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                ModelMapper modelMapper = new ModelMapper();
+                OsoiteModelMapper modelMapper = new OsoiteModelMapper();
                 
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
@@ -52,7 +61,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
         final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> kayntiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                ModelMapper modelMapper = new ModelMapper();
+                OsoiteModelMapper modelMapper = new OsoiteModelMapper();
                 
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
