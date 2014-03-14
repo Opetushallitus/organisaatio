@@ -328,9 +328,9 @@ return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
 });
 
 // Muokattavien yhteystietojen haku organisaatiopalvelulta
-// Esim. https://localhost:8180/organisaatio-service/rest/organisaatio/yhteystietometadata?organisaatioTyyppi=Oppilaitos
-app.factory('YhteystietoMetadata', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/yhteystietometadata/:orgTyyppi", { orgTyyppi: "@orgTyyppi"}, {
+// Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
+app.factory('YhteystietojenTyyppi', function($resource) {
+    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
         get: {method: 'GET', isArray: true}
     });
 });

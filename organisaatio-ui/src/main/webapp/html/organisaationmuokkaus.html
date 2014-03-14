@@ -181,7 +181,6 @@
         <div class="controls">
             <div>
                 <input type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
-                       datepicker-options="dateOptions"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -189,7 +188,6 @@
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 &nbsp;-&nbsp;
                 <input type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
-                       datepicker-options="dateOptions"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -299,7 +297,7 @@
             <div class="view-row-label">
                 <a href="" ng-model="ytexpanded" ng-click="ytexpanded = !ytexpanded">
                     <label>
-                        <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span> {{'Organisaationmuokkaus.yhteystiedot'| i18n}}
+                        <span ng-class="{'icon-chevron-down':ytexpanded, 'icon-chevron-right':!ytexpanded}"></span> {{'Organisaationmuokkaus.yhteystiedot'| i18n}}
                     </label>
                 </a>
             </div>
@@ -445,32 +443,50 @@
             </div>
         </div>
 
-        <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
-            <label class="control-label">
-                {{yttyyppi.nimi}}
-            </label>
-            <div class="controls well">
-                <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
-                     ng-form="ytForm">
-                    <label class="control-label">
-                        {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
-                    </label>
-                    <div class="controls">
-                        <input type="text" name="name"
-                               ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]==="true"'>
-                        <div>
-                            <span class="text-error" ng-show="ytForm.name.$error.required">
-                                {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
-                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
-                            </span>
-                        </div>
-                    </div>
+        <hr>
+    </div> <!-- ytexpanded -->
+
+    <!-- LISÄYHTEYSTIEDOT -->
+
+    <div ng-repeat="(ytoid, langs) in model.lisayhteystiedot" ng-init="ltexpanded={};">
+        <div class="row">
+            <div class="span4">
+                <div class="view-row-label">
+                    <a href="" ng-model="ltexpanded[ytoid]" ng-click="ltexpanded[ytoid] = !ltexpanded[ytoid]">
+                        <label>
+                            <span ng-class="{'icon-chevron-down':ltexpanded[ytoid], 'icon-chevron-right':!ltexpanded[ytoid]}"></span> {{model.uriLocalizedNames[ytoid]}}
+                        </label>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <hr>
-    </div> <!-- ytexpanded -->
+        <div ng-show="ltexpanded[ytoid]">
+            <tabset>
+                <tab ng-repeat="lttab in model.lttabs"
+                     heading="{{model.uriLocalizedNames[lttab]}}"
+                     select="model.ltlang=lttab">
+                </tab>
+            </tabset>
+            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang]"
+                 ng-form="ytForm">
+                <label class="control-label">
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]?"*":""}}
+                </label>
+                <div class="controls">
+                    <input type="text" name="name" class="span6"
+                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]'>
+                    <div>
+                        <span class="text-error" ng-show="ytForm.name.$error.required">
+                            {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                            {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div> <!-- ltexpanded -->
+    </div>
 
     <!-- HAKIJAPALVELUT --->
 
