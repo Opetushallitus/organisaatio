@@ -972,7 +972,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         checkLisayhteystiedot = function() {
             for (var i = model.organisaatio.yhteystietoArvos.length - 1; i >= 0; i--) {
-                if (model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.arvoText']===null) {
+                if ((model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.arvoText']===null) ||
+                        (model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.kieli']===null)) {
                     model.organisaatio.yhteystietoArvos.splice(i, 1);
                 }
             }
