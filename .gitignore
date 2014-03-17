@@ -1,3 +1,4 @@
+organisaatio-app/overlays/
 .idea/
 target/
 **/target
@@ -12,3 +13,5 @@ bin/
 **/.classpath
 */log
 *.iml
+nb-configuration.xml
+

@@ -17,6 +17,7 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import fi.vm.sade.security.xssfilter.FilterXss;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.Entity;
@@ -39,6 +40,9 @@ public class Yhteystieto extends OrganisaatioBaseEntity {
     @NotNull
     protected String yhteystietoOid;
 
+    @FilterXss
+    private String kieli;
+    
     public String getYhteystietoOid() {
         return yhteystietoOid;
     }
@@ -53,5 +57,19 @@ public class Yhteystieto extends OrganisaatioBaseEntity {
 
     public void setOrganisaatio(Organisaatio organisaatio) {
         this.organisaatio = organisaatio;
+    }
+
+    /**
+     * @return kieli
+     */
+    public String getKieli() {
+        return kieli;
+    }
+
+    /**
+     * @param kieli yhteystiedotn kieli
+     */
+    public void setKieli(String kieli) {
+        this.kieli = kieli;
     }
 }

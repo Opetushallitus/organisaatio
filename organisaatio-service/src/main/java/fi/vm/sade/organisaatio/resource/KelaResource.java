@@ -26,20 +26,26 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+
 import fi.vm.sade.rajapinnat.kela.KelaGenerator;
 
 @Path("/kela")
 @Component
+@Api(value = "/kela", description = "Kelan operaatiot")
 public class KelaResource {
-    
+
     Logger logger = LoggerFactory.getLogger(KelaResource.class);
-    
+
     private KelaGenerator kelaGenerator;
-    
+
     @GET
     @Path("/export")
     @Produces("text/plain")
-    public String exportKela(@QueryParam("transfer") final boolean transfer) {
+    @ApiOperation(value = "Vie Kelan tiedot", notes = "Operaatio vie Kelan tiedot.", response = String.class)
+    public String exportKela(@QueryParam("transfer") @ApiParam(value = "Generoidaanko siirtotiedostot", required = true) final boolean transfer) {
         final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/spring/context/bundle-context.xml");
         kelaGenerator = context.getBean(KelaGenerator.class);
         try {

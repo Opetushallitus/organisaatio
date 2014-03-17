@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.dao;
 
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;

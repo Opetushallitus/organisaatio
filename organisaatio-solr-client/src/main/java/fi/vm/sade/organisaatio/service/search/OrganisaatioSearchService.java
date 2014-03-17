@@ -134,6 +134,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                 oids.add((String) doc.getFirstValue(OID));
             }
 
+
             // get the actual docs
             q = new SolrQuery("*:*");
             q.setFields("*");
@@ -189,7 +190,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     private List<OrganisaatioPerustieto> filterNullLakkautusPvm(final OrganisaatioSearchCriteria organisaatioSearchCriteria,
             final List<OrganisaatioPerustieto> originalResults) {
 
-        if (organisaatioSearchCriteria.isVainLakkautetut()) {
+        if (organisaatioSearchCriteria.getVainLakkautetut()) {
             // Filteröidään lakkautettujen haussa tyhjät kentät pois
             // TODO: keksiä keino, miten tämän voisi toteuttaa solr filtterillä
             List<OrganisaatioPerustieto> result = Lists.newArrayList();
@@ -265,13 +266,13 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             final OrganisaatioSearchCriteria organisaatioSearchCriteria,
             SolrQuery q) {
 
-        if (!organisaatioSearchCriteria.isVainLakkautetut() && !organisaatioSearchCriteria.isVainAktiiviset()) {
+        if (!organisaatioSearchCriteria.getVainLakkautetut() && !organisaatioSearchCriteria.getVainAktiiviset()) {
             // Oletuksena näytetään aktiiviset ja suunnitellut. Filteröidään pois lakkautetut.
             q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
-        } else if (organisaatioSearchCriteria.isVainLakkautetut()) {
+        } else if (organisaatioSearchCriteria.getVainLakkautetut()) {
             // Filteröidään pois ne, joilla lakkautuspvm on tulevaisuudessa. Tyhjät kentät poistetaan jälkikäsittelynä
             q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "NOW", "*"));
-        } else if (organisaatioSearchCriteria.isVainAktiiviset()) {
+        } else if (organisaatioSearchCriteria.getVainAktiiviset()) {
             // Jätetään pois suunnitellut ja lakkautetut
             q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW", "*"));
             q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));

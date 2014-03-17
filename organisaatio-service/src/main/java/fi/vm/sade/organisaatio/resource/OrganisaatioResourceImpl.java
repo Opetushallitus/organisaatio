@@ -11,9 +11,10 @@ import fi.vm.sade.koodisto.service.types.common.KoodistoType;
 import fi.vm.sade.koodisto.service.types.common.SuhteenTyyppiType;
 import fi.vm.sade.koodisto.util.KoodiServiceSearchCriteriaBuilder;
 import fi.vm.sade.koodisto.util.KoodistoServiceSearchCriteriaBuilder;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,27 +23,45 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.oid.service.OIDService;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+import fi.vm.sade.organisaatio.service.NotAuthorizedException;
+import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ValidationException;
+import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -56,47 +75,59 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);
     @Autowired
+    private OrganisaatioBusinessService organisaatioBusinessService;
+    @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
     @Autowired
     private OrganisaatioDAOImpl organisaatioDAO;
     @Autowired
+    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
+    @Autowired
+    protected YhteystietoElementtiDAOImpl yhteystietoElementtiDAO;
+    @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private IndexerResource solrIndexer;
     @Autowired
     private KoodiService koodiService;
     @Autowired
     private KoodistoService koodistoService;
-    
+    @Autowired
+    private OIDService oidService;
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
-    
+
     @Value("${koodisto-uris.opetuspisteet}")
     private String toimipistekoodisto;
-    
+
     @Value("${koodisto-uris.yhteishaunkoulukoodi}")
     private String yhKoulukoodiKoodisto;
+
+    @Autowired
+    PermissionChecker permissionChecker;
 
     @Override
     public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
-        
-        if(s.getOppilaitosTyyppi()!=null && s.getOppilaitosTyyppi().length()==0) {
+
+        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
             s.setOppilaitosTyyppi(null);
         }
- 
-        if(s.getOrganisaatioTyyppi()!=null && s.getOrganisaatioTyyppi().length()==0) {
+
+        if (s.getOrganisaatioTyyppi() != null && s.getOrganisaatioTyyppi().length() == 0) {
             s.setOrganisaatioTyyppi(null);
         }
-        
+
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        
         List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(s);
-        
+
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
             public Comparable<String> apply(OrganisaatioPerustieto input) {
                 return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
 
-            };
+            }
+        ;
         });
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
@@ -107,9 +138,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         tulos.setNumHits(organisaatiot.size());
         return tulos;
     }
-    
-    
-    
 
     /**
      * Luo puumaisen organisaatiohierarkian. palauttaa listan juuritason
@@ -136,9 +164,39 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                 rootOrgs.add(curOrg);
             }
         }
-        
+
         return rootOrgs;
-        
+
+    }
+
+    // GET /organisaatio/{oid}/children
+    @Override
+    public List<OrganisaatioRDTO> children(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
+        List<OrganisaatioRDTO> childList = new LinkedList<OrganisaatioRDTO>();
+        if (parentOrg != null) {
+            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
+            for (OrganisaatioSuhde suhde : suhteet) {
+                childList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
+            }
+        }
+        return childList;
+    }
+
+    // GET /organisaatio/{oid}/childoids
+    @Override
+    public String childoids(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
+        List<String> childOidList = new LinkedList<String>();
+        if (parentOrg != null) {
+            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
+            for (OrganisaatioSuhde suhde : suhteet) {
+                childOidList.add("\"" + suhde.getChild().getOid() + "\"");
+            }
+        }
+        return "{ \"oids\": [" + Joiner.on(",").join(childOidList).toString() + "]}";
     }
 
     // GET /organisaatio/{oid}/parentoids - used for security purposes
@@ -190,7 +248,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
-
         // Search order
         // 1. OID
         // 2. Y-TUNNUS
@@ -215,7 +272,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (o.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) && isEmpty(o.getYhteishaunKoulukoodi())) {
             updateYhKoulukoodi(o);
         }
-        
+
         OrganisaatioRDTO result = conversionService.convert(o, OrganisaatioRDTO.class);
 
         LOG.debug("  result={}", result);
@@ -232,7 +289,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Organisaatio parentOl = null;
         if (o.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             olkoodi = o.getOppilaitosKoodi();
-        } else if ((parentOl = getParentOl(o)) != null){
+        } else if ((parentOl = getParentOl(o)) != null) {
             olkoodi = parentOl.getOppilaitosKoodi();
         }
         if (!isEmpty(olkoodi)) {
@@ -241,9 +298,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (!isEmpty(yhKoodi)) {
             o.setYhteishaunKoulukoodi(yhKoodi);
             this.organisaatioDAO.update(o);
-        }   
+        }
     }
-    
+
     /*
      * Method that seeks the nearest oppilaitos ancestor of organisaatio o.
      */
@@ -261,13 +318,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
-    
+
     /*
      * method that seeks the yhkoodi for organisaatio in koodisto. Organisaatio is represented by olkoodi and opJnro.
      * Organisaatio - > Organisaatiokoodi (in: opetuspisteet -koodisto) -> yhkoodi (in: yhteishaunkoulukoodisto)
      */
     private String getYhkoodi(String olkoodi, String opJnro) {
-        List<KoodiType> koodis = getKoodisByArvoAndKoodisto(olkoodi + opJnro, toimipistekoodisto);   
+        List<KoodiType> koodis = getKoodisByArvoAndKoodisto(olkoodi + opJnro, toimipistekoodisto);
         KoodiType opNroKoodi = null;
         KoodiType yhKoodi = null;
         if (koodis != null && !koodis.isEmpty()) {
@@ -276,7 +333,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
         return (yhKoodi == null) ? null : yhKoodi.getKoodiArvo();
     }
-    
+
     /*
      * Gets the opetuspisteenJarjNro for organisaatio.
      */
@@ -296,7 +353,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             SearchKoodistosCriteriaType koodistoSearchCriteria = KoodistoServiceSearchCriteriaBuilder.latestKoodistoByUri(koodistoUri);
 
             List<KoodistoType> koodistoResult = koodistoService.searchKoodistos(koodistoSearchCriteria);
-            if(koodistoResult.size() != 1) {
+            if (koodistoResult.size() != 1) {
                 // FIXME: Throw something other than RuntimeException?
                 throw new RuntimeException("No koodisto found for koodisto URI " + koodistoUri);
             }
@@ -310,7 +367,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             return null;
         }
     }
-    
+
     /*
      * Getting a sisaltyva koodi.
      */
@@ -326,4 +383,94 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
         return null;
     }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, true);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
+        Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
+        OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
+        return ret;
+    }
+
+    private Organisaatio removeOrganisaatioByOid(String oid, Set<String> reindex) {
+        Organisaatio removed = organisaatioDAO.markRemoved(oid);
+        reindex.add(oid);
+        return removed.getParent();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String deleteOrganisaatio(String oid) {
+        try {
+            permissionChecker.checkRemoveOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
+        Set<String> reindex = new HashSet<String>();
+        Organisaatio po = removeOrganisaatioByOid(oid, reindex);
+
+        solrIndexer.delete(new ArrayList<String>(reindex));
+
+        // päivittää aliorganisaatioiden lukumäärän parenttiin
+        if (po != null) {
+            solrIndexer.index(Arrays.asList(po));
+        }
+        return "{\"message\": \"deleted\"}";
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, false);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+        }
+        try {
+            Organisaatio org = organisaatioBusinessService.save(ordto, false, false);
+            OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
+            return ret;
+        } catch (ValidationException ex) {
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, ex.toString());
+        }
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String getRoles() {
+        StringBuilder ret = new StringBuilder("[");
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        for (GrantedAuthority ga : auth.getAuthorities()) {
+            ret.append("\"");
+            ret.append(ga.getAuthority().replace("ROLE_", ""));
+            ret.append("\",");
+        }
+        ret.setCharAt(ret.length() - 1, ']');
+        return ret.toString();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
+        if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
+            return new ArrayList<YhteystietojenTyyppiRDTO>();
+        }
+        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(organisaatioTyyppi);
+        if (entitys == null) {
+            return null;
+        }
+        List<YhteystietojenTyyppiRDTO> result = new ArrayList<YhteystietojenTyyppiRDTO>();
+        for (YhteystietojenTyyppi entity : entitys) {
+            result.add(conversionService.convert(entity, YhteystietojenTyyppiRDTO.class));
+        }
+        return result;
+    }
+
 }

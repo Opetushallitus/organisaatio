@@ -19,114 +19,13 @@ public class OrganisationHierarchyValidatorTest {
 
     private static final String ROOT_OID = "1";
     private Organisaatio root;
+    private OrganisationHierarchyValidator validator;
 
     @Before
     public void setup() {
         root = new Organisaatio();
         root.setOid(ROOT_OID);
-    }
-
-    @Test
-    public void testKoulutustoimija() {
-        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
-
-        final Predicate<Entry<Organisaatio, Organisaatio>> validator2 = validator.koulutustoimijaRule;
-        final Organisaatio koulutustoimija = getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
-        
-        //TODO this passes now but should it???
-        assertResult(null, koulutustoimija, true, validator, validator2);
-
-        // ok
-        assertResult(root, koulutustoimija, true, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO), koulutustoimija, true, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA), koulutustoimija, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPETUSPISTE), koulutustoimija, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPPILAITOS), koulutustoimija, false, validator, validator2);    
-    }
-
-    @Test
-    public void testMuuOrganisaatio() {
-        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
-
-        final Predicate<Entry<Organisaatio, Organisaatio>> validator2 = validator.muuOrgRule;
-        final Organisaatio muuOrganisaatio = getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO);
- 
-        //TODO this passes now but should it?
-        assertResult(null, muuOrganisaatio, true, validator, validator2);
-
-        // ok
-        assertResult(root, muuOrganisaatio, true, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO), muuOrganisaatio, true, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA), muuOrganisaatio, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPETUSPISTE), muuOrganisaatio, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPPILAITOS), muuOrganisaatio, false, validator, validator2);
-    }
-
-    @Test
-    public void testOppilaitos() {
-        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
-
-        final Predicate<Entry<Organisaatio, Organisaatio>> validator2 = validator.oppilaitosRule;
-
-        final Organisaatio oppilaitos = getOrg(OrganisaatioTyyppi.OPPILAITOS);
-
-        // !ok
-        assertResult(null, oppilaitos, false, validator, validator2);
-
-        // !ok
-        assertResult(root, oppilaitos, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO), oppilaitos, false, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA), oppilaitos, true, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPETUSPISTE), oppilaitos, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPPILAITOS), oppilaitos, false, validator, validator2);
-    }
-
-    @Test
-    public void testToimipiste() {
-        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
-
-        final Predicate<Entry<Organisaatio, Organisaatio>> validator2 = validator.toimipisteRule;
-
-
-        // !ok
-        final Organisaatio toimipiste = getOrg(OrganisaatioTyyppi.OPETUSPISTE);
-        assertResult(root, toimipiste, false, validator, validator2);
-
-        // !ok
-        assertResult(getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO), toimipiste, false, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA), toimipiste, false, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPETUSPISTE), toimipiste, true, validator, validator2);
-
-        // ok
-        assertResult(getOrg(OrganisaatioTyyppi.OPPILAITOS), toimipiste, true, validator, validator2);
+        validator = new OrganisationHierarchyValidator(ROOT_OID);
     }
 
     private void assertResult(Organisaatio parent, Organisaatio organisaatio, boolean expected, Predicate<Entry<Organisaatio, Organisaatio>> validator,
@@ -144,6 +43,396 @@ public class OrganisationHierarchyValidatorTest {
         }
         org.setTyypit(orgTyypit);
         return org;
+    }
+
+    /* child == oppisopimustoimipiste */
+    @Test
+    public void testToplevelOppisopimustoimipiste() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderOPT() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                true,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
+    public void testOppisopimustoimipisteUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    /* child == toimipiste (opetuspiste) */
+    @Test
+    public void testToplevelToimipiste() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                false,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderOPH() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                false,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                true,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                true,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                true,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                false,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
+    public void testToimipisteUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                false,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    /* child == oppilaitos */
+    @Test
+    public void testToplevelOppilaitos() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderOPH() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderToimipaikka() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                true,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderOppisopimustoimipaikka() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    /* child == koulutustoimija */
+    @Test
+    public void testToplevelKoulutustoimija() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                true,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderOPT() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                true,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    /* child == muu organisaatio */
+    @Test
+    public void testToplevelMuuOrganisaatio() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                true,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderOPH() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                true,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                false,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                true,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                false,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPETUSPISTE),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                false,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
+    public void testMuuOrganisaatioUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                false,
+                validator,
+                validator.muuOrgRule
+        );
     }
 
 }

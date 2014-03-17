@@ -14,7 +14,7 @@ import fi.vm.sade.organisaatio.api.model.types.OsoiteDTO;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 //import fi.vm.sade.organisaatio.api.model.types.Or
