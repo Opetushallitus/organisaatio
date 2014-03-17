@@ -18,17 +18,20 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <!-- kela-opti -->
-        <jaxws:client id="koodiPublicService"
+    <jaxws:client id="koodiPublicService"
                   serviceClass="fi.vm.sade.koodisto.service.KoodiService"
                   address="${koodi.public.webservice.url.backend}"/>
 
-        <jaxws:client id="koodistoPublicService"
+    <jaxws:client id="koodistoPublicService"
                   serviceClass="fi.vm.sade.koodisto.service.KoodistoService"
                   address="${koodisto.public.webservice.url.backend}"/>
 
     <!--
         REST Services
     -->
+
+    <!-- NON SERVICE VERSION -->
+    <bean id="oidService" class="fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl" />
 
     <!-- object to json -->
     <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
@@ -59,19 +62,60 @@
         <property name="mapper" ref="organisaatioObjectMapper"/>
     </bean>
 
-    <jaxrs:server id="organisaatioREST" address="/rest">
-        <jaxrs:serviceBeans>
-            <ref bean="organisaatioResourceImpl" />
-            <ref bean="indexerResource"/>
-            <ref bean="kelaResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="organisaatioJacksonJsonProvider" />
-        </jaxrs:providers>
-    </jaxrs:server>
-
+    <!--<jaxrs:server id="organisaatioREST" address="/rest">-->
+    <!--<jaxrs:serviceBeans>-->
+    <!--<ref bean="organisaatioResourceImpl" />-->
+    <!--<ref bean="indexerResource"/>-->
+    <!--<ref bean="kelaResource"/>-->
+    <!--</jaxrs:serviceBeans>-->
+    <!--<jaxrs:providers>-->
+    <!--<ref bean="cors-filter" />-->
+    <!--<ref bean="organisaatioJacksonJsonProvider" />-->
+    <!--</jaxrs:providers>-->
+    <!--</jaxrs:server>-->
 
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi"/>
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi"/>
+
+    <!--Swagger API listing resource-->
+    <bean id="swaggerResourceJSON" class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+
+    <!-- Swagger writers -->
+    <bean id="resourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+    <bean id="apiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+
+    <bean class="org.apache.cxf.jaxrs.JAXRSServerFactoryBean" init-method="create">
+        <property name="address" value="/rest" />
+        <property name="serviceBeans">
+            <list>
+                <ref bean="organisaatioResourceImpl"/>
+                <ref bean="organisaatioResourceImplV2"/>
+                <ref bean="indexerResource"/>
+                <ref bean="kelaResource"/>
+                <ref bean="ytjResource"/>
+                <ref bean="yhteystietojenTyyppiResource"/>
+                <ref bean="swaggerResourceJSON" />
+            </list>
+        </property>
+        <property name="providers">
+            <list>
+                <ref bean="organisaatioJacksonJsonProvider" />
+                <ref bean="resourceWriter" />
+                <ref bean="apiWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource"/>
+        <property name="version" value="1.0.0"/>
+        <property name="basePath" value="https://${host.virkailija}/rest"/>
+        <property name="title" value="Organisaatio resources ${host.virkailija}"/>
+        <property name="description" value="Organisaatio offered resources"/>
+        <property name="contact" value=""/>
+        <property name="license" value="Apache 2.0 License"/>
+        <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        <property name="scan" value="true"/>
+    </bean>
 
 </beans>

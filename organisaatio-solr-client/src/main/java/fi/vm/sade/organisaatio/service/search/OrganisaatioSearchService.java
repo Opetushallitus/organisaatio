@@ -47,7 +47,6 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
-
     private final SolrServer solr;
     private final Logger LOG = LoggerFactory.getLogger(OrganisaatioSearchService.class);
     private Map<String, Set<String>> orgTypeLimit = Maps.newHashMap();
@@ -55,16 +54,19 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
         this.solr = factory.getSolrServer();
-        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPETUSPISTE.value(), Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(), Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
+                OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(),
+                OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPETUSPISTE.value(),
+                Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
+                Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
     }
 
-    
-    public List<OrganisaatioPerustieto> searchBasicOrganisaatiosExact(final OrganisaatioSearchCriteria organisaatioSearchCriteria){
-        
+    public List<OrganisaatioPerustieto> searchBasicOrganisaatiosExact(final OrganisaatioSearchCriteria organisaatioSearchCriteria) {
+
         final String kunta = organisaatioSearchCriteria.getKunta();
         final List<String> restrictionList = organisaatioSearchCriteria
                 .getOidRestrictionList();
@@ -74,7 +76,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         SolrQuery q = createOrgQuery(organisaatioSearchCriteria, kunta,
                 restrictionList, organisaatioTyyppi, searchStr);
-        
+
         q.setRows(10000);
 
         final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
@@ -88,10 +90,10 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         }
 
     }
-    
+
     public List<OrganisaatioPerustieto> searchBasicOrganisaatios(
             final OrganisaatioSearchCriteria organisaatioSearchCriteria) {
-        long time =System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         final String kunta = organisaatioSearchCriteria.getKunta();
         final List<String> restrictionList = organisaatioSearchCriteria
                 .getOidRestrictionList();
@@ -108,6 +110,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         try {
             QueryResponse response = solr.query(q, METHOD.POST);
 
+            LOG.debug("Sending query: " + q.getQuery());
             LOG.debug("Search matched {} results, fetching docs...", response
                     .getResults().getNumFound());
             if (response.getResults().getNumFound() == 0) {
@@ -120,7 +123,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                 if (!rootOrganisaatioOid.equals(doc.getFieldValue(OID))) {
                     paths.add((String) doc.getFieldValue(OID));
                 }
-                
+
                 if (!organisaatioSearchCriteria.getSkipParents()) {
                     for (Object path : doc.getFieldValues(PATH)) {
                         if (!rootOrganisaatioOid.equals(path)) {
@@ -133,14 +136,14 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
 
             // get the actual docs
-            q = new SolrQuery();
+            q = new SolrQuery("*:*");
             q.setFields("*");
             addDateFilters(organisaatioSearchCriteria, q);
 
             // filter out oph (TODO do not index oph)
             q.addFilterQuery(String.format("-%s:%s", OID, rootOrganisaatioOid));
-            
-            //filter out types in upper hierarchy
+
+            // filter out types in upper hierarchy
             if (organisaatioTyyppi != null) {
                 final Set<String> limitToTypes = orgTypeLimit
                         .get(organisaatioTyyppi);
@@ -164,15 +167,19 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             }
             q.setQuery(query);
             q.setRows(10000);
+
             response = solr.query(q, METHOD.POST);
 
-            LOG.debug("Search time :{} ms.",(System.currentTimeMillis() - time)); 
-            
+            LOG.debug("Search time :{} ms.", (System.currentTimeMillis() - time));
+
             final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(oids);
 
-            final List<OrganisaatioPerustieto> result = Lists.newArrayList(Lists.transform(response.getResults(),
+            final List<OrganisaatioPerustieto> tempResult = Lists.newArrayList(Lists.transform(response.getResults(),
                     converter));
-            LOG.debug("Total time :{} ms.",(System.currentTimeMillis() - time));
+
+            final List<OrganisaatioPerustieto> result = filterNullLakkautusPvm(organisaatioSearchCriteria, tempResult);
+
+            LOG.debug("Total time :{} ms.", (System.currentTimeMillis() - time));
             return result;
         } catch (SolrServerException e) {
             LOG.error("Error executing search, q={}", q.getQuery());
@@ -180,6 +187,23 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         }
     }
 
+    private List<OrganisaatioPerustieto> filterNullLakkautusPvm(final OrganisaatioSearchCriteria organisaatioSearchCriteria,
+            final List<OrganisaatioPerustieto> originalResults) {
+
+        if (organisaatioSearchCriteria.getVainLakkautetut()) {
+            // Filteröidään lakkautettujen haussa tyhjät kentät pois
+            // TODO: keksiä keino, miten tämän voisi toteuttaa solr filtterillä
+            List<OrganisaatioPerustieto> result = Lists.newArrayList();
+            for (OrganisaatioPerustieto op : originalResults) {
+                if (op.getLakkautusPvm() != null) {
+                    result.add(op);
+                }
+            }
+            return result;
+        } else {
+            return originalResults;
+        }
+    }
 
     private SolrQuery createOrgQuery(
             final OrganisaatioSearchCriteria organisaatioSearchCriteria,
@@ -189,15 +213,15 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final List<String> queryParts = Lists.newArrayList();
 
         // nimi
-        if (searchStr != null && searchStr.length()>0) {
+        if (searchStr != null && searchStr.length() > 0) {
             searchStr = escape(searchStr);
-                // nimi search
-                queryParts.clear();
-                addQuery(searchStr, queryParts, "%s:*%s*", NIMISEARCH, searchStr);
-                q.addFilterQuery(Joiner.on(" ").join(queryParts));
-            
-        } 
-        
+            // nimi search
+            queryParts.clear();
+            addQuery(searchStr, queryParts, "%s:*%s*", NIMISEARCH, searchStr);
+            q.addFilterQuery(Joiner.on(" ").join(queryParts));
+
+        }
+
         addDateFilters(organisaatioSearchCriteria, q);
 
         if (organisaatioSearchCriteria.getOppilaitosTyyppi() != null
@@ -242,17 +266,18 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             final OrganisaatioSearchCriteria organisaatioSearchCriteria,
             SolrQuery q) {
 
-        // lakkautetut
-        if (organisaatioSearchCriteria.isLakkautetut() == false) {
-            q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*",
-                    "NOW"));
+        if (!organisaatioSearchCriteria.getVainLakkautetut() && !organisaatioSearchCriteria.getVainAktiiviset()) {
+            // Oletuksena näytetään aktiiviset ja suunnitellut. Filteröidään pois lakkautetut.
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
+        } else if (organisaatioSearchCriteria.getVainLakkautetut()) {
+            // Filteröidään pois ne, joilla lakkautuspvm on tulevaisuudessa. Tyhjät kentät poistetaan jälkikäsittelynä
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "NOW", "*"));
+        } else if (organisaatioSearchCriteria.getVainAktiiviset()) {
+            // Jätetään pois suunnitellut ja lakkautetut
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW", "*"));
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
         }
 
-        // suunnitellut
-        if (!organisaatioSearchCriteria.isSuunnitellut()) {
-            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW",
-                    "*"));
-        }
     }
 
     private void addQuery(final String param, final List<String> queryParts,
@@ -264,18 +289,19 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     /**
      * Search Organisations by oid
+     * 
      * @param organisationOids
      * @return
      */
     public List<OrganisaatioPerustieto> findByOidSet(
             Set<String> organisationOids) {
-        if(organisationOids.size()==0) {
+        if (organisationOids.size() == 0) {
             return Collections.EMPTY_LIST;
         }
 
         SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":(%s)", Joiner.on(" ").join(organisationOids)));
         q.setRows(organisationOids.size());
-        
+
         final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
 
         try {
@@ -285,7 +311,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         } catch (SolrServerException e) {
             throw new RuntimeException(e);
         }
-        
+
     }
 
     public List<String> findParentOids(
@@ -293,18 +319,18 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":%s", organisationOid));
         q.setFields(SolrOrgFields.PATH);
         final List<String> oids = Lists.newArrayList();
-        
+
         SolrDocumentList docList;
         try {
             docList = solr.query(q).getResults();
-        if(docList.getNumFound()==1) {
-            SolrDocument doc = docList.get(0);
-            for(Object field: doc.getFieldValues(SolrOrgFields.PATH)){
-                if(!rootOrganisaatioOid.equals(field)) {
-                    oids.add((String)field);
+            if (docList.getNumFound() == 1) {
+                SolrDocument doc = docList.get(0);
+                for (Object field : doc.getFieldValues(SolrOrgFields.PATH)) {
+                    if (!rootOrganisaatioOid.equals(field)) {
+                        oids.add((String) field);
+                    }
                 }
             }
-        }
 
         } catch (SolrServerException e) {
             throw new RuntimeException(e);
@@ -312,6 +338,5 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         return oids;
     }
-
 
 }

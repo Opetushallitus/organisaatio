@@ -37,14 +37,18 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioToSolrInputDocumentFunction;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 
 @Path("/indexer")
 @Component
+@Api(value = "/indexer", description = "Indeksoijan operaatiot")
 public class IndexerResource {
 
     Logger logger = LoggerFactory.getLogger(IndexerResource.class);
@@ -67,7 +71,8 @@ public class IndexerResource {
     @GET
     @Path("/start")
     @Produces("text/plain")
-    public String reBuildIndex(@QueryParam("clean") final boolean clean) {
+    @ApiOperation(value = "Rakentaa indeksin uudelleen", notes = "Operaatio rakentaa indeksin uudelleen.", response = String.class)
+    public String reBuildIndex(@ApiParam(value = "Tyhjennetäänkö indeksi ensin", required = true) @QueryParam("clean") final boolean clean) {
         Preconditions.checkNotNull(organisaatioDAOImpl, "need dao!");
         Preconditions.checkNotNull(transactionManager, "need TM!");
 
@@ -77,8 +82,7 @@ public class IndexerResource {
             @Override
             public Integer doInTransaction(TransactionStatus arg0) {
 
-                List<Organisaatio> organisaatiot = organisaatioDAOImpl
-                        .findAll();
+                List<Organisaatio> organisaatiot = organisaatioDAOImpl.findAll();
                 try {
                     if (clean) {
                         solr.deleteByQuery("*:*");
@@ -101,13 +105,13 @@ public class IndexerResource {
     public void delete(List<String> organisaatioOids) {
         deleteDocs(organisaatioOids);
     }
-    
+
     public void index(List<Organisaatio> organisaatiot) {
         final List<SolrInputDocument> docs = Lists.newArrayList();
         final List<String> delete = Lists.newArrayList();
 
         for (Organisaatio org : organisaatiot) {
-            if(org.isOrganisaatioPoistettu()) {
+            if (org.isOrganisaatioPoistettu()) {
                 delete.add(org.getOid());
             } else {
                 docs.add(converter.apply(org));

@@ -30,7 +30,9 @@ import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,9 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setAlkuPvm(s.getAlkuPvm());
         // t.setChildCount(s.getChildCount());
         t.setDomainNimi(s.getDomainNimi());
+
         t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
+
         t.setKieletUris(convertListToList(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setKuvaus(s.getKuvaus());
@@ -75,7 +79,10 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         // t.setParentMetadata(s.getParentMetadata());
         t.setParentOidPath(s.getParentOidPath());
         // t.set(s.getParentSuhteet());
+
+
         t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
+
         // t.set(s.getPuhelin());
         // t.set(s.getSopimusKunnat()); -- non existing old ui functionality has left it's marks...
         t.setToimipistekoodi(s.getToimipisteKoodi());
@@ -88,15 +95,20 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setYritysmuoto(s.getYritysmuoto());
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
+        t.setVirastoTunnus(s.getVirastoTunnus());
 
-        t.setPuhelinnumero(convertYhteystietoToPuhelinnumero(s.getYhteystiedot()));
-        t.setFaksinumero(convertYhteystietoToFaksinumero(s.getYhteystiedot()));
-        t.setEmailOsoite(convertYhteystietoToEmailOsoite(s.getYhteystiedot()));
-        t.setWwwOsoite(convertYhteystietoToWwwOsoite(s.getYhteystiedot()));
+        //t.setPuhelinnumero(convertYhteystietoToPuhelinnumero(s.getYhteystiedot()));
+        //t.setFaksinumero(convertYhteystietoToFaksinumero(s.getYhteystiedot()));
+        //t.setEmailOsoite(convertYhteystietoToEmailOsoite(s.getYhteystiedot()));
+        //t.setWwwOsoite(convertYhteystietoToWwwOsoite(s.getYhteystiedot()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         List<Map<String, String>> yhteystietoArvos = new ArrayList<Map<String, String>>();
         t.setYhteystietoArvos(yhteystietoArvos);
+
+        for (Yhteystieto y : s.getYhteystiedot()) {
+            t.addYhteystieto(convertYhteystietoGeneric(y));
+        }
 
         for (YhteystietoArvo yhteystietoArvo : s.getYhteystietoArvos()) {
             YhteystietoElementti yElementti = null;
@@ -106,6 +118,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
             yhteystietoArvos.add(val);
 
             val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
+            val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
 
             yElementti = yhteystietoArvo.getKentta();
 
@@ -156,6 +169,15 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         return result;
     }
 
+    private String formatDate(Date dt) {
+        if (dt != null) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            return df.format(dt);
+        } else {
+            return null;
+        }
+    }
+
     private Map<String, String> convertOsoiteToMap(Osoite s) {
         Map<String, String> t = new HashMap<String, String>();
 
@@ -167,14 +189,15 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         addToMapIfNotNULL(t, "extraRivi", s.getExtraRivi());
         addToMapIfNotNULL(t, "maaUri", s.getMaa());
         addToMapIfNotNULL(t, "osavaltio", s.getOsavaltio());
-        addToMapIfNotNULL(t, "osoite", s.getOsoite());
+        addToMapIfNotNULL(t, "osoite", s.getOsoite().replace("<br />", "\n"));
         addToMapIfNotNULL(t, "osoiteTyyppi", s.getOsoiteTyyppi());
         addToMapIfNotNULL(t, "postinumeroUri", s.getPostinumero());
         addToMapIfNotNULL(t, "postitoimipaikka", s.getPostitoimipaikka());
         addToMapIfNotNULL(t, "yhteystietoOid", s.getYhteystietoOid());
         addToMapIfNotNULL(t, "lap", s.getLat());
         addToMapIfNotNULL(t, "lng", s.getLng());
-        addToMapIfNotNULL(t, "ytjPaivitysPvm", "" + s.getYtjPaivitysPvm());
+
+        addToMapIfNotNULL(t, "ytjPaivitysPvm", formatDate(s.getYtjPaivitysPvm()));
 
         return t;
     }
@@ -229,7 +252,9 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         if (s != null) {
             result.put("id", "" + s.getId());
-
+            result.put("yhteystietoOid", s.getYhteystietoOid());
+            result.put("kieli", s.getKieli());
+            
             if (s instanceof Email) {
                 Email v = (Email) s;
                 result.put("email", v.getEmail());

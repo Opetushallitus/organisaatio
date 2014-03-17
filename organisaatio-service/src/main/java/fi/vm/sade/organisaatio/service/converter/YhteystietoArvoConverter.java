@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.model.OrganisaatioBaseEntity;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 

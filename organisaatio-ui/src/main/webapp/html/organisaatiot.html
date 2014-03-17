@@ -1,0 +1,134 @@
+<!-- Organisaatiot -->
+<script type="text/ng-template" id="organisaatio_node.html">
+    <div class="row">
+        <div class="span6">
+            <!-- Käytetään "level" kertaa sama tila kuin ikoni käyttäisi -->
+            <span ng-repeat="t in getTimes(data.level-1) track by $index">
+                <i class="icon icon-chevron-right" style="visibility: hidden"></i>
+            </span>
+            <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
+               ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
+            <!-- Käytetään sama tila kuin ikoni käyttäisi -->
+            <i class="icon icon-chevron-right" style="visibility: hidden" ng-if="model.isLeaf(data)"></i>
+            <span class="dropdown">
+                <a href="" class="icon-list dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
+                <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
+                    <li>
+                        <a href='#/organisaatiot/{{data.oid}}'>{{'Organisaatiot.tarkastele' | i18n}}</a>
+                    </li>
+                    <li auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a href='#/organisaatiot/{{data.oid}}/edit'>{{'Organisaatiot.muokkaa' | i18n}}</a>
+                    </li>
+                    <li ng-if="isCreateSubAllowed(data)" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a href='#/organisaatiot/{{data.oid}}/new'>{{'Organisaatiot.luoAliorganisaatio' | i18n}}</a>
+                    </li>
+                    <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
+                    </li>
+                </ul>
+            </span>
+            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
+        </div>
+        <div class="span2">
+           {{data.tila}}
+        </div>
+        <div class="span2">
+           {{data.tunnus}}
+        </div>
+        <div class="span2">
+           {{data.tyyppi}}
+        </div>
+    </div>
+    <ol class="unstyled" ng-if="data.expanded">
+        <li ng-repeat="data in data.children | orderBy:'i18nNimi'"
+            ng-include="'organisaatio_node.html'">
+        </li>
+    </ol>
+</script>
+
+<h2>{{'Organisaatiot.hakuOtsikko' | i18n}}</h2>
+
+<div class="row-fluid" ng-if="hakuehdot.organisaatioRajausVisible">
+    <p ng-show="hakuehdot.organisaatioRajaus">
+        {{'Organisaatiot.valittuOrganisaatio' | i18n}}
+        {{hakuehdot.organisaatiot}}
+        {{hakuehdot.rajatutOrganisaatiotStr}}
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
+            {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}
+        </a>
+    </p>
+    <p ng-hide="hakuehdot.organisaatioRajaus">
+        {{'Organisaatiot.kaikkiValittu' | i18n}}
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = true">
+            {{'Organisaatiot.palautaOletusOrganisaatioValinta' | i18n}}
+        </a>
+    </p>
+</div>
+
+
+<form class="form-search" novalidate ng-submit="search()">
+    <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
+    <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>
+    <button class="btn" type="reset" ng-click="resetHakuehdot()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+</form>
+
+<p ng-hide="tarkemmatHakuehdotVisible">
+    <a href="" ng-click="showTarkemmatHakuehdot()">
+        <i class="icon-chevron-right"></i>
+        {{'Organisaatiot.naytaTarkennettuHaku' | i18n}}
+    </a>
+</p>
+
+<div ng-show="tarkemmatHakuehdotVisible" class="">
+    <p>
+        <a href="" ng-click="hideTarkemmatHakuehdot()">
+            <i class="icon-chevron-down"></i>
+            {{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}
+        </a>
+    </p>
+    <form>
+        <div class="form-fluid">
+            <!-- Kotipaikka -->
+            <select class="input-xlarge" ng-model="hakuehdot.kunta" ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">
+                <option value="">{{'Organisaatiot.kotipaikka' | i18n}}</option>
+            </select>
+
+            <!-- Organisaatiotyyppi -->
+            <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi" ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'">
+                <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
+            </select>
+
+            <!-- Oppilaitostyyppi -->
+            <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi" ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
+                <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
+            </select>
+        </div>
+        <div>
+            <!-- Näytä kaikki -->
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.kaikki">{{'Organisaatiot.naytaKaikki' | i18n}}
+
+            <!-- Näytä vain aktiiviset -->           
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainAktiiviset">{{'Organisaatiot.naytaVainAktiiviset' | i18n}}
+
+            <!-- Näytä vain lakkautetut -->           
+            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainLakkautetut">{{'Organisaatiot.naytaVainLakkautetut' | i18n}}
+        </div>
+    </form>
+</div>
+
+<div class="row-fluid">
+    <h3 class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</h3>
+    <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
+        <button class="btn" ng-click="luoYlinTaso()">{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}</button>
+    </span>        
+</div>
+
+<br>
+
+<div class="well" ng-if="model.count">
+    <ol class="unstyled">
+        <li ng-repeat="data in model.getRootNodes() | orderBy:'i18nNimi'"
+            ng-include="'organisaatio_node.html'">
+        </li>
+    </ol>
+</div>

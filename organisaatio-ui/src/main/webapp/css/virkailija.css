@@ -1,0 +1,389 @@
+/* TYYLIKIRJASTO VIRKAILIJAN TYÖPÖYTÄKÄYTTÖLIITTYMÄÄ VARTEN */
+/* Täydentää bootstrap 2.3.1 css tyylejä */
+/* Tämä tyylikirjasto ladataan bootstrap versio 2.3.1 tyylitiedoston jälkeen */
+/* päivitetty 17.12.2013 */
+
+/* NAPPULAT */
+
+/* normaalikokoinen perusnappula */
+.btn {
+color:#333333;    
+border-radius: 3px;
+border-color: rgb(146, 204, 224);
+font-size: 13px;
+background-color: rgb(210, 236, 245);
+text-shadow: none; 
+background-image: none;
+-webkit-box-shadow:inset 1px 1px 1px rgba(223,242,248,1.0);
+   -moz-box-shadow:inset 1px 1px 1px rgba(223,242,248,1.0);
+        box-shadow:inset 1px 1px 1px rgba(223,242,248,1.0);    
+}
+
+/* */
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+  text-shadow: none;
+  background-image: none;
+  border-color: rgb( 89, 174, 202 );
+  border-radius: 3px;
+  background-color: rgb(159, 219, 240);
+}   
+
+/* alaspainettu nappula, varjostusmaski */
+.btn.active,
+.btn:active  {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+     -moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+          box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Inaktiivinen nappula*/
+.btn.disabled,
+.btn[disabled] {
+  cursor: default;
+  color: #333333;    
+  background-image:url("../img/disabled-pat.png");
+  background-repeat: repeat;
+  border: 1px solid #ababab;
+  box-shadow: none;    
+}
+
+/* iso nappula*/
+.btn-large {
+  padding: 11px 19px;
+  font-size: 13px;
+  background-color: #d2ecf5;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+/* primary-nappula */
+.btn-primary {
+  color: #333333;
+  text-shadow: none;
+  background-color: #feba00;
+  background-image: none;
+  border: 1px solid #dea300;
+  -webkit-box-shadow:inset 1px 1px 1px rgba(253, 237, 193,1.0);
+     -moz-box-shadow:inset 1px 1px 1px rgba(253, 237, 193,1.0);
+          box-shadow:inset 1px 1px 1px rgba(253, 237, 193,1.0);    
+  }
+
+/* primary-nappula, hover ja active*/
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled]  {
+  color: #333333;
+  background-color: #e99f00;
+  border-color:#c69100;
+  -webkit-box-shadow:inset 1px 1px 1px rgba(253, 237, 193, 1.0);
+     -moz-box-shadow:inset 1px 1px 1px rgba(253, 237, 193, 1.0);
+          box-shadow:inset 1px 1px 1px rgba(253, 237, 193, 1.0);
+}
+
+/* alaspainettu primary-nappula, varjostusmaski */
+.btn-primary:active,
+.btn-primary.active {
+  -webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+     -moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+          box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);    
+}
+
+/* muutetaan inaktiivisen nappulan ääriviiva harmaaksi ja poistetaan sisävarjostus */
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  border-color:#ababab;
+  box-shadow: none;
+}
+
+body {
+  font-size: 13px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 13px;
+}
+
+h6 {
+  font-size: 12px;
+}
+
+/*dialogin headerin tyyli*/
+.modal-header {
+    background-image:url("../img/dialog-pat.png");
+    border-bottom:1px solid #24a4cc;
+}
+
+/*dialogin tyyli*/
+.modal {
+    border:1px solid #dadada;
+    border-radius:3px;
+    box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
+}
+
+/*kaikki tabit*/
+
+.nav-tabs>li>a {
+    padding-top:8px;
+    padding-bottom:8px;
+    line-height:20px;
+    border-radius:0 0 0 0;
+    border:1px solid #ddd;
+    /*border-bottom-color:transparent;*/
+    cursor:default;
+    /*valkoinen kehys tabin sisällä*/
+    -moz-box-shadow: inset 0 0 0 1px #ffffff;
+    -webkit-box-shadow: inset 0 0 0 1px #ffffff;
+    box-shadow: inset 0 0 0 1px #ffffff;
+    /*gradient*/
+    background: #f5f5f5; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f5f5f5 25%, #e6e6e6 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#f5f5f5), color-stop(100%,#e6e6e6)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f5f5f5 25%,#e6e6e6 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#e6e6e6',GradientType=0 ); /* IE6-9 */
+}
+
+.nav-tabs>li>a:hover {
+    border:1px solid #d2d2d2;
+    background: #e6e6e6; /* Old browsers */
+    background: -moz-linear-gradient(top,  #e6e6e6 25%, #d2d2d2 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#e6e6e6), color-stop(100%,#d2d2d2)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #e6e6e6 25%,#d2d2d2 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#d2d2d2',GradientType=0 ); /* IE6-9 */
+    }
+    
+/*aktiivisen tabin gradient*/
+.nav-tabs>.active>a,.nav-tabs>.active>a:hover,.nav-tabs>.active>a:focus {
+    /*valkoinen kehys tabin sisällä*/
+    -moz-box-shadow: inset 0 0 0 1px #ffffff;
+    -webkit-box-shadow: inset 0 0 0 1px #ffffff;
+    box-shadow: inset 0 0 0 1px #ffffff;
+    font-weight: bold;
+    border-bottom-color: #ffffff;
+    /*gradient*/
+    background: #f0f0f0; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f0f0f0 0%, #ffffff 64%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f0f0), color-stop(64%,#ffffff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f0f0f0 0%,#ffffff 64%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+.alert {
+    background-color: #fef3d3;
+    border: none;
+    border-radius: 3px;
+    -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
+    box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
+}
+
+.alert-error {
+    background-color: #f2dede;
+}
+
+
+.alert-success {
+    background-color: #e3f4e5;
+}
+
+.alert-info {
+    background-color: #e4f4f9;
+}
+
+
+/*Tekstikenttien tyylit*/
+input { 
+    background-color: #ffffff;
+    background-image: none;
+    border: none;
+    box-shadow: 0 1px 1px #BFBFBF inset, 0 -1px 4px rgba(0, 0, 0, 0.07) inset;
+    color: #333333;
+    padding: 0 0 0 10px;
+    border-radius: 3px 3px 3px 3px;
+    font-size: 13px;
+    height: 26px;
+    line-height: 20px;
+    vertical-align: middle;
+} 
+
+input:hover, textarea:hover {  
+    background-color: #FFF5DA;
+}
+
+input:focus, textarea:focus {
+     background-color: #ffffff;
+}
+
+/*LINKIT*/
+
+a {
+    color: #0c566e;
+}
+
+a :hover {
+    text-decoration:underline;
+}
+
+a :active {
+    text-decoration:underline;
+}
+
+a :visited {
+    color:#730d02;
+}
+
+/* EROTINVIIVA */
+hr { 
+    border:0;
+    color: #149ecb; 
+    background: #149ecb;
+    background-color: #149ecb;
+    height: 1px; 
+} 
+
+
+/* TAULUKOT NORMAALI & STRIPED */
+
+.table {
+    border-top-color:#06526B; 
+}
+
+.table-striped tbody>tr:nth-child(odd)>td, .table-striped tbody>tr:nth-child(odd)>th {
+    background-color: rgba(20, 158, 203, 0.06);
+    border-top-color:rgba(6, 82, 107, 0.12);
+    border-bottom-color:rgba(6, 82, 107, 0.12);
+    
+}
+
+.table th, .table td {
+   border-top-color: rgba(6, 82, 107, 0.12);
+}
+
+.table thead tr th{
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+/* muutetaan disabloidun kentän tausta*/
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+    color: #333333;
+    background-image:url("../img/disabled-pat.png");
+    background-repeat: repeat;
+}
+
+
+/* korjaa checkboxin ympärillä olevan ikävän laatikon */
+/* sekä ongelman jossa checbox, radiobutton ja label eivät asetu pystysuunnassa samaan linjaan */
+/* testattu mac chrome,safari,firefox, w7 IE11,chrome,firefox */
+input[type="checkbox"], input[type="radio"] {
+    box-shadow: none;
+    height:13px;
+    width:13px;
+    padding:0;
+    margin:0;
+    position:relative;
+    top:4px;
+}
+
+/* radiobuttonin ja labelin asemoinnin hienosäätöä */
+input[type="radio"] {
+    top:3px;
+}
+
+/* Sivutus */
+
+.pagination{
+    margin:20px 0;
+}
+.pagination ul{
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+    margin-left:0;
+    margin-bottom:0;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.pagination ul>li{
+    display:inline;
+}
+.pagination ul>li>a,.pagination ul>li>span{
+    float:left;
+    padding:4px 12px;
+    line-height:20px;
+    text-decoration:none;
+    background-color:rgb(210, 236, 245);
+    border:1px solid rgb(146, 204, 224);
+    border-left-width:0;
+}
+.pagination ul>li>a:hover,.pagination ul>li>a:focus,.pagination ul>.active>a,.pagination ul>.active>span{
+    background-color:rgb( 89, 174, 202 );
+}
+.pagination ul>.active>a,.pagination ul>.active>span{
+    color:#999999;
+    cursor:default;
+}
+.pagination ul>.disabled>span,.pagination ul>.disabled>a,.pagination ul>.disabled>a:hover,.pagination ul>.disabled>a:focus{
+    color:#999999;
+    background-color:transparent;
+    cursor:default;
+}
+.pagination ul>li:first-child>a,.pagination ul>li:first-child>span{
+    border-left-width:1px;
+    -webkit-border-top-left-radius:3px;
+    -moz-border-radius-topleft:3px;
+    border-top-left-radius:3px;
+    -webkit-border-bottom-left-radius:3px;
+    -moz-border-radius-bottomleft:3px;
+    border-bottom-left-radius:3px;
+}
+.pagination ul>li:last-child>a,.pagination ul>li:last-child>span{
+    -webkit-border-top-right-radius:3px;
+    -moz-border-radius-topright:3px;
+    border-top-right-radius:3px;
+    -webkit-border-bottom-right-radius:3px;
+    -moz-border-radius-bottomright:3px;
+    border-bottom-right-radius:3px;
+}
+
+
+
+

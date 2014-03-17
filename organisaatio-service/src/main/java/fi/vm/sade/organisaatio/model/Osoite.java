@@ -44,15 +44,12 @@ public class Osoite extends Yhteystieto {
 
     public static final String TYYPPI_POSTIOSOITE = "posti";
     public static final String TYYPPI_KAYNTIOSOITE = "kaynti";
-    public static final String TYYPPI_RUOTSI_KAYNTIOSOITE = "ruotsi_kaynti";
-    public static final String TYYPPI_RUOTSI_POSTIOSOITE = "ruotsi_posti";
     public static final String TYYPPI_ULKOMAINEN_KAYNTIOSOITE = "ulkomainen_kaynti";
     public static final String TYYPPI_ULKOMAINEN_POSTIOSOITE = "ulkomainen_posti";
     public static final String TYYPPI_MUU = "muu";
     
     @NotNull
     @Pattern(regexp = TYYPPI_POSTIOSOITE + "|" + TYYPPI_KAYNTIOSOITE + "|" + 
-            TYYPPI_RUOTSI_KAYNTIOSOITE  + "|" + TYYPPI_RUOTSI_POSTIOSOITE  + "|" +
             TYYPPI_ULKOMAINEN_KAYNTIOSOITE  + "|" + TYYPPI_ULKOMAINEN_POSTIOSOITE  + "|" + TYYPPI_MUU)
     private String osoiteTyyppi;
     
@@ -99,7 +96,7 @@ public class Osoite extends Yhteystieto {
         this.postinumero = postinumero;
         this.postitoimipaikka = postitoimipaikka;
     }
-
+ 
     public String getOsoiteTyyppi() {
         return osoiteTyyppi;
     }

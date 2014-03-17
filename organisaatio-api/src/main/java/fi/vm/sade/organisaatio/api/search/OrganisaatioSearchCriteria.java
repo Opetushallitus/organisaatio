@@ -1,18 +1,30 @@
 package fi.vm.sade.organisaatio.api.search;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class OrganisaatioSearchCriteria  {
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
-    private boolean lakkautetut;
+@ApiModel(value = "Organisaation hakuehdot")
+public class OrganisaatioSearchCriteria {
+
+    private boolean vainLakkautetut;
+
+    private boolean vainAktiiviset;
+
     private String oppilaitostyyppi;
+
     private String organisaatiotyyppi;
+
     private boolean suunnitellut;
+
     private String kunta;
+
     private List<String> oidResctrictionList = new ArrayList<String>();
+
     private String searchStr;
+
     private boolean skipParents;
 
     /**
@@ -23,25 +35,8 @@ public class OrganisaatioSearchCriteria  {
         super();
     }
 
-
     public void setOidRestrictionList(List<String> oidRestrictionList) {
         this.oidResctrictionList.addAll(oidResctrictionList);
-    }
-
-    /**
-     * Gets the value of the lakkautetut property.
-     * 
-     */
-    public boolean isLakkautetut() {
-        return lakkautetut;
-    }
-
-    /**
-     * Sets the value of the lakkautetut property.
-     * 
-     */
-    public void setLakkautetut(boolean value) {
-        this.lakkautetut = value;
     }
 
     /**
@@ -50,6 +45,7 @@ public class OrganisaatioSearchCriteria  {
      * @return possible object is {@link String }
      * 
      */
+    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi", required = true)
     public String getOppilaitosTyyppi() {
         return oppilaitostyyppi;
     }
@@ -71,6 +67,7 @@ public class OrganisaatioSearchCriteria  {
      * @return possible object is {@link String }
      * 
      */
+    @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
     public String getOrganisaatioTyyppi() {
         return organisaatiotyyppi;
     }
@@ -90,7 +87,8 @@ public class OrganisaatioSearchCriteria  {
      * Gets the value of the suunnitellut property.
      * 
      */
-    public boolean isSuunnitellut() {
+    @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    public boolean getSuunnitellut() {
         return suunnitellut;
     }
 
@@ -102,16 +100,17 @@ public class OrganisaatioSearchCriteria  {
         this.suunnitellut = value;
     }
 
-    
-    public boolean getSkipParents(){
+    @ApiModelProperty(value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    public boolean getSkipParents() {
         return skipParents;
     }
-    
+
     /**
      * If true does not return parents, default = false
+     * 
      * @param skipParents
      */
-    public void setSkipParents(boolean skipParents){
+    public void setSkipParents(boolean skipParents) {
         this.skipParents = skipParents;
     }
 
@@ -121,6 +120,7 @@ public class OrganisaatioSearchCriteria  {
      * @return possible object is {@link String }
      * 
      */
+    @ApiModelProperty(value = "Haettavan organisaation kunta", required = true)
     public String getKunta() {
         return kunta;
     }
@@ -136,10 +136,12 @@ public class OrganisaatioSearchCriteria  {
         this.kunta = value;
     }
 
+    @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public List<String> getOidRestrictionList() {
         return this.oidResctrictionList;
     }
 
+    @ApiModelProperty(value = "Hakutermit", required = true)
     public String getSearchStr() {
         return searchStr;
     }
@@ -148,4 +150,35 @@ public class OrganisaatioSearchCriteria  {
         this.searchStr = searchStr;
     }
 
+    /**
+     * Gets the value of the vainLakkautetut property.
+     */
+    @ApiModelProperty(value = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    public boolean getVainLakkautetut() {
+        return vainLakkautetut;
+    }
+
+    /**
+     * Sets the value of the vainLakkautetut property.
+     * 
+     */
+    public void setVainLakkautetut(boolean value) {
+        this.vainLakkautetut = value;
+    }
+
+    /**
+     * Gets the value of the vainAktiiviset property.
+     */
+    @ApiModelProperty(value = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    public boolean getVainAktiiviset() {
+        return vainAktiiviset;
+    }
+
+    /**
+     * Sets the value of the vainLakkautetut property.
+     * 
+     */
+    public void setVainAktiiviset(boolean vainAktiiviset) {
+        this.vainAktiiviset = vainAktiiviset;
+    }   
 }

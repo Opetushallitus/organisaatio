@@ -59,6 +59,8 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
     @FilterXss
     private String arvoText;
+    @FilterXss
+    private String kieli;
 
     @NotNull
     private String yhteystietoArvoOid;
@@ -134,4 +136,13 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     public void setYhteystietoArvoOid(String yhteystietoArvoOid) {
         this.yhteystietoArvoOid = yhteystietoArvoOid;
     }
+
+    public String getKieli() {
+        return kieli;
+    }
+
+    public void setKieli(String kieli) {
+        this.kieli = kieli;
+    }
+
 }

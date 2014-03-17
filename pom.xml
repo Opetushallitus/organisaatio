@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>8.1</version>
+    <version>9.1</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
 
@@ -21,13 +21,14 @@
         <authentication.api.version>7.0-SNAPSHOT</authentication.api.version>
         <generic.version>9.0-SNAPSHOT</generic.version>
         <sade-generic.version>9.0-SNAPSHOT</sade-generic.version>
-        <koodisto.api.version>7.0-SNAPSHOT</koodisto.api.version>
-        <koodisto.widget.version>7.0-SNAPSHOT</koodisto.widget.version>
+        <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
+        <koodisto.widget.version>9.0-SNAPSHOT</koodisto.widget.version>
         <log.client.version>7.0-SNAPSHOT</log.client.version>
         <oid.api.version>8.0-SNAPSHOT</oid.api.version>
         <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
         <vaadin.theme.version>7.0-SNAPSHOT</vaadin.theme.version>
 
+        <modelmapper.version>0.6.3</modelmapper.version>
         <ehcache.version>2.5.0</ehcache.version>
         <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
         <jgroups.version>2.10.0.GA</jgroups.version>
@@ -40,15 +41,16 @@
         <module>organisaatio-service</module>
         <module>organisaatio-ui-widgets</module>
         <module>organisaatio-app</module>
+        <module>organisaatio-ui</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
 	    <dependency>
-	   	<groupId>org.jasig.cas</groupId>
+	   	<groupId>org.jasig.cas.client</groupId>
    		<artifactId>cas-client-support-distributed-ehcache</artifactId>
-   		<version>3.1.10</version>
+   		<version>3.1.12</version>
 		<exclusions>
 		        <exclusion>
           			<groupId>net.sf.ehcache</groupId>
@@ -90,28 +92,4 @@
             <url>http://penaali.hard.ware.fi/artifactory/oph-sade-release-local</url>
         </repository>
     </repositories>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>enforce-java</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[1.6,1.7)</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

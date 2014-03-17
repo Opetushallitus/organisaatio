@@ -1,0 +1,421 @@
+<form name="form" class="form-horizontal" novalidate>
+
+    <div class="control-group">
+        <div class="offset2 span6" ng-show="model.organisaatio.nimi">
+            <h2>{{model.uriLocalizedNames["nimi"]}}
+                <button type="button" class="btn-primary" ng-click="edit()"
+                        auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
+                        {{'Organisaationtarkastelu.muokkaa'| i18n}}
+                </button>
+            </h2>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-show="model.organisaatio.metadata.kuvaEncoded">
+        <img class="absolute offset8 span4" ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.nimi">
+        <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="(avain, arvo) in model.organisaatio.nimi">
+                    {{arvo}} [{{avain}}]<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.alkuPvm">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.voimassaolo'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.alkuPvm | date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm | date:'dd.MM.yyyy'}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.kotipaikka'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.uriLocalizedNames[model.organisaatio.kotipaikkaUri]}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.yritysmuoto">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.yritysmuoto}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.yritysmuoto" ng-if='model.isKoulutustoimija()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.yritysmuoto}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.ytunnus" ng-if='model.isKoulutustoimija()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.ytunnus'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.ytunnus}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.virastotunnus" ng-if='model.isKoulutustoimija()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.virastotunnus'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.virastotunnus}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.maaUri">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.maa'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.uriLocalizedNames[model.organisaatio.maaUri]}}
+            </label>
+        </div>
+    </div>
+
+
+    <div class="control-group" ng-show="model.organisaatio.kieletUris">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.kieli'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="kieli in model.organisaatio.kieletUris">
+                    {{model.uriLocalizedNames[kieli]}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'kaynti'}:true">
+        <div ng-show="yht.osoite">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{yht.osoite}},
+                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'posti'}:true">
+        <div ng-show="yht.osoite">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.postiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{yht.osoite}},
+                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'muu'}:true">
+        <div ng-show="yht.osoite">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.muuosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{yht.osoite}},
+                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
+                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.tyypit">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="tyyppi in model.organisaatio.tyypit">
+                    {{tyyppi}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.tkkoodi'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.oppilaitosKoodi}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.oppilaitosTyyppiUri" ng-if='model.isOppilaitos()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.oppilaitostyyppi'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.uriLocalizedNames[model.organisaatio.oppilaitosTyyppiUri]}}
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-show="model.organisaatio.vuosiluokat" ng-if="model.hasVuosiluokat()">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.vuosiluokat'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="vl in model.organisaatio.vuosiluokat">
+                    {{model.uriLocalizedNames[vl]}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
+        <label class="control-label">
+            {{yttyyppi.nimi}}
+        </label>
+        <div class="controls well">
+            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
+                 ng-form="ytForm">
+                <label class="control-label">
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{yt['YhteystietoArvo.arvoText']}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="control-group">
+        <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
+            <label ng-show="!ktexpanded">
+                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+            </label>
+            <label ng-show="ktexpanded">
+                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+            </label>
+        </a>
+    </div>
+    <div ng-if="ktexpanded">
+        <div class="control-group" ng-show="model.uriLocalizedNames.hakutoimistonNimi">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.uriLocalizedNames.hakutoimistonNimi}}
+                </label>
+            </div>
+        </div>
+
+            <div ng-repeat="tieto in model.organisaatio.metadata.yhteystiedot">
+        <div class="control-group" ng-show="tieto.osoite || tieto.numero || tieto.email || tieto.www">
+                <label class="control-label" ng-show="tieto.osoiteTyyppi === 'kaynti' && tieto.osoite">
+                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                </label>
+                <label class="control-label" ng-show="tieto.osoiteTyyppi === 'posti' && tieto.osoite">
+                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                </label>
+                <label class="control-label" ng-show="tieto.tyyppi === 'puhelin' && tieto.numero">
+                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                </label>
+                <label class="control-label" ng-show="tieto.tyyppi === 'faksi' && tieto.numero">
+                    {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                </label>
+                <label class="control-label" ng-show="tieto.email">
+                    {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                </label>
+                <label class="control-label" ng-show="tieto.www">
+                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left" ng-show="tieto.osoite">
+                        {{tieto.osoite}},
+                        {{model.uriKoodit[tieto.postinumeroUri].koodiArvo}},
+                        {{tieto.postitoimipaikka}}
+                    </label>
+                    <label class="control-label control-label-left" ng-show="tieto.numero">
+                        {{tieto.numero}}
+                    </label>
+                    <label class="control-label control-label-left" ng-show="tieto.email">
+                        {{tieto.email}}
+                    </label>
+                    <label class="control-label control-label-left" ng-show="tieto.www">
+                        {{tieto.www}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group" ng-show="model.hasSome()">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.FACEBOOK">
+                        Facebook: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
+                    </span>
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.GOOGLE_PLUS">
+                        Google+: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
+                    </span>
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.LINKED_IN">
+                        LinkedIn: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
+                    </span>
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.TWITTER">
+                        Twitter: <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
+                    </span>
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU">
+                        <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group" ng-show="model.organisaatio.metadata.hakutoimistoEctsNimi">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.organisaatio.metadata.hakutoimistoEctsNimi}},
+                    {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
+                    <span ng-show="model.organisaatio.metadata.hakutoimistoEctsPuhelin"><br>
+                        {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}},
+                        {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group" ng-if="model.kttabs && (model.kttabs.length > 0)">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.lisatiedot'| i18n}}
+            </label>
+            <div class="controls">
+                <ul class="nav nav-tabs" ng-init="model.ktlang = model.kttabs[0].lang">
+                    <li ng-repeat="tab in model.kttabs" ng-class="{active: model.ktlang === tab.lang}">
+                        <a ng-click="model.ktlang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
+                    </li>
+                </ul>
+
+                <div class="control-group" ng-repeat="field in model.kttypes" ng-if="model.organisaatio.metadata.data[field][model.ktlang]">
+                    <label class="control-label control-label-left">
+                        {{'Organisaationtarkastelu.' + field| i18n}}
+                    </label>
+                    <br>&nbsp;
+                    <div class="controls well" ng-bind-html='model.organisaatio.metadata.data[field][model.ktlang]'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- ktexpanded -->
+
+    <div class="control-group">
+        <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
+            <label ng-show="!oeexpanded">
+                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+            </label>
+            <label ng-show="oeexpanded">
+                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+            </label>
+        </a>
+    </div>
+
+    <div ng-if="oeexpanded">
+
+        <div class="control-group" ng-if="model.oetabs && (model.oetabs.length > 0)">
+            <label class="control-label">
+                {{'Organisaationmuokkaus.lisatiedot'| i18n}}
+            </label>
+            <div class="controls">
+                <ul class="nav nav-tabs" ng-init="model.oelang = model.oetabs[0].lang">
+                    <li ng-repeat="tab in model.oetabs" ng-class="{active: model.oelang === tab.lang}">
+                        <a ng-click="model.oelang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
+                    </li>
+                </ul>
+
+                <div class="control-group" ng-repeat="field in model.oetypes" ng-if="model.organisaatio.metadata.data[field][model.oelang]">
+                    <label class="control-label control-label-left">
+                        {{'Organisaationtarkastelu.' + field| i18n}}
+                    </label>
+                    <br>&nbsp;
+                    <div class="controls well" ng-bind-html='model.organisaatio.metadata.data[field][model.oelang]'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- oeexpanded -->
+
+    <div class="control-group">
+        <a href="" ng-model="aoexpanded" ng-click="aoexpanded = !aoexpanded">
+            <label ng-show="!aoexpanded">
+                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
+            </label>
+            <label ng-show="aoexpanded">
+                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
+            </label>
+        </a>
+    </div>
+
+    <div ng-if="aoexpanded">
+        <div ng-repeat="aliorg in model.aliorganisaatiot track by aliorg.oid">
+            <div class="row" ng-show="model.aliorganisaatiot.length">
+                <label class="offset2">
+                    <span ng-style="{'margin-left':'{{aliorg.level * 50}}px'}">
+                        <a href='#/organisaatiot/{{aliorg.oid}}'>{{aliorg.nimi}}</a>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- aoexpanded -->
+</form>

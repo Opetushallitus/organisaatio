@@ -108,7 +108,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("id")
-    @NotEmpty
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)

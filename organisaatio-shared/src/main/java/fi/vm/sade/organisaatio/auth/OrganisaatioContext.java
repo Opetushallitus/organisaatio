@@ -23,10 +23,12 @@ import java.util.Set;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 public class OrganisaatioContext {
 
     private OrganisaatioDTO dto;
+    private OrganisaatioRDTO rdto;
     private OrganisaatioPerustieto perus;
     private final String orgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
@@ -42,9 +44,16 @@ public class OrganisaatioContext {
     private String getNimi() {
         if (dto != null)
             return dto.getNimi().getTeksti().get(0).getValue();
+        if (rdto != null)
+            return rdto.getNimi().values().iterator().next();
         return (perus != null) ? perus.getNimi("fi") : null;
     }
 
+    private OrganisaatioContext(OrganisaatioRDTO org) {
+        this.orgOid = org != null ? org.getOid() : null;
+        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? org.getTyypit() : Collections.EMPTY_SET);
+        this.rdto = org;
+    }
 
     private OrganisaatioContext(OrganisaatioDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
@@ -72,6 +81,10 @@ public class OrganisaatioContext {
     }
 
     public static OrganisaatioContext get(OrganisaatioPerustieto organisaatio) {
+        return new OrganisaatioContext(organisaatio);
+    }
+
+    public static OrganisaatioContext get(OrganisaatioRDTO organisaatio) {
         return new OrganisaatioContext(organisaatio);
     }
 

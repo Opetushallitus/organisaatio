@@ -49,11 +49,11 @@ import fi.vm.sade.organisaatio.ui.util.UiUtils;
 import fi.vm.sade.vaadin.Oph;
 
 /**
- *
+ * 
  * The panel for specifying search criteria for organisaatio search.
- *
+ * 
  * @author markus
- *
+ * 
  */
 class SearchPanel extends VerticalLayout {
 
@@ -65,9 +65,9 @@ class SearchPanel extends VerticalLayout {
     private KoodistoComponent oppilaitosTyyppi;
     private Button searchButton;
     private Button clearButton;
-    private CheckBox lakkautetut;
-    private CheckBox suunnitellut;
-    //private CheckBox oikeudet;
+    private CheckBox vainLakkautetut;
+    private CheckBox vainAktiiviset;
+    // private CheckBox oikeudet;
     private OrganisaatioSearchCriteria searchCriteria;
     private KoodistoHelper koodistoHelper;
 
@@ -90,7 +90,7 @@ class SearchPanel extends VerticalLayout {
     }
 
     private void buildSearchLayout() {
-        //LAYOUT
+        // LAYOUT
         HorizontalLayout hl = new HorizontalLayout();
         hl.setHeight(-1, UNITS_PIXELS);
         hl.setWidth(-1, Sizeable.UNITS_PIXELS);
@@ -99,9 +99,9 @@ class SearchPanel extends VerticalLayout {
         hl.setMargin(false, false, true, false);
 
         /*
-         *   INITIALIZE COMPONENTS:
+         * INITIALIZE COMPONENTS:
          */
-        searchButton = UiUtils.buttonSmallSecodary(null,I18N.getMessage("c_hae"), new Button.ClickListener() {
+        searchButton = UiUtils.buttonSmallSecodary(null, I18N.getMessage("c_hae"), new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 startSearch();
@@ -109,8 +109,7 @@ class SearchPanel extends VerticalLayout {
         });
         searchButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-
-        searchButton.setWidth(-1, UNITS_PIXELS); //relative size
+        searchButton.setWidth(-1, UNITS_PIXELS); // relative size
 
         clearButton = UiUtils.buttonSmallSecodary(null, I18N.getMessage("c_tyhjenna"), new Button.ClickListener() {
             @Override
@@ -119,8 +118,7 @@ class SearchPanel extends VerticalLayout {
             }
         });
 
-        clearButton.setWidth(-1, UNITS_PIXELS); //relative size
-
+        clearButton.setWidth(-1, UNITS_PIXELS); // relative size
 
         kunta = initKoodistoComponentCombo(KoodistoURI.KOODISTO_KOTIPAIKKA_URI, "c_kunta");
         kunta.setWidth(-1, UNITS_PIXELS);
@@ -136,14 +134,14 @@ class SearchPanel extends VerticalLayout {
         searchBox.setImmediate(true);
 
         /*
-         *   SET COMPONENTS STYLES:
+         * SET COMPONENTS STYLES:
          */
         searchBox.addStyleName(Oph.TEXTFIELD_SEARCH);
         searchButton.addStyleName(Oph.BUTTON_SMALL);
         searchButton.addStyleName(Oph.BUTTON_PRIMARY);
 
         /*
-         *   ADD COMPONENTS TO LAYOUT:
+         * ADD COMPONENTS TO LAYOUT:
          */
         hl.addComponent(searchBox);
         hl.addComponent(kunta);
@@ -153,7 +151,7 @@ class SearchPanel extends VerticalLayout {
         hl.addComponent(clearButton);
 
         /*
-         *   SET ALIGNMENTS:
+         * SET ALIGNMENTS:
          */
         hl.setComponentAlignment(searchBox, Alignment.BOTTOM_LEFT);
         hl.setComponentAlignment(searchButton, Alignment.BOTTOM_LEFT);
@@ -163,19 +161,18 @@ class SearchPanel extends VerticalLayout {
         hl.setComponentAlignment(clearButton, Alignment.BOTTOM_RIGHT);
 
         /*
-         *   EXPAND RATION:
+         * EXPAND RATION:
          */
         hl.setExpandRatio(searchBox, 1f);
 
         addComponent(hl);
     }
 
-
     @Override
     public void attach() {
         super.attach();
-        
-        if(PortletRole.getInstance().getUserContext()!=null && PortletRole.getInstance().getUserContext().isDoAutoSearch()) {
+
+        if (PortletRole.getInstance().getUserContext() != null && PortletRole.getInstance().getUserContext().isDoAutoSearch()) {
             log.info("executing auto search");
             startSearch();
         }
@@ -187,9 +184,9 @@ class SearchPanel extends VerticalLayout {
         kunta.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "kunta"));
         organisaatioTyyppi.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "organisaatioTyyppi"));
         oppilaitosTyyppi.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "oppilaitosTyyppi"));
-        //oikeudet.setPropertyDataSource(new NestedMethodProperty(model, "oikeudet"));
-        lakkautetut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "lakkautetut"));
-        suunnitellut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "suunnitellut"));
+        // oikeudet.setPropertyDataSource(new NestedMethodProperty(model, "oikeudet"));
+        vainLakkautetut.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "vainLakkautetut"));
+        vainAktiiviset.setPropertyDataSource(new NestedMethodProperty(searchCriteria, "vainAktiiviset"));
     }
 
     /**
@@ -198,8 +195,8 @@ class SearchPanel extends VerticalLayout {
     private void clearSelections() {
 
         searchBox.setImmediate(false);
-        searchCriteria.setLakkautetut(false);
-        searchCriteria.setSuunnitellut(false);
+        searchCriteria.setVainAktiiviset(false);
+        searchCriteria.setVainLakkautetut(false);
         searchCriteria.setOppilaitosTyyppi(null);
         searchCriteria.setOrganisaatioTyyppi(null);
         searchCriteria.setSearchStr(null);
@@ -220,18 +217,30 @@ class SearchPanel extends VerticalLayout {
     }
 
     private void initCheckboxes() {
-        //oikeudet = new CheckBox(I18N.getMessage("c_oikeudet"));
+        vainLakkautetut = new CheckBox(I18N.getMessage("c_vainLakkautetut"));
+        vainLakkautetut.setImmediate(true);
+        vainLakkautetut.addListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                System.out.println("asdasdasdas");
+                vainAktiiviset.setValue(false);
+            }
+        });
+        lowerRow.addComponent(vainLakkautetut);
 
-        //lowerRow.addComponent(oikeudet);
-        lakkautetut = new CheckBox(I18N.getMessage("c_lakkautetut"));
-
-        lowerRow.addComponent(lakkautetut);
-        suunnitellut = new CheckBox(I18N.getMessage("c_suunnitellut"));
-
-        lowerRow.addComponent(suunnitellut);
+        vainAktiiviset = new CheckBox(I18N.getMessage("c_vainAktiiviset"));
+        vainAktiiviset.setImmediate(true);
+        vainAktiiviset.addListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                System.out.println("asdasdasdas");
+                vainLakkautetut.setValue(false);
+            }
+        });
+        lowerRow.addComponent(vainAktiiviset);
 
         lowerRow.setSpacing(true);
-        lowerRow.setMargin(false,false,true,false);
+        lowerRow.setMargin(false, false, true, false);
     }
 
     private KoodistoComponent initKoodistoComponentCombo(String koodistoUri, String message) {
@@ -241,7 +250,7 @@ class SearchPanel extends VerticalLayout {
 
         oppilaitosTyyppiC.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
         compToInit.setField(oppilaitosTyyppiC);
-        compToInit.setWidth(-1, UNITS_PIXELS); //relative size
+        compToInit.setWidth(-1, UNITS_PIXELS); // relative size
 
         return compToInit;
     }
@@ -250,7 +259,7 @@ class SearchPanel extends VerticalLayout {
         ComboBox cb = new ComboBox(I18N.getMessage("c_orgTyyppi"));
         addOrganisaatioTyyppis(cb);
         cb.setImmediate(true);
-        cb.setWidth(-1, UNITS_PIXELS); //relative size
+        cb.setWidth(-1, UNITS_PIXELS); // relative size
         return cb;
     }
 
@@ -309,20 +318,20 @@ class SearchPanel extends VerticalLayout {
         this.clearButton = clearButton;
     }
 
-    public CheckBox getLakkautetut() {
-        return lakkautetut;
+    public CheckBox getVainLakkautetut() {
+        return vainLakkautetut;
     }
 
-    public void setLakkautetut(CheckBox lakkautetut) {
-        this.lakkautetut = lakkautetut;
+    public void setVainLakkautetut(CheckBox vainLakkautetut) {
+        this.vainLakkautetut = vainLakkautetut;
     }
 
-    public CheckBox getSuunnitellut() {
-        return suunnitellut;
+    public CheckBox getVainaktiiviset() {
+        return vainAktiiviset;
     }
 
-    public void setSuunnitellut(CheckBox suunnitellut) {
-        this.suunnitellut = suunnitellut;
+    public void setVainAktiiviset(CheckBox vainAktiiviset) {
+        this.vainAktiiviset = vainAktiiviset;
     }
 
     public OrganisaatioSearchCriteria getSearchCriteria() {

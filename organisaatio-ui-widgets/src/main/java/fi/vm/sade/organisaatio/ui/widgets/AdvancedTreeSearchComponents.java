@@ -60,8 +60,8 @@ public class AdvancedTreeSearchComponents extends VerticalLayout {
     private CheckBox olKoodi;
     private ComboBox organisaatioTyyppi;
     private ComboBox oppilaitosTyyppi;
-    private CheckBox lakkautetut;
-    private CheckBox suunnitellut;
+    private CheckBox vainLakkautetut;
+    private CheckBox vainAktiiviset;
     private static int counter = 0;
 
 
@@ -149,9 +149,9 @@ public class AdvancedTreeSearchComponents extends VerticalLayout {
     }
 
     private void initRightCheckboxes() {
-        lakkautetut = initializeCheckbox("c_lakkautetut", "lakkautetutSearch", "lakkautetut", rightPanel);
+        vainLakkautetut = initializeCheckbox("c_vainLakkautetut", "lakkautetutSearch", "lakkautetut", rightPanel);
         //model.setLakkautetut(true);
-        suunnitellut = initializeCheckbox("c_suunnitellut", "suunnitellutSearch", "suunnitellut", rightPanel);
+        vainAktiiviset = initializeCheckbox("c_vainAktiiviset", "aktiivisetSearch", "aktiiviset", rightPanel);
     }
     /*
      * Initialization of components with data.
@@ -224,12 +224,12 @@ public class AdvancedTreeSearchComponents extends VerticalLayout {
         return oppilaitosTyyppi;
     }
 
-    public CheckBox getLakkautetut() {
-        return lakkautetut;
+    public CheckBox getVainlakkautetut() {
+        return vainLakkautetut;
     }
 
-    public CheckBox getSuunnitellut() {
-        return suunnitellut;
+    public CheckBox getVainaktiiviset() {
+        return vainAktiiviset;
     }
 
 
