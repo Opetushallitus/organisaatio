@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.path.StringPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
@@ -58,6 +59,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
 
+    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
+    
     /**
      * Find the children of given parent organisation.
      *
@@ -851,6 +854,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             return null;
         }
         
+        // TODO: kotipaikka vielä kunta-koodiston uri ilman versiota --> version lisäyksen jälkeen: getUriVersionExpression()
         BooleanExpression kuntaExpr = qOrganisaatio.kotipaikka.eq(kuntaList.get(0));
         if (kuntaList.size() > 1) {
             for (int i = 1; i < kuntaList.size(); ++i) {
@@ -865,10 +869,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             return null;
         }
         
-        BooleanExpression oppilaitostyyppiExpr = qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(0) + "#%");
+        BooleanExpression oppilaitostyyppiExpr = getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppiList.get(0));
         if (oppilaitostyyppiList.size() > 1) {
             for (int i = 1; i < oppilaitostyyppiList.size(); ++i) {
-                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppiList.get(i) + "#%"));
+                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppiList.get(i)));
             }
         }
         return oppilaitostyyppiExpr;
@@ -915,5 +919,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
         return oidExpr;
     }
-    
+ 
+    private BooleanExpression getUriVersionExpression(StringPath string, String criteriaUri) {
+        if (criteriaUri.matches(uriWithVersionRegExp)) {
+            return string.eq(criteriaUri);
+        }
+
+        return string.like(criteriaUri + "#%");
+    }
 }
