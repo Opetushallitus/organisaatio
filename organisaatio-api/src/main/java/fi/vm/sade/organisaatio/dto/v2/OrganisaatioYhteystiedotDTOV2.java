@@ -34,6 +34,8 @@ public class OrganisaatioYhteystiedotDTOV2 {
     
     private String kotipaikka;
     
+    private String oppilaitosTyyppi;
+    
     // Organisaatiotunniste saadaan vaikka näin --> CONCAT(oppilaitoskoodi, ytunnus, toimipistekoodi) as organisaatio_nro,
     private String oppilaitosKoodi;
     private String ytunnus;
@@ -246,5 +248,19 @@ public class OrganisaatioYhteystiedotDTOV2 {
      */
     public void setEmailOsoite(Map<String, String> emailOsoite) {
         this.emailOsoite = emailOsoite;
+    }
+
+    /**
+     * @return the oppilaitosTyyppi
+     */
+    public String getOppilaitosTyyppi() {
+        return oppilaitosTyyppi;
+    }
+
+    /**
+     * @param oppilaitosTyyppi the oppilaitosTyyppi to set
+     */
+    public void setOppilaitosTyyppi(String oppilaitosTyyppi) {
+        this.oppilaitosTyyppi = oppilaitosTyyppi;
     }
 }
