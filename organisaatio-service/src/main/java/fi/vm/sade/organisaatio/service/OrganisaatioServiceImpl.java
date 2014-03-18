@@ -413,6 +413,7 @@ public class OrganisaatioServiceImpl
             YhteystietoArvo o = ov.get(ya.getKentta().getOid());
             if (o != null) {
                 o.setArvoText(ya.getArvoText());
+                o.setKieli(ya.getKieli());
                 yhteystietoArvoDAO.update(o);
                 ret.add(o);
             } else {
