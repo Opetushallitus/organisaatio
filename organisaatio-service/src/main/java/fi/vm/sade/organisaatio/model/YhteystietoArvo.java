@@ -43,7 +43,7 @@ import fi.vm.sade.security.xssfilter.XssFilterListener;
  * @see fi.vm.sade.organisaatio.api.model.YhteystietoArvoDTO
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"kentta_id", "organisaatio_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"kentta_id", "organisaatio_id", "kieli"})})
 @EntityListeners(XssFilterListener.class)
 public class YhteystietoArvo extends OrganisaatioBaseEntity {
 
@@ -106,7 +106,7 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
 
     public Serializable getArvo() {
         if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.TEKSTI.value())) {
-            return arvoText;
+            return new String[]{ arvoText, kieli };
         } else if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.EMAIL.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.WWW.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.FAKSI.value())
@@ -116,7 +116,7 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
             return arvoYhteystieto;
         } else if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.NIMI.value())
                     || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.NIMIKE.value())) {
-            return arvoText;
+            return new String[]{ arvoText, kieli };
         } else {
             throw new IllegalArgumentException("cannot get arvo, illegal target class: "+kentta.getTyyppi());
         }

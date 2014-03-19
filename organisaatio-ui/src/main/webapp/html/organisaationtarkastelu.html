@@ -11,11 +11,23 @@
         </div>
     </div>
 
-    <hr>
-
     <div ng-show="model.organisaatio.metadata.kuvaEncoded">
         <img class="absolute offset8 span4" ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
     </div>
+
+    <div class="control-group" ng-show="model.organisaatio.tyypit">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="tyyppi in model.organisaatio.tyypit">
+                    {{tyyppi}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
 
     <div class="control-group" ng-show="model.organisaatio.nimi">
         <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
@@ -119,64 +131,6 @@
         </div>
     </div>
 
-    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'kaynti'}:true">
-        <div ng-show="yht.osoite">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <label class="control-label control-label-left">
-                    {{yht.osoite}},
-                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
-                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'posti'}:true">
-        <div ng-show="yht.osoite">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.postiosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <label class="control-label control-label-left">
-                    {{yht.osoite}},
-                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
-                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group" ng-repeat="yht in model.organisaatio.yhteystiedot| filter:{osoiteTyyppi:'muu'}:true">
-        <div ng-show="yht.osoite">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.muuosoite'| i18n}}
-            </label>
-            <div class="controls">
-                <label class="control-label control-label-left">
-                    {{yht.osoite}},
-                    {{model.uriKoodit[yht.postinumeroUri].koodiArvo}},
-                    {{model.getLocalizedPaikkaByUri(yht.postinumeroUri)}}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="control-group" ng-show="model.organisaatio.tyypit">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}
-        </label>
-        <div class="controls">
-            <label class="control-label control-label-left">
-                <div ng-repeat="tyyppi in model.organisaatio.tyypit">
-                    {{tyyppi}}<br>
-                </div>
-            </label>
-        </div>
-    </div>
-
     <div class="control-group" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
         <label class="control-label">
             {{'Organisaationtarkastelu.tkkoodi'| i18n}}
@@ -212,15 +166,129 @@
         </div>
     </div>
 
-    <div class="control-group" ng-repeat="yttyyppi in model.lisayhteystiedot">
-        <label class="control-label">
-            {{yttyyppi.nimi}}
-        </label>
-        <div class="controls well">
-            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos" ng-show="yt['YhteystietojenTyyppi.oid'] === yttyyppi.oid"
-                 ng-form="ytForm">
+    <hr>
+
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="ytexpanded" ng-click="ytexpanded = !ytexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':ytexpanded, 'icon-chevron-right':!ytexpanded}"
+                              ng-bind=""></span>
+                        {{'Organisaationmuokkaus.yhteystiedot'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="ytexpanded">
+
+        <tabset>
+            <tab ng-repeat="yttab in model.yttabs"
+                 heading="{{model.uriLocalizedNames[yttab]}}"
+                 select="model.ytlang=yttab">
+            </tab>
+        </tabset>
+
+        <div class="control-group">
+            <div>
                 <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
+                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].kaynti.osoite}},
+                        {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
+                        {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].posti.osoite}},
+                        {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
+                        {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].puhelin.numero}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].faksi.numero}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].email.email}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- ytexpanded -->
+
+    <div ng-repeat="yta in model.lisayhteystietoarvos" ng-init="ltexpanded={}; model.ltlang={}">
+        <div class="row">
+            <div class="span4">
+                <div class="view-row-label">
+                    <a href="" ng-model="ltexpanded[yta.oid]" ng-click="ltexpanded[yta.oid] = !ltexpanded[yta.oid]">
+                        <label>
+                            <span ng-class="{'icon-chevron-down':ltexpanded[yta.oid], 'icon-chevron-right':!ltexpanded[yta.oid]}"
+                                  ng-bind=""></span>
+                            {{yta.nimi}}
+                        </label>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="ltexpanded[yta.oid]">
+            <tabset>
+                <tab ng-repeat="lttab in model.lttabs"
+                     heading="{{model.uriLocalizedNames[lttab]}}"
+                     select="model.ltlang[yta.oid]=lttab">
+                </tab>
+            </tabset>
+
+            <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos"
+                 ng-show="yt['YhteystietojenTyyppi.oid'] === yta.oid && yt['YhteystietoArvo.kieli'] === model.ltlang[yta.oid]">
+                <label class="control-label">
+                    {{model.getLocalizedLisatietoElementtiNimi(yt)}}
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -228,72 +296,119 @@
                     </label>
                 </div>
             </div>
+            <hr>
+        </div> <!-- ltexpanded -->
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="hpexpanded" ng-click="hpexpanded = !hpexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span>
+                        {{'Organisaationmuokkaus.hakijapalvelut'| i18n}}
+                    </label>
+                </a>
+            </div>
         </div>
     </div>
 
-    <hr>
+    <div ng-show="hpexpanded">
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.hp.tabs"
+                 active="tab.active"
+                 select="model.hplang=tab.lang"
+                 heading="{{model.uriLocalizedNames[tab.lang]}}">
+            </tab>
+        </tabset>
 
-    <div class="control-group">
-        <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
-            <label ng-show="!ktexpanded">
-                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
-            </label>
-            <label ng-show="ktexpanded">
-                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
-            </label>
-        </a>
-    </div>
-    <div ng-if="ktexpanded">
-        <div class="control-group" ng-show="model.uriLocalizedNames.hakutoimistonNimi">
+
+        <div class="control-group">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    {{model.uriLocalizedNames.hakutoimistonNimi}}
+                    {{model.organisaatio.metadata.hakutoimistonNimi[model.hplang]}}
                 </label>
             </div>
         </div>
 
-            <div ng-repeat="tieto in model.organisaatio.metadata.yhteystiedot">
-        <div class="control-group" ng-show="tieto.osoite || tieto.numero || tieto.email || tieto.www">
-                <label class="control-label" ng-show="tieto.osoiteTyyppi === 'kaynti' && tieto.osoite">
-                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.mdyhteystiedot[model.hplang].kaynti.osoite}},&nbsp;
+                    {{model.uriKoodit[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
+                    {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}
                 </label>
-                <label class="control-label" ng-show="tieto.osoiteTyyppi === 'posti' && tieto.osoite">
-                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
-                </label>
-                <label class="control-label" ng-show="tieto.tyyppi === 'puhelin' && tieto.numero">
-                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
-                </label>
-                <label class="control-label" ng-show="tieto.tyyppi === 'faksi' && tieto.numero">
-                    {{'Organisaationtarkastelu.faksinumero'| i18n}}
-                </label>
-                <label class="control-label" ng-show="tieto.email">
-                    {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-                </label>
-                <label class="control-label" ng-show="tieto.www">
-                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
-                </label>
-                <div class="controls">
-                    <label class="control-label control-label-left" ng-show="tieto.osoite">
-                        {{tieto.osoite}},
-                        {{model.uriKoodit[tieto.postinumeroUri].koodiArvo}},
-                        {{tieto.postitoimipaikka}}
-                    </label>
-                    <label class="control-label control-label-left" ng-show="tieto.numero">
-                        {{tieto.numero}}
-                    </label>
-                    <label class="control-label control-label-left" ng-show="tieto.email">
-                        {{tieto.email}}
-                    </label>
-                    <label class="control-label control-label-left" ng-show="tieto.www">
-                        {{tieto.www}}
-                    </label>
-                </div>
             </div>
         </div>
 
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.postiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.mdyhteystiedot[model.hplang].posti.osoite}},&nbsp;
+                    {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
+                    {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.mdyhteystiedot[model.hplang].puhelin.numero}}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.faksinumero'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.mdyhteystiedot[model.hplang].faksi.numero}}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+            </label>
+            <div class="controls">
+                <label class="control-label control-label-left">
+                    {{model.mdyhteystiedot[model.hplang].email.email}}
+                </label>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- hpexpanded -->
+
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="smexpanded" ng-click="smexpanded = !smexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':smexpanded, 'icon-chevron-right':!smexpanded}"></span>
+                        {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="smexpanded">
         <div class="control-group" ng-show="model.hasSome()">
             <label class="control-label">
                 {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
@@ -314,11 +429,28 @@
                     </span>
                     <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU">
                         <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
+                    </span>
                 </label>
             </div>
         </div>
+        <hr>
+    </div> <!-- smexpanded -->
 
-        <div class="control-group" ng-show="model.organisaatio.metadata.hakutoimistoEctsNimi">
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="ectsexpanded" ng-click="ectsexpanded = !ectsexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':ectsexpanded, 'icon-chevron-right':!ectsexpanded}"></span>
+                        {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="ectsexpanded" ng-show="model.organisaatio.metadata.hakutoimistoEctsNimi">
+        <div class="control-group">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
             </label>
@@ -333,77 +465,90 @@
                 </label>
             </div>
         </div>
+        <hr>
+    </div> <!-- ectsexpanded -->
 
-        <div class="control-group" ng-if="model.kttabs && (model.kttabs.length > 0)">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.lisatiedot'| i18n}}
-            </label>
-            <div class="controls">
-                <ul class="nav nav-tabs" ng-init="model.ktlang = model.kttabs[0].lang">
-                    <li ng-repeat="tab in model.kttabs" ng-class="{active: model.ktlang === tab.lang}">
-                        <a ng-click="model.ktlang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
-                    </li>
-                </ul>
-
-                <div class="control-group" ng-repeat="field in model.kttypes" ng-if="model.organisaatio.metadata.data[field][model.ktlang]">
-                    <label class="control-label control-label-left">
-                        {{'Organisaationtarkastelu.' + field| i18n}}
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':ktexpanded, 'icon-chevron-right':!ktexpanded}"></span>
+                        {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
                     </label>
-                    <br>&nbsp;
-                    <div class="controls well" ng-bind-html='model.organisaatio.metadata.data[field][model.ktlang]'>
-                    </div>
-                </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="ktexpanded"> <!-- ktexpanded -->
+
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.kt.tabs"
+                 active="tab.active"
+                 select="model.ktlang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}}
+                </tab-heading>
+            </tab>
+        </tabset>
+
+
+        <div class="control-group" ng-repeat="field in model.kttypes" ng-show="model.organisaatio.metadata.data[field][model.ktlang]">
+            <label class="control-label">
+                {{'Organisaationtarkastelu.' + field| i18n}}
+            </label>
+            <div class="controls" ng-bind-html="model.organisaatio.metadata.data[field][model.ktlang]">
             </div>
         </div>
         <hr>
     </div> <!-- ktexpanded -->
 
-    <div class="control-group">
-        <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
-            <label ng-show="!oeexpanded">
-                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
-            </label>
-            <label ng-show="oeexpanded">
-                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
-            </label>
-        </a>
+   <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':oeexpanded, 'icon-chevron-right':!oeexpanded}"></span>
+                        {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div ng-if="oeexpanded">
+    <div ng-show="oeexpanded">
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.oe.tabs"
+                 active="tab.active"
+                 select="model.oelang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}}
+                </tab-heading>
+            </tab>
+        </tabset>
 
-        <div class="control-group" ng-if="model.oetabs && (model.oetabs.length > 0)">
+        <div class="control-group" ng-repeat="field in model.oetypes" ng-show="model.organisaatio.metadata.data[field][model.oelang]">
             <label class="control-label">
-                {{'Organisaationmuokkaus.lisatiedot'| i18n}}
+                {{'Organisaationtarkastelu.' + field| i18n}}
             </label>
-            <div class="controls">
-                <ul class="nav nav-tabs" ng-init="model.oelang = model.oetabs[0].lang">
-                    <li ng-repeat="tab in model.oetabs" ng-class="{active: model.oelang === tab.lang}">
-                        <a ng-click="model.oelang = tab.lang" href="" data-toggle="tabi">{{model.uriLocalizedNames[tab.lang]}}</a>
-                    </li>
-                </ul>
-
-                <div class="control-group" ng-repeat="field in model.oetypes" ng-if="model.organisaatio.metadata.data[field][model.oelang]">
-                    <label class="control-label control-label-left">
-                        {{'Organisaationtarkastelu.' + field| i18n}}
-                    </label>
-                    <br>&nbsp;
-                    <div class="controls well" ng-bind-html='model.organisaatio.metadata.data[field][model.oelang]'>
-                    </div>
-                </div>
+            <div class="controls" ng-bind-html="model.organisaatio.metadata.data[field][model.oelang]">
             </div>
         </div>
         <hr>
     </div> <!-- oeexpanded -->
 
-    <div class="control-group">
-        <a href="" ng-model="aoexpanded" ng-click="aoexpanded = !aoexpanded">
-            <label ng-show="!aoexpanded">
-                <span class="icon-chevron-right"></span> {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
-            </label>
-            <label ng-show="aoexpanded">
-                <span class="icon-chevron-down"></span> {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
-            </label>
-        </a>
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="aoexpanded" ng-click="aoexpanded = !aoexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':aoexpanded, 'icon-chevron-right':!aoexpanded}"></span>
+                        {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
     </div>
 
     <div ng-if="aoexpanded">

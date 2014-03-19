@@ -64,7 +64,8 @@ public class YhteystietoArvoConverter extends Converter<YhteystietoArvoDTO, Yhte
         } else if (entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.TEKSTI.value())
                     || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.NIMI.value())
                     || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.NIMIKE.value())) {
-            entity.setArvoText((String) theArvo);
+            entity.setArvoText(((String[]) theArvo)[0]);
+            entity.setKieli(((String[]) theArvo)[1]);
         } else {
             throw new IllegalArgumentException("illegal arvo in YhteystietoArvo: "+theArvo);
         }
