@@ -175,7 +175,7 @@ public interface OrganisaatioResource {
 
     @GET
     @Path("/auth")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Testaa autentikoituneen käyttäjän", notes = "Tätä voi kutsua ennen ensimmäistä autenttikoitua POST-kutsua, ettei tule CAS + autentikoitu POST redirection ongelma.", response = String.class)
     public String authHello();
 

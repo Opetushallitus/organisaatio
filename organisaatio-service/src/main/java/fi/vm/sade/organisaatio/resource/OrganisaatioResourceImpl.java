@@ -478,6 +478,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String authHello() {
-        return "Well Hello! " + new Date();
+        return "{\"message\": \"Well Hello! " + new Date() + "\"}";
     }
 }
