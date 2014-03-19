@@ -164,7 +164,7 @@ public interface OrganisaatioResource {
     @GET
     @Path("/myroles")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Palauttaa autentikoituneen käyttäjän roolit", notes = "Pitäisi testikäyttöön samat kuin /cas/myroles.", response = String.class)
+    @ApiOperation(value = "Palauttaa autentikoituneen käyttäjän roolit", notes = "Pitäisi palauttaa testikäyttöön samat kuin /cas/myroles.", response = String.class)
     public String getRoles();
 
     @GET
@@ -172,4 +172,11 @@ public interface OrganisaatioResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Palauttaa sallitut yhteystietotyypit", notes = "Palauttaa sallitut yhteystietotyypit", response = List.class)
     public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@QueryParam("organisaatioTyyppi") List<String> organisaatioTyyppi);
+
+    @GET
+    @Path("/auth")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Testaa autentikoituneen käyttäjän", notes = "Tätä voi kutsua ennen ensimmäistä autenttikoitua POST-kutsua, ettei tule CAS + autentikoitu POST redirection ongelma.", response = String.class)
+    public String authHello();
+
 }
