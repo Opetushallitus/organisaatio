@@ -267,10 +267,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (o == null) {
             o = organisaatioDAO.findByToimipistekoodi(oid);
         }
-        //If the organisaatio is opetuspiste (toimipiste) and it does not have a value in yhteishaunKoulukoodi field
-        //such is saught from koodisto
-        if (o.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) && isEmpty(o.getYhteishaunKoulukoodi())) {
-            updateYhKoulukoodi(o);
+        // If the organisaatio is opetuspiste (toimipiste) and it does not have a value in yhteishaunKoulukoodi field
+        // such is saught from koodisto
+        if (o != null) {
+            if (o.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) && isEmpty(o.getYhteishaunKoulukoodi())) {
+                updateYhKoulukoodi(o);
+            }
         }
 
         OrganisaatioRDTO result = conversionService.convert(o, OrganisaatioRDTO.class);
@@ -473,4 +475,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return result;
     }
 
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String authHello() {
+        return "{\"message\": \"Well Hello! " + new Date() + "\"}";
+    }
 }
