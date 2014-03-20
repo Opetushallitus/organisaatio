@@ -148,11 +148,15 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         },
 
         getNimi: function (node) {
-            if ('fi' in node.nimi) {
+            // TODO: Jos käyttäjän kieli muu kuin suomi --> valitaan oikea kieliversio
+            if ('fi' in node.nimi && node.nimi.fi) {
                 return node.nimi.fi;
             }
-            if ('sv' in node.nimi) {
+            if ('sv' in node.nimi && node.nimi.sv) {
                 return node.nimi.sv;
+            }
+            if ('en' in node.nimi && node.nimi.en) {
+                return node.nimi.en;
             }
             return "--";
         },

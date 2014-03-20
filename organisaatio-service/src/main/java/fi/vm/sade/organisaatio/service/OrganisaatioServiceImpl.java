@@ -400,7 +400,7 @@ public class OrganisaatioServiceImpl
             if (!isAllowed(org, ya)) {
                 yhteystietoArvoDAO.remove(ya);
             } else {
-                ov.put(ya.getKentta().getOid(), ya);
+                ov.put(ya.getKentta().getOid() + ya.getKieli(), ya);
             }
         }
 
@@ -410,9 +410,10 @@ public class OrganisaatioServiceImpl
             if (!isAllowed(org, ya)) {
                 continue;
             }
-            YhteystietoArvo o = ov.get(ya.getKentta().getOid());
+            YhteystietoArvo o = ov.get(ya.getKentta().getOid() + ya.getKieli());
             if (o != null) {
                 o.setArvoText(ya.getArvoText());
+                o.setKieli(ya.getKieli());
                 yhteystietoArvoDAO.update(o);
                 ret.add(o);
             } else {

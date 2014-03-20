@@ -71,8 +71,13 @@ app.config(function($routeProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-app.run(function(BuildVersion) {
+app.run(function(BuildVersion, OrganisaatioInitAuth) {
+    // Haetaan build version
     BuildVersion.update();
+    
+    // Tehdään autentikoitu get servicelle
+    // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
+    OrganisaatioInitAuth.init();
 });
 
 ////////////
@@ -190,6 +195,22 @@ app.factory('BuildVersion', ['$rootScope', '$http', '$log', function($rootScope,
     }
 ]);
 
+app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($log, OrganisaatioAuthGET) {
+        var initAuthService;
+        return initAuthService = {
+            init: function() {
+                OrganisaatioAuthGET.get({}, function(result) {
+                    $log.log("Organisaatio Auth Init.");
+                }, 
+                // Error case
+                function(response) {
+                    $log.error("Organisaatio Auth Init failed, response: " + response.status);
+                });
+            }
+        };
+    }
+]);
+
 
 ////////////
 //
@@ -228,6 +249,14 @@ app.factory('Aliorganisaatiot', function($resource) {
 app.factory('Organisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/hae", {}, {
         get: {method: 'GET'}
+    });
+});
+
+// Tehdään organisaatiopalveluun autentikoitu get kutsu
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/rest/myroles
+app.factory('OrganisaatioAuthGET', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
+        get: {method:   "GET"}
     });
 });
 

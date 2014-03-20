@@ -14,12 +14,20 @@ app.directive('ophNullIfZeroLength', function($log) {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function(viewValue) {
-                if (viewValue===null) {
+            var parserValidator = function(viewValue) {
+                if (viewValue === null) {
                     return viewValue;
                 }
                 return ((viewValue.length === 0) ? null : viewValue);
-            });
+            };
+            ctrl.$parsers.unshift(parserValidator);
+            var formatterValidator = function(viewValue) {
+                if (elm[0] && (elm[0].value !== null) && (elm[0].value.length === 0)) {
+                    elm.value = null;
+                }
+                return viewValue;
+            };
+            ctrl.$formatters.unshift(formatterValidator);
         }
     };
 });

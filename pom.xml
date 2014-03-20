@@ -36,11 +36,11 @@
 
     <modules>
         <module>organisaatio-api</module>
-        <module>organisaatio-shared</module>
+        <!-- <module>organisaatio-shared</module> -->
         <module>organisaatio-solr-client</module>
         <module>organisaatio-service</module>
-        <module>organisaatio-ui-widgets</module>
-        <module>organisaatio-app</module>
+        <!-- <module>organisaatio-ui-widgets</module> -->
+        <!-- <module>organisaatio-app</module> -->
         <module>organisaatio-ui</module>
     </modules>
 
