@@ -2,7 +2,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, YhteystietojenTyyppi, $filter, $log, $timeout) {
+        HenkiloKayttooikeus, KoodistoKieli, YhteystietojenTyyppi, $filter, $log, $timeout, $location) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -557,7 +557,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         updateLisayhteystiedot = function() {
             model.lisayhteystiedot = {};
-            var kaikkiTyypit = model.organisaatio.tyypit.concat(model.organisaatio.oppilaitosTyyppiUri);
+            var kaikkiTyypit = model.organisaatio.tyypit;
+            if (model.organisaatio.oppilaitosTyyppiUri) {
+                kaikkiTyypit = kaikkiTyypit.concat(model.organisaatio.oppilaitosTyyppiUri);
+            }
             for (tyyppi in kaikkiTyypit) {
                 if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
                     updateLisayhteystietoArvos(model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]);
@@ -798,11 +801,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         refreshHenkilo = function() {
             model.henkilot.virkailijatTooltip = "";
             HenkiloVirkailijat.get({oid: model.organisaatio.oid}, function(result) {
-                for (var i = 0; i < result.totalCount; i++) {
-                    model.henkilot.virkailijat.push({
-                        nimi: result.results[i].etunimet + " " + result.results[i].sukunimi,
-                        tiedot: result.results[i]});
-                    model.henkilot.virkailijatTooltip += result.results[0].etunimet + " " + result.results[0].sukunimi + "<br>";
+                if (result.results) {
+                    for (var i = 0; i < result.results.length; i++) {
+                        model.henkilot.virkailijat.push({
+                            nimi: result.results[i].etunimet + " " + result.results[i].sukunimi,
+                            tiedot: result.results[i]});
+                        model.henkilot.virkailijatTooltip += result.results[0].etunimet + " " + result.results[0].sukunimi + "<br>";
+                    }
                 }
             }, function(response) {
                 // Henkilöitä ei löytynyt
@@ -988,8 +993,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         checkLisayhteystiedot = function() {
             for (var i = model.organisaatio.yhteystietoArvos.length - 1; i >= 0; i--) {
-                if ((model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.arvoText']===null) ||
-                        (model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.kieli']===null)) {
+                if ((model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.arvoText'] === null) ||
+                        (model.organisaatio.yhteystietoArvos[i]['YhteystietoArvo.kieli'] === null)) {
                     model.organisaatio.yhteystietoArvos.splice(i, 1);
                 }
             }
@@ -1021,6 +1026,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                     Alert.closeAlert(model.alert);
+                    $location.path($location.path().split(model.organisaatio.parentOid)[0] + result.oid + "/edit");
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
