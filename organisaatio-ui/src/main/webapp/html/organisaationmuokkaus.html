@@ -330,7 +330,7 @@
                 {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
             </label>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
-                <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6"
+                <input id="kayntiosoitefi" type="text" maxlength="30" name="kayntiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
@@ -351,7 +351,7 @@
                 {{'Organisaationtarkastelu.postiosoite'| i18n}}
             </label>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
-                <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi" class="span6"
+                <input id="postiosoitefi" type="text" maxlength="30" name="postiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
@@ -534,7 +534,7 @@
                     </label>
 
                     <div class="controls">
-                        <input id="htnimifi" type="text" name="htnimifi" class="span6"
+                        <input id="htnimifi" type="text" name="htnimifi" class="span6" oph-null-if-zero-length
                                ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]"
                                ng-required="false"/>
                     </div>
@@ -559,7 +559,7 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdkayntiosoitefi" type="text" maxlength="30" name="mdkayntiosoitefi" class="span6"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" oph-null-if-zero-length
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
@@ -579,7 +579,7 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdpostiosoitefi" type="text" maxlength="30" name="mdpostiosoitefi" class="span6"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" oph-null-if-zero-length
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdpostipostifi" name="mdpostipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
