@@ -5,7 +5,7 @@
             <h2>{{model.uriLocalizedNames["nimi"]}}
                 <button type="button" class="btn-primary" ng-click="edit()"
                         auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
-                        {{'Organisaationtarkastelu.muokkaa'| i18n}}
+                    {{'Organisaationtarkastelu.muokkaa'| i18n}}
                 </button>
             </h2>
         </div>
@@ -46,7 +46,7 @@
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
-                {{model.organisaatio.alkuPvm | date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm | date:'dd.MM.yyyy'}}
+                {{model.organisaatio.alkuPvm| date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm| date:'dd.MM.yyyy'}}
             </label>
         </div>
     </div>
@@ -191,14 +191,14 @@
             </tab>
         </tabset>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite || model.yhteystiedot[model.ytlang].kaynti.postinumeroUri">
             <div>
                 <label class="control-label">
                     {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        {{model.yhteystiedot[model.ytlang].kaynti.osoite}},
+                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite}},</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
                         {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
                     </label>
@@ -206,14 +206,27 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite}}</pre>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].posti.osoite || model.yhteystiedot[model.ytlang].posti.postinumeroUri">
             <div>
                 <label class="control-label">
                     {{'Organisaationtarkastelu.postiosoite'| i18n}}
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        {{model.yhteystiedot[model.ytlang].posti.osoite}},
+                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite}},</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
                         {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
                     </label>
@@ -221,7 +234,20 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite}}</pre>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group"ng-if="model.yhteystiedot[model.ytlang].puhelin.numero">
             <div>
                 <label class="control-label">
                     {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
@@ -234,7 +260,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].faksi.numero">
             <div>
                 <label class="control-label">
                     {{'Organisaationtarkastelu.faksinumero'| i18n}}
@@ -247,9 +273,22 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].www.www">
             <div>
                 <label class="control-label">
+                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.yhteystiedot[model.ytlang].www.www}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div>
+                <label class="control-label" ng-if="model.yhteystiedot[model.ytlang].email.email">
                     {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
                 </label>
                 <div class="controls">
@@ -262,7 +301,7 @@
         <hr>
     </div> <!-- ytexpanded -->
 
-    <div ng-repeat="yta in model.lisayhteystietoarvos" ng-init="ltexpanded={}; model.ltlang={}">
+    <div ng-repeat="yta in model.lisayhteystietoarvos" ng-init="ltexpanded = {}; model.ltlang = {}">
         <div class="row">
             <div class="span4">
                 <div class="view-row-label">
@@ -323,7 +362,7 @@
         </tabset>
 
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
             </label>
@@ -334,33 +373,33 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite || model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri">
             <label class="control-label">
                 {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    {{model.mdyhteystiedot[model.hplang].kaynti.osoite}},&nbsp;
+                    <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">{{model.mdyhteystiedot[model.hplang].kaynti.osoite}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
                     {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}
                 </label>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].posti.osoite || model.mdyhteystiedot[model.hplang].posti.postinumeroUri">
             <label class="control-label">
                 {{'Organisaationtarkastelu.postiosoite'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    {{model.mdyhteystiedot[model.hplang].posti.osoite}},&nbsp;
+                    <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">{{model.mdyhteystiedot[model.hplang].posti.osoite}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
                     {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
                 </label>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].puhelin.numero">
             <label class="control-label">
                 {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
             </label>
@@ -371,7 +410,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].faksi.numero">
             <label class="control-label">
                 {{'Organisaationtarkastelu.faksinumero'| i18n}}
             </label>
@@ -382,7 +421,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].email.email">
             <label class="control-label">
                 {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
             </label>
@@ -392,6 +431,20 @@
                 </label>
             </div>
         </div>
+
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].www.www">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        {{model.mdyhteystiedot[model.hplang].www.www}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <hr>
     </div> <!-- hpexpanded -->
 
@@ -449,17 +502,22 @@
         </div>
     </div>
 
-    <div ng-show="ectsexpanded" ng-show="model.organisaatio.metadata.hakutoimistoEctsNimi">
-        <div class="control-group">
+    <div ng-show="ectsexpanded">
+        <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    {{model.organisaatio.metadata.hakutoimistoEctsNimi}},
-                    {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
-                    <span ng-show="model.organisaatio.metadata.hakutoimistoEctsPuhelin"><br>
-                        {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}},
+                    <span>{{model.organisaatio.metadata.hakutoimistoEctsNimi}}</span>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike">,&nbsp;
+                        {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
+                    </span><br>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">
+                        {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}}
+                    </span>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail">
+                        <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">,&nbsp;</span>
                         {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
                     </span>
                 </label>
@@ -504,7 +562,7 @@
         <hr>
     </div> <!-- ktexpanded -->
 
-   <div class="row">
+    <div class="row">
         <div class="span4">
             <div class="view-row-label">
                 <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
