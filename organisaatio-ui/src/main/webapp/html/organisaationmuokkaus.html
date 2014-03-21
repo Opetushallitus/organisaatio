@@ -473,17 +473,17 @@
             </div>
         </div>
 
-        <div ng-show="ltexpanded[ytoid]">
+        <div ng-show="ltexpanded[ytoid]" ng-init="model.ltlang={}">
             <tabset>
                 <tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
-                     select="model.ltlang=lttab">
+                     select="model.ltlang[ytoid]=lttab">
                 </tab>
             </tabset>
-            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang]"
+            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]"
                  ng-form="ytForm">
                 <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]?"*":""}}
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]==="true"?"*":""}}
                 </label>
                 <div class="controls">
                     <input type="text" name="name" class="span6" oph-null-if-zero-length

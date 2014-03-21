@@ -563,7 +563,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
             for (tyyppi in kaikkiTyypit) {
                 if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
-                    updateLisayhteystietoArvos(model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]);
+                    model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()].forEach(function(t) {
+                        updateLisayhteystietoArvos(t);
+                    });
                 }
             }
         };
@@ -630,11 +632,15 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
                 YhteystietojenTyyppi.get({}, function(result) {
+                    model.yhteystietojentyyppi = {};
                     for (var ytt in result) {
                         if (result[ytt]['sovellettavatOrganisaatios']) {
                             var tyypit = result[ytt]['sovellettavatOrganisaatios'].concat(result[ytt].sovellettavatOppilaitostyyppis);
                             for (tyyppi in tyypit) {
-                                model.yhteystietojentyyppi[tyypit[tyyppi].toUpperCase()] = result[ytt];
+                                if (!model.yhteystietojentyyppi[tyypit[tyyppi].toUpperCase()]) {
+                                    model.yhteystietojentyyppi[tyypit[tyyppi].toUpperCase()] = [];
+                                }
+                                model.yhteystietojentyyppi[tyypit[tyyppi].toUpperCase()].push(result[ytt]);
                             }
                         }
                     }

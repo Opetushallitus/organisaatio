@@ -18,6 +18,9 @@ app.directive('ophNullIfZeroLength', function($log) {
                 if (viewValue === null) {
                     return viewValue;
                 }
+                if (typeof viewValue === 'undefined') {
+                    return null;
+                }
                 return ((viewValue.length === 0) ? null : viewValue);
             };
             ctrl.$parsers.unshift(parserValidator);
