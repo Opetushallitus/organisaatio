@@ -938,7 +938,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
-            this.toggleCheckOrganisaatio("Koulutustoimija");
+            // Ei kuitenkaan poisteta "Koulutustoimija" tyyppiä, jos se on jo asetettu
+            var organisaatiotyyppi = "Koulutustoimija";
+            if (model.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
+               this.toggleCheckOrganisaatio(organisaatiotyyppi);
+            }
 
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
@@ -1086,16 +1090,17 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
 
                 // yritystietojen mukana kieli tulee "suomeksi" --> muutetaan se kieliArvoksi
+                // Koodisto "oppilaitoksenopetuskieli" arvot numeroita
                 var kieliArvo = null;
                 switch (kieli.trim().toLowerCase()) {
                     case "suomi":
-                        kieliArvo = "FI";
+                        kieliArvo = "1";
                         break;
                     case "ruotsi":
-                        kieliArvo = "SV";
+                        kieliArvo = "2";
                         break;
                     case "englanti":
-                        kieliArvo = "EN";
+                        kieliArvo = "4";
                         break;
                     default:
                         $log.warn("Failed to get kieli uri for language: " + kieli);
@@ -1103,7 +1108,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
 
                 // etsitään koodiston kielistä kieliArvoa ja palautetaan vastaava uri jos löytyy
-                var found = $filter('filter')(model.koodisto.isokielet, {arvo: kieliArvo}, true);
+                var found = $filter('filter')(model.koodisto.opetuskielet, {arvo: kieliArvo}, true);
                 if (found.length) {
                     return found[0].uri;
                 }
@@ -1114,7 +1119,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             };
             kieliUri = getKieliUri(model.ytjTiedot.yrityksenKieli);
             if (kieliUri) {
-                model.organisaatio.kieletUris.push(kieliUri);
+                // lisätään kieli, jos organisaatiolla ei vielä ole YTJ:stä tullutta kieltä
+                if (model.organisaatio.kieletUris.indexOf(kieliUri) === -1) {
+                    model.organisaatio.kieletUris.push(kieliUri);
+                }
             }
 
         };
