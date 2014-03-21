@@ -193,7 +193,13 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
 
             // Lisää hakuun mahdollinen organisaatiotyyppi
             if (hakuehdot.organisaatiotyyppi) {
-                hakuParametrit.organisaatiotyyppi = hakuehdot.organisaatiotyyppi;
+                // TODO: Tämä pitäisi korvata koodisto-urilla
+                if (hakuehdot.organisaatiotyyppi === "Toimipiste") {
+                    hakuParametrit.organisaatiotyyppi = "Opetuspiste";
+                }
+                else {
+                    hakuParametrit.organisaatiotyyppi = hakuehdot.organisaatiotyyppi;
+                }
             }
 
             // Lisää hakuun mahdollinen oppilaitostyyppi
