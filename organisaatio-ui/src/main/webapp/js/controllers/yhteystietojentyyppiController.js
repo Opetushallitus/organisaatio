@@ -1,13 +1,7 @@
-function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert) {
-    var language = $window.navigator.userLanguage || $window.navigator.language;
-    if (language) {
-        language = language.substr(0,2).toUpperCase();
-        if (language!=="FI" && language!=="SV") {
-            language = "FI";
-        }
-    } else {
-        language = "FI";
-    }
+function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo) {
+    UserInfo.then(function(s) {
+        language = s.lang;
+    });
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.valittuYhteystietotyyppi = null;

@@ -1,27 +1,22 @@
 var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce']);
 
 angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window',function ($rootScope, $locale, $window) {
-    var language = $window.navigator.userLanguage || $window.navigator.language;
-    if (language) {
-        language = language.substr(0,2).toUpperCase();
-        if (language!=="FI" && language!=="SV") {
-            language = "FI";
-        }
-    } else {
-        language = "FI";
-    }
-	jQuery.i18n.properties({
+.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
+    var initialized = false;
+    UserInfo.then(function(s) {
+        jQuery.i18n.properties({
 	    name:'messages',
 	    path:'../i18n/',
 	    mode:'map',
-	    language: language,
+            language: s.lang,
 	    callback: function() {
+                initialized = true;
 	    }
 	});
+    });
 
     return function (text) {
-        return jQuery.i18n.prop(text);
+        return initialized ? jQuery.i18n.prop(text) : '...';
     };
 }]);
 
@@ -43,6 +38,7 @@ var TEMPLATE_URL_BASE = TEMPLATE_URL_BASE || "";
 var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
 var AUTHENTICATION_URL_BASE = AUTHENTICATION_URL_BASE || "";
 var ROOT_ORGANISAATIO_OID = ROOT_ORGANISAATIO_OID || "";
+var CAS_ME_URL = CAS_ME_URL || "/cas/me";
 
 ////////////
 //
@@ -71,10 +67,10 @@ app.config(function($routeProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-app.run(function(BuildVersion, OrganisaatioInitAuth) {
+app.run(function(BuildVersion, OrganisaatioInitAuth, UserInfo) {
     // Haetaan build version
     BuildVersion.update();
-    
+
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
@@ -85,16 +81,12 @@ app.run(function(BuildVersion, OrganisaatioInitAuth) {
 // Services
 //
 ////////////
-app.service('KoodistoKoodi', function($locale, $window, $http) {
-    var language = $window.navigator.userLanguage || $window.navigator.language;
-    if (language) {
-        language = language.substr(0,2).toUpperCase();
-        if (language!=="FI" && language!=="SV") {
-            language = "FI";
-        }
-    } else {
-        language = "FI";
-    }
+app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
+    var language = 'FI';
+    UserInfo.then(function(s) {
+        language = s.lang;
+    });
+
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
         koodi.metadata.forEach(function(metadata){
@@ -195,13 +187,37 @@ app.factory('BuildVersion', ['$rootScope', '$http', '$log', function($rootScope,
     }
 ]);
 
+app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
+    var deferred = $q.defer();
+
+    (function() {
+        var instance = {};
+        instance.lang = 'FI';
+        $http.get(CAS_ME_URL).success(function(result) {
+            $log.debug(result);
+            var lang = angular.fromJson(result).lang;
+            if (lang) {
+                instance.lang = lang.toUpperCase();
+                deferred.resolve(instance);
+            } else {
+                $log.debug('failed parsing result, defaulting to FI');
+                deferred.resolve(instance);
+            }
+        }).error(function(data, status, headers, config) {
+            deferred.resolve(instance);
+        });
+    })();
+
+    return deferred.promise;
+}]);
+
 app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($log, OrganisaatioAuthGET) {
         var initAuthService;
         return initAuthService = {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {
                     $log.log("Organisaatio Auth Init.");
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("Organisaatio Auth Init failed, response: " + response.status);
