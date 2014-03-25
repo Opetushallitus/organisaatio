@@ -462,25 +462,36 @@
     </div>
 
     <div ng-show="smexpanded">
+
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.sm.tabs"
+                 active="tab.active"
+                 select="model.smlang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}}
+                </tab-heading>
+            </tab>
+        </tabset>
+
         <div class="control-group" ng-show="model.hasSome()">
             <label class="control-label">
                 {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.FACEBOOK">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.FACEBOOK" ng-if="index === model.smlang">
                         Facebook: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
                     </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.GOOGLE_PLUS">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.GOOGLE_PLUS" ng-if="index === model.smlang">
                         Google+: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
                     </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.LINKED_IN">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.LINKED_IN" ng-if="index === model.smlang">
                         LinkedIn: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
                     </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.TWITTER">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.TWITTER" ng-if="index === model.smlang">
                         Twitter: <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
                     </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU">
+                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU" ng-if="index === model.smlang">
                         <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
                     </span>
                 </label>
