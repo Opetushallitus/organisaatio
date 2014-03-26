@@ -94,6 +94,7 @@
         </label>
         <div class="controls">
             <input id="oppilaitoskoodi" type="text" maxlength="20" name="oppilaitoskoodi"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.oppilaitosKoodi"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d{5}$/"/>
             <div>
@@ -114,6 +115,7 @@
         </label>
         <div class="controls">
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri" class="span6"
+                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
                     ng-change="model.selectOppilaitosTyyppi(); form.$dirty = true" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
@@ -149,12 +151,12 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija()"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    type="text" name="nimifi" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false"
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
                    type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -168,12 +170,12 @@
 
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija()"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false"
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -181,12 +183,12 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija()"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimise" type="text" name="nimien" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false" 
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false" 
                    id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -199,7 +201,7 @@
         </label>
         <div class="controls">
             <div>
-                <input ng-if="model.isKoulutustoimija()"
+                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
@@ -207,7 +209,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-                <input ng-if="model.isKoulutustoimija()===false"
+                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
                        type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -215,7 +217,7 @@
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 &nbsp;-&nbsp;
-                <input ng-if="model.isKoulutustoimija()"
+                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
@@ -223,7 +225,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
-                <input ng-if="model.isKoulutustoimija()===false"
+                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
                        type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
