@@ -859,14 +859,20 @@
                             <option value="">{{'Organisaationmuokkaus.lisaasosiaalinenmedia'| i18n}}</option>
                         </select>
 
-                        <div class="control-group" ng-repeat="field in model.sometypes" ng-if="model.organisaatio.metadata.data[field].hasOwnProperty(model.smlang)">
+                        <div class="control-group" ng-repeat="field in model.sometypes" ng-form="someForm"
+                             ng-if="model.organisaatio.metadata.data[field].hasOwnProperty(model.smlang)">
                             <br />{{'Organisaationtarkastelu.' + field| i18n }}:<br />
                             <div class="input-append">
-                                <input id="some_{{field}}" type="text" name="some_{{field}}"
+                                <input id="somein" type="text" name="somein" class="span6"
+                                       oph-pattern="{{model.someurls[field].validator}}"
                                        ng-model="model.organisaatio.metadata.data[field][model.smlang]"
-                                       ie-placeholder placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
-                                <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
+                                       ie-placeholder placeholder="{{model.someurls[field].autofill}}"
+                                       onclick="if (!value) value=placeholder" required>
                                 <button type="button" class="btn" ng-click="model.removeSome(field)"><i class="icon-remove"></i></button>
+                            </div>
+                            <div>
+                                <span class="text-error" ng-show="someForm.somein.$error.ophPattern || someForm.somein.$error.required">
+                                    {{'Organisaationmuokkaus.validation.some'| i18n}}</span>
                             </div>
                         </div>
                     </div>

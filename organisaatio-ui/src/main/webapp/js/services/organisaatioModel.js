@@ -75,9 +75,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         // Sosiaalinen media
-        this.sometext = {};
         this.some = [];
         this.sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
+        this.someurls = {
+            FACEBOOK: {
+                autofill: 'https://facebook.com/',
+                validator: '^https{0,1}://facebook.com/.+'
+            },
+            GOOGLE_PLUS: {
+                autofill: 'https://plus.google.com/',
+                validator: '^https{0,1}://plus.google.com/.+'
+            },
+            LINKED_IN: {
+                autofill: 'https://linkedin.com/',
+                validator: '^https{0,1}://linkedin.com/.+'
+            },
+            TWITTER: {
+                autofill: 'https://twitter.com/',
+                validator: '^https{0,1}://twitter.com/.+'
+            },
+            MUU: {
+                autofill: 'https://',
+                validator: '^https{0,1}://.+'
+            }
+        };
         this.kttypes = ['YLEISKUVAUS', 'ESTEETOMYYS', 'OPPIMISYMPARISTO', 'VUOSIKELLO', 'VASTUUHENKILOT',
             'VALINTAMENETTELY', 'AIEMMIN_HANKITTU_OSAAMINEN', 'KIELIOPINNOT', 'TYOHARJOITTELU', 'OPISKELIJALIIKKUVUUS',
             'KANSAINVALISET_KOULUTUSOHJELMAT'];
@@ -1259,12 +1280,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.addSome = function() {
-            if (model.organisaatio.metadata) {
+            if (model.organisaatio.metadata && model.someplaceholder && (model.someplaceholder !== $filter('i18n')("lisaasosiaalinenmedia"))) {
                 if (!model.organisaatio.metadata.data[model.someplaceholder] ||
                         isEmptyObject(model.organisaatio.metadata.data[model.someplaceholder])) {
                     model.organisaatio.metadata.data[model.someplaceholder] = {};
                 }
-                model.organisaatio.metadata.data[model.someplaceholder][model.smlang] = model.sometext[model.someplaceholder];
+                if (!model.organisaatio.metadata.data[model.someplaceholder][model.smlang]) {
+                    model.organisaatio.metadata.data[model.someplaceholder][model.smlang] = null;
+                }
             }
             model.someplaceholder = $filter('i18n')("lisaasosiaalinenmedia");
         };
@@ -1278,7 +1301,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.hasSome = function() {
-            if (model.organisaatio.metadata) {
+            if (model.organisaatio.metadata && model.smlang) {
                 for (key in model.sometypes) {
                     for (key2 in model.organisaatio.metadata.data[model.sometypes[key]][model.smlang]) {
                         return true;

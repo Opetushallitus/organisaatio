@@ -10,6 +10,23 @@ app.directive('testField', function($log) {
     };
 });
 
+// Tätä voidaan käyttää ng-patternin sijaan, jos halutaan että epävalidi modelin arvo näytetään.
+// Angular ei näytä epävalidia arvoa vaan tyhjän kentän (https://github.com/angular/angular.js/issues/1412).
+app.directive('ophPattern', function($log) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            var validator = function(viewValue) {
+                var isValid = (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
+                ctrl.$setValidity('ophPattern', isValid);
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
+        }
+    };
+});
+
 app.directive('ophNullIfZeroLength', function($log) {
     return {
         require: 'ngModel',
