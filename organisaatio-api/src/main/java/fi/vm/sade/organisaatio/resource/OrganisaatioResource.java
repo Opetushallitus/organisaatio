@@ -96,6 +96,19 @@ public interface OrganisaatioResource {
     @ApiOperation(value = "Etsii organisaation alla olevat organisaatiot", notes = "Operaatio palauttaa organisaation alla olevat organisaatiot.")
     public List<OrganisaatioRDTO> children(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
+    /**
+     * Get list of all groups for the organisaatio.
+     *
+     * @param oid
+     * @return List of groups
+     * @throws Exception
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Path("/{oid}/ryhmat")
+    @ApiOperation(value = "Etsii organisaation alla olevat ryhmät", notes = "Operaatio palauttaa organisaation alla olevat ryhmät.")
+    public List<OrganisaatioRDTO> groups(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/hello")

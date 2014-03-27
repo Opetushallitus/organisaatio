@@ -39,6 +39,7 @@ import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -479,5 +480,21 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String authHello() {
         return "{\"message\": \"Well Hello! " + new Date() + "\"}";
+    }
+
+    @Override
+    public List<OrganisaatioRDTO> groups(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
+        List<OrganisaatioRDTO> groupList = new LinkedList<OrganisaatioRDTO>();
+        if (parentOrg != null) {
+            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
+            for (OrganisaatioSuhde suhde : suhteet) {
+                if (OrganisaatioUtil.isRyhma(suhde.getChild())) {
+                    groupList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
+                }
+            }
+        }
+        return groupList;
     }
 }

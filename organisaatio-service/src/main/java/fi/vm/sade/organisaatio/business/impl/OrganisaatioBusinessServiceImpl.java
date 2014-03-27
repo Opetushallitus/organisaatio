@@ -52,6 +52,7 @@ import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.service.OrganizationDateException;
 import fi.vm.sade.organisaatio.service.YtunnusException;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,7 +147,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
             }
         }
-        // validointi: y-tunnus
+        
+        // Haetaan parent organisaatio
+        Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
+                ? organisaatioDAO.findByOid(model.getParentOid()) : null;
+        
+        // Validointi: Tarkistetaan, että parent ei ole ryhmä
+        if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
+            throw new ValidationException("Parent cannot be group");
+        }
+
+        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä oph organisaatiolle
+        if (model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) && OrganisaatioUtil.isRyhma(model)) {
+            throw new ValidationException("Oph organisaatiolle ei voi luoda ryhmiä");
+        }
+     
+        // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
+        if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
+            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
+        }
+        
+        // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
         if (model.getYTunnus() != null && model.getYTunnus().length() == 0) {
             model.setYTunnus(null);
         }
@@ -154,7 +175,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("validation.Organisaatio.ytunnus");
         }
         
-        // validointi: virastotunnus
+        // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
         if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
             model.setVirastoTunnus(null);
         }
@@ -194,10 +215,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         
         entity.setOrganisaatioPoistettu(false);
         
-        // Check if organization has parent and if it has check that passivation dates match to parent
-        Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
-                ? organisaatioDAO.findByOid(model.getParentOid()) : null;
-        
         // OVT-4765 do not validate start date against parent date when updating
         if (updating) {
             LOG.info("this is an update, not validating parent dates.");
@@ -206,12 +223,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         
         // OH-116
         if (parentOrg != null) {
+            // Check if organization has parent and if it has check that passivation dates match to parent
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(skipParentDateValidation);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
                 throw new OrganizationDateException();
             }
         }
-        
+
         // Validoidaan organisaation lisätiedot
         List<String> orgTypes = new ArrayList<String>();
         String tyypitStr = "";
@@ -257,8 +275,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
         
-        // Index to solr
-        solrIndexer.index(Lists.newArrayList(entity));
+        // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
+        if (OrganisaatioUtil.isRyhma(entity) == false) {
+            solrIndexer.index(Lists.newArrayList(entity));
+        }
         
         return entity;
     }
@@ -395,7 +415,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
-            organisaatio.setOid(oidService.newOid(NodeClassCode.TOIMIPAIKAT));
+            if (OrganisaatioUtil.isRyhma(organisaatio)) {
+                /// @TODO: Sitten kun Oid palveluss on ryhmä mukana --> korjaa
+                //  organisaatio.setOid(oidService.newOid(NodeClassCode.RYHMA));
+                
+                organisaatio.setOid(oidService.newOidByClassValue("28"));
+            }
+            else {
+                organisaatio.setOid(oidService.newOid(NodeClassCode.TOIMIPAIKAT));
+            }
         }
         for (Yhteystieto curYt : organisaatio.getYhteystiedot()) {
             if (curYt.getYhteystietoOid() == null) {
