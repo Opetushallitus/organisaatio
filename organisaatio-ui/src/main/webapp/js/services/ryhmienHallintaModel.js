@@ -31,6 +31,9 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
 
             Ryhmat.get({oid: parentOid}, function(result) {
                 result.forEach(function(ryhma) {
+                    if (!ryhma.kuvaus2) {
+                        ryhma.kuvaus2 = {};
+                    }
                     ryhmat.push(ryhma);
                 });
                 callback();
@@ -47,6 +50,11 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                     "fi": null,
                     "sv": null,
                     "en": null
+                },
+                "kuvaus2": {
+                    "kieli_fi#1": null,
+                    "kieli_sv#1": null,
+                    "kieli_en#1": null
                 }
             };
             ryhmat.push(ryhma);
