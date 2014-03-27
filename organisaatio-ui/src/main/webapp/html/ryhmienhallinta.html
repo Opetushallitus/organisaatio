@@ -1,7 +1,7 @@
 <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
 
 <select ng-model="currentGroup"
-        ng-options="localizeRyhmanNimi(group) for group in model.groups">
+        ng-options="localizeNimi(group) for group in model.groups">
     <option value="">{{'RyhmienHallinta.valitseRyhma'| i18n}}</option>
 </select>
 <hr>
@@ -11,8 +11,8 @@
     <div class="control-group">
         <div class="controls">
             <input type="text" name="nimifi" class="span6"
-                   ng-model="model.organisaatio.nimi.fi"
-                   ie-placeholder placeholder="{{'RyhmienHallinta.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ng-model="currentGroup.nimi.fi"
+                   ie-placeholder placeholder="{{'RyhmienHallinta.nimisuomeksi'| i18n}}" ng-required="false" />
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
                     {{'RyhmienHallinta.ohje.nimet'| i18n}}
@@ -24,15 +24,15 @@
     <div class="control-group">
         <div class="controls">
             <input id="nimisv" type="text" name="nimisv" class="span6"
-                   ng-model="model.organisaatio.nimi.sv"
-                   ie-placeholder placeholder="{{'RyhmienHallinta.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ng-model="currentGroup.nimi.sv"
+                   ie-placeholder placeholder="{{'RyhmienHallinta.nimiruotsiksi'| i18n}}" ng-required="false" />
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
             <input id="nimise" type="text" name="nimien" class="span6"
-                   ng-model="model.organisaatio.nimi.en"
-                   ie-placeholder placeholder="{{'RyhmienHallinta.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+                   ng-model="currentGroup.nimi.en"
+                   ie-placeholder placeholder="{{'RyhmienHallinta.nimienglanniksi'| i18n}}" ng-required="false" />
         </div>
     </div>
 </div>

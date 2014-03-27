@@ -420,3 +420,11 @@ app.factory('HenkiloKayttooikeus', function($resource) {
         get: {method: 'GET', isArray: true}
     });
 });
+
+// Hae ryhmät organisaatioplavelulta
+//
+app.factory('Ryhmat', function($resource) {
+    return $resource(SERVICE_URL_BASE + ":orgoid/ryhmat", {orgoid: "@orgoid"}, {
+        get: {method: 'GET', isArray: true}
+    });
+});
