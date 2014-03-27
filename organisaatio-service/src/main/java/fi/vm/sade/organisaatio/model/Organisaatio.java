@@ -66,8 +66,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-    public static final String TYYPPI_RYHMA = "Ryhmä";
-        
 	//@OrderBy("id")
     @ElementCollection(fetch= FetchType.EAGER)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
