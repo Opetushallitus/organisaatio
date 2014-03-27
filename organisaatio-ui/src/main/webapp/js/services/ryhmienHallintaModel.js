@@ -1,9 +1,11 @@
-app.factory('RyhmienHallintaModel', function(Ryhmat) {
+app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaatio) {
 
     var model = new function() {
         var ryhmat = [];
         this.groups = ryhmat;
-        function loadRyhmat() {
+
+        this.reload = function(parentOid, callback, virheCallback) {
+            ryhmat.length = 0;
             // TODO: Remove dummy implemetation when api is available
             /*[
              {version: 0,
@@ -27,13 +29,12 @@ app.factory('RyhmienHallintaModel', function(Ryhmat) {
              ryhmat.push(ryhma);
              });*/
 
-            Ryhmat.get({}, function(result) {
+            Ryhmat.get({oid: parentOid}, function(result) {
                 result.forEach(function(ryhma) {
                     ryhmat.push(ryhma);
                 });
-            }, function(error) {
-                // Ei ryhmiä?
-            });
+                callback();
+            }, virheCallback);
         };
 
         this.create = function(parentOid) {
@@ -41,7 +42,7 @@ app.factory('RyhmienHallintaModel', function(Ryhmat) {
                 version: 0,
                 parentOid: parentOid,
                 oid: null,
-                tyypit: ['Ryhmä'],
+                tyypit: ['Ryhma'],
                 "nimi": {
                     "fi": null,
                     "sv": null,
@@ -51,15 +52,16 @@ app.factory('RyhmienHallintaModel', function(Ryhmat) {
             ryhmat.push(ryhma);
             return ryhma;
         };
+
         this.save = function(ryhma, callback, virheCallback) {
             var fn;
             if (ryhma.oid === null) {
-                fn = Ryhmat.put;
+                fn = UusiOrganisaatio.put;
             } else {
-                fn = Ryhmat.post;
+                fn = Organisaatio.post;
             }
             fn(ryhma, function(result) {
-                var ind = ryhmat.indexOf(ytt);
+                var ind = ryhmat.indexOf(ryhma);
                 if (ind !== -1) {
                     ryhmat.splice(ind, 1);
                 }
@@ -67,10 +69,11 @@ app.factory('RyhmienHallintaModel', function(Ryhmat) {
                 callback(ryhma);
             }, virheCallback);
         };
+
         this.delete = function(ryhma, callback, virheCallback) {
             var ind = ryhmat.indexOf(ryhma);
             if (ryhma.oid !== null) {
-                RyhmanPoisto.delete({oid: ryhma.oid}, function(result) {
+                organisaatio.delete(ryhma, function(result) {
                     if (ind !== -1) {
                         ryhmat.splice(ind, 1);
                     }
@@ -82,13 +85,9 @@ app.factory('RyhmienHallintaModel', function(Ryhmat) {
                 }
                 callback();
             }
+        };
 
-        };
-        this.reload = function() {
-            ryhmat.length = 0;
-            loadRyhmat();
-        };
-        loadRyhmat();
     };
+
     return model;
 });

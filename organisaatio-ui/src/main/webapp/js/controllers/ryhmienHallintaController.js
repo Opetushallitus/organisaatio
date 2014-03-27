@@ -6,10 +6,6 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
 
-    $scope.$watch('model', function(m) {
-        $log.debug(m);
-    });
-
     $scope.localizeNimi = function(ryhma) {
         for (var k in ryhma.nimi) {
             if (k === language.toLowerCase()) {
@@ -44,6 +40,15 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
 
     $scope.peruuta = function() {
         $scope.currentGroup = null;
-        $scope.model.reload();
+        $scope.model.reload(function(result) {
+        }, function(error) {
+            Alert.add("error", error, false);
+        });
     };
+
+    $scope.model.reload($routeParams.parentoid, function(result) {
+    }, function(error) {
+        Alert.add("error", error, false);
+    });
+
 }
