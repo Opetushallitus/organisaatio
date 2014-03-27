@@ -60,10 +60,13 @@ app.config(function($routeProvider) {
         // create new
         when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
-        // yhteytstietojen tyypit
+        // yhteystietojen tyypit
         when('/yhteystietotyypit', {controller:YhteystietojentyyppiController, templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
 
-        //else
+        // manage groups
+        when('/organisaatiot/:parentoid/groups', {controller:RyhmienHallintaController, templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+
+            //else
         otherwise({redirectTo:'/organisaatiot'});
 });
 
