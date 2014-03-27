@@ -490,7 +490,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (parentOrg != null) {
             List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
             for (OrganisaatioSuhde suhde : suhteet) {
-                if (OrganisaatioUtil.isRyhma(suhde.getChild())) {
+                // Palautetaan ryhmät, joita ei ole poistettu
+                if (OrganisaatioUtil.isRyhma(suhde.getChild()) && 
+                        suhde.getChild().isOrganisaatioPoistettu() == false) {
                     groupList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
                 }
             }
