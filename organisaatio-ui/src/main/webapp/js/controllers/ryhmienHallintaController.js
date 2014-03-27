@@ -40,7 +40,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
 
     $scope.peruuta = function() {
         $scope.currentGroup = null;
-        $scope.model.reload(function(result) {
+        $scope.model.reload($routeParams.parentoid, function(result) {
         }, function(error) {
             Alert.add("error", error, false);
         });

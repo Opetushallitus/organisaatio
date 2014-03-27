@@ -73,7 +73,7 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
         this.delete = function(ryhma, callback, virheCallback) {
             var ind = ryhmat.indexOf(ryhma);
             if (ryhma.oid !== null) {
-                organisaatio.delete(ryhma, function(result) {
+                Organisaatio.delete(ryhma, function(result) {
                     if (ind !== -1) {
                         ryhmat.splice(ind, 1);
                     }
