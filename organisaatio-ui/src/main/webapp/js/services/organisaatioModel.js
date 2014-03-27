@@ -507,7 +507,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         this.refreshIfNeeded = function(oid) {
-            if (oid) {// && (oid !== model.organisaatio.oid)) {
+            if (oid) {
+                if (oid !== model.organisaatio.oid) {
+                    model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
+                }
                 refresh(oid);
             }
         };
@@ -1303,8 +1306,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.hasSome = function() {
             if (model.organisaatio.metadata && model.smlang) {
                 for (key in model.sometypes) {
-                    for (key2 in model.organisaatio.metadata.data[model.sometypes[key]][model.smlang]) {
-                        return true;
+                    if (model.organisaatio.metadata.data[model.sometypes[key]]) {
+                        for (key2 in model.organisaatio.metadata.data[model.sometypes[key]][model.smlang]) {
+                            return true;
+                        }
                     }
                 }
             }
