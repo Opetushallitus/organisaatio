@@ -1,0 +1,80 @@
+<form name="form">
+    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
+
+    <select ng-model="currentGroup" class="span6"
+            ng-options="localizeNimi(group) for group in model.groups">
+        <option value="">{{'RyhmienHallinta.valitseRyhma'| i18n}}</option>
+    </select>
+    <hr>
+
+    <div ng-if="currentGroup">
+        <h3>{{'RyhmienHallinta.nimi'| i18n}}</h3>
+        <div class="control-group">
+            <div class="controls">
+                <input id="nimifi" type="text" name="nimifi" class="span6"
+                       ng-model="currentGroup.nimi.fi"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+                <div>
+                    <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
+                        {{'RyhmienHallinta.ohje.nimet'| i18n}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input id="nimisv" type="text" name="nimisv" class="span6"
+                       ng-model="currentGroup.nimi.sv"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input id="nimise" type="text" name="nimien" class="span6"
+                       ng-model="currentGroup.nimi.en"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+            </div>
+        </div>
+
+        <h3>{{'RyhmienHallinta.kuvaus'| i18n}}</h3>
+
+        <div class="control-group">
+            <div class="controls">
+                <input id="kuvausfi" type="text" name="kuvausfi" class="span6"
+                       ng-model="currentGroup.kuvaus2['kieli_fi#1']"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvaussuomeksi'| i18n}}" ng-required="false" />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input id="kuvaussv" type="text" name="kuvaussv" class="span6"
+                       ng-model="currentGroup.kuvaus2['kieli_sv#1']"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvausruotsiksi'| i18n}}" ng-required="false" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input id="kuvausen" type="text" name="kuvausen" class="span6"
+                       ng-model="currentGroup.kuvaus2['kieli_en#1']"
+                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvausenglanniksi'| i18n}}" ng-required="false" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span6">
+            <button class="btn" ng-click="poista()" ng-if="currentGroup">
+                {{'RyhmienHallinta.poista'| i18n}}
+            </button>
+            <button class="btn" ng-click="luoUusi()">
+                {{'RyhmienHallinta.luoUusi'| i18n}}
+            </button>
+        </div>
+        <div class="offset7">
+            <button class="btn" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
+            <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()">{{'RyhmienHallinta.tallenna'| i18n}}</button>
+        </div>
+    </div>
+</form>

@@ -1,6 +1,8 @@
 package fi.vm.sade.organisaatio.service;
 
-public class OrganisationPassivationException extends AbstractOrganisaatioBusinessException {
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
+
+public class OrganisationPassivationException extends OrganisaatioBusinessException {
 
     private static final long serialVersionUID = 1L;
 

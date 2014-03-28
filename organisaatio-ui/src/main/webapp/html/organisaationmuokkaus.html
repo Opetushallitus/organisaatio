@@ -20,18 +20,18 @@
 
         <div class="controls">
             <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
-                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi) > -1">
+                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi) > - 1">
                     <input class="" type='checkbox' name="orgtyyppi"
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                           form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi}}
                 </span>
-                <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === -1)">
+                <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
                     <input type='checkbox' name="orgtyyppi"
-                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== -1"
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                           form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
@@ -48,7 +48,7 @@
             {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
         </label>
         <div class="controls">
-            <input id="ytunnus" type="text" maxlength="9" name="ytunnus"
+            <input id="yritysmuoto" type="text" maxlength="9" name="yritysmuoto"
                    ng-model="model.organisaatio.yritysmuoto"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.yritysmuoto'| i18n}}" disabled/>
         </div>
@@ -60,6 +60,7 @@
         </label>
         <div class="controls">
             <input id="ytunnus" type="text" maxlength="9" name="ytunnus"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.ytunnus"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.ytunnus'| i18n}}" ng-pattern="/^\d{7}-./"/>
             <div>
@@ -76,6 +77,7 @@
         </label>
         <div class="controls">
             <input id="virastotunnus" type="text" maxlength="20" name="virastotunnus"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.virastoTunnus"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.virastotunnus'| i18n}}" ng-pattern="/^\d{6}.*/"/>
             <div>
@@ -92,6 +94,7 @@
         </label>
         <div class="controls">
             <input id="oppilaitoskoodi" type="text" maxlength="20" name="oppilaitoskoodi"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.oppilaitosKoodi"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.oppilaitoskoodi'| i18n}}" required ng-pattern="/^\d{5}$/"/>
             <div>
@@ -112,9 +115,9 @@
         </label>
         <div class="controls">
             <select id="oppilaitostyyppi" ng-model="model.organisaatio.oppilaitosTyyppiUri" class="span6"
+                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
-                    ng-change="model.selectOppilaitosTyyppi();
-                                    form.$dirty = true" required>
+                    ng-change="model.selectOppilaitosTyyppi(); form.$dirty = true" required>
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.oppilaitosTyyppiUri">
@@ -135,9 +138,9 @@
             <div ng-repeat="vl in model.koodisto.vuosiluokat| orderBy:'nimi'">
                 <div>
                     <input type='checkbox' name="vuosiluokka"
-                           ng-checked="model.organisaatio.vuosiluokat.indexOf(vl.uri) !== -1"
+                           ng-checked="model.organisaatio.vuosiluokat.indexOf(vl.uri) !== - 1"
                            ng-click="model.toggleCheckVuosiluokka(vl.uri);
-                                           form.$dirty = true">{{model.uriLocalizedNames[vl.uri]}}
+                                       form.$dirty = true">{{model.uriLocalizedNames[vl.uri]}}
                 </div>
             </div>
         </div>
@@ -148,7 +151,13 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
-            <input type="text" name="nimifi" class="span6"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                   type="text" name="nimifi" class="span6"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                   ng-model="model.organisaatio.nimi.fi"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                   type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <div>
@@ -161,14 +170,26 @@
 
     <div class="control-group">
         <div class="controls">
-            <input id="nimisv" type="text" name="nimisv" class="span6"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                   id="nimisv" type="text" name="nimisv" class="span6"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                   ng-model="model.organisaatio.nimi.sv"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                   id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input id="nimise" type="text" name="nimien" class="span6"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                   id="nimise" type="text" name="nimien" class="span6"
+                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                   ng-model="model.organisaatio.nimi.en"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                   id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
@@ -180,14 +201,32 @@
         </label>
         <div class="controls">
             <div>
-                <input type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                       auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                       type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
+                       close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                       current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                       clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                       toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
+                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                       type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 &nbsp;-&nbsp;
-                <input type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                       auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                       type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                       close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
+                       close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                       current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                       clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                       toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
+                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                       type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -254,7 +293,7 @@
         <div class="controls">
             <span ng-repeat="kieli in model.organisaatio.kieletUris">
                 <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli);
-                                form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
+                            form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
                     ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"
@@ -318,7 +357,7 @@
                 {{'Organisaationmuokkaus.osoitemuoto'| i18n}}
             </label>
             <div class="controls">
-                <select id="osoitemuoto" ng-model="model.osoitemuoto.yt[model.ytlang]">
+                <select id="ytosoitemuoto" name="ytosoitemuoto" ng-model="model.osoitemuoto.yt[model.ytlang]">
                     <option value='suomalainen'>{{'Organisaationmuokkaus.suomalainenosoitemuoto'| i18n}}</option>
                     <option value='kansainvalinen'>{{'Organisaationmuokkaus.kansainvalinenosoitemuoto'| i18n}}</option>
                 </select>
@@ -333,7 +372,7 @@
                 <input id="kayntiosoitefi" type="text" maxlength="100" name="kayntiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
                        ng-minlength="3" ng-maxlength="100"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="kayntipostifi" name="kayntipostifi" type="text"
                        ng-model="model.yhteystiedot.postinumerot[model.ytlang].kaynti" class="span2"
@@ -349,7 +388,7 @@
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
-                          ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"/>
+                          ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"></textarea>
             </div>
         </div>
         <div class="control-group">
@@ -361,7 +400,7 @@
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        ng-minlength="3" ng-maxlength="100"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}"/>
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
@@ -381,7 +420,7 @@
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
-                          ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"/>
+                          ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
                            ng-change="model.copyAddress(false, false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
@@ -434,7 +473,7 @@
                 <div>
                     <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
                         {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                     </span>
                 </div>
             </div>
@@ -473,17 +512,17 @@
             </div>
         </div>
 
-        <div ng-show="ltexpanded[ytoid]">
+        <div ng-show="ltexpanded[ytoid]" ng-init="model.ltlang = {}">
             <tabset>
                 <tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
-                     select="model.ltlang=lttab">
+                     select="model.ltlang[ytoid]=lttab">
                 </tab>
             </tabset>
-            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang]"
+            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]"
                  ng-form="ytForm">
                 <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]?"*":""}}
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]==="true"?"*":""}}
                 </label>
                 <div class="controls">
                     <input type="text" name="name" class="span6" oph-null-if-zero-length
@@ -548,6 +587,7 @@
                     <div class="controls">
                         <input id="htnimifi" type="text" name="htnimifi" class="span6" oph-null-if-zero-length
                                ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]"
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}"
                                ng-required="false"/>
                     </div>
                 </div>
@@ -557,7 +597,7 @@
                         {{'Organisaationmuokkaus.osoitemuoto'| i18n}}
                     </label>
                     <div class="controls">
-                        <select id="osoitemuoto" ng-model="model.osoitemuoto.hp[model.hplang]">
+                        <select id="hposoitemuoto" name="hposoitemuoto" ng-model="model.osoitemuoto.hp[model.hplang]">
                             <option value='suomalainen'>{{'Organisaationmuokkaus.suomalainenosoitemuoto'| i18n}}</option>
                             <option value='kansainvalinen'>{{'Organisaationmuokkaus.kansainvalinenosoitemuoto'| i18n}}</option>
                         </select>
@@ -571,7 +611,7 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdkayntiosoitefi" type="text" maxlength="100" name="mdkayntiosoitefi" class="span6"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
@@ -588,7 +628,7 @@
                     </div>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
                         <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
-                                  ng-disabled="disabled" ng-change="model.copyAddress(true, false)" class="span6"/>
+                                  ng-disabled="disabled" ng-change="model.copyAddress(true, false)" class="span6"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -597,7 +637,7 @@
                     </label>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdpostiosoitefi" type="text" maxlength="100" name="mdpostiosoitefi" class="span6"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoitesuomeksi'| i18n}}" oph-null-if-zero-length
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
@@ -619,7 +659,7 @@
                     </div>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
                         <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
-                                  ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true" class="span6"/>
+                                  ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true" class="span6"></textarea>
                         <div>
                             <input type='checkbox' ng-model="model.osoitemuoto.hpsamaosoite[model.hplang]"
                                    ng-change="model.copyAddress(true, false)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
@@ -672,7 +712,7 @@
                         <div>
                             <span class="text-error" ng-show="form.mdsahkopostiosoite.$error.email">
                                 {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-                                {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                             </span>
                         </div>
                     </div>
@@ -783,33 +823,62 @@
     </div>
 
     <div ng-show="someexpanded">
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
-            </label>
-            <div class="controls">
-                <select id="some" ng-model="model.someplaceholder"
-                        ng-options="some.type as some.nimi for some in model.some | orderBy:'some.nimi'" ng-required="false"
-                        ng-click="model.addSome()">
-                    <option value="">{{'Organisaationmuokkaus.lisaasosiaalinenmedia'| i18n}}</option>
+        <tabset>
+            <tab select="model.smlang='+'">
+                <tab-heading>
+                    <span class="icon-plus-sign"></span>
+                </tab-heading>
+            </tab>
+            <tab ng-repeat="tab in model.mkSections.sm.tabs"
+                 active="tab.active"
+                 select="model.smlang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('sm', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                </tab-heading>
+            </tab>
+        </tabset>
+        <div ng-if="model.smlang === '+'">
+            <div class="control-group">
+                <select id="maa" ng-model="model.mkSections.sm.placeholder"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.isokielet | orderBy:'nimi'" ng-required="false"
+                        ng-click="model.addMkLang('sm')">
+                    <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
                 </select>
-                <div ng-repeat="(k, v) in model.organisaatio.metadata.data">
-                    <div ng-if="['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'].indexOf(k) > -1">
-                        <div ng-repeat="(k2, v2) in v">
-                            <br />{{'Organisaationtarkastelu.' + k| i18n }}:<br />
+            </div>
+        </div>
+        <div ng-if="model.smlang !== '+'" ng-repeat='tab in model.mkSections.sm.tabs'>
+            <div ng-if='tab.lang === model.smlang'>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <select id="some" ng-model="model.someplaceholder"
+                                ng-options="some.type as some.nimi for some in model.some | orderBy:'some.nimi'" ng-required="false"
+                                ng-click="model.addSome()">
+                            <option value="">{{'Organisaationmuokkaus.lisaasosiaalinenmedia'| i18n}}</option>
+                        </select>
+
+                        <div class="control-group" ng-repeat="field in model.sometypes" ng-form="someForm"
+                             ng-if="model.organisaatio.metadata.data[field].hasOwnProperty(model.smlang)">
+                            <br />{{'Organisaationtarkastelu.' + field| i18n }}:<br />
                             <div class="input-append">
-                                <input id="some_{{k}}" type="text" name="some_{{k}}"
-                                       ng-model="model.organisaatio.metadata.data[k][k2]"
-                                       ie-placeholder placeholder="{{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}" ng-required="false" codes-combined-field/>
-                                <!-- {{ 'Organisaationmuokkaus.poistasome' | i18n}}-->
-                                <button type="button" class="btn" ng-click="model.removeSome(k)"><i class="icon-remove"></i></button>
+                                <input id="somein" type="text" name="somein" class="span6"
+                                       oph-pattern="{{model.someurls[field].validator}}"
+                                       ng-model="model.organisaatio.metadata.data[field][model.smlang]"
+                                       ie-placeholder placeholder="{{model.someurls[field].autofill}}"
+                                       onclick="if (!value) value=placeholder" required>
+                                <button type="button" class="btn" ng-click="model.removeSome(field)"><i class="icon-remove"></i></button>
+                            </div>
+                            <div>
+                                <span class="text-error" ng-show="someForm.somein.$error.ophPattern || someForm.somein.$error.required">
+                                    {{'Organisaationmuokkaus.validation.some'| i18n}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <hr>
     </div> <!-- someexpanded -->
 
@@ -838,7 +907,7 @@
                             <li
                                 ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.kt.placeholder = kieli.uri;
-                                                model.addMkLang('kt')">{{kieli.nimi}}</a>
+                                            model.addMkLang('kt')">{{kieli.nimi}}</a>
                             </li>
                         </ul>
                     </span>
@@ -913,7 +982,7 @@
                             <li
                                 ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.oe.placeholder = kieli.uri;
-                                                model.addMkLang('oe')">{{kieli.nimi}}</a>
+                                            model.addMkLang('oe')">{{kieli.nimi}}</a>
                             </li>
                         </ul>
                     </span>
@@ -983,7 +1052,8 @@
             <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
-        <span class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake' | i18n }}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
@@ -991,7 +1061,8 @@
             <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
-        <span class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake' | i18n }}</em></span>
     </div>
     <p>
 </div>

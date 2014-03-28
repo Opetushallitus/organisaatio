@@ -74,6 +74,19 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
         }
     };
 
+    Predicate<Entry<Organisaatio, Organisaatio>> ryhmaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
+        @Override
+        public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.RYHMA.value())
+                    && parentChild.getKey() != null
+                    && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
+        }
+    };
+
     public OrganisationHierarchyValidator(final String ophOid) {
         Preconditions.checkNotNull(ophOid);
         this.ophOid = ophOid;
@@ -84,7 +97,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     @Override
     public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
         Preconditions.checkNotNull(parentChild);
-        return Predicates.or(oppilaitosRule, muuOrgRule, toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule).apply(parentChild);
+        return Predicates.or(oppilaitosRule, muuOrgRule, toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
     }
 
 }

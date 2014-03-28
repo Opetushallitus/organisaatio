@@ -16,6 +16,8 @@
 
 package fi.vm.sade.organisaatio.resource;
 
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -27,32 +29,59 @@ public class OrganisaatioResourceException extends WebApplicationException {
 
     public static class ErrorMessage {
 
-        private final String error;
-        
-        public ErrorMessage(String error) {
-            this.error = error;
+        private final String errorMessage;
+        private final String errorKey;
+
+        public ErrorMessage(String errorMessage, String errorKey) {
+            this.errorMessage = errorMessage;
+            this.errorKey = errorKey;
         }
 
-        public String getError() {
-            return error;
+        public ErrorMessage(SadeBusinessException sbe) {
+            this.errorMessage = sbe.getMessage();
+            this.errorKey = sbe.getErrorKey();
         }
-        
+
+        public ErrorMessage(String errorMessage) {
+            this(errorMessage, "");
+        }
+
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        public String getErrorKey() {
+            return errorKey;
+        }
+
     }
 
     public OrganisaatioResourceException(int status, Object message) {
         super(Response.status(status).entity(message).build());
     }
-            
+
     public OrganisaatioResourceException(int status, String message) {
         this(status, new ErrorMessage(message));
     }
-    
+
+    public OrganisaatioResourceException(int status, String message, String key) {
+        this(status, new ErrorMessage(message, key));
+    }
+
     public OrganisaatioResourceException(Status status, String message) {
         this(status.getStatusCode(), new ErrorMessage(message));
     }
-    
+
+    public OrganisaatioResourceException(Status status, String message, String key) {
+        this(status.getStatusCode(), new ErrorMessage(message, key));
+    }
+
+    public OrganisaatioResourceException(SadeBusinessException sbe) {
+        this(500, new ErrorMessage(sbe));
+    }
+
     public OrganisaatioResourceException(Status status, Object message) {
         this(status.getStatusCode(), message);
     }
-    
+
 }

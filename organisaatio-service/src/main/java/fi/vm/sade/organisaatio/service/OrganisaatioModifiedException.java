@@ -16,12 +16,14 @@
  */
 package fi.vm.sade.organisaatio.service;
 
-public class OrganisaatioModifiedException extends AbstractOrganisaatioBusinessException {
-    
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
+
+public class OrganisaatioModifiedException extends OrganisaatioBusinessException {
+
     private static final long serialVersionUID = 1L;
 
     public OrganisaatioModifiedException(Exception cause) {
-        super("exception.organisaatio.modified", cause);
+        super("organisaatio.exception.organisaatio.modified", cause);
     }
 
 }

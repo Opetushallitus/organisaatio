@@ -16,12 +16,14 @@
  */
 package fi.vm.sade.organisaatio.service;
 
-public class OrganisaatioHierarchyException extends AbstractOrganisaatioBusinessException {
-    
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
+
+public class OrganisaatioHierarchyException extends OrganisaatioBusinessException {
+
     private static final long serialVersionUID = 1L;
 
     public OrganisaatioHierarchyException() {
-        super("exception.organisaatio.hierarchy");
+        super("organisaatio.exception.organisaatio.hierarchy");
     }
 
 }

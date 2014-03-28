@@ -25,6 +25,9 @@
                     <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
                         <a ng-click="deleteOrganisaatio(data)">{{'Organisaatiot.poista' | i18n}}</a>
                     </li>
+                    <li auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
+                        <a href='#/organisaatiot/{{data.oid}}/groups'>{{'Organisaatiot.hallinnoiRyhmia' | i18n}}</a>
+                    </li>
                 </ul>
             </span>
             <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>

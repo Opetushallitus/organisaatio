@@ -106,7 +106,7 @@ public class YhteystietojenTyyppiResource {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(nae);
         }
         try {
             generateOids(dto);
@@ -133,7 +133,7 @@ public class YhteystietojenTyyppiResource {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(nae);
         }
         try {
             generateOids(yhteystietojenTyyppi);
@@ -144,7 +144,7 @@ public class YhteystietojenTyyppiResource {
         try {
             entity = this.yhteystietojenTyyppiDAO.insert(entity);
         } catch (PersistenceException e) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, e.toString());
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
         }
 
         return converterFactory.convertToDTO(entity, YhteystietojenTyyppiDTO.class);
@@ -164,14 +164,22 @@ public class YhteystietojenTyyppiResource {
 
         List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiDAO.findBy("oid", oid);
         if (tyypit.isEmpty()) {
-            throw new OrganisaatioResourceException(Response.Status.NOT_FOUND, "");
+            throw new OrganisaatioResourceException(
+                    Response.Status.NOT_FOUND,
+                    oid,
+                    "yhteystietojentyyppi.exception.remove.notfound"
+            );
         }
         YhteystietojenTyyppi tyyppiToRemove = tyypit.get(0);
         List<YhteystietoArvo> arvos = yhteystietoArvoDAO.findByYhteystietojenTyyppi(tyyppiToRemove);
         if (arvos.isEmpty()) {
             this.yhteystietojenTyyppiDAO.remove(tyyppiToRemove);
         } else {
-            throw new OrganisaatioResourceException(Response.Status.CONFLICT, "");
+            throw new OrganisaatioResourceException(
+                    Response.Status.CONFLICT,
+                    oid,
+                    "yhteystietojentyyppi.exception.remove.inuse"
+            );
         }
         return "";
     }

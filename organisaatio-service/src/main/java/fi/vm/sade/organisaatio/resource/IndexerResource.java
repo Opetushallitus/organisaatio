@@ -45,6 +45,7 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioToSolrInputDocumentFunction;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 @Path("/indexer")
 @Component
@@ -111,6 +112,10 @@ public class IndexerResource {
         final List<String> delete = Lists.newArrayList();
 
         for (Organisaatio org : organisaatiot) {
+            // Ei indeksoida ryhmiä
+            if (OrganisaatioUtil.isRyhma(org)) {
+                continue;
+            }
             if (org.isOrganisaatioPoistettu()) {
                 delete.add(org.getOid());
             } else {
