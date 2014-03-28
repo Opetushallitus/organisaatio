@@ -41,7 +41,7 @@ public class OrganisaatioServiceExceptionWrapperAspectTest {
         try {
             proxy.ping("!!");
         } catch (GenericFault gf) {
-            Assert.assertEquals("exception.learning.institution.exists", gf.getFaultInfo().getErrorCode());
+            Assert.assertEquals("organisaatio.exception.learning.institution.exists", gf.getFaultInfo().getErrorCode());
         }
 
     }

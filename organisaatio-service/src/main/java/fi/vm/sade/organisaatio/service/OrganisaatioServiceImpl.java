@@ -360,7 +360,7 @@ public class OrganisaatioServiceImpl
 
         } catch (Exception exp) {
 
-            throw new OrganisationPassivationException("exception.error.passivating.child", exp);
+            throw new OrganisationPassivationException("organisaatio.exception.error.passivating.child", exp);
         }
 
     }
@@ -457,7 +457,7 @@ public class OrganisaatioServiceImpl
 
             if (model.getOppilaitosKoodi() != null && model.getOppilaitosKoodi().length() > 0) {
                 if (checkLearningInstitutionCodeIsUniqueAndNotUsed(model)) {
-                    throw new LearningInstitutionExistsException("oppilaitos.exists.with.code");
+                    throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
                 }
             }
         }

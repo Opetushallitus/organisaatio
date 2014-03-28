@@ -109,7 +109,7 @@ import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 @Transactional
 @ActiveProfiles("embedded-solr")
 public class OrganisaatioServiceTest extends SecurityAwareTestBase {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioServiceTest.class);
 
     @Autowired
@@ -131,7 +131,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     private YhteystietoDAOImpl yhteystietoDAO;
     @Autowired
     protected OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
-    
+
 
     @PersistenceContext
     private EntityManager em;
@@ -139,7 +139,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 	private static Date date(int n) {
 		return new GregorianCalendar(2000+n, 0, 0).getTime();
 	}
-	
+
 
     @Override
     @Before
@@ -199,7 +199,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         // assert koulutustoimija was saved successfully
         assertOrganisaatioSaved(nimi, ytunnus, koulutustoimija, 6, fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null);
     }
-    
+
     @Test
     public void testCreateToimipisteWithRunningNumber() throws GenericFault {
         String parentOid = "1.2.2004.2";
@@ -210,12 +210,12 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         String toimipisteOid = toimipiste.getOid();
         toimipiste.setOpetuspisteenJarjNro(jnro);
         toimipiste.setYhteishaunKoulukoodi(yhteishakukoodi);
-        
-        
+
+
         organisaatioService.createOrganisaatio(toimipiste, false);
-        
+
         OrganisaatioDTO readToimipiste = organisaatioService.findByOid(toimipisteOid);
-        
+
         assertTrue(readToimipiste.getOpetuspisteenJarjNro().equals(jnro));
         assertTrue(readToimipiste.getYhteishaunKoulukoodi().equals(yhteishakukoodi));
     }
@@ -270,10 +270,10 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 
         assertEquals(countYhteystieto, yhteystietoDAO.findAll().size());
     }
-    
+
     @Test
     public void testYtunnusUniqueness() throws Exception {
-    	
+
         String oid1 = "" + System.currentTimeMillis() + "" + Math.random();
         String oid2 = "" + System.currentTimeMillis() + "" + Math.random();
     	String ytunnus = buildYtunnus();
@@ -286,7 +286,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 			createKoulutustoimija(organisaatioService, "Testorg-1",  ytunnus, "Yhteys Henkilö", oid2);
 			fail("Y-tunnus uniqueness failed");
 		} catch (YtunnusException e) {} // ignore
-    	
+
     	// poistetaan ensin luotu organisaatio
     	RemoveByOidType rmb = new RemoveByOidType();
     	rmb.setOid(oid1);
@@ -343,7 +343,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
             organisaatioService.createOrganisaatio(org, false);
             fail("should not succeed");
         } catch (LearningInstitutionExistsException le) {
-            assertEquals("oppilaitos.exists.with.code", le.getKey());
+            assertEquals("organisaatio.oppilaitos.exists.with.code", le.getErrorKey());
         }
     }
 
@@ -378,7 +378,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         OrganisaatioDTO child = organisaatioService.createOrganisaatio(template, false);
         parent.setLakkautusPvm(date(2));
         parent = organisaatioService.updateOrganisaatio(parent, false);
-        
+
         //check child end date matches the date of parent
         Organisaatio org = organisaatioDAO.findByOid(child.getOid());
         assertEquals(date(2), org.getLakkautusPvm());
@@ -387,7 +387,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         child.setLakkautusPvm(date(2));
         child.setVersion(org.getVersion());
         child = organisaatioService.updateOrganisaatio(child, false);
-        
+
         org = organisaatioDAO.findByOid(child.getOid());
         assertEquals(date(2), org.getLakkautusPvm());
 
@@ -396,11 +396,11 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         try {
             child = organisaatioService.updateOrganisaatio(child, false);
         } catch (OrganizationDateException de) {
-            assertEquals("exception.organisaatio.date", de.getKey());
+            assertEquals("organisaatio.exception.organisaatio.date", de.getErrorKey());
         }
     }
 
-    
+
     @Test
     public void testRemove() throws GenericFault {
         final String oid = ""  + System.currentTimeMillis() + "" + Math.random();
@@ -419,20 +419,20 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         //final String oid2 = ""  + System.currentTimeMillis() + "" + Math.random();
         //OrganisaatioTstUtils.createKoulutustoimija(organisaatioService, "testemove", "1234567-8", "yhteyshlo", oid1);
     	OrganisaatioDTO o1 = OrganisaatioTstUtils.createOrganisaatio(organisaatioService, true, Arrays.asList("Koulutustoimija"), Arrays.asList("Oppilaitos"), Arrays.asList("Opetuspiste"));
-        
+
         Organisaatio org = organisaatioDAO.findByOid(o1.getParentOid());
         Assert.assertFalse(org.isOrganisaatioPoistettu());
         final RemoveByOidType oidType = new RemoveByOidType();
         oidType.setOid(o1.getParentOid());
         try {
-			organisaatioService.removeOrganisaatioByOid(oidType);        
-			//Assert.assertTrue(org.isOrganisaatioPoistettu());
-			fail("Ei olisi pitäny onnistua");
-		} catch (OrganisaatioCrudException e) {
-			assertEquals("child.orgs.found", e.getMessage());
-		}
+            organisaatioService.removeOrganisaatioByOid(oidType);
+            //Assert.assertTrue(org.isOrganisaatioPoistettu());
+            fail("Ei olisi pitäny onnistua");
+        } catch (OrganisaatioCrudException e) {
+            assertEquals("organisaatio.child.orgs.found", e.getMessage());
+        }
     }
-    
+
     private void passivate(Organisaatio org, Date passDate) {
     	org.setLakkautusPvm(passDate);
     	organisaatioDAO.update(org);
@@ -447,7 +447,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     			Arrays.asList("Koulutustoimija"),
     			Arrays.asList("Oppilaitos"),
     			Arrays.asList("Opetuspiste"));
-    	
+
         Organisaatio org = organisaatioDAO.findByOid(o1.getOid());
     	passivate(org, date(0));
         Assert.assertFalse(org.isOrganisaatioPoistettu());
@@ -458,7 +458,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 		Assert.assertTrue(org.isOrganisaatioPoistettu());
 
     }
-    
+
     @Ignore
     @Test
     public void createKoulutustoimija_cannotCreateWithSameNimi() throws GenericFault {
@@ -497,7 +497,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
             //expected
         }
         OrganisaatioDTO organisaatio = organisaatioService.createOrganisaatio(model, true);
-             
+
         OrganisaatioDTO organisaatioFat = organisaatioService.findByOid(organisaatio.getOid());
         // assertoidaan että meni oikein
         assertOrganisaatioSaved(nameSub, model.getYtunnus(), organisaatioFat, 6, fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.OPPILAITOS.value(), root.getOid());
@@ -759,7 +759,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         List<OrganisaatioDTO> result = organisaatioService.searchOrganisaatios(searchCriteria);
         assertEquals(2, result.size());
 
-        //List roots 
+        //List roots
         ArrayList<String> oidList = new ArrayList<String>();
         oidList.add("1.2.2004.1");
         oidList.add("1.2.2004.5");
@@ -771,7 +771,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         assertEquals(4, result.size());
 
 
-        //Finding all organisaatios with bar in name 
+        //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, true,null);
         result = organisaatioService.searchOrganisaatios(searchCriteria);
         assertEquals(2, result.size());
@@ -781,7 +781,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 //        result = organisaatioService.searchOrganisaatios(searchCriteria);
 //        assertEquals(0, result.size());
 
-        //Finding organisaatio with y-tunnus 1234567-1 
+        //Finding organisaatio with y-tunnus 1234567-1
 //        searchCriteria = createOrgSearchCriteria(null, null, "1234567-1", true, false, true, true,null);
 //        result = organisaatioService.searchOrganisaatios(searchCriteria);
 //        assertEquals(1, result.size());
@@ -863,7 +863,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     public void testFindeChildrenOidsByOid() {
     	OrganisaatioSearchOidType kysely = new OrganisaatioSearchOidType();
     	kysely.setSearchOid("1.2.2004.1");
-    	
+
     	OrganisaatioOidListType vastaus = organisaatioService.findChildrenOidsByOid(kysely);
         LOG.info("FIND CHILDREN OID LIST ORG COUNT:" + vastaus.getOrganisaatioOidList().size());
         assertTrue(!vastaus.getOrganisaatioOidList().isEmpty());
@@ -930,7 +930,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 //        searchCriteria = createOrgSearchCriteria(null, "Ammattikorkeakoulut", null, true, true,null);
 //        result = organisaatioService.searchBasicOrganisaatios(searchCriteria);
 //        assertEquals(4, result.size());
-//   
+//
 //   		//Search with only restriction list
 //        searchCriteria = createOrgSearchCriteria(null,  null,  null, true,  true,  Lists.newArrayList("1.2.2004.3"));
 //        result = organisaatioService.searchBasicOrganisaatios(searchCriteria);
@@ -996,15 +996,15 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     @Test
     public void testKuvailevatTiedot() throws GenericFault{
         OrganisaatioDTO organisaatio = organisaatioService.findByOid("1.2.2004.1");
-        
+
         EmailDTO emailOrg = new EmailDTO();
         emailOrg.setEmail("email1@foo.bar");
         emailOrg.setYhteystietoOid("org-oid");
-        
+
         organisaatio.getYhteystiedot().add(emailOrg);
-        
+
         OrganisaatioKuvailevatTiedotTyyppi kuvailevatTiedot = new OrganisaatioKuvailevatTiedotTyyppi();
-       
+
         HakutoimistoTyyppi hakutoimistoTyyppi = new HakutoimistoTyyppi();
         YhteyshenkiloTyyppi yhteyshenkilo = new YhteyshenkiloTyyppi();
         yhteyshenkilo.setEmail("email");
@@ -1012,40 +1012,40 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         yhteyshenkilo.setPuhelin("puhelin");
         yhteyshenkilo.setTitteli("Titteli");
         hakutoimistoTyyppi.setEctsYhteyshenkilo(yhteyshenkilo);
-        
-        
+
+
         MonikielinenTekstiTyyppi nimi = new MonikielinenTekstiTyyppi();
         Teksti teksti = new Teksti();
         teksti.setKieliKoodi("fi");
         teksti.setValue("nimi");
-        
+
         nimi.getTeksti().add(teksti);
         hakutoimistoTyyppi.setOpintotoimistoNimi(nimi);
-        
+
         kuvailevatTiedot.setHakutoimisto(hakutoimistoTyyppi);
-        
+
         //some linkit
         SoMeLinkkiTyyppi some1 = new SoMeLinkkiTyyppi();
         some1.setSisalto("http://www.foo.bar/");
         some1.setTyyppi(SoMeLinkkiTyyppiTyyppi.GOOGLE_PLUS);
-        
+
         kuvailevatTiedot.getSoMeLinkit().add(some1);
 
         organisaatio.setKuvailevatTiedot(kuvailevatTiedot);
-        
+
         //attach kuva
         OrganisaatioKuvaTyyppi kuva = new OrganisaatioKuvaTyyppi();
         kuva.setFileName("filename");
         kuva.setMimeType("mime/type");
         kuva.setKuva(new byte[]{0,1,2});
         kuvailevatTiedot.setKuva(kuva);
-        
+
         //attach email
         EmailDTO email = new EmailDTO();
         email.setEmail("me@here.bar");
         email.setYhteystietoOid("1");
         kuvailevatTiedot.getHakutoimisto().getOpintotoimistoYhteystiedot().add(email);
-       
+
         //attach osoite
         final OsoiteDTO osoite = new OsoiteDTO();
         osoite.setMaa("suomi");
@@ -1076,11 +1076,11 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         container.getTeksti().add(sisaltoFi);
         ktt.setSisalto(container);
         kuvailevatTiedot.getVapaatKuvaukset().add(ktt);
-        
+
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
 
         assertNotNull("no kuvailevattiedot found!", organisaatio.getKuvailevatTiedot());
- 
+
         //validate hakutoimisto
         //nimi
         assertEquals("Count did not match", 1, organisaatio.getKuvailevatTiedot().getHakutoimisto().getOpintotoimistoNimi().getTeksti().size());
@@ -1096,29 +1096,29 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         }
 
         YhteyshenkiloTyyppi yhenkilo = organisaatio.getKuvailevatTiedot().getHakutoimisto().getEctsYhteyshenkilo();
-        
+
         assertNotNull("ECTS Yhteyshenkilö not present", yhenkilo);
         assertEquals("Wrong email", "email", yhenkilo.getEmail());
         assertEquals("Wrong nimi", "Koko Nimi", yhenkilo.getKokoNimi());
         assertEquals("Wrong puhelin", "puhelin", yhenkilo.getPuhelin());
         assertEquals("Wrong titteli", "Titteli", yhenkilo.getTitteli());
-        
+
         //validate kuva
         assertNotNull("No kuva found!", organisaatio.getKuvailevatTiedot().getKuva());
         assertEquals("Filename mismatch", "filename", organisaatio.getKuvailevatTiedot().getKuva().getFileName());
         assertEquals("Mime type mismatch", "mime/type", organisaatio.getKuvailevatTiedot().getKuva().getMimeType());
         assertTrue("Image data mismatch", Arrays.equals(new byte[]{0,1,2},organisaatio.getKuvailevatTiedot().getKuva().getKuva()));
-        
+
         //validate some linkit
         assertEquals("some link count mismatch", 1, organisaatio.getKuvailevatTiedot().getSoMeLinkit().size());
         assertEquals("some link content mismatch", "http://www.foo.bar/", organisaatio.getKuvailevatTiedot().getSoMeLinkit().get(0).getSisalto());
-        
+
         //validate vapaat kuvaukset
         assertEquals("kuvailevat tiedot count mismatch", 1, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().size());
         assertEquals("kuvailevat tiedot tyyppi mismatch", KuvailevaTietoTyyppiTyyppi.AIEMMIN_HANKITTU_OSAAMINEN, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getTyyppi());
         assertEquals("kuvailevat tiedot content lang mismatch", "fi", organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getSisalto().getTeksti().get(0).getKieliKoodi());
         assertEquals("kuvailevat tiedot content value mismatch", "kuvaileva teksti", organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getSisalto().getTeksti().get(0).getValue());
-               
+
         //change kuva
         organisaatio.getKuvailevatTiedot().getKuva().setFileName("filename2");
         organisaatio.getKuvailevatTiedot().getKuva().setMimeType("mime/type2");
@@ -1138,7 +1138,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         SoMeLinkkiTyyppi some3 = new SoMeLinkkiTyyppi();
         some3.setSisalto("http://www.fase.bar/");
         some3.setTyyppi(SoMeLinkkiTyyppiTyyppi.MUU);
-        
+
         organisaatio.getKuvailevatTiedot().getSoMeLinkit().add(some2);
         organisaatio.getKuvailevatTiedot().getSoMeLinkit().add(some3);
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
@@ -1146,7 +1146,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         //validate some link count
         assertEquals("some link count mismatch", 3, organisaatio.getKuvailevatTiedot().getSoMeLinkit().size());
 
-        
+
         //add language to existing kuvaus
         Teksti kuvaileva = new Teksti();
         kuvaileva.setKieliKoodi("en");
@@ -1162,12 +1162,12 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         //remove language from existing kuvaus
         organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getSisalto().getTeksti().remove(0);
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
-        
+
         //validate
         assertEquals("kuvailevat tiedot count mismatch", 1, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().size());
         assertEquals("kuvailevat tiedot tyyppi mismatch", KuvailevaTietoTyyppiTyyppi.AIEMMIN_HANKITTU_OSAAMINEN, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getTyyppi());
         assertEquals("incorrect number of languages", 1, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().get(0).getSisalto().getTeksti().size());
-        
+
         //update kuvailevat tiedot
         ktt = new KuvailevaTietoTyyppi();
         ktt.setTyyppi(KuvailevaTietoTyyppiTyyppi.ESTEETOMYYS);
@@ -1178,12 +1178,12 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         container.getTeksti().add(sisaltoFi);
         ktt.setSisalto(container);
         organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().add(ktt);
-    
+
 
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
         //validate kuvaus count
         assertEquals("kuvailevat tiedot count mismatch", 2, organisaatio.getKuvailevatTiedot().getVapaatKuvaukset().size());
-  
+
         //change nimi
         nimi = new MonikielinenTekstiTyyppi();
         teksti = new Teksti();
@@ -1201,7 +1201,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 
         //change osoite
         organisaatio.getKuvailevatTiedot().getHakutoimisto().getOpintotoimistoYhteystiedot().remove(0);
-        
+
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
 
         //verify osoite removed
@@ -1211,104 +1211,104 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         organisaatio.getKuvailevatTiedot().setKuva(null);
         organisaatio = organisaatioService.updateOrganisaatio(organisaatio, false);
         Assert.assertNull(organisaatio.getKuvailevatTiedot().getKuva());
-        
+
     }
-    
+
     /*Tests that current parent and children of organisaatio is found correctly*/
     @Test
     @Ignore
     public void testGetCurrentParent() throws GenericFault {
-        
+
         //Creating test organisaatios (three parents and a child)
         OrganisaatioDTO root1 = OrganisaatioTstUtils.buildOrganisaatio("nimi1", "1111111-2");
         root1.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         root1.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
         root1 = organisaatioService.createOrganisaatio(root1, false);
-        
+
         Organisaatio root1E = this.organisaatioDAO.findByOid(root1.getOid());
-        
+
         OrganisaatioDTO root2 = OrganisaatioTstUtils.buildOrganisaatio("nimi2", "1111111-3");
         root2.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         root2.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
         root2 = organisaatioService.createOrganisaatio(root2, false);
-        
+
         Organisaatio root2E = this.organisaatioDAO.findByOid(root2.getOid());
-        
+
         OrganisaatioDTO root3 = OrganisaatioTstUtils.buildOrganisaatio("nimi3", "1111111-4");
         root3.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         root3.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
         root3 = organisaatioService.createOrganisaatio(root3, false);
-        
+
         Organisaatio root3E = this.organisaatioDAO.findByOid(root3.getOid());
-        
+
         OrganisaatioDTO child = OrganisaatioTstUtils.buildOrganisaatio("nimi4", null);
         child.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         child.getTyypit().add(OrganisaatioTyyppi.OPPILAITOS);
         child.setOppilaitosKoodi("13245");
         child.setParentOid(root1.getOid());
         child = organisaatioService.createOrganisaatio(child, false);
-        
+
         Organisaatio childE = this.organisaatioDAO.findByOid(child.getOid());
-        
-        
+
+
         /*Creating the organisaatioSuhde entities:
          * child's parent is root1 in the past, root2 currently, and root3 in the future
          */
         Calendar pastStart = Calendar.getInstance();
         pastStart.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 2);
-        
+
         Calendar currentStart = Calendar.getInstance();
         currentStart.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 1);
-        
+
         Calendar futureStart = Calendar.getInstance();
         futureStart.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) + 1);
-        
+
         OrganisaatioSuhde suhde = this.organisaatioSuhdeDAO.findChildrenTo(root1E.getId(), null).get(0);//addChild(root1E.getId(), childE.getId(), pastStart.getTime());
         suhde.setAlkuPvm(pastStart.getTime());
         this.organisaatioSuhdeDAO.update(suhde);
         this.organisaatioSuhdeDAO.addChild(root2E.getId(), childE.getId(), currentStart.getTime(), null);
         this.organisaatioSuhdeDAO.addChild(root3E.getId(), childE.getId(), futureStart.getTime(), null);
         childE.setParentSuhteet(this.organisaatioSuhdeDAO.findBy("child", childE));
-        
-        
+
+
         /*
          * Asserting that the parent child relationship is found correctly
          */
         child = this.organisaatioService.findByOid(child.getOid());
-        
+
         assertTrue(root2.getOid().equals(child.getParentOid()));
-        
+
         OrganisaatioSearchOidType param = new OrganisaatioSearchOidType();
         param.setSearchOid(root2.getOid());
         assertTrue(this.organisaatioService.findChildrenOidsByOid(param).getOrganisaatioOidList().get(0).getOrganisaatioOid().equals(child.getOid()));
-       
+
         param.setSearchOid(root1.getOid());
         assertTrue(this.organisaatioService.findChildrenOidsByOid(param).getOrganisaatioOidList().isEmpty());
-        
+
         param.setSearchOid(root3.getOid());
         assertTrue(this.organisaatioService.findChildrenOidsByOid(param).getOrganisaatioOidList().isEmpty());
     }
-    
+
     private void assertDateRange(Date expectedFrom, Date expectedTo, String oid) {
     	OrganisaatioDTO od = organisaatioService.findByOid(oid);
     	assertEquals(expectedFrom, od.getAlkuPvm());
     	assertEquals(expectedTo, od.getLakkautusPvm());
     }
-    
+
     private void setDateRange(Date from, Date to, String oid) throws Exception {
     	OrganisaatioDTO od = organisaatioService.findByOid(oid);
     	od.setAlkuPvm(from);
     	od.setLakkautusPvm(to);
     	organisaatioService.updateOrganisaatio(od, false);
     }
-    
+
     @Test
     public void testHierarchyDateModifications() throws Exception {
     	Date t0 = new GregorianCalendar(2000, 1,1).getTime();
     	Date t1 = new GregorianCalendar(2010, 1,1).getTime();
     	Date t2 = new GregorianCalendar(2020, 1,1).getTime();
     	Date t3 = new GregorianCalendar(2030, 1,1).getTime();
-    	
+
         OrganisaatioDTO root1 = OrganisaatioTstUtils.buildOrganisaatio("nimi1", "1111111-2");
         root1.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         root1.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
@@ -1316,7 +1316,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         root1.setLakkautusPvm(t2);
         root1 = organisaatioService.createOrganisaatio(root1, false);
         assertDateRange(t0, t2, root1.getOid());
-        
+
         OrganisaatioDTO sub1 = OrganisaatioTstUtils.buildOrganisaatio("nimi2", "1111112-2");
         sub1.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         sub1.getTyypit().add(OrganisaatioTyyppi.OPPILAITOS);
@@ -1325,7 +1325,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         sub1.setParentOid(root1.getOid());
         sub1 = organisaatioService.createOrganisaatio(sub1, false);
         assertDateRange(t0, t1, sub1.getOid());
-        
+
         OrganisaatioDTO sub2 = OrganisaatioTstUtils.buildOrganisaatio("nimi3", "1111113-2");
         sub2.getYhteystiedot().addAll(OrganisaatioTstUtils.DEFAULT_YHTEYSTIEDOT);
         sub2.getTyypit().add(OrganisaatioTyyppi.OPPILAITOS);
@@ -1336,7 +1336,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         assertDateRange(t0, t2, sub2.getOid());
 
         setDateRange(t1, t3, root1.getOid());
-        assertDateRange(t1, t3, root1.getOid());        
+        assertDateRange(t1, t3, root1.getOid());
         assertDateRange(t0, t1, sub1.getOid());
         assertDateRange(t0, t2, sub2.getOid());
 
@@ -1354,9 +1354,9 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         assertDateRange(t1, t3, root1.getOid());
         assertDateRange(t0, t1, sub1.getOid());
         assertDateRange(t0, t2, sub2.getOid());
-        
+
     }
-    
+
     @Test
     public void testProtectedResources() throws GenericFault{
         OrganisaatioDTO org = OrganisaatioTstUtils.createKoulutustoimija(organisaatioService, "testemove", "1234567-8", "yhteyshlo", "oid");
@@ -1383,7 +1383,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         } catch (NotAuthorizedException rte) {
             assertNoPermission(rte);
         }
-        
+
         try {
             organisaatioService.createYhteystietojenTyyppi(null);
             fail("unauthenticated user should not be able to access the service");
@@ -1405,16 +1405,16 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
             assertNoPermission(rte);
         }
     }
-    
-    
+
+
     /**
      * Test detailed rules, dates, name, type
-     * @throws GenericFault 
+     * @throws GenericFault
      */
     @Test
     public void testProtectedResourcesVirkailija() throws GenericFault{
         //1.2.2004.2 = oppilaitos
-        
+
         setCurrentUser("useroid", super.getAuthority("APP_" + OrganisaatioPermissionServiceImpl.ORGANISAATIOHALLINTA + "_CRUD", "1.2.2004.2"));
 
         //start date change for oppilaitos should not succeed
@@ -1436,7 +1436,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         } catch (NotAuthorizedException rte) {
             assertNoPermission(rte);
         }
-        
+
         //name change for oppilaitos should not succeed
         organisaatio = organisaatioService.findByOid("1.2.2004.2");
         organisaatio.getNimi().getTeksti().get(0).setValue("Uusi nimi");
@@ -1446,7 +1446,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         } catch (NotAuthorizedException rte) {
             assertNoPermission(rte);
         }
-        
+
 //        //add type koulutustoimija should not succeed
 //        organisaatio = organisaatioService.findByOid("1.2.2004.2");
 //        organisaatio.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);
@@ -1482,7 +1482,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         } catch (NotAuthorizedException rte) {
             assertNoPermission(rte);
         }
-        
+
         //virkailija should be able to add toimipiste
         OrganisaatioDTO toimipiste = new OrganisaatioDTO();
         toimipiste.getTyypit().add(OrganisaatioTyyppi.OPETUSPISTE);
@@ -1499,5 +1499,5 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     private void assertNoPermission(RuntimeException rte) {
         assertTrue(rte.getClass().getName(), rte.getMessage()!=null && rte.getMessage().equals("no.permission"));
     }
-    
+
 }

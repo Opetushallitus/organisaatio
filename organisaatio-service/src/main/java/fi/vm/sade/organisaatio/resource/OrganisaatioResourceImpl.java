@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.oid.service.OIDService;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -393,7 +394,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(nae);
         }
         Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
         OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
@@ -412,7 +413,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(nae);
         }
         Set<String> reindex = new HashSet<String>();
         Organisaatio po = removeOrganisaatioByOid(oid, reindex);
@@ -432,14 +433,17 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(nae);
         }
         try {
             Organisaatio org = organisaatioBusinessService.save(ordto, false, false);
             OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
             return ret;
         } catch (ValidationException ex) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, ex.toString());
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            throw new OrganisaatioResourceException(sbe);
         }
     }
 

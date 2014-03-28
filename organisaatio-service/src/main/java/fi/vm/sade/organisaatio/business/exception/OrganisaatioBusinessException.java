@@ -1,8 +1,4 @@
-package fi.vm.sade.organisaatio.service;
-
-
 /*
- *
  * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
  *
  * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
@@ -17,32 +13,39 @@ package fi.vm.sade.organisaatio.service;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
+
+package fi.vm.sade.organisaatio.business.exception;
+
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
+
 /**
  *
- * @author Tuomas Katva
  */
-public class AbstractOrganisaatioBusinessException extends RuntimeException {
+public abstract class OrganisaatioBusinessException extends SadeBusinessException {
 
-    private static final long serialVersionUID = 1L;
-	
-    private String key;
-
-    public AbstractOrganisaatioBusinessException(String key) {
-        super(key);
-        this.key = key;
-
+    public OrganisaatioBusinessException() {
     }
 
-    public AbstractOrganisaatioBusinessException(String key, Throwable cause) {
-        super(key, cause);
-        this.key = key;
+    public OrganisaatioBusinessException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public AbstractOrganisaatioBusinessException(Throwable cause) {
+    public OrganisaatioBusinessException(String message) {
+        super(message);
+    }
+
+    public OrganisaatioBusinessException(Throwable cause) {
         super(cause);
     }
 
-    public String getKey() {
-        return key;
+    @Override
+    public String getErrorKey() {
+        return getMessage();
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " [" + getErrorKey() + "]";
+    }
+
 }
