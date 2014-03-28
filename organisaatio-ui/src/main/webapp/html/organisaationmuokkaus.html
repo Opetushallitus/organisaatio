@@ -942,7 +942,9 @@
                     </div>
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                        <!--textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea-->
+                        <textarea id="kt_{{field}}}}" ui-tinymce="tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+
                     </div>
                 </div>
             </div>
@@ -1019,7 +1021,7 @@
                     </div>
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea id="oe_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <textarea id="oe_{{field}}}}" ui-tinymce="tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
                     </div>
                 </div>
             </div>

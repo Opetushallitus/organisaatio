@@ -1,13 +1,13 @@
-<form name="form">
-    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
+<form name="mainform" class="form-horizontal" novalidate>
+    <h1>{{'RyhmienHallinta.otsikko'| i18n}} ({{localizeNimi(parentOrg)}})</h1>
 
-    <select ng-model="currentGroup" class="span6"
+    <select ng-model="currentGroup" class="span6" ng-disabled="currentGroup && form.$dirty"
             ng-options="localizeNimi(group) for group in model.groups">
         <option value="">{{'RyhmienHallinta.valitseRyhma'| i18n}}</option>
     </select>
     <hr>
 
-    <div ng-if="currentGroup">
+    <div ng-show="currentGroup" ng-form="form">
         <h3>{{'RyhmienHallinta.nimi'| i18n}}</h3>
         <div class="control-group">
             <div class="controls">
@@ -65,15 +65,15 @@
 
     <div class="row">
         <div class="span6">
-            <button class="btn" ng-click="poista()" ng-if="currentGroup">
-                {{'RyhmienHallinta.poista'| i18n}}
-            </button>
             <button class="btn" ng-click="luoUusi()">
                 {{'RyhmienHallinta.luoUusi'| i18n}}
             </button>
+            <button class="btn" ng-disabled="!currentGroup" ng-click="poista()">
+                {{'RyhmienHallinta.poista'| i18n}}
+            </button>
         </div>
         <div class="offset7">
-            <button class="btn" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
+            <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
             <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()">{{'RyhmienHallinta.tallenna'| i18n}}</button>
         </div>
     </div>

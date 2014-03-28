@@ -6,34 +6,12 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
 
         this.reload = function(parentOid, callback, virheCallback) {
             ryhmat.length = 0;
-            // TODO: Remove dummy implemetation when api is available
-            /*[
-             {version: 0,
-             parentOid: '1.2.246.562.10.86037067971',
-             oid: '1.2.246.562.28.00000000001',
-             tyypit: ['Ryhmä'],
-             "nimi": {
-             "fi": "Ryhmä ykkönen",
-             "sv": null,
-             "en": null
-             }},
-             {version: 0,
-             parentOid: '1.2.246.562.10.86037067971',
-             oid: '1.2.246.562.28.00000000002',
-             tyypit: ['Ryhmä'],
-             "nimi": {
-             "fi": "Ryhmä kakkonen",
-             "sv": null,
-             "en": null
-             }}].forEach(function(ryhma) {
-             ryhmat.push(ryhma);
-             });*/
-
             Ryhmat.get({oid: parentOid}, function(result) {
                 result.forEach(function(ryhma) {
                     if (!ryhma.kuvaus2) {
                         ryhma.kuvaus2 = {};
                     }
+                    ryhma.tyypit = ['Ryhma'];
                     ryhmat.push(ryhma);
                 });
                 callback();
