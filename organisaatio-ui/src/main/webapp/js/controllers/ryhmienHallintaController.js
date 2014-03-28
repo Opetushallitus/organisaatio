@@ -33,7 +33,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
             $scope.model.save($scope.currentGroup, function(savedGroup) {
                 $scope.currentGroup = savedGroup;
             }, function(error) {
-                Alert.add("error", error, false);
+                Alert.add("error", $filter('i18n')(error.data.errorKey, ""), false);
             });
         }
     };
