@@ -73,8 +73,8 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                 if (ind !== -1) {
                     ryhmat.splice(ind, 1);
                 }
-                ryhmat.push(ryhma);
-                callback(ryhma);
+                ryhmat.push(result);
+                callback(result);
             }, virheCallback);
         };
 
