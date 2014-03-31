@@ -867,7 +867,7 @@
                                        oph-pattern="{{model.someurls[field].validator}}"
                                        ng-model="model.organisaatio.metadata.data[field][model.smlang]"
                                        ie-placeholder placeholder="{{model.someurls[field].autofill}}"
-                                       onclick="if (!value) value=placeholder" required>
+                                       onclick="if (!value && placeholder) value=placeholder" required>
                                 <button type="button" class="btn" ng-click="model.removeSome(field)"><i class="icon-remove"></i></button>
                             </div>
                             <div>
