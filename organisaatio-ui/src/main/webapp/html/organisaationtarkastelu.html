@@ -198,7 +198,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite}},</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
                         {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
                     </label>
@@ -226,7 +226,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite}},</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
                         {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
                     </label>
