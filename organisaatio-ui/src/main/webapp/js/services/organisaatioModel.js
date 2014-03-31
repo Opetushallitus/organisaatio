@@ -6,6 +6,26 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
     var model = new function() {
         this.organisaatio = {};
 
+        this.tinymceOptions = {
+            theme: "modern",
+            language: KoodistoKoodi.getLanguage().toLowerCase(),
+            plugins: [
+                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace visualblocks visualchars code fullscreen",
+                "insertdatetime media nonbreaking save table contextmenu directionality",
+                "emoticons template paste textcolor"
+                        //"wordcount"
+            ],
+            paste_word_valid_elements: "b,strong,i,em,h1,h2,p,ol,ul,li,a",
+            menubar: false,
+            //toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+            //toolbar2: "print preview media | forecolor backcolor emoticons",
+            toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image | preview | code"
+                    //image_advtab: true
+                    //height: "200px",
+                    //width: "650px"
+        };
+
         // Koodistodata organisaation muokkausta varten
         this.koodisto = {
             oid: 0,
@@ -79,8 +99,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
         this.someurls = {
             FACEBOOK: {
-                autofill: 'https://facebook.com/',
-                validator: '^https{0,1}://facebook.com/.+'
+                autofill: 'https://www.facebook.com/',
+                validator: '^https{0,1}://(?:www\.){0,1}facebook.com/.+'
             },
             GOOGLE_PLUS: {
                 autofill: 'https://plus.google.com/',
@@ -88,11 +108,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             },
             LINKED_IN: {
                 autofill: 'https://linkedin.com/',
-                validator: '^https{0,1}://linkedin.com/.+'
+                validator: '^https{0,1}://(?:www\.){0,1}linkedin.com/.+'
             },
             TWITTER: {
                 autofill: 'https://twitter.com/',
-                validator: '^https{0,1}://twitter.com/.+'
+                validator: '^https{0,1}://(?:www\.){0,1}twitter.com/.+'
             },
             MUU: {
                 autofill: 'https://',
@@ -136,7 +156,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 tabs: [],
                 types: this.sometypes,
                 fields: []
-            },
+            }
         };
 
         // Yhteystietojen kielivälilehdet
