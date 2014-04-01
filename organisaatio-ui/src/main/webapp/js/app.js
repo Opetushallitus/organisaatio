@@ -200,7 +200,8 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
             $log.debug(result);
             var lang = angular.fromJson(result).lang;
             if (lang) {
-                instance.lang = lang.toUpperCase();
+                // Toistaiseksi vain SV on tuettu FI:n lisäksi
+                instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
                 deferred.resolve(instance);
             } else {
                 $log.debug('failed parsing result, defaulting to FI');
