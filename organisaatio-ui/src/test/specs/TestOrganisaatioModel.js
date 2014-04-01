@@ -436,12 +436,14 @@ var parentResult = {
         // Olisi kivempi ladata data erillisestä tiedostosta, mutta ao. ei toimi:
         //jasmine.getJSONFixtures().fixturesPath='data';
 
+        $httpBackend.expectGET("/cas/me").respond('{"lang": "fi"}');
+
         $httpBackend.expectGET("http://localhost:8180/organisaatio-ui/buildversion.txt").respond("");
 
         $httpBackend.expectGET("organisaatio/auth").respond("");
 
         $httpBackend.expectGET("/cas/myroles").respond("");
-        
+
         $httpBackend.expectGET("organisaatio/1.2.246.562.10.99999999999").respond(organisaatioResult);
 
         $httpBackend.expectGET("organisaatio/1.2.246.562.10.11111111111").respond(parentResult);

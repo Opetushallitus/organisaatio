@@ -17,16 +17,18 @@
 
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
+
 /**
  *
  * @author Tuomas Katva
  */
-public class OrganizationDateException extends AbstractOrganisaatioBusinessException {
-    
+public class OrganizationDateException extends OrganisaatioBusinessException {
+
     private static final long serialVersionUID = 1L;
 
     public OrganizationDateException() {
-        super("exception.organisaatio.date");
+        super("organisaatio.exception.organisaatio.date");
     }
-    
+
 }

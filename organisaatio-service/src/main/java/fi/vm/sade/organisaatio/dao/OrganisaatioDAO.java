@@ -67,6 +67,13 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      */
     List<Organisaatio> findChildren(Long parentId);
 
+    /**
+     * Palautetaan oph organisaation alla olevat Ryhmä tyyppiset organisaatiot
+     * 
+     * @return
+     */
+    public List<Organisaatio> findGroups();
+    
     boolean isYtunnusAvailable(String ytunnus);
     
 }

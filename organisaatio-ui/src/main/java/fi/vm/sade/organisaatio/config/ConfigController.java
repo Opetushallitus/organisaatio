@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ConfigController {
     @Value("${organisaatio-ui.organisaatio-ui-url}")
     private String organisaatioUiURL;
-    
+
     @Value("${organisaatio-ui.organisaatio-service-url.rest}")
     private String organisaatioServiceRestURL;
 
@@ -32,6 +32,9 @@ public class ConfigController {
     @Value("${organisaatio-ui.cas.url:/cas/myroles}")
     private String casUrl;
 
+    @Value("${organisaatio-ui.cas-me.url:/cas/me}")
+    private String casMeUrl;
+
     @RequestMapping(value = "/configuration.js", method = RequestMethod.GET, produces = "text/javascript")
     @ResponseBody
     public String index() {
@@ -45,7 +48,8 @@ public class ConfigController {
         append(b, "TEMPLATE_URL_BASE", "");
 
         append(b, "CAS_URL", casUrl);
- 
+        append(b, "CAS_ME_URL", casMeUrl);
+
         if (!authMode.isEmpty()) {
             append(b, "AUTH_MODE", authMode);
             if (authMode.trim().equalsIgnoreCase("dev")) {

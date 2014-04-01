@@ -60,7 +60,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
 
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
-    
+
     /**
      * Find the children of given parent organisation.
      *
@@ -577,7 +577,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         // OVT-2391, cannot remove organization if there is child organizations)
         if (!findChildren(oid, false, false).isEmpty()) {
-            throw new OrganisaatioCrudException("child.orgs.found");
+            throw new OrganisaatioCrudException("organisaatio.child.orgs.found");
         }
 
         // Mark removed
@@ -767,14 +767,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Override
     public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList, 
-            List<String> kuntaList, 
-            List<String> oppilaitostyyppiList, 
+            List<String> kieliList,
+            List<String> kuntaList,
+            List<String> oppilaitostyyppiList,
             List<String> vuosiluokkaList,
-            List<String> ytunnusList, 
+            List<String> ytunnusList,
             List<String> oidList,
             int limit) {
-        
+
         log.debug("findBySearchCriteria()");
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
@@ -788,7 +788,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         // Ei oteta mukaan suunniteltuja ja lakkautettuja organisaatioita
         BooleanExpression voimassaOloExpr = getVoimassaoloExpression(false, false, org);
         whereExpression = (voimassaOloExpr != null) ? whereExpression.and(voimassaOloExpr) : whereExpression;
-        
+
         // Otetaan mukaan vain organisaatiot, joiden kieli on annetussa kielilistassa
         BooleanExpression kieliExpr = getKieliExpression(org, kieliList);
         whereExpression = (kieliExpr != null) ? whereExpression.and(kieliExpr) : whereExpression;
@@ -811,8 +811,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         // Otetaan mukaan vain organisaatiot, joiden oid  esiintyy annetussa oidlistassa
         BooleanExpression oidExpr = getOidExpression(org, oidList);
-        whereExpression = (oidExpr != null) ? whereExpression.and(oidExpr) : whereExpression;        
-        
+        whereExpression = (oidExpr != null) ? whereExpression.and(oidExpr) : whereExpression;
+
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = new JPAQuery(getEntityManager())
@@ -821,12 +821,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 //.distinct()
                 .limit(limit + 1)
                 .list(org);
-        
+
         log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
         for (int i = 0; i < organisaatiot.size(); ++i) {
             log.debug("Organisaatio " + i + " " + organisaatiot.get(i).getNimi().getValues() +
-                    " " + organisaatiot.get(i).getKotipaikka() + " " + organisaatiot.get(i).getNimihaku() + 
+                    " " + organisaatiot.get(i).getKotipaikka() + " " + organisaatiot.get(i).getNimihaku() +
                     " oid: " + organisaatiot.get(i).getOid() +
                     " luokat: " + organisaatiot.get(i).getVuosiluokat() +
                     " kielet: " + organisaatiot.get(i).getKielet());
@@ -839,7 +839,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (kieliList == null || kieliList.isEmpty()) {
             return null;
         }
-        
+
         BooleanExpression kieliExpr = qOrganisaatio.kielet.contains(kieliList.get(0));
         if (kieliList.size() > 1) {
             for (int i = 1; i < kieliList.size(); ++i) {
@@ -853,7 +853,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (kuntaList == null || kuntaList.isEmpty()) {
             return null;
         }
-        
+
         // TODO: kotipaikka vielä kunta-koodiston uri ilman versiota --> version lisäyksen jälkeen: getUriVersionExpression()
         BooleanExpression kuntaExpr = qOrganisaatio.kotipaikka.eq(kuntaList.get(0));
         if (kuntaList.size() > 1) {
@@ -868,7 +868,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (oppilaitostyyppiList == null || oppilaitostyyppiList.isEmpty()) {
             return null;
         }
-        
+
         BooleanExpression oppilaitostyyppiExpr = getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppiList.get(0));
         if (oppilaitostyyppiList.size() > 1) {
             for (int i = 1; i < oppilaitostyyppiList.size(); ++i) {
@@ -882,7 +882,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (ytunnusList == null || ytunnusList.isEmpty()) {
             return null;
         }
-        
+
         BooleanExpression ytunnusExpr = qOrganisaatio.ytunnus.eq(ytunnusList.get(0));
         if (ytunnusList.size() > 1) {
             for (int i = 1; i < ytunnusList.size(); ++i) {
@@ -896,7 +896,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (vuosiluokkaList == null || vuosiluokkaList.isEmpty()) {
             return null;
         }
-        
+
         BooleanExpression vuosiluokkaExpr = qOrganisaatio.vuosiluokat.contains(vuosiluokkaList.get(0));
         if (vuosiluokkaList.size() > 1) {
             for (int i = 1; i < vuosiluokkaList.size(); ++i) {
@@ -910,7 +910,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         if (oidList == null || oidList.isEmpty()) {
             return null;
         }
-        
+
         BooleanExpression oidExpr = qOrganisaatio.oid.eq(oidList.get(0));
         if (oidList.size() > 1) {
             for (int i = 1; i < oidList.size(); ++i) {
@@ -919,12 +919,34 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
         return oidExpr;
     }
- 
+
     private BooleanExpression getUriVersionExpression(StringPath string, String criteriaUri) {
         if (criteriaUri.matches(uriWithVersionRegExp)) {
             return string.eq(criteriaUri);
         }
 
         return string.like(criteriaUri + "#%");
+    }
+
+    @Override
+    public List<Organisaatio> findGroups() {
+        log.debug("findGroups()");
+
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+
+        // Haetaan vain organisaatiot, joiden parent on root
+        BooleanExpression whereExpression = qOrganisaatio.parentOidPath.eq("|" + ophOid + "|");
+
+        // Haetaan vain organisaatiot joita ei ole poistettu
+        whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.isFalse());
+
+        // Haetaan vain organisaatiot joiden tyyppi on Ryhmä
+        whereExpression = whereExpression.and(qOrganisaatio.tyypit.contains(OrganisaatioTyyppi.RYHMA.value()));
+
+        return new JPAQuery(getEntityManager())
+                .from(qOrganisaatio)
+                .where(whereExpression)
+                .distinct()
+                .list(qOrganisaatio);
     }
 }

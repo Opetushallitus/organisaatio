@@ -219,6 +219,7 @@
             <xs:enumeration value="Opetuspiste"/>
             <xs:enumeration value="Oppisopimustoimipiste"/>
             <xs:enumeration value="Muu organisaatio"/>
+            <xs:enumeration value="Ryhma"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="osoiteTyyppi">

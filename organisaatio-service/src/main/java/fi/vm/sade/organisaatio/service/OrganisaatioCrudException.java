@@ -1,6 +1,3 @@
-package fi.vm.sade.organisaatio.service;
-
-
 /*
  *
  * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
@@ -18,15 +15,25 @@ package fi.vm.sade.organisaatio.service;
  * European Union Public Licence for more details.
  */
 
+package fi.vm.sade.organisaatio.service;
+
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
+
 /**
  *
  * @author Tuomas Katva
  */
-public class OrganisaatioCrudException extends AbstractOrganisaatioBusinessException {
-    
+public class OrganisaatioCrudException extends OrganisaatioBusinessException {
+
     private static final long serialVersionUID = 1L;
 
     public OrganisaatioCrudException(String key) {
         super(key);
     }
+
+    @Override
+    public String getErrorKey() {
+        return getMessage();
+    }
+
 }

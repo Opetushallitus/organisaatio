@@ -2,8 +2,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
-
     $scope.model.mode = "show";
+
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
         if ('ytunnus' in $routeParams) {

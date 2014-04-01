@@ -1,3 +1,6 @@
+package fi.vm.sade.organisaatio.service;
+
+
 /*
  *
  * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
@@ -14,28 +17,32 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-
-package fi.vm.sade.organisaatio.service;
-
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
-
-
-
-
 /**
  *
  * @author Tuomas Katva
  */
-public class LearningInstitutionExistsException extends OrganisaatioBusinessException {
+public class DeprecatedAbstractOrganisaatioBusinessException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public LearningInstitutionExistsException(String message) {
-        super(message);
+    private String key;
+
+    public DeprecatedAbstractOrganisaatioBusinessException(String key) {
+        super(key);
+        this.key = key;
+
     }
 
-    public LearningInstitutionExistsException() {
-        this("organisaatio.exception.learning.institution.exists");
+    public DeprecatedAbstractOrganisaatioBusinessException(String key, Throwable cause) {
+        super(key, cause);
+        this.key = key;
     }
 
+    public DeprecatedAbstractOrganisaatioBusinessException(Throwable cause) {
+        super(cause);
+    }
+
+    public String getKey() {
+        return key;
+    }
 }
