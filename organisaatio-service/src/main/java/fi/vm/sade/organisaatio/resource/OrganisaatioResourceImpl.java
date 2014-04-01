@@ -489,17 +489,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> groups(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
-        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
-        List<OrganisaatioRDTO> groupList = new LinkedList<OrganisaatioRDTO>();
-        if (parentOrg != null) {
-            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
-            for (OrganisaatioSuhde suhde : suhteet) {
-                // Palautetaan ryhmät, joita ei ole poistettu
-                if (OrganisaatioUtil.isRyhma(suhde.getChild()) && 
-                        suhde.getChild().isOrganisaatioPoistettu() == false) {
-                    groupList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
-                }
-            }
+        
+        List<Organisaatio> entitys = organisaatioDAO.findGroups();
+        if (entitys == null) {
+            return null;
+        }
+        
+        List<OrganisaatioRDTO> groupList = new ArrayList<OrganisaatioRDTO>();
+        for (Organisaatio entity : entitys) {
+            groupList.add(conversionService.convert(entity, OrganisaatioRDTO.class));
         }
         return groupList;
     }
