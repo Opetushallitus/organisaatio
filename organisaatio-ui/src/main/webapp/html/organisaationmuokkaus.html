@@ -156,7 +156,7 @@
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -175,7 +175,7 @@
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -188,7 +188,7 @@
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -209,7 +209,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                        type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -225,7 +225,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
-                <input ng-if="model.isKoulutustoimija()===false && model.isOppilaitos()===false"
+                <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                        type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -866,8 +866,8 @@
                                 <input id="somein" type="text" name="somein" class="span6"
                                        oph-pattern="{{model.someurls[field].validator}}"
                                        ng-model="model.organisaatio.metadata.data[field][model.smlang]"
-                                       ie-placeholder placeholder="{{model.someurls[field].autofill}}"
-                                       onclick="if (!value) value=placeholder" required>
+                                       ie-placeholder placeholder="{{model.someurls[field].autofill}}" required>
+                                <!--onclick="if (!value && placeholder) value = placeholder" -->
                                 <button type="button" class="btn" ng-click="model.removeSome(field)"><i class="icon-remove"></i></button>
                             </div>
                             <div>
@@ -933,7 +933,7 @@
         <div ng-if="model.ktlang !== '+'" ng-repeat='tab in model.mkSections.kt.tabs'>
             <div ng-if='tab.lang === model.ktlang'>
 
-                <div class="control-group" ng-repeat="field in model.kttypes">
+                <div class="control-group" ng-repeat="field in model.kttypes" ng-form="ktForm">
                     <label class="control-label">
                         {{'Organisaationtarkastelu.' + field| i18n}}
                     </label>
@@ -942,7 +942,13 @@
                     </div>
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea id="kt_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                        <textarea name="mcearea_kt" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                        <div>
+                            <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.ktlang] && model.organisaatio.metadata.data[field][model.ktlang].length > 16383">
+                                {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
+                                {{model.organisaatio.metadata.data[field][model.ktlang].length}}
+                                {{'Organisaationmuokkaus.validation.maxpituusloppu'| i18n }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1010,7 +1016,7 @@
         <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
             <div ng-if='tab.lang === model.oelang'>
 
-                <div class="control-group" ng-repeat="field in model.oetypes">
+                <div class="control-group" ng-repeat="field in model.oetypes" ng-form="oeForm">
                     <label class="control-label">
                         {{'Organisaationtarkastelu.' + field| i18n}}
                     </label>
@@ -1019,7 +1025,13 @@
                     </div>
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea id="oe_{{field}}}}" ui-tinymce='{menubar:"false"}' ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <textarea name="mcearea_oe" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <div>
+                            <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.oelang] && model.organisaatio.metadata.data[field][model.oelang].length > 16383">
+                                {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
+                                {{model.organisaatio.metadata.data[field][model.oelang].length}}
+                                {{'Organisaationmuokkaus.validation.maxpituusloppu'| i18n }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1053,7 +1065,7 @@
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake' | i18n }}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
@@ -1062,7 +1074,7 @@
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake' | i18n }}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <p>
 </div>

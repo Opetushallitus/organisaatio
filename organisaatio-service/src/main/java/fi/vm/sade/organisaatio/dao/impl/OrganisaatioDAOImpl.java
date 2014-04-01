@@ -927,4 +927,26 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         return string.like(criteriaUri + "#%");
     }
+
+    @Override
+    public List<Organisaatio> findGroups() {
+        log.debug("findGroups()");
+
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+
+        // Haetaan vain organisaatiot, joiden parent on root
+        BooleanExpression whereExpression = qOrganisaatio.parentOidPath.eq("|" + ophOid + "|");
+
+        // Haetaan vain organisaatiot joita ei ole poistettu
+        whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.isFalse());
+
+        // Haetaan vain organisaatiot joiden tyyppi on Ryhmä
+        whereExpression = whereExpression.and(qOrganisaatio.tyypit.contains(OrganisaatioTyyppi.RYHMA.value()));
+
+        return new JPAQuery(getEntityManager())
+                .from(qOrganisaatio)
+                .where(whereExpression)
+                .distinct()
+                .list(qOrganisaatio);
+    }
 }

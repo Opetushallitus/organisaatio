@@ -136,5 +136,8 @@ function OrganisaatioTreeController($scope, $location, $filter,
             $log.log('Modal dismissed at: ' + new Date());
         });
     };
-
+    
+    $scope.ryhmienHallinta = function() {
+        $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/groups");
+    };
 }

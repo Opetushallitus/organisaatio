@@ -1,4 +1,4 @@
-function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Alert, UserInfo) {
+function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo) {
     UserInfo.then(function(s) {
         language = s.lang;
     });
@@ -32,6 +32,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
         if ($scope.currentGroup !== null) {
             $scope.model.save($scope.currentGroup, function(savedGroup) {
                 $scope.currentGroup = savedGroup;
+                $scope.form.$setPristine();
             }, function(error) {
                 Alert.add("error", $filter('i18n')(error.data.errorKey, ""), false);
             });
@@ -41,6 +42,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
     $scope.peruuta = function() {
         $scope.currentGroup = null;
         $scope.model.reload($routeParams.parentoid, function(result) {
+            $scope.form.$setPristine();
         }, function(error) {
             Alert.add("error", error, false);
         });
@@ -50,5 +52,4 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
     }, function(error) {
         Alert.add("error", error, false);
     });
-
 }
