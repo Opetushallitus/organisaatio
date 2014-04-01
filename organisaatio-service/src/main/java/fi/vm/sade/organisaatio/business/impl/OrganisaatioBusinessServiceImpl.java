@@ -159,9 +159,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("Parent cannot be group");
         }
 
-        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä oph organisaatiolle
-        if (model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) && OrganisaatioUtil.isRyhma(model)) {
-            throw new ValidationException("Oph organisaatiolle ei voi luoda ryhmiä");
+        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
+        if (OrganisaatioUtil.isRyhma(model) && model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) == false ) {
+            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
         }
 
         // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä

@@ -5,7 +5,6 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
-    $scope.parentOrg = {};
 
     $scope.localizeNimi = function(ryhma) {
         for (var k in ryhma.nimi) {
@@ -52,15 +51,5 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
     $scope.model.reload($routeParams.parentoid, function(result) {
     }, function(error) {
         Alert.add("error", error, false);
-    });
-
-    Aliorganisaatiot.get({oid:$routeParams.parentoid}, function(result) {
-        if (result.organisaatiot.length>0) {
-           $scope.parentOrg = result.organisaatiot[0];
-        } else {
-            Alert.add("error", $filter('i18n')('Ryhmienhallinta.virhe.eihakutuloksia', ""), false);
-        }
-    }, function(error) {
-        Alert.add("error", $filter('i18n')(error.data.errorKey, ""), false);
     });
 }

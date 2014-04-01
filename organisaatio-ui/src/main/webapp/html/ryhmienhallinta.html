@@ -1,5 +1,5 @@
 <form name="mainform" class="form-horizontal" novalidate>
-    <h1>{{'RyhmienHallinta.otsikko'| i18n}} ({{localizeNimi(parentOrg)}})</h1>
+    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
 
     <select ng-model="currentGroup" class="span6" ng-disabled="currentGroup && form.$dirty"
             ng-options="localizeNimi(group) for group in model.groups">
