@@ -215,7 +215,7 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
     return deferred.promise;
 }]);
 
-app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($log, OrganisaatioAuthGET) {
+app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', function($log, Alert, OrganisaatioAuthGET) {
         var initAuthService;
         return initAuthService = {
             init: function() {
@@ -224,6 +224,7 @@ app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($lo
                 },
                 // Error case
                 function(response) {
+                    Alert.add("error", $filter('i18n')("Organisaatiot.yleinenVirhe", ""), true);
                     $log.error("Organisaatio Auth Init failed, response: " + response.status);
                 });
             }
