@@ -45,7 +45,9 @@ var CAS_ME_URL = CAS_ME_URL || "/cas/me";
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $httpProvider) {
+        $httpProvider.interceptors.push('NoCacheInterceptor');
+
         $routeProvider.
 
         // front page
@@ -212,6 +214,19 @@ app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', fun
     }
 ]);
 
+// http://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http#19771501
+app.factory('NoCacheInterceptor', function() {
+    return {
+        request: function(config) {
+            if (config.method && config.method === 'GET' && config.url.indexOf('html') === -1 &&
+                    config.url.indexOf(SERVICE_URL_BASE) !== -1) {
+                var separator = config.url.indexOf('?') === -1 ? '?' : '&';
+                config.url = config.url + separator + 'noCache=' + new Date().getTime();
+            }
+            return config;
+        }
+    };
+});
 
 ////////////
 //
