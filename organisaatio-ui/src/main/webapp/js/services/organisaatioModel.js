@@ -523,7 +523,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.refreshIfNeeded = function(oid) {
             if (oid) {
                 if (oid !== model.organisaatio.oid) {
-                    model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
+                    if (model.keepsavestatus) {
+                        model.keepsavestatus = false;
+                    } else {
+                        model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
+                    }
                 }
                 Organisaatio.get({oid: oid}, function(result) {
                     refresh(result);
@@ -1068,6 +1072,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         orgForm.$setPristine();
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
+                    model.keepsavestatus = true;
                     Alert.closeAlert(model.alert);
                     $location.path($location.path().split(model.organisaatio.parentOid)[0] + result.oid + "/edit");
                 }, function(response) {

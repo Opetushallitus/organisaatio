@@ -1071,7 +1071,7 @@
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
         <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
