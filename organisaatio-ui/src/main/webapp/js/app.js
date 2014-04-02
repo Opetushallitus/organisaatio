@@ -70,10 +70,7 @@ app.config(function($routeProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-app.run(function(BuildVersion, OrganisaatioInitAuth, UserInfo) {
-    // Haetaan build version
-    BuildVersion.update();
-
+app.run(function(OrganisaatioInitAuth, UserInfo) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
@@ -168,23 +165,6 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
             },
             clear: function(){
                 $rootScope.alerts = [];
-            }
-        };
-    }
-]);
-
-app.factory('BuildVersion', ['$rootScope', '$http', '$log', function($rootScope, $http, $log) {
-        var versionService;
-        $rootScope.buildTime = "";
-
-        return versionService = {
-            update: function() {
-                $http.get(UI_URL_BASE + 'buildversion.txt').success(function(str) {
-                    oph_bv = angular.fromJson("{" + str.replace(/^/g, '"')/*sol*/.replace(/(\r\n|\n|\r)/g, '",\n"')/*eol*/.replace(/=/g, '": "')/*=*/.replace(/$/, '"')/*eof*/.replace(/""/, '"valid": "ate"') /*make sure is valid*/ + "}");
-                    $log.log(oph_bv);
-                    $rootScope.buildTime = oph_bv.buildTtime;
-                    $log.log($rootScope.buildTime);
-                });
             }
         };
     }
