@@ -93,7 +93,7 @@ import fi.vm.sade.organisaatio.service.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisaatioModifiedException;
-import fi.vm.sade.organisaatio.service.OrganizationDateException;
+import fi.vm.sade.organisaatio.service.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.service.YtunnusException;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 //import static fi.vm.sade.organisaatio.api.model.OrganisaatioTyyppiDTO.*;
@@ -395,7 +395,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         child.setLakkautusPvm(date(3));
         try {
             child = organisaatioService.updateOrganisaatio(child, false);
-        } catch (OrganizationDateException de) {
+        } catch (OrganisaatioDateException de) {
             assertEquals("organisaatio.exception.organisaatio.date", de.getErrorKey());
         }
     }
