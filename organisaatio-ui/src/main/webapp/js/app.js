@@ -135,7 +135,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
 app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
         var alertService;
         $rootScope.alerts = [];
-        return alertService = {
+        alertService = {
             add: function(type, msg, usetimeout, hideOnTopLevel) {
                 var alert = {
                     type: type,
@@ -169,6 +169,10 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
                 $rootScope.alerts = [];
             }
         };
+        $rootScope.$on('$locationChangeStart', function() {
+            alertService.clear();
+        });
+        return alertService;
     }
 ]);
 
