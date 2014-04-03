@@ -396,9 +396,20 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
-        Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
-        OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
-        return ret;
+        
+        try {
+            Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
+            OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
+            return ret;
+        } catch (ValidationException ex) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 
     private Organisaatio removeOrganisaatioByOid(String oid, Set<String> reindex) {
@@ -444,6 +455,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
         }
     }
 

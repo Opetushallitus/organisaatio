@@ -511,7 +511,7 @@ public class OrganisaatioServiceImpl
         if (parentOrg != null) {
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(skipParentDateValidation);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
-                throw new OrganizationDateException();
+                throw new OrganisaatioDateException();
             }
         }
 
