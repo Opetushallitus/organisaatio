@@ -255,12 +255,10 @@ input:focus, textarea:focus {
 
 a {
     color: #06526b;
-    text-decoration:underline;
 }
 
 a :visited {
     color:#707070;
-    text-decoration:underline;
 }
 
 a :hover {
