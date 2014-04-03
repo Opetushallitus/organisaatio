@@ -203,14 +203,14 @@
             <div>
                 <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                       type="text" name="alkupvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -219,14 +219,14 @@
                 &nbsp;-&nbsp;
                 <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
                 <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                       type="text" name="lakkautuspvm" datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"

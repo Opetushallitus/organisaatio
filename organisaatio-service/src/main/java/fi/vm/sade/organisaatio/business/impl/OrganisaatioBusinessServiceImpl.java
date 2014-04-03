@@ -52,7 +52,7 @@ import fi.vm.sade.organisaatio.service.LearningInstitutionExistsException;
 import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import fi.vm.sade.organisaatio.service.OrganizationDateException;
+import fi.vm.sade.organisaatio.service.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.service.YtunnusException;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
@@ -228,7 +228,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Check if organization has parent and if it has check that passivation dates match to parent
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(skipParentDateValidation);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
-                throw new OrganizationDateException();
+                throw new OrganisaatioDateException();
             }
         }
 
