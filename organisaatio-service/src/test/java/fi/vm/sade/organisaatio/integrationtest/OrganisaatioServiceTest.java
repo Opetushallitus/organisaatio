@@ -359,8 +359,8 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         try {
             organisaatioService.createOrganisaatio(org, false);
             fail("should not succeed");
-        } catch (javax.validation.ValidationException ve) {
-            assertEquals("{organisaatio-service.invalid.lopetusPvm}", ve.getMessage());
+        } catch (OrganisaatioDateException ve) {
+            assertEquals("organisaatio.exception.organisaatio.date", ve.getErrorKey());
         }
     }
 

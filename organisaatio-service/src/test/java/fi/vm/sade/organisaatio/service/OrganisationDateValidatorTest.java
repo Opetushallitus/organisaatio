@@ -101,7 +101,7 @@ public class OrganisationDateValidatorTest {
         try {
             validator.apply(parentChild);
             Assert.fail("No exception thrown");
-        } catch (javax.validation.ValidationException ve) {
+        } catch (OrganisaatioDateException ve) {
             // expected
         }
 
