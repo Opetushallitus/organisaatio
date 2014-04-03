@@ -62,17 +62,6 @@
         </div>
     </div>
 
-    <div class="control-group" ng-show="model.organisaatio.yritysmuoto">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
-        </label>
-        <div class="controls">
-            <label class="control-label control-label-left">
-                {{model.organisaatio.yritysmuoto}}
-            </label>
-        </div>
-    </div>
-
     <div class="control-group" ng-show="model.organisaatio.yritysmuoto" ng-if='model.isKoulutustoimija()'>
         <label class="control-label">
             {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
