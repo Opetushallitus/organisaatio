@@ -406,6 +406,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
         }
     }
 
@@ -452,6 +455,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
         }
     }
 

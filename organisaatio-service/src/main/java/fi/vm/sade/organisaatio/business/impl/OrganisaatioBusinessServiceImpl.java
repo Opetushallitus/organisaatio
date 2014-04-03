@@ -53,6 +53,7 @@ import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.service.OrganisaatioDateException;
+import fi.vm.sade.organisaatio.service.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.service.YtunnusException;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
@@ -65,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
@@ -259,7 +261,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // call super.insert OR update which saves & validates jpa
         if (updating) {
             LOG.info("updating " + entity);
-            organisaatioDAO.update(entity);
+            try {
+                organisaatioDAO.update(entity);
+            } catch (OptimisticLockException ole) {
+                throw new OrganisaatioModifiedException(ole);
+            }
             entity = organisaatioDAO.read(entity.getId());
         } else {
             entity = organisaatioDAO.insert(entity);
