@@ -374,15 +374,20 @@
                        ng-minlength="3" ng-maxlength="100"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
-                <input id="kayntipostifi" name="kayntipostifi" type="text"
+                <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode
                        ng-model="model.yhteystiedot.postinumerot[model.ytlang].kaynti" class="span2"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
+                       ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
                 &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti)}}
                 <div>
                     <span class="text-error" ng-show="form.kayntiosoitefi.$error.minlength || form.kayntiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+                    </span>
+                </div>
+                <div>
+                    <span class="text-error" ng-show="form.kayntipostifi.$error.ophpostcode">
+                        {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                     </span>
                 </div>
             </div>
@@ -402,15 +407,21 @@
                        ng-minlength="3" ng-maxlength="100"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
-                <input id="postipostifi" name="postipostifi" type="text" ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
+                <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode
+                       ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                       typeahead-on-select="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
+                       ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
                 &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti)}}
                 <div>
                     <span class="text-error" ng-show="form.postiosoitefi.$error.minlength || form.postiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+                    </span>
+                </div>
+                <div>
+                    <span class="text-error" ng-show="form.postipostifi.$error.ophpostcode">
+                        {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                     </span>
                 </div>
                 <div>
@@ -615,14 +626,20 @@
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
-                        <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
+                        <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" oph-validate-postcode
+                               ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                               typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
+                               ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
                         &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti)}}
                         <div>
                             <span class="text-error" ng-show="form.mdkayntiosoitefi.$error.minlength || form.mdkayntiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-error" ng-show="form.mdkayntipostifi.$error.ophpostcode">
+                                {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                             </span>
                         </div>
                     </div>
@@ -641,15 +658,21 @@
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
-                        <input id="mdpostipostifi" name="mdpostipostifi" type="text" ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
+                        <input id="mdpostipostifi" name="mdpostipostifi" type="text" oph-validate-postcode
+                               ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
                                ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
-                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="false"
-                               typeahead-on-select="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
+                               ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
+                               ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
                         &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti)}}
                         <div>
                             <span class="text-error" ng-show="form.mdpostiosoitefi.$error.minlength || form.mdpostiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-error" ng-show="form.mdpostipostifi.$error.ophpostcode">
+                                {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                             </span>
                         </div>
                         <div>

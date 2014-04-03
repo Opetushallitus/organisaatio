@@ -115,3 +115,22 @@ app.directive('addressCombinedField', function() {
         }
     };
 });
+
+// Validoi että syötetty postinumero löytyy koodistosta
+app.directive('ophValidatePostcode', function($log) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            var validator = function(viewValue) {
+                if (!viewValue) {
+                    return viewValue;
+                }
+                var isValid = (typeof viewValue === 'string' && scope.model.koodisto.postinumerot.indexOf(viewValue) !== -1);
+                ctrl.$setValidity('ophpostcode', isValid);
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
+        }
+    };
+});

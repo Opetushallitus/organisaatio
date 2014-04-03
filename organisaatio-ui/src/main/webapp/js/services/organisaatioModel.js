@@ -1402,6 +1402,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             var yt = (md ? model.mdyhteystiedot : model.yhteystiedot);
             var lang = (md ? model.hplang : model.ytlang);
             var koodistoPostiKoodi = (lang === 'kieli_sv#1' ? model.koodisto.nimetSV[postcode] : model.koodisto.nimetFI[postcode]);
+            if (typeof koodistoPostiKoodi === 'undefined') {
+                koodistoPostiKoodi = {
+                    uri: null,
+                    paikka: null
+                };
+            }
             if (sama === true) {
                 if (yt.postinumerot[lang].kaynti) {
                     yt.postinumerot[lang].posti = yt.postinumerot[lang].kaynti;
