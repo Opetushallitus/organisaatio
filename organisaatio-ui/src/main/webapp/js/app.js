@@ -45,7 +45,9 @@ var CAS_ME_URL = CAS_ME_URL || "/cas/me";
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $httpProvider) {
+        $httpProvider.interceptors.push('NoCacheInterceptor');
+
         $routeProvider.
 
         // front page
@@ -70,10 +72,7 @@ app.config(function($routeProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-app.run(function(BuildVersion, OrganisaatioInitAuth, UserInfo) {
-    // Haetaan build version
-    BuildVersion.update();
-
+app.run(function(OrganisaatioInitAuth, UserInfo) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
@@ -136,7 +135,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
 app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
         var alertService;
         $rootScope.alerts = [];
-        return alertService = {
+        alertService = {
             add: function(type, msg, usetimeout, hideOnTopLevel) {
                 var alert = {
                     type: type,
@@ -170,23 +169,10 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
                 $rootScope.alerts = [];
             }
         };
-    }
-]);
-
-app.factory('BuildVersion', ['$rootScope', '$http', '$log', function($rootScope, $http, $log) {
-        var versionService;
-        $rootScope.buildTime = "";
-
-        return versionService = {
-            update: function() {
-                $http.get(UI_URL_BASE + 'buildversion.txt').success(function(str) {
-                    oph_bv = angular.fromJson("{" + str.replace(/^/g, '"')/*sol*/.replace(/(\r\n|\n|\r)/g, '",\n"')/*eol*/.replace(/=/g, '": "')/*=*/.replace(/$/, '"')/*eof*/.replace(/""/, '"valid": "ate"') /*make sure is valid*/ + "}");
-                    $log.log(oph_bv);
-                    $rootScope.buildTime = oph_bv.buildTtime;
-                    $log.log($rootScope.buildTime);
-                });
-            }
-        };
+        $rootScope.$on('$locationChangeStart', function() {
+            alertService.clear();
+        });
+        return alertService;
     }
 ]);
 
@@ -200,7 +186,8 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
             $log.debug(result);
             var lang = angular.fromJson(result).lang;
             if (lang) {
-                instance.lang = lang.toUpperCase();
+                // Toistaiseksi vain SV on tuettu FI:n lisäksi
+                instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
                 deferred.resolve(instance);
             } else {
                 $log.debug('failed parsing result, defaulting to FI');
@@ -214,7 +201,7 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
     return deferred.promise;
 }]);
 
-app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($log, OrganisaatioAuthGET) {
+app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter', function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
         var initAuthService;
         return initAuthService = {
             init: function() {
@@ -223,13 +210,33 @@ app.factory('OrganisaatioInitAuth', ['$log', 'OrganisaatioAuthGET', function($lo
                 },
                 // Error case
                 function(response) {
-                    $log.error("Organisaatio Auth Init failed, response: " + response.status);
+                    $timeout(function() {
+                        OrganisaatioAuthGET.get({}, function(result) {
+                            $log.log("Organisaatio Auth Init, second try.");
+                        }, function(response) {
+                            Alert.add("error", $filter('i18n')("Organisaatiot.yleinenVirhe", ""), true);
+                            $log.error("Organisaatio Auth Init failed, response: " + response.status);
+                        });
+                    }, 1000);
                 });
             }
         };
     }
 ]);
 
+// http://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http#19771501
+app.factory('NoCacheInterceptor', function() {
+    return {
+        request: function(config) {
+            if (config.method && config.method === 'GET' && config.url.indexOf('html') === -1 &&
+                    config.url.indexOf(SERVICE_URL_BASE) !== -1) {
+                var separator = config.url.indexOf('?') === -1 ? '?' : '&';
+                config.url = config.url + separator + 'noCache=' + new Date().getTime();
+            }
+            return config;
+        }
+    };
+});
 
 ////////////
 //

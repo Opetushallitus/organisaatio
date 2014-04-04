@@ -40,7 +40,6 @@ import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -396,9 +395,20 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
-        Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
-        OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
-        return ret;
+
+        try {
+            Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
+            OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
+            return ret;
+        } catch (ValidationException ex) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 
     private Organisaatio removeOrganisaatioByOid(String oid, Set<String> reindex) {
@@ -444,6 +454,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
         }
     }
 
@@ -453,6 +466,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         StringBuilder ret = new StringBuilder("[");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ret.append("\"");
+        ret.append(auth.getName());
+        ret.append("\",");
 
         for (GrantedAuthority ga : auth.getAuthorities()) {
             ret.append("\"");
@@ -489,12 +505,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> groups(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
-        
+
         List<Organisaatio> entitys = organisaatioDAO.findGroups();
         if (entitys == null) {
             return null;
         }
-        
+
         List<OrganisaatioRDTO> groupList = new ArrayList<OrganisaatioRDTO>();
         for (Organisaatio entity : entitys) {
             groupList.add(conversionService.convert(entity, OrganisaatioRDTO.class));

@@ -23,11 +23,11 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
  *
  * @author Tuomas Katva
  */
-public class OrganizationDateException extends OrganisaatioBusinessException {
+public class OrganisaatioDateException extends OrganisaatioBusinessException {
 
     private static final long serialVersionUID = 1L;
 
-    public OrganizationDateException() {
+    public OrganisaatioDateException() {
         super("organisaatio.exception.organisaatio.date");
     }
 

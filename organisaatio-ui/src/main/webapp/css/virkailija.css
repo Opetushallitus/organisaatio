@@ -1,7 +1,7 @@
 /* TYYLIKIRJASTO VIRKAILIJAN TYÖPÖYTÄKÄYTTÖLIITTYMÄÄ VARTEN */
 /* Täydentää bootstrap 2.3.1 css tyylejä */
 /* Tämä tyylikirjasto ladataan bootstrap versio 2.3.1 tyylitiedoston jälkeen */
-/* päivitetty 17.12.2013 */
+/* päivitetty 25.3.2014 */
 
 /* NAPPULAT */
 
@@ -106,6 +106,19 @@ background-image: none;
   box-shadow: none;
 }
 
+/* harmaa nappula*/
+
+.btn-harmaa {
+  background: #D4D4D4;
+  border-radius: 3px;
+  border: 1px solid #B5B5B5;
+  -moz-box-shadow:    inset 0px 1px 1px 0px #E7E7E7;
+  -webkit-box-shadow: inset 0px 1px 1px 0px #E7E7E7;
+  box-shadow:         inset 0px 1px 1px 0px #E7E7E7;
+}
+
+/*TEKSTI*/
+
 body {
   font-size: 13px;
 }
@@ -147,44 +160,36 @@ h6 {
     box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
 }
 
-/*kaikki tabit*/
 
+/*TABIT ELI VÄLILEHDET*/
+
+/*tab perustila*/
 .nav-tabs>li>a {
     padding-top:8px;
     padding-bottom:8px;
     line-height:20px;
-    border-radius:0 0 0 0;
-    border:1px solid #ddd;
-    /*border-bottom-color:transparent;*/
+    border-radius:3px 3px 0 0;
+    border:1px solid #dcdcdc;
     cursor:default;
     /*valkoinen kehys tabin sisällä*/
     -moz-box-shadow: inset 0 0 0 1px #ffffff;
     -webkit-box-shadow: inset 0 0 0 1px #ffffff;
     box-shadow: inset 0 0 0 1px #ffffff;
-    /*gradient*/
-    background: #f5f5f5; /* Old browsers */
-    background: -moz-linear-gradient(top,  #f5f5f5 25%, #e6e6e6 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#f5f5f5), color-stop(100%,#e6e6e6)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #f5f5f5 25%,#e6e6e6 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #f5f5f5 25%,#e6e6e6 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#e6e6e6',GradientType=0 ); /* IE6-9 */
+    background: #DFF2F8; /* Old browsers */
+    background-color: #DFF2F8;
+    text-decoration:none;
+    margin-right:10px;
 }
 
+/*hover tab*/
 .nav-tabs>li>a:hover {
     border:1px solid #d2d2d2;
-    background: #e6e6e6; /* Old browsers */
-    background: -moz-linear-gradient(top,  #e6e6e6 25%, #d2d2d2 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#e6e6e6), color-stop(100%,#d2d2d2)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #e6e6e6 25%,#d2d2d2 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #e6e6e6 25%,#d2d2d2 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#d2d2d2',GradientType=0 ); /* IE6-9 */
+    background: #BFE4F1; /* Old browsers */
+    background-color: #BFE4F1;
+    text-decoration:underline;
     }
     
-/*aktiivisen tabin gradient*/
+/*aktiivinen tab*/
 .nav-tabs>.active>a,.nav-tabs>.active>a:hover,.nav-tabs>.active>a:focus {
     /*valkoinen kehys tabin sisällä*/
     -moz-box-shadow: inset 0 0 0 1px #ffffff;
@@ -192,16 +197,12 @@ h6 {
     box-shadow: inset 0 0 0 1px #ffffff;
     font-weight: bold;
     border-bottom-color: #ffffff;
-    /*gradient*/
-    background: #f0f0f0; /* Old browsers */
-    background: -moz-linear-gradient(top,  #f0f0f0 0%, #ffffff 64%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f0f0), color-stop(64%,#ffffff)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #f0f0f0 0%,#ffffff 64%); /* IE10+ */
-    background: linear-gradient(to bottom,  #f0f0f0 0%,#ffffff 64%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    background: #ffffff; /* Old browsers */
+    background:#ffffff;
+    text-decoration:none;
 }
+
+/*ALERTIT*/
 
 .alert {
     background-color: #fef3d3;
@@ -225,7 +226,8 @@ h6 {
 }
 
 
-/*Tekstikenttien tyylit*/
+/*TEKSTIKENTÄT*/
+
 input { 
     background-color: #ffffff;
     background-image: none;
@@ -248,55 +250,78 @@ input:focus, textarea:focus {
      background-color: #ffffff;
 }
 
+
 /*LINKIT*/
 
 a {
-    color: #0c566e;
+    color: #06526b;
+}
+
+a :visited {
+    color:#707070;
 }
 
 a :hover {
+    color:#062B37;
     text-decoration:underline;
 }
 
 a :active {
+    color: #06526b;
     text-decoration:underline;
 }
 
-a :visited {
-    color:#730d02;
-}
 
 /* EROTINVIIVA */
 hr { 
-    border:0;
-    color: #149ecb; 
-    background: #149ecb;
-    background-color: #149ecb;
-    height: 1px; 
+    border: 0;
+    border-bottom: 1px dashed #c3c3c3;
+    background: #e7e7e7;
 } 
 
 
 /* TAULUKOT NORMAALI & STRIPED */
 
 .table {
-    border-top-color:#06526B; 
+    border-top-color:#BFE4F1; 
 }
 
+/* muutetaan parittomien rivien väri siniseksi ja borderien väri valkeaksi */
 .table-striped tbody>tr:nth-child(odd)>td, .table-striped tbody>tr:nth-child(odd)>th {
-    background-color: rgba(20, 158, 203, 0.06);
-    border-top-color:rgba(6, 82, 107, 0.12);
-    border-bottom-color:rgba(6, 82, 107, 0.12);
-    
+    background-color: #DFF2F8;
+    border-top-color: #ffffff;
+    border-bottom-color: #ffffff; 
+}
+
+/* muutetaan parillisten rivien border valkeaksi jotta sopisi yhteen parittomien rivien kanssa */
+.table-striped tbody>tr:nth-child(even)>td, .table-striped tbody>tr:nth-child(even)>th {
+    border-top-color: #ffffff;
+    border-bottom-color: #ffffff; 
 }
 
 .table th, .table td {
-   border-top-color: rgba(6, 82, 107, 0.12);
+   border-top-color: #BFE4F1;
 }
 
-.table thead tr th{
+.table thead tr th {
     font-size:12px;
     text-transform:uppercase;
 }
+
+.table-bordered thead tr th {
+    border-top-color: #dddddd;
+    background-image:url("../img/dialog-pat.png");
+}
+
+.table-bordered tbody tr td {
+    border-color: #dddddd;
+    border-top-color: #dddddd;
+    border-bottom-color: #dddddd;
+    border-left-color:#dddddd;
+    border-right-color:#dddddd;
+}
+
+/* DISABLOITU TEKSTIKENTTÄ*/
 
 /* muutetaan disabloidun kentän tausta*/
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
@@ -306,9 +331,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 
-/* korjaa checkboxin ympärillä olevan ikävän laatikon */
-/* sekä ongelman jossa checbox, radiobutton ja label eivät asetu pystysuunnassa samaan linjaan */
-/* testattu mac chrome,safari,firefox, w7 IE11,chrome,firefox */
+/* korjaa checkboxin ympärillä olevan ikävän laatikon                                           */
+/* sekä ongelman jossa checbox, radiobutton ja label eivät asetu pystysuunnassa samaan linjaan  */
+/* testattu mac chrome,safari,firefox, w7 IE11,chrome,firefox                                   */
 input[type="checkbox"], input[type="radio"] {
     box-shadow: none;
     height:13px;
@@ -324,7 +349,8 @@ input[type="radio"] {
     top:3px;
 }
 
-/* Sivutus */
+
+/* SIVUTUS */
 
 .pagination{
     margin:20px 0;
@@ -335,9 +361,9 @@ input[type="radio"] {
     *zoom:1;
     margin-left:0;
     margin-bottom:0;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    border-radius:4px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
     -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
     -moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
@@ -355,7 +381,8 @@ input[type="radio"] {
     border-left-width:0;
 }
 .pagination ul>li>a:hover,.pagination ul>li>a:focus,.pagination ul>.active>a,.pagination ul>.active>span{
-    background-color:rgb( 89, 174, 202 );
+    background-color:#0B93C1;
+    color:#ffffff;
 }
 .pagination ul>.active>a,.pagination ul>.active>span{
     color:#999999;
@@ -384,6 +411,57 @@ input[type="radio"] {
     border-bottom-right-radius:3px;
 }
 
+/* LABELIT */
 
+.label,
+.badge {
+  font-size: 12px;
+  font-weight:normal;
+  -webkit-box-sizing:border-box;
+  box-sizing:border-box;
+  display: inline-block;
+  line-height: 1.4em;
+  padding: 0 0.4em;
+  color: #ffffff;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius:3px;
+  text-shadow:none;
+}
 
+.label-info {
+background-color: rgba(20,158,203,1);
+}
 
+.label-success {
+background-color: rgba(82,154,90,1);
+}
+
+.vrk {
+  background-color: #00539F;
+  color:#ffffff;
+}
+
+.turva {
+  background-color: #feedbd;
+  color:#C09853;
+  border:solid 1px #D5BA8B;
+  line-height:30px;
+}
+
+/* CONTAINERIT */
+
+.notification {
+background: #feedbd;
+width: 220px;
+padding:10px;    
+-webkit-box-shadow: inset 0 0 3px 0 rgba(0,0,0,.14);
+box-shadow: inset 0 0 3px 0 rgba(0,0,0,.14);
+}
+
+.infobox {
+background: #fafafa;
+width: 510px;
+padding:10px;
+border: 1px solid #dddddd;
+}
