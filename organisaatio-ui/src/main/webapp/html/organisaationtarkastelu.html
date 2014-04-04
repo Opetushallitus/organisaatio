@@ -33,8 +33,8 @@
         <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
         <div class="controls">
             <label class="control-label control-label-left">
-                <div ng-repeat="(avain, arvo) in model.organisaatio.nimi">
-                    {{arvo}} [{{avain}}]<br>
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi) | orderBy:orderByLang">
+                    {{model.organisaatio.nimi[avain]}} [{{avain}}]<br>
                 </div>
             </label>
         </div>

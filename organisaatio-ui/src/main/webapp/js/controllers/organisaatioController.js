@@ -19,6 +19,15 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
 
     $scope.model.refreshIfNeeded($scope.oid);
 
+    $scope.organisaatioNimiLangs = function(nimi) {
+        return Object.keys(nimi);
+    };
+
+    $scope.orderByLang = function(lang) {
+        var m = {'fi': '0--', 'sv': '1--', 'en': '2--'};
+        return m[lang] || '3--' + lang;
+    };
+
     $scope.save = function() {
         $scope.model.persistOrganisaatio($scope.form);
     };
