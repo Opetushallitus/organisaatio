@@ -1,0 +1,269 @@
+<!--
+  ~ Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
+  ~
+  ~ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+  ~ soon as they will be approved by the European Commission - subsequent versions
+  ~ of the EUPL (the "Licence");
+  ~
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ European Union Public Licence for more details.
+  -->
+
+<!--
+    spring security context for front/backend applications/services, uses cas+ldap
+
+    NOTE!
+
+    * needs global cas* and ldap* -properties (exist eg in file common.properties)
+    * needs app specific cas_key and cas_service properties
+
+-->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+    </global-method-security>
+
+    <!-- /buildversion.txt?auth forced to require authentication (needed for auth health checking purposes) -->
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <custom-filter position="CAS_FILTER" ref="casFilter" />
+    </http>
+
+    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt|/healthcheck">
+        <intercept-url pattern="/**" access="permitAll"/>
+    </http>
+
+    <!-- wsdl/xsd resources must be public -->
+    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*[.?]wsdl">
+        <intercept-url pattern="/**" access="permitAll"/>
+    </http>
+    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*\?xsd=[\w/]*\.xsd">
+        <intercept-url pattern="/**" access="permitAll"/>
+    </http>
+
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/user/postLogin.*">
+        <intercept-url pattern="/user/postLogin.*" access="isAuthenticated()"/> <!-- todo: -->
+        <custom-filter position="CAS_FILTER" ref="casFilter" />
+    </http>
+
+    <!-- own config for single logout, because: xTODO: singleLogoutFilter aiheuttaa POSTeissa formin tyhjenemisen, consuumaa formin mystisesti, ilmeni haku-projektin yhteydessa -->
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/j_spring_cas_security_check.*">
+        <intercept-url pattern="/**" access="${spring_security_default_access}"/>
+        <!-- tata ei tarvita, kun logout tehdaan suoraan casin kautta, ja singleLogoutFilter on paalla -->
+        <!--<custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />-->
+        <custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+        <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->
+    </http>
+    <!--
+        Workaround viestintapalvelun suojaamiseksi kunnes Guice-konteksti vaihdetaan Springiin ja tietoturva voidaan hoitaa samoin kuin muissa palveluissa!
+    -->
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/api/v1/download">
+        <intercept-url pattern="/**" access="hasAnyRole('ROLE_APP_VALINTAPERUSTEET_CRUD_1.2.246.562.10.00000000001')"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+    </http>
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/api/v1/download/">
+        <intercept-url pattern="/**" access="hasAnyRole('ROLE_APP_VALINTAPERUSTEET_CRUD_1.2.246.562.10.00000000001')"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+    </http>
+    <!--
+        Workaround loppuu!
+    -->
+
+    <!--
+    actual application, calls will be forwared to cas when needed, mappings:
+    ..UNsecured app resources ::: /[APP]/public/**
+    ..secured app resources ::: /[APP]/MAYBESTHING/secured/**
+    ..default app resources with ${spring_security_default_access} access ::: /[APP]/ALLTHERESTPATHS
+    -->
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex">
+        <intercept-url pattern="(/.*)?/secured(/.*)?" access="isAuthenticated()"/>
+        <intercept-url pattern="/public(/.*)?" access="permitAll"/>
+        <intercept-url pattern="/**" access="${spring_security_default_access}"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+        <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->
+    </http>
+
+    <!-- note: -->
+    <!-- tata ei tarvita, kun logout tehdaan suoraan casin kautta, ja singleLogoutFilter on paalla -->
+    <!--<custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />-->
+    <!--<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />-->
+
+    <!--  ===== end of mappings ===== -->
+
+    <beans:bean id="casFilter" class="fi.vm.sade.security.CustomCasAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="serviceProperties" ref="casServiceProperties"/>
+        <beans:property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+        <beans:property name="proxyReceptorUrl" value="/j_spring_cas_security_proxyreceptor"/>
+    </beans:bean>
+
+    <!-- This filter handles a Single Logout Request from the CAS Server -->
+    <beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+    <!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
+    <!-- tata ei oikeasti tarvita, koska logout tehdaan aina kutsumalla suoraan /cas/logout :ia
+    <beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:constructor-arg value="${web.url.cas}/logout"/>
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+        </beans:constructor-arg>
+        <beans:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"/>
+    </beans:bean>
+    -->
+
+    <!-- enable proxy authentication (in front proxy) -->
+    <!--
+      NOTE: In a real application you should not use an in memory implementation.
+    -->
+    <beans:bean id="pgtStorage" class="org.jasig.cas.client.proxy.EhcacheBackedProxyGrantingTicketStorageImpl">
+        <beans:constructor-arg name="cache">
+            <beans:bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <beans:property name="cacheManager" ref="casTicketCache" />
+                <beans:property name="maxElementsInMemory" value="100000" />
+                <beans:property name="maxElementsOnDisk" value="10000000" />
+                <beans:property name="overflowToDisk" value="true" />
+                <beans:property name="cacheName" value="casProxyGrantingTickets" />
+                <beans:property name="timeToLive" value="7200" />
+                <beans:property name="timeToIdle" value="7200" />
+                <beans:property name="eternal" value="false" />
+                <beans:property name="cacheEventListeners">
+                    <beans:bean class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicator">
+                        <beans:constructor-arg name="replicatePuts" value="true"/> <!-- replicatePuts -->
+                        <beans:constructor-arg name="replicateUpdates" value="true"/> <!-- replicateUpdates -->
+                        <beans:constructor-arg name="replicateUpdatesViaCopy" value="true"/> <!-- replicateUpdatesViaCopy -->
+                        <beans:constructor-arg name="replicateRemovals" value="true"/> <!-- replicateRemovals -->
+                    </beans:bean>
+                </beans:property>
+            </beans:bean>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <beans:bean id="casEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        <beans:property name="loginUrl" value="${web.url.cas}/login"/>
+        <beans:property name="serviceProperties" ref="casServiceProperties"/>
+    </beans:bean>
+
+    <beans:bean id="forbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="casAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="casTicketsCacheBean" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <beans:property name="cacheManager" ref="casTicketCache" />
+        <beans:property name="diskExpiryThreadIntervalSeconds" value="120" />
+        <beans:property name="diskPersistent" value="false" />
+        <beans:property name="maxElementsInMemory" value="100000" />
+        <beans:property name="maxElementsOnDisk" value="10000000" />
+        <beans:property name="memoryStoreEvictionPolicy" value="LRU" />
+        <beans:property name="overflowToDisk" value="true" />
+        <beans:property name="cacheName" value="casTickets" />
+        <beans:property name="timeToLive" value="7200" />
+        <beans:property name="timeToIdle" value="7200" />
+        <beans:property name="eternal" value="false" />
+        <beans:property name="cacheEventListeners" ref="jgroupsEventListener"/>
+    </beans:bean>
+
+    <beans:bean id="ehCacheBasedTicketCache" class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
+        <beans:property name="cache">
+                <beans:ref local="casTicketsCacheBean"/>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="ldapUserService"/>
+        <beans:property name="serviceProperties" ref="casServiceProperties"/>
+        <beans:property name="ticketValidator" ref="casTicketValidator"/>
+        <beans:property name="key" value="${cas_key}"/>
+        <!-- enable proxy authentication (in backend) -->
+        <beans:property name="statelessTicketCache">
+            <beans:ref local="ehCacheBasedTicketCache" />
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="jgroupsEventListener" class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicator">
+        <beans:constructor-arg name="replicatePuts" value="true"/> <!-- replicatePuts -->
+        <beans:constructor-arg name="replicateUpdates" value="true"/> <!-- replicateUpdates -->
+        <beans:constructor-arg name="replicateUpdatesViaCopy" value="true"/> <!-- replicateUpdatesViaCopy -->
+        <beans:constructor-arg name="replicateRemovals" value="true"/> <!-- replicateRemovals -->
+    </beans:bean>
+
+    <beans:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+        <beans:constructor-arg index="0" value="${web.url.cas}" /><!-- enable proxy authentication (in front proxy) -->
+        <beans:property name="proxyCallbackUrl" value="${cas_service}/j_spring_cas_security_proxyreceptor"/>
+        <beans:property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+        <beans:property name="acceptAnyProxy" value="true"/>
+    </beans:bean>
+
+
+    <!-- enable proxy authentication (in backend) -->
+    <!-- TODO: cacheasetukset ihan arvalla nyt, statelessTicketCache kuitenkin sallii saman proxytiketin kayttamisen, joka vahentaa huomattavasti cas-liikennetta -->
+    <beans:bean id="casTicketCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <beans:property name="configLocation" value="file://${user.home}/oph-configuration/ehcache.xml" />
+        <beans:property name="shared" value="false" />
+        <beans:property name="cacheManagerName" value="casTicketCache" />
+    </beans:bean>
+
+    <!--p:configLocation="classpath:ehcacheClearPass.xml"-->
+
+    <!-- NOTE! role-prefix means that every role fetched from ldap will be prefixed with the prefix. so role 'X' in ldap will be 'ROLE_X' in code eg when used in @Secured-annotation -->
+    <!-- todo: ldap-user-servicen cache -->
+    <ldap-user-service id="ldapUserService"
+                       role-prefix="ROLE_"
+                       server-ref="ldapServer"
+                       user-search-base="${cas.user-search-base}"
+                       user-search-filter="${cas.user-search-filter}"
+                       group-search-base="${cas.group-search-base}"
+                       group-search-filter="${cas.group-search-filter}"
+                       group-role-attribute="${cas.group-role-attribute}"
+                       user-context-mapper-ref="customUserContextMapper"
+            />
+    <!--user-details-class="fi.vm.sade.security.CustomUserDetails"-->
+    <beans:bean id="customUserContextMapper" class="fi.vm.sade.security.CustomUserDetailsMapper"/>
+
+    <ldap-server id="ldapServer" url="${ldap.url.with.base}" manager-dn="${ldap.manager-dn}" manager-password="${ldap.manager-password}"/>
+
+    <beans:bean id="casServiceProperties" class="org.springframework.security.cas.ServiceProperties">
+        <beans:property name="service" value="${cas_service}/j_spring_cas_security_check"/>
+        <beans:property name="sendRenew" value="${cas.sendRenew}"/>
+        <beans:property name="authenticateAllArtifacts" value="true"/>
+    </beans:bean>
+
+    <!-- Tracing -->
+    <!--
+    <beans:bean name="traceInterceptor" class="fi.vm.sade.security.TraceInterceptor">
+    </beans:bean>
+    <beans:bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <beans:property name="beanNames" value="*WS,*Ws,*AdminService,*PublicService"/>
+        <beans:property name="proxyTargetClass" value="false"/>
+        <beans:property name="interceptorNames">
+            <beans:list>
+                <beans:value>traceInterceptor</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+    -->
+
+    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <beans:property name="allowIfAllAbstainDecisions" value="true"/>
+        <beans:property name="decisionVoters">
+            <beans:list>
+                <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+</beans:beans>
