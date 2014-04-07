@@ -15,6 +15,8 @@ host.ilb={{host.ilb}}
 host.postgresql.organisaatio={{host.postgresql.organisaatio}}
 host.postgresql.organisaatio.password={{host.postgresql.organisaatio.password}}
 host.postgresql.organisaatio.user={{host.postgresql.organisaatio.user}}
+ldap.manager.password={{ldap.manager.password}}
+ldap.manager-password={{ldap.manager-password}}
 oph.name={{oph.name}}
 #organisaatio-app.koodisto-uris.kieli-uri={{organisaatio-app.koodisto-uris.kieli-uri}}
 #organisaatio-app.koodisto-uris.yritys-uri={{organisaatio-app.koodisto-uris.yritys-uri}}
@@ -69,6 +71,16 @@ koodi.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/
 koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate
 jpa.showSql=false
+ldap.cache.size=10000
+ldap.data.dir=${user.home}/data
+ldap.filter.people=uid\=%u
+ldap.index.cache.size=10000
+ldap.manager.userdn=cn=admin,ou=People,dc=opintopolku,dc=fi
+ldap.manager-dn=uid\=admin,ou\=system
+ldap.port=10389
+ldap.search.base.people=ou=People,dc=opintopolku,dc=fi
+ldap.url=ldap://${host.ldap}\:${ldap.port}
+ldap.url.with.base=ldap\://${host.ldap}\:${ldap.port}/dc\=opintopolku,dc\=fi
 log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
