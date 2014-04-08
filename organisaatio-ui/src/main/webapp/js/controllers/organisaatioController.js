@@ -20,7 +20,11 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     $scope.model.refreshIfNeeded($scope.oid);
 
     $scope.organisaatioNimiLangs = function(nimi) {
-        return Object.keys(nimi);
+        if (nimi) {
+            return Object.keys(nimi);
+        } else {
+            return undefined;
+        }
     };
 
     $scope.orderByLang = function(lang) {
