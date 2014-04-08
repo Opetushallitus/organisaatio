@@ -1,22 +1,22 @@
-app.directive('formatteddate', function ($log, $filter) {
+app.directive('formatteddate', function($log, $filter) {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function (scope, element, attrs, ctrl) {
-            
+        link: function(scope, element, attrs, ctrl) {
+
             // Tämä muuttaa päivämäärän oikeaksi jos syötetty esim. 31.2.1999 --> 03.03.1999
-            element.bind('blur', function () {
+            element.bind('blur', function() {
                 var val = element.val();
-                 
-                if(!val || ctrl.$valid === false) {
+
+                if (!val || ctrl.$valid === false) {
                     return val;
                 }
-                
+
                 var dateParts = val.split('.');
-                parsed = new Date(dateParts[2],dateParts[1]-1,dateParts[0]);
-                
+                parsed = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+
                 var newVal = $filter('date')(parsed, 'dd.MM.yyyy');
-                
+
                 element.val(newVal);
             });
 
@@ -51,29 +51,29 @@ app.directive('formatteddate', function ($log, $filter) {
                 }
             }
             ctrl.$parsers.unshift(validateDate);
-            
+
             // Tämä hoitaa sen, että DatePicker saa päivämäärän oikeassa muodossa
-            ctrl.$parsers.unshift(function (viewValue) {
+            ctrl.$parsers.unshift(function(viewValue) {
                 var val = element.val();
-                 
-                if(!val)
+
+                if (!val)
                     return viewValue;
-                var dateStr = $filter('date')(val,'dd.MM.yyyy');
-                
-                if(dateStr === undefined) {
+                var dateStr = $filter('date')(val, 'dd.MM.yyyy');
+
+                if (dateStr === undefined) {
                     return viewValue;
                 }
                 var parsed = viewValue;
                 try
                 {
                     var dateParts = dateStr.split('.');
-                    parsed = new Date(dateParts[2],dateParts[1]-1,dateParts[0]);
+                    parsed = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
                 }
-                catch(e){
+                catch (e) {
                     $log.log("catch --> invalid");
                 }
                 return parsed;
-            });            
+            });
         }
     };
 });
@@ -97,7 +97,7 @@ app.directive('ophPattern', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                var isValid = (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
+                var isValid = (viewValue===null || typeof viewValue=== 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
                 ctrl.$setValidity('ophPattern', isValid);
                 return viewValue;
             };
@@ -202,15 +202,34 @@ app.directive('ophValidatePostcode', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
+                // Kieli on pakko lukea suoraan modelista, attribuutin arvona ei näytä päivittyvän oikein
+                var lang = (attrs.ophValidatePostcode==="yt" ? scope.model.ytlang : scope.model.hplang);
                 if (!viewValue) {
+                    ctrl.$setValidity('ophpostcode', true);
+                    ctrl.$setValidity('ophpostcode_' + lang, true);
                     return viewValue;
                 }
                 var isValid = (typeof viewValue === 'string' && scope.model.koodisto.postinumerot.indexOf(viewValue) !== -1);
                 ctrl.$setValidity('ophpostcode', isValid);
+                ctrl.$setValidity('ophpostcode_' + lang, isValid);
                 return viewValue;
             };
             ctrl.$parsers.unshift(validator);
             ctrl.$formatters.unshift(validator);
         }
     };
+});
+
+app.directive("dynamicName",function($compile, $log){
+  return {
+      restrict:"A",
+      terminal:true,
+      priority:1000,
+      link:function(scope,element,attrs){
+          element.attr('name', attrs.dynamicNamePrefix + "_" + scope.$eval(attrs.dynamicName));
+          element.removeAttr("dynamic-name");
+          element.removeAttr("dynamic-name-prefix");
+          $compile(element)(scope);
+      }
+   };
 });
