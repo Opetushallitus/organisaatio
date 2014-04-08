@@ -33,7 +33,7 @@ public class OrganisaatioContext {
     private final String orgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
 
-    String getOrgOid() {
+    public String getOrgOid() {
         return orgOid;
     }
 

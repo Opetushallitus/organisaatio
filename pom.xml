@@ -36,7 +36,6 @@
 
     <modules>
         <module>organisaatio-api</module>
-        <module>organisaatio-shared</module>
         <module>organisaatio-solr-client</module>
         <module>organisaatio-service</module>
         <!-- <module>organisaatio-ui-widgets</module> -->

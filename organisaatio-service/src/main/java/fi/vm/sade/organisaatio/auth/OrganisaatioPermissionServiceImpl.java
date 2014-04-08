@@ -35,7 +35,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     public static final String ORGANISAATIOHALLINTA = "ORGANISAATIOHALLINTA";
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
-    
+
     @Value("${root.organisaatio.oid}")
     private String ophOid;
 
@@ -47,7 +47,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         super(ORGANISAATIOHALLINTA);
         this.ophOid = ophOid;
     }
-    
+
     public boolean userCanUpdateOrganisation(OrganisaatioContext context) {
         Preconditions.checkNotNull(context.getOrgOid());
         /*
@@ -101,7 +101,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
         return checkAccess(ophOid, ROLE_CRUD);
     }
-    
+
 
     /**
      * Vain oph virkailija voi muuttaa oppilaitoksen nimeä
@@ -110,7 +110,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
      */
     public boolean userCanEditName(OrganisaatioContext context) {
         if(context.getOrgTypes().contains(OrganisaatioTyyppi.OPPILAITOS) || context.getOrgTypes().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA) || context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)) {
-            return checkAccess(ophOid, ROLE_CRUD, ROLE_RU); 
+            return checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
         }
         return true;
     }
@@ -136,11 +136,11 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
             log.error("Unhandled or type:" + tyyppi + " returning false!");
             break;
         }
-        
+
         return false;
     }
 
-    
+
     public boolean userCanDeleteOrganisation(OrganisaatioContext context) {
         /*
          * Käyttöoikeudet huomioitava: Vain OPH:n pääkäyttäjä voi poistaa
@@ -173,7 +173,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         Preconditions.checkNotNull(context, "organisaatioContext cannot be null");
         Preconditions.checkNotNull(context.getOrgTypes(), "organisaatioContext.orgTypes cannot be null");
         Preconditions.checkArgument(context.getOrgTypes().size()>0, "organisaatioContext.orgTypes must contain atleast 1 type");
-        
+
         boolean containsKoulutustoimijaOrOppilaitos =  context.getOrgTypes().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA) || context.getOrgTypes().contains(OrganisaatioTyyppi.OPPILAITOS);
 
         if(containsKoulutustoimijaOrOppilaitos) {
@@ -218,11 +218,11 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     public boolean userCanDeleteYhteystietojenTyyppi() {
         return checkAccess(ophOid, ROLE_CRUD);
     }
-    
+
     public boolean userCanEditOppilaitostyyppi() {
         return userCanCreateRootOrganisation();
     }
-    
+
     public boolean userCanEditOlkoodi() {
         return userCanCreateRootOrganisation();
     }

@@ -22,8 +22,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.auth.OrganisaatioContext;
-import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 
 //TODO combine permission service tests and make this a proper unit test
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,12 +34,12 @@ public class OrganisaatioPermissionServiceTest {
     public static final String userOrgOid = "1.2.2004.2";
     public static final String otherOrgOid = "1.2.2005.2";
 
-    
+
     private OrganisaatioPermissionServiceImpl permissionService = new OrganisaatioPermissionServiceImpl(rootOrgOid);
 
     @Test
     public void testBasic() {
-        
+
         OidProvider oidProvider = Mockito.mock(OidProvider.class);
         Mockito.stub(oidProvider.getSelfAndParentOids(otherOrgOid)).toReturn(
                 Lists.newArrayList(rootOrgOid, otherOrgOid));
@@ -51,7 +49,7 @@ public class OrganisaatioPermissionServiceTest {
                 Lists.newArrayList(rootOrgOid));
         OrganisationHierarchyAuthorizer authorizer = new OrganisationHierarchyAuthorizer(oidProvider);
         permissionService.setAuthorizer(authorizer);
-        
+
 
         //non oph user, outside own hierarchy
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(
@@ -63,14 +61,14 @@ public class OrganisaatioPermissionServiceTest {
         Assert.assertFalse(permissionService.userCanDeleteOrganisation(OrganisaatioContext.get(org)));
         Assert.assertFalse(permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
         Assert.assertFalse(permissionService.userCanMoveOrganisation(OrganisaatioContext.get(org)));
-        
+
         //yhteystietojentyyppi
         Assert.assertFalse(permissionService.userCanEditYhteystietojenTyypit());
         Assert.assertFalse(permissionService.userCanDeleteYhteystietojenTyyppi());
 
         //alku, loppupäivä
         Assert.assertFalse(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
-        
+
         //non oph user inside own hierarchy
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(
                 permissionService.ROLE_CRUD, userOrgOid)));
@@ -84,7 +82,7 @@ public class OrganisaatioPermissionServiceTest {
         assertEditOrganisation(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPETUSPISTE, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPPILAITOS, true);
-        
+
         //sallitut tyypit
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
@@ -105,24 +103,24 @@ public class OrganisaatioPermissionServiceTest {
         org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.OPETUSPISTE);
         //alku, loppupäivä
         Assert.assertTrue(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
-        
+
         //oph CRUD user
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(permissionService.ROLE_CRUD,  rootOrgOid)));
-        
+
         //can edit all types
         assertEditOrganisation(OrganisaatioTyyppi.MUU_ORGANISAATIO, true);
         assertEditOrganisation(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPETUSPISTE, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPPILAITOS, true);
 
-        
+
         //yhteystietojentyyppi
         Assert.assertTrue(permissionService.userCanEditYhteystietojenTyypit());
         Assert.assertTrue(permissionService.userCanDeleteYhteystietojenTyyppi());
 
         //alku, loppupäivä
         Assert.assertTrue(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
-     
+
         //sallitut tyyppit
         Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
@@ -137,14 +135,14 @@ public class OrganisaatioPermissionServiceTest {
 
         //oph RU user
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(permissionService.ROLE_RU,  rootOrgOid)));
-        
+
         //yhteystietojentyyppi
         Assert.assertTrue(permissionService.userCanEditYhteystietojenTyypit());
         Assert.assertFalse(permissionService.userCanDeleteYhteystietojenTyyppi());
 
         //alku, loppupäivä
         Assert.assertTrue(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
-     
+
         //sallitut tyyppit
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
@@ -176,15 +174,15 @@ public class OrganisaatioPermissionServiceTest {
         org.setOid(oid);
         return org;
     }
-    
+
     List<GrantedAuthority> getAuthority(String appPermission, String oid) {
         GrantedAuthority orgAuthority = new SimpleGrantedAuthority(String.format("%s", appPermission));
         GrantedAuthority roleAuthority = new SimpleGrantedAuthority(String.format("%s_%s", appPermission, oid));
         return Lists.newArrayList(orgAuthority, roleAuthority);
     }
-    
+
     static void setCurrentUser(final String oid, final List<GrantedAuthority> grantedAuthorities) {
-        
+
         Authentication auth = new TestingAuthenticationToken(oid, null, grantedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
     }

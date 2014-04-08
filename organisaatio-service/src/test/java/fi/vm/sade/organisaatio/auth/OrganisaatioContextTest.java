@@ -9,7 +9,6 @@ import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.auth.OrganisaatioContext;
 
 public class OrganisaatioContextTest {
 
@@ -34,8 +33,8 @@ public class OrganisaatioContextTest {
 
         context = OrganisaatioContext.get((OrganisaatioDTO)null);
         Assert.assertNotNull(context.toString());
-        
-        
+
+
         // with perus
         OrganisaatioPerustieto perus = new OrganisaatioPerustieto();
         perus.setOid("1");

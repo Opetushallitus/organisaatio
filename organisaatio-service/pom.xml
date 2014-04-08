@@ -181,12 +181,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.organisaatio</groupId>
-            <artifactId>organisaatio-shared</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-common</artifactId>
             <version>${generic.version}</version>
