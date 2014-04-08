@@ -1,0 +1,38 @@
+apply plugin: 'distribution'
+
+configurations { sshAntTask }
+
+dependencies { sshAntTask 'org.apache.ant:ant-jsch:1.9.2' }
+
+// Repo needed for Ant SCP tasks
+repositories {
+        mavenCentral()
+}
+
+// Create release zip (wars and configs)
+task(zipIt, type: Zip) {
+    destinationDir new File(buildDir, "distributions")
+	archiveName serviceName + "_" + branchName + "_" + new Date().format("yyyyMMddHHmmss") + ".zip"
+	from 'src/main/resources'
+	from 'organisaatio-service/target'
+	from 'organisaatio-ui/target'
+}
+
+// Task for copying the .zip file to
+task(scp, dependsOn: zipIt) << {
+	
+	// Redefine scp
+	ant.taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
+                classpath: configurations.sshAntTask.asPath)
+	
+    // SCP to target
+    ant.scp(
+            todir: user + "@" + host + ":/data00/releases/" + serviceName + "/" + branchName + "/",
+            trust: true,
+            keyfile: keyFile,
+    ) {
+            fileset(dir: 'build/distributions/') {
+                    include(name: '*.zip')
+            }
+    }
+}
