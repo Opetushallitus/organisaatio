@@ -544,12 +544,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.refreshIfNeeded = function(oid) {
             if (oid) {
-                if (oid !== model.organisaatio.oid) {
-                    if (model.keepsavestatus) {
-                        model.keepsavestatus = false;
-                    } else {
-                        model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
-                    }
+                if (model.keepsavestatus) {
+                    model.keepsavestatus = false;
+                } else {
+                    model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
                 }
                 Organisaatio.get({oid: oid}, function(result) {
                     refresh(result);
