@@ -48,8 +48,8 @@
             {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
         </label>
         <div class="controls">
-            <input id="yritysmuoto" type="text" maxlength="9" name="yritysmuoto"
-                   ng-model="model.organisaatio.yritysmuoto"
+            <input id="yritysmuoto" type="text" maxlength="255" name="yritysmuoto"
+                   ng-model="model.organisaatio.yritysmuoto" oph-set-dirty="model.mode==='new'"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.yritysmuoto'| i18n}}" disabled/>
         </div>
     </div>

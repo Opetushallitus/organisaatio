@@ -233,3 +233,19 @@ app.directive("dynamicName",function($compile, $log){
       }
    };
 });
+
+// Asettaa lomakkeen dirty-flagin päälle jos oph-set-dirty -attribuutti on true
+app.directive('ophSetDirty', function($log) {
+    return {
+        require: [ 'ngModel' ,'^form'],
+        restrict: "A",
+        link: function(scope, elm, attrs, ctrls) {
+            ctrls[0].$formatters.unshift(function(viewValue) {
+                if (typeof viewValue === 'string' && viewValue.length>0 && scope.$eval(attrs.ophSetDirty) === true) {
+                    ctrls[1].$setDirty();
+                }
+                return viewValue;
+            });
+        }
+    };
+});

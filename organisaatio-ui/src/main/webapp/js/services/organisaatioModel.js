@@ -940,7 +940,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             });
         };
 
-        this.updateOrganisaatioYTunnuksella = function(ytunnus) {
+        this.updateOrganisaatioYTunnuksella = function(ytunnus, orgForm) {
             YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
                 model.ytjTiedot = result;
 
@@ -951,6 +951,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.addYtjLang();
                 model.addYtjOsoite();
                 model.addYtjKotipaikka();
+                orgForm.$setDirty();
             }, function(response) {
                 // yritystietoa ei löytynyt
                 showAndLogError("Organisaationtarkastelu.ytunnushakuvirhe", response);

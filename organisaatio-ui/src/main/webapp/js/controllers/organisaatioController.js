@@ -60,7 +60,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         modalInstance.result.then(function(ytunnus) {
             if (ytunnus) {
                 $log.log('Päivitetään organisaation tiedot tiedoilla YTynnukselta: ' + ytunnus);
-                $scope.model.updateOrganisaatioYTunnuksella(ytunnus);
+                $scope.model.updateOrganisaatioYTunnuksella(ytunnus, $scope.form);
             }
             $scope.modalOpen = false;
         }, function() {
