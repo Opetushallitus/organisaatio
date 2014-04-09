@@ -1057,7 +1057,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             for (var tab in langs) {
                 var kv_lang = (md ? langs[tab].lang : langs[tab].lang);
                 var yt = ytt[kv_lang];
-                if (model.osoitemuoto.yt[langs[tab].lang] === 'suomalainen') {
+                var osoiteMuoto = (md ? model.osoitemuoto.hp : model.osoitemuoto.yt);
+                if (osoiteMuoto[langs[tab].lang] === 'suomalainen') {
                     clearAddress(yt.ulkomainen_kaynti);
                     clearAddress(yt.ulkomainen_posti);
                 } else {
