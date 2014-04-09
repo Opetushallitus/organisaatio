@@ -395,7 +395,8 @@
                 </div>
             </div>
             <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
+                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" oph-null-if-zero-length
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
                           ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"></textarea>
             </div>
         </div>
@@ -433,7 +434,8 @@
                 </div>
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
+                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length 
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
@@ -658,7 +660,8 @@
                         </div>
                     </div>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
-                        <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
+                        <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" oph-null-if-zero-length
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
                                   ng-disabled="disabled" ng-change="model.copyAddress(true, false)" class="span6"></textarea>
                     </div>
                 </div>
@@ -695,7 +698,8 @@
                         </div>
                     </div>
                     <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
-                        <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
+                        <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" oph-null-if-zero-length
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
                                   ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true" class="span6"></textarea>
                         <div>
                             <input type='checkbox' ng-model="model.osoitemuoto.hpsamaosoite[model.hplang]"
