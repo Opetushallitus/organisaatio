@@ -20,7 +20,11 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     $scope.model.refreshIfNeeded($scope.oid);
 
     $scope.organisaatioNimiLangs = function(nimi) {
-        return Object.keys(nimi);
+        if (nimi) {
+            return Object.keys(nimi);
+        } else {
+            return undefined;
+        }
     };
 
     $scope.orderByLang = function(lang) {
@@ -56,7 +60,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         modalInstance.result.then(function(ytunnus) {
             if (ytunnus) {
                 $log.log('Päivitetään organisaation tiedot tiedoilla YTynnukselta: ' + ytunnus);
-                $scope.model.updateOrganisaatioYTunnuksella(ytunnus);
+                $scope.model.updateOrganisaatioYTunnuksella(ytunnus, $scope.form);
             }
             $scope.modalOpen = false;
         }, function() {
@@ -66,7 +70,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     };
 
     $scope.peruutaOrganisaationmuokkaus = function(dirty) {
-        if (dirty===false) {
+        if (dirty === false) {
             // jos ei ole muutettu ei tarvitse kysyä vahvistusta
             $location.path($location.path().substr(0, $location.path().lastIndexOf("/")));
         } else {
@@ -88,4 +92,23 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             });
         }
     };
+
+    // Muodostaa listan invalid-komponenteista
+    // Hakee modelilta lokalisoidut nimet komponenteille
+    $scope.listErrors = function() {
+        $scope.model.errorsTooltip = "<ul>";
+
+        for (var el in $scope.form) {
+            if ($scope.form[el].$invalid) {
+                var localizedEl = $scope.model.localize(el);
+                if (el.match("_1.2.246.562.")) {
+                    // haetaan nimi muokattavalle yhteystietotyypille
+                    localizedEl = $scope.model.uriLocalizedNames[el.split("_")[1]];
+                }
+                $scope.model.errorsTooltip += ("<li>" + localizedEl + "</li>");
+            }
+        }
+        $scope.model.errorsTooltip += "</ul>";
+    };
+
 }

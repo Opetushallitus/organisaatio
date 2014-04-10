@@ -544,12 +544,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.refreshIfNeeded = function(oid) {
             if (oid) {
-                if (oid !== model.organisaatio.oid) {
-                    if (model.keepsavestatus) {
-                        model.keepsavestatus = false;
-                    } else {
-                        model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
-                    }
+                if (model.keepsavestatus) {
+                    model.keepsavestatus = false;
+                } else {
+                    model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
                 }
                 Organisaatio.get({oid: oid}, function(result) {
                     refresh(result);
@@ -657,14 +655,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
                                 /*
-                                if (orgTyyppiKoodi.koodiArvo === "03") {
-                                    // Koodistossa 'Opetuspiste' on 'Toimipiste'!?
-                                    model.koodisto.organisaatiotyypit.push('Opetuspiste');
-                                    localizedOrgType = 'Opetuspiste';
-                                } else {
-                                    model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
-                                    localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                                }
+                                 if (orgTyyppiKoodi.koodiArvo === "03") {
+                                 // Koodistossa 'Opetuspiste' on 'Toimipiste'!?
+                                 model.koodisto.organisaatiotyypit.push('Opetuspiste');
+                                 localizedOrgType = 'Opetuspiste';
+                                 } else {
+                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
+                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
+                                 }
                                  */
                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
@@ -685,12 +683,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
                             var localizedKoodistoOrgType = "";
                             /*
-                            if (orgTyyppiKoodi.koodiArvo === "03") {
-                                localizedKoodistoOrgType = 'Opetuspiste';
-                            } else {
-                                localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                            }
-                            */
+                             if (orgTyyppiKoodi.koodiArvo === "03") {
+                             localizedKoodistoOrgType = 'Opetuspiste';
+                             } else {
+                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
+                             }
+                             */
                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                         }
                     });
@@ -942,7 +940,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             });
         };
 
-        this.updateOrganisaatioYTunnuksella = function(ytunnus) {
+        this.updateOrganisaatioYTunnuksella = function(ytunnus, orgForm) {
             YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
                 model.ytjTiedot = result;
 
@@ -953,6 +951,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.addYtjLang();
                 model.addYtjOsoite();
                 model.addYtjKotipaikka();
+                orgForm.$setDirty();
             }, function(response) {
                 // yritystietoa ei löytynyt
                 showAndLogError("Organisaationtarkastelu.ytunnushakuvirhe", response);
@@ -1058,7 +1057,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             for (var tab in langs) {
                 var kv_lang = (md ? langs[tab].lang : langs[tab].lang);
                 var yt = ytt[kv_lang];
-                if (model.osoitemuoto.yt[langs[tab].lang] === 'suomalainen') {
+                var osoiteMuoto = (md ? model.osoitemuoto.hp : model.osoitemuoto.yt);
+                if (osoiteMuoto[langs[tab].lang] === 'suomalainen') {
                     clearAddress(yt.ulkomainen_kaynti);
                     clearAddress(yt.ulkomainen_posti);
                 } else {
@@ -1572,6 +1572,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 return stripMuuPrefix(ret);
             }
             return stripMuuPrefix(yta['YhteystietoElementti.nimi']);
+        };
+
+        this.localize = function(name) {
+            var ret = $filter('i18n')("Organisaationtarkastelu." + name);
+            if (ret.indexOf("[")===0) {
+                ret = $filter('i18n')("Organisaationmuokkaus." + name);
+            }
+            return ret;
         };
 
     };

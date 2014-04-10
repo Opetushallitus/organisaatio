@@ -195,6 +195,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             entity.setId(orgEntity.getId());
+            entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
         }
         try {
             generateOids(entity);
@@ -209,7 +210,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, model);
         } else {
-            opJarjNro = model.getOpetuspisteenJarjNro();
+            opJarjNro = entity.getOpetuspisteenJarjNro();
         }
 
         // If inserting, check if ytunnus allready exists in the database
@@ -362,31 +363,32 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * @return
      */
     private String calculateAndUpdateToimipisteKoodi2(Organisaatio s) {
-        LOG.info("calculateAndUpdateToimipisteKoodi2(org={})", s);
+        LOG.debug("calculateAndUpdateToimipisteKoodi2(org={})", s);
 
         if (s == null) {
-            LOG.info("  org  == null, return ''");
+            LOG.debug("  org  == null, return ''");
             return "";
         }
 
         if (organisaatioIsOfType(s, OrganisaatioTyyppi.OPPILAITOS)) {
-            LOG.info("  org  == OPPILAITOS, return oppilaitoskoodi: '{}'", s.getOppilaitosKoodi());
+            LOG.debug("  org  == OPPILAITOS, return oppilaitoskoodi: '{}'", s.getOppilaitosKoodi());
             return s.getOppilaitosKoodi();
         }
 
         if (organisaatioIsOfType(s, OrganisaatioTyyppi.OPETUSPISTE)) {
-            LOG.info("  org  == OPETUSPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
+            LOG.debug("  org  == OPETUSPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
             String onum = isEmpty(s.getOpetuspisteenJarjNro()) ? "01" : s.getOpetuspisteenJarjNro();
             Organisaatio parent = null;
             if (s.getId() != null) {
                 parent = (s.getParent() != null) ? s.getParent() : this.organisaatioSuhdeDAO.findParentTo(s.getId(), new Date()).getParent();
             } else {
-                parent = s.getParent();
+                String[] parentOids = s.getParentOidPath().split("\\|");
+                parent = (s.getParent() != null) ? s.getParent() : organisaatioDAO.findByOid(parentOids[parentOids.length - 1]);
             }
             return calculateAndUpdateToimipisteKoodi2(parent) + onum;
         }
 
-        LOG.error("calculateAndUpdateToimipisteKoodi2 == TYPE unknown?: types='{}'", s.getTyypit());
+        LOG.debug("calculateAndUpdateToimipisteKoodi2 == TYPE unknown?: types='{}'", s.getTyypit());
 
         return "";
     }

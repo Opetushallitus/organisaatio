@@ -375,6 +375,19 @@
             </div>
         </div>
 
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite}}</pre>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].posti.osoite || model.mdyhteystiedot[model.hplang].posti.postinumeroUri">
             <label class="control-label">
                 {{'Organisaationtarkastelu.postiosoite'| i18n}}
@@ -385,6 +398,19 @@
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
                     {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
                 </label>
+            </div>
+        </div>
+
+        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite">
+            <div>
+                <label class="control-label">
+                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                </label>
+                <div class="controls">
+                    <label class="control-label control-label-left">
+                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite}}</pre>
+                    </label>
+                </div>
             </div>
         </div>
 
