@@ -1512,14 +1512,18 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-        this.getLocalizedPaikka = function(postikoodi) {
+        this.getLocalizedPaikka = function(postikoodi, lang) {
+            $log.debug("Kutsuttu getLocalizedPaikka: " + postikoodi + ' ' + lang);
             if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+                if (lang.substring(0, 8) === 'kieli_sv') {
+                    return this.getLocalizedPaikkaSv(postikoodi);
+                }
                 return model.koodisto.nimetFI[postikoodi].paikka;
             }
         };
 
         this.getLocalizedPaikkaSv = function(postikoodi) {
-            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetSV)) {
                 return model.koodisto.nimetSV[postikoodi].paikka;
             }
         };
