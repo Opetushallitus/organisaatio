@@ -25,13 +25,13 @@
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi| i18n}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
                     <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi| i18n}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
