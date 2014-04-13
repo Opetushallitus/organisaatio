@@ -189,7 +189,8 @@
                     <label class="control-label control-label-left">
                         <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
-                        {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
                     </label>
                 </div>
             </div>
@@ -217,7 +218,8 @@
                     <label class="control-label control-label-left">
                         <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
-                        {{model.uriLocalizedNames[model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
                     </label>
                 </div>
             </div>
@@ -370,7 +372,8 @@
                 <label class="control-label control-label-left">
                     <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">{{model.mdyhteystiedot[model.hplang].kaynti.osoite}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
-                    {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
                 </label>
             </div>
         </div>
@@ -396,7 +399,8 @@
                 <label class="control-label control-label-left">
                     <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">{{model.mdyhteystiedot[model.hplang].posti.osoite}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
-                    {{model.uriLocalizedNames[model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
                 </label>
             </div>
         </div>

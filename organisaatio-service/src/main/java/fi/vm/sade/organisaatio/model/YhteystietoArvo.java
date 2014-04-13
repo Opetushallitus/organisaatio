@@ -106,7 +106,7 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
 
     public Serializable getArvo() {
         if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.TEKSTI.value())) {
-            return new String[]{ arvoText, kieli };
+            return arvoText;
         } else if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.EMAIL.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.WWW.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.FAKSI.value())
@@ -116,7 +116,7 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
             return arvoYhteystieto;
         } else if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.NIMI.value())
                     || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.NIMIKE.value())) {
-            return new String[]{ arvoText, kieli };
+            return arvoText;
         } else {
             throw new IllegalArgumentException("cannot get arvo, illegal target class: "+kentta.getTyyppi());
         }
