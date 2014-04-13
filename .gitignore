@@ -14,4 +14,6 @@ bin/
 */log
 *.iml
 nb-configuration.xml
+/build
+/.gradle
 

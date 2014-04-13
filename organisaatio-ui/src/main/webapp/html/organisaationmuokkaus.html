@@ -21,14 +21,14 @@
         <div class="controls">
             <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
                 <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi) > - 1">
-                    <input class="" type='checkbox' name="orgtyyppi"
+                    <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
                                        form.$dirty = true">{{tyyppi}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
-                    <input type='checkbox' name="orgtyyppi"
+                    <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
                                        form.$dirty = true">{{tyyppi}}
@@ -48,8 +48,8 @@
             {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
         </label>
         <div class="controls">
-            <input id="yritysmuoto" type="text" maxlength="9" name="yritysmuoto"
-                   ng-model="model.organisaatio.yritysmuoto"
+            <input id="yritysmuoto" type="text" maxlength="255" name="yritysmuoto"
+                   ng-model="model.organisaatio.yritysmuoto" oph-set-dirty="model.mode==='new'"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.yritysmuoto'| i18n}}" disabled/>
         </div>
     </div>
@@ -203,14 +203,14 @@
             <div>
                 <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                       type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -237,7 +237,7 @@
                 <em class="muted">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</em>
             </div>
             <div>
-                <span class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
+                <span class="text-error" ng-show="form.luontipvm.$error.required || form.luontipvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
@@ -340,10 +340,13 @@
                     </label>
                 </a>
             </div>
+            <span class="text-error span4" ng-show="form.yhteystiedot.$invalid">
+                {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
+            </span>
         </div>
     </div>
 
-    <div ng-show="ytexpanded">
+    <div ng-show="ytexpanded" ng-form="yhteystiedot">
 
         <tabset>
             <tab ng-repeat="yttab in model.yttabs"
@@ -368,31 +371,32 @@
             <label class="control-label">
                 {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
             </label>
-            <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
+            <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="kayntiosoitefi" type="text" maxlength="100" name="kayntiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
                        ng-minlength="3" ng-maxlength="100"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
-                <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode
+                <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length
                        ng-model="model.yhteystiedot.postinumerot[model.ytlang].kaynti" class="span2"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                        ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti)}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti, model.ytlang)}}
                 <div>
-                    <span class="text-error" ng-show="form.kayntiosoitefi.$error.minlength || form.kayntiosoitefi.$error.maxlength">
+                    <span class="text-error" ng-show="yhteystiedot.kayntiosoitefi.$error.minlength || yhteystiedot.kayntiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
                     </span>
                 </div>
                 <div>
-                    <span class="text-error" ng-show="form.kayntipostifi.$error.ophpostcode">
+                    <span class="text-error" ng-show="yhteystiedot.kayntipostifi.$error.ophpostcode">
                         {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                     </span>
                 </div>
             </div>
-            <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
+            <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
+                <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" oph-null-if-zero-length
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
                           ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"></textarea>
             </div>
         </div>
@@ -400,27 +404,27 @@
             <label class="control-label">
                 {{'Organisaationtarkastelu.postiosoite'| i18n}}
             </label>
-            <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
+            <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        ng-minlength="3" ng-maxlength="100"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
-                <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode
+                <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length
                        ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                        ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti)}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti, model.ytlang)}}
                 <div>
-                    <span class="text-error" ng-show="form.postiosoitefi.$error.minlength || form.postiosoitefi.$error.maxlength">
+                    <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.minlength || yhteystiedot.postiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
                     </span>
                 </div>
                 <div>
-                    <span class="text-error" ng-show="form.postipostifi.$error.ophpostcode">
+                    <span class="text-error" ng-show="yhteystiedot.postipostifi.$error.ophpostcode">
                         {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                     </span>
                 </div>
@@ -430,7 +434,8 @@
                 </div>
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
+                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length 
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
@@ -448,7 +453,7 @@
                        ng-model="model.yhteystiedot[model.ytlang].puhelin.numero" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                 <div>
-                    <span class="text-error" ng-show="form.puhelinnumero.$error.pattern">
+                    <span class="text-error" ng-show="yhteystiedot.puhelinnumero.$error.pattern">
                         {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
                         {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                     </span>
@@ -465,7 +470,7 @@
                        ng-model="model.yhteystiedot[model.ytlang].faksi.numero" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                 <div>
-                    <span class="text-error" ng-show="form.faksinumero.$error.pattern">
+                    <span class="text-error" ng-show="yhteystiedot.faksinumero.$error.pattern">
                         {{'Organisaationtarkastelu.faksinumero'| i18n}}
                         {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                     </span>
@@ -482,7 +487,7 @@
                        ng-model="model.yhteystiedot[model.ytlang].email.email" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
                 <div>
-                    <span class="text-error" ng-show="form.sahkopostiosoite.$error.email">
+                    <span class="text-error" ng-show="yhteystiedot.sahkopostiosoite.$error.email">
                         {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
                         {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                     </span>
@@ -499,7 +504,7 @@
                        ng-model="model.yhteystiedot[model.ytlang].www.www" oph-null-if-zero-length
                        ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
                 <div>
-                    <span class="text-error" ng-show="form.wwwosoite.$error.codescombinedrequired">
+                    <span class="text-error" ng-show="yhteystiedot.wwwosoite.$error.codescombinedrequired">
                         {{'codes.validation.codescombinedrequired'| i18n}}</span>
                 </div>
             </div>
@@ -520,26 +525,28 @@
                         </label>
                     </a>
                 </div>
+                <span class="text-error span4" ng-show="form['lisayhteystiedotForm_' + ytoid].$invalid">
+                    {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
+                </span>
             </div>
         </div>
 
-        <div ng-show="ltexpanded[ytoid]" ng-init="model.ltlang = {}">
+        <div ng-show="ltexpanded[ytoid]" ng-init="model.ltlang = {}" ng-form dynamic-name-prefix='lisayhteystiedotForm' dynamic-name="ytoid">
             <tabset>
                 <tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
                      select="model.ltlang[ytoid]=lttab">
                 </tab>
             </tabset>
-            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]"
-                 ng-form="ytForm">
+            <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]" ng-form="ytForm">
                 <label class="control-label">
                     {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]==="true"?"*":""}}
                 </label>
                 <div class="controls">
-                    <input type="text" name="name" class="span6" oph-null-if-zero-length
+                    <input type="text" dynamic-name="yt['YhteystietoElementti.oid']" dynamic-name-prefix="name" class="span6" oph-null-if-zero-length
                            ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]'>
                     <div>
-                        <span class="text-error" ng-show="ytForm.name.$error.required">
+                        <span class="text-error" ng-show="ytForm['name_'+ yt['YhteystietoElementti.oid']].$error.required">
                             {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
                             {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                         </span>
@@ -560,11 +567,14 @@
                         <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span> {{'Organisaationmuokkaus.hakijapalvelut'| i18n}}
                     </label>
                 </a>
+                <span class="text-error span4" ng-show="form.hakijapalvelut.$invalid">
+                    {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
+                </span>
             </div>
         </div>
     </div>
 
-    <div ng-show="hpexpanded">
+    <div ng-show="hpexpanded" ng-form="hakijapalvelut">
         <tabset>
             <tab select="model.hplang='+'">
                 <tab-heading>
@@ -589,7 +599,7 @@
             </div>
         </div>
         <div ng-if="model.hplang !== '+'" ng-repeat='tab in model.mkSections.hp.tabs'>
-            <div ng-if='tab.lang === model.hplang'>
+            <div ng-show='tab.lang === model.hplang'>
                 <div class="control-group">
                     <label class="control-label">
                         {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
@@ -599,7 +609,13 @@
                         <input id="htnimifi" type="text" name="htnimifi" class="span6" oph-null-if-zero-length
                                ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]"
                                ie-placeholder placeholder="{{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}"
+                               ng-minlength="3" ng-maxlength="255"
                                ng-required="false"/>
+                    </div>
+                    <div>
+                        <span class="text-error" ng-show="hakijapalvelut.nimi.$error.minlength || hakijapalvelut.nimi.$error.maxlength">
+                            {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+                        </span>
                     </div>
                 </div>
 
@@ -620,31 +636,32 @@
                     <label class="control-label">
                         {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
                     </label>
-                    <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
+                    <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdkayntiosoitefi" type="text" maxlength="100" name="mdkayntiosoitefi" class="span6"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
-                        <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" oph-validate-postcode
+                        <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length
                                ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                                ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
-                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti)}}
+                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti, model.hplang)}}
                         <div>
-                            <span class="text-error" ng-show="form.mdkayntiosoitefi.$error.minlength || form.mdkayntiosoitefi.$error.maxlength">
+                            <span class="text-error" ng-show="hakijapalvelut.mdkayntiosoitefi.$error.minlength || hakijapalvelut.mdkayntiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
                             </span>
                         </div>
                         <div>
-                            <span class="text-error" ng-show="form.mdkayntipostifi.$error.ophpostcode">
+                            <span class="text-error" ng-show="hakijapalvelut.mdkayntipostifi.$error.ophpostcode">
                                 {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                             </span>
                         </div>
                     </div>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
-                        <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
+                        <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" oph-null-if-zero-length
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
                                   ng-disabled="disabled" ng-change="model.copyAddress(true, false)" class="span6"></textarea>
                     </div>
                 </div>
@@ -652,26 +669,26 @@
                     <label class="control-label">
                         {{'Organisaationtarkastelu.postiosoite'| i18n}}
                     </label>
-                    <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
+                    <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdpostiosoitefi" type="text" maxlength="100" name="mdpostiosoitefi" class="span6"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
                                ng-minlength="3" ng-maxlength="100"
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
-                        <input id="mdpostipostifi" name="mdpostipostifi" type="text" oph-validate-postcode
+                        <input id="mdpostipostifi" name="mdpostipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length
                                ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
                                ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                                ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
-                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti)}}
+                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti, model.hplang)}}
                         <div>
-                            <span class="text-error" ng-show="form.mdpostiosoitefi.$error.minlength || form.mdpostiosoitefi.$error.maxlength">
+                            <span class="text-error" ng-show="hakijapalvelut.mdpostiosoitefi.$error.minlength || hakijapalvelut.mdpostiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
                             </span>
                         </div>
                         <div>
-                            <span class="text-error" ng-show="form.mdpostipostifi.$error.ophpostcode">
+                            <span class="text-error" ng-show="hakijapalvelut.mdpostipostifi.$error.ophpostcode">
                                 {{'Organisaationmuokkaus.validointi.postinumerovirheellinen'| i18n}}
                             </span>
                         </div>
@@ -680,8 +697,9 @@
                                    ng-change="model.copyAddress(true, true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
                         </div>
                     </div>
-                    <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
-                        <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
+                    <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
+                        <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" oph-null-if-zero-length
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
                                   ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true" class="span6"></textarea>
                         <div>
                             <input type='checkbox' ng-model="model.osoitemuoto.hpsamaosoite[model.hplang]"
@@ -699,7 +717,7 @@
                                ng-model="model.mdyhteystiedot[model.hplang].puhelin.numero" oph-null-if-zero-length
                                ie-placeholder placeholder="{{'Organisaationtarkastelu.puhelinnumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                         <div>
-                            <span class="text-error" ng-show="form.mdpuhelinnumero.$error.pattern">
+                            <span class="text-error" ng-show="hakijapalvelut.mdpuhelinnumero.$error.pattern">
                                 {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
                                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                             </span>
@@ -716,7 +734,7 @@
                                ng-model="model.mdyhteystiedot[model.hplang].faksi.numero" oph-null-if-zero-length
                                ie-placeholder placeholder="{{'Organisaationtarkastelu.faksinumero'| i18n}}" ng-pattern="/^[\d \-\+]+$/"/>
                         <div>
-                            <span class="text-error" ng-show="form.mdfaksinumero.$error.pattern">
+                            <span class="text-error" ng-show="hakijapalvelut.mdfaksinumero.$error.pattern">
                                 {{'Organisaationtarkastelu.faksinumero'| i18n}}
                                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                             </span>
@@ -733,7 +751,7 @@
                                ng-model="model.mdyhteystiedot[model.hplang].email.email" oph-null-if-zero-length
                                ie-placeholder placeholder="{{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}"/>
                         <div>
-                            <span class="text-error" ng-show="form.mdsahkopostiosoite.$error.email">
+                            <span class="text-error" ng-show="hakijapalvelut.mdsahkopostiosoite.$error.email">
                                 {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
                                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
                             </span>
@@ -748,9 +766,9 @@
                     <div class="controls">
                         <input id="mdwwwosoite" type="text" name="mdwwwosoite" class="span6" maxlength="255"
                                ng-model="model.mdyhteystiedot[model.hplang].www.www" oph-null-if-zero-length
-                               ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false"/>
                         <div>
-                            <span class="text-error" ng-show="form.mdwwwosoite.$error.codescombinedrequired">
+                            <span class="text-error" ng-show="hakijapalvelut.mdwwwosoite.$error.codescombinedrequired">
                                 {{'codes.validation.codescombinedrequired'| i18n}}</span>
                         </div>
                     </div>
@@ -772,10 +790,13 @@
                     </label>
                 </a>
             </div>
+            <span class="text-error span4" ng-show="form.hakutoimistoectsnimi.$invalid">
+                {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
+            </span>
         </div>
     </div>
 
-    <div ng-show="ectsexpanded">
+    <div ng-show="ectsexpanded" ng-form="hakutoimistoectsnimi">
         <div class="control-group">
             <label class="control-label">
                 {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
@@ -793,13 +814,13 @@
             <div class="controls">
                 <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
-                       ng-required="false" codes-combined-field/>
-            </div>
-            <div>
-                <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
-                    {{'codes.validation.codescombinedrequired'| i18n}}</span>
-                <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
-                    {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                       ng-maxlength="255"
+                       ng-required="false"/>
+                <div>
+                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectsnimike.$error.maxlength">
+                        {{'Organisaationmuokkaus.validation.maxpituus255'| i18n}}
+                    </span>
+                </div>
             </div>
         </div>
         <div class="control-group">
@@ -809,9 +830,13 @@
             <div class="controls">
                 <input id="ectspuhelin" type="text" name="ectspuhelin"
                        ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin"
-                       ng-required="false" codes-combined-field/>
-                <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
-                    {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                       ng-required="false" oph-null-if-zero-length oph-pattern="^[\d \-\+]*$"/>
+                <div>
+                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectspuhelin.$error.ophPattern">
+                        {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                    </span>
+                </div>
             </div>
         </div>
         <div class="control-group">
@@ -820,11 +845,13 @@
             </label>
             <div class="controls">
                 <div>
-                    <input id="ectsemail" type="text" name="ectsemail" class="span6"
+                    <input id="ectsemail" type="email" name="ectsemail" class="span6" maxlength="255"
                            ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail"
-                           ng-required="false" codes-combined-field/>
-                    <span class="text-error" ng-show="form.nimifi.$error.codescombinedrequired">
-                        {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                           ng-required="false" oph-null-if-zero-length/>
+                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectsemail.$error.email">
+                        {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                    </span>
                 </div>
             </div>
         </div>
@@ -842,10 +869,13 @@
                     </label>
                 </a>
             </div>
+            <span class="text-error span4" ng-show="form.sosiaalinenmedia.$invalid">
+                {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
+            </span>
         </div>
     </div>
 
-    <div ng-show="someexpanded">
+    <div ng-show="someexpanded" ng-form="sosiaalinenmedia">
         <tabset>
             <tab select="model.smlang='+'">
                 <tab-heading>
@@ -1088,7 +1118,7 @@
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
@@ -1097,7 +1127,7 @@
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <p>
 </div>

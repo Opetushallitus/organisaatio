@@ -524,9 +524,9 @@ public class ConverterFactory {
         if (dtos != null) {
             for (YhteystietoArvoDTO dto : dtos) {
                 if (dto.getArvo() != null
-                        && (((dto.getArvo() instanceof String[])
-                                && (((String [])dto.getArvo())[0]).length() > 0)
-                            || isValidYhteystieto(dto.getArvo()))) {
+                        && (((dto.getArvo() instanceof String)
+                                && ((String)dto.getArvo()).length() > 0
+                            || isValidYhteystieto(dto.getArvo())))) {
                     YhteystietoArvo jpa = convertYhteystietoArvoToJPA(dto, merge);
                     if (jpa.getYhteystietoArvoOid() == null) {
                     	jpa.setYhteystietoArvoOid(dto.getYhteystietoArvoOid());

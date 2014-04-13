@@ -334,6 +334,11 @@
                     <xs:documentation xml:lang="fi">Dynaamisen tyypin arvo.</xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element minOccurs="0" name="kieli" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="fi">Arvon kieli.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element minOccurs="0" name="kenttaOid" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Dynaamisen kentän yksilöivä tunniste.</xs:documentation>

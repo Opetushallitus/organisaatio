@@ -58,6 +58,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // Koko koodi, avaimena uri
         this.uriKoodit = {};
 
+        // Koodin nimi eri kielillä, avaimena kieli.uri
+        this.uriLangNames = {};
+        this.uriLangNames["FI"] = {};
+        this.uriLangNames["SV"] = {};
+
         // Aliorganisaatioiden nimet listana
         this.aliorganisaatiot = [];
 
@@ -415,6 +420,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             convOpetuspisteToToimipiste(result);
             model.organisaatio = result;
             model.uriLocalizedNames["nimi"] = getLocalizedValue(result.nimi, "", "", false);
+            model.uriLangNames = {};
+            model.uriLangNames["FI"] = {};
+            model.uriLangNames["SV"] = {};
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 model.uriLocalizedNames["parentnimi"] = getLocalizedValue(parentResult.nimi, "", "", false);
@@ -503,6 +511,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         model.uriLocalizedNames[koodiResult[i]["koodiUri"] + "#" + koodiResult[i]["versio"]] = KoodistoKoodi.getLocalizedName(koodiResult[i]);
                         model.uriKoodit[koodiResult[i]["koodiUri"]] = koodiResult[i];
                         model.uriKoodit[koodiResult[i]["koodiUri"] + "#" + koodiResult[i]["versio"]] = koodiResult[i];
+                        model.uriLangNames["FI"][koodiResult[i]["koodiUri"]] = KoodistoKoodi.getLangName(koodiResult[i], "FI");
+                        model.uriLangNames["FI"][koodiResult[i]["koodiUri"] + "#" + koodiResult[i]["versio"]] = KoodistoKoodi.getLangName(koodiResult[i], "FI");
+                        model.uriLangNames["SV"][koodiResult[i]["koodiUri"]] = KoodistoKoodi.getLangName(koodiResult[i], "SV");
+                        model.uriLangNames["SV"][koodiResult[i]["koodiUri"] + "#" + koodiResult[i]["versio"]] = KoodistoKoodi.getLangName(koodiResult[i], "SV");
                     }
                 });
                 model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
@@ -544,12 +556,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.refreshIfNeeded = function(oid) {
             if (oid) {
-                if (oid !== model.organisaatio.oid) {
-                    if (model.keepsavestatus) {
-                        model.keepsavestatus = false;
-                    } else {
-                        model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
-                    }
+                if (model.keepsavestatus) {
+                    model.keepsavestatus = false;
+                } else {
+                    model.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
                 }
                 Organisaatio.get({oid: oid}, function(result) {
                     refresh(result);
@@ -657,14 +667,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
                                 /*
-                                if (orgTyyppiKoodi.koodiArvo === "03") {
-                                    // Koodistossa 'Opetuspiste' on 'Toimipiste'!?
-                                    model.koodisto.organisaatiotyypit.push('Opetuspiste');
-                                    localizedOrgType = 'Opetuspiste';
-                                } else {
-                                    model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
-                                    localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                                }
+                                 if (orgTyyppiKoodi.koodiArvo === "03") {
+                                 // Koodistossa 'Opetuspiste' on 'Toimipiste'!?
+                                 model.koodisto.organisaatiotyypit.push('Opetuspiste');
+                                 localizedOrgType = 'Opetuspiste';
+                                 } else {
+                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
+                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
+                                 }
                                  */
                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
@@ -685,12 +695,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
                             var localizedKoodistoOrgType = "";
                             /*
-                            if (orgTyyppiKoodi.koodiArvo === "03") {
-                                localizedKoodistoOrgType = 'Opetuspiste';
-                            } else {
-                                localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                            }
-                            */
+                             if (orgTyyppiKoodi.koodiArvo === "03") {
+                             localizedKoodistoOrgType = 'Opetuspiste';
+                             } else {
+                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
+                             }
+                             */
                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                         }
                     });
@@ -942,7 +952,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             });
         };
 
-        this.updateOrganisaatioYTunnuksella = function(ytunnus) {
+        this.updateOrganisaatioYTunnuksella = function(ytunnus, orgForm) {
             YTJYritysTiedot.get({'ytunnus': ytunnus}, function(result) {
                 model.ytjTiedot = result;
 
@@ -953,6 +963,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 model.addYtjLang();
                 model.addYtjOsoite();
                 model.addYtjKotipaikka();
+                orgForm.$setDirty();
             }, function(response) {
                 // yritystietoa ei löytynyt
                 showAndLogError("Organisaationtarkastelu.ytunnushakuvirhe", response);
@@ -1058,7 +1069,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             for (var tab in langs) {
                 var kv_lang = (md ? langs[tab].lang : langs[tab].lang);
                 var yt = ytt[kv_lang];
-                if (model.osoitemuoto.yt[langs[tab].lang] === 'suomalainen') {
+                var osoiteMuoto = (md ? model.osoitemuoto.hp : model.osoitemuoto.yt);
+                if (osoiteMuoto[langs[tab].lang] === 'suomalainen') {
                     clearAddress(yt.ulkomainen_kaynti);
                     clearAddress(yt.ulkomainen_posti);
                 } else {
@@ -1512,14 +1524,17 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-        this.getLocalizedPaikka = function(postikoodi) {
+        this.getLocalizedPaikka = function(postikoodi, lang) {
             if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+                if (lang.substring(0, 8) === 'kieli_sv') {
+                    return this.getLocalizedPaikkaSv(postikoodi);
+                }
                 return model.koodisto.nimetFI[postikoodi].paikka;
             }
         };
 
         this.getLocalizedPaikkaSv = function(postikoodi) {
-            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetFI)) {
+            if ((typeof postikoodi !== 'undefined') && (postikoodi in model.koodisto.nimetSV)) {
                 return model.koodisto.nimetSV[postikoodi].paikka;
             }
         };
@@ -1572,6 +1587,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 return stripMuuPrefix(ret);
             }
             return stripMuuPrefix(yta['YhteystietoElementti.nimi']);
+        };
+
+        this.localize = function(name) {
+            var ret = $filter('i18n')("Organisaationtarkastelu." + name);
+            if (ret.indexOf("[")===0) {
+                ret = $filter('i18n')("Organisaationmuokkaus." + name);
+            }
+            return ret;
         };
 
     };
