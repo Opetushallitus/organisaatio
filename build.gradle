@@ -11,6 +11,13 @@ repositories {
 
 // Create release zip (wars and configs)
 task(zipIt, type: Zip) {
+	doFirst {
+		// Renames abc-x.y-SOMETHING.war to abc.war	
+        fileTree(dir: 'distributions/service-access/target', include: '*.war').files.each { oneFile ->
+                String replaced = oneFile.path.replaceFirst('-\\d\\.\\d-\\w+','')
+                oneFile.renameTo(file(replaced))
+        }
+    }
     destinationDir new File(buildDir, "distributions")
 	archiveName serviceName + "_" + branchName + "_" + new Date().format("yyyyMMddHHmmss") + ".zip"
 	from 'src/main/resources'
