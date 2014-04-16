@@ -29,8 +29,8 @@
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-        <!-- Commons-Logging on loggaus jarjestelma siina missa SLF4J jos halutaan 
-            logitus SLF4J:lla niin taytyy kayttaa JCL-OVER-SLF4J:ta eli java commons 
+        <!-- Commons-Logging on loggaus jarjestelma siina missa SLF4J jos halutaan
+            logitus SLF4J:lla niin taytyy kayttaa JCL-OVER-SLF4J:ta eli java commons
             logging over slf4j !!! -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -155,6 +155,9 @@
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.2.8/angular-sanitize.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/tinymce-4.0.11/tinymce.min.js</source>
+                        <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/vendor/jquery.ui.widget.js</source>
+                        <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js</source>
+                        <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/jquery.fileupload.js</source>
                     </preloadSources>
                     <jsSrcDir>${project.basedir}/src/main/webapp</jsSrcDir>
                     <sourceExcludes>

@@ -317,11 +317,13 @@
         <div class="controls">
             <div ng-show="model.organisaatio.metadata.kuvaEncoded">
                 <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
+                <div>&nbsp;</div>
             </div>
             <div ng-controller="UploadController">
                 <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
                 <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
-                <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                <input style="display: none;" ng-if="canUseFileReader" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                <input style="display: none;" ng-if="!canUseFileReader" id="upload" type="file" name="upload" data-url="" oph-fileupload>
                 <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="form.$setDirty(); model.removeImage(form)">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
             </div>
         </div>
@@ -434,7 +436,7 @@
                 </div>
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length 
+                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
                           ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>

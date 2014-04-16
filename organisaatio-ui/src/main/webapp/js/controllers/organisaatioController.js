@@ -111,4 +111,10 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         $scope.model.errorsTooltip += "</ul>";
     };
 
+    $scope.canUseFileReader = (function() {
+        $log.info('can use file reader: ' + !!window.FileReader);
+        return !!window.FileReader;
+    }());
+
+    $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
 }
