@@ -254,7 +254,8 @@ app.directive('ophFileupload', function($log, $http) {
     $log.info('init file upload');
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        require: '^form',
+        link: function(scope, element, attrs, ctrl) {
             var tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
             element.attr('data-url', tempFileUrl);
             $(function() {
@@ -267,6 +268,7 @@ app.directive('ophFileupload', function($log, $http) {
                     done: function(e, data) {
                         $http.get(tempFileUrl + data.result.name).success(function(res) {
                             scope.model.organisaatio.metadata.kuvaEncoded = res;
+                            ctrl.$setDirty();
                             $http.delete(tempFileUrl + data.result.name).success(function() {
                                 $log.debug('deleted temp file from server');
                             }).error(function(err) {
