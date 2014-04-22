@@ -52,7 +52,7 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 @Api(value = "/indexer", description = "Indeksoijan operaatiot")
 public class IndexerResource {
 
-    Logger logger = LoggerFactory.getLogger(IndexerResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndexerResource.class);
 
     @Autowired(required = true)
     private OrganisaatioDAOImpl organisaatioDAOImpl;
@@ -124,15 +124,15 @@ public class IndexerResource {
         }
         if (docs.size() > 0) {
             try {
-                logger.info("Indexing {} docs.", docs.size());
+                LOG.info("Indexing {} docs.", docs.size());
                 solr.add(docs);
-                logger.info("Committing changes to index.", docs.size());
+                LOG.info("Committing changes to index.", docs.size());
                 solr.commit(true, true, false);
-                logger.info("Done.");
+                LOG.info("Done.");
             } catch (SolrServerException e) {
-                logger.error("Indexing failed", e);
+                LOG.error("Indexing failed", e);
             } catch (IOException e) {
-                logger.error("Indexing failed", e);
+                LOG.error("Indexing failed", e);
             }
         }
         deleteDocs(delete);
@@ -141,14 +141,14 @@ public class IndexerResource {
     private void deleteDocs(final List<String> delete) {
         if (delete.size() > 0) {
             try {
-                logger.info("Deleting {} docs.", delete.size());
+                LOG.info("Deleting {} docs.", delete.size());
                 solr.deleteById(delete);
                 solr.commit(true, true, false);
-                logger.info("Committing changes to index.");
+                LOG.info("Committing changes to index.");
             } catch (SolrServerException e) {
-                logger.error("Deleting failed", e);
+                LOG.error("Deleting failed", e);
             } catch (IOException e) {
-                logger.error("Deleting failed", e);
+                LOG.error("Deleting failed", e);
             }
         }
     }

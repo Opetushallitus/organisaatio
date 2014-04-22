@@ -45,7 +45,7 @@ import javax.ws.rs.core.Response;
 @Api(value = "/ytj", description = "YTJ hakuoperaatiot")
 public class YTJResource {
 
-    Logger logger = LoggerFactory.getLogger(YTJResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
         
     @Autowired(required = true)
     private YTJService ytjService;
@@ -67,7 +67,7 @@ public class YTJResource {
         } 
         catch (YtjConnectionException ex) {
             ex.printStackTrace();
-            logger.error("YtjConnectionException : " + ex.toString());
+            LOG.error("YtjConnectionException : " + ex.toString());
             
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
         }
@@ -86,7 +86,7 @@ public class YTJResource {
                 ytjList = ytjService.findByYNimi(nimi.trim(), true, YTJKieli.FI);
             } catch (YtjConnectionException ex) {
                 ex.printStackTrace();
-                logger.warn("YtjConnectionException : " + ex.toString());
+                LOG.warn("YtjConnectionException : " + ex.toString());
 
                 throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
             }
