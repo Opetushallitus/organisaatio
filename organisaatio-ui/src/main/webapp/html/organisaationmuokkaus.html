@@ -953,6 +953,13 @@
     </div>
 
     <div ng-show="oesexpanded">
+
+        <div class="control-group">
+        <div>
+            <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
+        </div>
+        </div>
+
         <tabset>
             <tab select="model.ktlang='+'">
                 <tab-heading>
@@ -1030,8 +1037,13 @@
 
     <div ng-show="oeexpanded">
 
+        <div class="control-group">
         <div>
             <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
+        </div>
+        <div>
+            <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
+        </div>
         </div>
 
         <tabset>

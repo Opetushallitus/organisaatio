@@ -1597,6 +1597,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             return ret;
         };
 
+        this.copyMkFromParent = function(section, orgForm) {
+            if (section==='oe') {
+                this.copyKTOEFromParent("oelang", model.mkSections.oe);
+            } else {
+                this.copyKTOEFromParent("ktlang", model.mkSections.kt);
+            }
+            orgForm.$setDirty();
+        };
+
+        this.copyKTOEFromParent = function(mklang, mksection) {
+            var kieli = model[mklang];
+            model[mklang] = "+";
+            for (var type in mksection.types) {
+                if (model.parent.metadata && model.parent.metadata.data) {
+                    for (var l in model.parent.metadata.data[mksection.types[type]]) {
+                        model.organisaatio.metadata.data[mksection.types[type]][l] =
+                                model.parent.metadata.data[mksection.types[type]][l];
+                    }
+                }
+            }
+            // Palauta välilehden kielivalinta => päivittää tekstikentät
+            $timeout(function() {model[mklang] = kieli;}, 0);
+        };
+
     };
 
     return model;

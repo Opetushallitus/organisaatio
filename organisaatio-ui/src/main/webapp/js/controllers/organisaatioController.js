@@ -111,6 +111,24 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         $scope.model.errorsTooltip += "</ul>";
     };
 
+    $scope.vahvistakopiointi = function(section) {
+        var modalInstance = $modal.open({
+            templateUrl: 'kopioinninvahvistus.html',
+            controller: KuvailevatTiedotKopiointiController,
+            resolve: {
+                nimi: function() {
+                    return $scope.model.uriLocalizedNames['parentnimi'];
+                },
+            }
+        });
+
+        modalInstance.result.then(function() {
+            $scope.model.copyMkFromParent(section, $scope.form);
+        }, function() {
+            // peruutettiin
+        });
+    };
+
     $scope.canUseFileReader = (function() {
         $log.info('can use file reader: ' + !!window.FileReader);
         return !!window.FileReader;
