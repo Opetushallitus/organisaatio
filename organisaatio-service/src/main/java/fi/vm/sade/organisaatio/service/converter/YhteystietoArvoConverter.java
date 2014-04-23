@@ -18,7 +18,7 @@ import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 */
 public class YhteystietoArvoConverter extends Converter<YhteystietoArvoDTO, YhteystietoArvo> {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
     //@Autowired
     //private OrganisaatioDAOImpl organisaatioDAO;
@@ -45,9 +45,9 @@ public class YhteystietoArvoConverter extends Converter<YhteystietoArvoDTO, Yhte
     @Override
     public void setValuesToJPA(YhteystietoArvoDTO dto, YhteystietoArvo entity, boolean merge, OrganisaatioDAOImpl organisaatioDAO, YhteystietoElementtiDAOImpl yhteistietoElementtiDAO) {
 
-        log.info("setValuesToJPA({}, {}, {})", new Object[]{dto, entity, merge});
+        LOG.info("setValuesToJPA({}, {}, {})", new Object[]{dto, entity, merge});
         if (entity != null) {
-            log.info("  id=" + entity.getId());
+            LOG.info("  id=" + entity.getId());
         }
 
         if (dto.getOrganisaatioOid() != null) { // is null in insert, will be set when adding arvos to organisaatio.lisatietokentanArvos

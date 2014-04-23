@@ -23,7 +23,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 @Aspect
 public class OrganisaatioServiceExceptionWrapperAspect {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(OrganisaatioServiceExceptionWrapperAspect.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(OrganisaatioServiceExceptionWrapperAspect.class);
 
     @Pointcut("within(fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl)")
     public void serviceMethod() {
@@ -36,7 +36,7 @@ public class OrganisaatioServiceExceptionWrapperAspect {
         try {
             return pjp.proceed();
         } catch (Throwable throwedException) {
-            LOGGER.error("Organisaatio exception wrapped ", throwedException);
+            LOG.error("Organisaatio exception wrapped ", throwedException);
 
             MethodSignature sigu = (MethodSignature) pjp.getSignature();
             Class[] types = sigu.getExceptionTypes();
@@ -57,7 +57,7 @@ public class OrganisaatioServiceExceptionWrapperAspect {
             throw fault;
             } else {
 
-                LOGGER.error("Unhandled exception : " + throwedException.getClass() + " - " + throwedException.getMessage(),throwedException);
+                LOG.error("Unhandled exception : " + throwedException.getClass() + " - " + throwedException.getMessage(),throwedException);
                 throw new RuntimeException("Unhandled exception : " + throwedException.getClass() + " - " + throwedException.getMessage(),throwedException);
             }
         }

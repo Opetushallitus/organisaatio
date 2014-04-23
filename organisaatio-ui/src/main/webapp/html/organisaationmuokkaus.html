@@ -25,13 +25,13 @@
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi| i18n}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
                     <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi}}
+                                       form.$dirty = true">{{tyyppi| i18n}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
@@ -317,11 +317,13 @@
         <div class="controls">
             <div ng-show="model.organisaatio.metadata.kuvaEncoded">
                 <img ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
+                <div>&nbsp;</div>
             </div>
             <div ng-controller="UploadController">
                 <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
                 <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
-                <input style="display: none;" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                <input style="display: none;" ng-if="canUseFileReader" type="file" name="upload" id="upload" ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
+                <input style="display: none;" ng-if="!canUseFileReader" id="upload" type="file" name="upload" data-url="" oph-fileupload>
                 <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="form.$setDirty(); model.removeImage(form)">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
             </div>
         </div>
@@ -382,7 +384,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                        ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti)}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti, model.ytlang)}}
                 <div>
                     <span class="text-error" ng-show="yhteystiedot.kayntiosoitefi.$error.minlength || yhteystiedot.kayntiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
@@ -417,7 +419,7 @@
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                        ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
-                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti)}}
+                &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti, model.ytlang)}}
                 <div>
                     <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.minlength || yhteystiedot.postiosoitefi.$error.maxlength">
                         {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
@@ -434,7 +436,7 @@
                 </div>
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length 
+                <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
                           ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>
@@ -647,7 +649,7 @@
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                                ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
-                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti)}}
+                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti, model.hplang)}}
                         <div>
                             <span class="text-error" ng-show="hakijapalvelut.mdkayntiosoitefi.$error.minlength || hakijapalvelut.mdkayntiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
@@ -681,7 +683,7 @@
                                typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
                                ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
-                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti)}}
+                        &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].posti, model.hplang)}}
                         <div>
                             <span class="text-error" ng-show="hakijapalvelut.mdpostiosoitefi.$error.minlength || hakijapalvelut.mdpostiosoitefi.$error.maxlength">
                                 {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
@@ -951,6 +953,13 @@
     </div>
 
     <div ng-show="oesexpanded">
+
+        <div class="control-group">
+        <div>
+            <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
+        </div>
+        </div>
+
         <tabset>
             <tab select="model.ktlang='+'">
                 <tab-heading>
@@ -1028,8 +1037,13 @@
 
     <div ng-show="oeexpanded">
 
+        <div class="control-group">
         <div>
             <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
+        </div>
+        <div>
+            <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
+        </div>
         </div>
 
         <tabset>

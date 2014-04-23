@@ -482,9 +482,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<OrganisaatioSuhde> curChildren = this.organisaatioSuhdeDAO.findBy("parent", parentE);
         if (curChildren != null) {
             for (OrganisaatioSuhde curChildSuhde : curChildren) {
-                getDescendantSuhteet(curChildSuhde.getChild(), children);
+                if (curChildSuhde.getSuhdeTyyppi()==OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA) {
+                    getDescendantSuhteet(curChildSuhde.getChild(), children);
+                    children.add(curChildSuhde);
+                }
             }
-            children.addAll(curChildren);
         }
 
     }
