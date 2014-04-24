@@ -12,7 +12,6 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 */
-
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
@@ -32,6 +31,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param oppilaitostyyppiList oppilaitostyyppirajaus oppilaitostyyppi-koodiston koodiUreja: ["oppilaitostyyppi_19", "oppilaitostyyppi_91"]
      * @param vuosiluokkaList vuosiluokkarajaus vuosiluokat-koodiston koodiUreja: ["vuosiluokat_1","vuosiluokat_2"]
      * @param ytunnusList y-tunnusrajaus: ["0147510-4", "0203797-4"]
+     * @param oidList
      * @param limit hakutuloksen määrän rajoite
      * @return
      */
@@ -55,6 +55,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * findParentsTo(g) -> a c
      * </pre>
      *
+     * @param oid
      * @return
      */
     List<Organisaatio> findParentsTo(String oid);
