@@ -31,7 +31,7 @@
     -->
 
     <!-- NON SERVICE VERSION -->
-    <bean id="oidService" class="fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl" />
+    <bean id="oidService" class="fi.vm.sade.organisaatio.service.oid.OrganisaatioOIDServiceImpl" />
 
     <!-- object to json -->
     <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
