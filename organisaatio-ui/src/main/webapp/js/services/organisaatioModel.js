@@ -1324,11 +1324,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
                 else if (model.ytjTiedot.postiOsoite.kieli === 2) {
                     mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite,
-                            model.yhteystiedot['kieli_fi#1'].posti,
+                            model.yhteystiedot['kieli_sv#1'].posti,
                             "posti");
                 }
                 else {
-                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.postiOsoite);
+                    $log.debug("Unknown language in ytj osoite: " + JSON.stringify(model.ytjTiedot.postiOsoite));
                 }
 
             }
@@ -1344,7 +1344,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             "kaynti");
                 }
                 else {
-                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.kayntiOsoite);
+                    $log.debug("Unknown language in ytj osoite: " + JSON.stringify(model.ytjTiedot.kayntiOsoite));
                 }
             }
         };
