@@ -5,9 +5,6 @@
                 <h3>
                     <span ng-show="model.mode === 'edit'">{{'Organisaationmuokkaus.muokkaus'| i18n}} {{model.uriLocalizedNames["nimi"]}}</span>
                     <span ng-show="model.mode === 'new'">{{'Organisaationmuokkaus.uudenluonti'| i18n}} {{model.uriLocalizedNames["parentnimi"]}}</span>
-                    <button auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()" class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)">
-                        {{'Organisaationmuokkaus.paivitaYtj'| i18n}}
-                    </button>
                 </h3>
             </div>
         </div>
@@ -63,6 +60,9 @@
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.ytunnus"
                    ie-placeholder placeholder="{{'Organisaationtarkastelu.ytunnus'| i18n}}" ng-pattern="/^\d{7}-./"/>
+                    <button auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()" class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)" tooltip="{{'Organisaatiot.ohje.haeytjtiedot' | i18n}}">
+                        {{'Organisaationmuokkaus.paivitaYtj'| i18n}}
+                    </button>
             <div>
                 <span class="text-error" ng-show="form.ytunnus.$error.pattern">
                     {{'Organisaationmuokkaus.validointi.ytunnus'| i18n}}
@@ -1139,7 +1139,7 @@
 <div class="row fixed-footer" ng-if="modalOpen == false">
     <div ng-show="model.mode === 'edit'">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
@@ -1148,7 +1148,7 @@
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>

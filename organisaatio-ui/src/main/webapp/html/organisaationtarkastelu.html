@@ -2,12 +2,7 @@
 
     <div class="control-group">
         <div class="offset2 span6" ng-show="model.organisaatio.nimi">
-            <h2>{{model.uriLocalizedNames["nimi"]}}
-                <button type="button" class="btn-primary" ng-click="edit()"
-                        auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
-                    {{'Organisaationtarkastelu.muokkaa'| i18n}}
-                </button>
-            </h2>
+            <h2>{{model.uriLocalizedNames["nimi"]}}</h2>
         </div>
     </div>
 
@@ -33,7 +28,7 @@
         <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
         <div class="controls">
             <label class="control-label control-label-left">
-                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi) | orderBy:orderByLang">
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
                     {{model.organisaatio.nimi[avain]}} [{{avain}}]<br>
                 </div>
             </label>
@@ -651,4 +646,15 @@
         </div>
         <hr>
     </div> <!-- aoexpanded -->
+
+    <div class="row fixed-footer" ng-if="modalOpen == false">
+        <div class="align-right ">
+            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn btn-primary" ng-click="edit()" tooltip="{{'Organisaatiot.ohje.muokkaa' | i18n}}"
+                    auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
+                {{'Organisaationtarkastelu.muokkaa'| i18n}}
+            </button>
+        </div>
+        <span>&nbsp;</span>
+    </div>
 </form>

@@ -22,10 +22,10 @@
     </div>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer" ng-init="withoutselect = withoutselect || !model.hakuString">
     <div class="form-fluid">
         <button class="btn" ng-click="cancel()">{{'YritysValinta.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="continueWithouSelect()">{{'YritysValinta.jatkaValitsematta' | i18n}}</button>
+        <button ng-if="withoutselect" class="btn" ng-click="continueWithouSelect()">{{'YritysValinta.jatkaValitsematta' | i18n}}</button>
     </div>    
 </div>
 
