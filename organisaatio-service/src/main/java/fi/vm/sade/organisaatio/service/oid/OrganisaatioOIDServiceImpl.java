@@ -26,11 +26,12 @@ import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -48,6 +49,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author simok 
  */
 public class OrganisaatioOIDServiceImpl implements OIDService {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private OrganisaatioDAOImpl organisaatioDAO;
 
@@ -64,7 +67,6 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
             
     
-    private static final Logger LOG = Logger.getAnonymousLogger();
 
     private final String root = "1.2.246.562.";
     private final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
@@ -118,7 +120,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             }
         }
         if (valueIndex < 0) {
-            LOG.warning("It seems that there is a new NodeClassCode defined, please update " +
+            LOG.warn("It seems that there is a new NodeClassCode defined, please update " +
                     this.getClass().getSimpleName() + "! NodeClassCode = " + nodeClass);
             // Generate TEKN_5 oid
             valueIndex = 0;
@@ -128,6 +130,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     }
 
     private String generateOid(String nodeClassValue) {
+        LOG.debug("Generating new OID for node class: " + nodeClassValue);
         boolean generateNew = true;
         String newOid = null;
         
@@ -138,7 +141,8 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
                 generateNew = false;
             }
         }
-        
+
+        LOG.debug("New oid generated: " + newOid);
         return newOid;
     }
         
@@ -187,24 +191,28 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             return (org == null) ? true : false;
         }
         else if (nodeClass == NodeClassCode.TEKN_5) {
-            // Yhteystietoihin liittyvät OID:t löytyvät neljästä eri taulusta
-            if (yhteystietoDAO.findBy("yhteystietooid", oid).size() > 0) {
-                return false;
+            try {
+                // Yhteystietoihin liittyvät OID:t löytyvät neljästä eri taulusta
+                if (yhteystietoDAO.findBy("yhteystietoOid", oid).size() > 0) {
+                    return false;
+                }
+                if (yhteystietoArvoDAO.findBy("yhteystietoArvoOid", oid).size() > 0) {
+                    return false;
+                }
+                if (yhteystietoElementtiDAO.findBy("oid", oid).size() > 0) {
+                    return false;
+                }
+                if (yhteystietojenTyyppiDAO.findBy("oid", oid).size() > 0) {
+                    return false;
+                }
+            } catch (Exception ex) {
+                LOG.warn(ex.getMessage());
             }
-            if (yhteystietoArvoDAO.findBy("yhteystietoarvooid", oid).size() > 0) {
-                return false;
-            }
-            if (yhteystietoElementtiDAO.findBy("oid", oid).size() > 0) {
-                return false;
-            }
-            if (yhteystietojenTyyppiDAO.findBy("oid", oid).size() > 0) {
-                return false;
-            }            
             // Yhteystietoihin liittyvistä tauluista ei löytynyt oidia
             return true;
         }
         
-        LOG.log(Level.WARNING, "Unknown node class value: {0}", nodeClassValue);
+        LOG.warn("Unknown node class value: " + nodeClassValue);
         
         return false;
     }
