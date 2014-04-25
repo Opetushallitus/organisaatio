@@ -12,7 +12,7 @@
 
         <cacheManagerPeerProviderFactory
           class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
-          properties="connect=UDP(mcast_addr={{casTickets.multicast.address}};mcast_port={{casTickets.multicast.port}};):PING:
+          properties="connect=UDP(mcast_addr={{casTickets_multicast_address}};mcast_port={{casTickets_multicast_port}};):PING:
           MERGE2:FD_SOCK:VERIFY_SUSPECT:pbcast.NAKACK:UNICAST:pbcast.STABLE:FRAG:pbcast.GMS::syncMode=GET_ALL"
           propertySeparator="::"/>
 

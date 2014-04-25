@@ -55,7 +55,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Value("${root.organisaatio.oid}")
     private String ophOid;
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
 
@@ -69,7 +69,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      */
     @Override
     public List<Organisaatio> findChildren(Long parentId) {
-        log.debug("findChildren({})", parentId);
+        LOG.debug("findChildren({})", parentId);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
@@ -96,7 +96,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @return
      */
     public List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut) {
-        log.debug("findChildren({})", parentOid);
+        LOG.debug("findChildren({})", parentOid);
 
         Organisaatio parent = this.findByOid(parentOid);
         List<Organisaatio> result = new ArrayList<Organisaatio>();
@@ -118,7 +118,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     public List<Organisaatio> findByDomainNimi(String domainNimi) {
-        log.debug("findByDomainNimi");
+        LOG.debug("findByDomainNimi");
         return findBy("domainNimi", domainNimi);
     }
 
@@ -136,7 +136,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     public List<Organisaatio> findOrganisaatioByNimiLike(String organisaatioNimi, int firstResult, int maxResults) {
-        log.debug("findOrganisaatioByNimiLike()");
+        LOG.debug("findOrganisaatioByNimiLike()");
         Query query = getEntityManager().createQuery("SELECT o FROM Organisaatio o WHERE UPPER(o.nimiFi) LIKE :orgnimi OR UPPER(o.nimiSv) LIKE :orgnimi "
                 + "OR UPPER(o.nimiEn) LIKE :orgnimi");
         query.setParameter("orgnimi", "%" + organisaatioNimi.toUpperCase() + "%");
@@ -155,7 +155,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                                                     boolean olKoodi,
                                                     int maxResults,
                                                     List<String> oids) {
-        log.debug("findBySearchCriteria()");
+        LOG.debug("findBySearchCriteria()");
 
         QOrganisaatio qOrganisaatio = new QOrganisaatio("a");
 
@@ -197,7 +197,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .limit(maxResults + 1)
                 .list(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr));
 
-        log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
+        LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
         organisaatiot = retrieveParentsAndChildren(organisaatiot, new TreeSet<String>(oids), suunnitellut, lakkautetut);
 
@@ -286,7 +286,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                                                          boolean lakkautetut,
                                                          int maxResults,
                                                          List<String> oids) {
-        log.debug("findBySearchCriteria()");
+        LOG.debug("findBySearchCriteria()");
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         //QOrganisaatio qOrganisaatio1 = new QOrganisaatio("b");
@@ -346,7 +346,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     private BooleanExpression getStringExpression(String searchStr, QOrganisaatio qOrganisaatio) {
-        log.debug("getStringExpression()");
+        LOG.debug("getStringExpression()");
         if (searchStr == null || searchStr.isEmpty()) {
             return null;
         }
@@ -362,7 +362,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     private BooleanExpression getVoimassaoloExpression(boolean suunnitellut, boolean lakkautetut, QOrganisaatio qOrganisaatio) {
-        log.debug("getVoimassaoloExpression()");
+        LOG.debug("getVoimassaoloExpression()");
         BooleanExpression voimassaoloExpr = null;
 
         Date currentDate = Calendar.getInstance().getTime();
@@ -382,7 +382,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Override
     public Organisaatio findByOid(String oid) {
-        log.debug("findByOid({})", oid);
+        LOG.debug("findByOid({})", oid);
 
 
         oid = oid != null ? oid.trim() : null;
@@ -392,13 +392,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 return organisaatios.get(0);
             }
         } catch (Exception ex) {
-            log.info(ex.getMessage());
+            LOG.info(ex.getMessage());
         }
         return null;
     }
 
     public List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults) {
-        log.debug("findByOidList({}, {})", oidList, maxResults);
+        LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
         List<String> oidListFiltered = new ArrayList<String>();
@@ -425,7 +425,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     public List<OrgPerustieto> findDescendantsBasicByOidList(List<String> oidList, int maxResults) {
-        log.debug("findByOidList({}, {})", oidList, maxResults);
+        LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
         List<String> oidListFiltered = new ArrayList<String>();
@@ -475,7 +475,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     public List<Organisaatio> findByOidList(List<String> oidList, int maxResults) {
-        log.debug("findByOidList({}, {})", oidList, maxResults);
+        LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
         List<String> oidListFiltered = new ArrayList<String>();
@@ -638,7 +638,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @return
      */
     public List<String> findParentOidsTo(String oid) {
-        log.debug("findParentOidsTo({})", oid);
+        LOG.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
         List<String> oids = Lists.newArrayList();
 
@@ -673,7 +673,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      */
     @Override
     public List<Organisaatio> findParentsTo(String oid) {
-        log.debug("findParentOidsTo({})", oid);
+        LOG.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
         List<Organisaatio> parents = Lists.newArrayList();
 
@@ -700,7 +700,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      */
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type) {
 
-        log.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
+        LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
         BooleanExpression whereExpr = null;
@@ -736,31 +736,31 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             q.offset(startIndex);
         }
 
-        log.debug("  q = {}", q);
+        LOG.debug("  q = {}", q);
 
         return q.list(org.oid);
     }
 
     public Organisaatio findByYTunnus(String oid) {
-        log.debug("findByYtunnus({})", oid);
+        LOG.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid)).singleResult(org);
     }
 
     public Organisaatio findByVirastoTunnus(String oid) {
-        log.debug("findByVirastotunnus({})", oid);
+        LOG.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid)).singleResult(org);
     }
 
     public Organisaatio findByOppilaitoskoodi(String oid) {
-        log.debug("findByOppilaitoskoodi({})", oid);
+        LOG.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid)).singleResult(org);
     }
 
     public Organisaatio findByToimipistekoodi(String oid) {
-        log.debug("findByToimipisteKoodi({})", oid);
+        LOG.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid)).singleResult(org);
     }
@@ -775,7 +775,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             List<String> oidList,
             int limit) {
 
-        log.debug("findBySearchCriteria()");
+        LOG.debug("findBySearchCriteria()");
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
 
@@ -822,10 +822,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .limit(limit + 1)
                 .list(org);
 
-        log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
+        LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
         for (int i = 0; i < organisaatiot.size(); ++i) {
-            log.debug("Organisaatio " + i + " " + organisaatiot.get(i).getNimi().getValues() +
+            LOG.debug("Organisaatio " + i + " " + organisaatiot.get(i).getNimi().getValues() +
                     " " + organisaatiot.get(i).getKotipaikka() + " " + organisaatiot.get(i).getNimihaku() +
                     " oid: " + organisaatiot.get(i).getOid() +
                     " luokat: " + organisaatiot.get(i).getVuosiluokat() +
@@ -930,7 +930,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Override
     public List<Organisaatio> findGroups() {
-        log.debug("findGroups()");
+        LOG.debug("findGroups()");
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 

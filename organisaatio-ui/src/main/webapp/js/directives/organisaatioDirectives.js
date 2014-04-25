@@ -249,3 +249,35 @@ app.directive('ophSetDirty', function($log) {
         }
     };
 });
+
+app.directive('ophFileupload', function($log, $http) {
+    $log.info('init file upload');
+    return {
+        restrict: 'A',
+        require: '^form',
+        link: function(scope, element, attrs, ctrl) {
+            var tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
+            element.attr('data-url', tempFileUrl);
+            $(function() {
+                $(element).fileupload({
+                    dataType: 'json',
+                    add: function(e, data) {
+                        $log.info('added file');
+                        data.submit();
+                    },
+                    done: function(e, data) {
+                        $http.get(tempFileUrl + data.result.name).success(function(res) {
+                            scope.model.organisaatio.metadata.kuvaEncoded = res;
+                            ctrl.$setDirty();
+                            $http.delete(tempFileUrl + data.result.name).success(function() {
+                                $log.debug('deleted temp file from server');
+                            }).error(function(err) {
+                                $log.debug('failed to delete temp file from server: ' + err);
+                            });
+                        });
+                    }
+                });
+            });
+        }
+    };
+});

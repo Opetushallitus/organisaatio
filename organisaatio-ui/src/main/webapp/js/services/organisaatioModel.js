@@ -1324,11 +1324,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 }
                 else if (model.ytjTiedot.postiOsoite.kieli === 2) {
                     mapOsoiteYhteystieto(model.ytjTiedot.postiOsoite,
-                            model.yhteystiedot['kieli_fi#1'].posti,
+                            model.yhteystiedot['kieli_sv#1'].posti,
                             "posti");
                 }
                 else {
-                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.postiOsoite);
+                    $log.debug("Unknown language in ytj osoite: " + JSON.stringify(model.ytjTiedot.postiOsoite));
                 }
 
             }
@@ -1344,7 +1344,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             "kaynti");
                 }
                 else {
-                    $log.warn("Unknown language in ytj osoite: " + model.ytjTiedot.kayntiOsoite);
+                    $log.debug("Unknown language in ytj osoite: " + JSON.stringify(model.ytjTiedot.kayntiOsoite));
                 }
             }
         };
@@ -1595,6 +1595,30 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 ret = $filter('i18n')("Organisaationmuokkaus." + name);
             }
             return ret;
+        };
+
+        this.copyMkFromParent = function(section, orgForm) {
+            if (section==='oe') {
+                this.copyKTOEFromParent("oelang", model.mkSections.oe);
+            } else {
+                this.copyKTOEFromParent("ktlang", model.mkSections.kt);
+            }
+            orgForm.$setDirty();
+        };
+
+        this.copyKTOEFromParent = function(mklang, mksection) {
+            var kieli = model[mklang];
+            model[mklang] = "+";
+            for (var type in mksection.types) {
+                if (model.parent.metadata && model.parent.metadata.data) {
+                    for (var l in model.parent.metadata.data[mksection.types[type]]) {
+                        model.organisaatio.metadata.data[mksection.types[type]][l] =
+                                model.parent.metadata.data[mksection.types[type]][l];
+                    }
+                }
+            }
+            // Palauta välilehden kielivalinta => päivittää tekstikentät
+            $timeout(function() {model[mklang] = kieli;}, 0);
         };
 
     };

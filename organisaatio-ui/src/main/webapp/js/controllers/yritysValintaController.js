@@ -5,10 +5,13 @@ function YritysValintaController($scope, $modalInstance, $location, $log, Yritys
         $log.debug("Yritysvalinta ytunnuksella: " + ytunnus);
         $scope.model.hakuString = ytunnus;
     }
+    $scope.model.yritykset.lenght = 0;
+    $scope.model.refresh();
     
     $scope.select = function (yritys) {
         $log.info(yritys);
         $modalInstance.close(yritys.ytunnus);
+        $scope.model.hakuString = "";
     };
     
     $scope.search = function() {
@@ -17,9 +20,11 @@ function YritysValintaController($scope, $modalInstance, $location, $log, Yritys
     
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+        $scope.model.hakuString = "";
     };
     
     $scope.continueWithouSelect = function () {
         $modalInstance.close();
+        $scope.model.hakuString = "";
     };
 }

@@ -50,7 +50,7 @@ app.factory('YritysValintaModel', function($filter, $log, Alert,
                     $log.log("Haku kesti: " +diff);
                     model.yritykset = result;
                     
-                    if (model.yritykset.length === 0) {
+                    if (model.hakuString.length>0 && model.yritykset.length === 0) {
                         Alert.add("warnign", $filter('i18n')("YritysValinta.eiHakutuloksia", ""), true, true);
                     }
                 }, 

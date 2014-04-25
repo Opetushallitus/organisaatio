@@ -36,7 +36,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Aspect
 public class AuditLogAspect {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(AuditLogAspect.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
     public static final String SYSTEM = "organisaatio-service";
     public static final String TARGET_TYPE = "Organisaatio";
@@ -163,7 +163,7 @@ public class AuditLogAspect {
                     String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
                     logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
                 } else {
-                    LOGGER.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
                 }
                 break;
         }

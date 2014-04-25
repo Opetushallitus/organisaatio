@@ -67,7 +67,7 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
  */
 public class ConverterFactory {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DozerBeanMapper mapper;
@@ -588,7 +588,7 @@ public class ConverterFactory {
 
     public OrganisaatioDTO convertToFatDTO(Organisaatio entity) {
         OrganisaatioDTO dto = convertToDTO(entity, OrganisaatioDTO.class);
-        log.info("convertToFatDTO: " + entity + " -> " + dto);
+        LOG.info("convertToFatDTO: " + entity + " -> " + dto);
         return dto;
     }
 

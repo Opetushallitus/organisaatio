@@ -19,14 +19,14 @@ app.factory('uploadService', function($q, $log) {
         var reader = null;
         if (window.FileReader) {
             reader = new FileReader();
+            reader.onload = onLoad(reader, deferred, scope);
+            reader.onerror = onError(reader, deferred, scope);
         } else {
             // TODO: IE9 has no File API. Use flash?
             //  - http://aymkdn.github.io/FileToDataURI
             //  - https://github.com/Jahdrien/FileReader
             //  - https://github.com/mailru/FileAPI
         }
-        reader.onload = onLoad(reader, deferred, scope);
-        reader.onerror = onError(reader, deferred, scope);
         return reader;
     };
 
