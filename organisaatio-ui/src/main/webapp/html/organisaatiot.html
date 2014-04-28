@@ -27,7 +27,7 @@
                     </li>
                 </ul>
             </span>
-            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
+            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
         </div>
         <div class="span2">
            {{data.tila}}

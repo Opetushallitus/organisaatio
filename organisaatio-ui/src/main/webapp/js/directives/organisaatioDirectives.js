@@ -250,6 +250,23 @@ app.directive('ophSetDirty', function($log) {
     };
 });
 
+// Konvertoi &amp; => &
+app.directive("ophDecodeName",function($compile, $log){
+    return {
+        require: 'ngModel',
+        restrict: "A",
+        link: function(scope, elm, attrs, ctrl) {
+            var formatterValidator = function(viewValue) {
+                if (viewValue) {
+                    return viewValue.replace(/&amp;/g, '&');
+                }
+            };
+            ctrl.$formatters.unshift(formatterValidator);
+            ctrl.$parsers.unshift(formatterValidator);
+        }
+    };
+});
+
 app.directive('ophFileupload', function($log, $http) {
     $log.info('init file upload');
     return {

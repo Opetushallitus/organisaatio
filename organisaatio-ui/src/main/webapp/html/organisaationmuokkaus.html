@@ -154,11 +154,11 @@
             <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    type="text" name="nimifi" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.fi"
+                   ng-model="model.organisaatio.nimi.fi" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    type="text" name="nimifi" class="span6"
-                   ng-model="model.organisaatio.nimi.fi"
+                   ng-model="model.organisaatio.nimi.fi" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
@@ -173,11 +173,11 @@
             <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.sv"
+                   ng-model="model.organisaatio.nimi.sv" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
             <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimisv" type="text" name="nimisv" class="span6"
-                   ng-model="model.organisaatio.nimi.sv"
+                   ng-model="model.organisaatio.nimi.sv" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
@@ -186,11 +186,11 @@
             <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimise" type="text" name="nimien" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.en"
+                   ng-model="model.organisaatio.nimi.en" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
             <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimise" type="text" name="nimien" class="span6"
-                   ng-model="model.organisaatio.nimi.en"
+                   ng-model="model.organisaatio.nimi.en" oph-decode-name
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
@@ -376,7 +376,7 @@
             <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
                 <input id="kayntiosoitefi" type="text" maxlength="100" name="kayntiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite" ng-change="model.copyAddress(false, true)"
-                       ng-minlength="3" ng-maxlength="100"
+                       ng-minlength="3" ng-maxlength="100" oph-decode-name
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length
@@ -398,7 +398,7 @@
             </div>
             <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" oph-null-if-zero-length
-                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite" oph-decode-name
                           ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"></textarea>
             </div>
         </div>
@@ -410,7 +410,7 @@
                 <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
-                       ng-minlength="3" ng-maxlength="100"
+                       ng-minlength="3" ng-maxlength="100" oph-decode-name
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
                 <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length
@@ -443,7 +443,7 @@
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
-                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
+                          ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite" oph-decode-name
                           ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
                 <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
@@ -615,7 +615,7 @@
 
                     <div class="controls">
                         <input id="htnimifi" type="text" name="htnimifi" class="span6" oph-null-if-zero-length
-                               ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]"
+                               ng-model="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]" oph-decode-name
                                ie-placeholder placeholder="{{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}"
                                ng-minlength="3" ng-maxlength="255"
                                ng-required="false"/>
@@ -647,7 +647,7 @@
                     <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdkayntiosoitefi" type="text" maxlength="100" name="mdkayntiosoitefi" class="span6"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
-                               ng-minlength="3" ng-maxlength="100"
+                               ng-minlength="3" ng-maxlength="100" oph-decode-name
                                ng-model="model.mdyhteystiedot[model.hplang].kaynti.osoite" ng-change="model.copyAddress(true, true)"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length
@@ -669,7 +669,7 @@
                     </div>
                     <div class="controls" ng-if="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
                         <textarea id="mdkvkayntiosoitefi" name="mdkvkayntiosoitefi" rows="6" oph-null-if-zero-length
-                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite"
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite" oph-decode-name
                                   ng-disabled="disabled" ng-change="model.copyAddress(true, false)" class="span6"></textarea>
                     </div>
                 </div>
@@ -680,7 +680,7 @@
                     <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] === 'suomalainen'">
                         <input id="mdpostiosoitefi" type="text" maxlength="100" name="mdpostiosoitefi" class="span6"
                                ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}" oph-null-if-zero-length
-                               ng-minlength="3" ng-maxlength="100"
+                               ng-minlength="3" ng-maxlength="100" oph-decode-name
                                ng-model="model.mdyhteystiedot[model.hplang].posti.osoite" ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"/>
                         &nbsp;&nbsp;&nbsp;
                         <input id="mdpostipostifi" name="mdpostipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length
@@ -713,7 +713,7 @@
                     </div>
                     <div class="controls" ng-show="model.osoitemuoto.hp[model.hplang] !== 'suomalainen'">
                         <textarea id="mdkvpostiosoitefi" name="mdkvpostiosoitefi" rows="6" oph-null-if-zero-length
-                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite"
+                                  ng-model="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite" oph-decode-name
                                   ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true" class="span6"></textarea>
                         <div>
                             <input type='checkbox' ng-model="model.osoitemuoto.hpsamaosoite[model.hplang]"
