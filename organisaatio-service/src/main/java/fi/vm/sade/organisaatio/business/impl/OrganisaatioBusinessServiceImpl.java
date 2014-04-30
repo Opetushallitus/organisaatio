@@ -479,6 +479,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) &&
                 !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
+            if (oppilaitosE == null) {
+                LOG.warn("Oppilaitos not found in parents");
+                return null;
+            }
 
             List<OrganisaatioSuhde> children = new ArrayList<OrganisaatioSuhde>();
             getDescendantSuhteet(oppilaitosE, children);
