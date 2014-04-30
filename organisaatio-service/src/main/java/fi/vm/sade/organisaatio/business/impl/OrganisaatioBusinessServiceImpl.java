@@ -423,6 +423,23 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return false;
     }
 
+    /**
+     * Check that given toimipistekoodi code has not been used.
+     *
+     * @param org
+     * @return
+     */
+    private boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
+        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
+        if (orgs != null && orgs.size() > 0) {
+            // toimipistekoodi on jo olemassa
+            LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
+            return false;
+        }
+
+        return true;
+    }
+
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
             if (OrganisaatioUtil.isRyhma(organisaatio)) {
@@ -467,8 +484,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             getDescendantSuhteet(oppilaitosE, children);
             int nextVal = children.size() + 1;
 
-            String jarjNro = (nextVal < 10) ? String.format("%s%s", "0", nextVal) : String.format("%s", nextVal);
-            entity.setOpetuspisteenJarjNro(jarjNro);
+            String jarjNro ="99";
+            int i;
+            // kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
+            for (i = nextVal; i<100; i++) {
+                jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
+                if (checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
+                    entity.setOpetuspisteenJarjNro(jarjNro);
+                    return jarjNro;
+                }
+            }
+            LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + oppilaitosE.getOppilaitosKoodi() + ")");
             return jarjNro;
         }
         return null;
