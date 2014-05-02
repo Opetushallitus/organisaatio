@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
@@ -88,7 +87,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("organisaatioBusinessService")
 public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessService {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
