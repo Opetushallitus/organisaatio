@@ -14,18 +14,11 @@
  */
 package fi.vm.sade.organisaatio.business.exception;
 
-/**
- *
- */
-public class OrganisaatioExistsException extends OrganisaatioBusinessException {
+public class OrganisationPassivationException extends OrganisaatioBusinessException {
 
-    public OrganisaatioExistsException(String oid) {
-        super("organisaatio " + oid + " already exists, cannot re-create, use update instead");
+    private static final long serialVersionUID = 1L;
+
+    public OrganisationPassivationException(String key, Throwable cause) {
+        super(key, cause);
     }
-
-    @Override
-    public String getErrorKey() {
-        return "organisaatio.exception.organisaatio.exists";
-    }
-
 }

@@ -23,6 +23,7 @@ import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakutuloksetV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO;
+import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,6 +89,11 @@ public class OrganisaatioKoulutukset {
         ResultV1RDTO<HakutuloksetV1RDTO<KoulutusHakutulosV1RDTO>> classInstance = new ResultV1RDTO<HakutuloksetV1RDTO<KoulutusHakutulosV1RDTO>>();
                 
         hakuTulokset = get(buildSearchKoulutusUri(oid), classInstance.getClass());
+        
+        // Tarkistetaan hakutulokset
+        if (hakuTulokset.getStatus() != ResultStatus.OK) {
+            
+        }
         
         return true;
     }

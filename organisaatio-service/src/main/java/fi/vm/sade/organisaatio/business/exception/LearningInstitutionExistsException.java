@@ -14,18 +14,21 @@
  */
 package fi.vm.sade.organisaatio.business.exception;
 
+
 /**
  *
+ * @author Tuomas Katva
  */
-public class OrganisaatioExistsException extends OrganisaatioBusinessException {
+public class LearningInstitutionExistsException extends OrganisaatioBusinessException {
 
-    public OrganisaatioExistsException(String oid) {
-        super("organisaatio " + oid + " already exists, cannot re-create, use update instead");
+    private static final long serialVersionUID = 1L;
+
+    public LearningInstitutionExistsException(String message) {
+        super(message);
     }
 
-    @Override
-    public String getErrorKey() {
-        return "organisaatio.exception.organisaatio.exists";
+    public LearningInstitutionExistsException() {
+        this("organisaatio.exception.learning.institution.exists");
     }
 
 }

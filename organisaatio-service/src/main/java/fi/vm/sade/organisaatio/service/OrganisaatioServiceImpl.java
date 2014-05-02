@@ -16,6 +16,13 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.business.exception.OrganisationPassivationException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
+import fi.vm.sade.organisaatio.business.exception.YtunnusException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
+import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
