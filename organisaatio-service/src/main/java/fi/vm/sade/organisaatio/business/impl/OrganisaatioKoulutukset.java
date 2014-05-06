@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import fi.vm.sade.generic.common.EnhancedProperties;
 import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakutuloksetV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO;
@@ -92,7 +93,8 @@ public class OrganisaatioKoulutukset {
         
         // Tarkistetaan hakutulokset
         if (hakuTulokset.getStatus() != ResultStatus.OK) {
-            
+            LOG.warn("Search failed for koulutus with organization oid: " + oid + " status: " + hakuTulokset.getStatus());
+            throw new OrganisaatioTarjontaException();
         }
         
         return true;
