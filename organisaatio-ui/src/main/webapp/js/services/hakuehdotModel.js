@@ -117,16 +117,22 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             AuthService.getOrganizations("APP_ORGANISAATIOHALLINTA").then(function(organisations){
                         "use strict";
                 $log.debug("Käyttäjän organisaatiot:" + organisations);
-                
+
                 // Jos OPH käyttäjä, niin ei näytetä organisaatiorajausta
                 if(!organisations || organisations.indexOf(ROOT_ORGANISAATIO_OID) > -1) {
                     model.organisaatioRajausVisible = false;
                     model.organisaatioRajaus = false;
+                    model.rajatutOrganisaatiot = [];
+                    model.rajatutOrganisaatiotStr = "";
+                }
+                else if (angular.equals(organisations,model.rajatutOrganisaatiot)) {
+                    // Sivulle tultiin takaisin ja vanhat rajatut organisaatio käytössä
                 }
                 else {
                     model.organisaatioRajausVisible = true;
                     model.organisaatioRajaus = true;
                     model.rajatutOrganisaatiot = organisations;
+                    model.rajatutOrganisaatiotStr = "";
                 }
                 deferred.resolve();
             });
