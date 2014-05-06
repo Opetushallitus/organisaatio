@@ -16,6 +16,13 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.business.exception.OrganisationPassivationException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
+import fi.vm.sade.organisaatio.business.exception.YtunnusException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
+import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
@@ -590,15 +597,29 @@ public class OrganisaatioServiceImpl
     private String generateOpetuspisteenJarjNro(Organisaatio entity,
                                                 OrganisaatioDTO model) {
         //Opetuspisteen jarjestysnumero is only generated to opetuspiste which is not also an oppilaitos
-        if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE) && !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS)) {
+        if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE) &&
+                !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS)) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
+            if (oppilaitosE == null) {
+                LOG.warn("Oppilaitos not found in parents");
+                return null;
+            }
 
             List<OrganisaatioSuhde> children = new ArrayList<OrganisaatioSuhde>();
             getDescendantSuhteet(oppilaitosE, children);
             int nextVal = children.size() + 1;
 
-            String jarjNro = (nextVal < 10) ? String.format("%s%s", "0", nextVal) : String.format("%s", nextVal);
-            entity.setOpetuspisteenJarjNro(jarjNro);
+            String jarjNro ="99";
+            int i;
+            // kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
+            for (i = nextVal; i<100; i++) {
+                jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
+                if (checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
+                    entity.setOpetuspisteenJarjNro(jarjNro);
+                    return jarjNro;
+                }
+            }
+            LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + oppilaitosE.getOppilaitosKoodi() + ")");
             return jarjNro;
         }
         return null;
@@ -802,6 +823,23 @@ public class OrganisaatioServiceImpl
         } else {
             return false;
         }
+    }
+
+    /**
+     * Check that given toimipistekoodi code has not been used.
+     *
+     * @param org
+     * @return
+     */
+    private boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
+        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
+        if (orgs != null && orgs.size() > 0) {
+            // toimipistekoodi on jo olemassa
+            LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
+            return false;
+        }
+
+        return true;
     }
 
     // OVT-464

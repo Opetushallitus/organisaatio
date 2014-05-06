@@ -27,6 +27,15 @@ app.filter('fixHttpLink',function () {
     };
 });
 
+app.filter('decodeAmp',function () {
+    return function (text) {
+        if (text===null) {
+            return null;
+        }
+        return text.replace(/&amp;/g, '&');
+    };
+});
+
 ////////////
 //
 // Configuration from config/properties files

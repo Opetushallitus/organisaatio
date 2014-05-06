@@ -97,7 +97,7 @@ app.directive('ophPattern', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                var isValid = (viewValue===null || typeof viewValue=== 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
+                var isValid = (viewValue === null || typeof viewValue === 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
                 ctrl.$setValidity('ophPattern', isValid);
                 return viewValue;
             };
@@ -203,7 +203,7 @@ app.directive('ophValidatePostcode', function($log) {
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
                 // Kieli on pakko lukea suoraan modelista, attribuutin arvona ei näytä päivittyvän oikein
-                var lang = (attrs.ophValidatePostcode==="yt" ? scope.model.ytlang : scope.model.hplang);
+                var lang = (attrs.ophValidatePostcode === "yt" ? scope.model.ytlang : scope.model.hplang);
                 if (!viewValue) {
                     ctrl.$setValidity('ophpostcode', true);
                     ctrl.$setValidity('ophpostcode_' + lang, true);
@@ -220,32 +220,49 @@ app.directive('ophValidatePostcode', function($log) {
     };
 });
 
-app.directive("dynamicName",function($compile, $log){
-  return {
-      restrict:"A",
-      terminal:true,
-      priority:1000,
-      link:function(scope,element,attrs){
-          element.attr('name', attrs.dynamicNamePrefix + "_" + scope.$eval(attrs.dynamicName));
-          element.removeAttr("dynamic-name");
-          element.removeAttr("dynamic-name-prefix");
-          $compile(element)(scope);
-      }
-   };
+app.directive("dynamicName", function($compile, $log) {
+    return {
+        restrict: "A",
+        terminal: true,
+        priority: 1000,
+        link: function(scope, element, attrs) {
+            element.attr('name', attrs.dynamicNamePrefix + "_" + scope.$eval(attrs.dynamicName));
+            element.removeAttr("dynamic-name");
+            element.removeAttr("dynamic-name-prefix");
+            $compile(element)(scope);
+        }
+    };
 });
 
 // Asettaa lomakkeen dirty-flagin päälle jos oph-set-dirty -attribuutti on true
 app.directive('ophSetDirty', function($log) {
     return {
-        require: [ 'ngModel' ,'^form'],
+        require: ['ngModel', '^form'],
         restrict: "A",
         link: function(scope, elm, attrs, ctrls) {
             ctrls[0].$formatters.unshift(function(viewValue) {
-                if (typeof viewValue === 'string' && viewValue.length>0 && scope.$eval(attrs.ophSetDirty) === true) {
+                if (typeof viewValue === 'string' && viewValue.length > 0 && scope.$eval(attrs.ophSetDirty) === true) {
                     ctrls[1].$setDirty();
                 }
                 return viewValue;
             });
+        }
+    };
+});
+
+// Konvertoi &amp; => &
+app.directive("ophDecodeName", function($compile, $log) {
+    return {
+        require: 'ngModel',
+        restrict: "A",
+        link: function(scope, elm, attrs, ctrl) {
+            var formatterValidator = function(viewValue) {
+                if (viewValue) {
+                    return viewValue.replace(/&amp;/g, '&');
+                }
+            };
+            ctrl.$formatters.unshift(formatterValidator);
+            ctrl.$parsers.unshift(formatterValidator);
         }
     };
 });
@@ -277,6 +294,20 @@ app.directive('ophFileupload', function($log, $http) {
                         });
                     }
                 });
+            });
+        }
+    };
+});
+
+// Estä enterin painalluksen default-toiminto
+app.directive('ophEnter', function() {
+    return  {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                }
             });
         }
     };
