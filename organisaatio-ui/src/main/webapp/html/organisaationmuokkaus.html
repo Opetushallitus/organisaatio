@@ -606,7 +606,7 @@
                 </select>
             </div>
         </div>
-        <div ng-if="model.hplang !== '+'" ng-repeat='tab in model.mkSections.hp.tabs'>
+        <div ng-show="model.hplang !== '+'" ng-repeat='tab in model.mkSections.hp.tabs'>
             <div ng-show='tab.lang === model.hplang'>
                 <div class="control-group">
                     <label class="control-label">
