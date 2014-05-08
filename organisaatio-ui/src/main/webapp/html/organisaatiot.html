@@ -27,7 +27,7 @@
                     </li>
                 </ul>
             </span>
-            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
+            <a style="display: inline-block; width: 400px; vertical-align: top;" href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
         </div>
         <div class="span2">
            {{data.tila}}
@@ -51,7 +51,6 @@
 <div class="row-fluid" ng-if="hakuehdot.organisaatioRajausVisible">
     <p ng-show="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.valittuOrganisaatio' | i18n}}
-        {{hakuehdot.organisaatiot}}
         {{hakuehdot.rajatutOrganisaatiotStr}}
         <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
             {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}

@@ -13,16 +13,19 @@ function OrganisaatioTreeController($scope, $location, $filter,
             $scope.model.refresh($scope.hakuehdot).then (function() {
 
                 // Päivitetään organisaatiorajauksen organisaatioiden nimet mallista
-                var organisaatiot = "";
-                angular.forEach($scope.hakuehdot.rajatutOrganisaatiot, function(oid, index){
-                    if (index === 0) {
-                        organisaatiot = $scope.model.getNimiForOid(oid);
-                    }
-                    else {
-                        organisaatiot = organisaatiot + ", " + $scope.model.getNimiForOid(oid);
-                    }
-                });
-                $scope.hakuehdot.rajatutOrganisaatiotStr = organisaatiot;
+                // Jos vanha organisaatiorajaus voimassa, ei tarvitse tehdä päivitystä
+                if (!$scope.hakuehdot.rajatutOrganisaatiotStr) {
+                    var organisaatiot = "";
+                    angular.forEach($scope.hakuehdot.rajatutOrganisaatiot, function(oid, index){
+                        if (index === 0) {
+                            organisaatiot = $scope.model.getNimiForOid(oid);
+                        }
+                        else {
+                            organisaatiot = organisaatiot + ", " + $scope.model.getNimiForOid(oid);
+                        }
+                    });
+                    $scope.hakuehdot.rajatutOrganisaatiotStr = organisaatiot;
+                }
             });
         }
     });
