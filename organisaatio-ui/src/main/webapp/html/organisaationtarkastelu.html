@@ -2,12 +2,7 @@
 
     <div class="control-group">
         <div class="offset2 span6" ng-show="model.organisaatio.nimi">
-            <h2>{{model.uriLocalizedNames["nimi"]}}
-                <button type="button" class="btn-primary" ng-click="edit()"
-                        auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
-                    {{'Organisaationtarkastelu.muokkaa'| i18n}}
-                </button>
-            </h2>
+            <h2>{{model.uriLocalizedNames["nimi"]}}</h2>
         </div>
     </div>
 
@@ -22,7 +17,7 @@
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="tyyppi in model.organisaatio.tyypit">
-                    {{tyyppi}}<br>
+                    {{tyyppi| i18n}}<br>
                 </div>
             </label>
         </div>
@@ -33,8 +28,8 @@
         <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
         <div class="controls">
             <label class="control-label control-label-left">
-                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi) | orderBy:orderByLang">
-                    {{model.organisaatio.nimi[avain]}} [{{avain}}]<br>
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
+                    {{model.organisaatio.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                 </div>
             </label>
         </div>
@@ -187,7 +182,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite | decodeAmp}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
                         <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
                         <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
@@ -203,7 +198,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite}}</pre>
+                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite | decodeAmp}}</pre>
                     </label>
                 </div>
             </div>
@@ -216,7 +211,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite | decodeAmp}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}</span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
                         <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
                         <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
@@ -232,7 +227,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite}}</pre>
+                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite | decodeAmp}}</pre>
                     </label>
                 </div>
             </div>
@@ -359,7 +354,7 @@
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    {{model.organisaatio.metadata.hakutoimistonNimi[model.hplang]}}
+                    {{model.organisaatio.metadata.hakutoimistonNimi[model.hplang] | decodeAmp}}
                 </label>
             </div>
         </div>
@@ -370,7 +365,7 @@
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">{{model.mdyhteystiedot[model.hplang].kaynti.osoite}},&nbsp;</span>
+                    <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">{{model.mdyhteystiedot[model.hplang].kaynti.osoite | decodeAmp}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
                     <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
                     <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
@@ -385,7 +380,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite}}</pre>
+                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite | decodeAmp}}</pre>
                     </label>
                 </div>
             </div>
@@ -397,7 +392,7 @@
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">{{model.mdyhteystiedot[model.hplang].posti.osoite}},&nbsp;</span>
+                    <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">{{model.mdyhteystiedot[model.hplang].posti.osoite | decodeAmp}},&nbsp;</span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
                     <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
                     <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
@@ -412,7 +407,7 @@
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite}}</pre>
+                        <pre ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite">{{model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite | decodeAmp}}</pre>
                     </label>
                 </div>
             </div>
@@ -651,4 +646,15 @@
         </div>
         <hr>
     </div> <!-- aoexpanded -->
+
+    <div class="row fixed-footer" ng-if="modalOpen == false">
+        <div class="align-right ">
+            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn btn-primary" ng-click="edit()" tooltip="{{'Organisaatiot.ohje.muokkaa' | i18n}}"
+                    auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
+                {{'Organisaationtarkastelu.muokkaa'| i18n}}
+            </button>
+        </div>
+        <span>&nbsp;</span>
+    </div>
 </form>

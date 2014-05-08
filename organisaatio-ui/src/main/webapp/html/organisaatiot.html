@@ -1,7 +1,7 @@
 <!-- Organisaatiot -->
 <script type="text/ng-template" id="organisaatio_node.html">
     <div class="row">
-        <div class="span6">
+        <div class="span7">
             <!-- Käytetään "level" kertaa sama tila kuin ikoni käyttäisi -->
             <span ng-repeat="t in getTimes(data.level-1) track by $index">
                 <i class="icon icon-chevron-right" style="visibility: hidden"></i>
@@ -27,7 +27,7 @@
                     </li>
                 </ul>
             </span>
-            <a href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi}}</a>
+            <a style="display: inline-block; width: 400px; vertical-align: top;" href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
         </div>
         <div class="span2">
            {{data.tila}}
@@ -51,7 +51,6 @@
 <div class="row-fluid" ng-if="hakuehdot.organisaatioRajausVisible">
     <p ng-show="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.valittuOrganisaatio' | i18n}}
-        {{hakuehdot.organisaatiot}}
         {{hakuehdot.rajatutOrganisaatiotStr}}
         <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
             {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}

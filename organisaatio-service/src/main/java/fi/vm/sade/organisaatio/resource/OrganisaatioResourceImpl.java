@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * European Union Public Licence for more details.
+ */
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.generic.common.I18N;
@@ -37,7 +52,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.service.NotAuthorizedException;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 
@@ -393,6 +408,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to update organisation: " + oid);
+            LOG.warn("Roles of user: " + getRoles());
             throw new OrganisaatioResourceException(nae);
         }
 
@@ -423,6 +440,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to delete organisation: " + oid);
+            LOG.warn("Roles of user: " + getRoles());
             throw new OrganisaatioResourceException(nae);
         }
         Set<String> reindex = new HashSet<String>();
@@ -443,6 +462,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
+            LOG.warn("Roles of user: " + getRoles());
             throw new OrganisaatioResourceException(nae);
         }
         try {

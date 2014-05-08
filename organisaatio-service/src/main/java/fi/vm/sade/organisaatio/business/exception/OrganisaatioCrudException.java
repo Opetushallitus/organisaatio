@@ -1,6 +1,5 @@
 /*
- *
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
+ * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
  *
  * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
  * soon as they will be approved by the European Commission - subsequent versions
@@ -12,18 +11,24 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.service;
+package fi.vm.sade.organisaatio.business.exception;
 
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
-
-public class OrganisaatioModifiedException extends OrganisaatioBusinessException {
+/**
+ *
+ * @author Tuomas Katva
+ */
+public class OrganisaatioCrudException extends OrganisaatioBusinessException {
 
     private static final long serialVersionUID = 1L;
 
-    public OrganisaatioModifiedException(Exception cause) {
-        super("organisaatio.exception.organisaatio.modified", cause);
+    public OrganisaatioCrudException(String key) {
+        super(key);
+    }
+
+    @Override
+    public String getErrorKey() {
+        return getMessage();
     }
 
 }

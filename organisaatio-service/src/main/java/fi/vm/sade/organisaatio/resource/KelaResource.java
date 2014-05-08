@@ -37,7 +37,7 @@ import fi.vm.sade.rajapinnat.kela.KelaGenerator;
 @Api(value = "/kela", description = "Kelan operaatiot")
 public class KelaResource {
 
-    Logger logger = LoggerFactory.getLogger(KelaResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KelaResource.class);
 
     private KelaGenerator kelaGenerator;
 
@@ -54,7 +54,7 @@ public class KelaResource {
                 kelaGenerator.transferFiles();
             }
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            LOG.error(ex.getMessage());
         }
         return String.format("%s", kelaGenerator.getHost() != null);
     }

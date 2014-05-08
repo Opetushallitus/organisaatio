@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

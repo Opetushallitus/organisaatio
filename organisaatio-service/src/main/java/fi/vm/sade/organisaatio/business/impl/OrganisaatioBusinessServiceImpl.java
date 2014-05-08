@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
@@ -48,13 +47,13 @@ import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
-import fi.vm.sade.organisaatio.service.LearningInstitutionExistsException;
-import fi.vm.sade.organisaatio.service.OrganisaatioHierarchyException;
+import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import fi.vm.sade.organisaatio.service.OrganisaatioDateException;
-import fi.vm.sade.organisaatio.service.OrganisaatioModifiedException;
-import fi.vm.sade.organisaatio.service.YtunnusException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
+import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("organisaatioBusinessService")
 public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessService {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -423,6 +422,23 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return false;
     }
 
+    /**
+     * Check that given toimipistekoodi code has not been used.
+     *
+     * @param org
+     * @return
+     */
+    private boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
+        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
+        if (orgs != null && orgs.size() > 0) {
+            // toimipistekoodi on jo olemassa
+            LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
+            return false;
+        }
+
+        return true;
+    }
+
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
             if (OrganisaatioUtil.isRyhma(organisaatio)) {
@@ -462,13 +478,26 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) &&
                 !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
+            if (oppilaitosE == null) {
+                LOG.warn("Oppilaitos not found in parents");
+                return null;
+            }
 
             List<OrganisaatioSuhde> children = new ArrayList<OrganisaatioSuhde>();
             getDescendantSuhteet(oppilaitosE, children);
             int nextVal = children.size() + 1;
 
-            String jarjNro = (nextVal < 10) ? String.format("%s%s", "0", nextVal) : String.format("%s", nextVal);
-            entity.setOpetuspisteenJarjNro(jarjNro);
+            String jarjNro ="99";
+            int i;
+            // kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
+            for (i = nextVal; i<100; i++) {
+                jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
+                if (checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
+                    entity.setOpetuspisteenJarjNro(jarjNro);
+                    return jarjNro;
+                }
+            }
+            LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + oppilaitosE.getOppilaitosKoodi() + ")");
             return jarjNro;
         }
         return null;
@@ -482,9 +511,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<OrganisaatioSuhde> curChildren = this.organisaatioSuhdeDAO.findBy("parent", parentE);
         if (curChildren != null) {
             for (OrganisaatioSuhde curChildSuhde : curChildren) {
-                getDescendantSuhteet(curChildSuhde.getChild(), children);
+                if (curChildSuhde.getSuhdeTyyppi()==OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA) {
+                    getDescendantSuhteet(curChildSuhde.getChild(), children);
+                    children.add(curChildSuhde);
+                }
             }
-            children.addAll(curChildren);
         }
 
     }

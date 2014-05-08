@@ -51,7 +51,7 @@ import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
-import fi.vm.sade.organisaatio.service.OrganisaatioCrudException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 //service.model.OrganisaatioService;
 
