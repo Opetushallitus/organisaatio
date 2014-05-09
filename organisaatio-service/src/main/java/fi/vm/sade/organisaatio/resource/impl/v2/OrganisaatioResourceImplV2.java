@@ -15,8 +15,10 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -81,6 +83,11 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     @Override
     public String hello() {
         return "Hello V2! " + new Date();
+    }
+
+    @Override
+    public OrganisaatioHakutulos searchOrganisaatioRakenne(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    
     

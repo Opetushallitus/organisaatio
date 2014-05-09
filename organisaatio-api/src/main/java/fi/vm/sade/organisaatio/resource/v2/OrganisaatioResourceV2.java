@@ -17,9 +17,13 @@ package fi.vm.sade.organisaatio.resource.v2;
 
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -28,6 +32,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 
@@ -45,6 +50,14 @@ public interface OrganisaatioResourceV2 {
     @ApiOperation(value = "Testi", notes = "Testioperaatio", response = String.class)
     public String hello();
 
+    @GET
+    @Path("/hae")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla", 
+            notes = "Operaatio näyttää listan organisaatioita, jotka vastaavat annettuja hakuehtoja.", response = OrganisaatioHakutulos.class)
+    public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true) 
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    
     /**
      *
      * @param hakuEhdot
