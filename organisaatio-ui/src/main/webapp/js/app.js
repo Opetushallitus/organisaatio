@@ -253,7 +253,7 @@ app.factory('NoCacheInterceptor', function() {
     return {
         request: function(config) {
             if (config.method && config.method === 'GET' && config.url.indexOf('html') === -1 &&
-                    config.url.indexOf(SERVICE_URL_BASE) !== -1) {
+                    (config.url.indexOf(SERVICE_URL_BASE) !== -1 || config.url.indexOf(KOODISTO_URL_BASE) !== -1)) {
                 var separator = config.url.indexOf('?') === -1 ? '?' : '&';
                 config.url = config.url + separator + 'noCache=' + new Date().getTime();
             }
