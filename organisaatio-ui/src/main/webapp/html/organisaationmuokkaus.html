@@ -966,11 +966,13 @@
 
     <div ng-show="oesexpanded">
 
+        <!-- Koipiointi disabloitu kunnes saadaan käännökset OVT-7335
         <div class="control-group" ng-if="!model.isKoulutustoimija()">
             <div>
                 <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
             </div>
         </div>
+        -->
 
         <tabset>
             <tab select="model.ktlang='+'">
@@ -1053,9 +1055,11 @@
         <div>
             <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
         </div>
+        <!-- Kopiointi disabloitu kunnes saadaan käännökset OVT-7335
         <div ng-if="!model.isKoulutustoimija()">
             <button type="button" class="btn" ng-click="vahvistakopiointi('oe')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
         </div>
+        -->
         </div>
 
         <tabset>
