@@ -647,7 +647,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         };
 
         refreshKoodisto = function(oid) {
-            if (oid === null || (oid !== model.koodisto.oid)) {
+            if (oid === null || (oid !== model.koodisto.oid)) {
                 model.koodisto.localizedOppilaitos = "";
                 model.koodisto.localizedKoulutustoimija = "";
                 model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
