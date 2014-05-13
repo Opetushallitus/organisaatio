@@ -53,8 +53,10 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,6 +124,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     PermissionChecker permissionChecker;
 
+    @Autowired
+    private SearchCriteriaModelMapper searchCriteriaModelMapper;
+    
     @Override
     public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -134,8 +139,11 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             s.setOrganisaatioTyyppi(null);
         }
 
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
+        
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(s);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {

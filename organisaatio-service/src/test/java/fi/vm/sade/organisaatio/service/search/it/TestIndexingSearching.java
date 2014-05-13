@@ -47,6 +47,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
@@ -55,6 +56,7 @@ import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 
 /**
@@ -83,6 +85,8 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     OrganisaatioService organisaatioService;
     @Autowired
     OrganisaatioSearchService searchService;
+    @Autowired
+    SearchCriteriaModelMapper searchCriteriaModelMapper;
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -133,10 +137,6 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         searchCriteria.setKunta(null);
         searchCriteria.setOppilaitosTyyppi(null);
         searchCriteria.setSearchStr(null);
-        // searchCriteria.setFirstResult(0); //default value, returns parents
-
-        // test returns all (except oph), org search has changed and this is now impossible to test!
-        // assertResultMatches(searchCriteria, "AAA","BBB","CCC","DDD","EEE","FFF");
 
         // with restriction list (leaf, f)
         searchCriteria.getOidRestrictionList().clear();
@@ -303,8 +303,12 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
      * 
      * @param wantedResults
      */
-    private void assertResultMatches(OrganisaatioSearchCriteria searchCriteria, String... wantedResults) {
+    private void assertResultMatches(OrganisaatioSearchCriteria apiSearchCriteria, String... wantedResults) {
         final int count = wantedResults.length;
+        
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(apiSearchCriteria, SearchCriteria.class);
+        
         final List<OrganisaatioPerustieto> search = searchService.searchBasicOrganisaatios(searchCriteria);
         final List<String> wantedResultsList = Lists.newArrayList(wantedResults);
 
@@ -312,7 +316,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         assertContent(wantedResultsList, search);
     }
 
-    private String createAssertMessage(OrganisaatioSearchCriteria searchCriteria, final List<OrganisaatioPerustieto> search, String... wantedResults) {
+    private String createAssertMessage(SearchCriteria searchCriteria, final List<OrganisaatioPerustieto> search, String... wantedResults) {
         String resultsAsList = "[";
         for (OrganisaatioPerustieto organisaatioPerustieto : search) {
             resultsAsList += organisaatioPerustieto.getNimi("fi") + ", ";
