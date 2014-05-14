@@ -103,14 +103,14 @@
             </select>
         </div>
         <div>
-            <!-- Näytä kaikki -->
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.kaikki">{{'Organisaatiot.naytaKaikki' | i18n}}
+            <!-- Näytä aktiiviset organisaatiot -->
+            <input type="checkbox" ng-model="hakuehdot.aktiiviset">{{'Organisaatiot.aktiiviset' | i18n}}
 
-            <!-- Näytä vain aktiiviset -->           
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainAktiiviset">{{'Organisaatiot.naytaVainAktiiviset' | i18n}}
+            <!-- Näytä suunnitellut organisaatiot -->           
+            <input type="checkbox" ng-model="hakuehdot.suunnitellut">{{'Organisaatiot.suunnitellut' | i18n}}
 
-            <!-- Näytä vain lakkautetut -->           
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainLakkautetut">{{'Organisaatiot.naytaVainLakkautetut' | i18n}}
+            <!-- Näytä lakkautetut organisaatiot -->           
+            <input type="checkbox" ng-model="hakuehdot.lakkautetut">{{'Organisaatiot.passivoidut' | i18n}}
         </div>
     </form>
 </div>

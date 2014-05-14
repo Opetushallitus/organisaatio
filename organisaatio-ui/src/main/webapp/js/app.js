@@ -297,7 +297,7 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Organisaatioiden haku
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/hae", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
         get: {method: 'GET'}
     });
 });

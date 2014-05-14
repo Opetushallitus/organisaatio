@@ -107,44 +107,46 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             return "--";
         },
 
-        getStatus: function (node) {
-           var today = +new Date(); 
-           
-           if ('alkuPvm' in node) {
-              var alkuPvm = new Date(node.alkuPvm);
-              
-              if (alkuPvm > today) {
-                  return ($filter('i18n')("Organisaatiot.suunnitteilla",""));
-              }
-           }
-           if ('lakkautusPvm' in node) {
-              var lakkautusPvm = new Date(node.lakkautusPvm);
-              
-              if (lakkautusPvm < today) {
-                  return ($filter('i18n')("Organisaatiot.lakkautettu",""));
-              }
-           }
-           return null;
+        isAktiivinen: function (node) {
+            var today = +new Date(); 
+            
+            if ('alkuPvm' in node) {
+                var alkuPvm = new Date(node.alkuPvm);
+                
+                if (alkuPvm > today) {
+                    // suunnitteilla
+                    return false;
+                }
+            }
+            if ('lakkautusPvm' in node) {
+                var lakkautusPvm = new Date(node.lakkautusPvm);
+                
+                if (lakkautusPvm < today) {
+                    // passivoitu
+                    return false;
+                }
+            }
+            return true;
         },
 
         getTila: function(node) {
-           var today = +new Date(); 
-           
-           if ('alkuPvm' in node) {
-              var alkuPvm = new Date(node.alkuPvm);
-              
-              if (alkuPvm > today) {
-                  return ($filter('i18n')("Organisaatiot.suunniteltu",""));
-              }
-          }
-           if ('lakkautusPvm' in node) {
-              var lakkautusPvm = new Date(node.lakkautusPvm);
-              
-              if (lakkautusPvm < today) {
-                  return ($filter('i18n')("Organisaatiot.passivoitu",""));
-              }
-           }
-           return ($filter('i18n')("Organisaatiot.aktiivinen",""));
+            var today = +new Date(); 
+            
+            if ('alkuPvm' in node) {
+                var alkuPvm = new Date(node.alkuPvm);
+                
+                if (alkuPvm > today) {
+                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+                }
+            }
+            if ('lakkautusPvm' in node) {
+                var lakkautusPvm = new Date(node.lakkautusPvm);
+                
+                if (lakkautusPvm < today) {
+                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
+                }
+            }
+            return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         },
 
         getNimi: function (node) {
@@ -207,13 +209,10 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 hakuParametrit.oppilaitostyyppi = hakuehdot.oppilaitostyyppi + "#*";
             }
 
-            // Vain aktiiviset tain vain lakkautetut
-            if (hakuehdot.tila === hakuehdot.vainAktiiviset) {
-                hakuParametrit.vainAktiiviset = true;
-            }
-            else if (hakuehdot.tila === hakuehdot.vainLakkautetut) {
-                hakuParametrit.vainLakkautetut = true;
-            }
+            // Lisää hakuun organisaation tilat
+            hakuParametrit.aktiiviset   = hakuehdot.aktiiviset;
+            hakuParametrit.suunnitellut = hakuehdot.suunnitellut;
+            hakuParametrit.lakkautetut  = hakuehdot.lakkautetut;
 
             // Haetaan vain rajatuista organisaatioista
             if (hakuehdot.organisaatioRajaus) {
@@ -236,8 +235,8 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             
             updateSubtree = function(node, level, expanded) {
                 node.i18nNimi = model.getNimi(node);
-                if (model.getStatus(node)) {
-                    node.i18nNimi += " (" + model.getStatus(node) + ")";
+                if (model.isAktiivinen(node) === false) {
+                    node.i18nNimi += " (" + model.getTila(node) + ")";
                 }
                 node.tunnus = model.getTunnus(node);
                 node.tyyppi = model.getTyyppi(node);
@@ -272,8 +271,6 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             var parametrit = this.buildHakuParametrit(hakuehdot);
 
             Organisaatiot.get(parametrit, function(result) {
-                //$log.log("Solar returned: " + result.response.numFound + " entries for query: " + '"' + query + '"');
-
                 var end = +new Date();  // log end timestamp
                 var diff = end - start;
                 $log.log("Haku kesti: " +diff);

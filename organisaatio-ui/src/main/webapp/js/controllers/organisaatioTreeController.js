@@ -90,7 +90,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
     $scope.search = function() {
         if ($scope.hakuehdot.isEmpty()) {
-            $log.warn("Hakuehdon tyhjät!");
+            $log.warn("Hakuehdo tyhjät / liian väljät!");
             Alert.add("warning", $filter('i18n')("Organisaatiot.tarkennaHakuehtoja", ""), true);
             return;
         }
