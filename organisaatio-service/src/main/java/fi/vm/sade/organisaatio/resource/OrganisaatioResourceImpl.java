@@ -57,6 +57,7 @@ import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -157,40 +158,10 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 
         //rakenna hierarkia
-        tulos.setOrganisaatiot(createHierarchy(organisaatiot));
+        tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
 
         tulos.setNumHits(organisaatiot.size());
         return tulos;
-    }
-
-    /**
-     * Luo puumaisen organisaatiohierarkian. palauttaa listan juuritason
-     * organisaatioista ja asettaa organisaatioille lapset.
-     */
-    private List<OrganisaatioPerustieto> createHierarchy(
-            final List<OrganisaatioPerustieto> organisaatiot) {
-
-        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<String, OrganisaatioPerustieto>();
-
-        //ORganisaatiot joilla eil ole isää:
-        List<OrganisaatioPerustieto> rootOrgs = new ArrayList<OrganisaatioPerustieto>();
-
-        for (OrganisaatioPerustieto curOrg : organisaatiot) {
-            oidToOrgMap.put(curOrg.getOid(), curOrg);
-        }
-
-        for (OrganisaatioPerustieto curOrg : organisaatiot) {
-            final String parentOid = curOrg.getParentOid();
-            final OrganisaatioPerustieto parentOrg = oidToOrgMap.get(parentOid);
-            if (parentOrg != null) {
-                parentOrg.getChildren().add(curOrg);
-            } else {
-                rootOrgs.add(curOrg);
-            }
-        }
-
-        return rootOrgs;
-
     }
 
     // GET /organisaatio/{oid}/children
