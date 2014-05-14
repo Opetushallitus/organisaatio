@@ -16,13 +16,18 @@
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
+import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
 import java.lang.reflect.Type;
 import java.util.Date;
 
@@ -51,6 +56,12 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     @Autowired
     private OrganisaatioModelMapper modelMapper;
 
+    @Autowired
+    private OrganisaatioSearchService organisaatioSearchService;
+    
+    @Autowired
+    private SearchCriteriaModelMapper searchCriteriaModelMapper;
+        
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
@@ -87,7 +98,21 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
     @Override
     public OrganisaatioHakutulos searchOrganisaatioRakenne(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
+
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+
+        // Hae organisaatiot
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+
+        // Rakenna hierarkia
+        tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
+
+        // Lukumäärä tuloksiin
+        tulos.setNumHits(organisaatiot.size());
+        
+        return tulos;
     }
    
     
