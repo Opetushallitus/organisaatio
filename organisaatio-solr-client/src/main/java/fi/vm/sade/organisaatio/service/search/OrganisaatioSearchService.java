@@ -236,6 +236,16 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     }
 
     private void addDateFilters(final SearchCriteria searchCriteria, SolrQuery q) {
+        // Ei aktiivisia, suunniteltuja eikä lakkautettuja - tätä ei pitäisi tapahtua
+        if (!searchCriteria.getAktiiviset() && !searchCriteria.getSuunnitellut() && 
+                !searchCriteria.getLakkautetut()) {
+            // Filtteröidään pois aktiiviset, suunnitellut, lakkautetut
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "*", "NOW"));  
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW", "*"));
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
+            return;
+        }
+        
         // Aktiiviset, Suunnitellut, Lakkautetut
         if (searchCriteria.getAktiiviset() && searchCriteria.getSuunnitellut() && 
                 searchCriteria.getLakkautetut()) {
