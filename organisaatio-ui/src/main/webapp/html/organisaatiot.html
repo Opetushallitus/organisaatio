@@ -52,23 +52,23 @@
     <p ng-show="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.valittuOrganisaatio' | i18n}}
         {{hakuehdot.rajatutOrganisaatiotStr}}
-        <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = false; perusHakuForm.$setDirty()">
             {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}
         </a>
     </p>
     <p ng-hide="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.kaikkiValittu' | i18n}}
-        <a href="" ng-click="hakuehdot.organisaatioRajaus = true">
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = true; perusHakuForm.$setDirty()">
             {{'Organisaatiot.palautaOletusOrganisaatioValinta' | i18n}}
         </a>
     </p>
 </div>
 
-
-<form class="form-search" novalidate ng-submit="search()">
+<form name="perusHakuForm" class="form-search" novalidate ng-submit="search(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">
     <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
     <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>
-    <button class="btn" type="reset" ng-click="resetHakuehdot()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+    <button class="btn" type="reset" ng-click="resetHakuehdot(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+    <span ng-if="tarkemmatHakuehdotForm.$dirty || perusHakuForm.$dirty" class="muted" style="background-color: #fff"><em>{{'Organisaatiot.hakuehtojaMuutettu' | i18n}}</em></span>
 </form>
 
 <p ng-hide="tarkemmatHakuehdotVisible">
@@ -85,7 +85,7 @@
             {{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}
         </a>
     </p>
-    <form>
+    <form name="tarkemmatHakuehdotForm">
         <div class="form-fluid">
             <!-- Kotipaikka -->
             <select class="input-xlarge" ng-model="hakuehdot.kunta" ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">

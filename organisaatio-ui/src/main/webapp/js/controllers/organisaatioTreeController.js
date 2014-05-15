@@ -105,7 +105,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
         $scope.tarkemmatHakuehdotVisible = false;
 
         // Tarkempien ehtojen piilotus tyhjentää tarkemmat hakukentät
-        $scope.hakuehdot.resetTarkemmatEhdot();
+        //$scope.hakuehdot.resetTarkemmatEhdot();
     };
 
     $scope.showTarkemmatHakuehdot = function() {
