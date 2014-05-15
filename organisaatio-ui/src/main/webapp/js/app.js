@@ -294,7 +294,7 @@ app.factory('Aliorganisaatiot', function($resource) {
     });
 });
 
-// Organisaatioiden haku puunäkymää varten
+// Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
@@ -303,7 +303,7 @@ app.factory('Organisaatiot', function($resource) {
 });
 
 // Autentikoitu get kutsu organisaatiopalveluun
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/rest/myroles
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/auth
 app.factory('OrganisaatioAuthGET', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
         get: {method:   "GET"}
