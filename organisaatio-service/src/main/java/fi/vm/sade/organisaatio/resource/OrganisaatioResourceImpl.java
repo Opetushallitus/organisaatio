@@ -262,10 +262,10 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (o == null) {
             o = organisaatioDAO.findByToimipistekoodi(oid);
         }
-        // If the organisaatio is opetuspiste (toimipiste) and it does not have a value in yhteishaunKoulukoodi field
+        // If the organisaatio is toimipiste and it does not have a value in yhteishaunKoulukoodi field
         // such is saught from koodisto
         if (o != null) {
-            if (o.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) && isEmpty(o.getYhteishaunKoulukoodi())) {
+            if (o.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value()) && isEmpty(o.getYhteishaunKoulukoodi())) {
                 updateYhKoulukoodi(o);
             }
         }

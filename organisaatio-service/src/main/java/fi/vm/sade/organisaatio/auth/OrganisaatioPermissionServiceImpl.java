@@ -129,7 +129,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
             return checkAccess(ophOid, ROLE_CRUD);
 
         case OPPISOPIMUSTOIMIPISTE:
-        case OPETUSPISTE:
+        case TOIMIPISTE:
             return checkAccess(new String[]{ROLE_CRUD}) || checkAccess(ophOid, ROLE_CRUD);
 
         default:

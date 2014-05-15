@@ -49,17 +49,17 @@ public class TestDataCreator {
     OrganisaatioDAOImpl organisaatioDAO;
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
-    
+
     public void createInitialTestData() {
-        
+
         // create initial test organisations - TODO: for testing purposes
         Calendar futureStart = Calendar.getInstance();
         futureStart.set(2013, 5, 29);
         Calendar pastStop = Calendar.getInstance();
         pastStop.set(2011, 5, 29);
-        
+
         Organisaatio rootOfAllEvil = initCreateOrLoad("opetushallitus", "6666666-6", null, null, null, null, "1.2.246.562.24.00000000001");
-        
+
         Organisaatio root = initCreateOrLoad("root test koulutustoimija", "1234567-1", rootOfAllEvil, null, null, null, "1.2.2004.1");
         Organisaatio node1 = initCreateOrLoad("node1 asd", "1234567-2", root, futureStart.getTime(), null, "Ammattikorkeakoulut", "1.2.2004.2");
         Organisaatio node2 = initCreateOrLoad("node2 foo", "1234567-3", root, null, pastStop.getTime(), "Yliopistot", "1.2.2004.3");
@@ -67,7 +67,7 @@ public class TestDataCreator {
         Organisaatio root2 = initCreateOrLoad("root2 test2 koulutustoimija2", "1234567-5", rootOfAllEvil, futureStart.getTime(), null, null, "1.2.2004.5");
         Organisaatio nodex = initCreateOrLoad("nodex bar", "1234567-6", root2, null, pastStop.getTime(), "Ammattikorkeakoulut", "1.2.2004.6");
     }
-    
+
     private Organisaatio initCreateOrLoad(String nimi, String ytunnus, Organisaatio parent, Date startDate, Date endDate, String oppilaitostyyppi, String oid) {
         try {
             Organisaatio org = organisaatioDAO.findByOid(oid);
@@ -87,7 +87,7 @@ public class TestDataCreator {
             organisaatio.setOrganisaatioPoistettu(false);
             if (parent != null) {
                 if (!parent.getOid().equals("1.2.246.562.24.00000000001")) {
-                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
+                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
                 organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
                 } else {
                 organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
@@ -97,7 +97,7 @@ public class TestDataCreator {
             }
 
             createYhteystietos(organisaatio);
-            
+
             organisaatio = organisaatioDAO.insert(organisaatio);
 
             if (parent != null) {
@@ -105,20 +105,20 @@ public class TestDataCreator {
                 organisaatio.getParentSuhteet().add(suhde); //organisaatioDAO.findByOid(organisaatio.getOid());
                 setParentPaths(organisaatio, parent.getOid());
             }
-            
+
             return organisaatio;
         } catch (Exception exp) {
             exp.printStackTrace();
             return new Organisaatio();
         }
     }
-    
+
     private MonikielinenTeksti setNimiValue(String lang, String value) {
     	MonikielinenTeksti nimi = new MonikielinenTeksti();
     	nimi.addString(lang, value);
     	return nimi;
-    } 
-    
+    }
+
     private void createYhteystietos(Organisaatio organisaatio) {
         List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
         Osoite osoite1 = new Osoite(Osoite.TYYPPI_POSTIOSOITE, "Mannerheimintie 1", "00100", "Helsinki", null);
@@ -145,7 +145,7 @@ public class TestDataCreator {
         organisaatio.setYhteystiedot(yhteystiedot);
 
     }
-    
+
     private void setParentPaths(Organisaatio o, String parentOid) {
         String parentOidpath = "";
         String parentIdPath = "";
@@ -158,5 +158,5 @@ public class TestDataCreator {
         o.setParentOidPath(parentOidpath);
         o.setParentIdPath(parentIdPath);
     }
-    
+
 }

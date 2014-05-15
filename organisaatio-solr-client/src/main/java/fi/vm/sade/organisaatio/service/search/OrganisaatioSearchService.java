@@ -54,13 +54,13 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     public OrganisaatioSearchService(SolrServerFactory factory) {
         this.solr = factory.getSolrServer();
         orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
-                OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPETUSPISTE.value(),
+                OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(),
                 OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPETUSPISTE.value(),
-                Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.TOIMIPISTE.value(),
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
-                Sets.newHashSet(OrganisaatioTyyppi.OPETUSPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
     }
 
@@ -295,7 +295,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     /**
      * Search Organisations by oid
-     * 
+     *
      * @param organisationOids
      * @return
      */

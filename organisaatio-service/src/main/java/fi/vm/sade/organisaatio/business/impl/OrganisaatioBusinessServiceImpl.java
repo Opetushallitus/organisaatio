@@ -374,8 +374,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             return s.getOppilaitosKoodi();
         }
 
-        if (organisaatioIsOfType(s, OrganisaatioTyyppi.OPETUSPISTE)) {
-            LOG.debug("  org  == OPETUSPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
+        if (organisaatioIsOfType(s, OrganisaatioTyyppi.TOIMIPISTE)) {
+            LOG.debug("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
             String onum = isEmpty(s.getOpetuspisteenJarjNro()) ? "01" : s.getOpetuspisteenJarjNro();
             Organisaatio parent = null;
             if (s.getId() != null) {
@@ -475,7 +475,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String generateOpetuspisteenJarjNro(Organisaatio entity,
             OrganisaatioRDTO model) {
         //Opetuspisteen jarjestysnumero is only generated to opetuspiste which is not also an oppilaitos
-        if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value()) &&
+        if (model.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value()) &&
                 !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
             if (oppilaitosE == null) {

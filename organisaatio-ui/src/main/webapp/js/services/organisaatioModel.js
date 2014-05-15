@@ -401,33 +401,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.lisayhteystietoarvos = res;
         };
 
-        convOrgTyyppi = function(result, from, to) {
-            var tyypit = [];
-            for (var i in result.tyypit) {
-                if (result.tyypit[i] === from) {
-                    tyypit.push(to);
-                } else {
-                    tyypit.push(result.tyypit[i]);
-                }
-            }
-            result.tyypit = tyypit;
-        };
-
-        convOpetuspisteToToimipiste = function(result) {
-            convOrgTyyppi(result, 'Opetuspiste', 'Toimipiste');
-        };
-
-        convToimipisteToOpetuspiste = function(result) {
-            convOrgTyyppi(result, 'Toimipiste', 'Opetuspiste');
-        };
-
-
         refresh = function(result) {
             $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
             model.ytjTiedot = {};
             modelYhteystiedot = {};
-            convOpetuspisteToToimipiste(result);
             model.organisaatio = result;
             model.uriLocalizedNames["nimi"] = getDecodedLocalizedValue(result.nimi, "", "", false);
             model.uriLangNames = {};
@@ -660,9 +638,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     /* Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
                      Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
-                     Jos organisaatio on OPETUSPISTE (eli toimipiste), sillä on oltava yläorganisaatio joka on tyypiltään joko
-                     OPETUSPISTE, OPPILAITOS tai KOULUTUSTOIMIJA.
-                     Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> OPETUSPISTE [0..n]
+                     Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
+                     TOIMIPISTE, OPPILAITOS tai KOULUTUSTOIMIJA.
+                     Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste, 05:Muu organisaatio
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      */
@@ -670,22 +648,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                         'Muu organisaatio': ["05", "03"],
                         'Koulutustoimija': ["02", "04"],
                         'Oppilaitos': ["03"],
-                        'Opetuspiste': ["03"],
                         'Toimipiste': ["03"],
                         'Oppisopimustoimipiste': []};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
-                                /*
-                                 if (orgTyyppiKoodi.koodiArvo === "03") {
-                                 // Koodistossa 'Opetuspiste' on 'Toimipiste'!?
-                                 model.koodisto.organisaatiotyypit.push('Opetuspiste');
-                                 localizedOrgType = 'Opetuspiste';
-                                 } else {
-                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
-                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                                 }
-                                 */
                                 model.koodisto.organisaatiotyypit.push(KoodistoKoodi.getLocalizedName(orgTyyppiKoodi));
                                 localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                             } else if (model.organisaatio.parentOid === model.OPHOid
@@ -704,13 +671,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             }
 
                             var localizedKoodistoOrgType = "";
-                            /*
-                             if (orgTyyppiKoodi.koodiArvo === "03") {
-                             localizedKoodistoOrgType = 'Opetuspiste';
-                             } else {
-                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                             }
-                             */
                             localizedKoodistoOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
                         }
                     });
@@ -1107,7 +1067,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             selectAddressType(false);
             selectAddressType(true);
             checkLisayhteystiedot();
-            convToimipisteToOpetuspiste(model.organisaatio);
             if (model.organisaatio.$post) {
                 Organisaatio.post(model.organisaatio, function(result) {
                     //console.log(result);
