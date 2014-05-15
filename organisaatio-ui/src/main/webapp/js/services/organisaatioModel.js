@@ -2,7 +2,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, YhteystietojenTyyppi, $filter, $log, $timeout, $location) {
+        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, $filter, $log, $timeout, $location) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -678,7 +678,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     // organisaatiotyyppejä ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-                YhteystietojenTyyppi.get({}, function(result) {
+                Yhteystietojentyyppi.get({}, function(result) {
                     model.yhteystietojentyyppi = {};
                     for (var ytt in result) {
                         if (result[ytt]['sovellettavatOrganisaatios']) {

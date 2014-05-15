@@ -268,7 +268,7 @@ app.factory('NoCacheInterceptor', function() {
 //
 ////////////
 
-// Organisaation haku / tallennus organisaatiopalvelulta
+// Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/:oid", {oid: "@oid"}, {
@@ -278,7 +278,7 @@ app.factory('Organisaatio', function($resource) {
     });
 });
 
-// Organisaation haku / tallennus organisaatiopalvelulta
+// Organisaation luonti organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('UusiOrganisaatio', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio", {}, {
@@ -286,7 +286,7 @@ app.factory('UusiOrganisaatio', function($resource) {
     });
 });
 
-// Hae aliorganisaatiot organisaatiopalvelulta
+// Aliorganisaatioiden haku organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
 app.factory('Aliorganisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/hae?oidRestrictionList=:oid", {oid: "@oid"}, {
@@ -294,7 +294,7 @@ app.factory('Aliorganisaatiot', function($resource) {
     });
 });
 
-// Organisaatioiden haku
+// Organisaatioiden haku puunäkymää varten
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
@@ -302,7 +302,7 @@ app.factory('Organisaatiot', function($resource) {
     });
 });
 
-// Tehdään organisaatiopalveluun autentikoitu get kutsu
+// Autentikoitu get kutsu organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/rest/myroles
 app.factory('OrganisaatioAuthGET', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
@@ -374,7 +374,7 @@ return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyVa
   });
 });
 
-// YTJ tiedot yhden yrityksen osalta
+// YTJ tiedot yhden yrityksen osalta organisaatiopalvelun kautta
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
 app.factory('YTJYritysTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/:ytunnus", {ytunnus: "@ytunnus"}, {}, {
@@ -382,7 +382,7 @@ app.factory('YTJYritysTiedot', function($resource) {
     });
 });
 
-// YTJ haku nimen perusteella
+// YTJ tietojen haku nimen perusteella
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/hae?nimi=yliopiston
 app.factory('YTJYritystenTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/hae", {}, {
@@ -390,7 +390,7 @@ app.factory('YTJYritystenTiedot', function($resource) {
     });
 });
 
-// postinumeroiden haku koodistopalvelulta
+// Postinumeroiden haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
 app.factory('KoodistoPosti', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
@@ -408,12 +408,6 @@ return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
 
 // Muokattavien yhteystietojen haku organisaatiopalvelulta
 // Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
-app.factory('YhteystietojenTyyppi', function($resource) {
-    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
-        get: {method: 'GET', isArray: true}
-    });
-});
-
 app.factory('Yhteystietojentyyppi', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
         get: {method: 'GET', isArray: true},
@@ -422,6 +416,7 @@ app.factory('Yhteystietojentyyppi', function($resource) {
     });
 });
 
+// Yhteystietotyypin poisto organisaatiopalvelulta
 app.factory('YhteystietojentyypinPoisto', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid", { oid: "@oid" }, {
         delete: {method: 'DELETE'}
@@ -452,8 +447,8 @@ app.factory('HenkiloKayttooikeus', function($resource) {
     });
 });
 
-// Hae ryhmät organisaatioplavelulta
-//
+// Ryhmien haku organisaatioplavelulta
+// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/1.2.246.562.10.00000000001/ryhmat
 app.factory('Ryhmat', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/:oid/ryhmat", {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
