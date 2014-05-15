@@ -37,6 +37,13 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             return true;
         },
         
+        isTilaValid: function() {
+            if (!model.aktiiviset && !model.suunnitellut && !model.lakkautetut) {
+                return false;
+            }   
+            return true;
+        },
+        
         refreshIfNeeded: function() {
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
