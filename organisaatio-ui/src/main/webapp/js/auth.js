@@ -1,6 +1,7 @@
 var READ = "_READ";
 var UPDATE = "_READ_UPDATE";
 var CRUD = "_CRUD";
+var RYHMA = "_RYHMA";
 var OPH_ORG = "1.2.246.562.10.00000000001";
 var ORGANISAATIO_URL_BASE = SERVICE_URL_BASE;
 var CAS_URL = CAS_URL || "/cas/myroles";
@@ -118,6 +119,29 @@ app.factory('AuthService', function ($q, $http, $timeout, MyRolesModel) {
         return deferred.promise;
     };
 
+    var containsRyhmaRole = function (service, roles) {
+        for (var i in roles) {
+            if (roles[i].indexOf(service + RYHMA) > -1) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var ryhmaAccessCheck = function (service) {
+        var deferred = $q.defer();
+        MyRolesModel.then(function(model) {
+            if (ophCrud(service, model)) {
+                deferred.resolve();
+            } else if (containsRyhmaRole(service, model.myroles)) {
+                deferred.resolve();
+            } else {
+                deferred.reject();
+            }
+        });
+        return deferred.promise;
+    };
+
     var auth = (function () {
         "use strict";
 
@@ -147,6 +171,10 @@ app.factory('AuthService', function ($q, $http, $timeout, MyRolesModel) {
 
         instance.crudOph = function (service) {
             return ophAccessCheck(service, ophCrud);
+        };
+
+        instance.crudRyhma = function (service) {
+            return ryhmaAccessCheck(service);
         };
 
         instance.getOrganizations = function (service) {
