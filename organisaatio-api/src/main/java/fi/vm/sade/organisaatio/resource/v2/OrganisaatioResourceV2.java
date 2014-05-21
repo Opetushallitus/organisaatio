@@ -42,7 +42,7 @@ import javax.ws.rs.core.MediaType;
  * @author simok
  */
 @Path("/organisaatio/v2")
-@Api(value = "/organisaatio", description = "Organisaation operaatiot")
+@Api(value = "/organisaatio/v2", description = "Organisaation operaatiot")
 public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -53,11 +53,11 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Path("/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla", 
+    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla",
             notes = "Operaatio näyttää listan organisaatioita, jotka vastaavat annettuja hakuehtoja.", response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true) 
+    public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
-    
+
     /**
      *
      * @param hakuEhdot
@@ -67,9 +67,9 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/yhteystiedot/hae")
-    @ApiOperation(value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot", 
+    @ApiOperation(value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
             notes = "Operaatio palauttaa hakukriteerit täyttävien organisaatioiden yhteystiedot.")
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
-   
-        
+
+
 }
