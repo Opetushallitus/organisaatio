@@ -152,6 +152,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         };
 
         var origText = $scope.model.organisaatio.metadata.data[field][lang];
+        $scope.modalOpen = true;
         var modalInstance = $modal.open({
             templateUrl: 'kuvailevientietojenmuokkaus.html',
             controller: KuvailevatTiedotMuokkausController,
@@ -177,9 +178,11 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
 
         modalInstance.result.then(function() {
             $scope.form.$setDirty();
+            $scope.modalOpen = false;
         }, function() {
             // peruutettiin
             $scope.model.organisaatio.metadata.data[field][lang] = origText;
+            $scope.modalOpen = false;
         });
     };
 
