@@ -23,13 +23,7 @@ port.postgresql={{port_postgresql}}
 rajapinnat.ytj.asiakastunnus={{rajapinnat_ytj_asiakastunnus}}
 rajapinnat.ytj.avain={{rajapinnat_ytj_avain}}
 server.name={{ansible_hostname}}
-solr.data.dir={{solr_data_dir}}
-solr.ulog.dir={{solr_ulog_dir}}
-solr.url.oppija={{solr_url_oppija}}
-solr.url.virkailija={{solr_url_virkailija}}
-solr.zookeeper.host.virkailija={{solr_zookeeper_host_virkailija}}
-solr.zookeeper.host.oppija={{solr_zookeeper_host_oppija}}
-tarjonta.solr.baseurl={{tarjonta_solr_baseurl}}
+organisaatio.solr.url={{organisaatio_solr_url}}
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
