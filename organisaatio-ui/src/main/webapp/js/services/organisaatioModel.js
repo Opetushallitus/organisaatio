@@ -6,26 +6,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
     var model = new function() {
         this.organisaatio = {};
 
-        this.tinymceOptions = {
-            theme: "modern",
-            language: KoodistoKoodi.getLanguage().toLowerCase(),
-            plugins: [
-                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                "searchreplace visualblocks visualchars code fullscreen",
-                "insertdatetime media nonbreaking save table contextmenu directionality",
-                "emoticons template paste textcolor"
-                        //"wordcount"
-            ],
-            paste_word_valid_elements: "b,strong,i,em,h1,h2,p,ol,ul,li,a",
-            menubar: false,
-            //toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-            //toolbar2: "print preview media | forecolor backcolor emoticons",
-            toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image | preview | code"
-                    //image_advtab: true
-                    //height: "200px",
-                    //width: "650px"
-        };
-
         // Koodistodata organisaation muokkausta varten
         this.koodisto = {
             oid: 0,
@@ -1592,6 +1572,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             // Palauta välilehden kielivalinta => päivittää tekstikentät
             $timeout(function() {model[mklang] = kieli;}, 0);
         };
+        
+        this.getUserLang = function() {
+            return KoodistoKoodi.getLanguage().toLowerCase();
+        }
 
     };
 

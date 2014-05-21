@@ -1014,9 +1014,8 @@
                     <div class="controls">
                         <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
                     </div>
-                    <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea name="mcearea_kt" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                        <div class="well" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}" style="height:70px; overflow:auto" ng-click="openEditor(field, model.ktlang, model.getUserLang());" name="mcearea_kt" ng-bind-html="model.organisaatio.metadata.data[field][model.ktlang]"></div>
                         <div>
                             <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.ktlang] && model.organisaatio.metadata.data[field][model.ktlang].length > 16383">
                                 {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
@@ -1093,7 +1092,7 @@
                 </select>
             </div>
         </div>
-
+            
         <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
             <div ng-if='tab.lang === model.oelang'>
 
@@ -1104,9 +1103,8 @@
                     <div class="controls">
                         <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
                     </div>
-                    <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea name="mcearea_oe" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <div class="well" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}" style="height:70px; overflow:auto" ng-click="openEditor(field, model.oelang, model.getUserLang());" name="mcearea_oe" ng-bind-html="model.organisaatio.metadata.data[field][model.oelang]"></div>
                         <div>
                             <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.oelang] && model.organisaatio.metadata.data[field][model.oelang].length > 16383">
                                 {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
