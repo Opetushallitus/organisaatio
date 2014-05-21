@@ -128,6 +128,60 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             // peruutettiin
         });
     };
+    
+    $scope.openEditor = function(field, lang, userlang) {
+        var tinymceOptions = {
+            height: 350,
+            theme: "modern",
+            language: userlang,
+            plugins: [
+                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace visualblocks visualchars code fullscreen",
+                "insertdatetime media nonbreaking save table contextmenu directionality",
+                "emoticons template paste textcolor"
+                        //"wordcount"
+            ],
+            paste_word_valid_elements: "b,strong,i,em,h1,h2,p,ol,ul,li,a",
+            menubar: false,
+            //toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+            //toolbar2: "print preview media | forecolor backcolor emoticons",
+            toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image | preview | code"
+                    //image_advtab: true
+                    //height: "200px",
+                    //width: "650px"
+        };
+
+        var origText = $scope.model.organisaatio.metadata.data[field][lang];
+        var modalInstance = $modal.open({
+            templateUrl: 'kuvailevientietojenmuokkaus.html',
+            controller: KuvailevatTiedotMuokkausController,
+            windowClass: 'modal-large',
+            resolve: {
+                nimi: function() {
+                    return $scope.model.uriLocalizedNames['nimi'];
+                },
+                field: function() {
+                    return field;
+                },
+                lang: function() {
+                    return lang;
+                },                
+                data: function() {
+                    return $scope.model.organisaatio.metadata.data;
+                },
+                options: function() {
+                    return tinymceOptions;
+                }
+            }
+        });
+
+        modalInstance.result.then(function() {
+            $scope.form.$setDirty();
+        }, function() {
+            // peruutettiin
+            $scope.model.organisaatio.metadata.data[field][lang] = origText;
+        });
+    };
 
     $scope.canUseFileReader = (function() {
         $log.info('can use file reader: ' + !!window.FileReader);
