@@ -4,7 +4,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>9.3.3</version>
+        <version>9.4.1</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>servers</artifactId>
@@ -43,7 +43,7 @@
                         <contextHandler implementation="org.eclipse.jetty.webapp.WebAppContext">
                             <contextPath>/organisaatio-service</contextPath>
                             <resourceBase>
-                                ${basedir}/../organisaatio-service/target/organisaatio-service-9.3.3
+                                ${basedir}/../organisaatio-service/target/organisaatio-service-9.4.1
                             </resourceBase>
                             <configurationClasses>
                                 <configurationClass>org.eclipse.jetty.webapp.WebInfConfiguration</configurationClass>
