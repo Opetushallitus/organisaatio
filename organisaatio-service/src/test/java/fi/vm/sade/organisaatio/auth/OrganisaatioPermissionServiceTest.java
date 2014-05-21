@@ -80,27 +80,27 @@ public class OrganisaatioPermissionServiceTest {
 
         assertEditOrganisation(OrganisaatioTyyppi.MUU_ORGANISAATIO, false);
         assertEditOrganisation(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true);
-        assertEditOrganisation(OrganisaatioTyyppi.OPETUSPISTE, true);
+        assertEditOrganisation(OrganisaatioTyyppi.TOIMIPISTE, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPPILAITOS, true);
 
         //sallitut tyypit
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPETUSPISTE));
+        Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.TOIMIPISTE));
 
         //nimen muokkaus
         Assert.assertFalse(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.KOULUTUSTOIMIJA))));
         Assert.assertFalse(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPPILAITOS))));
         Assert.assertFalse(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.MUU_ORGANISAATIO))));
-        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPETUSPISTE))));
+        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.TOIMIPISTE))));
 
         //alku, loppupäivä
         Assert.assertFalse(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
 
         //non oph user, opetuspiste
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(permissionService.ROLE_CRUD,userOrgOid)));
-        org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.OPETUSPISTE);
+        org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.TOIMIPISTE);
         //alku, loppupäivä
         Assert.assertTrue(permissionService.userCanEditDates(OrganisaatioContext.get(org)));
 
@@ -110,7 +110,7 @@ public class OrganisaatioPermissionServiceTest {
         //can edit all types
         assertEditOrganisation(OrganisaatioTyyppi.MUU_ORGANISAATIO, true);
         assertEditOrganisation(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true);
-        assertEditOrganisation(OrganisaatioTyyppi.OPETUSPISTE, true);
+        assertEditOrganisation(OrganisaatioTyyppi.TOIMIPISTE, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPPILAITOS, true);
 
 
@@ -125,13 +125,13 @@ public class OrganisaatioPermissionServiceTest {
         Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
         Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPETUSPISTE));
+        Assert.assertTrue(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.TOIMIPISTE));
 
         //nimen muokkaus
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.KOULUTUSTOIMIJA))));
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPPILAITOS))));
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.MUU_ORGANISAATIO))));
-        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPETUSPISTE))));
+        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.TOIMIPISTE))));
 
         //oph RU user
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(permissionService.ROLE_RU,  rootOrgOid)));
@@ -147,17 +147,17 @@ public class OrganisaatioPermissionServiceTest {
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPPILAITOS));
         Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.OPETUSPISTE));
+        Assert.assertFalse(permissionService.userCanCreateOrganisationOfType(OrganisaatioTyyppi.TOIMIPISTE));
 
         //nimen muokkaus
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.KOULUTUSTOIMIJA))));
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPPILAITOS))));
         Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.MUU_ORGANISAATIO))));
-        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.OPETUSPISTE))));
+        Assert.assertTrue(permissionService.userCanEditName(OrganisaatioContext.get(getOrganisaatio("nimi", "oid", OrganisaatioTyyppi.TOIMIPISTE))));
 
         assertEditOrganisation(OrganisaatioTyyppi.MUU_ORGANISAATIO, false);
         assertEditOrganisation(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true);
-        assertEditOrganisation(OrganisaatioTyyppi.OPETUSPISTE, true);
+        assertEditOrganisation(OrganisaatioTyyppi.TOIMIPISTE, true);
         assertEditOrganisation(OrganisaatioTyyppi.OPPILAITOS, true);
 
     }

@@ -17,8 +17,8 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
  * <li>Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on
  * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai MUU
  * ORGANISAATIO.
- * <li>Jos organisaatio on OPETUSPISTE (eli toimipiste), sillä on oltava
- * yläorganisaatio joka on tyypiltään joko OPETUSPISTE, OPPILAITOS tai
+ * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
+ * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS tai
  * KOULUTUSTOIMIJA.
  *
  */
@@ -57,10 +57,10 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> toimipisteRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
                     && parentChild.getKey() != null
                     && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
         }
     };
@@ -81,7 +81,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     && parentChild.getKey() != null
                     && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
         }

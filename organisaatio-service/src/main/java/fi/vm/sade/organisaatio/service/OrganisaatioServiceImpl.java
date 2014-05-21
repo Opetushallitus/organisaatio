@@ -597,7 +597,7 @@ public class OrganisaatioServiceImpl
     private String generateOpetuspisteenJarjNro(Organisaatio entity,
                                                 OrganisaatioDTO model) {
         //Opetuspisteen jarjestysnumero is only generated to opetuspiste which is not also an oppilaitos
-        if (model.getTyypit().contains(OrganisaatioTyyppi.OPETUSPISTE) &&
+        if (model.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE) &&
                 !model.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS)) {
             Organisaatio oppilaitosE = findClosestOppilaitos(entity);
             if (oppilaitosE == null) {
@@ -1250,7 +1250,7 @@ public class OrganisaatioServiceImpl
     /**
      * Simple recursive operuspiste / toimipiste koodi calculation.
      *
-     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then append OPETUSPISTE order number(s).
+     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then append TOIMIPISTE order number(s).
      *
      * @param s
      * @return
@@ -1268,8 +1268,8 @@ public class OrganisaatioServiceImpl
             return s.getOppilaitosKoodi();
         }
 
-        if (organisaatioIsOfType(s, OrganisaatioTyyppi.OPETUSPISTE)) {
-            LOG.info("  org  == OPETUSPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
+        if (organisaatioIsOfType(s, OrganisaatioTyyppi.TOIMIPISTE)) {
+            LOG.info("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
             String onum = isEmpty(s.getOpetuspisteenJarjNro()) ? "01" : s.getOpetuspisteenJarjNro();
             Organisaatio parent = null;
             if (s.getId() != null) {

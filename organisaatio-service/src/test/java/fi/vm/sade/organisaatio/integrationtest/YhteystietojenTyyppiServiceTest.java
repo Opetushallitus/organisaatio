@@ -148,10 +148,9 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         dto.getAllLisatietokenttas().add(createYTEl(true, "postiosoite", YhteystietoElementtiTyyppi.OSOITE));
         dto.getAllLisatietokenttas().add(createYTEl(true, "faksi", YhteystietoElementtiTyyppi.FAKSI));
         dto.getAllLisatietokenttas().add(createYTEl(false, "www", YhteystietoElementtiTyyppi.WWW));
-        dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.MUU_ORGANISAATIO);//new OrganisaatiotyypinYhteystiedotDTO(organisaatioService.findOrganisaatioTyyppi(MUU_STRING)));
-        dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.OPETUSPISTE);
+        dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.MUU_ORGANISAATIO);
+        dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.TOIMIPISTE);
         dto.setOid("" + System.currentTimeMillis() + "" + Math.random());
-        //new OrganisaatiotyypinYhteystiedotDTO(organisaatioService.findOrganisaatioTyyppi(OPETUSPISTE_STRING)));
         YhteystietojenTyyppiDTO original = dto;
         dto = organisaatioService.createYhteystietojenTyyppi(dto);//yhteystietojenTyyppiService.insert(dto);
         assertNotNull(dto);
@@ -233,9 +232,8 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         // muutetaan nimi pakolliseksi
         YhteystietoElementtiDTO nimi = getLisatietokentta(dto, YhteystietoElementtiTyyppi.TEKSTI, "nimi");
         nimi.setPakollinen(true);
-        // poistetaan opetuspiste litietyistä organisaatiotyypeistä
-        //OrganisaatiotyypinYhteystiedotDTO sovOrg = dto.getSovellettavaOrganisaatio(OPETUSPISTE_STRING);
-        dto.getSovellettavatOrganisaatios().remove(OrganisaatioTyyppi.OPETUSPISTE);
+        // poistetaan toimipiste litietyistä organisaatiotyypeistä
+        dto.getSovellettavatOrganisaatios().remove(OrganisaatioTyyppi.TOIMIPISTE);
     }
 
     public YhteystietoElementtiDTO getLisatietokentta(YhteystietojenTyyppiDTO dto, YhteystietoElementtiTyyppi tyyppi, String nimi) {
@@ -255,7 +253,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         OrganisaatioDTO parent = createKoulutustoimija(organisaatioService, "hjdfasyu", buildYtunnus(), "yhteyshlo", null);
 
         // luodaan organisaation lisätiedot -metadata määritykset
-        //      -organisaatiotyyppi: opetuspiste
+        //      -organisaatiotyyppi: toimipiste
         //      -pakollinen tieto: nimi
         //      -pakollinen tieto: postiosoite
         YhteystietojenTyyppiDTO lisatiedot = createYTT("test lisatiedot");
@@ -266,7 +264,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         int countArvot = yhteystietoArvoDAO.findAll().size();
         int countYhteystiedot = yhteystietoDAO.findAll().size();
 
-        // luodaan uusi organisaatio tyyppiä opetuspiste, jolle asetetaan lisätietokenttien arvot
+        // luodaan uusi organisaatio tyyppiä toimipiste, jolle asetetaan lisätietokenttien arvot
         OrganisaatioDTO model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.OPPILAITOS.value());
         model.getYhteystietoArvos().add(createYTA(null, getLisatietokentta(lisatiedot, YhteystietoElementtiTyyppi.TEKSTI, "nimi").getOid(), "foobar"));
         model.getYhteystietoArvos().add(createYTA(null, getLisatietokentta(lisatiedot, YhteystietoElementtiTyyppi.OSOITE, null).getOid()  , OrganisaatioTstUtils.createOsoite(OsoiteTyyppi.POSTI, "katuosoite 1", "12345", "helsinki")));
@@ -412,7 +410,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         int countArvot = yhteystietoArvoDAO.findAll().size();
 
         // tallennetaan onnistuneesti lisätietokenttään null arvo
-        model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.OPETUSPISTE.value());
+        model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.TOIMIPISTE.value());
         model.getYhteystietoArvos().add(createYTA(null,  getLisatietokentta(lisatiedot, YhteystietoElementtiTyyppi.TEKSTI, "nimi").getOid(), null));
         OrganisaatioDTO organisaatio = organisaatioService.createOrganisaatio(model, false);
 
@@ -460,7 +458,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         String ytunnus = buildYtunnus();
         OrganisaatioDTO parent = createKoulutustoimija(organisaatioService, ytunnus, ytunnus, "yhteyshlo", null);
         YhteystietojenTyyppiDTO lisatiedot = createYTT("test lisatiedot");
-        lisatiedot.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.OPETUSPISTE);//  new OrganisaatiotyypinYhteystiedotDTO(organisaatioService.findOrganisaatioTyyppi(OPETUSPISTE_STRING)));
+        lisatiedot.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.TOIMIPISTE);
         lisatiedot.getAllLisatietokenttas().addAll(kentat);//setAllLisatietokenttas(kentat);
 
 
@@ -472,7 +470,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
             OrganisaatioDTO model;
 
             // asetetaan lisätietojen arvot
-            model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.OPETUSPISTE.value());
+            model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.TOIMIPISTE.value());
             for (int i = 0; i < arvot.size(); i++) {
                 Object arvo = arvot.get(i);
                 model.getYhteystietoArvos().add(createYTA(null, lisatiedot.getAllLisatietokenttas().get(i).getOid(), arvo));
@@ -499,7 +497,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
                 OrganisaatioDTO model;
 
                 // asetetaan lisätietojen arvot
-                model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.OPETUSPISTE.value());
+                model = buildCreateOrganisaatioModel(organisaatioService, buildYtunnus(), parent.getOid(), OrganisaatioTyyppi.TOIMIPISTE.value());
                 for (int i = 0; i < arvot.size(); i++) {
                     Object arvo = arvot.get(i);
                     model.getYhteystietoArvos().add(createYTA(null, lisatiedot.getAllLisatietokenttas().get(i).getOid(), arvo));
