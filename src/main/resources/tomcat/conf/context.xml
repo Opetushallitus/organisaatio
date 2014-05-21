@@ -23,6 +23,6 @@
 
     <Resource name="jdbc/organisaatio" auth="Container" type="javax.sql.DataSource"
               maxActive="250" maxIdle="30" maxWait="10000"
-              username="{{host.postgresql.organisaatio.user}}" password="{{host.postgresql.organisaatio.password}}" driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://{{host.postgresql.organisaatio}}:{{port.postgresql}}/organisaatio"/>
+              username="{{host_postgresql_organisaatio_user}}" password="{{host_postgresql_organisaatio_password}}" driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio"/>
 </Context>
