@@ -10,7 +10,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
 //          "fi" : "Kappelimäen koulu"
 //        },
 //        "children" : [ ],
-//        "organisaatiotyypit" : [ "OPETUSPISTE" ],
+//        "organisaatiotyypit" : [ "TOIMIPISTE" ],
 //        "aliOrganisaatioMaara" : 0
 //      }
 
@@ -34,11 +34,11 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         isExpanded: function (data) {
             return data.expanded;
         },
-        
+
         isCollapsed: function (data) {
             return !this.isExpanded(data);
         },
-        
+
         isLeaf: function (data) {
             return data.children.length === 0;
         },
@@ -51,7 +51,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     if (node === parentNode.children[i]) {
                         return parentNode;
                     }
-                } 
+                }
                 for(var i=0; i < parentNode.children.length; i++) {
                     parent = findParent(parentNode.children[i]);
                     if (parent) {
@@ -59,11 +59,11 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     }
                 }
                 return;
-            };  
+            };
 
             // Etsitään noodin parenttia, jotta voidaan poistaa se parentista
             parent = findParent(tree);
-            
+
             // Jos parent löytyi niin postetaan se children listalta
             if (parent) {
                 var index = -1;
@@ -71,10 +71,10 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     if (node === parent.children[i]) {
                         index = i;
                     }
-                } 
+                }
                 if (index > -1) {
                     parent.children.splice(index, 1);
-                    
+
                     // Vähennetään myös listalla olevien organisaatioiden määrää
                     model.count = model.count-1;
                 }
@@ -95,11 +95,11 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     }
                 }
                 return;
-            };  
-            
+            };
+
             // Etsitään noodia jonka oid on annettu oid
             node = findOid(tree);
-            
+
             // Jos parent löytyi niin postetaan se children listalta
             if (node) {
                 return model.getNimi(node);
@@ -128,23 +128,23 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         },
 
         getTila: function(node) {
-           var today = +new Date(); 
-           
-           if ('alkuPvm' in node) {
-              var alkuPvm = new Date(node.alkuPvm);
-              
-              if (alkuPvm > today) {
-                  return ($filter('i18n')("Organisaatiot.suunniteltu",""));
-              }
-          }
-           if ('lakkautusPvm' in node) {
-              var lakkautusPvm = new Date(node.lakkautusPvm);
-              
-              if (lakkautusPvm < today) {
-                  return ($filter('i18n')("Organisaatiot.passivoitu",""));
-              }
-           }
-           return ($filter('i18n')("Organisaatiot.aktiivinen",""));
+            var today = +new Date();
+
+            if ('alkuPvm' in node) {
+                var alkuPvm = new Date(node.alkuPvm);
+
+                if (alkuPvm > today) {
+                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+                }
+            }
+            if ('lakkautusPvm' in node) {
+                var lakkautusPvm = new Date(node.lakkautusPvm);
+
+                if (lakkautusPvm < today) {
+                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
+                }
+            }
+            return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         },
 
         getNimi: function (node) {
@@ -160,7 +160,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             }
             return "--";
         },
-        
+
         getTunnus: function (node) {
             if ('oppilaitosKoodi' in node) {
                 return node.oppilaitosKoodi;
@@ -170,14 +170,14 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             }
             return "\u00A0";
         },
-        
+
         getTyyppi: function (node) {
             if ('organisaatiotyypit' in node) {
                 return $filter('i18n')("Organisaatiot."+node.organisaatiotyypit[0], "");
             }
             return "\u00A0";
         },
-              
+
         buildHakuParametrit: function(hakuehdot) {
             $log.log('buildHakuParametrit()');
 
@@ -185,7 +185,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
 
             // Lisää hakuun käyttäjän kirjoittama osa organisaation nimest' / tunnuksesta
             hakuParametrit.searchstr = hakuehdot.nimiTaiTunnus;
-            
+
             // Lisää hakuun mahdollinen paikkakunta
             if (hakuehdot.kunta) {
                 hakuParametrit.kunta = hakuehdot.kunta;
@@ -194,12 +194,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             // Lisää hakuun mahdollinen organisaatiotyyppi
             if (hakuehdot.organisaatiotyyppi) {
                 // TODO: Tämä pitäisi korvata koodisto-urilla
-                if (hakuehdot.organisaatiotyyppi === "Toimipiste") {
-                    hakuParametrit.organisaatiotyyppi = "Opetuspiste";
-                }
-                else {
-                    hakuParametrit.organisaatiotyyppi = hakuehdot.organisaatiotyyppi;
-                }
+                hakuParametrit.organisaatiotyyppi = hakuehdot.organisaatiotyyppi;
             }
 
             // Lisää hakuun mahdollinen oppilaitostyyppi
@@ -229,11 +224,11 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             $log.log('updateTree()');
             this.count = numHits;
             tree.children = organisaatiot;
-            
+
             if (this.count === 0) {
                 Alert.add("warning", $filter('i18n')("Organisaatiot.eiHakutuloksia", ""), true);
             }
-            
+
             updateSubtree = function(node, level, expanded) {
                 node.i18nNimi = model.getNimi(node);
                 if (model.getStatus(node)) {
@@ -252,10 +247,10 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 }
                 node.expanded = expanded;
             };
-            
+
             tree.children.forEach(function(node) {
                 var expanded = true;
-                
+
                 // Jos ylimmällä tasolla on paljon noodeja, niin ei laajenneta puuta
                 if (tree.children.length > 20) {
                     expanded = false;
@@ -267,26 +262,24 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         refresh: function(hakuehdot) {
             $log.log('refresh()');
             var start = +new Date();
-            
+
             var deferred = $q.defer();
             var parametrit = this.buildHakuParametrit(hakuehdot);
 
             Organisaatiot.get(parametrit, function(result) {
-                //$log.log("Solar returned: " + result.response.numFound + " entries for query: " + '"' + query + '"');
-
                 var end = +new Date();  // log end timestamp
                 var diff = end - start;
                 $log.log("Haku kesti: " +diff);
 
                 model.updateTree(result.numHits, result.organisaatiot);
-                
+
                 deferred.resolve();
-            }, 
+            },
             // Error case
             function(response) {
                 $log.error("Organisaatiot response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
-                
+
                 deferred.reject();
             });
             return deferred.promise;

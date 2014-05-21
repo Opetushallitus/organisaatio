@@ -145,7 +145,7 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
             HashSet<String> additions = new HashSet<String>();
             for (OrganisaatioDTO org : repo) {
                 for (String oid : oids) {
-                    
+
                     if (oid.equals(org.getParentOid()) && !oids.contains(org.getOid())) {
                         additions.add(org.getOid());
                     }
@@ -159,7 +159,7 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
             oidType.setOrganisaatioOid(oid);
             response.getOrganisaatioOidList().add(oidType);
         }
-        
+
         return response;
     }
 
@@ -184,7 +184,7 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
 
     private List<OrganisaatioTyyppi> getDefTyypit() {
         List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
-        tyypit.add(OrganisaatioTyyppi.OPETUSPISTE);
+        tyypit.add(OrganisaatioTyyppi.TOIMIPISTE);
         tyypit.add(OrganisaatioTyyppi.OPPILAITOS);
         return tyypit;
     }
@@ -207,9 +207,9 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
 
         //Yhteystietojentyypit
         List<OrganisaatioTyyppi> orgTyyppis = new ArrayList<OrganisaatioTyyppi>();
-        orgTyyppis.add(OrganisaatioTyyppi.OPPILAITOS);//new OrganisaatiotyypinYhteystiedotDTO(new OrganisaatioTyyppiDTO(OrganisaatioTyyppiDTO.OPPILAITOS_STRING)));
-        orgTyyppis.add(OrganisaatioTyyppi.MUU_ORGANISAATIO);  //new OrganisaatiotyypinYhteystiedotDTO(new OrganisaatioTyyppiDTO(OrganisaatioTyyppiDTO.MUU_STRING)));
-        orgTyyppis.add(OrganisaatioTyyppi.OPETUSPISTE);//new OrganisaatiotyypinYhteystiedotDTO(new OrganisaatioTyyppiDTO(OrganisaatioTyyppiDTO.OPETUSPISTE_STRING)));
+        orgTyyppis.add(OrganisaatioTyyppi.OPPILAITOS);
+        orgTyyppis.add(OrganisaatioTyyppi.MUU_ORGANISAATIO);
+        orgTyyppis.add(OrganisaatioTyyppi.TOIMIPISTE);
 
         createYtt("Etsivä nuorisotyö", newExtraField(createOid(), false, "Lankanumero", YhteystietoElementtiTyyppi.PUHELIN), orgTyyppis);
         createYtt("Kriisiviestintä", newExtraField(createOid(), false, "www-osoite", YhteystietoElementtiTyyppi.WWW), orgTyyppis);

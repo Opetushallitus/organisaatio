@@ -216,7 +216,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="Koulutustoimija"/>
             <xs:enumeration value="Oppilaitos"/>
-            <xs:enumeration value="Opetuspiste"/>
+            <xs:enumeration value="Toimipiste"/>
             <xs:enumeration value="Oppisopimustoimipiste"/>
             <xs:enumeration value="Muu organisaatio"/>
             <xs:enumeration value="Ryhma"/>

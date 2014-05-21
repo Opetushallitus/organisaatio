@@ -152,7 +152,7 @@ describe("Testing OrganisaatioModel", function() {
   },
   "oid" : "1.2.246.562.10.99999999999",
   "parentOid" : "1.2.246.562.10.11111111111",
-  "tyypit" : [ "Opetuspiste" ],
+  "tyypit" : [ "Toimipiste" ],
   "nimi" : {
     "fi" : "Testi-Koulutus"
   },

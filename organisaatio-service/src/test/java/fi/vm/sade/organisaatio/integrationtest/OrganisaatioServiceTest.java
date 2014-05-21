@@ -206,7 +206,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         String nimi = "toimipiste testi";
         String jnro = "001";
         String yhteishakukoodi = "yhteishaku toimipiste testi koodi";
-        OrganisaatioDTO toimipiste=  OrganisaatioTstUtils.buildCreateOrganisaatioModel(organisaatioService, nimi, parentOid, OrganisaatioTyyppi.OPETUSPISTE.value());
+        OrganisaatioDTO toimipiste=  OrganisaatioTstUtils.buildCreateOrganisaatioModel(organisaatioService, nimi, parentOid, OrganisaatioTyyppi.TOIMIPISTE.value());
         String toimipisteOid = toimipiste.getOid();
         toimipiste.setOpetuspisteenJarjNro(jnro);
         toimipiste.setYhteishaunKoulukoodi(yhteishakukoodi);
@@ -418,7 +418,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         //final String oid1 = ""  + System.currentTimeMillis() + "" + Math.random();
         //final String oid2 = ""  + System.currentTimeMillis() + "" + Math.random();
         //OrganisaatioTstUtils.createKoulutustoimija(organisaatioService, "testemove", "1234567-8", "yhteyshlo", oid1);
-    	OrganisaatioDTO o1 = OrganisaatioTstUtils.createOrganisaatio(organisaatioService, true, Arrays.asList("Koulutustoimija"), Arrays.asList("Oppilaitos"), Arrays.asList("Opetuspiste"));
+        OrganisaatioDTO o1 = OrganisaatioTstUtils.createOrganisaatio(organisaatioService, true, Arrays.asList("Koulutustoimija"), Arrays.asList("Oppilaitos"), Arrays.asList("Toimipiste"));
 
         Organisaatio org = organisaatioDAO.findByOid(o1.getParentOid());
         Assert.assertFalse(org.isOrganisaatioPoistettu());
@@ -446,7 +446,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
     	OrganisaatioDTO o1 = OrganisaatioTstUtils.createOrganisaatio(organisaatioService, true,
     			Arrays.asList("Koulutustoimija"),
     			Arrays.asList("Oppilaitos"),
-    			Arrays.asList("Opetuspiste"));
+                        Arrays.asList("Toimipiste"));
 
         Organisaatio org = organisaatioDAO.findByOid(o1.getOid());
     	passivate(org, date(0));
@@ -590,7 +590,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 
     @Test
     public void createOrganisaatio_failsIfIllegalParentId() throws GenericFault {
-        OrganisaatioDTO model = buildCreateOrganisaatioModel(organisaatioService, "asdasd", "78253634L", fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.OPETUSPISTE.value());
+        OrganisaatioDTO model = buildCreateOrganisaatioModel(organisaatioService, "asdasd", "78253634L", fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.TOIMIPISTE.value());
         model.setParentOid(null);//setParentId(null);
         try {
             organisaatioService.createOrganisaatio(model, false);
@@ -1485,7 +1485,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 
         //virkailija should be able to add toimipiste
         OrganisaatioDTO toimipiste = new OrganisaatioDTO();
-        toimipiste.getTyypit().add(OrganisaatioTyyppi.OPETUSPISTE);
+        toimipiste.getTyypit().add(OrganisaatioTyyppi.TOIMIPISTE);
         toimipiste.setOid("toimipiste-oid");
         toimipiste.setParentOid("1.2.2004.2");
         toimipiste.getYhteystiedot().add(OrganisaatioTstUtils.DEFAULT_POSTIOSOITE);

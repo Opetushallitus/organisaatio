@@ -153,12 +153,12 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         }
     });
 
-    Object.defineProperty(obj, 'opetuspiste', {
+    Object.defineProperty(obj, 'toimipiste', {
         get: function() {
-            return _orgTypeContains('OPETUSPISTE');
+            return _orgTypeContains('TOIMIPISTE');
         },
         set: function(t) {
-            _orgTypeMod(t, 'OPETUSPISTE');
+            _orgTypeMod(t, 'TOIMIPISTE');
         }
     });
 
