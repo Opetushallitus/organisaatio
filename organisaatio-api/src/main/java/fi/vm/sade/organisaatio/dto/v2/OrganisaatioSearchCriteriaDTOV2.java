@@ -27,7 +27,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private boolean aktiiviset;
     private boolean suunnitellut;
     private boolean lakkautetut;
-    
+
     private String kunta;
     private String organisaatiotyyppi;
     private String oppilaitostyyppi;
@@ -35,12 +35,13 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private List<String> oidResctrictionList = new ArrayList<String>();
 
     private String searchStr;
+    private String oid;
 
     private boolean skipParents;
 
     /**
      * Default no-arg constructor
-     * 
+     *
      */
     public OrganisaatioSearchCriteriaDTOV2() {
         super();
@@ -53,7 +54,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
 
     public void setAktiiviset(boolean aktiiviset) {
         this.aktiiviset = aktiiviset;
-    }   
+    }
 
     @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getSuunnitellut() {
@@ -99,12 +100,12 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     public void setOppilaitosTyyppi(String oppilaitostyyppi) {
         this.oppilaitostyyppi = oppilaitostyyppi;
     }
-    
+
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public List<String> getOidRestrictionList() {
         return this.oidResctrictionList;
     }
-    
+
     public void setOidRestrictionList(List<String> oidRestrictionList) {
         this.oidResctrictionList.addAll(oidResctrictionList);
     }
@@ -126,4 +127,14 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     public void setSkipParents(boolean skipParents) {
         this.skipParents = skipParents;
     }
+
+    @ApiModelProperty(value = "Haku oid:lla. Hakutermi jätetään huomioimatta jos oid on annettu.")
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
 }

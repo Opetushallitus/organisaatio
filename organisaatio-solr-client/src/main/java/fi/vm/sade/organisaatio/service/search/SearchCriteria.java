@@ -24,7 +24,7 @@ public class SearchCriteria {
     private boolean aktiiviset;
     private boolean suunnitellut;
     private boolean lakkautetut;
-    
+
     private String kunta;
     private String organisaatiotyyppi;
     private String oppilaitostyyppi;
@@ -32,6 +32,8 @@ public class SearchCriteria {
     private List<String> oidRestrictionList = new ArrayList<String>();
 
     private String searchStr;
+
+    private String oid;
 
     private boolean skipParents;
 
@@ -42,14 +44,14 @@ public class SearchCriteria {
     public SearchCriteria() {
         super();
     }
-    
+
     public boolean getAktiiviset() {
         return aktiiviset;
     }
 
     public void setAktiiviset(boolean aktiiviset) {
         this.aktiiviset = aktiiviset;
-    }   
+    }
 
     public boolean getSuunnitellut() {
         return suunnitellut;
@@ -90,11 +92,11 @@ public class SearchCriteria {
     public void setOppilaitosTyyppi(String oppilaitostyyppi) {
         this.oppilaitostyyppi = oppilaitostyyppi;
     }
-    
+
     public List<String> getOidRestrictionList() {
         return this.oidRestrictionList;
     }
-    
+
     public void setOidRestrictionList(List<String> oidRestrictionList) {
         this.oidRestrictionList.clear();
         this.oidRestrictionList.addAll(oidRestrictionList);
@@ -115,4 +117,13 @@ public class SearchCriteria {
     public void setSkipParents(boolean skipParents) {
         this.skipParents = skipParents;
     }
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
 }
