@@ -410,6 +410,7 @@
                 <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
+                       ng-required="true"
                        ng-minlength="3" ng-maxlength="100" oph-decode-name
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
@@ -437,9 +438,14 @@
                     </span>
                 </div>
                 <div>
+                    <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.required">
+                        {{'Organisaationmuokkaus.postiosoite' | i18n}} {{'Organisaationmuokkaus.validointi.pakollinen' | i18n}}
+                    </span>
+                </div>
+                <!-- <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
                            ng-change="model.copyAddress(false, true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
-                </div>
+                </div> -->
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
