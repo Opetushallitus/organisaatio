@@ -153,6 +153,7 @@
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.2.8/angular-resource.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.2.8/angular-route.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.2.8/angular-sanitize.js</source>
+                        <source>${project.basedir}/src/main/webapp/jslib/angular-1.2.8/angular-cookies.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/tinymce-4.0.26/tinymce.min.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/vendor/jquery.ui.widget.js</source>

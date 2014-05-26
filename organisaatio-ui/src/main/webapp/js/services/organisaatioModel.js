@@ -1,8 +1,8 @@
 app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
-        KoodistoPosti, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
+        KoodistoPosti, KoodistoPostiCached, KoodistoPostiVersio, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, $filter, $log, $timeout, $location) {
+        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, $filter, $log, $timeout, $location, $q, $cookieStore) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -117,6 +117,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // kt: koulutustarjoajatiedot
         // hp: hakijapalvelut
         // oe: opiskelijan edut
+        // sm: sosiaalinen media
         this.mkSections = {
             kt: {
                 placeholder: $filter('i18n')("lisaakieli"),
@@ -757,9 +758,74 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     // vuosiluokkia ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-                KoodistoPosti.get({}, function(result) {
+
+                var getKoodistoPostiVersio = function() {
+                    var deferred = $q.defer();
+                    KoodistoPostiVersio.get({}, function(result) {
+                        deferred.resolve(result.versio);
+                    }, function(response) {
+                        deferred.reject();
+                    });
+                    return deferred.promise;
+                };
+
+                var getKoodistoPosti = function(cached) {
+                    var deferred = $q.defer();
+                    if (cached===true) {
+                        KoodistoPostiCached.get({}, function(result) {
+                            deferred.resolve(result);
+                        }, function(response) {
+                            deferred.reject();
+                        });
+                    } else {
+                        KoodistoPosti.get({}, function(result) {
+                            deferred.resolve(result);
+                        }, function(response) {
+                            deferred.reject();
+                        });
+                    }
+                    return deferred.promise;
+                };
+
+                var updateKoodistoPosti = function() {
+                    var deferred = $q.defer();
+                    // Sallitaan postinumerokoodiston haku selaimen cachesta jos versionumero ei ole muuttunut.
+                    //
+                    // Kun koodistoa päivitetään, koodistoversion pitäisi muuttua, mutta vain jos koodisto ei
+                    // ole luonnostilassa eli koodisto pitää käydä hyväksymässä muutoksen jälkeen.
+                    // Oletettavasti koodistoja ei kuitenkaan jätetä luonnostilaan roikkumaan pitemmäksi aikaa.
+                    //
+                    // Testauksessa pitää huomioida että testiympäristössä koodistoversiota ei välttämättä päivitetä
+                    // yllä kuvatulla tavalla.
+                    getKoodistoPostiVersio().then(function(versio) {
+                        var kversio = $cookieStore.get('KoodistoPNVersio');
+                        if (typeof kversio === 'undefined' || kversio !== versio) {
+                            // versio on vaihtunut, estä haku selaimen cachesta
+                            $cookieStore.put('KoodistoPNVersio', versio);
+                            getKoodistoPosti(false).then(function(result) {
+                                deferred.resolve(result);
+                            }, function() {
+                                showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+                                deferred.reject();
+                            });
+                        } else {
+                            // voidaan hakea selaimen cachesta
+                            getKoodistoPosti(true).then(function(result) {
+                                deferred.resolve(result);
+                            }, function() {
+                                showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+                                deferred.reject();
+                            });
+                        }
+                    }, function() {
+                        showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+                        deferred.reject();
+                    });
+                    return deferred.promise;
+                };
+
+                updateKoodistoPosti().then(function(result) {
                     model.koodisto.postinumerot.length = 0;
-                    //model.koodisto.postinumerot2.length = 0;
                     model.koodisto.nimetFI = {};
                     model.koodisto.nimetSV = {};
                     var arvoByUri = {};
@@ -832,6 +898,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
             }
+        }, function(response) {
+            // postinumeroita ei löytynyt
+            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
         };
 
         refreshHenkilo = function() {
@@ -1196,6 +1265,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     if (!model.organisaatio.metadata.data[model.mkSections[section].types[field]]) {
                         model.organisaatio.metadata.data[model.mkSections[section].types[field]] = {};
                     }
+                    model.organisaatio.metadata.data[model.mkSections[section].types[field]][lang] = "";
                 }
                 for (var field in model.mkSections[section].fields) {
                     if (typeof model.organisaatio.metadata[model.mkSections[section].fields[field]] === 'undefined') {
@@ -1561,18 +1631,33 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         this.copyKTOEFromParent = function(mklang, mksection) {
             var kieli = model[mklang];
             model[mklang] = "+";
+            var alllangs = {};
             for (var type in mksection.types) {
                 if (model.parent.metadata && model.parent.metadata.data) {
                     for (var l in model.parent.metadata.data[mksection.types[type]]) {
                         model.organisaatio.metadata.data[mksection.types[type]][l] =
                                 model.parent.metadata.data[mksection.types[type]][l];
+                        alllangs[l] = true;
                     }
+                }
+            }
+            // Näytä tabit uusille kielille
+            for (var l in alllangs) {
+                var langfound = false;
+                for (var i in mksection.tabs) {
+                    if (mksection.tabs[i].lang === l) {
+                        langfound = true;
+                    }
+                }
+                if (langfound === false) {
+                    var tab = {lang: l, active: false};
+                    mksection.tabs.push(tab);
                 }
             }
             // Palauta välilehden kielivalinta => päivittää tekstikentät
             $timeout(function() {model[mklang] = kieli;}, 0);
         };
-        
+
         this.getUserLang = function() {
             return KoodistoKoodi.getLanguage().toLowerCase();
         }

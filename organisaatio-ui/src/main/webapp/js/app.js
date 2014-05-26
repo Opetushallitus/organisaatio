@@ -1,4 +1,4 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce']);
+var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies']);
 
 angular.module('localization', [])
 .filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
@@ -153,6 +153,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
         }
         return true;
     };
+
 });
 
 // Esimerkki: Alert.add("warning", $filter('i18n')("YritysValinta.virheViesti", ""), true);
@@ -249,11 +250,15 @@ app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$t
 ]);
 
 // http://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http#19771501
+// Cachen voi sallia yksittäisille URLeille parametrilla '?allowCache=true'
 app.factory('NoCacheInterceptor', function() {
     return {
         request: function(config) {
-            if (config.method && config.method === 'GET' && config.url.indexOf('html') === -1 &&
-                    (config.url.indexOf(SERVICE_URL_BASE) !== -1 || config.url.indexOf(KOODISTO_URL_BASE) !== -1)) {
+            if (config.method && config.method === 'GET' &&
+                    config.url.indexOf('html') === -1 &&
+                    config.url.indexOf("?allowCache=true") === -1 &&
+                    (config.url.indexOf(SERVICE_URL_BASE) !== -1 ||
+                            (config.url.indexOf(KOODISTO_URL_BASE) !== -1))) {
                 var separator = config.url.indexOf('?') === -1 ? '?' : '&';
                 config.url = config.url + separator + 'noCache=' + new Date().getTime();
             }
@@ -390,10 +395,26 @@ app.factory('YTJYritystenTiedot', function($resource) {
     });
 });
 
+// Postinumerokoodiston version haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/posti
+app.factory('KoodistoPostiVersio', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/posti", {}, {
+    get: {method: "GET"}
+  });
+});
+
 // Postinumeroiden haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
 app.factory('KoodistoPosti', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
+    get: {method: "GET", isArray: true}
+  });
+});
+
+// Postinumeroiden haku koodistopalvelulta tai selaimen cachesta
+// Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
+app.factory('KoodistoPostiCached', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });
