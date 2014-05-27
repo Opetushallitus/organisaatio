@@ -23,7 +23,9 @@ import java.util.Set;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import java.util.List;
 
 public class OrganisaatioContext {
 
@@ -32,6 +34,14 @@ public class OrganisaatioContext {
     private OrganisaatioPerustieto perus;
     private final String orgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
+
+    private static Set<OrganisaatioTyyppi> getTyypitFromStrings(List<String> tyypitStrs) {
+        Set<OrganisaatioTyyppi> tyypit = new HashSet<OrganisaatioTyyppi>();
+        for (String tyyppiStr : tyypitStrs) {
+            tyypit.add(OrganisaatioTyyppi.fromValue(tyyppiStr));
+        }
+        return tyypit;
+    }
 
     public String getOrgOid() {
         return orgOid;
@@ -51,7 +61,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(OrganisaatioRDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? org.getTyypit() : Collections.EMPTY_SET);
+        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.EMPTY_SET);
         this.rdto = org;
     }
 
@@ -72,6 +82,11 @@ public class OrganisaatioContext {
         this.perus = org;
     }
 
+    private OrganisaatioContext(Organisaatio org) {
+        this.orgOid = org != null ? org.getOid() : null;
+        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.EMPTY_SET);
+    }
+
     public static OrganisaatioContext get(OrganisaatioDTO organisaatio) {
         return new OrganisaatioContext(organisaatio);
     }
@@ -85,6 +100,10 @@ public class OrganisaatioContext {
     }
 
     public static OrganisaatioContext get(OrganisaatioRDTO organisaatio) {
+        return new OrganisaatioContext(organisaatio);
+    }
+
+    public static OrganisaatioContext get(Organisaatio organisaatio) {
         return new OrganisaatioContext(organisaatio);
     }
 

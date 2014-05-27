@@ -53,8 +53,11 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,6 +125,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     PermissionChecker permissionChecker;
 
+    @Autowired
+    private SearchCriteriaModelMapper searchCriteriaModelMapper;
+    
     @Override
     public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -134,8 +140,11 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             s.setOrganisaatioTyyppi(null);
         }
 
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
+        
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(s);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
@@ -149,40 +158,10 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 
         //rakenna hierarkia
-        tulos.setOrganisaatiot(createHierarchy(organisaatiot));
+        tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
 
         tulos.setNumHits(organisaatiot.size());
         return tulos;
-    }
-
-    /**
-     * Luo puumaisen organisaatiohierarkian. palauttaa listan juuritason
-     * organisaatioista ja asettaa organisaatioille lapset.
-     */
-    private List<OrganisaatioPerustieto> createHierarchy(
-            final List<OrganisaatioPerustieto> organisaatiot) {
-
-        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<String, OrganisaatioPerustieto>();
-
-        //ORganisaatiot joilla eil ole isää:
-        List<OrganisaatioPerustieto> rootOrgs = new ArrayList<OrganisaatioPerustieto>();
-
-        for (OrganisaatioPerustieto curOrg : organisaatiot) {
-            oidToOrgMap.put(curOrg.getOid(), curOrg);
-        }
-
-        for (OrganisaatioPerustieto curOrg : organisaatiot) {
-            final String parentOid = curOrg.getParentOid();
-            final OrganisaatioPerustieto parentOrg = oidToOrgMap.get(parentOid);
-            if (parentOrg != null) {
-                parentOrg.getChildren().add(curOrg);
-            } else {
-                rootOrgs.add(curOrg);
-            }
-        }
-
-        return rootOrgs;
-
     }
 
     // GET /organisaatio/{oid}/children

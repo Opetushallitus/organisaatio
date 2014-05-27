@@ -43,6 +43,7 @@
     </bean>
 
     <bean id="modelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
+    <bean id="searchCriteriaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper"/>
 
     <!--
         Enable @Scheduled annotations

@@ -241,6 +241,10 @@
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
+                <<span class="text-error" ng-show="form.luontipvm.$error.dateYear">
+                    {{'Organisaationmuokkaus.validointi.alkupvmvuosi'| i18n}}. </span>
+                <span class="text-error" ng-show="form.lakkautuspvm.$error.dateYear">
+                    {{'Organisaationmuokkaus.validointi.loppupvmvuosi'| i18n}}</span>
             </div>
         </div>
     </div>
@@ -410,6 +414,7 @@
                 <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
+                       ng-required="true"
                        ng-minlength="3" ng-maxlength="100" oph-decode-name
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
                 &nbsp;&nbsp;&nbsp;
@@ -437,9 +442,14 @@
                     </span>
                 </div>
                 <div>
+                    <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.required">
+                        {{'Organisaationmuokkaus.postiosoite' | i18n}} {{'Organisaationmuokkaus.validointi.pakollinen' | i18n}}
+                    </span>
+                </div>
+                <!-- <div>
                     <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
                            ng-change="model.copyAddress(false, true)"/>{{'Organisaationmuokkaus.samaosoite'| i18n}}
-                </div>
+                </div> -->
             </div>
             <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
                 <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
@@ -966,13 +976,11 @@
 
     <div ng-show="oesexpanded">
 
-        <!-- Koipiointi disabloitu kunnes saadaan käännökset OVT-7335
         <div class="control-group" ng-if="!model.isKoulutustoimija()">
             <div>
                 <button type="button" class="btn" ng-click="vahvistakopiointi('kt')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
             </div>
         </div>
-        -->
 
         <tabset>
             <tab select="model.ktlang='+'">
@@ -1016,9 +1024,8 @@
                     <div class="controls">
                         <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
                     </div>
-                    <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea name="mcearea_kt" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.ktlang]"></textarea>
+                        <div class="well" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}" style="height:70px; overflow:auto" ng-click="openEditor(field, model.ktlang, model.getUserLang());" name="mcearea_kt" ng-bind-html="model.organisaatio.metadata.data[field][model.ktlang]"></div>
                         <div>
                             <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.ktlang] && model.organisaatio.metadata.data[field][model.ktlang].length > 16383">
                                 {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
@@ -1055,11 +1062,11 @@
         <div>
             <em class="muted">{{'Organisaationmuokkaus.ohje.palvelutoppijalle'| i18n}}</em>
         </div>
-        <!-- Kopiointi disabloitu kunnes saadaan käännökset OVT-7335
+
         <div ng-if="!model.isKoulutustoimija()">
             <button type="button" class="btn" ng-click="vahvistakopiointi('oe')" tooltip="{{'Organisaationmuokkaus.ohje.kopioitiedot'| i18n}} {{model.uriLocalizedNames['parentnimi']}}."><i class="icon-copy"></i>{{'Organisaationmuokkaus.kopioitiedot'| i18n}}</button>
         </div>
-        -->
+
         </div>
 
         <tabset>
@@ -1095,7 +1102,7 @@
                 </select>
             </div>
         </div>
-
+            
         <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
             <div ng-if='tab.lang === model.oelang'>
 
@@ -1106,9 +1113,8 @@
                     <div class="controls">
                         <em class="muted">{{'Organisaationmuokkaus.ohje.' + field| i18n}}</em>
                     </div>
-                    <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                        <textarea name="mcearea_oe" ui-tinymce="model.tinymceOptions" ng-model="model.organisaatio.metadata.data[field][model.oelang]"></textarea>
+                        <div class="well" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}" style="height:70px; overflow:auto" ng-click="openEditor(field, model.oelang, model.getUserLang());" name="mcearea_oe" ng-bind-html="model.organisaatio.metadata.data[field][model.oelang]"></div>
                         <div>
                             <span class="text-error" ng-show="model.organisaatio.metadata.data[field][model.oelang] && model.organisaatio.metadata.data[field][model.oelang].length > 16383">
                                 {{'Organisaationmuokkaus.validation.maxpituusalku'| i18n }}
