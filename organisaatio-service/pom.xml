@@ -115,6 +115,7 @@
             <!-- autentikaatiossa excludaavat xerceksen, pitäisikö tässäkin? -->
         </dependency>
 
+        <!-- Tapahtumalogi -->
         <dependency>
             <groupId>fi.vm.sade.log</groupId>
             <artifactId>log-client</artifactId>
@@ -127,6 +128,7 @@
             </exclusions>
         </dependency>
 
+        <!-- Solr indeksointia ja testejä varten -->
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
@@ -144,6 +146,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -284,7 +287,9 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
