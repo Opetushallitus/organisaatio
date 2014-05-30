@@ -53,6 +53,7 @@ import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatT
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioBasicConverter;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -342,7 +343,7 @@ public class OrganisaatioServiceImpl
             } else if (!parentOrgs.get(0).getOid().equals(ophOid)) { //Vanhempi ei ole uber org
                 LOG.debug("Updating non-root parent: {}", org.getOid());
                 //Ja vanhemman lakkautus pvm on joko tyhja tai lapsen lakkautuspvm on ennen tai sama kuin vanhemman lakkautus pvm
-                Date nlpvm = OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(org.getLakkautusPvm(), lakkautusPvm, oldLakkautusPvm, parentLakkautusPvm);
+                Date nlpvm = OrganisaatioUtil.getUpdatedLakkautusPvm(org.getLakkautusPvm(), lakkautusPvm, oldLakkautusPvm, parentLakkautusPvm);
                 if (org.getLakkautusPvm() == null) {
                     LOG.debug("Doing actual update for: {}", org.getOid());
                     org.setLakkautusPvm(nlpvm);
