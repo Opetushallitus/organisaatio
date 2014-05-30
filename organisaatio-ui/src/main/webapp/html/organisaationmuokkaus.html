@@ -558,11 +558,11 @@
             </tabset>
             <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]" ng-form="ytForm">
                 <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]==="true"?"*":""}}
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"] && yt["YhteystietoElementti.pakollinen"]!=="false"?"*":""}}
                 </label>
                 <div class="controls">
                     <input type="text" dynamic-name="yt['YhteystietoElementti.oid']" dynamic-name-prefix="name" class="span6" oph-null-if-zero-length oph-enter
-                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required="yt['YhteystietoElementti.pakollinen']==='true'">
+                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required="yt['YhteystietoElementti.pakollinen'] && yt['YhteystietoElementti.pakollinen']!=='false'">
                     <div>
                         <span class="text-error" ng-show="ytForm['name_'+ yt['YhteystietoElementti.oid']].$error.required">
                             {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
