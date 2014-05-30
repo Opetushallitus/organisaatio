@@ -562,7 +562,7 @@
                 </label>
                 <div class="controls">
                     <input type="text" dynamic-name="yt['YhteystietoElementti.oid']" dynamic-name-prefix="name" class="span6" oph-null-if-zero-length oph-enter
-                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]'>
+                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required="yt['YhteystietoElementti.pakollinen']==='true'">
                     <div>
                         <span class="text-error" ng-show="ytForm['name_'+ yt['YhteystietoElementti.oid']].$error.required">
                             {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
@@ -1102,7 +1102,7 @@
                 </select>
             </div>
         </div>
-            
+
         <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
             <div ng-if='tab.lang === model.oelang'>
 
