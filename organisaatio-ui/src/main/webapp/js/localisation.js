@@ -19,25 +19,25 @@
  *
  * NOTE: this module assumes that all the translations are PRELOADED in
  * global scope to configuration object:
- * </b>Config.env["tarjonta.localisations"]</b>
+ * </b>$window.LOCALISATION_DATA</b>
  *
  * See "index.html" how the pre-loading is done to following global variable:
- * <b>window.CONFIG.env["tarjonta.localisations"]</b>
+ * <b>window.$window.LOCALISATION_DATA</b>
  *
  * @see partials/init.js for preload implementation ("jQuery.ajax(...")
  *
  * @author mlyly
  */
-var app = angular.module('localisation', ['ngResource', 'config', 'Logging']);
+var app = angular.module('localisation', ['ngResource']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
  */
-app.factory('Localisations', function($log, $resource, Config) {
+app.factory('Localisations', function($log, $resource, $window) {
 
-    $log = $log.getInstance("Localisations");
+    //$log = $log.getInstance("Localisations");
 
-    var uri = Config.env.tarjontaLocalisationRestUrl;
+    var uri = $window.LOKALISAATIO_URL_BASE + 'v1/localisation';
     $log.debug("Localisations() - uri = ", uri);
 
     return $resource(uri + "/:id", {
@@ -84,7 +84,7 @@ app.factory('Localisations', function($log, $resource, Config) {
  */
 app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationService) {
 
-        $log = $log.getInstance("<tt>");
+        //$log = $log.getInstance("<tt>");
 
         return {
             restrict: 'A',
@@ -148,14 +148,14 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  * LocalisationService.tl("this.is.the.key2", "fi", ["array", "of", "values"])  == localized value in given locale
  * </pre>
  */
-app.service('LocalisationService', function($log, Localisations, Config, AuthService, $injector) {
+app.service('LocalisationService', function($log, $window, Localisations, UserInfo, $injector) {
 
-    $log = $log.getInstance("LocalisationService");
+    //$log = $log.getInstance("LocalisationService");
 
     // $log.debug("LocalisationService()");
 
     // Singleton state, default current locale for the user
-    this.locale = AuthService.getLanguage();
+    this.locale = UserInfo.lang;
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
@@ -208,8 +208,6 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
     this.updateAccessedById = {};
 
     this.updateAccessInformation = function() {
-        var uri = Config.env.tarjontaLocalisationRestUrl + "/access";
-
         var ids = Object.keys(this.updateAccessedById);
         this.updateAccessedById = {};
 
@@ -347,7 +345,7 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
         $log.info("createMissingTranslations()", key, locale, originalText);
 
         // Default locales that translations should be created for
-        var locales = ["fi", "en", "sv"];
+        var locales = ["fi", "sv"];
 
         if (angular.isDefined(locale) && locales.indexOf(locale) < 0) {
             locales.push(locale);
@@ -394,7 +392,7 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
         var loadingService = $injector.get('loadingService');
         if (loadingService) {
             $log.debug("  disable system error dialog.");
-            loadingService.onErrorHandled();
+            //loadingService.onErrorHandled();
         } else {
             $log.warn("  FAILED TO disable system error dialog. Sorry about that.");
         }
@@ -406,8 +404,8 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
      * @returns global APP_LOCALISATION_DATA, array of {key, locale, value} objects.
      */
     this.getTranslations = function() {
-        Config.env["tarjonta.localisations"] = Config.env["tarjonta.localisations"] || [];
-        return Config.env["tarjonta.localisations"];
+        $window.LOCALISATION_DATA = $window.LOCALISATION_DATA || [];
+        return $window.LOCALISATION_DATA;
     };
 
 
@@ -426,8 +424,8 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
         // Create temporary map
         var tmp = {};
 
-        for (var localisationIndex in Config.env["tarjonta.localisations"]) {
-            var localisation = Config.env["tarjonta.localisations"][localisationIndex];
+        for (var localisationIndex in $window.LOCALISATION_DATA) {
+            var localisation = $window.LOCALISATION_DATA[localisationIndex];
             var mapByLocale = tmp[localisation.locale];
             if (!mapByLocale) {
                 tmp[localisation.locale] = {};
@@ -500,12 +498,10 @@ app.service('LocalisationService', function($log, Localisations, Config, AuthSer
  * LocalisationCtrl - a localisation controller.
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
-app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval, Config) {
-    $log = $log.getInstance("LocalisationCtrl");
+app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval) {
+    //log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
-
-    $scope.CONFIG = Config;
 
     // Returns translation if it exists
     $scope.t = function(key, params) {

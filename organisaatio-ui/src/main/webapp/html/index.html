@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="organisaatio" ng-controller="EventsCtrl">
+<html ng-controller="EventsCtrl">
 
 <head>
     <!-- libs -->
@@ -29,6 +29,7 @@
     <!-- app js-->
     <script type="text/javascript" src="../js/app.js"></script>
     <script type="text/javascript" src="../js/auth.js"></script>
+    <script type="text/javascript" src="../js/localisation.js"></script>
     <script type="text/javascript" src="../js/directives/directives.js"></script>
     <script type="text/javascript" src="../js/services/hakuehdotModel.js"></script>
     <script type="text/javascript" src="../js/services/organisaatioModel.js"></script>
@@ -53,6 +54,7 @@
     <script type="text/javascript" src="../js/idler.js"></script>
 
     <script type="text/javascript" src="../js/loading.js"></script>
+    <script type="text/javascript" src="../js/init.js"></script>
 
     <!--Virkailija layout script -->
     <script type="text/javascript" src="/virkailija-raamit/apply-raamit.js"></script>
@@ -86,6 +88,7 @@
     <div ng-controller="LoadingCtrl">
         <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
     </div>
+    <script>organisaatioInitialize();</script>
 </body>
 
 </html>
