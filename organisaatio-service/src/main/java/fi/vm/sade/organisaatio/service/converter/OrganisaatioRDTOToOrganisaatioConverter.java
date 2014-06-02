@@ -71,6 +71,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setMaa(t.getMaaUri());
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
+        s.setNimihaku(convertNimiMapToNimihaku(t.getNimi()));
         // t.set(s.getNimiLyhenne());
         s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
         s.setOppilaitosKoodi(t.getOppilaitosKoodi());
@@ -353,5 +354,14 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             }
         }
         return null;
+    }
+
+    private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
+        StringBuilder sb = new StringBuilder();
+        for (String nimi : nimiMap.values()) {
+                sb.append(",");
+                sb.append(nimi);
+        }
+        return sb.toString();
     }
 }
