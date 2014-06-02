@@ -195,6 +195,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             entity.getNimi().setId(orgEntity.getNimi().getId());
             entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
+            entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
+            entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
             entity.setId(orgEntity.getId());
             entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
         }
