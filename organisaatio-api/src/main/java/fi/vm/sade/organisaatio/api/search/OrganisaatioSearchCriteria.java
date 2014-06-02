@@ -25,11 +25,13 @@ public class OrganisaatioSearchCriteria {
 
     private String searchStr;
 
+    private String oid;
+
     private boolean skipParents;
 
     /**
      * Default no-arg constructor
-     * 
+     *
      */
     public OrganisaatioSearchCriteria() {
         super();
@@ -41,9 +43,9 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Gets the value of the oppilaitosTyyppi property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi", required = true)
     public String getOppilaitosTyyppi() {
@@ -52,10 +54,10 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the oppilaitosTyyppi property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOppilaitosTyyppi(String value) {
         this.oppilaitostyyppi = value;
@@ -63,9 +65,9 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Gets the value of the organisaatioTyyppi property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
     public String getOrganisaatioTyyppi() {
@@ -74,10 +76,10 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the organisaatioTyyppi property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOrganisaatioTyyppi(String value) {
         this.organisaatiotyyppi = value;
@@ -85,7 +87,7 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Gets the value of the suunnitellut property.
-     * 
+     *
      */
     @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getSuunnitellut() {
@@ -94,7 +96,7 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the suunnitellut property.
-     * 
+     *
      */
     public void setSuunnitellut(boolean value) {
         this.suunnitellut = value;
@@ -107,7 +109,7 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * If true does not return parents, default = false
-     * 
+     *
      * @param skipParents
      */
     public void setSkipParents(boolean skipParents) {
@@ -116,9 +118,9 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Gets the value of the kunta property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     @ApiModelProperty(value = "Haettavan organisaation kunta", required = true)
     public String getKunta() {
@@ -127,10 +129,10 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the kunta property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setKunta(String value) {
         this.kunta = value;
@@ -160,7 +162,7 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the vainLakkautetut property.
-     * 
+     *
      */
     public void setVainLakkautetut(boolean value) {
         this.vainLakkautetut = value;
@@ -176,9 +178,18 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Sets the value of the vainLakkautetut property.
-     * 
+     *
      */
     public void setVainAktiiviset(boolean vainAktiiviset) {
         this.vainAktiiviset = vainAktiiviset;
-    }   
+    }
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
 }

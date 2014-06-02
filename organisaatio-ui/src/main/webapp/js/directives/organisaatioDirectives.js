@@ -24,6 +24,7 @@ app.directive('formatteddate', function($log, $filter) {
             function validateDate(viewValue) {
                 var val = element.val();
                 var pattern = /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.(19[7-9]\d)|([2-9]\d{3})$/i;
+                ctrl.$setValidity('dateYear', true);
 
                 if (val && val.match(pattern) === null) {
                     ctrl.$setValidity('date', false);
@@ -35,6 +36,10 @@ app.directive('formatteddate', function($log, $filter) {
                     return null;
                 } else if (angular.isDate(viewValue) && !isNaN(viewValue)) {
                     ctrl.$setValidity('date', true);
+                    if (viewValue.getFullYear() < 1990 || viewValue.getFullYear() > 2030) {
+                        ctrl.$setValidity('dateYear', false);
+                        return viewValue;
+                    }
                     return viewValue;
                 } else if (angular.isString(viewValue)) {
                     var date = new Date(viewValue);
@@ -43,6 +48,10 @@ app.directive('formatteddate', function($log, $filter) {
                         return undefined;
                     } else {
                         ctrl.$setValidity('date', true);
+                        if (date.getFullYear() < 1990 || date.getFullYear() > 2030) {
+                            ctrl.$setValidity('dateYear', false);
+                            return viewValue;
+                        }
                         return date;
                     }
                 } else {

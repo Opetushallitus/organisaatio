@@ -16,6 +16,7 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -37,36 +38,36 @@ public class OrganisaatioServiceAlgorithmsTest extends Assert {
 		Date D3 = testDate(3);
 		
 		// ei ylempää lpvm:ää hierarkiassa
-		assertEquals(null, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(null, null, null, null));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(null, D1, null, null));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D1, null, null));
-		assertEquals(null, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, null, null, null));
+		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(null, null, null, null));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(null, D1, null, null));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D1, null, null));
+		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, null, null));
 
 		// parentilla lpvm
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, D2, null, D1));
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, D2, null, D2));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D2, null, D1));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D2, null, D2));
 		
 		// myöhennys
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, D2, D1, D1));
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, D2, D1, D2));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D2, D1, D1));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D2, D1, D2));
 
-		assertEquals(D3, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, D3, D1, D3));
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D3, D1, D3));
+		assertEquals(D3, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D3, D1, D3));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D3, D1, D3));
 
 		// aiennus
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D1, D2, D2));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D1, D2, D1));
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D1, D3, D1));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D3, D1, D3, D1));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D1, D2, D2));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D1, D2, D1));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D1, D3, D1));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D3, D1, D3, D1));
 		
 		// poisto
-		assertEquals(null, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, null, D2, null));
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, null, D2, D2));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, null, D2, D2));
-		assertEquals(D1, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D1, null, D2, null));
+		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, D2, null));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, D2, D2));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, null, D2, D2));
+		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, null, D2, null));
 
 		// OVT-3748
-		assertEquals(D2, OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(D2, D3, D2, D2));
+		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D3, D2, D2));
 
 		
 	}

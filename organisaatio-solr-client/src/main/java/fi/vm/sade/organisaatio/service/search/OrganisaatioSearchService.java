@@ -70,8 +70,9 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
         final String organisaatioTyyppi = searchCriteria.getOrganisaatioTyyppi();
         String searchStr = searchCriteria.getSearchStr();
+        String oid = searchCriteria.getOid();
 
-        SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, searchStr);
+        SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, searchStr, oid);
 
         q.setRows(10000);
 
@@ -93,8 +94,9 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
         final String organisaatioTyyppi    = searchCriteria.getOrganisaatioTyyppi();
         String searchStr = searchCriteria.getSearchStr();
+        String oid = searchCriteria.getOid();
 
-        SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, searchStr);
+        SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, searchStr, oid);
 
         q.set("fl", OID, PATH);
         // max rows to return
@@ -164,10 +166,10 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
             LOG.debug("Search time :{} ms.", (System.currentTimeMillis() - time));
 
-            final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = 
+            final SolrDocumentToOrganisaatioPerustietoTypeFunction converter =
                     new SolrDocumentToOrganisaatioPerustietoTypeFunction(oids);
 
-            final List<OrganisaatioPerustieto> result = 
+            final List<OrganisaatioPerustieto> result =
                     Lists.newArrayList(Lists.transform(response.getResults(), converter));
 
             LOG.debug("Total time :{} ms.", (System.currentTimeMillis() - time));
@@ -181,12 +183,15 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     private SolrQuery createOrgQuery(
             final SearchCriteria searchCriteria,
             final String kunta, final List<String> restrictionList,
-            final String organisaatioTyyppi, String searchStr) {
+            final String organisaatioTyyppi, String searchStr,
+            String oid) {
         SolrQuery q = new SolrQuery("*:*");
         final List<String> queryParts = Lists.newArrayList();
 
-        // nimi
-        if (searchStr != null && searchStr.length() > 0) {
+        if (oid != null && !oid.isEmpty()) {
+            q.addFilterQuery(String.format("%s:%s", OID, oid));
+        } else if (searchStr != null && searchStr.length() > 0) {
+            // nimi
             searchStr = escape(searchStr);
             // nimi search
             queryParts.clear();
@@ -197,7 +202,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         addDateFilters(searchCriteria, q);
 
-        if (searchCriteria.getOppilaitosTyyppi() != null 
+        if (searchCriteria.getOppilaitosTyyppi() != null
                 && searchCriteria.getOppilaitosTyyppi().length() > 0) {
             queryParts.clear();
             addQuery(searchCriteria.getOppilaitosTyyppi(),
@@ -237,48 +242,48 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     private void addDateFilters(final SearchCriteria searchCriteria, SolrQuery q) {
         // Ei aktiivisia, suunniteltuja eikä lakkautettuja - tätä ei pitäisi tapahtua
-        if (!searchCriteria.getAktiiviset() && !searchCriteria.getSuunnitellut() && 
+        if (!searchCriteria.getAktiiviset() && !searchCriteria.getSuunnitellut() &&
                 !searchCriteria.getLakkautetut()) {
             // Filtteröidään pois aktiiviset, suunnitellut, lakkautetut
-            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "*", "NOW"));  
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "*", "NOW"));
             q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW", "*"));
             q.addFilterQuery(String.format("-%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
             return;
         }
-        
+
         // Aktiiviset, Suunnitellut, Lakkautetut
-        if (searchCriteria.getAktiiviset() && searchCriteria.getSuunnitellut() && 
+        if (searchCriteria.getAktiiviset() && searchCriteria.getSuunnitellut() &&
                 searchCriteria.getLakkautetut()) {
             // Ei päivämääräfiltteröintiä
             return;
         }
-        
+
         // Suunnitellut, Lakkautetut
-        if (!searchCriteria.getAktiiviset() && searchCriteria.getSuunnitellut() && 
+        if (!searchCriteria.getAktiiviset() && searchCriteria.getSuunnitellut() &&
                 searchCriteria.getLakkautetut()) {
             // Alkupvm tulevaisuudessa tai lakkautuspvm menneisyydessä
             q.addFilterQuery(String.format("%s:[%s TO %s] || %s:[%s TO %s]", ALKUPVM, "NOW", "*", LAKKAUTUSPVM, "*", "NOW"));
             return;
         }
-        
+
         // Lakkautetut
-        if (!searchCriteria.getAktiiviset() && !searchCriteria.getSuunnitellut() && 
+        if (!searchCriteria.getAktiiviset() && !searchCriteria.getSuunnitellut() &&
                 searchCriteria.getLakkautetut()) {
             // Haetaan mukaan kaikki lakkautetut - lakkautuspäivämäärä menneisyydessä
             q.addFilterQuery(String.format("%s:[%s TO %s]", LAKKAUTUSPVM, "*", "NOW"));
             return;
         }
-        
+
         // Alkupäivämäärän käsittely -otetaanko mukaan suunnitellut vai filtteröidäänkö ne ulos
         if (searchCriteria.getSuunnitellut() && !searchCriteria.getAktiiviset()) {
             // Filtteröidään pois aktiiviset - joiden alkupvm menneisyydessä
-            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "*", "NOW"));  
+            q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "*", "NOW"));
         }
         else if (!searchCriteria.getSuunnitellut() && searchCriteria.getAktiiviset()) {
             // Filtteröidään pois suunnitellut - joiden alkupvm tulevaisuudessa
             q.addFilterQuery(String.format("-%s:[%s TO %s]", ALKUPVM, "NOW", "*"));
         }
-        
+
         // Loppupäivämäärän käsittely - otetaanko mukaan lakkautetut vai filtteröidäänkö ne ulos
         if (!searchCriteria.getLakkautetut()) {
             // Filteröidään pois lakkautetut.
@@ -300,7 +305,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
      * @return
      */
     public List<OrganisaatioPerustieto> findByOidSet(Set<String> organisationOids) {
-        
+
         if (organisationOids.isEmpty()) {
             return Collections.EMPTY_LIST;
         }

@@ -203,14 +203,14 @@
             <div>
                 <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -219,14 +219,14 @@
                 &nbsp;-&nbsp;
                 <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
                 <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -241,6 +241,10 @@
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}</span>
+                <span class="text-error" ng-show="form.luontipvm.$error.dateYear">
+                    {{'Organisaationmuokkaus.validointi.alkupvmvuosi'| i18n}}. </span>
+                <span class="text-error" ng-show="form.lakkautuspvm.$error.dateYear">
+                    {{'Organisaationmuokkaus.validointi.loppupvmvuosi'| i18n}}</span>
             </div>
         </div>
     </div>
@@ -554,11 +558,11 @@
             </tabset>
             <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]" ng-form="ytForm">
                 <label class="control-label">
-                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"]==="true"?"*":""}}
+                    {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"] && yt["YhteystietoElementti.pakollinen"]!=="false"?"*":""}}
                 </label>
                 <div class="controls">
                     <input type="text" dynamic-name="yt['YhteystietoElementti.oid']" dynamic-name-prefix="name" class="span6" oph-null-if-zero-length oph-enter
-                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required='yt["YhteystietoElementti.pakollinen"]'>
+                           ng-model="yt['YhteystietoArvo.arvoText']" ng-required="yt['YhteystietoElementti.pakollinen'] && yt['YhteystietoElementti.pakollinen']!=='false'">
                     <div>
                         <span class="text-error" ng-show="ytForm['name_'+ yt['YhteystietoElementti.oid']].$error.required">
                             {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}
@@ -1098,7 +1102,7 @@
                 </select>
             </div>
         </div>
-            
+
         <div ng-if="model.oelang !== '+'" ng-repeat='tab in model.mkSections.oe.tabs'>
             <div ng-if='tab.lang === model.oelang'>
 

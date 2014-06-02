@@ -20,6 +20,9 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
+import java.util.Date;
+import com.google.common.base.Objects;
+
 /**
  *
  * @author simok
@@ -31,5 +34,25 @@ public abstract class OrganisaatioUtil {
 
     public static boolean isRyhma(OrganisaatioRDTO organisaatio) {
         return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
+    }
+
+    /**
+     * Organisaation lakkautuspvm -logiikka. Huom. kaikki parametrit voivat olla null.
+     *
+     * @param oldLpvm Päivitettävän organisaation nykyinen lakkautuspvm.
+     * @param newLpvm Uusi lakkautuspvm.
+     * @param origLpvm Päivitettävän organisaatiojoukun alkuperäinen lakkautuspvm.
+     * @param parentLpvm Ylemmän tason organisaation lakkautuspvm.
+     * @return
+     */
+    public static Date getUpdatedLakkautusPvm(Date oldLpvm, Date newLpvm, Date origLpvm, Date parentLpvm) {
+        if (parentLpvm != null && (newLpvm == null || newLpvm.after(parentLpvm))) {
+            newLpvm = parentLpvm;
+        }
+        if (origLpvm != null && !Objects.equal(oldLpvm, origLpvm)) {
+            return oldLpvm;
+        } else {
+            return newLpvm;
+        }
     }
 }

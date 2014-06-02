@@ -134,6 +134,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
     }
 
+    private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
+        entity.getNimi().setId(orgEntity.getNimi().getId());
+            entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
+            entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
+            entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
+            OrganisaatioMetaData metadata = entity.getMetadata();
+            OrganisaatioMetaData orgMetadata = orgEntity.getMetadata();
+            metadata.setId(orgMetadata.getId());
+            metadata.setVersion(orgMetadata.getVersion());
+            metadata.getHakutoimistoNimi().setId(orgMetadata.getHakutoimistoNimi().getId());
+            metadata.getHakutoimistoNimi().setVersion(orgMetadata.getHakutoimistoNimi().getVersion());
+            metadata.getNimi().setId(orgMetadata.getNimi().getId());
+            metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
+    }
+
     @Override
     public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
         // Tarkistetaan OID
@@ -193,6 +208,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
+            mergeAuxData(entity, orgEntity);
             entity.setId(orgEntity.getId());
             entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
         }
