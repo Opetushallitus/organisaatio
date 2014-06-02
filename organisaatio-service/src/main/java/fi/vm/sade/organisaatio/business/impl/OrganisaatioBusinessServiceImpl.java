@@ -193,6 +193,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
+            entity.getNimi().setId(orgEntity.getNimi().getId());
+            entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
             entity.setId(orgEntity.getId());
             entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
         }
