@@ -78,6 +78,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -158,6 +159,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+    private String getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @Override
     public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
         // Tarkistetaan OID
@@ -215,6 +220,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Setting the parent paths
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+
+        entity.setPaivittaja(getCurrentUser());
+        entity.setPaivitysPvm(new Date());
+
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             mergeAuxData(entity, orgEntity);
