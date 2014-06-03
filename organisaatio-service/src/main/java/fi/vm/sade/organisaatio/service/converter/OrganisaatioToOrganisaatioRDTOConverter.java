@@ -63,7 +63,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         t.setKieletUris(convertListToList(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
-        t.setKuvaus(s.getKuvaus());
         t.setKuvaus2(convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
@@ -254,7 +253,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
             result.put("id", "" + s.getId());
             result.put("yhteystietoOid", s.getYhteystietoOid());
             result.put("kieli", s.getKieli());
-            
+
             if (s instanceof Email) {
                 Email v = (Email) s;
                 result.put("email", v.getEmail());

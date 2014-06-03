@@ -120,10 +120,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String yritysmuoto;
 
-    // TODO remove this when MonikieinenTeksti is enabled.
-    @FilterXss
-    private String kuvaus;
-
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date alkuPvm;
 
@@ -297,14 +293,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 */
 
         this.nimiLyhenne = nimiLyhenne;
-    }
-
-    public String getKuvaus() {
-        return kuvaus;
-    }
-
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
     }
 
     public Date getAlkuPvm() {
