@@ -175,6 +175,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Column(length = 32)
     private String toimipisteKoodi;
 
+    // OVT-7684
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date paivitysPvm;
+
+    // OVT-7684
+    @Column(length = 255)
+    private String paivittaja;
+
     /**
      * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
      */
@@ -632,4 +640,19 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.toimipisteKoodi = toimipisteKoodi;
     }
 
+    public Date getPaivitysPvm() {
+        return paivitysPvm;
+    }
+
+    public void setPaivitysPvm(Date paivitysPvm) {
+        this.paivitysPvm = paivitysPvm;
+    }
+
+    public String getPaivittaja() {
+        return paivittaja;
+    }
+
+    public void setPaivittaja(String paivittaja) {
+        this.paivittaja = paivittaja;
+    }
 }

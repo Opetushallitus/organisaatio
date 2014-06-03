@@ -15,14 +15,17 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
+import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
@@ -61,6 +64,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
+    
+    @Autowired
+    private OrganisaatioDAOImpl organisaatioDAO;
         
     @Override
     @Transactional(readOnly = true)
@@ -114,6 +120,22 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         
         return tulos;
     }
-   
-    
+
+    @Override
+    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+
+        LOG.debug("searchOrganisaatioPaivittaja: " + oid);
+
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+
+        if(org != null){
+            final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
+            tulos.setPaivittaja(org.getPaivittaja());
+            tulos.setPaivitysPvm(org.getPaivitysPvm());
+            return tulos;
+        }
+
+        return null;
+    }
 }

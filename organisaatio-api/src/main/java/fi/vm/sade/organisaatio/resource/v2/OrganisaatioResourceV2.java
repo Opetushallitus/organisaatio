@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.resource.v2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 
@@ -31,6 +32,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -71,5 +73,10 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio palauttaa hakukriteerit täyttävien organisaatioiden yhteystiedot.")
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
 
-
+    @GET
+    @Path("/{oid}/paivittaja")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee aktiivisen organisaation päivittäjän",
+            notes = "Operaatio palauttaa viimeisimmän päivittäjän.", response = OrganisaatioPaivittajaDTOV2.class)
+    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 }
