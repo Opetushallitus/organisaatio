@@ -17,9 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.SHORT_MAX;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -41,10 +38,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
@@ -74,11 +69,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @ElementCollection
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private List<String> vuosiluokat = new ArrayList<String>();
-
-    @ElementCollection
-    @CollectionTable(name = "organisaatio_sopimuskunnat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> sopimusKunnat = new ArrayList<String>();
-
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nimi_mkt")
@@ -393,20 +383,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setOrganisaatioPoistettu(boolean organisaatioPoistettu) {
         this.organisaatioPoistettu = organisaatioPoistettu ? null : false;
-    }
-
-    /**
-     * @return the sopimusKunnat
-     */
-    public List<String> getSopimusKunnat() {
-        return sopimusKunnat;
-    }
-
-    /**
-     * @param sopimusKunnat the sopimusKunnat to set
-     */
-    public void setSopimusKunnat(List<String> sopimusKunnat) {
-        this.sopimusKunnat = sopimusKunnat;
     }
 
     /**

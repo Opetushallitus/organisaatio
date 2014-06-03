@@ -83,7 +83,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         // t.set(s.getParentSuhteet());
 
         // t.set(s.getPuhelin());
-        // t.set(s.getSopimusKunnat()); -- non existing old ui functionality has left it's marks...
         s.setToimipisteKoodi(t.getToimipistekoodi());
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());

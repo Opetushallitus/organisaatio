@@ -625,10 +625,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="organisaatioSopimusKunnat" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="oppilaitosTyyppi" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Koodisto - jos organisaatio on "oppilaitos"; URI.</xs:documentation>
