@@ -54,6 +54,8 @@ import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.ArrayList;
@@ -136,17 +138,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         entity.getNimi().setId(orgEntity.getNimi().getId());
-            entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
-            entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
-            entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
-            OrganisaatioMetaData metadata = entity.getMetadata();
-            OrganisaatioMetaData orgMetadata = orgEntity.getMetadata();
-            metadata.setId(orgMetadata.getId());
-            metadata.setVersion(orgMetadata.getVersion());
-            metadata.getHakutoimistoNimi().setId(orgMetadata.getHakutoimistoNimi().getId());
-            metadata.getHakutoimistoNimi().setVersion(orgMetadata.getHakutoimistoNimi().getVersion());
-            metadata.getNimi().setId(orgMetadata.getNimi().getId());
-            metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
+        entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
+        entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
+        entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
+        OrganisaatioMetaData metadata = entity.getMetadata();
+        OrganisaatioMetaData orgMetadata = orgEntity.getMetadata();
+        metadata.setId(orgMetadata.getId());
+        metadata.setVersion(orgMetadata.getVersion());
+        metadata.getHakutoimistoNimi().setId(orgMetadata.getHakutoimistoNimi().getId());
+        metadata.getHakutoimistoNimi().setVersion(orgMetadata.getHakutoimistoNimi().getVersion());
+        metadata.getNimi().setId(orgMetadata.getNimi().getId());
+        metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
+        for (NamedMonikielinenTeksti value : metadata.getValues()) {
+            MonikielinenTeksti mkt = orgMetadata.getNamedValue(value.getKey());
+            if (mkt != null) {
+                value.getValue().setId(mkt.getId());
+                value.getValue().setVersion(mkt.getVersion());
+            }
+        }
     }
 
     @Override
