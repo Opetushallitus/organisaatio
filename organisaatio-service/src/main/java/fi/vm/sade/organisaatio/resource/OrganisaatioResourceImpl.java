@@ -127,7 +127,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
-    
+
     @Override
     public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -142,7 +142,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
-        
+
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
         List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
 
@@ -401,6 +401,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            throw ore;
         } catch (Throwable t) {
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
