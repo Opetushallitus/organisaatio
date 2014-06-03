@@ -409,14 +409,6 @@
                             <xs:documentation xml:lang="fi">Haetaan organisaation domain nimestä.</xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <!--
-                                        Removed as unnesessary: 15.1.2013 / mlyly
-                                        <xs:element minOccurs="0" name="oikeudet" type="xs:boolean">
-                                            <xs:annotation>
-                                                <xs:documentation xml:lang="fi">Jos totta, palauttaa vain ne joihin hallintaoikeudet.</xs:documentation>
-                                            </xs:annotation>
-                                        </xs:element>
-                    -->
                     <xs:element minOccurs="0" name="kunta" type="xs:string">
                         <xs:annotation>
                             <xs:documentation xml:lang="fi">Haetaan valitun kunnan koodisto uri:lla.</xs:documentation>
@@ -578,10 +570,6 @@
                     <xs:documentation xml:lang="fi">Organisaation nimi, UI:ssa FI, EN, SV.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" name="nimiLyhenne" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="parentOid" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Organisaation "äiti", hierarkinen rakenne.</xs:documentation>

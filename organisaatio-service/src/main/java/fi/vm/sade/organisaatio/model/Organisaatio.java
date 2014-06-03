@@ -102,10 +102,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @FilterXss
     private String virastoTunnus;
 
-    @Size(min = GENERIC_MIN, max = SHORT_MAX)
-    @FilterXss
-    private String nimiLyhenne;
-
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
@@ -276,23 +272,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setKotipaikka(String kotipaikka) {
         this.kotipaikka = kotipaikka;
-    }
-
-    public String getNimiLyhenne() {
-        return nimiLyhenne;
-    }
-
-    public void setNimiLyhenne(String nimiLyhenne) {
-/*
-        HistoryMetadata hmd = new HistoryMetadata();
-        hmd.setOrganisaatio(this);
-        hmd.setAvain("nimiLyhenne");
-        hmd.setKieli("");
-        hmd.setArvo(nimiLyhenne);
-        getHistoriaData().add(hmd);
-*/
-
-        this.nimiLyhenne = nimiLyhenne;
     }
 
     public Date getAlkuPvm() {
