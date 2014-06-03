@@ -48,6 +48,7 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
@@ -221,8 +222,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Setting the parent paths
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
 
-        entity.setPaivittaja(getCurrentUser());
-        entity.setPaivitysPvm(new Date());
+        try {
+            entity.setPaivittaja(getCurrentUser());
+            entity.setPaivitysPvm(new Date());
+        } catch (Throwable t) {
+            throw new OrganisaatioCrudException("error.setting.updater");
+        }
 
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
