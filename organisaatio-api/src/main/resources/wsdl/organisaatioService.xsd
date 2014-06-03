@@ -562,10 +562,6 @@
                     <xs:documentation xml:lang="fi">Organisaation kotipaikka, koodisto URI (kunnat).</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" name="kuvaus" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="lakkautusPvm" type="xs:dateTime">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Organisaation voimassa olo lakkaa. "NULL" toistaiseksi voimassa.
