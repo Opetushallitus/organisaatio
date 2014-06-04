@@ -37,7 +37,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 
 /**
- * REST services for Organisaatio.
+ * Organisaation REST palvelut (Versio 1).
  *
  * @author mlyly
  */
@@ -50,7 +50,12 @@ public interface OrganisaatioResource {
     @GET
     @Path("/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla", notes = "Operaatio näyttää listan organisaatioita, jotka vastaavat annettuja hakuehtoja.", response = OrganisaatioHakutulos.class)
+    @ApiOperation(
+            value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
+                    + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
+            response = OrganisaatioHakutulos.class)
     public OrganisaatioHakutulos searchBasic(@QueryParam("") @ApiParam(value = "hakuehdot", required = true) OrganisaatioSearchCriteria q);
 
     /**
@@ -66,8 +71,12 @@ public interface OrganisaatioResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{oid}/parentoids")
-    @ApiOperation(value = "Etsii organisaation vanhempien oid:t", notes = "Operaatio palauttaa organisaation vanhempien oid:t "
-            + "alkaen juuresta päättyen annetun organisaation oid:hen. " + "Id:t on eroteltu kautta-merkillä ('/').")
+    @ApiOperation(
+            value = "Hakee organisaation vanhempien oid:t",
+            notes = "Operaatio palauttaa organisaation vanhempien oid:t "
+                    + "alkaen juuresta päättyen annetun organisaation oid:hen. "
+                    + "Id:t on eroteltu kautta-merkillä ('/').",
+            response = String.class)
     public String parentoids(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     /**
@@ -80,7 +89,10 @@ public interface OrganisaatioResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/{oid}/childoids")
-    @ApiOperation(value = "Etsii organisaation alla olevien organisaatioiden oid:t", notes = "Operaatio palauttaa organisaation alla olevien organisaatioiden oid:t.", response = String.class)
+    @ApiOperation(
+            value = "Hakee organisaation alla olevien organisaatioiden oid:t",
+            notes = "Operaatio palauttaa organisaation alla olevien organisaatioiden oid:t.",
+            response = String.class)
     public String childoids(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     /**
@@ -93,7 +105,11 @@ public interface OrganisaatioResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/{oid}/children")
-    @ApiOperation(value = "Etsii organisaation alla olevat organisaatiot", notes = "Operaatio palauttaa organisaation alla olevat organisaatiot.")
+    @ApiOperation(
+            value = "Hakee organisaation alla olevat organisaatiot",
+            notes = "Operaatio palauttaa organisaation alla olevat organisaatiot.",
+            response = OrganisaatioRDTO.class,
+            responseContainer = "List")
     public List<OrganisaatioRDTO> children(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     /**
@@ -106,13 +122,20 @@ public interface OrganisaatioResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/{oid}/ryhmat")
-    @ApiOperation(value = "Etsii organisaation alla olevat ryhmät", notes = "Operaatio palauttaa organisaation alla olevat ryhmät.")
+    @ApiOperation(
+            value = "Hakee organisaation alla olevat ryhmät",
+            notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
+            response = OrganisaatioRDTO.class,
+            responseContainer = "List")
     public List<OrganisaatioRDTO> groups(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/hello")
-    @ApiOperation(value = "Testi", notes = "Testioperaatio", response = String.class)
+    @ApiOperation(
+            value = "Testioperaatio, jolla voi kokeilla onko organisaatiopalvelu pystyssä.",
+            notes = "Operaatio vastaa tervehdykseen ja palauttaa palvelun aikaleiman.",
+            response = String.class)
     public String hello();
 
     /**
@@ -133,7 +156,10 @@ public interface OrganisaatioResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee organisaatioiden oid:t annetuilla hakuehdoilla", notes = "Operaatio palauttaa listan organisaatioiden oid:tä annetuilla hakuehdoilla.")
+    @ApiOperation(
+            value = "Hakee organisaatioiden oid:t annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa listan organisaatioiden oid:tä annetuilla hakuehdoilla.",
+            response = String.class)
     public List<String> search(@ApiParam(value = "Hakutermit", required = true) @QueryParam("searchTerms") String searchTerms,
             @ApiParam(value = "Tulosjoukon koko", required = true) @QueryParam("count") int count,
             @ApiParam(value = "Ensimmäisen hakutuloksen indeksi", required = true) @QueryParam("startIndex") int startIndex,
@@ -151,45 +177,68 @@ public interface OrganisaatioResource {
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Näyttää yhden organisaation oid:llä", notes = "Operaatio näyttää yhden organisaation tiedot annetulla oid:llä.", response = OrganisaatioRDTO.class)
+    @ApiOperation(
+            value = "Hakee yhden organisaation annetulla oid:lla",
+            notes = "Operaatio palauttaa oid:n määrittämän organisaation tiedot.",
+            response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO getOrganisaatioByOID(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
 
     @POST
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Päivittää organisaation oid:llä", notes = "Operaatio päivittää organisaation tiedot annetulla oid:llä.", response = OrganisaatioRDTO.class)
+    @ApiOperation(
+            value = "Päivittää oid:n määrittämän organisaation tiedot",
+            notes = "Operaatio päivittää oid:n määrittämän organisaation tiedot.",
+            response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO updateOrganisaatio(@PathParam("oid") String oid, OrganisaatioRDTO ordto);
 
     @DELETE
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Poistaa organisaation oid:llä", notes = "Operaatio poistaa organisaation annetulla oid:llä.", response = String.class)
+    @ApiOperation(
+            value = "Poistaa oid:n määrittämän organisaation",
+            notes = "Operaatio poistaa organisaation annetulla oid:llä.",
+            response = String.class)
     public String deleteOrganisaatio(@PathParam("oid") String oid);
 
     @PUT
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Luo uuden organisaation", notes = "Operaatio luo uuden organisaation annetusta JSON:sta.", response = OrganisaatioRDTO.class)
+    @ApiOperation(
+            value = "Luo uuden organisaation",
+            notes = "Operaatio luo uuden organisaation annetusta JSON:sta.",
+            response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GET
     @Path("/myroles")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Palauttaa autentikoituneen käyttäjän roolit", notes = "Pitäisi palauttaa testikäyttöön samat kuin /cas/myroles.", response = String.class)
+    @ApiOperation(
+            value = "Hakee autentikoituneen käyttäjän roolit",
+            notes = "Operaatio palauttaa samat kuin /cas/myroles. HUOM! Testikäyttöön tarkoitettu.",
+            response = String.class)
     public String getRoles();
 
     @GET
     @Path("/yhteystietometadata")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Palauttaa sallitut yhteystietotyypit", notes = "Palauttaa sallitut yhteystietotyypit", response = List.class)
+    @ApiOperation(
+            value = "Hakee sallitut yhteystietotyypit",
+            notes = "Operaatio palauttaa annetuille organisaatiotyypeille sallitut yhteystietotyypit.",
+            response = YhteystietojenTyyppiRDTO.class,
+            responseContainer = "List")
     public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@QueryParam("organisaatioTyyppi") List<String> organisaatioTyyppi);
 
     @GET
     @Path("/auth")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Testaa autentikoituneen käyttäjän", notes = "Tätä voi kutsua ennen ensimmäistä autenttikoitua POST-kutsua, ettei tule CAS + autentikoitu POST redirection ongelma.", response = String.class)
+    @ApiOperation(
+            value = "Testaa autentikoituneen käyttäjän",
+            notes = "Operaatiota käytetään ennen ensimmäistä autenttikoitua POST-kutsua. "
+                    + "Näin vältetään CAS + autentikoitu POST redirection ongelma.",
+            response = String.class)
     public String authHello();
 
 }

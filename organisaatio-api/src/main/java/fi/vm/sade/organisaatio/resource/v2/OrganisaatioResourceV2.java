@@ -49,14 +49,21 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/hello")
-    @ApiOperation(value = "Testi", notes = "Testioperaatio", response = String.class)
+    @ApiOperation(
+            value = "Testioperaatio, jolla voi kokeilla onko organisaatiopalvelu pystyssä.",
+            notes = "Operaatio vastaa tervehdykseen ja palauttaa palvelun aikaleiman.",
+            response = String.class)
     public String hello();
 
     @GET
     @Path("/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla",
-            notes = "Operaatio näyttää listan organisaatioita, jotka vastaavat annettuja hakuehtoja.", response = OrganisaatioHakutulos.class)
+    @ApiOperation(
+            value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
+                    + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
+            response = OrganisaatioHakutulos.class)
     public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
@@ -69,14 +76,17 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/yhteystiedot/hae")
-    @ApiOperation(value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
+    @ApiOperation(
+            value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
             notes = "Operaatio palauttaa hakukriteerit täyttävien organisaatioiden yhteystiedot.")
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
     @Path("/{oid}/paivittaja")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee aktiivisen organisaation päivittäjän",
-            notes = "Operaatio palauttaa viimeisimmän päivittäjän.", response = OrganisaatioPaivittajaDTOV2.class)
+    @ApiOperation(
+            value = "Hakee organisaation viimeisimmän päivittäjän tiedot.",
+            notes = "Operaatio palauttaa oid:n määrittämän organisaation viimeisimmän päivittäjän.",
+            response = OrganisaatioPaivittajaDTOV2.class)
     public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 }
