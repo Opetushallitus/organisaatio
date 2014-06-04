@@ -9,17 +9,22 @@ repositories {
         mavenCentral()
 }
 
+String zipFileName = ""
+
 // Create release zip (wars and configs)
 task(zipIt, type: Zip) {
 	doFirst {
 		// Renames abc-x.y-SOMETHING.war to abc.war
 		fileTree(from: '.', include: '**/target/*.war').files.each { oneFile ->	
-	    	String replaced = oneFile.path.replaceFirst('-\\d+\\.\\d+-\\w+','')
+	    	String replaced = oneFile.path.replaceFirst('-\\d+\\.\\d+.[^.]+','')
 	        oneFile.renameTo(file(replaced))
 		}
 	}
+	
+	zipFileName = serviceName + "_" + branchName + "_" + new Date().format("yyyyMMddHHmmss") + ".zip"
+	
     destinationDir new File(buildDir, "distributions")
-	archiveName serviceName + "_" + branchName + "_" + new Date().format("yyyyMMddHHmmss") + ".zip"
+	archiveName zipFileName
 	from 'src/main/resources'
 	from 'organisaatio-service/target'
 	from 'organisaatio-ui/target'
@@ -42,4 +47,23 @@ task(scp, dependsOn: zipIt) << {
                     include(name: '*.zip')
             }
     }
+}
+
+// Task for complete "deploy", creates .zip, copies it and calls for script with ssh
+task(remoteDeploy, dependsOn: scp) << {
+	
+	// Redefine sshexec
+	ant.taskdef(name: 'sshexec',
+      classname: 'org.apache.tools.ant.taskdefs.optional.ssh.SSHExec',
+      classpath: configurations.sshAntTask.asPath)
+
+	String fullPath = "/data00/releases/" + serviceName + "/" + branchName + "/" + zipFileName
+	String archiveName = zipFileName
+	String archivePath = fullPath
+	String fullCmd = remoteCommand.replace("{{archiveName}}", zipFileName).replace("{{archivePath}}", fullPath);
+	println("SSH: " + fullCmd)
+	ant.sshexec(host: host, username: user, trust: 'true', keyfile: keyFile, command: fullCmd, outputproperty: 'result')
+	def result = ant.project.properties.'result'
+	println("SSH OUTPUT: " + result);
+	
 }

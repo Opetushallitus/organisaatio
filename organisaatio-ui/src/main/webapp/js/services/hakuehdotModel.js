@@ -13,10 +13,9 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
         kunta: "",
         organisaatiotyyppi: "",
         oppilaitostyyppi: "",
-        tila: "kaikki",
-        kaikki: "kaikki",
-        vainAktiiviset: "vainAkviiviset",
-        vainLakkautetut: "vainLakkautetut",
+        aktiiviset: true,
+        suunnitellut: true,
+        lakkautetut: false,
         paikkakunnat: [],
         organisaatiotyypit: [],
         oppilaitostyypit: [],
@@ -33,6 +32,13 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     model.organisaatiotyyppi ||
                     model.oppilaitostyyppi ||
                     model.organisaatioRajaus) {
+                return false;
+            }   
+            return true;
+        },
+        
+        isTilaValid: function() {
+            if (!model.aktiiviset && !model.suunnitellut && !model.lakkautetut) {
                 return false;
             }   
             return true;
@@ -100,7 +106,9 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             model.kunta= "";
             model.organisaatiotyyppi= "";
             model.oppilaitostyyppi= "";
-            model.tila = "kaikki";
+            model.aktiiviset= true;
+            model.suunnitellut= true;
+            model.lakkautetut= false;
         },
 
         resetAll: function () {
@@ -109,7 +117,9 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             model.kunta= "";
             model.organisaatiotyyppi= "";
             model.oppilaitostyyppi= "";
-            model.tila = "kaikki";
+            model.aktiiviset= true;
+            model.suunnitellut= true;
+            model.lakkautetut= false;
         },
         
         init: function () {

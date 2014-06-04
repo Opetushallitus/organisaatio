@@ -30,6 +30,14 @@ app.directive('formatteddate', function($log, $filter) {
                     return viewValue;
                 }
 
+                var dateParts = val.split('.');
+
+                // Jos vuosiluku ei ole välillä 1990 - 2030
+                if(dateParts[2] < 1990 || dateParts[2] < 2030){
+                    ctrl.$setValidity('dateYear', false);
+                    return viewValue;
+                }
+
                 if (!viewValue) {
                     ctrl.$setValidity('date', true);
                     return null;

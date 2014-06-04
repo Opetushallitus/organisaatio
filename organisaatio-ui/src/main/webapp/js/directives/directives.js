@@ -47,6 +47,10 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
                     case "readOrg":
                         AuthService.readOrg(attrs.authService, [attrs.authOrg]).then(success);
                         break;
+
+                    case "crudRyhma":
+                        AuthService.crudRyhma(attrs.authService).then(success);
+                        break;
                 }
             }, 0);
 

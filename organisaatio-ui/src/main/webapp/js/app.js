@@ -1,4 +1,4 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce']);
+var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies']);
 
 angular.module('localization', [])
 .filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
@@ -153,6 +153,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
         }
         return true;
     };
+
 });
 
 // Esimerkki: Alert.add("warning", $filter('i18n')("YritysValinta.virheViesti", ""), true);
@@ -249,11 +250,15 @@ app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$t
 ]);
 
 // http://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http#19771501
+// Cachen voi sallia yksittäisille URLeille parametrilla '?allowCache=true'
 app.factory('NoCacheInterceptor', function() {
     return {
         request: function(config) {
-            if (config.method && config.method === 'GET' && config.url.indexOf('html') === -1 &&
-                    (config.url.indexOf(SERVICE_URL_BASE) !== -1 || config.url.indexOf(KOODISTO_URL_BASE) !== -1)) {
+            if (config.method && config.method === 'GET' &&
+                    config.url.indexOf('html') === -1 &&
+                    config.url.indexOf("?allowCache=true") === -1 &&
+                    (config.url.indexOf(SERVICE_URL_BASE) !== -1 ||
+                            (config.url.indexOf(KOODISTO_URL_BASE) !== -1))) {
                 var separator = config.url.indexOf('?') === -1 ? '?' : '&';
                 config.url = config.url + separator + 'noCache=' + new Date().getTime();
             }
@@ -268,7 +273,7 @@ app.factory('NoCacheInterceptor', function() {
 //
 ////////////
 
-// Organisaation haku / tallennus organisaatiopalvelulta
+// Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/:oid", {oid: "@oid"}, {
@@ -278,7 +283,7 @@ app.factory('Organisaatio', function($resource) {
     });
 });
 
-// Organisaation haku / tallennus organisaatiopalvelulta
+// Organisaation luonti organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('UusiOrganisaatio', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio", {}, {
@@ -286,7 +291,7 @@ app.factory('UusiOrganisaatio', function($resource) {
     });
 });
 
-// Hae aliorganisaatiot organisaatiopalvelulta
+// Aliorganisaatioiden haku organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
 app.factory('Aliorganisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/hae?oidRestrictionList=:oid", {oid: "@oid"}, {
@@ -294,16 +299,16 @@ app.factory('Aliorganisaatiot', function($resource) {
     });
 });
 
-// Organisaatioiden haku
+// Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/hae", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
         get: {method: 'GET'}
     });
 });
 
-// Tehdään organisaatiopalveluun autentikoitu get kutsu
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/rest/myroles
+// Autentikoitu get kutsu organisaatiopalveluun
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/auth
 app.factory('OrganisaatioAuthGET', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
         get: {method:   "GET"}
@@ -374,7 +379,7 @@ return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyVa
   });
 });
 
-// YTJ tiedot yhden yrityksen osalta
+// YTJ tiedot yhden yrityksen osalta organisaatiopalvelun kautta
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
 app.factory('YTJYritysTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/:ytunnus", {ytunnus: "@ytunnus"}, {}, {
@@ -382,7 +387,7 @@ app.factory('YTJYritysTiedot', function($resource) {
     });
 });
 
-// YTJ haku nimen perusteella
+// YTJ tietojen haku nimen perusteella
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/hae?nimi=yliopiston
 app.factory('YTJYritystenTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/hae", {}, {
@@ -390,10 +395,26 @@ app.factory('YTJYritystenTiedot', function($resource) {
     });
 });
 
-// postinumeroiden haku koodistopalvelulta
+// Postinumerokoodiston version haku koodistopalvelulta
+// Esim: https://localhost:8503/koodisto-service/rest/json/posti
+app.factory('KoodistoPostiVersio', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/posti", {}, {
+    get: {method: "GET"}
+  });
+});
+
+// Postinumeroiden haku koodistopalvelulta
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
 app.factory('KoodistoPosti', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
+    get: {method: "GET", isArray: true}
+  });
+});
+
+// Postinumeroiden haku koodistopalvelulta tai selaimen cachesta
+// Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
+app.factory('KoodistoPostiCached', function($resource) {
+return $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
     get: {method: "GET", isArray: true}
   });
 });
@@ -408,12 +429,6 @@ return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
 
 // Muokattavien yhteystietojen haku organisaatiopalvelulta
 // Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
-app.factory('YhteystietojenTyyppi', function($resource) {
-    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
-        get: {method: 'GET', isArray: true}
-    });
-});
-
 app.factory('Yhteystietojentyyppi', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
         get: {method: 'GET', isArray: true},
@@ -422,6 +437,7 @@ app.factory('Yhteystietojentyyppi', function($resource) {
     });
 });
 
+// Yhteystietotyypin poisto organisaatiopalvelulta
 app.factory('YhteystietojentyypinPoisto', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid", { oid: "@oid" }, {
         delete: {method: 'DELETE'}
@@ -452,8 +468,8 @@ app.factory('HenkiloKayttooikeus', function($resource) {
     });
 });
 
-// Hae ryhmät organisaatioplavelulta
-//
+// Ryhmien haku organisaatioplavelulta
+// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/1.2.246.562.10.00000000001/ryhmat
 app.factory('Ryhmat', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/:oid/ryhmat", {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}

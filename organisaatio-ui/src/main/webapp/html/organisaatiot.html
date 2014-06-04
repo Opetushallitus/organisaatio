@@ -52,23 +52,23 @@
     <p ng-show="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.valittuOrganisaatio' | i18n}}
         {{hakuehdot.rajatutOrganisaatiotStr}}
-        <a href="" ng-click="hakuehdot.organisaatioRajaus = false">
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = false; perusHakuForm.$setDirty()">
             {{'Organisaatiot.poistaOrganisaatioValinta' | i18n}}
         </a>
     </p>
     <p ng-hide="hakuehdot.organisaatioRajaus">
         {{'Organisaatiot.kaikkiValittu' | i18n}}
-        <a href="" ng-click="hakuehdot.organisaatioRajaus = true">
+        <a href="" ng-click="hakuehdot.organisaatioRajaus = true; perusHakuForm.$setDirty()">
             {{'Organisaatiot.palautaOletusOrganisaatioValinta' | i18n}}
         </a>
     </p>
 </div>
 
-
-<form class="form-search" novalidate ng-submit="search()">
+<form name="perusHakuForm" class="form-search" novalidate ng-submit="search(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">
     <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
     <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>
-    <button class="btn" type="reset" ng-click="resetHakuehdot()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+    <button class="btn" type="reset" ng-click="resetHakuehdot(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+    <span ng-if="tarkemmatHakuehdotForm.$dirty || perusHakuForm.$dirty" class="muted" style="background-color: #fff"><em>{{'Organisaatiot.hakuehtojaMuutettu' | i18n}}</em></span>
 </form>
 
 <p ng-hide="tarkemmatHakuehdotVisible">
@@ -85,32 +85,39 @@
             {{'Organisaatiot.piilotaTarkennettuHaku' | i18n}}
         </a>
     </p>
-    <form>
+    <form name="tarkemmatHakuehdotForm">
         <div class="form-fluid">
             <!-- Kotipaikka -->
-            <select class="input-xlarge" ng-model="hakuehdot.kunta" ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">
+            <select class="input-xlarge" ng-model="hakuehdot.kunta"
+                    ng-options="kunta.uri as kunta.nimi for kunta in hakuehdot.paikkakunnat | orderBy:'nimi'">
                 <option value="">{{'Organisaatiot.kotipaikka' | i18n}}</option>
             </select>
 
             <!-- Organisaatiotyyppi -->
-            <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi" ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'">
+            <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi"
+                    ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'">
                 <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
             </select>
 
             <!-- Oppilaitostyyppi -->
-            <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi" ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
+            <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi"
+                    ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
                 <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
             </select>
         </div>
         <div>
-            <!-- Näytä kaikki -->
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.kaikki">{{'Organisaatiot.naytaKaikki' | i18n}}
+            <!-- Näytä aktiiviset organisaatiot -->
+            <input type="checkbox" ng-model="hakuehdot.aktiiviset">{{'Organisaatiot.aktiiviset' | i18n}}
 
-            <!-- Näytä vain aktiiviset -->           
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainAktiiviset">{{'Organisaatiot.naytaVainAktiiviset' | i18n}}
+            <!-- Näytä suunnitellut organisaatiot -->
+            <input type="checkbox" ng-model="hakuehdot.suunnitellut">{{'Organisaatiot.suunnitellut' | i18n}}
 
-            <!-- Näytä vain lakkautetut -->           
-            <input type="radio" ng-model="hakuehdot.tila" ng-value="hakuehdot.vainLakkautetut">{{'Organisaatiot.naytaVainLakkautetut' | i18n}}
+            <!-- Näytä lakkautetut organisaatiot -->
+            <input type="checkbox" ng-model="hakuehdot.lakkautetut">{{'Organisaatiot.passivoidut' | i18n}}
+
+            <span ng-if="hakuehdot.isTilaValid() === false" class="muted" style="background-color: #fff; color: #f00">
+                <em>{{'Organisaatiot.validointi.valitseYksiTila'| i18n }}</em>
+            </span>
         </div>
     </form>
 </div>
@@ -119,12 +126,10 @@
     <h3 class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</h3>
     <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
         <button class="btn" ng-click="luoYlinTaso()">{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}</button>
-    </span>   
-    <!-- Ryhmäkäsitteen lisääminen versiossa 10.0 
-    <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
+    </span>
+    <span auth="crudRyhma" auth-service="APP_ORGANISAATIOHALLINTA">
         <button class="btn" ng-click="ryhmienHallinta()">{{'Organisaatiot.hallinnoiRyhmia' | i18n}}</button>
     </span>
-     -->
 </div>
 
 <br>

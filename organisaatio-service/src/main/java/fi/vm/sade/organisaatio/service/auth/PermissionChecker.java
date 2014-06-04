@@ -21,6 +21,10 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import java.util.Map;
+import java.util.Set;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Encapsulate most of the auth check logic done at server here.
@@ -29,14 +33,34 @@ import java.util.Map;
 public class PermissionChecker {
 
     @Autowired
+    private OrganisaatioDAOImpl organisaatioDAO;
+
+    @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
 
     @Autowired
     private OrganisaatioDAOImpl organisaatioDao;
 
+    private boolean checkCRUDRyhma(OrganisaatioContext authContext) {
+        Set<OrganisaatioTyyppi> tyypit = authContext.getOrgTypes();
+        if (tyypit.size() == 1 && tyypit.contains(OrganisaatioTyyppi.RYHMA)) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            for (GrantedAuthority ga : auth.getAuthorities()) {
+                if (ga.getAuthority().startsWith("ROLE_APP_ORGANISAATIOHALLINTA_RYHMA_")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void checkRemoveOrganisation(String oid) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioDAO.findByOid(oid));
+        if (checkCRUDRyhma(authContext)) {
+            return;
+        }
         checkPermission(permissionService
-                .userCanDeleteOrganisation(OrganisaatioContext.get(oid)));
+                .userCanDeleteOrganisation(authContext));
     }
 
     MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
@@ -53,6 +77,10 @@ public class PermissionChecker {
             boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext
                 .get(organisaatio);
+
+        if (checkCRUDRyhma(authContext)) {
+            return;
+        }
 
         if (update) {
             final Organisaatio current = organisaatioDao.findByOid(organisaatio
