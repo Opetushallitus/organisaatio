@@ -512,7 +512,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     var pvm = new Date(paivitys.paivitysPvm);
                     model.paivitys.pvm = pvm.toLocaleDateString() + ' ' + pvm.toLocaleTimeString();
                     Henkilo.get({hlooid: paivitys.paivittaja}, function(paivittaja_hlo) {
-                        model.paivitys.paivittaja = paivittaja_hlo.etunimi + ' ' + paivittaja_hlo.sukunimi;
+                        model.paivitys.paivittaja = paivittaja_hlo.etunimet + ' ' + paivittaja_hlo.sukunimi;
                     }, function(response) {
                         model.paivitys.paivittaja = paivitys.paivittaja;
                     });
