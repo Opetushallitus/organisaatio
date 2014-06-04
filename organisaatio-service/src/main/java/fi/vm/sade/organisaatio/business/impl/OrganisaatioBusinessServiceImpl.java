@@ -139,27 +139,37 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
-            entity.getNimi().setId(orgEntity.getNimi().getId());
-            entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
-            entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
-            entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
+            if (orgEntity.getNimi() != null) {
+                entity.getNimi().setId(orgEntity.getNimi().getId());
+                entity.getNimi().setVersion(orgEntity.getNimi().getVersion());
+            }
+            if (orgEntity.getKuvaus2() != null) {
+                entity.getKuvaus2().setId(orgEntity.getKuvaus2().getId());
+                entity.getKuvaus2().setVersion(orgEntity.getKuvaus2().getVersion());
+            }
             OrganisaatioMetaData metadata = entity.getMetadata();
             OrganisaatioMetaData orgMetadata = orgEntity.getMetadata();
-            metadata.setId(orgMetadata.getId());
-            metadata.setVersion(orgMetadata.getVersion());
-            metadata.getHakutoimistoNimi().setId(orgMetadata.getHakutoimistoNimi().getId());
-            metadata.getHakutoimistoNimi().setVersion(orgMetadata.getHakutoimistoNimi().getVersion());
-            metadata.getNimi().setId(orgMetadata.getNimi().getId());
-            metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
-            for (NamedMonikielinenTeksti value : metadata.getValues()) {
-                MonikielinenTeksti mkt = orgMetadata.getNamedValue(value.getKey());
-                if (mkt != null) {
-                    value.getValue().setId(mkt.getId());
-                    value.getValue().setVersion(mkt.getVersion());
+            if (metadata != null && orgMetadata != null) {
+                metadata.setId(orgMetadata.getId());
+                metadata.setVersion(orgMetadata.getVersion());
+                if (orgMetadata.getHakutoimistoNimi() != null) {
+                    metadata.getHakutoimistoNimi().setId(orgMetadata.getHakutoimistoNimi().getId());
+                    metadata.getHakutoimistoNimi().setVersion(orgMetadata.getHakutoimistoNimi().getVersion());
+                }
+                if (orgMetadata.getNimi() != null) {
+                    metadata.getNimi().setId(orgMetadata.getNimi().getId());
+                    metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
+                }
+                for (NamedMonikielinenTeksti value : metadata.getValues()) {
+                    MonikielinenTeksti mkt = orgMetadata.getNamedValue(value.getKey());
+                    if (mkt != null) {
+                        value.getValue().setId(mkt.getId());
+                        value.getValue().setVersion(mkt.getVersion());
+                    }
                 }
             }
         } catch (Exception ex) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.getMessage(), "error.merge.aux.data");
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.getMessage(), "organisaatio.error.merge.aux.data");
         }
     }
 
