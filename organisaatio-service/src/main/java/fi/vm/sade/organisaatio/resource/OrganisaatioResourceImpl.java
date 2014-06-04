@@ -404,6 +404,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         } catch (OrganisaatioResourceException ore) {
             throw ore;
         } catch (Throwable t) {
+            LOG.error("Error saving " + oid, t);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
