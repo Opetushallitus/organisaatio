@@ -25,6 +25,10 @@
         <log.client.version>7.0-SNAPSHOT</log.client.version>
         <oid.api.version>8.0-SNAPSHOT</oid.api.version>
         <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
+
+        <maven.war.plugin.version>2.4</maven.war.plugin.version>
+        <swagger.version>1.3.0</swagger.version>
+        <solr.version>4.2.0</solr.version>
         <modelmapper.version>0.6.3</modelmapper.version>
         <ehcache.version>2.5.0</ehcache.version>
         <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>

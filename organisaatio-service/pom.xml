@@ -25,7 +25,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1-alpha-2</version>
+                <version>${maven.war.plugin.version}</version>
                 <configuration>
                     <containerConfigXML>src/main/webapp/META-INF/context.xml</containerConfigXML>
                 </configuration>
@@ -132,12 +132,12 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>4.2.0</version>
+            <version>${solr.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-core</artifactId>
-            <version>4.2.0</version>
+            <version>${solr.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -227,7 +227,7 @@
         <dependency>
             <groupId>com.wordnik</groupId>
             <artifactId>swagger-jersey-jaxrs_2.10</artifactId>
-            <version>1.3.0</version>
+            <version>${swagger.version}</version>
         </dependency>
 
         <dependency>
@@ -253,7 +253,7 @@
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
-            <version>6.1.26</version>
+            <version>${jetty.embed.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -355,7 +355,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
