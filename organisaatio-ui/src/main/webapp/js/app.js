@@ -475,3 +475,11 @@ app.factory('Ryhmat', function($resource) {
         get: {method: 'GET', isArray: true}
     });
 });
+
+// Viimeisimman päivityksen tietojen haku organisaatioplavelulta
+// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/paivittaja
+app.factory('Paivittaja', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/paivittaja", {oid: "@oid"}, {
+        get: {method: 'GET'}
+    });
+});
