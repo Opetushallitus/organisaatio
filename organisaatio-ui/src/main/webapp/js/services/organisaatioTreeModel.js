@@ -173,9 +173,16 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             return "\u00A0";
         },
 
-        getTyyppi: function (node) {
+        getTyypit: function (node) {
             if ('organisaatiotyypit' in node) {
-                return $filter('i18n')("Organisaatiot."+node.organisaatiotyypit[0], "");
+                var tyypit = "";
+                for(var i=0; i < node.organisaatiotyypit.length; i++) {
+                    if (i !== 0) {
+                        tyypit += ", ";
+                    }
+                    tyypit += $filter('i18n')("Organisaatiot."+node.organisaatiotyypit[i], "");
+                }
+                return tyypit;
             }
             return "\u00A0";
         },
@@ -234,7 +241,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     node.i18nNimi += " (" + model.getTila(node) + ")";
                 }
                 node.tunnus = model.getTunnus(node);
-                node.tyyppi = model.getTyyppi(node);
+                node.tyyppi = model.getTyypit(node);
                 node.tila   = model.getTila(node);
                 node.level  = level;
 
