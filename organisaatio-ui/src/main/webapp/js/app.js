@@ -302,7 +302,7 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hierarkia/hae", {}, {
         get: {method: 'GET'}
     });
 });

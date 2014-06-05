@@ -64,8 +64,8 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
     }
 
-    public List<OrganisaatioPerustieto> searchBasicOrganisaatiosExact(final SearchCriteria searchCriteria) {
-
+    public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
+        long time = System.currentTimeMillis();
         final String kunta = searchCriteria.getKunta();
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
         final String organisaatioTyyppi = searchCriteria.getOrganisaatioTyyppi();
@@ -74,13 +74,21 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, searchStr, oid);
 
+        // max rows to return
         q.setRows(10000);
 
-        final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
-
         try {
-            List<OrganisaatioPerustieto> result = Lists.newArrayList(Lists.transform(solr.query(q, METHOD.POST).getResults(),
-                    converter));
+            QueryResponse response = solr.query(q, METHOD.POST);
+
+            final SolrDocumentToOrganisaatioPerustietoTypeFunction converter =
+                    new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
+
+            final List<OrganisaatioPerustieto> result =
+                    Lists.newArrayList(Lists.transform(response.getResults(), converter));
+
+            LOG.debug("Total time :{} ms. Results :{}",
+                    (System.currentTimeMillis() - time),
+                    response.getResults().getNumFound());
             return result;
         } catch (SolrServerException e) {
             throw new RuntimeException(e);
@@ -88,7 +96,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     }
 
-    public List<OrganisaatioPerustieto> searchBasicOrganisaatios(final SearchCriteria searchCriteria) {
+    public List<OrganisaatioPerustieto> searchHierarchy(final SearchCriteria searchCriteria) {
         long time = System.currentTimeMillis();
         final String kunta = searchCriteria.getKunta();
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
@@ -152,8 +160,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                         .join(restrictionList)));
             }
 
-            String query = null;
-            query = String.format("%s:(%s)", OID, Joiner.on(" ").join(oids));
+            String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(oids));
             if (paths.size() > 0) {
                 query = query
                         + String.format(" %s:(%s)", PATH,

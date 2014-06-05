@@ -56,15 +56,27 @@ public interface OrganisaatioResourceV2 {
     public String hello();
 
     @GET
-    @Path("/hae")
+    @Path("hierarkia/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
+                    + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti."
                     + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
             response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulos searchOrganisaatioHierarkia(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+
+    @GET
+    @Path("hae")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatiot, jotka osuvat annetuihin hakuehtoihin",
+            notes = "Operaatio palauttaa vain hakuehtoja vastaavat organisaatiot.",
+            response = OrganisaatioHakutulos.class)
+    public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     /**

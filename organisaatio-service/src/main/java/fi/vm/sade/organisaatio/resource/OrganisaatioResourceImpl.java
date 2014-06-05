@@ -129,7 +129,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
 
     @Override
-    public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
+    public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
@@ -144,7 +144,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
 
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {

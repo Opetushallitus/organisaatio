@@ -50,24 +50,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @CrossOriginResourceSharing(allowAllOrigins = true)
 public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
-        
+
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
-        
+
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
-    
+
     @Autowired
     private OrganisaatioModelMapper modelMapper;
 
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
-    
+
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
-    
+
     @Autowired
     private OrganisaatioDAOImpl organisaatioDAO;
-        
+
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
@@ -78,9 +78,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getYtunnusList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
-        
+
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
-        
+
         List<Organisaatio> organisaatiot = organisaatioBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
@@ -103,21 +103,40 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public OrganisaatioHakutulos searchOrganisaatioRakenne(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+    public OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         // Rakenna hierarkia
         tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
 
         // Lukumäärä tuloksiin
         tulos.setNumHits(organisaatiot.size());
-        
+
+        return tulos;
+    }
+
+    @Override
+    public OrganisaatioHakutulos searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
+
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+
+        // Hae organisaatiot
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+
+        // Organisaatiot tuloksiin
+        tulos.setOrganisaatiot(organisaatiot);
+
+        // Lukumäärä tuloksiin
+        tulos.setNumHits(organisaatiot.size());
+
         return tulos;
     }
 
