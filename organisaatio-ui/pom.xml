@@ -159,6 +159,7 @@
                         <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/vendor/jquery.ui.widget.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/jQuery-File-Upload-9.5.7/jquery.fileupload.js</source>
+                        <source>${project.basedir}/src/main/webapp/jslib/angular-modules/angular-idle-0.3.2.js</source>
                     </preloadSources>
                     <jsSrcDir>${project.basedir}/src/main/webapp</jsSrcDir>
                     <sourceExcludes>
