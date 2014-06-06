@@ -49,7 +49,7 @@ app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$modalInstance', '$win
     };
 }]);
 
-app.controller('EventsCtrl', ['$scope','$idle', '$modal', '$http', '$log', function($scope, $idle, $modal, $http, $log) {
+app.controller('EventsCtrl', ['$scope','$idle', '$modal', '$http', function($scope, $idle, $modal, $http) {
     var openModal = function(template) {
         return $modal.open({
                 templateUrl: TEMPLATE_URL_BASE + template,
@@ -61,14 +61,12 @@ app.controller('EventsCtrl', ['$scope','$idle', '$modal', '$http', '$log', funct
     };
 
     $scope.$on('$idleWarn', function(e, countdown) {
-        $log.info('Idle warn!');
         if (!$scope.sessionWarning || angular.element('#sessionWarning').length < 1) {
             $scope.sessionWarning = openModal('sessionWarning.html');
         }
     });
 
     $scope.$on('$idleTimeout', function() {
-        $log.info('Idle timeout!');
         $scope.sessionWarning.close();
         $scope.sessionWarning = openModal('sessionExpired.html');
         $idle.unwatch();
