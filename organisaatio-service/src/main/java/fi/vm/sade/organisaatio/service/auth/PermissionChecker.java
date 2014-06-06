@@ -37,11 +37,11 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
-import org.apache.commons.lang.time.DateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,14 +110,14 @@ public class PermissionChecker {
                 // name changed
                 checkPermission(permissionService.userCanEditName(authContext));
             }
-            if (DateUtils.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
                 LOG.info("Alkupäivämäärä muuttunut: " +
                         current.getAlkuPvm() + " -> " + organisaatio.getAlkuPvm());
 
                 // date(s) changed
                 checkPermission(permissionService.userCanEditDates(authContext));
             }
-            if (DateUtils.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut: " +
                         current.getLakkautusPvm() + " -> " + organisaatio.getLakkautusPvm());
 
@@ -150,14 +150,14 @@ public class PermissionChecker {
                 // name changed
                 checkPermission(permissionService.userCanEditName(authContext));
             }
-            if (DateUtils.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
                 LOG.info("Alkupäivämäärä muuttunut: " +
                         current.getAlkuPvm() + " -> " + organisaatio.getAlkuPvm());
 
                 // date(s) changed
                 checkPermission(permissionService.userCanEditDates(authContext));
             }
-            if (DateUtils.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut: " +
                         current.getLakkautusPvm() + " -> " + organisaatio.getLakkautusPvm());
 
