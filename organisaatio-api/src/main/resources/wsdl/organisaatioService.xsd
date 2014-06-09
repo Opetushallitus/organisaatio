@@ -409,14 +409,6 @@
                             <xs:documentation xml:lang="fi">Haetaan organisaation domain nimestä.</xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <!--
-                                        Removed as unnesessary: 15.1.2013 / mlyly
-                                        <xs:element minOccurs="0" name="oikeudet" type="xs:boolean">
-                                            <xs:annotation>
-                                                <xs:documentation xml:lang="fi">Jos totta, palauttaa vain ne joihin hallintaoikeudet.</xs:documentation>
-                                            </xs:annotation>
-                                        </xs:element>
-                    -->
                     <xs:element minOccurs="0" name="kunta" type="xs:string">
                         <xs:annotation>
                             <xs:documentation xml:lang="fi">Haetaan valitun kunnan koodisto uri:lla.</xs:documentation>
@@ -562,10 +554,6 @@
                     <xs:documentation xml:lang="fi">Organisaation kotipaikka, koodisto URI (kunnat).</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" name="kuvaus" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="lakkautusPvm" type="xs:dateTime">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Organisaation voimassa olo lakkaa. "NULL" toistaiseksi voimassa.
@@ -582,10 +570,6 @@
                     <xs:documentation xml:lang="fi">Organisaation nimi, UI:ssa FI, EN, SV.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" name="nimiLyhenne" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="parentOid" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Organisaation "äiti", hierarkinen rakenne.</xs:documentation>
@@ -641,10 +625,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!--
-                        Removed as unnecessary/not used 15.1.2013/mlyly
-                        <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="organisaatioSopimusKunnat" type="xs:string"/>
-            -->
             <xs:element minOccurs="0" name="oppilaitosTyyppi" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Koodisto - jos organisaatio on "oppilaitos"; URI.</xs:documentation>

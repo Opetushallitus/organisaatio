@@ -65,12 +65,12 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
         s.setKielet(convertListToList(t.getKieletUris()));
         s.setKotipaikka(t.getKotipaikkaUri());
-        s.setKuvaus(s.getKuvaus());
         s.setKuvaus2(convertMapToMonikielinenTeksti(t.getKuvaus2()));
         s.setLakkautusPvm(t.getLakkautusPvm());
         s.setMaa(t.getMaaUri());
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
+        s.setNimihaku(convertNimiMapToNimihaku(t.getNimi()));
         // t.set(s.getNimiLyhenne());
         s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
         s.setOppilaitosKoodi(t.getOppilaitosKoodi());
@@ -83,7 +83,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         // t.set(s.getParentSuhteet());
 
         // t.set(s.getPuhelin());
-        // t.set(s.getSopimusKunnat()); -- non existing old ui functionality has left it's marks...
         s.setToimipisteKoodi(t.getToimipistekoodi());
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
@@ -353,5 +352,14 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
             }
         }
         return null;
+    }
+
+    private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
+        StringBuilder sb = new StringBuilder();
+        for (String nimi : nimiMap.values()) {
+                sb.append(",");
+                sb.append(nimi);
+        }
+        return sb.toString();
     }
 }

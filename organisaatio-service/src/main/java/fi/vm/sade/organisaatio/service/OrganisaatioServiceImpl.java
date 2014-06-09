@@ -29,7 +29,6 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -37,7 +36,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.vm.sade.generic.common.DateHelper;
 import fi.vm.sade.generic.common.ValidationException;
-import fi.vm.sade.log.model.Tapahtuma;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.GenericFault;
 import fi.vm.sade.organisaatio.api.model.types.*;
@@ -53,12 +51,12 @@ import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatT
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioBasicConverter;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jws.WebParam;
@@ -342,7 +340,7 @@ public class OrganisaatioServiceImpl
             } else if (!parentOrgs.get(0).getOid().equals(ophOid)) { //Vanhempi ei ole uber org
                 LOG.debug("Updating non-root parent: {}", org.getOid());
                 //Ja vanhemman lakkautus pvm on joko tyhja tai lapsen lakkautuspvm on ennen tai sama kuin vanhemman lakkautus pvm
-                Date nlpvm = OrganisaatioServiceAlgorithms.getUpdatedLakkautusPvm(org.getLakkautusPvm(), lakkautusPvm, oldLakkautusPvm, parentLakkautusPvm);
+                Date nlpvm = OrganisaatioUtil.getUpdatedLakkautusPvm(org.getLakkautusPvm(), lakkautusPvm, oldLakkautusPvm, parentLakkautusPvm);
                 if (org.getLakkautusPvm() == null) {
                     LOG.debug("Doing actual update for: {}", org.getOid());
                     org.setLakkautusPvm(nlpvm);

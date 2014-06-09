@@ -20,6 +20,9 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
+import java.util.Date;
+import org.apache.commons.lang.time.DateUtils;
+
 /**
  *
  * @author simok
@@ -31,5 +34,47 @@ public abstract class OrganisaatioUtil {
 
     public static boolean isRyhma(OrganisaatioRDTO organisaatio) {
         return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
+    }
+
+    /**
+     * Organisaation lakkautuspvm -logiikka. Huom. kaikki parametrit voivat olla null.
+     *
+     * @param oldLpvm Päivitettävän organisaation nykyinen lakkautuspvm.
+     * @param newLpvm Uusi lakkautuspvm.
+     * @param origLpvm Päivitettävän organisaatiojoukun alkuperäinen lakkautuspvm.
+     * @param parentLpvm Ylemmän tason organisaation lakkautuspvm.
+     * @return
+     */
+    public static Date getUpdatedLakkautusPvm(Date oldLpvm, Date newLpvm, Date origLpvm, Date parentLpvm) {
+        if (parentLpvm != null && (newLpvm == null || newLpvm.after(parentLpvm))) {
+            newLpvm = parentLpvm;
+        }
+        if (origLpvm != null && !isSameDay(oldLpvm, origLpvm)) {
+            return oldLpvm;
+        } else {
+            return newLpvm;
+        }
+    }
+
+    /**
+     * Tarkistetaan annetuista päivämääristä onko ne päivän osalta samat.
+     *
+     * @param pvm1 Päivämäärä lhs
+     * @param pvm2 Päivämäärä rhs
+     * @return true, jos päivät samat
+     */
+    public static boolean isSameDay(Date pvm1, Date pvm2) {
+        // Täysin sama date tai molemmat null
+        if (pvm1 == pvm2) {
+            return true;
+        }
+
+        // Toinen null
+        if (pvm1 == null || pvm2 == null) {
+            return false;
+        }
+
+        // Kumpikaan ei ole null --> tarkastetaan onko sama päivä
+        return DateUtils.isSameDay(pvm1, pvm2);
     }
 }

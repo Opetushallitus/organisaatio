@@ -1,5 +1,6 @@
 <ehcache name="casTicketCache"
     updateCheck="false"
+    maxBytesLocalDisk="2G"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
 

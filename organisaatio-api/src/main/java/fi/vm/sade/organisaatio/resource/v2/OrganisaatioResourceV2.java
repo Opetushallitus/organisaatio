@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.resource.v2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 
@@ -31,6 +32,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -47,15 +49,34 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/hello")
-    @ApiOperation(value = "Testi", notes = "Testioperaatio", response = String.class)
+    @ApiOperation(
+            value = "Testioperaatio, jolla voi kokeilla onko organisaatiopalvelu pystyssä.",
+            notes = "Operaatio vastaa tervehdykseen ja palauttaa palvelun aikaleiman.",
+            response = String.class)
     public String hello();
 
     @GET
-    @Path("/hae")
+    @Path("hierarkia/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee organisaatiot annetuilla hakuehdoilla",
-            notes = "Operaatio näyttää listan organisaatioita, jotka vastaavat annettuja hakuehtoja.", response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchOrganisaatioRakenne(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    @ApiOperation(
+            value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
+                    + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti."
+                    + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
+                    + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
+            response = OrganisaatioHakutulos.class)
+    public OrganisaatioHakutulos searchOrganisaatioHierarkia(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+
+    @GET
+    @Path("hae")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatiot, jotka osuvat annetuihin hakuehtoihin",
+            notes = "Operaatio palauttaa vain hakuehtoja vastaavat organisaatiot.",
+            response = OrganisaatioHakutulos.class)
+    public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     /**
@@ -67,9 +88,17 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/yhteystiedot/hae")
-    @ApiOperation(value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
+    @ApiOperation(
+            value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
             notes = "Operaatio palauttaa hakukriteerit täyttävien organisaatioiden yhteystiedot.")
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
 
-
+    @GET
+    @Path("/{oid}/paivittaja")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaation viimeisimmän päivittäjän tiedot.",
+            notes = "Operaatio palauttaa oid:n määrittämän organisaation viimeisimmän päivittäjän.",
+            response = OrganisaatioPaivittajaDTOV2.class)
+    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 }

@@ -22,7 +22,9 @@
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
     <Resource name="jdbc/organisaatio" auth="Container" type="javax.sql.DataSource"
-              maxActive="250" maxIdle="30" maxWait="10000"
+              maxActive="{{ host_postgresql_organisaatio_maxActive | default(50) }}" 
+              maxIdle="{{ host_postgresql_organisaatio_maxIdle | default(30) }}" 
+              maxWait="{{ host_postgresql_organisaatio_maxWait | default(10000) }}"
               username="{{host_postgresql_organisaatio_user}}" password="{{host_postgresql_organisaatio_password}}" driverClassName="org.postgresql.Driver"
               url="jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio"/>
 </Context>

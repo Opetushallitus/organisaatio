@@ -448,6 +448,8 @@ var parentResult = {
 
         $httpBackend.expectGET(/organisaatio\/hae\?oidRestrictionList=1.2.246.562.10.99999999999/).respond("{}");
 
+        $httpBackend.expectGET(/organisaatio\/v2\/1.2.246.562.10.99999999999\/paivittaja\?noCache=.*/).respond("{}");
+
         $httpBackend.expectGET(/json\/searchKoodis?.*/).respond(koodistoResult);
 
         spyOn($scope.model, "refreshIfNeeded").andCallThrough();

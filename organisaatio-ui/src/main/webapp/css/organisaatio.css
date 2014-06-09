@@ -76,3 +76,7 @@ input.greyed[type="text"] {
     -ms-transition: 0.3s;
     transition: 0.3s;
 }
+
+.modal-warning {
+    z-index: 120050 !important;
+}

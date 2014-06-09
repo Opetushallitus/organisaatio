@@ -96,6 +96,7 @@
                 <ref bean="yhteystietojenTyyppiResource"/>
                 <ref bean="swaggerResourceJSON" />
                 <ref bean="tempfileResource"/>
+                <ref bean="sessionResource"/>
             </list>
         </property>
         <property name="providers">

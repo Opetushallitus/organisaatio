@@ -168,6 +168,8 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     /**
      * Is user allowed to edit start and end dates.
      * OH-15: Vain OPH:N virkailija voi muuttaa koulutustoimijan ja oppilaitoksen perustamis- ja lakkauttamispäiviä
+     * @param context
+     * @return
      */
     public boolean userCanEditDates(final OrganisaatioContext context) {
         Preconditions.checkNotNull(context, "organisaatioContext cannot be null");
@@ -185,6 +187,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
     /**
      * Is user allowed to create "root" organisation.
+     * @return
      */
     public boolean userCanCreateRootOrganisation() {
         OrganisaatioPerustieto root = new OrganisaatioPerustieto();
@@ -196,6 +199,8 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
     /**
      * Is user allowed to move organisation.
+     * @param context
+     * @return
      */
     public boolean userCanMoveOrganisation(OrganisaatioContext context) {
         if (checkAccess(context.getOrgOid(), ROLE_CRUD)) {

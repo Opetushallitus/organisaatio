@@ -6,6 +6,12 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <div class="offset2" ng-show="model.paivitys.pvm">
+            ({{'Organisaationtarkastelu.tallennettu'| i18n}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})
+        </div>
+    </div>
+
     <div ng-show="model.organisaatio.metadata.kuvaEncoded">
         <img class="absolute offset8 span4" ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
     </div>

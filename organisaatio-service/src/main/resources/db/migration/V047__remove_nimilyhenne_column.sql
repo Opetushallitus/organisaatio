@@ -1,0 +1,1 @@
+ALTER TABLE organisaatio DROP COLUMN nimilyhenne;
