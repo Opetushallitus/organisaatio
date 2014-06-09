@@ -19,10 +19,10 @@
  *
  * NOTE: this module assumes that all the translations are PRELOADED in
  * global scope to configuration object:
- * </b>$window.LOCALISATION_DATA</b>
+ * </b>$window.APP_LOCALISATION_DATA</b>
  *
  * See "index.html" how the pre-loading is done to following global variable:
- * <b>window.$window.LOCALISATION_DATA</b>
+ * <b>window.$window.APP_LOCALISATION_DATA</b>
  *
  * @see partials/init.js for preload implementation ("jQuery.ajax(...")
  *
@@ -89,45 +89,22 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
         return {
             restrict: 'A',
             replace: true,
-            //template: '<div tt="this.is.key" locale="fi">Default saved for the given key</div>',
             scope: false,
             compile: function(tElement, tAttrs, transclude) {
-                // $log.debug("tt compile", tElement, tAttrs, transclude);
 
                 var key = tAttrs["tt"];
                 var locale = angular.isDefined(tAttrs["locale"]) ? tAttrs["locale"] : LocalisationService.getLocale();
-                var translation = "";
+                var translation = LocalisationService.tl(key, locale);
+                var localName = tElement[0].localName;
 
-                if (LocalisationService.hasTranslation(key, locale)) {
-                    // Existing translations, just return it
-                    translation = LocalisationService.tl(key, locale);
-                } else {
-                    // Missing / new translation
-                    // Grab the original / placeholder text in the template
-                    var originalText = "";
-
-                    var localName = tElement[0].localName;
-                    if (localName === "input") {
-                        originalText = tAttrs["value"];
-                    } else {
-                        originalText = tElement.html();
-                    }
-
-                    LocalisationService.createMissingTranslations(key, locale, originalText);
-
-                    translation = "*CREATED* " + originalText;
-                }
-
-                // $log.debug("  key: '" + key + "', locale: '"+ locale + "' --> " + translation);
-
-                // Put translated text to DOM
                 if (localName === "input") {
                     tElement.attr("value", translation);
                 } else {
                     tElement.html(translation);
                 }
 
-                return function postLink(scope, iElement, iAttrs, controller) {
+                // must return the link function
+                return function link(scope, iElement, iAttrs, controller) {
                     // $timeout(scope.$destroy.bind(scope), 0);
                 };
             }
@@ -181,21 +158,11 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      */
     this.getLocale = function() {
         // Default fallback
-        if (this.locale === undefined) {
+        if (!angular.isDefined(this.locale)) {
             $log.warn("  aha! undefined locale - using fi!");
             this.locale = "fi";
         }
         return this.locale;
-    };
-
-    // Note - the "koodisto" kieli... Brilliant!
-    var kieliUri = "kieli_" + this.getLocale();
-
-    /**
-     * returns language uri that matches the current language
-     */
-    this.getKieliUri = function(){
-      return kieliUri;
     };
 
     this.setLocale = function(value) {
@@ -227,6 +194,18 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     // see this.updateLookupMap() how it is filled
     this.localisationMapByLocaleAndKey = {};
 
+    function compileTranslation(translation, params) {
+        if (!angular.isArray(params)) {
+            // force params to be an array
+            params = [params];
+        }
+
+        return translation.replace(/{(\d+)}/g, 
+            function(match, number) {
+                return params[number] || match;
+            });
+    }
+
     /**
      * Get translation, fill in possible parameters.
      *
@@ -236,24 +215,14 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns {String} translation value, parameters replaced
      */
     this.getTranslation = function(key, locale, params) {
-        // $log.info("getTranslation(key, locale, params), key=" + key + ", l=" +  locale + ",params=" + params);
-
-        // Use default locale if not specified
-        if (locale === undefined) {
-            locale = this.getLocale();
-        }
-
         var result = this.getRawTranslation(key, locale);
 
         if (!angular.isDefined(result)) {
-            // Should not happen, missing translations created automatically elsewhere...
-            result = "!!Virhe!! key=" + key + " - locale=" + locale;
+            // Make it visible that a translation is missing
+            result = "Missing translation " + key + " for locale " + locale;
         } else {
-            // Expand parameters
-            if (params != undefined) {
-                result = result.replace(/{(\d+)}/g, function(match, number) {
-                    return angular.isDefined(params[number]) ? params[number] : match;
-                });
+            if (angular.isDefined(params)) {
+                result = compileTranslation(result, params);
             }
         }
 
@@ -279,35 +248,36 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     };
 
     /**
-     * Get the "raw" translations, no parameters filled.
+     * Get the "raw" translations and keep note which localisations have been accessed.
+     * Parameters are not filled.
      *
      * @param {type} key
      * @param {type} locale
      * @returns {v.value}
      */
     this.getRawTranslation = function(key, locale) {
-    	if (!key==null) {
+        var localisation, translation, id; 
+    	if (!angular.isString(key)) {
     		throw new Error("Illegal translation key: '"+key+"'");
     	}
+        if (!angular.isString(locale)) locale = this.getLocale();
     	
-        // Get translations by locale
-        var v0 = this.localisationMapByLocaleAndKey[locale];
-        // Get translation by key
-        var v = v0 ? v0[key] : undefined;
+        // Get translations by locale and key
+        localisation = this.localisationMapByLocaleAndKey[locale] && this.localisationMapByLocaleAndKey[locale][key];
 
-        // Update access info
-        if (v) {
-            // Bookkeeping for accessed updating, only the keys are used.
-            if (angular.isDefined(v.id)) {
-                this.updateAccessedById[v.id] = "";
+        if (angular.isDefined(localisation)) {
+            translation = localisation.value;
+
+            // Store the accessed key for bookkeeping
+            id = localisation.id;
+            if (angular.isDefined(id)) {
+                this.updateAccessedById[id] = "";
             } else {
-                $log.warn("Hmmm... translation id is undefined - all server loaded should have and id? t=" + v, v);
+                $log.warn("Hmmm... translation id is undefined - all server loaded should have and id? t=" + translation, locale, key);
             }
         }
 
-        // Get value if any
-        var result = v ? v.value : undefined;
-        return result;
+        return translation;
     };
 
     /**
@@ -401,11 +371,11 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     /**
      * Get list of currently loaded translations.
      *
-     * @returns global APP_LOCALISATION_DATA, array of {key, locale, value} objects.
+     * @returns global APP_APP_LOCALISATION_DATA, array of {key, locale, value} objects.
      */
     this.getTranslations = function() {
-        $window.LOCALISATION_DATA = $window.LOCALISATION_DATA || [];
-        return $window.LOCALISATION_DATA;
+        $window.APP_LOCALISATION_DATA = $window.APP_LOCALISATION_DATA || [];
+        return $window.APP_LOCALISATION_DATA;
     };
 
 
@@ -424,8 +394,8 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
         // Create temporary map
         var tmp = {};
 
-        for (var localisationIndex in $window.LOCALISATION_DATA) {
-            var localisation = $window.LOCALISATION_DATA[localisationIndex];
+        for (var localisationIndex in $window.APP_LOCALISATION_DATA) {
+            var localisation = $window.APP_LOCALISATION_DATA[localisationIndex];
             var mapByLocale = tmp[localisation.locale];
             if (!mapByLocale) {
                 tmp[localisation.locale] = {};
@@ -454,7 +424,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns {String} value for translation
      */
     this.t = function(key, params) {
-        return this.tl(key, this.getLocale(), params);
+        return this.getTranslation(key, this.getLocale(), params);
     };
 
     /**
@@ -468,24 +438,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns Resolved translation with "{NUM}" replaced with parameters
      */
     this.tl = function(key, locale, params) {
-
-        //
-        if (angular.isDefined(params)) {
-            if (params instanceof Array) {
-                // OK
-            } else {
-                // Make it so...
-                // $log.info("FIXING PARAMS TO BE ARRAY: ", params);
-                params = [ params ];
-            }
-        }
-
-        if (this.hasTranslation(key, locale)) {
-            return this.getTranslation(key, locale, params);
-        } else {
-            // Missing translation, create it, returns placeholder value given in
-            return this.createMissingTranslations(key, locale, "[" + key + "-" + locale + "]");
-        }
+        return this.getTranslation(key, locale, params);
     };
 
     // Bootstrap in memory lookup table
