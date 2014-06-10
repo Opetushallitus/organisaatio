@@ -1,22 +1,17 @@
 var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
 
 angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
+.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService) {
     var initialized = false;
+
     UserInfo.then(function(s) {
-        jQuery.i18n.properties({
-	    name:'messages',
-	    path:'../i18n/',
-	    mode:'map',
-            language: s.lang,
-	    callback: function() {
-                initialized = true;
-	    }
-	});
+
+        LocalisationService.setLocale(s.lang.toLowerCase());
+        initialized = true;
     });
 
-    return function (text) {
-        return initialized ? jQuery.i18n.prop(text) : '...';
+    return function (localisationKey) {
+        return initialized ? LocalisationService.t(localisationKey) : '...';
     };
 }]);
 

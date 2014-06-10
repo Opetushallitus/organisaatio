@@ -14,7 +14,7 @@ function organisaatioInitialize() {
     dataType: 'json',
     crossDomain: true,
     success: function(xhr, status) {
-      window.LOCALISATION_DATA = xhr;
+      window.APP_LOCALISATION_DATA = xhr;
       console.log('Localisation info was successfully loaded.');
       initOrganisaatioApp();
     },
