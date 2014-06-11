@@ -51,8 +51,26 @@
             </label>
         </div>
     </div>
-
-    <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
+    <!--div class="control-group" ng-show="model.organisaatio.organisaationtila" ng-if='model.getOrganisaationTila()'>
+        <label class="control-label">
+            {{'Organisaationtarkastelu.organisaationtila'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.alkuPvm| date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm| date:'dd.MM.yyyy'}}
+            </label>
+        </div>
+    </div-->
+    <div class="control-group">
+        <label class="control-label">
+            {{'Organisaationtarkastelu.organisaationtila'| i18n}}
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.organisaationtila}}
+            </label>
+        </div>
+    </div> <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
         <label class="control-label">
             {{'Organisaationtarkastelu.kotipaikka'| i18n}}
         </label>

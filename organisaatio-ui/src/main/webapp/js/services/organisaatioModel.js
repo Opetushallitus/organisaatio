@@ -392,6 +392,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.uriLangNames = {};
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
+            model.organisaatio.organisaationtila = model.getOrganisaationTila();
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(parentResult.nimi, "", "", false);
@@ -1550,6 +1551,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
+      
         this.getLocalizedPaikkaByUri = function(uri) {
             if (uri in model.uriKoodit) {
                 var koodi = model.uriKoodit[uri];
@@ -1673,6 +1675,40 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.getUserLang = function() {
             return KoodistoKoodi.getLanguage().toLowerCase();
+        }
+
+        this.getOrganisaationTila = function() {
+
+            // parse a date in dd.MM.yyyy format
+            parseDate = function(input) {
+                if (!input) {
+                    return;
+                }
+                var parts = input.split('.');
+                // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+                return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
+            };
+
+            var today = +new Date();
+            today = this.formatDate(today);
+            
+            var alkuPvm = model.organisaatio.alkuPvm;
+            
+            if (alkuPvm) {                
+                
+                if (alkuPvm > today) {
+                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+                }
+            }
+                
+            var lakkautusPvm = model.organisaatio.lakkautusPvm;
+            if (lakkautusPvm) {
+                
+                if (lakkautusPvm < today) {
+                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
+                }
+            }
+            return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         }
 
     };
