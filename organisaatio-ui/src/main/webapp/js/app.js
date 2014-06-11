@@ -1,4 +1,4 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies']);
+var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
 
 angular.module('localization', [])
 .filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
@@ -48,6 +48,8 @@ var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
 var AUTHENTICATION_URL_BASE = AUTHENTICATION_URL_BASE || "";
 var ROOT_ORGANISAATIO_OID = ROOT_ORGANISAATIO_OID || "";
 var CAS_ME_URL = CAS_ME_URL || "/cas/me";
+var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECONDS || 30;
+var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 
 ////////////
 //
@@ -302,7 +304,7 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hierarkia/hae", {}, {
         get: {method: 'GET'}
     });
 });
@@ -473,5 +475,13 @@ app.factory('HenkiloKayttooikeus', function($resource) {
 app.factory('Ryhmat', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/:oid/ryhmat", {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
+    });
+});
+
+// Viimeisimman päivityksen tietojen haku organisaatioplavelulta
+// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/paivittaja
+app.factory('Paivittaja', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/paivittaja", {oid: "@oid"}, {
+        get: {method: 'GET'}
     });
 });

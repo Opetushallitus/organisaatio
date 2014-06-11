@@ -127,9 +127,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
-    
+
     @Override
-    public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
+    public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
@@ -142,9 +142,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
-        
+
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
@@ -384,6 +384,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
+        LOG.info("Saving " + oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
@@ -397,11 +398,17 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
             return ret;
         } catch (ValidationException ex) {
+            LOG.warn("Error saving " + oid, ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving " + oid, sbe);
             throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            LOG.warn("Error saving " + oid, ore);
+            throw ore;
         } catch (Throwable t) {
+            LOG.error("Error saving " + oid, t);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
@@ -450,11 +457,14 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
             return ret;
         } catch (ValidationException ex) {
+            LOG.warn("Error saving new org", ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving new org", sbe);
             throw new OrganisaatioResourceException(sbe);
         } catch (Throwable t) {
+            LOG.warn("Error saving new org", t);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }

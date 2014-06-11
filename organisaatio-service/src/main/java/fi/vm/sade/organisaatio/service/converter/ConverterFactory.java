@@ -258,10 +258,9 @@ public class ConverterFactory {
 
            entity.setTyypit(getTyypitStr(dto.getTyypit()));
 
-            // entity.setSopimusKunnat(dto.getOrganisaatioSopimusKunnat());
-            entity.setVuosiluokat(dto.getVuosiluokat());
-            entity.setKielet(dto.getKielet());
-            convertNimiToEntity(dto, entity);
+           entity.setVuosiluokat(dto.getVuosiluokat());
+           entity.setKielet(dto.getKielet());
+           convertNimiToEntity(dto, entity);
 
         } catch (Exception exp) {
             throw new RuntimeException(exp);

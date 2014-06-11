@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="organisaatio">
+<html ng-app="organisaatio" ng-controller="EventsCtrl">
 
 <head>
     <!-- libs -->
@@ -17,6 +17,7 @@
     <script type="text/javascript" src="../jslib/tinymce-4.0.26/tinymce.min.js"></script>
     <script type="text/javascript" src="../jslib/angular-ui-tinymce-1a3c618/tinymce.js"></script>
     <script type="text/javascript" src="../jslib/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js"></script>
+    <script type="text/javascript" src="../jslib/angular-modules/angular-idle-0.3.2.js"></script>
 
     <script type="text/javascript" src="../jslib/jQuery-File-Upload-9.5.7/vendor/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="../jslib/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js"></script>
@@ -49,6 +50,7 @@
     <script type="text/javascript" src="../js/controllers/kuvailevatTiedotMuokkausController.js"></script>
     <script type="text/javascript" src="../js/directives/organisaatioDirectives.js"></script>
     <script type="text/javascript" src="../js/directives/ieplaceholder.js"></script>
+    <script type="text/javascript" src="../js/idler.js"></script>
 
     <script type="text/javascript" src="../js/loading.js"></script>
 
@@ -71,7 +73,7 @@
 
     <title ng-bind-template="{{'Organisaatiot.title' | i18n}}"></title>
 </head>
-<body>
+<body idle>
     <div class="container-fluid" id="application-wrapper">
         <div>
             <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>

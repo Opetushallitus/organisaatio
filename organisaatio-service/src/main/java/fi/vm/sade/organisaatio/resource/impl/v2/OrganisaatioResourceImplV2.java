@@ -15,14 +15,17 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
+import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
@@ -47,21 +50,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @CrossOriginResourceSharing(allowAllOrigins = true)
 public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
-        
+
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
-        
+
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
-    
+
     @Autowired
     private OrganisaatioModelMapper modelMapper;
 
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
-    
+
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
-        
+
+    @Autowired
+    private OrganisaatioDAOImpl organisaatioDAO;
+
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
@@ -72,9 +78,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getYtunnusList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
-        
+
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
-        
+
         List<Organisaatio> organisaatiot = organisaatioBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
@@ -97,23 +103,58 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public OrganisaatioHakutulos searchOrganisaatioRakenne(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+    public OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         // Rakenna hierarkia
         tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
 
         // Lukumäärä tuloksiin
         tulos.setNumHits(organisaatiot.size());
-        
+
         return tulos;
     }
-   
-    
+
+    @Override
+    public OrganisaatioHakutulos searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
+
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+
+        // Hae organisaatiot
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+
+        // Organisaatiot tuloksiin
+        tulos.setOrganisaatiot(organisaatiot);
+
+        // Lukumäärä tuloksiin
+        tulos.setNumHits(organisaatiot.size());
+
+        return tulos;
+    }
+
+    @Override
+    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+
+        LOG.debug("searchOrganisaatioPaivittaja: " + oid);
+
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+
+        if(org != null){
+            final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
+            tulos.setPaivittaja(org.getPaivittaja());
+            tulos.setPaivitysPvm(org.getPaivitysPvm());
+            return tulos;
+        }
+
+        return null;
+    }
 }

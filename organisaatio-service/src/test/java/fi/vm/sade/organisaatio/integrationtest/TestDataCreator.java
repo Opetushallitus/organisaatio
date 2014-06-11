@@ -78,7 +78,6 @@ public class TestDataCreator {
             organisaatio.setOid(oid);
             organisaatio.setNimi(setNimiValue("fi", nimi));//((Fi(nimi);
             organisaatio.setNimihaku(nimi);
-            organisaatio.setNimiLyhenne(nimi.substring(0, 8));
             organisaatio.setYtunnus(ytunnus);
             organisaatio.setKotipaikka("Helsinki");
             organisaatio.setYritysmuoto("oy");

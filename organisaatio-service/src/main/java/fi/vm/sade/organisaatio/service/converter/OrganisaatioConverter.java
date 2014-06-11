@@ -17,7 +17,6 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-//import fi.vm.sade.organisaatio.api.model.types.Or
 
 /**
 * @author Antti
@@ -33,13 +32,12 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
         setParentAndTyypit(dto, entity);
         setAllYhteystiedot(dto, entity);
         dto.getYhteystietoArvos().addAll(converterFactory.convertToDTO(entity.getYhteystietoArvos(), YhteystietoArvoDTO.class));//convertYhteystiedotToDTO(entity.getYhteystietoArvos(), YhteystietoArvoDTO.class));
-        // dto.getOrganisaatioSopimusKunnat().addAll(entity.getSopimusKunnat());
         setVuosiluokat(dto, entity);
         dto.getKielet().addAll(entity.getKielet());
         convertNimiToDTO(entity, dto);
         //dto.setKuvailevatTiedot(new EntityToOrganisaatioKuvailevatTiedotTyyppiFunction(converterFactory).apply(entity.getMetadata()));
     }
-    
+
     private void convertNimiToDTO(Organisaatio entity, OrganisaatioDTO dto) {
     	if (entity.getNimi() == null) {
     		return;
@@ -81,13 +79,11 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
     }
 
     public void setValuesToJPA(OrganisaatioDTO dto, Organisaatio entity, boolean merge, OrganisaatioDAOImpl organisaatioDAO) {
-
-        // entity.setSopimusKunnat(dto.getOrganisaatioSopimusKunnat());
         entity.setVuosiluokat(dto.getVuosiluokat());
         entity.setKielet(dto.getKielet());
         convertNimiToEntity(dto, entity);
     }
-    
+
     private void convertNimiToEntity(OrganisaatioDTO dto, Organisaatio entity) {
     	if (dto.getNimi() == null) {
     		return;

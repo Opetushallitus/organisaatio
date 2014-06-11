@@ -27,10 +27,12 @@ app.directive("iePlaceholder", function($timeout) {
                 }
             });
             element.bind('blur', function(e) {
-                if (element.val() === '') {
-                    element.val(_placeholder);
-                    element.addClass('greyed');
-                }
+                $timeout(function() {
+                    if (element.val() === '') {
+                        element.val(_placeholder);
+                        element.addClass('greyed');
+                    }
+                });
             });
             // If this element is part of a form ensure that the placeholder
             // value is not sent to the server on submit

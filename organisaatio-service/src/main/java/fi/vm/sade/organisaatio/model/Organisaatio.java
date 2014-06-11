@@ -17,9 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.SHORT_MAX;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -41,10 +38,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
@@ -75,11 +70,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private List<String> vuosiluokat = new ArrayList<String>();
 
-    @ElementCollection
-    @CollectionTable(name = "organisaatio_sopimuskunnat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> sopimusKunnat = new ArrayList<String>();
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nimi_mkt")
     private MonikielinenTeksti nimi;
@@ -102,10 +92,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @FilterXss
     private String virastoTunnus;
 
-    @Size(min = GENERIC_MIN, max = SHORT_MAX)
-    @FilterXss
-    private String nimiLyhenne;
-
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
@@ -119,10 +105,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
 
     private String yritysmuoto;
-
-    // TODO remove this when MonikieinenTeksti is enabled.
-    @FilterXss
-    private String kuvaus;
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date alkuPvm;
@@ -174,6 +156,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     // OVT-4954
     @Column(length = 32)
     private String toimipisteKoodi;
+
+    // OVT-7684
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date paivitysPvm;
+
+    // OVT-7684
+    @Column(length = 255)
+    private String paivittaja;
 
     /**
      * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
@@ -272,31 +262,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setKotipaikka(String kotipaikka) {
         this.kotipaikka = kotipaikka;
-    }
-
-    public String getNimiLyhenne() {
-        return nimiLyhenne;
-    }
-
-    public void setNimiLyhenne(String nimiLyhenne) {
-/*
-        HistoryMetadata hmd = new HistoryMetadata();
-        hmd.setOrganisaatio(this);
-        hmd.setAvain("nimiLyhenne");
-        hmd.setKieli("");
-        hmd.setArvo(nimiLyhenne);
-        getHistoriaData().add(hmd);
-*/
-
-        this.nimiLyhenne = nimiLyhenne;
-    }
-
-    public String getKuvaus() {
-        return kuvaus;
-    }
-
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
     }
 
     public Date getAlkuPvm() {
@@ -418,20 +383,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setOrganisaatioPoistettu(boolean organisaatioPoistettu) {
         this.organisaatioPoistettu = organisaatioPoistettu ? null : false;
-    }
-
-    /**
-     * @return the sopimusKunnat
-     */
-    public List<String> getSopimusKunnat() {
-        return sopimusKunnat;
-    }
-
-    /**
-     * @param sopimusKunnat the sopimusKunnat to set
-     */
-    public void setSopimusKunnat(List<String> sopimusKunnat) {
-        this.sopimusKunnat = sopimusKunnat;
     }
 
     /**
@@ -632,4 +583,19 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.toimipisteKoodi = toimipisteKoodi;
     }
 
+    public Date getPaivitysPvm() {
+        return paivitysPvm;
+    }
+
+    public void setPaivitysPvm(Date paivitysPvm) {
+        this.paivitysPvm = paivitysPvm;
+    }
+
+    public String getPaivittaja() {
+        return paivittaja;
+    }
+
+    public void setPaivittaja(String paivittaja) {
+        this.paivittaja = paivittaja;
+    }
 }
