@@ -38,10 +38,10 @@
         };
     }]);
 
-    app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$modalInstance', '$window', function( $idle, $scope, $modalInstance, $window) {
+    app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$modalInstance', '$window', 'LocalisationService', function( $idle, $scope, $modalInstance, $window, LocalisationService) {
         $scope.timeoutMessage = function() {
             var duration = Math.floor(MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
-            return jQuery.i18n.prop('session.expired.text1.part1') + " " + duration +  " " + jQuery.i18n.prop('session.expired.text1.part2');
+            return LocalisationService.t('session.expired.text1.part1') + " " + duration +  " " + LocalisationService.t('session.expired.text1.part2');
         };
 
         $scope.okConfirm = function() {
