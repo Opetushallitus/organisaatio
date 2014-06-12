@@ -154,6 +154,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // YTJ rajapinnan kautta saadut yrityksen tiedot
         this.ytjTiedot = {};
 
+        // Organisaation tila
+        this.organisaationTila = '';
+
         this.OPHOid = "1.2.246.562.10.00000000001";
 
         this.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
@@ -196,7 +199,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (ret) {
                 return ret.replace(/&amp;/g, '&');
             }
-        }
+        };
 
         getMonikielinenTekstiLanguages = function(mkt) {
             ret = [];
@@ -229,7 +232,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.organisaatio.metadata.data[mkSection.types[field]] = {};
                 }
             }
-        }
+        };
 
         refreshMetadata = function(result) {
             model.mkSections.kt.tabs.length = 0;
@@ -392,7 +395,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.uriLangNames = {};
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
-            model.organisaatio.organisaationtila = model.getOrganisaationTila();
+            model.organisaationtila = model.getOrganisaationTila();
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(parentResult.nimi, "", "", false);
@@ -583,7 +586,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
 
                     // Jos arvoa ei vielä ole, lisätään muokkaus/uudenluontinäkymään bindausta varten
-                    if (arvo == null) {
+                    if (arvo === null) {
                         var uusiyt = {};
                         uusiyt["YhteystietoArvo.arvoText"] = null;
                         uusiyt["YhteystietoArvo.kieli"] = ytlangs[i];
@@ -1551,7 +1554,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             }
         };
 
-      
+
         this.getLocalizedPaikkaByUri = function(uri) {
             if (uri in model.uriKoodit) {
                 var koodi = model.uriKoodit[uri];
@@ -1675,7 +1678,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.getUserLang = function() {
             return KoodistoKoodi.getLanguage().toLowerCase();
-        }
+        };
 
         this.getOrganisaationTila = function() {
 
@@ -1691,25 +1694,25 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
             var today = +new Date();
             today = this.formatDate(today);
-            
+
             var alkuPvm = model.organisaatio.alkuPvm;
-            
-            if (alkuPvm) {                
-                
+
+            if (alkuPvm) {
+
                 if (alkuPvm > today) {
                     return ($filter('i18n')("Organisaatiot.suunniteltu",""));
                 }
             }
-                
+
             var lakkautusPvm = model.organisaatio.lakkautusPvm;
             if (lakkautusPvm) {
-                
+
                 if (lakkautusPvm < today) {
                     return ($filter('i18n')("Organisaatiot.passivoitu",""));
                 }
             }
             return ($filter('i18n')("Organisaatiot.aktiivinen",""));
-        }
+        };
 
     };
 
