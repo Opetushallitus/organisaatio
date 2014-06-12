@@ -395,12 +395,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.uriLangNames = {};
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
-            model.organisaationtila = model.getOrganisaationTila();
+            model.organisaationtila = "";
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(parentResult.nimi, "", "", false);
                 model.parenttype = parentResult.tyypit[0];
                 model.parent = parentResult;
+                model.organisaationtila = model.getOrganisaationTila();
 
                 if (model.mode === 'edit') {
                     refreshKoodisto();
@@ -522,7 +523,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     });
                 }
             });
-
         };
 
         addAliorganisaatio = function(aliOrgList, level) {
