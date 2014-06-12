@@ -241,7 +241,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                         $scope.model.yhteystietotyypit.splice(ind, 1);
                         $scope.valittuYhteystietotyyppi = null;
                     }, function(virhe) {
-                        Alert.add("error", $filter('i18n')(virhe.data.errorKey, ''), false);
+                        Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
                     });
                 } else {
                     $scope.model.yhteystietotyypit.splice(ind, 1);
@@ -256,7 +256,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
             $scope.model.save($scope.valittuYhteystietotyyppi, function(tallennettuYtt) {
                 $scope.valittuYhteystietotyyppi = tallennettuYtt;
             }, function(virhe) {
-                Alert.add("error", $filter('i18n')(virhe.data.errorKey, ''), false);
+                Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
             });
         }
     };

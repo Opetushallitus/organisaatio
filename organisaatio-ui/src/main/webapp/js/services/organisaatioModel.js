@@ -368,7 +368,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
         showAndLogError = function(msg, response) {
-            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey, msg), false);
+            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
             $log.error(msg + " (status: " + response.status + ")");
         };
 
