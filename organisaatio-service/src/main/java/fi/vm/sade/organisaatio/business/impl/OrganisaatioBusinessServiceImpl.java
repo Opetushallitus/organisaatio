@@ -286,7 +286,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        // Validoidaan organisaation lisätiedot
+        // Asetetaan yhteystietoarvot
+        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
+
+        for (Yhteystieto yhtTieto : entity.getYhteystiedot()) {
+            yhtTieto.setOrganisaatio(entity);
+        }
+
+        // Tarkistetaan organisaatio hierarkia
+        checkOrganisaatioHierarchy(entity, model.getParentOid());
+
+        // Asetetaan tyypit "organisaatio" taulun kenttään
         List<String> orgTypes = new ArrayList<String>();
         String tyypitStr = "";
         for (String curTyyppi : model.getTyypit()) {
@@ -295,14 +305,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         entity.setOrganisaatiotyypitStr(tyypitStr);
 
-        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
-
-        // Tarkistetaan organisaatio hierarkia
-        checkOrganisaatioHierarchy(entity, model.getParentOid());
-
-        for (Yhteystieto yhtTieto : entity.getYhteystiedot()) {
-            yhtTieto.setOrganisaatio(entity);
-        }
 
         // Generate natural key, OVT-4954
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
