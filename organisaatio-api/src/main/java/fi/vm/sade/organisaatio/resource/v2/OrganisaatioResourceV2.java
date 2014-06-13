@@ -56,7 +56,7 @@ public interface OrganisaatioResourceV2 {
     public String hello();
 
     @GET
-    @Path("hierarkia/hae")
+    @Path("/hierarkia/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
@@ -70,7 +70,7 @@ public interface OrganisaatioResourceV2 {
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
-    @Path("hae")
+    @Path("/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee organisaatiot, jotka osuvat annetuihin hakuehtoihin",
