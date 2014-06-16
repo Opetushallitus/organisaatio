@@ -232,9 +232,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Validointi: koodistoureissa pitää olla versiotieto
         checkVersionInKoodistoUris(model);
 
-        // Setting the parent paths
+        // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
 
+        // Asetetaan parent path
+        createParentPath(entity, model.getParentOid());
+
+        // Asetetaan päivittäjä ja päivityksen aikaleima
         try {
             entity.setPaivittaja(getCurrentUser());
             entity.setPaivitysPvm(new Date());
@@ -242,21 +246,40 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
 
+        // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             mergeAuxData(entity, orgEntity);
             entity.setId(orgEntity.getId());
             entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
+
+            // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut
+            if (entity.getParentOidPath().equals(orgEntity.getParentOidPath()) == false) {
+                LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
+                checkOrganisaatioHierarchy(entity, model.getParentOid());
+            }
+
+            // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
+            if (!entity.getTyypit().containsAll(orgEntity.getTyypit()) ||
+                    !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
+                LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
+                checkOrganisaatioHierarchy(entity, model.getParentOid());
+            }
         }
+        else {
+            // Tarkistetaan organisaatio hierarkia
+            checkOrganisaatioHierarchy(entity, model.getParentOid());
+        }
+
+        // Generoidaan oidit
         try {
             generateOids(entity);
             generateOidsMetadata(entity.getMetadata());
         } catch (ExceptionMessage em) {
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
         }
-        createParentPath(entity, model.getParentOid());
 
-        // Generating the opetuspiteenJarjNro
+        // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
         if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, model);
@@ -292,9 +315,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (Yhteystieto yhtTieto : entity.getYhteystiedot()) {
             yhtTieto.setOrganisaatio(entity);
         }
-
-        // Tarkistetaan organisaatio hierarkia
-        checkOrganisaatioHierarchy(entity, model.getParentOid());
 
         // Asetetaan tyypit "organisaatio" taulun kenttään
         List<String> orgTypes = new ArrayList<String>();
@@ -593,7 +613,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio parentOrg = (parentOid != null) ? this.organisaatioDAO.findByOid(parentOid) : null;
         if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio))) {
             //check children
-            if (organisaatio.getId() != null) { // we can haz children only if we are already saved
+            if (organisaatio.getId() != null) { // we can have children only if we are already saved
                 List<Organisaatio> children = organisaatioDAO.findChildren(organisaatio.getId());
                 for (Organisaatio child : children) {
                     if (!validator.apply(Maps.immutableEntry(organisaatio, child))) {
