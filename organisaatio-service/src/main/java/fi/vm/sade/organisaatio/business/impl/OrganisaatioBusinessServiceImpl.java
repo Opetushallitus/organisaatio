@@ -253,8 +253,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setId(orgEntity.getId());
             entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
 
-            // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut
-            if (entity.getParentOidPath().equals(orgEntity.getParentOidPath()) == false) {
+            // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
+            if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
                 LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
                 checkOrganisaatioHierarchy(entity, model.getParentOid());
             }
