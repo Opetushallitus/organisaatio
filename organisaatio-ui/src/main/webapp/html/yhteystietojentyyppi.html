@@ -1,7 +1,7 @@
 <h1>{{'YhteystietojenTyyppiForm.otsikko'| i18n}}</h1>
 
 <select ng-model="valittuYhteystietotyyppi"
-        ng-options="localizeYhteystietotyypinNimi(yt) for yt in model.yhteystietotyypit">
+        ng-options="localizeYhteystietotyypinNimi(yt) for yt in model.yhteystietotyypit | orderBy:localizeYhteystietotyypinNimi">
     <option value="">{{'YhteystietojenTyyppiForm.valitseTyyppi'| i18n}}</option>
 </select>
 <hr>
