@@ -30,7 +30,25 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         }
         return null;
     };
-
+    
+    $scope.yttNimiUnique = function(nimi) {
+        if (nimi === "") {
+            return true; // Ignore empty strings.
+        }
+        for (var i = 0; i < $scope.model.yhteystietotyypit.length; i++) {
+            if ($scope.valittuYhteystietotyyppi === $scope.model.yhteystietotyypit[i]) {
+                continue;
+            }
+            var teksti = $scope.model.yhteystietotyypit[i].nimi.teksti;
+            for (var j = 0; j < teksti.length; j++) {
+                if (teksti[j].value === nimi) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     function _match(item, filt) {
         for (var i in filt) {
             if (typeof filt[i] === 'string') {
