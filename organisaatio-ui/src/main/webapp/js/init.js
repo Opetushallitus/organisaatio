@@ -12,7 +12,7 @@ function organisaatioInitialize() {
 
     if (typeof new XMLHttpRequest().responseType !== 'string' && window.XDomainRequest) { //IE8 and IE9
         var xdr = new XDomainRequest();
-        xdr.open("post", localisationUrl);
+        xdr.open("get", localisationUrl);
         xdr.onload = function () {
             var data = jQuery.parseJSON(xdr.responseText);
             window.APP_LOCALISATION_DATA = data;
