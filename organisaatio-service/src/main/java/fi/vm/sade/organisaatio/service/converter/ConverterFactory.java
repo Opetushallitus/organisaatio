@@ -45,7 +45,6 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoDAOImpl;
