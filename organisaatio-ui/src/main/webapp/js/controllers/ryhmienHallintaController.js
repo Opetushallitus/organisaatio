@@ -34,7 +34,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
                 $scope.currentGroup = savedGroup;
                 $scope.form.$setPristine();
             }, function(error) {
-                Alert.add("error", $filter('i18n')(error.data.errorKey, ""), false);
+                Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
             });
         }
     };

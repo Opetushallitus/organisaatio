@@ -205,6 +205,27 @@ app.directive('addressCombinedField', function() {
     };
 });
 
+app.directive('uniqueYhteystietojenTyyppiField', function($log) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            var parserValidator = function(viewValue) {
+                $log.log("parserValidator");
+                ctrl.$setValidity('unique', scope.yttNimiUnique(viewValue));
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(parserValidator);
+
+            var formatterValidator = function(viewValue) {
+                $log.log("formatterValidator");
+                ctrl.$setValidity('unique', scope.yttNimiUnique(viewValue));
+                return viewValue;
+            };
+            ctrl.$formatters.unshift(formatterValidator);
+        }
+    };
+});
+
 // Validoi että syötetty postinumero löytyy koodistosta
 app.directive('ophValidatePostcode', function($log) {
     return {

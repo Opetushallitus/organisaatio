@@ -1,22 +1,17 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies']);
+var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
 
 angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
+.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService) {
     var initialized = false;
+
     UserInfo.then(function(s) {
-        jQuery.i18n.properties({
-	    name:'messages',
-	    path:'../i18n/',
-	    mode:'map',
-            language: s.lang,
-	    callback: function() {
-                initialized = true;
-	    }
-	});
+
+        LocalisationService.setLocale(s.lang.toLowerCase());
+        initialized = true;
     });
 
-    return function (text) {
-        return initialized ? jQuery.i18n.prop(text) : '...';
+    return function (localisationKey) {
+        return initialized ? LocalisationService.t(localisationKey) : '...';
     };
 }]);
 
@@ -45,9 +40,12 @@ var UI_URL_BASE = UI_URL_BASE || "http://localhost:8180/organisaatio-ui/";
 var SERVICE_URL_BASE = SERVICE_URL_BASE || "";
 var TEMPLATE_URL_BASE = TEMPLATE_URL_BASE || "";
 var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
+var LOKALISAATIO_URL_BASE = LOKALISAATIO_URL_BASE || "";
 var AUTHENTICATION_URL_BASE = AUTHENTICATION_URL_BASE || "";
 var ROOT_ORGANISAATIO_OID = ROOT_ORGANISAATIO_OID || "";
 var CAS_ME_URL = CAS_ME_URL || "/cas/me";
+var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECONDS || 30;
+var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 
 ////////////
 //
@@ -302,7 +300,7 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hierarkia/hae", {}, {
         get: {method: 'GET'}
     });
 });

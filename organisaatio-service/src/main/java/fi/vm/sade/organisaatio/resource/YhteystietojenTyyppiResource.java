@@ -23,6 +23,7 @@ import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.GenericFault;
+import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
@@ -32,6 +33,7 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
+import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.PersistenceException;
@@ -135,6 +137,15 @@ public class YhteystietojenTyyppiResource {
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
+        
+        // Validate
+        for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
+            YhteystietojenTyyppiDTO dtd = (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t);
+            if (MonikielinenTekstiUtil.haveSameText(yhteystietojenTyyppi.getNimi(), dtd.getNimi())) {
+                throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
+            }
+        }
+        
         try {
             generateOids(yhteystietojenTyyppi);
         } catch (ExceptionMessage em) {

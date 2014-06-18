@@ -53,10 +53,12 @@ public interface OrganisaatioResource {
     @ApiOperation(
             value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
+                    + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti."
                     + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
             response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchBasic(@QueryParam("") @ApiParam(value = "hakuehdot", required = true) OrganisaatioSearchCriteria q);
+    public OrganisaatioHakutulos searchHierarchy(@QueryParam("") @ApiParam(value = "hakuehdot", required = true) OrganisaatioSearchCriteria q);
 
     /**
      * NOTE: USED BY SECURITY FRAMEWORK - DON'T CHANGE

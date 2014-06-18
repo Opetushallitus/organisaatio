@@ -15,7 +15,30 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
+
+
 import fi.vm.sade.generic.common.I18N;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.koodisto.service.KoodiService;
 import fi.vm.sade.koodisto.service.KoodistoService;
 import fi.vm.sade.koodisto.service.types.SearchKoodisByKoodistoCriteriaType;
@@ -26,62 +49,37 @@ import fi.vm.sade.koodisto.service.types.common.KoodistoType;
 import fi.vm.sade.koodisto.service.types.common.SuhteenTyyppiType;
 import fi.vm.sade.koodisto.util.KoodiServiceSearchCriteriaBuilder;
 import fi.vm.sade.koodisto.util.KoodistoServiceSearchCriteriaBuilder;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Ordering;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
-import fi.vm.sade.oid.service.OIDService;
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
-import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
-
-import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Ordering;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ValidationException;
+import javax.ws.rs.core.Response;
+
+import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Antti Salonen
@@ -111,8 +109,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private KoodiService koodiService;
     @Autowired
     private KoodistoService koodistoService;
-    @Autowired
-    private OIDService oidService;
+
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -129,7 +126,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
 
     @Override
-    public OrganisaatioHakutulos searchBasic(OrganisaatioSearchCriteria s) {
+    public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
@@ -144,7 +141,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
 
 //        System.out.println("oidRestrictionList:" + s.getOidRestrictionList());
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchBasicOrganisaatios(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
