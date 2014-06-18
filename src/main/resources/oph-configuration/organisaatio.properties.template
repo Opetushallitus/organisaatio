@@ -12,6 +12,7 @@ auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
 host.ilb={{host_ilb}}
+host.ldap={{host_ldap}}
 host.postgresql.organisaatio={{host_postgresql_organisaatio}}
 host.postgresql.organisaatio.password={{host_postgresql_organisaatio_password}}
 host.postgresql.organisaatio.user={{host_postgresql_organisaatio_user}}
@@ -44,7 +45,12 @@ activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
 cas.callback.organisaatio-app=http://${server.name}:8301/organisaatio-app
 cas.callback.organisaatio-service=http://${server.name}:8301/organisaatio-service
 cas.callback.organisaatio-ui=http://${server.name}:8301/organisaatio-ui
+cas.group-role-attribute=cn
+cas.group-search-base=ou\=groups
+cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
+cas.user-search-base=ou\=people
+cas.user-search-filter=(|(mail\={0})(uid\={0}))
 cas.callback.organisaatio-service=http://${server.name}:8301/organisaatio-service
 cas.callback.organisaatio-ui=http://${server.name}:8301/organisaatio-ui
 cas.callback.tarjonta-service=http://${server.name}:8302/tarjonta-service
