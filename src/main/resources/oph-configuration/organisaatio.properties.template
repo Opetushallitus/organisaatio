@@ -77,7 +77,6 @@ log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
 organisaatio.rest.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/hae
-organisaatio.solr.url=${solr.url.virkailija}/organisaatiot
 organisaatio.webservice.url.backend=https\://${host.virkailija}/organisaatio-service/services/organisaatioService
 organisaatio-ui.authentication-service-url.rest=https://${host.virkailija}/authentication-service/resources/
 organisaatio-ui.cas.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/myroles
