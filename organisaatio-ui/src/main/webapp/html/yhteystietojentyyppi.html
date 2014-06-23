@@ -213,7 +213,7 @@
 		        {{'YhteystietojenTyyppiForm.rajatutOppilaitokset'| i18n}}&nbsp;
 		        <select ng-if="valittuYhteystietotyyppiOrgTyypit.rajatutOppilaitostyypit"
 		                ng-model="valittuYhteystietotyyppiOrgTyypit.valitutOppilaitostyypit"
-		                ng-options="ot.nimi for ot in model.oppilaitostyypit">
+		                ng-options="ot.nimi for ot in model.oppilaitostyypit | orderBy:'nimi'">
 		            <option value="">{{'YhteystietojenTyyppiForm.lisaaOppilaitostyyppi'| i18n}}</option>
 		        </select>
 		    </div>
