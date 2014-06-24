@@ -33,6 +33,7 @@
         <ehcache.version>2.5.0</ehcache.version>
         <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
         <jgroups.version>2.10.0.GA</jgroups.version>
+        <phantomjs-maven-plugin.version>0.3</phantomjs-maven-plugin.version>
     </properties>
 
     <modules>

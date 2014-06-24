@@ -22,7 +22,7 @@ app.factory('YhteystietojentyyppiModel', function(
         }
 
         function loadOppilaitostyypit() {
-            KoodistoOppilaitostyypit.get({}, function(tyypit) {
+            KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(tyypit) {
                 tyypit.forEach(function(t) {
                     oppilaitostyypit.push({id: t.koodiUri + '#' + t.versio, nimi: KoodistoKoodi.getLocalizedName(t)});
                     oppilaitostyypitMap[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);
