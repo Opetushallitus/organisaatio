@@ -69,10 +69,9 @@ ldap.filter.people=uid\=%u
 ldap.index.cache.size=10000
 ldap.manager.userdn=cn=admin,ou=People,dc=opintopolku,dc=fi
 ldap.manager-dn=uid\=admin,ou\=system
-ldap.port=10389
 ldap.search.base.people=ou=People,dc=opintopolku,dc=fi
-ldap.url=ldap://${host.ldap}\:${ldap.port}
-ldap.url.with.base=ldap\://${host.ldap}\:${ldap.port}/dc\=opintopolku,dc\=fi
+ldap.url=ldap://${host.ldap}
+ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
 log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
