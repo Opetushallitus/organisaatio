@@ -21,14 +21,22 @@
                     <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
-                           ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi| i18n}}
+                           ng-click="model.toggleCheckOrganisaatio(tyyppi);form.$dirty = true">
+                    {{tyyppi| i18n}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
                     <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
-                           ng-click="model.toggleCheckOrganisaatio(tyyppi);
-                                       form.$dirty = true">{{tyyppi| i18n}}
+                           ng-click="model.toggleCheckOrganisaatio(tyyppi);form.$dirty = true">
+                    {{tyyppi| i18n}}
+                </span>
+            </span>
+            <!-- Näytetään tyypit, jotka eivät hierarkiasääntöjen mukaan ole valideja -->
+            <span ng-repeat="tyyppi in model.organisaatio.tyypit">
+                <span ng-if="model.koodisto.organisaatiotyypit.indexOf(tyyppi) === - 1">
+                    <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1" disabled>
+                    {{tyyppi| i18n}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
