@@ -19,6 +19,7 @@ host.postgresql.organisaatio.user={{host_postgresql_organisaatio_user}}
 host.virkailija={{host_virkailija}}
 ldap.manager.password={{ldap_manager_password}}
 ldap.manager-password={{ldap_manager_password}}
+ldap.manager.userdn={{ldap_manager_userdn}}
 port.organisaatio-service={{port_organisaatio_service}}
 port.koodisto-service={{port_koodisto_service}}
 port.postgresql={{port_postgresql}}
@@ -67,8 +68,7 @@ ldap.cache.size=10000
 ldap.data.dir=${user.home}/data
 ldap.filter.people=uid\=%u
 ldap.index.cache.size=10000
-ldap.manager.userdn=cn=admin,ou=People,dc=opintopolku,dc=fi
-ldap.manager-dn=uid\=admin,ou\=system
+ldap.manager-dn=${ldap.manager.userdn}
 ldap.search.base.people=ou=People,dc=opintopolku,dc=fi
 ldap.url=ldap://${host.ldap}
 ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
