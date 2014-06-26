@@ -50,8 +50,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle
         return ($scope.hakuehdot.organisaatioRajausVisible===false) ?
-                node.tyyppi!=="Oppisopimustoimipiste" :
-                node.tyyppi!=="Koulutustoimija" && node.tyyppi!=="Muu organisaatio" && node.tyyppi!=="Oppisopimustoimipiste";
+                // OPH-käyttäjän tapauksessa oppisopimustoimipisteelle ei voi lisätä aliorganisaatiota
+                !$scope.model.isTyyppi(node, "Oppisopimustoimipiste") :
+                // Muiden käyttäjien tapauksessa seuraaville tyypeille ei voi lisätä aliorganisaatioita
+                !$scope.model.isTyyppi(node, "Koulutustoimija") &&
+                !$scope.model.isTyyppi(node, "Muu organisaatio") &&
+                !$scope.model.isTyyppi(node, "Oppisopimustoimipiste");
     };
 
     $scope.deleteOrganisaatio = function (node) {
@@ -62,8 +66,8 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 nimi: function () {
                     return $scope.model.getNimi(node);
                 },
-                tyyppi:  function () {
-                    return $scope.model.getTyyppi(node);
+                tyypit:  function () {
+                    return $scope.model.getTyypit(node);
                 }
             }
         });
@@ -139,7 +143,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
             $log.log('Modal dismissed at: ' + new Date());
         });
     };
-    
+
     $scope.ryhmienHallinta = function() {
         $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/groups");
     };

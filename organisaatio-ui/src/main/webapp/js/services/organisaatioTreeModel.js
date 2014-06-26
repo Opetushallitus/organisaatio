@@ -129,6 +129,15 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             return true;
         },
 
+        isTyyppi: function (node, tyyppi) {
+            if ('organisaatiotyypit' in node) {
+                if (node.organisaatiotyypit.indexOf(tyyppi) > -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
         getTila: function(node) {
             var today = +new Date();
 
@@ -241,7 +250,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     node.i18nNimi += " (" + model.getTila(node) + ")";
                 }
                 node.tunnus = model.getTunnus(node);
-                node.tyyppi = model.getTyypit(node);
+                node.tyypit = model.getTyypit(node);
                 node.tila   = model.getTila(node);
                 node.level  = level;
 
