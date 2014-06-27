@@ -3,58 +3,69 @@ app.directive('formatteddate', function($log, $filter) {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
+            var maxDate = scope[attrs.max];
+            var minDate = scope[attrs.min];
 
-            // Tämä muuttaa päivämäärän oikeaksi jos syötetty esim. 31.2.1999 --> 03.03.1999
-            element.bind('blur', function() {
-                var val = element.val();
-
-                if (!val || ctrl.$valid === false) {
-                    return val;
+            function isRangeValid(date) {
+                if (date < minDate || date > maxDate) {
+                    return false;
                 }
-
-                var dateParts = val.split('.');
-                parsed = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-
-                var newVal = $filter('date')(parsed, 'dd.MM.yyyy');
-
-                element.val(newVal);
-            });
+                return true;
+            }
 
             // Tämä validoi päivämäärän
             function validateDate(viewValue) {
-                var val = element.val();
-                var pattern = /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.(19[7-9]\d)|([2-9]\d{3})$/i;
-                ctrl.$setValidity('dateYear', true);
+                $log.log("Validation starts");
+                $log.log("Element value= "+element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
 
-                if (val && val.match(pattern) === null) {
+                if (viewValue === undefined) {
+                    $log.log("ViewValue undefined");
                     ctrl.$setValidity('date', false);
-                    return viewValue;
+                    ctrl.$setValidity('dateYear', true);
+                    return null;
                 }
 
                 if (!viewValue) {
+                    $log.log("ViewValue empty");
                     ctrl.$setValidity('date', true);
+                    ctrl.$setValidity('dateYear', true);
                     return null;
-                } else if (angular.isDate(viewValue) && !isNaN(viewValue)) {
-                    ctrl.$setValidity('date', true);
-                    if (viewValue.getFullYear() < 1990 || viewValue.getFullYear() > 2030) {
+                }
+
+                if (typeof viewValue === "object" && moment(viewValue).isValid()) {
+                    $log.log("Valid object ViewValue= " + viewValue);
+
+                    var date = moment(viewValue);
+                    if (!isRangeValid(date.toDate())) {
                         ctrl.$setValidity('dateYear', false);
                         return viewValue;
                     }
+                    ctrl.$setValidity('dateYear', true);
+                    ctrl.$setValidity('date', true);
                     return viewValue;
-                } else if (angular.isString(viewValue)) {
-                    var date = new Date(viewValue);
-                    if (isNaN(date)) {
+                }
+                else if (angular.isString(viewValue)) {
+                    $log.log("String ViewValue= " + viewValue);
+                    if (!moment(viewValue,'DD.MM.YYYY').isValid()) {
+                        $log.log("Invalid string viewValue= " + viewValue);
                         ctrl.$setValidity('date', false);
                         return undefined;
-                    } else {
-                        ctrl.$setValidity('date', true);
-                        if (date.getFullYear() < 1990 || date.getFullYear() > 2030) {
-                            ctrl.$setValidity('dateYear', false);
-                            return viewValue;
-                        }
-                        return date;
                     }
-                } else {
+                    var date = moment(viewValue, 'DD.MM.YYYY');
+                    if (!date.isValid()) {
+                        $log.log("String ViewValue invalid");
+                        ctrl.$setValidity('date', false);
+                        return undefined;
+                    }
+                    if (!isRangeValid(date.toDate())) {
+                        ctrl.$setValidity('dateYear', false);
+                        return viewValue;
+                    }
+                    ctrl.$setValidity('dateYear', true);
+                    ctrl.$setValidity('date', true);
+                    return date.toDate();
+                }
+                else {
                     ctrl.$setValidity('date', false);
                     return undefined;
                 }
@@ -63,25 +74,21 @@ app.directive('formatteddate', function($log, $filter) {
 
             // Tämä hoitaa sen, että DatePicker saa päivämäärän oikeassa muodossa
             ctrl.$parsers.unshift(function(viewValue) {
-                var val = element.val();
+                $log.log("Format starts");
+                $log.log("ElementValue= " + element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
 
-                if (!val)
-                    return viewValue;
-                var dateStr = $filter('date')(val, 'dd.MM.yyyy');
-
-                if (dateStr === undefined) {
-                    return viewValue;
+                // pass through if we clicked date from popup
+                if (typeof ctrl.$viewValue === "object" || ctrl.$viewValue === "") {
+                    $log.log("Pass through");
+                    return ctrl.$viewValue;
                 }
-                var parsed = viewValue;
-                try
-                {
-                    var dateParts = dateStr.split('.');
-                    parsed = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                var date = moment(ctrl.$viewValue, 'DD.MM.YYYY');
+                if (date.isValid()) {
+                    $log.log("Valid ctrl.$viewValue= " + ctrl.$viewValue);
+                    ctrl.$setViewValue(date);
+                    return date.toDate();
                 }
-                catch (e) {
-                    $log.log("catch --> invalid");
-                }
-                return parsed;
+                return ctrl.$viewValue;
             });
         }
     };
