@@ -8,7 +8,9 @@ function organisaatioInitialize() {
     }
 
     var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
-    console.log('Loading localisation info from: ', localisationUrl);
+    if (window.console) {
+        console.log('Loading localisation info from: ', localisationUrl);
+    }
 
     if (typeof new XMLHttpRequest().responseType !== 'string' && window.XDomainRequest) { //IE8 and IE9
         var xdr = new XDomainRequest();
@@ -16,14 +18,18 @@ function organisaatioInitialize() {
         xdr.onload = function () {
             var data = jQuery.parseJSON(xdr.responseText);
             window.APP_LOCALISATION_DATA = data;
-            console.log('Localisation info was successfully loaded.');
+            if (window.console) {
+                console.log('Localisation info was successfully loaded.');
+            }
             initOrganisaatioApp();
         };
         xdr.onprogress = function () { };
         xdr.ontimeout = function () { };
         xdr.onerror = function () {
             window.LOCALISATION_DATA = [];
-            console.log('There was an error while loading the localisation info!');
+            if (window.console) {
+                console.log('There was an error while loading the localisation info!');
+            }
         };
         setTimeout(function () {
             xdr.send();
@@ -34,12 +40,16 @@ function organisaatioInitialize() {
             crossDomain: true,
             success: function(xhr, status) {
                 window.APP_LOCALISATION_DATA = xhr;
-                console.log('Localisation info was successfully loaded.');
+                if (window.console) {
+                    console.log('Localisation info was successfully loaded.');
+                }
                 initOrganisaatioApp();
             },
             error: function(xhr, status) {
                 window.LOCALISATION_DATA = [];
-                console.log('There was an error while loading the localisation info: ', status, xhr);
+                if (window.console) {
+                    console.log('There was an error while loading the localisation info: ', status, xhr);
+                }
             }
         });
     }
