@@ -15,22 +15,34 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import fi.vm.sade.generic.common.EnhancedProperties;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
-import fi.vm.sade.tarjonta.service.resources.v1.dto.HakutuloksetV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
-import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
-import fi.vm.sade.tarjonta.service.resources.v1.dto.TarjoajaHakutulosV1RDTO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +57,12 @@ public class OrganisaatioKoulutukset {
     // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
     private static final CachingRestClient cachingRestClient = new CachingRestClient();
     private String tarjontaServiceWebappUrl;
+    private Gson gson;
 
     public OrganisaatioKoulutukset(String tarjontaServiceWebappUrl) {
         this.tarjontaServiceWebappUrl = tarjontaServiceWebappUrl;
+
+        initGson();
     }
 
     public OrganisaatioKoulutukset() {
@@ -67,62 +82,108 @@ public class OrganisaatioKoulutukset {
             }
             throw new RuntimeException("failed to read common.properties", e);
         }
+
+        initGson();
     }
 
-    private <T> T get(String uri, Class<? extends T> resultClass) {
-        try {
-            long t0 = System.currentTimeMillis();
-            T result = cachingRestClient.get(tarjontaServiceWebappUrl + "/rest/v1" + uri, resultClass);
-            LOG.debug("tarjonta rest get done, uri: {}, took: {} ms, cacheStatus: {} result: {}",
-                    new Object[] { uri, (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus(), result });
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void initGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        // Jätetään oid pois sillä KoulutusHakutulosV1RDTO sisältää kaksi oid kenttää
+        gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                return "oid".equals(fieldAttributes.getName());
+            }
+            @Override
+            public boolean shouldSkipClass(Class<?> arg0) {
+                return false;
+            }
+        });
+
+        // Rekisteröidään adapteri, jolla hoidetaan date tyyppi long arvona
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            @Override
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsLong());
+            }
+        });
+
+        gson = gsonBuilder.create();
     }
 
     private String buildSearchKoulutusUri(String oid) {
         return "/koulutus/search?" + "organisationOid=" + oid;
     }
 
+    private List<KoulutusHakutulosV1RDTO> getOrganisaatioKoulutukset(JsonElement organisaatioTulos) {
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
+
+        JsonElement koulutusTulokset = organisaatioTulos.getAsJsonObject().get("tulokset");
+
+        // Tarkistetaan, että tuloksia löytyy!
+        if (koulutusTulokset.isJsonNull()) {
+            LOG.warn("Search failed for koulutus! --> koulutus tulokset == NULL");
+            return Collections.EMPTY_LIST;
+        }
+
+        // Käydään läpi koulutukset ja deserialisoidaan
+        JsonArray koulutusTuloksetArray = koulutusTulokset.getAsJsonArray();
+        for (JsonElement koulutusTulos : koulutusTuloksetArray){
+            KoulutusHakutulosV1RDTO hakuTulos = gson.fromJson(koulutusTulos, KoulutusHakutulosV1RDTO.class);
+
+            koulutukset.add(hakuTulos);
+        }
+
+        return koulutukset;
+    }
+
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
-        LOG.debug("Haetaan koulutuksia oidille: " + oid);
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
+        InputStream jsonStream;
 
-        ResultV1RDTO<HakutuloksetV1RDTO<KoulutusHakutulosV1RDTO>> hakuTulokset;
-        ResultV1RDTO<HakutuloksetV1RDTO<KoulutusHakutulosV1RDTO>> classInstance = new ResultV1RDTO<HakutuloksetV1RDTO<KoulutusHakutulosV1RDTO>>();
+        try {
+            long t0 = System.currentTimeMillis();
+            jsonStream = cachingRestClient.get(tarjontaServiceWebappUrl + "/rest/v1" + buildSearchKoulutusUri(oid));
+            LOG.debug("tarjonta rest get done, uri: {}, took: {} ms, cacheStatus: {}",
+                    new Object[] {buildSearchKoulutusUri(oid), (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-
-        hakuTulokset = get(buildSearchKoulutusUri(oid), classInstance.getClass());
+        Reader reader = new InputStreamReader(jsonStream);
+        JsonElement json = new JsonParser().parse(reader);
 
         // Tarkistetaan hakutulokset
-        if (hakuTulokset.getStatus() != ResultStatus.OK) {
-            LOG.warn("Search failed for koulutus with organization oid: " + oid + " status: " + hakuTulokset.getStatus());
+        if (json.getAsJsonObject().get("status").isJsonNull()) {
+            LOG.warn("Search failed for koulutus with organization oid: " + oid);
+            throw new OrganisaatioTarjontaException();
+        }
+        ResultStatus status = gson.fromJson(json.getAsJsonObject().get("status"), new TypeToken<ResultStatus>(){}.getType());
+        if (status != ResultStatus.OK) {
+            LOG.warn("Search failed for koulutus with organization oid: " + oid + " status: " + status);
             throw new OrganisaatioTarjontaException();
         }
 
-        LOG.debug("Hakutulokset: "+ hakuTulokset.toString());
-
-        if (hakuTulokset.getResult() == null) {
-            LOG.debug("Hakutulosten result NULL!");
+        // Otetaan ensimmäinen taso "result"
+        JsonElement result = json.getAsJsonObject().get("result");
+        if (result.isJsonNull()) {
+            LOG.warn("Search failed for koulutus with organization oid: " + oid + " --> result == NULL");
             return Collections.EMPTY_LIST;
         }
 
-        List<TarjoajaHakutulosV1RDTO<KoulutusHakutulosV1RDTO>> tarjoajienKoulutukset = hakuTulokset.getResult().getTulokset();
-        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
-
-        // Ei löytynyt koulutuksia
-        if (hakuTulokset.getResult().getTuloksia() == 0 || tarjoajienKoulutukset == null) {
-            LOG.debug("Ei koulutuksia organisaatiolle: " + oid);
+        // Otetaan organisaatiolista (sisältää listata organisaatioiden hakutuloksista)
+        JsonElement organisaatioTulokset = result.getAsJsonObject().get("tulokset");
+        if (organisaatioTulokset.isJsonNull()) {
+            LOG.warn("Search failed for koulutus with organization oid: " + oid + " --> tulokset == NULL");
             return Collections.EMPTY_LIST;
         }
 
-        // Kerätään tuloksista annetun oid:n määrittämän tarjoajan koulutukset
-        for (TarjoajaHakutulosV1RDTO<KoulutusHakutulosV1RDTO> tarjoajanKoulutukset: tarjoajienKoulutukset) {
-            // Ei pitäisi olla muita tarjoajia listalla, mutta tarkistetaan silti
-            if (tarjoajanKoulutukset.getOid().equals(oid)) {
-		koulutukset.addAll(tarjoajanKoulutukset.getTulokset());
-            }
-	}
+        // Käydään läpi organisaatioiden koulutukset ja lisätään listalle
+        JsonArray organisaatioTuloksetArray = organisaatioTulokset.getAsJsonArray();
+        for (JsonElement organisaatioTulos : organisaatioTuloksetArray){
+            koulutukset.addAll(getOrganisaatioKoulutukset(organisaatioTulos));
+        }
 
         return koulutukset;
     }
@@ -138,11 +199,7 @@ public class OrganisaatioKoulutukset {
         // Tarkistetaan onko alkavia koulutuksia annetun päivämäärän jälkeen
         for (KoulutusHakutulosV1RDTO koulutus : koulutukset) {
             if (koulutus.getKoulutuksenAlkamisPvmMax().after(after)) {
-                LOG.debug("After: " + koulutus.getNimi().get("fi"));
 		return true;
-            }
-            else {
-                LOG.debug("Before: " + koulutus.getNimi().get("fi"));
             }
 	}
 
