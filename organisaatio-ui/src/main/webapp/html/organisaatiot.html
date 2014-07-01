@@ -95,12 +95,13 @@
 
             <!-- Organisaatiotyyppi -->
             <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi"
-                    ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'">
+                    ng-options="orgTyyppi.nimi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'"
+                    ng-change="organisaatiotyyppiChanged()">
                 <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
             </select>
 
             <!-- Oppilaitostyyppi -->
-            <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi"
+            <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi" ng-show="isOppilaitosSelected()"
                     ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
                 <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
             </select>

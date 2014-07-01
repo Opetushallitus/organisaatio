@@ -147,4 +147,14 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.ryhmienHallinta = function() {
         $location.path($location.path() + "/" + ROOT_ORGANISAATIO_OID + "/groups");
     };
+
+    $scope.organisaatiotyyppiChanged = function() {
+        if ($scope.hakuehdot.organisaatiotyyppi !== 'Oppilaitos') {
+            $scope.hakuehdot.oppilaitostyyppi = '';
+        }
+    };
+
+    $scope.isOppilaitosSelected = function() {
+        return $scope.hakuehdot.organisaatiotyyppi === 'Oppilaitos';
+    };
 }
