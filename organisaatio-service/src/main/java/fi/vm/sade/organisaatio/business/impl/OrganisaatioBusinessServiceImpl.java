@@ -17,53 +17,45 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
-
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
-
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
+import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioExistsException;
-
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
+import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
-
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
-
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-
-import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
-import fi.vm.sade.organisaatio.business.exception.YtunnusException;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -71,10 +63,8 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
@@ -115,6 +105,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private ConversionService conversionService;
+
+    @Autowired
+    private OrganisaatioKoulutukset organisaatioKoulutukset;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -264,6 +257,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
                 LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
                 checkOrganisaatioHierarchy(entity, model.getParentOid());
+            }
+
+            // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
+            if (OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), orgEntity.getLakkautusPvm()) == false) {
+                LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
+                checkLakkautusAlkavatKoulutukset(entity);
             }
         }
         else {
@@ -626,6 +625,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+    private void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
+        if (organisaatioKoulutukset.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
+            throw new OrganisaatioLakkautusKoulutuksiaException();
+        }
+    }
 
     private void createParentPath(Organisaatio entity, String parentOid) {
         if (parentOid == null) {

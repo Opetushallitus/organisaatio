@@ -25,13 +25,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import fi.vm.sade.generic.common.EnhancedProperties;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,48 +38,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author simok
  */
+@Component
 public class OrganisaatioKoulutukset {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
     private static final CachingRestClient cachingRestClient = new CachingRestClient();
+
+    @Value("${organisaatio-service.tarjonta-service.rest.url}")
     private String tarjontaServiceWebappUrl;
+
     private Gson gson;
 
-    public OrganisaatioKoulutukset(String tarjontaServiceWebappUrl) {
-        this.tarjontaServiceWebappUrl = tarjontaServiceWebappUrl;
-
-        initGson();
-    }
-
     public OrganisaatioKoulutukset() {
-        // read tarjonta-service url from common.properties
-        FileInputStream fis = null;
-        try {
-            Properties props = new EnhancedProperties();
-            fis = new FileInputStream(new File(System.getProperty("user.home"), "oph-configuration/common.properties"));
-            props.load(fis);
-            this.tarjontaServiceWebappUrl = props.getProperty("cas.service.tarjonta-service");
-        } catch (IOException e) {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException ioe) {
-                }
-            }
-            throw new RuntimeException("failed to read common.properties", e);
-        }
-
         initGson();
     }
 
@@ -144,7 +123,7 @@ public class OrganisaatioKoulutukset {
 
         try {
             long t0 = System.currentTimeMillis();
-            jsonStream = cachingRestClient.get(tarjontaServiceWebappUrl + "/rest/v1" + buildSearchKoulutusUri(oid));
+            jsonStream = cachingRestClient.get(tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid));
             LOG.debug("tarjonta rest get done, uri: {}, took: {} ms, cacheStatus: {}",
                     new Object[] {buildSearchKoulutusUri(oid), (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
         } catch (IOException e) {
