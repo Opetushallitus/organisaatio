@@ -36,6 +36,14 @@
             <b>vuosiluokat</b>
         </field-exclude>
         <field-exclude>
+            <a>ryhmatyypit</a>
+            <b>ryhmatyypit</b>
+        </field-exclude>
+        <field-exclude>
+            <a>kayttoryhmat</a>
+            <b>kayttoryhmat</b>
+        </field-exclude>
+        <field-exclude>
             <a>kielet</a>
             <b>kielet</b>
         </field-exclude>

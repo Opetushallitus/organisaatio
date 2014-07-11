@@ -62,6 +62,10 @@ public class OrganisaatioRDTO implements Serializable {
 
     private List<String> _vuosiluokat;
 
+    private List<String> _ryhmatyypit;
+
+    private List<String> _kayttoryhmat;
+
     private Map<String, String> _nimi;
 
     private String _maaUri;
@@ -273,6 +277,30 @@ public class OrganisaatioRDTO implements Serializable {
 
     public void setVuosiluokat(List<String> _vuosiluokat) {
         this._vuosiluokat = _vuosiluokat;
+    }
+
+    @ApiModelProperty(value = "Ryhmatyypit", required = true)
+    public List<String> getRyhmatyypit() {
+        if (_ryhmatyypit == null) {
+            _ryhmatyypit = new ArrayList<String>();
+        }
+        return _ryhmatyypit;
+    }
+
+    public void setRyhmatyypit(List<String> _ryhmatyypit) {
+        this._ryhmatyypit = _ryhmatyypit;
+    }
+
+    @ApiModelProperty(value = "Kayttoryhmat", required = true)
+    public List<String> getKayttoryhmat() {
+        if (_kayttoryhmat == null) {
+            _kayttoryhmat = new ArrayList<String>();
+        }
+        return _kayttoryhmat;
+    }
+
+    public void setKayttoryhmat(List<String> _kayttoryhmat) {
+        this._kayttoryhmat = _kayttoryhmat;
     }
 
     @ApiModelProperty(value = "Käyntiosoite", required = true)
