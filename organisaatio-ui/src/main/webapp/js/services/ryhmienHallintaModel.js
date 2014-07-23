@@ -12,6 +12,12 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                         ryhma.kuvaus2 = {};
                     }
                     ryhma.tyypit = ['Ryhma'];
+                    if (ryhma.ryhmatyypit.length===0) {
+                        ryhma.ryhmatyypit = [''];
+                    }
+                    if (ryhma.kayttoryhmat.length===0) {
+                        ryhma.kayttoryhmat = [''];
+                    }
                     ryhmat.push(ryhma);
                 });
                 callback();
@@ -24,6 +30,8 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                 parentOid: parentOid,
                 oid: null,
                 tyypit: ['Ryhma'],
+                ryhmatyypit: [''],
+                kayttoryhmat: [''],
                 "nimi": {
                     "fi": null,
                     "sv": null,

@@ -641,12 +641,13 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste, 05:Muu organisaatio
                      OPH-organisaation tyyppi on 'Muu organisaatio'
+                     Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
                     sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03"],
+                        'Muu organisaatio': ["05", "03", "04"],
                         'Koulutustoimija': ["02", "04"],
-                        'Oppilaitos': ["03"],
-                        'Toimipiste': ["03"],
+                        'Oppilaitos': ["03", "04"],
+                        'Toimipiste': ["03", "04"],
                         'Oppisopimustoimipiste': []};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {

@@ -1,10 +1,12 @@
-function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo) {
+function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo, RyhmaKoodisto) {
     UserInfo.then(function(s) {
         language = s.lang;
     });
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
+
+    $scope.koodisto = RyhmaKoodisto;
 
     $scope.localizeNimi = function(ryhma) {
         for (var k in ryhma.nimi) {

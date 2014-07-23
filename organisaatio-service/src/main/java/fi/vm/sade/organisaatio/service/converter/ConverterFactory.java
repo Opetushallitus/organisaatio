@@ -261,6 +261,8 @@ public class ConverterFactory {
            entity.setTyypit(getTyypitStr(dto.getTyypit()));
 
            entity.setVuosiluokat(dto.getVuosiluokat());
+           entity.setRyhmatyypit(dto.getRyhmatyypit());
+           entity.setKayttoryhmat(dto.getKayttoryhmat());
            entity.setKielet(dto.getKielet());
            convertNimiToEntity(dto, entity);
 

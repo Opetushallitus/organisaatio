@@ -481,3 +481,10 @@ app.factory('Paivittaja', function($resource) {
         get: {method: 'GET'}
     });
 });
+
+// Koodiston haku koodistopalvelulta koodistoUrin perusteella
+app.factory('KoodistoArrayByUri', function($resource) {
+    return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
+        get: {method: "GET", isArray: true}
+    });
+});
