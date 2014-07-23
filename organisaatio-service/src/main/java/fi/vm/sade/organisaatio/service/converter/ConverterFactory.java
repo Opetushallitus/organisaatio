@@ -61,6 +61,8 @@ import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import javax.ws.rs.core.Response;
 
 /**
  * @author Antti Salonen
@@ -259,6 +261,8 @@ public class ConverterFactory {
            entity.setTyypit(getTyypitStr(dto.getTyypit()));
 
            entity.setVuosiluokat(dto.getVuosiluokat());
+           entity.setRyhmatyypit(dto.getRyhmatyypit());
+           entity.setKayttoryhmat(dto.getKayttoryhmat());
            entity.setKielet(dto.getKielet());
            convertNimiToEntity(dto, entity);
 
@@ -470,6 +474,9 @@ public class ConverterFactory {
                  entity = entityManager.merge(entity);
                  */
                  entity = this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).get(0);
+                 if (entity.getVersion() != dto.getVersion()) {
+                     throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Data version changed.", "yhteystietojentyyppi.exception.modified");
+                 }
                  mapper.map(dto, entity);
              } else {
                  // or convert fields from dto

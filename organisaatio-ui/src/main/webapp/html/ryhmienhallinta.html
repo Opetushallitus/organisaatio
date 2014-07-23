@@ -1,7 +1,7 @@
 <form name="mainform" class="form-horizontal" novalidate>
     <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
 
-    <select ng-model="currentGroup" class="span6" ng-disabled="currentGroup && form.$dirty"
+    <select ng-model="currentGroup" class="span6" ng-disabled="(currentGroup && form.$dirty) || model.groups.length===0"
             ng-options="localizeNimi(group) for group in model.groups">
         <option value="">{{'RyhmienHallinta.valitseRyhma'| i18n}}</option>
     </select>
@@ -61,6 +61,45 @@
                        ie-placeholder placeholder="{{'RyhmienHallinta.kuvausenglanniksi'| i18n}}" ng-required="false" />
             </div>
         </div>
+
+        <h3>{{'RyhmienHallinta.ryhmatyyppi'| i18n}}</h3>
+
+        <div class="control-group">
+            <div class="controls">
+                <select id="ryhmatyyppi" ng-model="currentGroup.ryhmatyypit[0]" class="span6"
+                    ng-options="rTyyppi.uri as rTyyppi.nimi for rTyyppi in koodisto.ryhmatyypit | orderBy:'nimi'"
+                    ng-change="form.$dirty = true" required>
+                    <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
+                </select>
+                <div ng-if="!currentGroup.ryhmatyypit[0]">
+                    <input type="hidden" name="gtyyppivirhe" ng-model="gtyyppivirhe" required>
+                    <span class="text-error" ng-show="form.gtyyppivirhe.$error.required">
+                        {{'RyhmienHallinta.ryhmatyyppi'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <h3>{{'RyhmienHallinta.kayttoryhma'| i18n}}</h3>
+
+        <div class="control-group">
+            <div class="controls">
+                <select id="kayttoryhma" ng-model="currentGroup.kayttoryhmat[0]" class="span6"
+                    ng-options="kTyyppi.uri as kTyyppi.nimi for kTyyppi in koodisto.kayttoryhmat | orderBy:'nimi'"
+                    ng-change="form.$dirty = true" required>
+                    <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
+                </select>
+                <div ng-if="!currentGroup.kayttoryhmat[0]">
+                    <input type="hidden" name="ktyyppivirhe" ng-model="ktyyppivirhe" required>
+                    <span class="text-error" ng-show="form.ktyyppivirhe.$error.required">
+                        {{'RyhmienHallinta.kayttoryhma'| i18n}}
+                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row">

@@ -1,22 +1,17 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
+var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
 
 angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', function ($rootScope, $locale, $window, $http, UserInfo) {
+.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService) {
     var initialized = false;
+
     UserInfo.then(function(s) {
-        jQuery.i18n.properties({
-	    name:'messages',
-	    path:'../i18n/',
-	    mode:'map',
-            language: s.lang,
-	    callback: function() {
-                initialized = true;
-	    }
-	});
+
+        LocalisationService.setLocale(s.lang.toLowerCase());
+        initialized = true;
     });
 
-    return function (text) {
-        return initialized ? jQuery.i18n.prop(text) : '...';
+    return function (localisationKey) {
+        return initialized ? LocalisationService.t(localisationKey) : '...';
     };
 }]);
 
@@ -45,6 +40,7 @@ var UI_URL_BASE = UI_URL_BASE || "http://localhost:8180/organisaatio-ui/";
 var SERVICE_URL_BASE = SERVICE_URL_BASE || "";
 var TEMPLATE_URL_BASE = TEMPLATE_URL_BASE || "";
 var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
+var LOKALISAATIO_URL_BASE = LOKALISAATIO_URL_BASE || "";
 var AUTHENTICATION_URL_BASE = AUTHENTICATION_URL_BASE || "";
 var ROOT_ORGANISAATIO_OID = ROOT_ORGANISAATIO_OID || "";
 var CAS_ME_URL = CAS_ME_URL || "/cas/me";
@@ -483,5 +479,12 @@ app.factory('Ryhmat', function($resource) {
 app.factory('Paivittaja', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/paivittaja", {oid: "@oid"}, {
         get: {method: 'GET'}
+    });
+});
+
+// Koodiston haku koodistopalvelulta koodistoUrin perusteella
+app.factory('KoodistoArrayByUri', function($resource) {
+    return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
+        get: {method: "GET", isArray: true}
     });
 });

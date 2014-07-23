@@ -15,7 +15,6 @@
 
 package fi.vm.sade.organisaatio.business;
 
-import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import java.util.List;
@@ -27,14 +26,16 @@ import javax.validation.ValidationException;
  */
 public interface OrganisaatioBusinessService {
     public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
-    
-    
+
+
     /**
      * @param kieliList kielirajaus kielivalikoima-koodiston koodiUreja: ["kielivalikoima_en", "kielivalikoima_sv"]
      * @param kuntaList kuntarajaus kunta-koodiston koodiUreja: ["kunta_407", "kunta_604"]
      * @param oppilaitostyyppiList oppilaitostyyppirajaus oppilaitostyyppi-koodiston koodiUreja: ["oppilaitostyyppi_19", "oppilaitostyyppi_91"]
      * @param vuosiluokkaList vuosiluokkarajaus vuosiluokat-koodiston koodiUreja: ["vuosiluokat_1","vuosiluokat_2"]
      * @param ytunnusList y-tunnusrajaus: ["0147510-4", "0203797-4"]
+     * @param oidList
+     * @param limit
      * @return
      */
     public List<Organisaatio> findBySearchCriteria(

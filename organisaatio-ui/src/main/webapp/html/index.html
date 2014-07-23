@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html ng-app="organisaatio" ng-controller="EventsCtrl">
+<html ng-controller="EventsCtrl">
 
 <head>
     <!-- libs -->
-    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery-1.8.3.js"></script>
-    <script type="text/javascript" src="../jslib/jquery-ui-1.9.2/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.nestable.js"></script>
-    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.mjs.nestedSortable.js"></script>
-    <script type="text/javascript" src="../jslib/jquery-1.8.3/jquery.i18n.properties-min-1.0.9.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/angular.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/i18n/angular-locale_fi-fi.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/angular-resource.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/angular-route.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/angular-sanitize.js"></script>
-    <script type="text/javascript" src="../jslib/angular-1.2.8/angular-cookies.js"></script>
+    <script type="text/javascript" src="../jslib/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/angular.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/i18n/angular-locale_fi-fi.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/angular-resource.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/angular-route.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/angular-sanitize.js"></script>
+    <script type="text/javascript" src="../jslib/angular-1.2.18/angular-cookies.js"></script>
     <script type="text/javascript" src="../jslib/tinymce-4.0.26/tinymce.min.js"></script>
     <script type="text/javascript" src="../jslib/angular-ui-tinymce-1a3c618/tinymce.js"></script>
     <script type="text/javascript" src="../jslib/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js"></script>
     <script type="text/javascript" src="../jslib/angular-modules/angular-idle-0.3.2.js"></script>
+    <script type="text/javascript" src="../jslib/moment.min.js"></script>
 
     <script type="text/javascript" src="../jslib/jQuery-File-Upload-9.5.7/vendor/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="../jslib/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js"></script>
@@ -29,6 +26,7 @@
     <!-- app js-->
     <script type="text/javascript" src="../js/app.js"></script>
     <script type="text/javascript" src="../js/auth.js"></script>
+    <script type="text/javascript" src="../js/localisation.js"></script>
     <script type="text/javascript" src="../js/directives/directives.js"></script>
     <script type="text/javascript" src="../js/services/hakuehdotModel.js"></script>
     <script type="text/javascript" src="../js/services/organisaatioModel.js"></script>
@@ -37,6 +35,7 @@
     <script type="text/javascript" src="../js/services/yritysValintaModel.js"></script>
     <script type="text/javascript" src="../js/services/yhteystietojentyyppiModel.js"></script>
     <script type="text/javascript" src="../js/services/uploadService.js"></script>
+    <script type="text/javascript" src="../js/services/ryhmaKoodisto.js"></script>
     <script type="text/javascript" src="../js/controllers/organisaatioController.js"></script>
     <script type="text/javascript" src="../js/controllers/organisaatioDeleteController.js"></script>
     <script type="text/javascript" src="../js/controllers/organisaatioTreeController.js"></script>
@@ -53,6 +52,7 @@
     <script type="text/javascript" src="../js/idler.js"></script>
 
     <script type="text/javascript" src="../js/loading.js"></script>
+    <script type="text/javascript" src="../js/init.js"></script>
 
     <!--Virkailija layout script -->
     <script type="text/javascript" src="/virkailija-raamit/apply-raamit.js"></script>
@@ -73,7 +73,7 @@
 
     <title ng-bind-template="{{'Organisaatiot.title' | i18n}}"></title>
 </head>
-<body idle>
+<body idle ng-controller="LocalisationCtrl">
     <div class="container-fluid" id="application-wrapper">
         <div>
             <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
@@ -84,8 +84,9 @@
         </div>
     </div>
     <div ng-controller="LoadingCtrl">
-        <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
+        <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold; z-index: 1060; width: 100%; text-align: center;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
     </div>
+    <script>organisaatioInitialize();</script>
 </body>
 
 </html>

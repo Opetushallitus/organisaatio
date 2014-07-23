@@ -33,6 +33,8 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
         setAllYhteystiedot(dto, entity);
         dto.getYhteystietoArvos().addAll(converterFactory.convertToDTO(entity.getYhteystietoArvos(), YhteystietoArvoDTO.class));//convertYhteystiedotToDTO(entity.getYhteystietoArvos(), YhteystietoArvoDTO.class));
         setVuosiluokat(dto, entity);
+        setRyhmatyypit(dto, entity);
+        setKayttoryhmat(dto, entity);
         dto.getKielet().addAll(entity.getKielet());
         convertNimiToDTO(entity, dto);
         //dto.setKuvailevatTiedot(new EntityToOrganisaatioKuvailevatTiedotTyyppiFunction(converterFactory).apply(entity.getMetadata()));
@@ -54,6 +56,14 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
 
     private void setVuosiluokat(OrganisaatioDTO dto, Organisaatio entity) {
         dto.getVuosiluokat().addAll(entity.getVuosiluokat());
+    }
+
+    private void setRyhmatyypit(OrganisaatioDTO dto, Organisaatio entity) {
+        dto.getRyhmatyypit().addAll(entity.getRyhmatyypit());
+    }
+
+    private void setKayttoryhmat(OrganisaatioDTO dto, Organisaatio entity) {
+        dto.getKayttoryhmat().addAll(entity.getKayttoryhmat());
     }
 
     private void setAllYhteystiedot(OrganisaatioDTO dto, Organisaatio entity) {
@@ -80,6 +90,8 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
 
     public void setValuesToJPA(OrganisaatioDTO dto, Organisaatio entity, boolean merge, OrganisaatioDAOImpl organisaatioDAO) {
         entity.setVuosiluokat(dto.getVuosiluokat());
+        entity.setRyhmatyypit(dto.getRyhmatyypit());
+        entity.setKayttoryhmat(dto.getKayttoryhmat());
         entity.setKielet(dto.getKielet());
         convertNimiToEntity(dto, entity);
     }

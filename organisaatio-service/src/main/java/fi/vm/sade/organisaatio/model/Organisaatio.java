@@ -70,6 +70,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private List<String> vuosiluokat = new ArrayList<String>();
 
+    @ElementCollection
+    @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    private List<String> ryhmatyypit = new ArrayList<String>();
+
+    @ElementCollection
+    @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    private List<String> kayttoryhmat = new ArrayList<String>();
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nimi_mkt")
     private MonikielinenTeksti nimi;
@@ -369,6 +377,36 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public void setVuosiluokat(List<String> vuosiluokat) {
         this.vuosiluokat.clear();
         this.vuosiluokat.addAll(vuosiluokat);// = vuosiluokat;
+    }
+
+    /**
+     * @return ryhmatyypit
+     */
+    public List<String> getRyhmatyypit() {
+        return Collections.unmodifiableList(ryhmatyypit);
+    }
+
+    /**
+     * @param ryhmatyypit ryhmatyypit to set
+     */
+    public void setRyhmatyypit(List<String> ryhmatyypit) {
+        this.ryhmatyypit.clear();
+        this.ryhmatyypit.addAll(ryhmatyypit);
+    }
+
+    /**
+     * @return kayttoryhmat
+     */
+    public List<String> getKayttoryhmat() {
+        return Collections.unmodifiableList(kayttoryhmat);
+    }
+
+    /**
+     * @param kayttoryhmat kayttoryhmat to set
+     */
+    public void setKayttoryhmat(List<String> kayttoryhmat) {
+        this.kayttoryhmat.clear();
+        this.kayttoryhmat.addAll(kayttoryhmat);
     }
 
     /**

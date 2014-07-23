@@ -87,6 +87,8 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setTyypit(convertListToList(s.getTyypit()));
         // t.set(s.getTyypitAsString());
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
+        t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
+        t.setKayttoryhmat(convertListToList(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
         // t.set(s.getYhteystiedot());
         // t.set(s.getYhteystietoArvos());

@@ -1,10 +1,12 @@
-function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo) {
+function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo, RyhmaKoodisto) {
     UserInfo.then(function(s) {
         language = s.lang;
     });
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
+
+    $scope.koodisto = RyhmaKoodisto;
 
     $scope.localizeNimi = function(ryhma) {
         for (var k in ryhma.nimi) {
@@ -34,7 +36,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
                 $scope.currentGroup = savedGroup;
                 $scope.form.$setPristine();
             }, function(error) {
-                Alert.add("error", $filter('i18n')(error.data.errorKey, ""), false);
+                Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
             });
         }
     };
