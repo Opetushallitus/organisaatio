@@ -109,6 +109,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Autowired
     private OrganisaatioKoulutukset organisaatioKoulutukset;
 
+    @Autowired
+    private OrganisaatioKoodisto organisaatioKoodisto;
+
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -360,6 +363,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (OrganisaatioUtil.isRyhma(entity) == false) {
             solrIndexer.index(Lists.newArrayList(entity));
         }
+
+        // Päivitä tiedot koodistoon
+        updateKoodisto(entity);
 
         return entity;
     }
@@ -628,6 +634,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
         if (organisaatioKoulutukset.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
             throw new OrganisaatioLakkautusKoulutuksiaException();
+        }
+    }
+
+    private void updateKoodisto(Organisaatio entity) {
+        if (organisaatioKoodisto.paivitaKoodisto(entity)==false) {
+            // TODO: Saa olla opportunistinen kunnes kokonaan toteutettu ja testattu. Sitten voidaan ehkä
+            // heittää poikkeus jos koodiston päivitys ei onnistu.
+            //throw new OrganisaatioKoodistoException();
+            LOG.warn("Failed to update Koodisto.");
         }
     }
 
