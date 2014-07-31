@@ -22,6 +22,7 @@ ldap.manager-password={{ldap_manager_password}}
 ldap.manager.userdn={{ldap_manager_userdn}}
 port.organisaatio-service={{port_organisaatio_service}}
 port.koodisto-service={{port_koodisto_service}}
+port.tarjonta-service={{port_tarjonta_service}}
 port.postgresql={{port_postgresql}}
 rajapinnat.ytj.asiakastunnus={{rajapinnat_ytj_asiakastunnus}}
 rajapinnat.ytj.avain={{rajapinnat_ytj_avain}}
