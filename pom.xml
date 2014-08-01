@@ -5,7 +5,7 @@
   <groupId>fi.vm.sade.rajapinnat</groupId>
   <artifactId>ytj-parent</artifactId>
   <packaging>pom</packaging>
-  <name>Rajapinnat :: YTJ :: parent - ${version}</name>
+  <name>Rajapinnat :: YTJ :: parent - ${project.version}</name>
   
   <parent>
     <artifactId>rajapinnat</artifactId>

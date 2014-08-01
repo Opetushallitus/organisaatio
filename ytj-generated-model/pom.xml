@@ -11,7 +11,7 @@
 
     <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
     <artifactId>ytj-generated-model</artifactId>
-    <name>Rajapinnat :: YTJ :: generated-model - ${version}</name>
+    <name>Rajapinnat :: YTJ :: generated-model - ${project.version}</name>
 
     <build>
         <sourceDirectory>target/generated-sources/cxf</sourceDirectory>

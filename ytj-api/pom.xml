@@ -11,7 +11,7 @@
 
     <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
     <artifactId>ytj-api</artifactId>
-    <name>Rajapinnat :: YTJ :: API - ${version}</name>
+    <name>Rajapinnat :: YTJ :: API - ${project.version}</name>
     <url>http://maven.apache.org</url>
 
     <properties>
