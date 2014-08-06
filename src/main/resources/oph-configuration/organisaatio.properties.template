@@ -28,6 +28,8 @@ rajapinnat.ytj.asiakastunnus={{rajapinnat_ytj_asiakastunnus}}
 rajapinnat.ytj.avain={{rajapinnat_ytj_avain}}
 server.name={{ansible_hostname}}
 organisaatio.solr.url={{organisaatio_solr_url}}
+organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
+organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koodisto}}
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
@@ -88,3 +90,4 @@ root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
 user.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/userService
 web.url.cas=https\://${host.cas}/cas
+

@@ -16,19 +16,14 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fi.vm.sade.generic.model.BaseEntity;
-import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,19 +36,25 @@ public class OrganisaatioKoodisto {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
-    private static final CachingRestClient cachingRestClient = new CachingRestClient();
+    @Autowired
+    private OrganisaatioKoodistoClient client;
 
-    @Value("${organisaatio-service.koodisto-service.rest.url}")
-    private String koodistoServiceWebappUrl;
+    private final Gson gson;
 
-    private Gson gson;
+    private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
     /**
      * Luo instanssin ja alustaa gson:in
      */
     public OrganisaatioKoodisto() {
         gson = new GsonBuilder().create();
+    }
+
+    private OrganisaatioKoodistoClient getClient() {
+        if (client == null) {
+            client = new OrganisaatioKoodistoClient();
+        }
+        return client;
     }
 
     /**
@@ -64,43 +65,35 @@ public class OrganisaatioKoodisto {
      * oppilaitosnumero tai y-tunnus ilman väliviivaa)
      * @return Koodiobjekti tai null jos ei löytynyt
      */
-    private Koodi haeKoodi(String koodistoUri, String tunniste) {
-        Koodi res;
-        try {
-            long t0 = System.currentTimeMillis();
-            res = cachingRestClient.get(koodistoServiceWebappUrl + "/json/" + koodistoUri + "/koodi/" + koodistoUri + "_" + tunniste, Koodi.class);
-            LOG.debug("koodisto rest get done, koodistoUri: {}, tunniste: {}, took: {} ms, cacheStatus: {}",
-                    new Object[]{koodistoUri, tunniste, (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
-        } catch (IOException e) {
-            LOG.debug("Koodi not found.");
-            return null;
-        }
-        LOG.debug(res.toString());
-        return res;
+    private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
+        String json = getClient().get("/rest/json/" + koodistoUri + "/koodi/" + koodistoUri + "_" + tunniste);
+        LOG.debug("Haettiin koodi: " + (json == null ? null : json.toString()));
+        return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
     }
 
-    // Päivittää olemassaolevan koodin kutsumalla cachingRestClientin PUT-operaatiota
-    private boolean paivitaKoodi(Koodi koodi) {
-        String json = gson.toJson(koodi);
-        LOG.debug("Päivitetään koodi: " + json);
-
+    // Päivittää koodistoon olemassaolevan koodin (PUT)
+    private boolean paivitaKoodi(OrganisaatioKoodistoKoodi koodi) {
         try {
-            HttpResponse res = cachingRestClient.put(koodistoServiceWebappUrl + "/codeelement", "application/json;charset=utf-8", json);
-        } catch (IOException e) {
-            LOG.warn("Koodi update failed. Reason: " + e.getMessage());
+            getClient().put(gson.toJson(koodi));
+        } catch (OrganisaatioKoodistoException e) {
+            LOG.debug("Koodi update failed. Reason: " + e.getMessage());
             return false;
         }
         return true;
     }
 
-    // Lisää uuden koodin kutsumalla cachingRestClientin POST-operaatiota
-    private boolean lisaaKoodi(Koodi koodi, String uri) {
-        String json = gson.toJson(koodi);
-        LOG.debug("Lisätään koodi: " + json);
-
+    /**
+     * Lisää koodistoon uuden koodin (POST)
+     *
+     * @param koodi Lisättävä koodi
+     * @param uri Koodisto URI ("opetuspisteet", "oppilaitosnumero",
+     * "koulutustoimija" tai "yhteishaunkoulukoodi")
+     * @return true jos lisääminen onnistui, false muuten
+     */
+    private boolean lisaaKoodi(OrganisaatioKoodistoKoodi koodi, String uri) {
         try {
-            HttpResponse res = cachingRestClient.post(koodistoServiceWebappUrl + "/codeelement/" + uri, "application/json;charset=utf-8", json);
-        } catch (IOException e) {
+            getClient().post(gson.toJson(koodi), uri);
+        } catch (OrganisaatioKoodistoException e) {
             LOG.warn("Koodi insert failed. Reason: " + e.getMessage());
             return false;
         }
@@ -117,14 +110,15 @@ public class OrganisaatioKoodisto {
      */
     private boolean luoKoodi(String uri, String tunniste, Organisaatio entity) {
         // Lisätään koodi
-        Koodi uk = new Koodi();
+        OrganisaatioKoodistoKoodi uk = new OrganisaatioKoodistoKoodi();
 
-        uk.setKoodiArvo(uri + "_" + tunniste);
+        uk.setKoodiArvo(tunniste);
         uk.setVoimassaAlkuPvm(new SimpleDateFormat("yyyy-MM-dd").format(entity.getAlkuPvm()));
         uk.setVersio(1);
+        uk.setTila("LUONNOS");
 
         for (String lang : entity.getNimi().getValues().keySet()) {
-            KoodiMetadata umt = new KoodiMetadata();
+            OrganisaatioKoodistoKoodiMetadata umt = new OrganisaatioKoodistoKoodiMetadata();
             umt.setKieli(lang.toUpperCase());
             umt.setNimi(entity.getNimi().getString(lang));
             umt.setLyhytNimi(entity.getNimi().getString(lang));
@@ -152,7 +146,7 @@ public class OrganisaatioKoodisto {
      * @param entity Organisaatio
      * @return true jos koodiston päivittäminen onnistui, false muuten
      */
-    public boolean paivitaKoodisto(Organisaatio entity) {
+    public String paivitaKoodisto(Organisaatio entity) {
         /*
          * Koodiston koodit
          *     [0]: koodiUri
@@ -171,19 +165,23 @@ public class OrganisaatioKoodisto {
         for (Object[] koodiAlkio : koodiLista) {
             String uri = (String) koodiAlkio[URI_INDEX];
             String tunniste = (String) koodiAlkio[TUNNISTE_INDEX];
-            Koodi koodi = null;
+            OrganisaatioKoodistoKoodi koodi = null;
             LOG.debug("KOODI uri: " + uri + ", tunniste: '" + tunniste + "'");
             if (tunniste != null && !tunniste.isEmpty()) {
                 // Tunniste on olemassa, haetaan koodistosta
-                koodi = haeKoodi(uri, tunniste);
-
+                try {
+                    koodi = haeKoodi(uri, tunniste);
+                } catch (OrganisaatioKoodistoException e) {
+                    LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
+                    return INFO_CODE_SAVE_FAILED;
+                }
                 if (koodi == null) {
                     // Ei löytynyt, luodaan uusi
                     if (luoKoodi(uri, tunniste, entity) == true) {
-                        LOG.debug("Koodi " + uri + "_" + tunniste + " lisätty");
+                        LOG.info("Koodi " + uri + "_" + tunniste + " lisättiin");
                     } else {
                         LOG.warn("Koodin " + uri + "_" + tunniste + " lisääminen epäonnistui");
-                        return false;
+                        return INFO_CODE_SAVE_FAILED;
                     }
                 } else {
                     // Päivitetään olemassa olevaan nimi ja lakkautuspvm jos muuttuneet
@@ -197,7 +195,6 @@ public class OrganisaatioKoodisto {
                             koodi.setVoimassaLoppuPvm(loppupvm);
                             muuttunut = true;
                         }
-                        // TODO: tarkista onko nimi muuttunut
                     } else if (koodi.getVoimassaLoppuPvm() != null && !koodi.getVoimassaLoppuPvm().isEmpty()) {
                         LOG.debug("Lakkautuspvm poistettu");
                         koodi.setVoimassaLoppuPvm(null);
@@ -205,8 +202,8 @@ public class OrganisaatioKoodisto {
                     }
 
                     // Koodin nimet tällä hetkellä koodistossa
-                    Map<String, KoodiMetadata> koodiNyt = new HashMap<String, KoodiMetadata>();
-                    for (KoodiMetadata km : koodi.getMetadata()) {
+                    Map<String, OrganisaatioKoodistoKoodiMetadata> koodiNyt = new HashMap<String, OrganisaatioKoodistoKoodiMetadata>();
+                    for (OrganisaatioKoodistoKoodiMetadata km : koodi.getMetadata()) {
                         koodiNyt.put(km.getKieli(), km);
                     }
 
@@ -215,243 +212,51 @@ public class OrganisaatioKoodisto {
                         String uusiNimi = entity.getNimi().getValues().get(kieli);
                         LOG.debug("Nimi: " + kieli.toUpperCase() + "=" + uusiNimi);
 
-                        KoodiMetadata km = koodiNyt.get(kieli.toUpperCase());
+                        OrganisaatioKoodistoKoodiMetadata km = koodiNyt.get(kieli.toUpperCase());
                         if (km != null) {
                             // Kieliversio on olemassa
                             if (!km.getNimi().equals(uusiNimi)) {
                                 LOG.debug("Nimi(" + kieli + ") muuttunut");
                                 km.setNimi(uusiNimi);
-                                // TODO: lyhytnimi, kuvaus?
+                                // Olemassaolevia kenttiä lyhytNimi ja kuvaus ei ylikirjoiteta
                                 muuttunut = true;
                             } else {
                                 LOG.debug("Nimi(" + kieli + ") ei ole muuttunut");
                             }
+                            koodiNyt.remove(kieli.toUpperCase());
                         } else {
                             // Lisää koodiin
-                            KoodiMetadata ukm = new KoodiMetadata();
+                            OrganisaatioKoodistoKoodiMetadata ukm = new OrganisaatioKoodistoKoodiMetadata();
                             ukm.setKieli(kieli.toUpperCase());
                             ukm.setNimi(uusiNimi);
-                            //ukm.setLyhytNimi(uusiNimi);
-                            //ukm.setKuvaus(uusiNimi);
+                            // Myös kenttiin lyhytNimi ja kuvaus on asetettava arvot
+                            ukm.setLyhytNimi(uusiNimi);
+                            ukm.setKuvaus(uusiNimi);
                             koodi.getMetadata().add(ukm);
                             LOG.debug("Nimi(" + kieli + ") lisätty");
                             muuttunut = true;
                         }
                     }
+                    // Poistetaan koodistakin kielet jotka on poistettu organisaatiossa
+                    for (String kieli : koodiNyt.keySet()) {
+                        koodi.getMetadata().remove(koodiNyt.get(kieli));
+                        LOG.debug("Nimi(" + kieli + ") poistettu");
+                        muuttunut = true;
+                    }
 
                     if (muuttunut == true) {
-                        paivitaKoodi(koodi);
+                        if (paivitaKoodi(koodi) == true) {
+                            LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
+                        } else {
+                            LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
+                            return INFO_CODE_SAVE_FAILED;
+                        }
                     } else {
                         LOG.debug("Ei muutoksia");
                     }
                 }
             }
         }
-        return true;
-    }
-
-    /**
-     * Koodi-luokka, jonka gson serialisoi/unserialisoi REST-kutsujen JSON:sta.
-     *
-     * Sisältää vain tämän toiminnalisuuden ja rajapintojen käytön kannalta tarpeelliset propertyt.
-     *
-     */
-    public class Koodi {
-
-        private String koodiUri;
-
-        //Ei tarvita tässä yhteydessä
-        //private String resourceUri;
-        private Long version;
-
-        private int versio;
-
-        private String koodiArvo;
-
-        protected String paivitysPvm;
-
-        protected String voimassaAlkuPvm;
-
-        protected String voimassaLoppuPvm;
-
-        protected List<KoodiMetadata> metadata = new ArrayList<KoodiMetadata>();
-
-        public String getKoodiUri() {
-            return koodiUri;
-        }
-
-        public void setKoodiUri(String koodiUri) {
-            this.koodiUri = koodiUri;
-        }
-
-        /*public String getResourceUri() {
-         return resourceUri;
-         }
-
-         public void setResourceUri(String resourceUri) {
-         this.resourceUri = resourceUri;
-         }*/
-        public int getVersio() {
-            return versio;
-        }
-
-        public void setVersio(int versio) {
-            this.versio = versio;
-        }
-
-        public String getKoodiArvo() {
-            return koodiArvo;
-        }
-
-        public void setKoodiArvo(String koodiArvo) {
-            this.koodiArvo = koodiArvo;
-        }
-
-        public String getPaivitysPvm() {
-            return paivitysPvm;
-        }
-
-        public void setPaivitysPvm(String paivitysPvm) {
-            this.paivitysPvm = paivitysPvm;
-        }
-
-        public String getVoimassaAlkuPvm() {
-            return voimassaAlkuPvm;
-        }
-
-        public void setVoimassaAlkuPvm(String voimassaAlkuPvm) {
-            this.voimassaAlkuPvm = voimassaAlkuPvm;
-        }
-
-        public String getVoimassaLoppuPvm() {
-            return voimassaLoppuPvm;
-        }
-
-        public void setVoimassaLoppuPvm(String voimassaLoppuPvm) {
-            this.voimassaLoppuPvm = voimassaLoppuPvm;
-        }
-
-        public List<KoodiMetadata> getMetadata() {
-            return metadata;
-        }
-
-        public void setMetadata(List<KoodiMetadata> metadata) {
-            this.metadata = metadata;
-        }
-
-        public Long getVersion() {
-            return version;
-        }
-
-        public void setVersion(final Long version) {
-            this.version = version;
-        }
-    }
-
-    /**
-     * KoodiMetadata-luokka on osa Koodi:a jonka gson serialisoi/unserialisoi REST-kutsujen JSON:sta.
-     */
-    public class KoodiMetadata extends BaseEntity {
-
-        private String nimi;
-
-        private String kuvaus;
-
-        private String lyhytNimi;
-
-        private String kayttoohje;
-
-        private String kasite;
-
-        private String sisaltaaMerkityksen;
-
-        private String eiSisallaMerkitysta;
-
-        private String huomioitavaKoodi;
-
-        private String sisaltaaKoodiston;
-
-        private String kieli;
-
-        public String getNimi() {
-            return nimi;
-        }
-
-        public void setNimi(String nimi) {
-            this.nimi = nimi;
-        }
-
-        public String getKuvaus() {
-            return kuvaus;
-        }
-
-        public void setKuvaus(String kuvaus) {
-            this.kuvaus = kuvaus;
-        }
-
-        public String getLyhytNimi() {
-            return lyhytNimi;
-        }
-
-        public void setLyhytNimi(String lyhytNimi) {
-            this.lyhytNimi = lyhytNimi;
-        }
-
-        public String getKayttoohje() {
-            return kayttoohje;
-        }
-
-        public void setKayttoohje(String kayttoohje) {
-            this.kayttoohje = kayttoohje;
-        }
-
-        public String getKasite() {
-            return kasite;
-        }
-
-        public void setKasite(String kasite) {
-            this.kasite = kasite;
-        }
-
-        public String getSisaltaaMerkityksen() {
-            return sisaltaaMerkityksen;
-        }
-
-        public void setSisaltaaMerkityksen(String sisaltaaMerkityksen) {
-            this.sisaltaaMerkityksen = sisaltaaMerkityksen;
-        }
-
-        public String getEiSisallaMerkitysta() {
-            return eiSisallaMerkitysta;
-        }
-
-        public void setEiSisallaMerkitysta(String eiSisallaMerkitysta) {
-            this.eiSisallaMerkitysta = eiSisallaMerkitysta;
-        }
-
-        public String getHuomioitavaKoodi() {
-            return huomioitavaKoodi;
-        }
-
-        public void setHuomioitavaKoodi(String huomioitavaKoodi) {
-            this.huomioitavaKoodi = huomioitavaKoodi;
-        }
-
-        public String getSisaltaaKoodiston() {
-            return sisaltaaKoodiston;
-        }
-
-        public void setSisaltaaKoodiston(String sisaltaaKoodiston) {
-            this.sisaltaaKoodiston = sisaltaaKoodiston;
-        }
-
-        public String getKieli() {
-            return kieli;
-        }
-
-        public void setKieli(String kieli) {
-            this.kieli = kieli;
-        }
-
+        return null;
     }
 }

@@ -38,6 +38,7 @@ import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
@@ -174,7 +175,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
         // Tarkistetaan OID
         if (model.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
@@ -365,9 +366,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitä tiedot koodistoon
-        updateKoodisto(entity);
+        String info = updateKoodisto(entity);
 
-        return entity;
+        return new OrganisaatioResult(entity, info);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
@@ -637,13 +638,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private void updateKoodisto(Organisaatio entity) {
-        if (organisaatioKoodisto.paivitaKoodisto(entity)==false) {
-            // TODO: Saa olla opportunistinen kunnes kokonaan toteutettu ja testattu. Sitten voidaan ehkä
-            // heittää poikkeus jos koodiston päivitys ei onnistu.
-            //throw new OrganisaatioKoodistoException();
-            LOG.warn("Failed to update Koodisto.");
-        }
+    private String updateKoodisto(Organisaatio entity) {
+        return organisaatioKoodisto.paivitaKoodisto(entity);
     }
 
     private void createParentPath(Organisaatio entity, String parentOid) {

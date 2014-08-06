@@ -822,7 +822,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             $cookieStore.put('KoodistoPNVersio', versio);
                             getKoodistoPosti(false).then(function(result) {
                                 deferred.resolve(result);
-                            }, function() {
+                            }, function(response) {
                                 showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                                 deferred.reject();
                             });
@@ -830,12 +830,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                             // voidaan hakea selaimen cachesta
                             getKoodistoPosti(true).then(function(result) {
                                 deferred.resolve(result);
-                            }, function() {
+                            }, function(response) {
                                 showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                                 deferred.reject();
                             });
                         }
-                    }, function() {
+                    }, function(response) {
                         showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                         deferred.reject();
                     });
@@ -1134,7 +1134,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             selectAddressType(false);
             selectAddressType(true);
             checkLisayhteystiedot();
-            if (model.organisaatio.$post) {
+            if (model.mode==="edit") {
                 Organisaatio.post(model.organisaatio, function(result) {
                     //console.log(result);
                     if (orgForm) {
@@ -1142,7 +1142,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                     Alert.closeAlert(model.alert);
-                    refresh(result);
+                    refresh(result.organisaatio);
+                    if (result.status==="WARNING") {
+                        model.alert = Alert.add("warn", $filter('i18n')(result.info || msg), false);
+                    }
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
@@ -1155,8 +1158,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                     model.keepsavestatus = true;
+                    if (result.status==="WARNING") {
+                        model.alert = Alert.add("warn", $filter('i18n')(result.info || msg), false);
+                    }
                     Alert.closeAlert(model.alert);
-                    $location.path($location.path().split(model.organisaatio.parentOid)[0] + result.oid + "/edit");
+                    $location.path($location.path().split(model.organisaatio.parentOid)[0] + result.organisaatio.oid + "/edit");
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");

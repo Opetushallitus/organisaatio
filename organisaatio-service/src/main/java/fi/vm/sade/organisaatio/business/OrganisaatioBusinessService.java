@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import java.util.List;
 import javax.validation.ValidationException;
@@ -25,7 +26,7 @@ import javax.validation.ValidationException;
  * @author simok
  */
 public interface OrganisaatioBusinessService {
-    public Organisaatio save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
 
 
     /**
