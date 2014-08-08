@@ -51,10 +51,10 @@ public class OrganisaatioKoodistoClient {
     @Value("${organisaatio-service.service-access.url}")
     private String serviceAccessUrl;
 
-    @Value("${organisaatio.service.username.to.koodisto:}")
+    @Value("${organisaatio.service.username.to.koodisto}")
     private String clientUsername;
 
-    @Value("${organisaatio.service.password.to.koodisto:}")
+    @Value("${organisaatio.service.password.to.koodisto}")
     private String clientPassword;
 
     private String ticket;
