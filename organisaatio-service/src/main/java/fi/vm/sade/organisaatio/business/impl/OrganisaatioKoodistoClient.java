@@ -104,11 +104,9 @@ public class OrganisaatioKoodistoClient {
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
         LOG.debug("GET " + koodistoServiceUrl + uri);
-        authorize();
         String json = null;
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(koodistoServiceUrl + uri);
-        get.addHeader("CasSecurityTicket", ticket);
         try {
             HttpResponse resp = client.execute(get);
             json = EntityUtils.toString(resp.getEntity(), "UTF-8");
