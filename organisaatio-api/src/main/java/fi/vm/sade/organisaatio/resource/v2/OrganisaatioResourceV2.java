@@ -15,18 +15,16 @@
 
 package fi.vm.sade.organisaatio.resource.v2;
 
-import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
-
-import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
-
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import java.util.List;
 import javax.ws.rs.Consumes;
 
@@ -117,4 +115,14 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio palauttaa oid:n määrittämän organisaation viimeisimmän päivittäjän.",
             response = OrganisaatioPaivittajaDTOV2.class)
     public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+
+    @GET
+    @Path("/{oid}/nimet")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaation nimihistorian.",
+            notes = "Operaatio palauttaa oid:n määrittämän organisaation nimihistorian.",
+            response = OrganisaatioPaivittajaDTOV2.class)
+    public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+
 }

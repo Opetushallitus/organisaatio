@@ -32,12 +32,14 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuks
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
@@ -97,6 +99,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
+
+    @Autowired
+    protected OrganisaatioNimiDAO organisaatioNimiDAO;
 
     @Autowired
     private IndexerResource solrIndexer;
@@ -733,6 +738,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
 
+    }
+
+    @Override
+    public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
+        return organisaatioNimiDAO.findNimet(oid);
     }
 
 }

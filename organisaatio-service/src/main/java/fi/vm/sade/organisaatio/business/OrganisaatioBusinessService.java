@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import java.util.List;
@@ -26,6 +27,15 @@ import javax.validation.ValidationException;
  * @author simok
  */
 public interface OrganisaatioBusinessService {
+
+    /**
+     *
+     * @param model
+     * @param updating
+     * @param skipParentDateValidation
+     * @return
+     * @throws ValidationException
+     */
     public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
 
 
@@ -47,4 +57,11 @@ public interface OrganisaatioBusinessService {
             List<String> ytunnusList,
             List<String> oidList,
             int limit);
+
+    /**
+     *
+     * @param oid
+     * @return 
+     */
+    public List<OrganisaatioNimi> getOrganisaatioNimet(String oid);
 }
