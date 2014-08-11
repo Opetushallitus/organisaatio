@@ -19,6 +19,7 @@ import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 
@@ -67,6 +68,21 @@ public interface OrganisaatioResourceV2 {
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
             response = OrganisaatioHakutulos.class)
     public OrganisaatioHakutulos searchOrganisaatioHierarkia(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+
+    @GET
+    @Path("/nimet/hae")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatiot suppeat tiedot puurakenteena annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
+                    + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti. "
+                    + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
+                    + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä). "
+                    + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
+            response = OrganisaatioHakutulosSuppeaDTOV2.class)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET

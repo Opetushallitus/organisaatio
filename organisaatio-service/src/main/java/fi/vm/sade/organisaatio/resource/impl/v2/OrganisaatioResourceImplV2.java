@@ -26,6 +26,8 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPerustietoSuppea;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
@@ -35,6 +37,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 import java.util.List;
+import java.util.ArrayList;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -119,6 +122,43 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         tulos.setNumHits(organisaatiot.size());
 
         return tulos;
+    }
+    
+    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot) {
+        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<OrganisaatioPerustietoSuppea>();
+        
+        for (OrganisaatioPerustieto fullItem : organisaatiot) {
+            OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
+            item.setOid(fullItem.getOid());
+            item.setNimi(fullItem.getNimi());
+            if (item.getChildren() != null) {
+                item.setChildren(convertLaajaToSuppea(fullItem.getChildren()));
+            }
+            opts.add(item);
+        }
+        
+        return opts;
+    }
+    
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
+
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+
+        // Hae organisaatiot
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+
+        // Rakenna hierarkia
+        tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
+        
+        OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
+        
+        ohts.setNumHits(tulos.getNumHits());
+        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot()));
+        
+        return ohts;
     }
 
     @Override

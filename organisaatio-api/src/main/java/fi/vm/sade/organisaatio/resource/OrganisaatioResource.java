@@ -178,13 +178,13 @@ public interface OrganisaatioResource {
      * @return
      */
     @GET
-    @Path("/{oid}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee yhden organisaation annetulla oid:lla",
-            notes = "Operaatio palauttaa oid:n määrittämän organisaation tiedot.",
+            value = "Hakee yhden organisaation annetulla id:llä (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi).",
+            notes = "Operaatio palauttaa id:n määrittämän organisaation tiedot.",
             response = OrganisaatioRDTO.class)
-    public OrganisaatioRDTO getOrganisaatioByOID(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
+    public OrganisaatioRDTO getOrganisaatioByOID(@ApiParam(value = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.", required = true) @PathParam("id") String oid);
 
     @POST
     @Path("/{oid}")
