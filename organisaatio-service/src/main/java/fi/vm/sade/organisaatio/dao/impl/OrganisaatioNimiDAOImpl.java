@@ -95,5 +95,44 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
         return this.findNimet(organisaatio.getId());
     }
 
+    public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm) {
+        if (organisaatioId == null) {
+            throw new IllegalArgumentException("organisaatioId cannot be null");
+        }
+
+        LOG.info("findNimi({}, {})", new Object[]{organisaatioId, alkuPvm});
+
+        QOrganisaatioNimi qOrganisaatioNimi = QOrganisaatioNimi.organisaatioNimi;
+
+        // Otetaan hakuun mukaan organisaatio
+        BooleanExpression whereExpression = qOrganisaatioNimi.organisaatio.id.eq(organisaatioId);
+
+        // Otetaan hakuun mukaan alkuPvm
+        BooleanExpression alkuPvmExpr = qOrganisaatioNimi.organisaatio.alkuPvm.eq(alkuPvm);
+
+        whereExpression = whereExpression.and(alkuPvmExpr);
+
+        List<OrganisaatioNimi> organisaatioNimet = new JPAQuery(getEntityManager())
+                .from(qOrganisaatioNimi)
+                .where(whereExpression)
+                .distinct()
+                .list(qOrganisaatioNimi);
+
+
+        if (organisaatioNimet.size() == 1) {
+            return organisaatioNimet.get(0);
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm) {
+        Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
+
+        return this.findNimi(organisaatio.getId(), alkuPvm);
+    }
+
 
 }
