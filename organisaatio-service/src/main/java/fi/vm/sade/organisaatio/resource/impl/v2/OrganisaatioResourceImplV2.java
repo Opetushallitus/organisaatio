@@ -29,8 +29,12 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPerustietoSuppea;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -40,6 +44,8 @@ import java.util.Date;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -53,6 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author simok
  */
 @Component
+@Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
 public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
@@ -143,7 +150,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         // Map api search criteria to solr search criteria
@@ -181,6 +188,27 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         return tulos;
     }
+    
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
+
+        // Map api search criteria to solr search criteria
+        SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+
+        // Hae organisaatiot
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+
+        // Organisaatiot tuloksiin
+        tulos.setOrganisaatiot(organisaatiot);
+
+        OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
+
+        ohts.setNumHits(tulos.getNumHits());
+        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot()));
+
+        return ohts;
+    }
 
     @Override
     public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) throws Exception {
@@ -211,5 +239,56 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         // Map domain type to DTO
         return modelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
+    }
+    
+    private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
+        Map<String, String> result = new HashMap<String, String>();
+        
+        if (nimi != null) {
+            result.putAll(nimi.getValues());
+        }
+
+        return result;
+    }
+    
+    @Override
+    public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(String oid) {
+        Preconditions.checkNotNull(oid);
+
+        LOG.debug("getOrganisaationLOPTiedotByOID: " + oid);
+
+        // Search order
+        // 1. OID
+        // 2. Y-TUNNUS
+        // 3. VIRASTOTUNNUS
+        // 4. OPPILAITOSKOODI
+        // 5. TOIMIPISTEKOODI
+        Organisaatio o = organisaatioDAO.findByOid(oid);
+        if (o == null) {
+            o = organisaatioDAO.findByYTunnus(oid);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByVirastoTunnus(oid);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByOppilaitoskoodi(oid);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByToimipistekoodi(oid);
+        }
+
+        if(o != null){
+            final OrganisaatioLOPTietoDTOV2 tulos = new OrganisaatioLOPTietoDTOV2();
+            tulos.setOid(o.getOid());
+            tulos.setNimi(convertMKTToMap(o.getNimi()));
+            if (o.getMetadata() != null && o.getMetadata().getValues() != null) {
+                for (NamedMonikielinenTeksti namedMonikielinenTeksti : o.getMetadata().getValues()) {
+                    tulos.addByKey(namedMonikielinenTeksti.getKey(), convertMKTToMap(namedMonikielinenTeksti.getValue()));
+                }
+            }
+            return tulos;
+        }
+
+        return null;
     }
 }

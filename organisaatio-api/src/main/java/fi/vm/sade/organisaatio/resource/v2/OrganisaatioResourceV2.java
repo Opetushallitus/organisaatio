@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
 import java.util.List;
 import javax.ws.rs.Consumes;
 
@@ -69,10 +70,10 @@ public interface OrganisaatioResourceV2 {
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
-    @Path("/nimet/hae")
+    @Path("/hierarkia/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee organisaatiot suppeat tiedot puurakenteena annetuilla hakuehdoilla",
+            value = "Hakee organisaatioiden suppeat tiedot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
                     + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
                     + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti. "
@@ -80,7 +81,7 @@ public interface OrganisaatioResourceV2 {
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä). "
                     + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
@@ -91,6 +92,17 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio palauttaa vain hakuehtoja vastaavat organisaatiot.",
             response = OrganisaatioHakutulos.class)
     public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    
+    @GET
+    @Path("/hae/nimi")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden suppeat tiedot",
+            notes = "Operaatio palauttaa vain hakuehtoja vastaavien organisaatioiden suppeat tiedot."
+                    + "Soveltuu käytettäväksi haun \"/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
+            response = OrganisaatioHakutulosSuppeaDTOV2.class)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     /**
@@ -124,5 +136,14 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio palauttaa oid:n määrittämän organisaation nimihistorian.",
             response = OrganisaatioPaivittajaDTOV2.class)
     public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+    
+    @GET
+    @Path("/{id}/LOP")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee yhden organisaation LOP tiedot.",
+            notes = "Operaatio palauttaa id:n määrittämän organisaation LOP tiedot (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi). Soveltuu käytettäväksi haun \"/{id}\" sijaan silloin kuin paluuarvossa riittää pelkät LOP tiedot.",
+            response = OrganisaatioLOPTietoDTOV2.class)
+    public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@ApiParam(value = "Organisaation oid.", required = true) @PathParam("id") String oid);
 
 }
