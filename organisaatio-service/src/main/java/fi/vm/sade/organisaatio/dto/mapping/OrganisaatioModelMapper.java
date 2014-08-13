@@ -146,14 +146,6 @@ public class OrganisaatioModelMapper extends ModelMapper {
             }
         };
 
-        this.addMappings(new PropertyMap<OrganisaatioNimi, OrganisaatioNimiDTOV2>() {
-            @Override
-            protected void configure() {
-                // Monikielinen nimi
-                map().setNimi(source.getNimi().getValues());
-            }
-        });
-
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
             protected void configure() {

@@ -21,6 +21,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
@@ -69,7 +70,10 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioBusinessService organisaatioBusinessService;
 
     @Autowired
-    private OrganisaatioModelMapper modelMapper;
+    private OrganisaatioModelMapper organisaatioModelMapper;
+
+    @Autowired
+    private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
@@ -106,7 +110,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         Type organisaatioYhteystiedotDTOV2ListType = new TypeToken<List<OrganisaatioYhteystiedotDTOV2>>() {}.getType();
 
         // Map domain type to DTO
-        return modelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
+        return organisaatioModelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
     }
 
     @Override
@@ -238,7 +242,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTOV2>>() {}.getType();
 
         // Map domain type to DTO
-        return modelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
+        return organisaatioNimiModelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
     }
     
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
