@@ -30,6 +30,8 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioExistsException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
@@ -37,6 +39,8 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
@@ -102,6 +106,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     protected OrganisaatioNimiDAO organisaatioNimiDAO;
+
+    @Autowired
+    private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired
     private IndexerResource solrIndexer;
@@ -743,6 +750,77 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
         return organisaatioNimiDAO.findNimet(oid);
+    }
+
+    @Override
+    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) {
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+
+        if (orgEntity == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+
+        // Luodaan tallennettava entity objekti
+        OrganisaatioNimi nimiEntity = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
+
+        // Asetetaan organisaatio
+        nimiEntity.setOrganisaatio(orgEntity);
+
+        // Insertoidaan kantaan
+        nimiEntity = organisaatioNimiDAO.insert(nimiEntity);
+
+        return nimiEntity;
+    }
+
+    @Override
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTOV2 nimidto) {
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+
+        if (orgEntity == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+
+        // Haetaan päivitettävä entity objecti
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(oid, alkuPvm);
+
+        // Luodaan tallennettava entity objekti
+        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
+
+        // Asetetaan organisaatio
+        nimiEntityNew.setOrganisaatio(orgEntity);
+
+        // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
+        nimiEntityNew.setId(nimiEntityOld.getId());
+
+        LOG.info("updating " + nimiEntityNew);
+        try {
+            // Päivitetään nimi
+            organisaatioNimiDAO.update(nimiEntityNew);
+        } catch (OptimisticLockException ole) {
+            throw new OrganisaatioNimiModifiedException(ole);
+        }
+
+        // Palautetaan päivitetty nini
+        nimiEntityNew = organisaatioNimiDAO.read(nimiEntityNew.getId());
+
+        return nimiEntityNew;
+    }
+
+    @Override
+    public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+
+        if (orgEntity == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+
+        // Haetaan poistettava entity objecti
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(oid, alkuPvm);
+
+        // TODO: Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
+
+        // Poistetaan
+        this.organisaatioNimiDAO.remove(nimiEntity);
     }
 
 }

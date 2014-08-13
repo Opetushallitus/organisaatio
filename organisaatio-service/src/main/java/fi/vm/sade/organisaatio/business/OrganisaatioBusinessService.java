@@ -15,10 +15,12 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import java.util.Date;
 import java.util.List;
 import javax.validation.ValidationException;
 
@@ -61,7 +63,13 @@ public interface OrganisaatioBusinessService {
     /**
      *
      * @param oid
-     * @return 
+     * @return
      */
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid);
+
+    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto);
+
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto);
+
+    public void deleteOrganisaatioNimi(String oid, Date date);
 }

@@ -26,11 +26,13 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
-
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -93,7 +95,7 @@ public interface OrganisaatioResourceV2 {
             response = OrganisaatioHakutulos.class)
     public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
-    
+
     @GET
     @Path("/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
@@ -105,11 +107,6 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    /**
-     *
-     * @param hakuEhdot
-     * @return
-     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -134,9 +131,9 @@ public interface OrganisaatioResourceV2 {
     @ApiOperation(
             value = "Hakee organisaation nimihistorian.",
             notes = "Operaatio palauttaa oid:n määrittämän organisaation nimihistorian.",
-            response = OrganisaatioPaivittajaDTOV2.class)
+            response = OrganisaatioNimiDTOV2.class)
     public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
-    
+
     @GET
     @Path("/{id}/LOP")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
@@ -146,4 +143,32 @@ public interface OrganisaatioResourceV2 {
             response = OrganisaatioLOPTietoDTOV2.class)
     public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@ApiParam(value = "Organisaation oid.", required = true) @PathParam("id") String oid);
 
+    @PUT
+    @Path("/{oid}/nimet")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Luo uuden nimen organisaatiolle",
+            notes = "Operaatio luo uuden nimen organisaatiolle annetusta JSON:sta.",
+            response = OrganisaatioNimiDTOV2.class)
+    public OrganisaatioNimiDTOV2 newOrganisaatioNimi(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception;
+
+    @POST
+    @Path("/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date",
+            notes = "Operaatio päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
+            response = OrganisaatioNimiDTOV2.class)
+    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") Date date, OrganisaatioNimiDTOV2 nimidto);
+
+    @DELETE
+    @Path("/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Poistaa oid:n määrittämän organisaation nimen, jonka alkupäivämäärä on annettu date",
+            notes = "Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
+            response = String.class)
+    public String deleteOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") Date date);
 }
