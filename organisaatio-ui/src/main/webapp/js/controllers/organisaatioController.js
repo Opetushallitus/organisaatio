@@ -44,6 +44,37 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         $location.path($location.path() + "/edit");
     };
 
+    $scope.openNimenMuokkaus = function () {
+        $scope.modalOpen = true;
+        var modalInstance = $modal.open({
+            templateUrl: 'nimenmuokkaus.html',
+            controller: NimenMuokkausController,
+            windowClass:'modal-wide',
+            resolve: {
+                nimi_fi: function () {
+                    return;
+                },
+                nimi_sv: function () {
+                    return;
+                },
+                nimi_en: function () {
+                    return;
+                },
+                alkupvm: function () {
+                    return;
+                }
+            }
+        });
+
+        modalInstance.result.then(function () {
+            $scope.modalOpen = false;
+            $log.log('Luodaan uusi nimi: xxx ');
+        }, function () {
+            $scope.modalOpen = false;
+            $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
+        });
+    };
+
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
@@ -118,7 +149,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             resolve: {
                 nimi: function() {
                     return $scope.model.uriLocalizedNames['parentnimi'];
-                },
+                }
             }
         });
 
@@ -128,7 +159,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             // peruutettiin
         });
     };
-    
+
     $scope.openEditor = function(field, lang, userlang) {
         var tinymceOptions = {
             height: 350,
@@ -166,7 +197,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 },
                 lang: function() {
                     return lang;
-                },                
+                },
                 data: function() {
                     return $scope.model.organisaatio.metadata.data;
                 },
