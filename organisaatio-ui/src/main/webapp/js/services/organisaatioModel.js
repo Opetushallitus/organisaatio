@@ -161,6 +161,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         this.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
 
+        this.nameFormat = false;
+
         // TODO: Add also parent needed possibly for moving organisaatio
 
         // Palauta lokalisoitu arvo.
@@ -394,6 +396,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.parentPattern["sv"] = (parentResult.nimi.sv ? "^" + parentResult.nimi.sv + ".*" : ".*");
             model.parentPattern["en"] = (parentResult.nimi.en ? "^" + parentResult.nimi.en + ".*" : ".*");
             model.organisaationtila = model.getOrganisaationTila();
+            model.nameFormat = {};
+            model.nameFormat['fi'] = (model.organisaatio.nimi.fi ? model.organisaatio.nimi.fi.match(model.parentPattern["fi"]) : null);
+            model.nameFormat['sv'] = (model.organisaatio.nimi.sv ? model.organisaatio.nimi.sv.match(model.parentPattern["sv"]) : null);
+            model.nameFormat['en'] = (model.organisaatio.nimi.en ? model.organisaatio.nimi.en.match(model.parentPattern["en"]) : null);
         }
 
         refresh = function(result) {
