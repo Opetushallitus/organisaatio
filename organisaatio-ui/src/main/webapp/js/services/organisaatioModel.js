@@ -385,6 +385,17 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.lisayhteystietoarvos = res;
         };
 
+        refreshParent = function(parentResult) {
+            model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(parentResult.nimi, "", "", false);
+            model.parenttype = parentResult.tyypit[0];
+            model.parent = parentResult;
+            model.parentPattern = {};
+            model.parentPattern["fi"] = (parentResult.nimi.fi ? "^" + parentResult.nimi.fi + ".*" : ".*");
+            model.parentPattern["sv"] = (parentResult.nimi.sv ? "^" + parentResult.nimi.sv + ".*" : ".*");
+            model.parentPattern["en"] = (parentResult.nimi.en ? "^" + parentResult.nimi.en + ".*" : ".*");
+            model.organisaationtila = model.getOrganisaationTila();
+        }
+
         refresh = function(result) {
             $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
@@ -398,14 +409,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaationtila = "";
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
-                model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(parentResult.nimi, "", "", false);
-                model.parenttype = parentResult.tyypit[0];
-                model.parent = parentResult;
-                model.parentPattern = {};
-                model.parentPattern["fi"] = (parentResult.nimi.fi ? "^" + parentResult.nimi.fi + ".*" : ".*");
-                model.parentPattern["sv"] = (parentResult.nimi.sv ? "^" + parentResult.nimi.sv + ".*" : ".*");
-                model.parentPattern["en"] = (parentResult.nimi.en ? "^" + parentResult.nimi.en + ".*" : ".*");
-                model.organisaationtila = model.getOrganisaationTila();
+                refreshParent(parentResult);
 
                 if (model.mode === 'edit') {
                     refreshKoodisto();
@@ -966,8 +970,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
             Organisaatio.get({oid: parentoid}, function(result) {
                 model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(result.nimi, "", "", false);
-                model.parenttype = result.tyypit[0];
-                model.parent = result;
+                refreshParent(result);
 
                 refreshKoodisto(null);
                 refreshHenkilo();
