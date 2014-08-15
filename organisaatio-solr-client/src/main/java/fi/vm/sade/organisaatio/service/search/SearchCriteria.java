@@ -28,6 +28,7 @@ public class SearchCriteria {
     private String kunta;
     private String organisaatiotyyppi;
     private String oppilaitostyyppi;
+    private String kieli;
 
     private List<String> oidRestrictionList = new ArrayList<String>();
 
@@ -83,6 +84,14 @@ public class SearchCriteria {
 
     public void setOrganisaatioTyyppi(String value) {
         this.organisaatiotyyppi = value;
+    }
+    
+    public String getKieli() {
+        return kieli;
+    }
+
+    public void setKieli(String value) {
+        this.kieli = value;
     }
 
     public String getOppilaitosTyyppi() {

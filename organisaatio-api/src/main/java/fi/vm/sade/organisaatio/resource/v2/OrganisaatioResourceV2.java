@@ -139,7 +139,7 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee yhden organisaation LOP tiedot.",
-            notes = "Operaatio palauttaa id:n määrittämän organisaation LOP tiedot (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi). Soveltuu käytettäväksi haun \"/{id}\" sijaan silloin kuin paluuarvossa riittää pelkät LOP tiedot.",
+            notes = "Operaatio palauttaa id:n määrittämän organisaation LOP (Learning Opportunity Provider) tiedot (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi). Soveltuu käytettäväksi haun \"/{id}\" sijaan silloin kuin paluuarvossa riittää pelkät LOP tiedot.",
             response = OrganisaatioLOPTietoDTOV2.class)
     public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@ApiParam(value = "Organisaation oid.", required = true) @PathParam("id") String oid);
 

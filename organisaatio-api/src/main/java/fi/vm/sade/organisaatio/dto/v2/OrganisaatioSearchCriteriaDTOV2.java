@@ -31,6 +31,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private String kunta;
     private String organisaatiotyyppi;
     private String oppilaitostyyppi;
+    private String kieli;
 
     private List<String> oidResctrictionList = new ArrayList<String>();
 
@@ -99,6 +100,15 @@ public class OrganisaatioSearchCriteriaDTOV2 {
 
     public void setOppilaitosTyyppi(String oppilaitostyyppi) {
         this.oppilaitostyyppi = oppilaitostyyppi;
+    }
+    
+    @ApiModelProperty(value = "Haettavan organisaation kieli", required = true)
+    public String getKieli() {
+        return kieli;
+    }
+
+    public void setKieli(String value) {
+        this.kieli = value;
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
