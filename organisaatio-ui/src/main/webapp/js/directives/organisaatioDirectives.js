@@ -113,7 +113,6 @@ app.directive('ophPattern', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                $log.debug("Pattern: " + attrs.ophPattern);
                 var isValid = (viewValue === null || typeof viewValue === 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
                 ctrl.$setValidity('ophPattern', isValid);
                 return viewValue;
@@ -130,10 +129,8 @@ app.directive('ophPatternWarning', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                $log.debug("Pattern: " + attrs.ophPatternWarning);
                 var isValid = (viewValue === null || typeof viewValue === 'undefined') ||
                         (typeof viewValue === 'string' && viewValue.match(attrs.ophPatternWarning));
-                $log.debug("isValid: " + isValid);
                 ctrl.ophPatternWarning = !isValid;
                 return viewValue;
             };
@@ -368,9 +365,4 @@ app.directive('ophEnter', function() {
             });
         }
     };
-});
-
-// Pakota tekstikenttään tietty prefix
-app.directive('ophMandatoryPrefix', function() {
-
 });
