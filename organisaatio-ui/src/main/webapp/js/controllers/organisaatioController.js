@@ -51,17 +51,11 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             controller: NimenMuokkausController,
             windowClass:'modal-wide',
             resolve: {
-                nimi_fi: function () {
-                    return;
+                nimihistoria: function () {
+                    return $scope.model.nimihistoria;
                 },
-                nimi_sv: function () {
-                    return;
-                },
-                nimi_en: function () {
-                    return;
-                },
-                alkupvm: function () {
-                    return;
+                organisaatioAlkuPvm: function () {
+                    return $scope.model.organisaatio.alkuPvm;
                 }
             }
         });

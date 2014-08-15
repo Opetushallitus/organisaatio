@@ -1,12 +1,17 @@
 <!-- Organisaation nimen muokkaus -->
 <div class="modal-header">
-    <h3>{{'Organisaationmuokkaus.nimenmuokkaus' | i18n}}</h3>
+    <h3>{{'Nimenmuokkaus.title' | i18n}}</h3>
 </div>
 
-<div class="modal-body" style='max-height: 600px; height:100%;'>
+<div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
+        <input type="radio" ng-model="mode" value="update"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
+        <input type="radio" ng-model="mode" value="new">    {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
+
+        <br>
+
         <label class="control-label">
-            {{'Organisaationmuokkaus.uusinimi' | i18n}}
+            {{'Nimenmuokkaus.uusinimi' | i18n}}
         </label>
         <input type="text" name="nimifi" class="span6"
                ng-model="nimi_fi" oph-decode-name oph-enter
@@ -24,18 +29,16 @@
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
     </form>
     <label class="control-label">
-        {{'Organisaationmuokkaus.uusinimi.alkupvm' | i18n}}
+        {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
     </label>
-    <datepicker ng-model="alkupvm" min="'1990-01-01'" max="'2030-12-31'" show-weeks="true" class="well well-sm"></datepicker>
     <input oph-enter
-           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="alkupvm"
+           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="minAlkupvm" max="'2030-12-31'" ng-model="alkupvm"
            close-on-date-selection="true"
            ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
            close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
            current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
            clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
            toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
-
 </div>
 <div class="modal-footer">
     <div class="form-fluid">
