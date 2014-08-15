@@ -2,7 +2,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoPostiCached, KoodistoPostiVersio, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, $filter, $log, $timeout, $location, $q, $cookieStore) {
+        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, Nimet,
+        $filter, $log, $timeout, $location, $q, $cookieStore) {
     var model = new function() {
         this.organisaatio = {};
 
@@ -153,6 +154,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         // YTJ rajapinnan kautta saadut yrityksen tiedot
         this.ytjTiedot = {};
+
+        // Nimihistoria
+        this.nimihistoria = [];
 
         // Organisaation tila
         this.organisaationTila = '';
@@ -537,7 +541,15 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     });
                 }
             });
-        };
+
+            model.nimihistoria = [];
+            Nimet.get({oid: result.oid}, function(nimihistoria) {
+                model.nimihistoria = nimihistoria;
+            }, function(response) {
+                // nimihistorian haku ei onnistunut
+                showAndLogError("Organisaationtarkastelu.nimihistoriahakuvirhe", response);
+            });
+          };
 
         addAliorganisaatio = function(aliOrgList, level) {
             if (aliOrgList) {

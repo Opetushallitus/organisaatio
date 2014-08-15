@@ -482,6 +482,14 @@ app.factory('Paivittaja', function($resource) {
     });
 });
 
+// Nimihistorian haku organisaatioplavelulta
+// Esim. http://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/nimet
+app.factory('Nimet', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/nimet", {oid: "@oid"}, {
+        get: {method: 'GET', isArray: true}
+    });
+});
+
 // Koodiston haku koodistopalvelulta koodistoUrin perusteella
 app.factory('KoodistoArrayByUri', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
