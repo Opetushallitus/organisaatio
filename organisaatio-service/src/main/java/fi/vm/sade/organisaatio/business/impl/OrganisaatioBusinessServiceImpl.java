@@ -666,7 +666,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private String updateKoodisto(Organisaatio entity, boolean reauthorize) {
-        return organisaatioKoodisto.paivitaKoodisto(entity, reauthorize);
+        // TODO: Koodiston päivitys disabloitu kunnes koodiston APIsta on pakollisuus poistettu
+        // kuvaus- ja lyhennekentistä. organisaatio: OVT-6882, koodisto: KH-211
+        return null;
+        //return organisaatioKoodisto.paivitaKoodisto(entity, reauthorize);
     }
 
     private void createParentPath(Organisaatio entity, String parentOid) {
