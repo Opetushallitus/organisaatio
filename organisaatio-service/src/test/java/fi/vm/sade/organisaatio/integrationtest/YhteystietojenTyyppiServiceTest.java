@@ -554,7 +554,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         lisatiedot.getAllLisatietokenttas().clear();
         organisaatioService.updateYhteystietojenTyyppi(lisatiedot);//update(lisatiedot);
         lisatiedot = organisaatioService.readYhteystietojenTyyppi(lisatiedot.getOid());//read(lisatiedot.getId());
-        assertEquals(0, getOsoites(lisatiedot).size());
+        assertEquals(1, getOsoites(lisatiedot).size());
 
         // assertoidaan että kenttä poistui mutta arvo jäi
         // ..tai oikeastaan kenttä ei poistunut vaan merkattiin poistetuksi
