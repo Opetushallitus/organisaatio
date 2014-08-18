@@ -31,7 +31,7 @@
     <label class="control-label">
         {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
     </label>
-    <input oph-enter
+    <input ng-disabled="mode === 'update'" oph-enter
            type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="minAlkupvm" max="'2030-12-31'" ng-model="alkupvm"
            close-on-date-selection="true"
            ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
