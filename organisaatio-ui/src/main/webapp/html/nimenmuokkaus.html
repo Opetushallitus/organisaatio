@@ -5,16 +5,15 @@
 
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
-        <input type="radio" ng-model="mode" value="update"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
-        <input type="radio" ng-model="mode" value="new">    {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
-
+        <input type="radio" ng-model="mode" value="update" ng-change="modeChanged('update')"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
+        <input type="radio" ng-model="mode" value="new"    ng-change="modeChanged('new')">    {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
         <br>
 
         <label class="control-label">
             {{'Nimenmuokkaus.uusinimi' | i18n}}
         </label>
         <input type="text" name="nimifi" class="span6"
-               ng-model="nimi_fi" oph-decode-name oph-enter
+               ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
         <div>
             <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
@@ -22,17 +21,17 @@
             </span>
         </div>
         <input id="nimisv" type="text" name="nimisv" class="span6"
-               ng-model="nimi_sv" oph-decode-name oph-enter
+               ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
         <input id="nimise" type="text" name="nimien" class="span6"
-               ng-model="nimi_en" oph-decode-name oph-enter
+               ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
     </form>
     <label class="control-label">
         {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
     </label>
     <input ng-disabled="mode === 'update'" oph-enter
-           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="minAlkupvm" max="'2030-12-31'" ng-model="alkupvm"
+           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
            close-on-date-selection="true"
            ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
            close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
