@@ -1,4 +1,4 @@
-app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimenMuokkaus) {
+app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
     emptyNimi = {
         "nimi" : {
             "fi" : "",
@@ -12,6 +12,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimenMuokkaus) 
         uusinNimi : emptyNimi,
         minAlkuPvm : "",
         nimi : emptyNimi,
+        mode : "update",
 
         // Haetaan Nimihistorian uusin nimi
         getUusinNimi: function(nimihistoria) {
@@ -81,12 +82,35 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimenMuokkaus) 
             this.nimi = emptyNimi;
         },
 
+        saveNewNimi: function(oid) {
+            Nimet.put({oid: oid, alkuPvm: ""}, this.nimi, function(result) {
+                $log.log(result);
+            },
+            // Error case
+            function(response) {
+                $log.error("Nimet put response: " + response.status);
+                Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
+            });
+        },
+
+        saveUpdatedNimi: function(oid) {
+            Nimet.post({oid: oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
+                $log.log(result);
+            },
+            // Error case
+            function(response) {
+                $log.error("Nimet post response: " + response.status);
+                Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
+            });
+        },
 
         refresh: function(nimihistoria, organisaatioAlkuPvm) {
             $log.log('refresh()');
             this.uusinNimi = this.getUusinNimi(nimihistoria);
 
             this.minAlkuPvm = this.getMinAlkuPvm(nimihistoria, organisaatioAlkuPvm);
+
+            this.setUusinNimiVisible();
         }
     };
 

@@ -5,8 +5,8 @@
 
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
-        <input type="radio" ng-model="mode" value="update" ng-change="modeChanged('update')"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
-        <input type="radio" ng-model="mode" value="new"    ng-change="modeChanged('new')">    {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="update" ng-change="model.setUusinNimiVisible()"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="new"    ng-change="model.clearVisibleNimi()"> {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
         <br>
 
         <label class="control-label">
@@ -30,7 +30,7 @@
     <label class="control-label">
         {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
     </label>
-    <input ng-disabled="mode === 'update'" oph-enter
+    <input ng-disabled="model.mode === 'update'" oph-enter
            type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
            close-on-date-selection="true"
            ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
@@ -41,8 +41,11 @@
 </div>
 <div class="modal-footer">
     <div class="form-fluid">
+        <!--        <button class="btn" ng-click="$dismiss()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
+                <button class="btn" ng-click="$close()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>-->
         <button class="btn" ng-click="$dismiss()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="$close()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <button class="btn" ng-click="tallenna()">Tallenna</button>
+        <button class="btn" ng-click="poista()">Poista</button>
     </div>
 </div>
 
