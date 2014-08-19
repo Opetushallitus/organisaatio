@@ -18,14 +18,15 @@ package fi.vm.sade.organisaatio.resource.v2;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -187,7 +188,7 @@ public interface OrganisaatioResourceV2 {
             value = "Päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date",
             notes = "Operaatio päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
             response = OrganisaatioNimiDTOV2.class)
-    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") Date date, OrganisaatioNimiDTOV2 nimidto);
+    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") DateParam date, OrganisaatioNimiDTOV2 nimidto);
 
     @DELETE
     @Path("/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}")
@@ -196,5 +197,5 @@ public interface OrganisaatioResourceV2 {
             value = "Poistaa oid:n määrittämän organisaation nimen, jonka alkupäivämäärä on annettu date",
             notes = "Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
             response = String.class)
-    public String deleteOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") Date date);
+    public String deleteOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") DateParam date);
 }

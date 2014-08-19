@@ -886,6 +886,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
         nimiEntityNew.setId(nimiEntityOld.getId());
+        nimiEntityNew.getNimi().setId(nimiEntityOld.getNimi().getId());
+        nimiEntityNew.getNimi().setVersion(nimiEntityOld.getNimi().getVersion());
 
         LOG.info("updating " + nimiEntityNew);
         try {

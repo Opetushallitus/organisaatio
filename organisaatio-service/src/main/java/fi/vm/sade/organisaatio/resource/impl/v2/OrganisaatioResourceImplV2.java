@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Preconditions;
+import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -25,17 +26,17 @@ import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPerustietoSuppea;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
@@ -43,10 +44,10 @@ import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
 import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
@@ -341,7 +342,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto) {
+    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(String oid, DateParam date, OrganisaatioNimiDTOV2 nimidto) {
         Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(date);
 
@@ -352,14 +353,14 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         }
 
 
-        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, date, nimidto);
+        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, date.getValue(), nimidto);
 
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTOV2.class);
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String deleteOrganisaatioNimi(String oid, Date date) {
+    public String deleteOrganisaatioNimi(String oid, DateParam date) {
         Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(date);
 
@@ -369,7 +370,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(nae);
         }
 
-        organisaatioBusinessService.deleteOrganisaatioNimi(oid, date);
+        organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
 
         return "";
     }
