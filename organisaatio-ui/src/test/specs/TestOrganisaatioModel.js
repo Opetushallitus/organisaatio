@@ -443,7 +443,7 @@ var parentResult = {
         $httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
 
         $httpBackend.expectGET(/v1\/localisation\/authorize\?noCache=.*/).respond(200, {});
-        
+
         $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.99999999999\?noCache=.*/).respond(organisaatioResult);
 
         $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.11111111111\?noCache=.*/).respond(parentResult);
@@ -451,6 +451,8 @@ var parentResult = {
         $httpBackend.expectGET(/organisaatio\/hae\?oidRestrictionList=1.2.246.562.10.99999999999/).respond("{}");
 
         $httpBackend.expectGET(/organisaatio\/v2\/1.2.246.562.10.99999999999\/paivittaja\?noCache=.*/).respond("{}");
+
+        $httpBackend.expectGET(/organisaatio\/v2\/1.2.246.562.10.99999999999\/nimet\?noCache=.*/).respond("[]");
 
         $httpBackend.expectGET(/json\/searchKoodis?.*/).respond(koodistoResult);
 
