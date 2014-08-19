@@ -142,24 +142,27 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot) {
+    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
         List<OrganisaatioPerustietoSuppea> opts = new ArrayList<OrganisaatioPerustietoSuppea>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
             OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
             item.setOid(fullItem.getOid());
             item.setNimi(fullItem.getNimi());
+            if (tyypit) {
+                item.setOrganisaatiotyypit(fullItem.getOrganisaatiotyypit());
+                item.setOppilaitostyyppi(fullItem.getOppilaitostyyppi());
+            }
             if (item.getChildren() != null) {
-                item.setChildren(convertLaajaToSuppea(fullItem.getChildren()));
+                item.setChildren(convertLaajaToSuppea(fullItem.getChildren(), tyypit));
             }
             opts.add(item);
         }
 
         return opts;
     }
-
-    @Override
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+    
+    private OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaSuppea(OrganisaatioSearchCriteriaDTOV2 hakuEhdot, boolean tyypit) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         // Map api search criteria to solr search criteria
@@ -174,9 +177,19 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
 
         ohts.setNumHits(tulos.getNumHits());
-        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot()));
+        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot(), tyypit));
 
-        return ohts;
+        return ohts;        
+    }
+
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        return searchOrganisaatioHierarkiaSuppea(hakuEhdot, false);
+    }
+    
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        return searchOrganisaatioHierarkiaSuppea(hakuEhdot, true);
     }
 
     @Override
@@ -198,8 +211,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    @Override
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+    private OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotSuppea(OrganisaatioSearchCriteriaDTOV2 hakuEhdot, boolean tyypit) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
         // Map api search criteria to solr search criteria
@@ -214,9 +226,19 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
 
         ohts.setNumHits(tulos.getNumHits());
-        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot()));
+        ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot(), tyypit));
 
         return ohts;
+    }
+    
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        return searchOrganisaatiotSuppea(hakuEhdot, false);
+    }
+    
+    @Override
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
+        return searchOrganisaatiotSuppea(hakuEhdot, true);
     }
 
     @Override

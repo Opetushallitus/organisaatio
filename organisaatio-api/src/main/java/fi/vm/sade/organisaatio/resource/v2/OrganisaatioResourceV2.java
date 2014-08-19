@@ -75,7 +75,7 @@ public interface OrganisaatioResourceV2 {
     @Path("/hierarkia/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee organisaatioiden suppeat tiedot puurakenteena annetuilla hakuehdoilla",
+            value = "Hakee organisaatioiden nimi- ja oid tiedot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
                     + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
                     + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti. "
@@ -84,6 +84,21 @@ public interface OrganisaatioResourceV2 {
                     + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    
+    @GET
+    @Path("/hierarkia/hae/tyyppi")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden nimi-, oid-, ja tyyppitiedot puurakenteena annetuilla hakuehdoilla",
+            notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
+                    + "Hakuehtojen osuessa hierarkiassa ylemmän tason organisaatioon, "
+                    + "palautetaan alemman tason organisaatio myös, siis puurakenne lehtiin asti. "
+                    + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
+                    + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä). "
+                    + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi, oid, organisaatiotyypit ja mahdollinen oppilaitostyyppi.",
+            response = OrganisaatioHakutulosSuppeaDTOV2.class)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
@@ -100,11 +115,22 @@ public interface OrganisaatioResourceV2 {
     @Path("/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden suppeat tiedot",
+            value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden nimi- ja oid tiedot",
             notes = "Operaatio palauttaa vain hakuehtoja vastaavien organisaatioiden suppeat tiedot."
                     + "Soveltuu käytettäväksi haun \"/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    
+    @GET
+    @Path("/hae/tyyppi")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden nimi-, oid-, ja tyyppitiedot",
+            notes = "Operaatio palauttaa vain hakuehtoja vastaavien organisaatioiden suppeat tiedot."
+                    + "Soveltuu käytettäväksi haun \"/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi, oid, organisaatiotyypit ja mahdollinen oppilaitostyyppi.",
+            response = OrganisaatioHakutulosSuppeaDTOV2.class)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @POST

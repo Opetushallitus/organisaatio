@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation suppeat perustiedot")
@@ -37,6 +38,12 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     @ApiModelProperty(value = "Organisaation nimi", required = true)
     private Map<String, String> nimi = new HashMap<String, String>();
+    
+    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+    private List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
+    
+    @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
+    private String oppilaitostyyppi;
 
     private List<OrganisaatioPerustietoSuppea> children = new ArrayList<OrganisaatioPerustietoSuppea>();
 
@@ -102,5 +109,41 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     public String getNimi(String language) {
         return this.nimi.get(language);
     }
+    
+    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+    public List<OrganisaatioTyyppi> getOrganisaatiotyypit() {
+        if (tyypit == null) {
+            return null;
+        }
+        if (tyypit.size() == 0) {
+            return null;
+        }
+        return this.tyypit;
+    }
+    
+    public void setOrganisaatiotyypit(List<OrganisaatioTyyppi> tyypit) {
+        this.tyypit = tyypit;
+    }
+    
+    /**
+     * Gets the value of the oppilaitostyyppi property.
+     * 
+     * @return possible object is {@link String }
+     * 
+     */
+    public String getOppilaitostyyppi() {
+        return oppilaitostyyppi;
+    }
 
+    /**
+     * Sets the value of the oppilaitostyyppi property.
+     * 
+     * @param value
+     *            allowed object is {@link String }
+     * 
+     */
+    public void setOppilaitostyyppi(String value) {
+        this.oppilaitostyyppi = value;
+    }
+    
 }
