@@ -634,7 +634,29 @@
         <hr>
     </div> <!-- oeexpanded -->
 
-    <div class="row">
+    <div class="row" ng-show='model.parent.oid!=="1.2.246.562.10.00000000001"'>
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="yoexpanded" ng-click="yoexpanded = !yoexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':yoexpanded, 'icon-chevron-right':!yoexpanded}"></span>
+                        {{'Organisaationtarkastelu.sisaltyyorganisaatioon'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="yoexpanded">
+            <div class="row">
+                <label class="offset2">
+                        <a href='#/organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{model.parent.tyypit[0] | i18n}})</a>
+                </label>
+            </div>
+        <hr>
+    </div> <!-- yoexpanded -->
+
+    <div class="row" ng-show="model.aliorganisaatiot.length">
         <div class="span4">
             <div class="view-row-label">
                 <a href="" ng-model="aoexpanded" ng-click="aoexpanded = !aoexpanded">
@@ -649,7 +671,7 @@
 
     <div ng-if="aoexpanded">
         <div ng-repeat="aliorg in model.aliorganisaatiot track by aliorg.oid">
-            <div class="row" ng-show="model.aliorganisaatiot.length">
+            <div class="row">
                 <label class="offset2">
                     <span ng-style="{'margin-left':'{{aliorg.level * 50}}px'}">
                         <a href='#/organisaatiot/{{aliorg.oid}}'>{{aliorg.nimi}}</a>
