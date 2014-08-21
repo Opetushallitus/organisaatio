@@ -51,6 +51,9 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             controller: NimenMuokkausController,
             windowClass:'modal-wide',
             resolve: {
+                oid: function () {
+                    return $scope.oid;
+                },
                 nimihistoria: function () {
                     return $scope.model.nimihistoria;
                 },

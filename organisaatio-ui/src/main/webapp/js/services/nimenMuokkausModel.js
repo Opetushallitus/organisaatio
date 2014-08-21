@@ -9,6 +9,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
     };
 
     var model = {
+        oid : "",
         uusinNimi : emptyNimi,
         minAlkuPvm : "",
         nimi : emptyNimi,
@@ -82,8 +83,8 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             this.nimi = emptyNimi;
         },
 
-        saveNewNimi: function(oid) {
-            Nimet.put({oid: oid, alkuPvm: ""}, this.nimi, function(result) {
+        saveNewNimi: function() {
+            Nimet.put({oid: this.oid, alkuPvm: ""}, this.nimi, function(result) {
                 $log.log(result);
             },
             // Error case
@@ -93,8 +94,8 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             });
         },
 
-        saveUpdatedNimi: function(oid) {
-            Nimet.post({oid: oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
+        saveUpdatedNimi: function() {
+            Nimet.post({oid: this.oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
                 $log.log(result);
             },
             // Error case
@@ -104,10 +105,11 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             });
         },
 
-        refresh: function(nimihistoria, organisaatioAlkuPvm) {
+        refresh: function(oid, nimihistoria, organisaatioAlkuPvm) {
             $log.log('refresh()');
-            this.uusinNimi = this.getUusinNimi(nimihistoria);
 
+            this.oid = oid;
+            this.uusinNimi = this.getUusinNimi(nimihistoria);
             this.minAlkuPvm = this.getMinAlkuPvm(nimihistoria, organisaatioAlkuPvm);
 
             this.setUusinNimiVisible();

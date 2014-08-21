@@ -1,15 +1,15 @@
-function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausModel, nimihistoria, organisaatioAlkuPvm) {
+function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausModel, oid, nimihistoria, organisaatioAlkuPvm) {
 
     $scope.model = NimenMuokkausModel;
-    $scope.model.refresh(nimihistoria, organisaatioAlkuPvm);
+    $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm);
 
     $scope.tallenna = function() {
-        $log.log('Tallenna mode: ' + $scope.mode);
-        if ($scope.mode === "update") {
-            $scope.model.saveUpdatedNimi("1.2.246.562.10.2014031214412603544642");
+        $log.log('Tallenna mode: ' + $scope.model.mode);
+        if ($scope.model.mode === "update") {
+            $scope.model.saveUpdatedNimi();
         }
         else {
-            $scope.model.saveNewNimi("1.2.246.562.10.2014031214412603544642");
+            $scope.model.saveNewNimi();
         }
     };
 }
