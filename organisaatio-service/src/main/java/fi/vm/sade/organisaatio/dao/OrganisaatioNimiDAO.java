@@ -56,6 +56,10 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
      */
     List<OrganisaatioNimi> findNimet(String organisaatioOid);
 
+    public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm);
     public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm);
+
+    public OrganisaatioNimi findCurrentNimi(Long organisaatioId);
+    public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
 
 }

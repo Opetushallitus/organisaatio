@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuks
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameEmptyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameFormatException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiDeleteException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
@@ -879,7 +880,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
 
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(oid, alkuPvm);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(orgEntity.getId(), alkuPvm);
 
         if (nimiEntityOld == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
@@ -919,9 +920,28 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Haetaan poistettava entity objecti
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(oid, alkuPvm);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(orgEntity.getId(), alkuPvm);
 
-        // TODO: Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
+        // Tarkistetaan, että nimi ei ole nykyinen nimi
+        OrganisaatioNimi currentNimiEntity = this.organisaatioNimiDAO.findCurrentNimi(orgEntity.getId());
+
+        if (nimiEntity == null) {
+            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+        }
+
+        // Tarkistetaan ettei poistettava nimi ole organisaation nykyinen nimi
+        if (currentNimiEntity != null) {
+            if (currentNimiEntity.getId().equals(nimiEntity.getId())) {
+                throw new OrganisaatioNimiDeleteException();
+            }
+        }
+
+        // Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
+        if (alkuPvm.before(new Date())) {
+            throw new OrganisaatioNimiDeleteException();
+        }
+
+        LOG.info("deleting " + nimiEntity);
 
         // Poistetaan
         this.organisaatioNimiDAO.remove(nimiEntity);

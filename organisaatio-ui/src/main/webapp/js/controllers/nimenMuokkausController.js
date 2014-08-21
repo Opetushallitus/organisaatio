@@ -12,4 +12,10 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
             $scope.model.saveNewNimi();
         }
     };
+
+    $scope.poista = function() {
+        $log.log('Poista: ' + $scope.model.nimi);
+
+        $scope.model.deletePresetNimi();
+    };
 }

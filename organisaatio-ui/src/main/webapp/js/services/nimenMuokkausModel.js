@@ -101,7 +101,18 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             // Error case
             function(response) {
                 $log.error("Nimet post response: " + response.status);
-                Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
+                Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
+            });
+        },
+
+        deletePresetNimi: function() {
+            Nimet.delete({oid: this.oid, alkuPvm: this.uusinNimi.alkuPvm}, function(result) {
+                $log.log(result);
+            },
+            // Error case
+            function(response) {
+                $log.error("Nimet delete response: " + response.status);
+                Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
             });
         },
 

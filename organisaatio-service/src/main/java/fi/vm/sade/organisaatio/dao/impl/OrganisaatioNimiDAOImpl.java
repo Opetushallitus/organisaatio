@@ -98,6 +98,7 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
         return this.findNimet(organisaatio.getId());
     }
 
+    @Override
     public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm) {
         if (organisaatioId == null) {
             throw new IllegalArgumentException("organisaatioId cannot be null");
@@ -138,6 +139,48 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
         Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
 
         return this.findNimi(organisaatio.getId(), alkuPvm);
+    }
+
+    @Override
+    public OrganisaatioNimi findCurrentNimi(Long organisaatioId) {
+        if (organisaatioId == null) {
+            throw new IllegalArgumentException("organisaatioId cannot be null");
+        }
+
+        LOG.info("findCurrentNimi({})", new Object[]{organisaatioId});
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String s = "SELECT n FROM OrganisaatioNimi n "
+                + "WHERE "
+                + "alkupvm = (SELECT MAX (o.alkuPvm) "
+                + "FROM OrganisaatioNimi o "
+                + "WHERE "
+                + "organisaatio_id = " + organisaatioId
+                + " AND "
+                + "alkupvm <= '" + df.format(new Date()) + "')";
+
+        Query q = getEntityManager().createQuery(s);
+
+        List<OrganisaatioNimi> organisaatioNimet = (List<OrganisaatioNimi>) q.getResultList();
+
+        LOG.info("findCurrentNimi() result size: " + organisaatioNimet.size());
+
+        if (organisaatioNimet.size() == 1) {
+            return organisaatioNimet.get(0);
+        }
+
+        LOG.info("findNimi({}) --> OrganisaatioNimi not found", new Object[]{organisaatioId});
+
+        return null;
+    }
+
+
+    @Override
+    public OrganisaatioNimi findCurrentNimi(String organisaatioOid) {
+        Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
+
+        return this.findCurrentNimi(organisaatio.getId());
     }
 
 
