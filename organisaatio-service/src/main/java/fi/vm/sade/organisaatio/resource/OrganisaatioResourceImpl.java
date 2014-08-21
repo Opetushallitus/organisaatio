@@ -131,7 +131,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
+        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().size() == 0) {
             s.setOppilaitosTyyppi(null);
         }
 
