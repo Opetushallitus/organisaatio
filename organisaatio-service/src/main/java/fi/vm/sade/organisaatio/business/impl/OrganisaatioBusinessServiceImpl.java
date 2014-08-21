@@ -29,10 +29,11 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioExistsException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameEmptyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameFormatException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiNotFoundException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
@@ -875,8 +876,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNotFoundException(oid);
         }
 
+        LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
+
         // Haetaan päivitettävä entity objecti
         OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(oid, alkuPvm);
+
+        if (nimiEntityOld == null) {
+            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+        }
 
         // Luodaan tallennettava entity objekti
         OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);

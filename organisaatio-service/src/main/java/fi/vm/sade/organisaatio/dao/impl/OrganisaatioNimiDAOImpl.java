@@ -23,8 +23,11 @@ import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.QOrganisaatioNimi;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,26 +105,29 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
 
         LOG.info("findNimi({}, {})", new Object[]{organisaatioId, alkuPvm});
 
-        QOrganisaatioNimi qOrganisaatioNimi = QOrganisaatioNimi.organisaatioNimi;
+        // Kyselyä kokeilty myös QueryDsl:llä
+        // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
+        // organisaation id:llä rivejä oli enemmän kuin 1
 
-        // Otetaan hakuun mukaan organisaatio
-        BooleanExpression whereExpression = qOrganisaatioNimi.organisaatio.id.eq(organisaatioId);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-        // Otetaan hakuun mukaan alkuPvm
-        BooleanExpression alkuPvmExpr = qOrganisaatioNimi.organisaatio.alkuPvm.eq(alkuPvm);
+        String s = "SELECT n FROM OrganisaatioNimi n "
+                + "WHERE "
+                + "organisaatio_id = " + organisaatioId
+                + " and "
+                + "alkupvm = '" + df.format(alkuPvm) + "'";
 
-        whereExpression = whereExpression.and(alkuPvmExpr);
+        Query q = getEntityManager().createQuery(s);
 
-        List<OrganisaatioNimi> organisaatioNimet = new JPAQuery(getEntityManager())
-                .from(qOrganisaatioNimi)
-                .where(whereExpression)
-                .distinct()
-                .list(qOrganisaatioNimi);
+        List<OrganisaatioNimi> organisaatioNimet = (List<OrganisaatioNimi>) q.getResultList();
 
+        LOG.info("findNimi() result size: " + organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         }
+
+        LOG.info("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatioId, alkuPvm});
 
         return null;
     }
