@@ -25,10 +25,10 @@ public class SearchCriteria {
     private boolean suunnitellut;
     private boolean lakkautetut;
 
-    private List<String> kunta = new ArrayList<String>();
+    private String kunta;
     private String organisaatiotyyppi;
-    private List<String> oppilaitostyyppi = new ArrayList<String>();
-    private List<String> kieli = new ArrayList<String>();
+    private String oppilaitostyyppi;
+    private String kieli;
 
     private List<String> oidRestrictionList = new ArrayList<String>();
 
@@ -70,13 +70,12 @@ public class SearchCriteria {
         this.lakkautetut = lakkautetut;
     }
 
-    public List<String> getKunta() {
+    public String getKunta() {
         return kunta;
     }
 
-    public void setKunta(List<String> value) {
-        this.kunta.clear();
-        this.kunta.addAll(value);
+    public void setKunta(String value) {
+        this.kunta = value;
     }
 
     public String getOrganisaatioTyyppi() {
@@ -87,22 +86,20 @@ public class SearchCriteria {
         this.organisaatiotyyppi = value;
     }
     
-    public List<String> getKieli() {
+    public String getKieli() {
         return kieli;
     }
 
-    public void setKieli(List<String> value) {
-        this.kieli.clear();
-        this.kieli.addAll(value);
+    public void setKieli(String value) {
+        this.kieli = value;
     }
 
-    public List<String> getOppilaitosTyyppi() {
+    public String getOppilaitosTyyppi() {
         return oppilaitostyyppi;
     }
 
-    public void setOppilaitosTyyppi(List<String> oppilaitostyyppi) {
-        this.oppilaitostyyppi.clear();
-        this.oppilaitostyyppi.addAll(oppilaitostyyppi);
+    public void setOppilaitosTyyppi(String oppilaitostyyppi) {
+        this.oppilaitostyyppi = oppilaitostyyppi;
     }
 
     public List<String> getOidRestrictionList() {

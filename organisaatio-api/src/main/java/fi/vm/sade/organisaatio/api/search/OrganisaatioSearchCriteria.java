@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import java.util.HashSet;
-import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteria {
@@ -15,13 +13,13 @@ public class OrganisaatioSearchCriteria {
 
     private boolean vainAktiiviset;
 
-    private Set<String> oppilaitostyyppi = new HashSet<String>();
+    private String oppilaitostyyppi;
 
     private String organisaatiotyyppi;
 
     private boolean suunnitellut;
 
-    private Set<String> kunta = new HashSet<String>();
+    private String kunta;
 
     private List<String> oidResctrictionList = new ArrayList<String>();
 
@@ -49,8 +47,8 @@ public class OrganisaatioSearchCriteria {
      * @return possible object is {@link String }
      *
      */
-    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
-    public Set<String> getOppilaitosTyyppi() {
+    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi", required = true)
+    public String getOppilaitosTyyppi() {
         return oppilaitostyyppi;
     }
 
@@ -61,8 +59,8 @@ public class OrganisaatioSearchCriteria {
      *            allowed object is {@link String }
      *
      */
-    public void setOppilaitosTyyppi(Set<String> value) {
-        this.oppilaitostyyppi.addAll(value);
+    public void setOppilaitosTyyppi(String value) {
+        this.oppilaitostyyppi = value;
     }
 
     /**
@@ -124,8 +122,8 @@ public class OrganisaatioSearchCriteria {
      * @return possible object is {@link String }
      *
      */
-    @ApiModelProperty(value = "Haettavan organisaation kunta tai lista kunnista", required = true)
-    public Set<String> getKunta() {
+    @ApiModelProperty(value = "Haettavan organisaation kunta", required = true)
+    public String getKunta() {
         return kunta;
     }
 
@@ -136,8 +134,8 @@ public class OrganisaatioSearchCriteria {
      *            allowed object is {@link String }
      *
      */
-    public void setKunta(Set<String> value) {
-        this.kunta.addAll(value);
+    public void setKunta(String value) {
+        this.kunta = value;
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)

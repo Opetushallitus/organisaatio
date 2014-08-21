@@ -66,10 +66,10 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
         long time = System.currentTimeMillis();
-        final List<String> kunta = searchCriteria.getKunta();
+        final String kunta = searchCriteria.getKunta();
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
         final String organisaatioTyyppi = searchCriteria.getOrganisaatioTyyppi();
-        final List<String> kieli = searchCriteria.getKieli();
+        final String kieli = searchCriteria.getKieli();
         String searchStr = searchCriteria.getSearchStr();
         String oid = searchCriteria.getOid();
 
@@ -99,10 +99,10 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     public List<OrganisaatioPerustieto> searchHierarchy(final SearchCriteria searchCriteria) {
         long time = System.currentTimeMillis();
-        final List<String> kunta = searchCriteria.getKunta();
+        final String kunta = searchCriteria.getKunta();
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
         final String organisaatioTyyppi    = searchCriteria.getOrganisaatioTyyppi();
-        final List<String> kieli    = searchCriteria.getKieli();
+        final String kieli    = searchCriteria.getKieli();
         String searchStr = searchCriteria.getSearchStr();
         String oid = searchCriteria.getOid();
 
@@ -114,7 +114,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         try {
             QueryResponse response = solr.query(q, METHOD.POST);
 
-            LOG.debug("Sending query: " + q.getQuery() + ", filters: " + Joiner.on(" ").join(q.getFilterQueries()));
+            LOG.debug("Sending query: " + q.getQuery());
             LOG.debug("Search matched {} results, fetching docs...", response
                     .getResults().getNumFound());
             if (response.getResults().getNumFound() == 0) {
@@ -191,8 +191,8 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     private SolrQuery createOrgQuery(
             final SearchCriteria searchCriteria,
-            final List<String> kunta, final List<String> restrictionList,
-            final String organisaatioTyyppi, final List<String> kieli, String searchStr,
+            final String kunta, final List<String> restrictionList,
+            final String organisaatioTyyppi, final String kieli, String searchStr,
             String oid) {
         SolrQuery q = new SolrQuery("*:*");
         final List<String> queryParts = Lists.newArrayList();
@@ -211,19 +211,20 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         addDateFilters(searchCriteria, q);
 
-        if (searchCriteria.getOppilaitosTyyppi() != null 
-                && searchCriteria.getOppilaitosTyyppi().size() > 0) {
-            // filter based on oppilaitosTyyppi list
-            q.addFilterQuery(String.format("%s:(%s)", OPPILAITOSTYYPPI, Joiner.on(" ")
-                    .join(searchCriteria.getOppilaitosTyyppi())));
+        if (searchCriteria.getOppilaitosTyyppi() != null
+                && searchCriteria.getOppilaitosTyyppi().length() > 0) {
+            queryParts.clear();
+            addQuery(searchCriteria.getOppilaitosTyyppi(),
+                    queryParts, "%s:%s", OPPILAITOSTYYPPI,
+                    searchCriteria.getOppilaitosTyyppi());
+            q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
 
         // kunta
-        if (kunta != null 
-                && kunta.size() > 0) {
-            // filter based on kunta list
-            q.addFilterQuery(String.format("+%s:(%s)", KUNTA, Joiner.on(" ")
-                    .join(kunta)));
+        queryParts.clear();
+        addQuery(kunta, queryParts, "+%s:*%s*", KUNTA, kunta);
+        if (queryParts.size() > 0) {
+            q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
         // organisaatiotyyppi
         queryParts.clear();
@@ -233,11 +234,11 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
         // kieli
-        if (kieli != null 
-                && kieli.size() > 0) {
-            // filter based on kieli list
-            q.addFilterQuery(String.format("%s:(%s)", KIELI, Joiner.on(" ")
-                    .join(kieli)));
+        queryParts.clear();
+        addQuery(kieli, queryParts, "{!term f=%s}%s", KIELI,
+                kieli);
+        if (queryParts.size() > 0) {
+            q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
 
         if (restrictionList.size() > 0) {
