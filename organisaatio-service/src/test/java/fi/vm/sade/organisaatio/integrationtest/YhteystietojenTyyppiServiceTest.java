@@ -525,7 +525,7 @@ public class YhteystietojenTyyppiServiceTest extends SecurityAwareTestBase {
         //}
     }
 
-    //@Test
+    @Test
     public void deleteLisatietokenttaAfterSomeOrganisaatioHasInputtedArvoAlready() throws GenericFault {
 
         // task: OVT-658
