@@ -634,6 +634,25 @@
         <hr>
     </div> <!-- oeexpanded -->
 
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="nhexpanded" ng-click="nhexpanded = !nhexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down':nhexpanded, 'icon-chevron-right':!nhexpanded}"></span>
+                        {{'Organisaationtarkastelu.nimihistoria'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="nhexpanded">
+            <div class="row">
+                    <div class="span8" data-ng-include data-src="'nimihistorialista.html'"></div>
+            </div>
+    </div> <!-- nhexpanded -->
+
     <div class="row" ng-show='model.parent.oid!=="1.2.246.562.10.00000000001"'>
         <div class="span4">
             <div class="view-row-label">
