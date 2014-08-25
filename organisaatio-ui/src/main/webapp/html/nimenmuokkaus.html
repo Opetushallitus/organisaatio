@@ -11,7 +11,8 @@
         <input type="radio" ng-model="model.mode" value="new"
                ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
         {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
-        <input type="radio" ng-model="model.mode" value="delete"
+        <input ng-disabled="model.ajastettuMuutos === false"
+               type="radio" ng-model="model.mode" value="delete"
                ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
         {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
         <br>

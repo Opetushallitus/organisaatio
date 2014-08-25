@@ -14,6 +14,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
         minAlkuPvm : "",
         nimi : emptyNimi,
         mode : "update",
+        ajastettuMuutos : false,
 
         // Haetaan Nimihistorian uusin nimi
         getUusinNimi: function(nimihistoria) {
@@ -36,7 +37,6 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
                 nimi = nimihistoria[0];
             }
             for(var i=0; i < nimihistoria.length; i++) {
-                $log.debug(nimihistoria[i]);
                 if (moment(nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
                         moment(nimihistoria[i].alkuPvm).isBefore(moment())) {
                     nimi = nimihistoria[i];
@@ -70,7 +70,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
                     moment(uusinNimi.alkuPvm).isAfter(moment())) {
                 ajastettuMuutos = true;
             }
-            $log.debug('Ajastettu muutos: ' + $scope.ajastettuMuutos);
+            $log.debug('Ajastettu muutos: ' + ajastettuMuutos);
 
             return ajastettuMuutos;
         },
@@ -121,6 +121,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
 
             this.oid = oid;
             this.uusinNimi = this.getUusinNimi(nimihistoria);
+            this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
             this.minAlkuPvm = this.getMinAlkuPvm(nimihistoria, organisaatioAlkuPvm);
 
             this.setUusinNimiVisible();
