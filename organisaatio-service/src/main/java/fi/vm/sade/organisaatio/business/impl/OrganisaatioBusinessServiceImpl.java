@@ -386,6 +386,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
+        // Päivitetään nimihistorian nykyinen nimi, jos nimi muuttunut
+        if (updating && oldName != null && oldName.equals(entity.getNimi().getValues()) == false) {
+            updateCurrentOrganisaatioNimi(model.getOid(), entity.getNimi());
+        }
+
         // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
         if (OrganisaatioUtil.isRyhma(entity) == false) {
             solrIndexer.index(Lists.newArrayList(entity));
@@ -945,6 +950,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Poistetaan
         this.organisaatioNimiDAO.remove(nimiEntity);
+    }
+
+    private OrganisaatioNimi updateCurrentOrganisaatioNimi(String oid, MonikielinenTeksti nimi) {
+        // Haetaan päivitettävä entity objecti
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(oid);
+
+        if (nimiEntity == null) {
+            throw new OrganisaatioNimiNotFoundException(oid);
+        }
+
+        // Asetetaan organisaation nimi
+        nimiEntity.setNimi(nimi);
+
+        LOG.info("updating " + nimiEntity);
+        try {
+            // Päivitetään nimi
+            organisaatioNimiDAO.update(nimiEntity);
+        } catch (OptimisticLockException ole) {
+            throw new OrganisaatioNimiModifiedException(ole);
+        }
+
+        // Palautetaan päivitetty nini
+        nimiEntity = organisaatioNimiDAO.read(nimiEntity.getId());
+
+        return nimiEntity;
     }
 
 }

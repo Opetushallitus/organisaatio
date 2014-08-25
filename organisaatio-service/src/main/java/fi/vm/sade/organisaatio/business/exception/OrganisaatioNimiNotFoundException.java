@@ -22,6 +22,10 @@ import java.util.Date;
  */
 public class OrganisaatioNimiNotFoundException extends OrganisaatioBusinessException {
 
+    public OrganisaatioNimiNotFoundException(String oid) {
+        super("organisaation nimi " + oid + " was not found");
+    }
+
     public OrganisaatioNimiNotFoundException(String oid, Date alkuPvm) {
         super("organisaation nimi " + oid + " " + alkuPvm + " was not found");
     }
