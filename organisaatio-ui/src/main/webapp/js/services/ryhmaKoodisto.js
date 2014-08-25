@@ -49,7 +49,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
     var model = new function() {
         this.ryhmatyypit = [];
         this.kayttoryhmat = [];
-
+        
         var koodistoArrays = [
             {
                 uri: 'ryhmatyyppi',
@@ -58,7 +58,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
                     // Default-arvoja käytetään kunnes koodistoon lisätään 'ryhmatyyppi'-koodisto
                     // Default-arvojen lähde: Confluence / Ryhmien määrittely
                     {uri: 'organisaatio', nimi: 'Organisaatio'},
-                    {uri: 'hakukohde', nimi: 'Hakukohde'}
+                    {uri: 'hakukohde', nimi: 'Hakukohde'},
+                    {uri: 'perustetyoryhma', nimi: 'Perustetyöryhmä'}
                 ]
             },
             {
@@ -70,7 +71,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
                     {uri: 'yleinen', nimi: 'Yleinen'},
                     {uri: 'hakukohde_rajaava', nimi: 'Rajaava'},
                     {uri: 'hakukohde_priorisoiva', nimi: 'Priorisoiva'},
-                    {uri: 'hakukohde_liiteosoite', nimi: 'Liiteosoite'}
+                    {uri: 'hakukohde_liiteosoite', nimi: 'Liiteosoite'},
+                    {uri: 'perusteiden_laadinta', nimi: 'Perusteiden laadinta'}
                 ]
             }
         ];
