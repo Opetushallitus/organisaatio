@@ -5,14 +5,22 @@
 
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
-        <input type="radio" ng-model="model.mode" value="update" ng-change="model.setUusinNimiVisible()"> {{'Nimenmuokkaus.nimenkorjaus' | i18n}} <br/>
-        <input type="radio" ng-model="model.mode" value="new"    ng-change="model.clearVisibleNimi()"> {{'Nimenmuokkaus.uudennimenluonti' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="update"
+               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
+        {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="new"
+               ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
+        {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="delete"
+               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
+        {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
         <br>
 
         <label class="control-label">
-            {{'Nimenmuokkaus.uusinimi' | i18n}}
+            {{'Nimenmuokkaus.nimi' | i18n}}
         </label>
-        <input type="text" name="nimifi" class="span6"
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimifi" class="span6" ng-style="inputStyle"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
         <div>
@@ -20,17 +28,20 @@
                 {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
             </span>
         </div>
-        <input id="nimisv" type="text" name="nimisv" class="span6"
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimisv" class="span6"  ng-style="inputStyle"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input id="nimise" type="text" name="nimien" class="span6"
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimien" class="span6"  ng-style="inputStyle"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
     </form>
     <label class="control-label">
         {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
     </label>
-    <input ng-disabled="model.mode === 'update'" oph-enter
+    <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
+           ng-style="inputStyle"
            type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
            close-on-date-selection="true"
            ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
