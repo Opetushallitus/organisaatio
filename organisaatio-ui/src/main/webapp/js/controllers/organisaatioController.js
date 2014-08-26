@@ -3,6 +3,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
     $scope.model.mode = "show";
+    $scope.nimenmuokkaus = null;
+
 
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
@@ -63,11 +65,18 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             }
         });
 
-        modalInstance.result.then(function () {
+        modalInstance.result.then(function (nimenmuokkausModel) {
             $scope.modalOpen = false;
-            $log.log('Luodaan uusi nimi: xxx ');
+            $scope.nimenmuokkaus = nimenmuokkausModel;
+            $log.log('Nimenmuokkaus mode: ' + nimenmuokkausModel.mode);
+
+            if (nimenmuokkausModel.mode === 'update') {
+                $scope.form.$setDirty();
+                $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+            }
         }, function () {
             $scope.modalOpen = false;
+            $scope.nimenmuokkaus = null;
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
         });
     };

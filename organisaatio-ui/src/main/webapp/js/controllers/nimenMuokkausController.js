@@ -3,6 +3,16 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
     $scope.model = NimenMuokkausModel;
     $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm);
 
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+        $scope.model.clear();
+    },
+
+    $scope.accept = function() {
+        $modalInstance.close($scope.model);
+    },
+
+
     $scope.tallenna = function() {
         $log.log('Tallenna mode: ' + $scope.model.mode);
         if ($scope.model.mode === "update") {

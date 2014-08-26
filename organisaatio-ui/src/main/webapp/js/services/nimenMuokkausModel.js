@@ -14,7 +14,15 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
         minAlkuPvm : "",
         nimi : emptyNimi,
         mode : "update",
-        ajastettuMuutos : false,
+
+        // Tyhjenneteään mallin tiedot
+        clear: function() {
+            this.oid = "";
+            this.uusinNimi = emptyNimi;
+            this.minAlkuPvm = "";
+            this.nimi = emptyNimi;
+            this.mode = "update";
+        },
 
         // Haetaan Nimihistorian uusin nimi
         getUusinNimi: function(nimihistoria) {

@@ -593,33 +593,33 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             if (!model.organisaatio.yhteystietoArvos) {
                 model.organisaatio.yhteystietoArvos = [];
             }
-            
-                        
+
+
             var ytlangs = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1'];
             lisatieto.allLisatietokenttas.forEach(function(yt) {
-                
+
                 model.uriLocalizedNames[yt.oid] =
                         (KoodistoKoodi.getLanguage() === "SV" ? yt.nimiSv : (
                                 KoodistoKoodi.getLanguage() === "EN" ? yt.nimiEn : yt.nimi));
-                               
+
                 for (var i in ytlangs) {
                     ytlang = ytlangs[i];
                     // Lisätään jos arvoa ei ole
                     var arvo = null;
                     for (var a in model.organisaatio.yhteystietoArvos) {
-                        
+
                         if ((lisatieto.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietojenTyyppi.oid']) &&
                                 (yt.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietoElementti.oid']) &&
                                 (ytlang === model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.kieli'])) {
-                                 if (yt.kaytossa === true ) 
-                                 { 
+                                 if (yt.kaytossa === true )
+                                 {
                                     arvo = model.organisaatio.yhteystietoArvos[a];
                                  }
                                  else if (model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.arvoText'] !== null )
                                  {
                                     arvo = model.organisaatio.yhteystietoArvos[a];
                                  }
-                                 
+
                         }
                     }
 
@@ -647,7 +647,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang]) {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
                     }
-                    
+
                     if ((arvo["YhteystietoElementti.kaytossa"] === true) || (arvo["YhteystietoArvo.arvoText"] !== null))
                     {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang].push(arvo);
@@ -1172,6 +1172,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                     model.organisaatio.yhteystietoArvos.splice(i, 1);
                 }
             }
+        };
+
+        this.setNimi = function(nimi) {
+            model.organisaatio.nimi = nimi;
         };
 
         this.persistOrganisaatio = function(orgForm) {
