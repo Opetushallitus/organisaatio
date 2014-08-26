@@ -70,12 +70,12 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             return minAlkuPvm;
         },
 
-        // Tarkastetaan onko uusin tallennettu muutos ajastus --> siis alkupvm tulevaisuudessa
-        isAjastettuMuutos: function(uusinNimi) {
+        // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
+        isAjastettuMuutos: function(nimi) {
             var ajastettuMuutos = false;
-            if('alkuPvm' in uusinNimi &&
-                    moment(uusinNimi.alkuPvm).isValid() &&
-                    moment(uusinNimi.alkuPvm).isAfter(moment())) {
+            if('alkuPvm' in nimi &&
+                    moment(nimi.alkuPvm).isValid() &&
+                    moment(nimi.alkuPvm).isAfter(moment())) {
                 ajastettuMuutos = true;
             }
             $log.debug('Ajastettu muutos: ' + ajastettuMuutos);
@@ -122,6 +122,21 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
                 $log.error("Nimet delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
             });
+        },
+
+        save: function() {
+            if (this.mode === "update") {
+                this.saveUpdatedNimi();
+            }
+            else if (this.mode === "new") {
+                this.saveNewNimi();
+            }
+            else if (this.mode === "delete") {
+                this.deletePresetNimi();
+            }
+            else {
+                $log.error("Unknown mode: " + this.mode);
+            }
         },
 
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm) {

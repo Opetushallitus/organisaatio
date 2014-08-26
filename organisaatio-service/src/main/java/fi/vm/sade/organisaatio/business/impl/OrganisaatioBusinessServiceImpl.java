@@ -361,6 +361,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // "Jos toimipiste, palautetaan oppilaitosnro+toimipisteenjärjestysnumero(konkatenoituna)sekä yhkoulukoodi."
         entity.setToimipisteKoodi(calculateAndUpdateToimipisteKoodi2(entity));
 
+        // Päivitetään nimihistorian nykyinen nimi, jos nimi muuttunut
+        if (updating && oldName != null && oldName.equals(entity.getNimi().getValues()) == false) {
+            OrganisaatioNimi nimiEntity = updateCurrentOrganisaatioNimi(model.getOid(), entity.getNimi());
+
+            // Asetetaan organisaation nimi ja nimihistorian nykyinen nimi
+            // osoittamaan varmasti samaan monikieliseen tekstiin
+            entity.setNimi(nimiEntity.getNimi());
+        }
+
         // call super.insert OR update which saves & validates jpa
         if (updating) {
             LOG.info("updating " + entity);
@@ -384,11 +393,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (!updating && entity.getParent() != null) {
                 solrIndexer.index(Arrays.asList(parentOrg));
             }
-        }
-
-        // Päivitetään nimihistorian nykyinen nimi, jos nimi muuttunut
-        if (updating && oldName != null && oldName.equals(entity.getNimi().getValues()) == false) {
-            updateCurrentOrganisaatioNimi(model.getOid(), entity.getNimi());
         }
 
         // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
@@ -953,11 +957,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private OrganisaatioNimi updateCurrentOrganisaatioNimi(String oid, MonikielinenTeksti nimi) {
-        // Haetaan päivitettävä entity objecti
+        // Haetaan päivitettävä entity objekti
         OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(oid);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(oid);
+        }
+
+        // Jos nimihistorian nykyinen nimi on sama kuin päivitettävä nimi, ei tehdä muutosta
+        if (nimi.getValues().equals(nimiEntity.getNimi().getValues())) {
+            return nimiEntity;
         }
 
         // Asetetaan organisaation nimi

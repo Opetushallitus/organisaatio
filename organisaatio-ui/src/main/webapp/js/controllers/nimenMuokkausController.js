@@ -6,26 +6,9 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
         $scope.model.clear();
-    },
+    };
 
     $scope.accept = function() {
         $modalInstance.close($scope.model);
-    },
-
-
-    $scope.tallenna = function() {
-        $log.log('Tallenna mode: ' + $scope.model.mode);
-        if ($scope.model.mode === "update") {
-            $scope.model.saveUpdatedNimi();
-        }
-        else {
-            $scope.model.saveNewNimi();
-        }
-    };
-
-    $scope.poista = function() {
-        $log.log('Poista: ' + $scope.model.nimi);
-
-        $scope.model.deletePresetNimi();
     };
 }

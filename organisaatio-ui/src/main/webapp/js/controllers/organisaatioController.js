@@ -35,6 +35,13 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     };
 
     $scope.save = function() {
+        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
+        // tai poistanut tulevan nimenmuutoksen --> suoritetaan muutos
+        if ($scope.nimenmuokkaus !== null) {
+            if ($scope.nimenmuokkaus.mode === 'new' || $scope.nimenmuokkaus.mode === 'delete') {
+                $scope.nimenmuokkaus.save();
+            }
+        }
         $scope.model.persistOrganisaatio($scope.form);
     };
 
@@ -68,11 +75,27 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         modalInstance.result.then(function (nimenmuokkausModel) {
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = nimenmuokkausModel;
-            $log.log('Nimenmuokkaus mode: ' + nimenmuokkausModel.mode);
 
             if (nimenmuokkausModel.mode === 'update') {
+                $log.log('Nimenmuokkaus --> nimen päivitys');
                 $scope.form.$setDirty();
                 $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+            }
+            else if (nimenmuokkausModel.mode === 'new') {
+                if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
+                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> ajastus');
+                    $scope.form.$setDirty();
+                    $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
+                }
+                else {
+                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> uusi nimi heti käyttöön');
+                    $scope.form.$setDirty();
+                    $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+                }
+            }
+            else { // nimenmuokkausModel.mode === 'delete'
+                $scope.form.$setDirty();
+                $scope.model.deleteTulevaNimi();
             }
         }, function () {
             $scope.modalOpen = false;
