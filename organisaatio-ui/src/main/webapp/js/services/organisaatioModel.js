@@ -2,7 +2,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoPostiCached, KoodistoPostiVersio, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, Nimet,
+        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, Nimet, NimiHistoriaModel,
         $filter, $log, $timeout, $location, $q, $cookieStore) {
     var model = new function() {
         this.organisaatio = {};
@@ -158,6 +158,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
         // Nimihistoria
         this.nimihistoria = [];
 
+        // Organisaation tuleva nimi (ajastettu nimenmuutos)
+        this.organisaationTulevaNimi = {};
+        this.organisaationTulevaNimi.nimi = {};
+
         // Organisaation tila
         this.organisaationTila = '';
 
@@ -213,6 +217,15 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 ret.push(k);
             }
             return ret;
+        };
+
+        this.deleteTulevaNimi = function() {
+            model.organisaationTulevaNimi = {};
+            model.organisaationTulevaNimi.nimi = {};
+        };
+
+        this.setTulevaNimi = function(tulevaNimi) {
+            model.organisaationTulevaNimi = tulevaNimi;
         };
 
         initMk = function(mkSection) {
@@ -545,6 +558,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.nimihistoria = [];
             Nimet.get({oid: result.oid}, function(nimihistoria) {
                 model.nimihistoria = nimihistoria;
+
+                var nimiHistoriaModel = NimiHistoriaModel;
+                nimiHistoriaModel.init(nimihistoria);
+
+                // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
+                if (nimiHistoriaModel.ajastettuMuutos) {
+                    model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
+                }
             }, function(response) {
                 // nimihistorian haku ei onnistunut
                 showAndLogError("Organisaationtarkastelu.nimihistoriahakuvirhe", response);

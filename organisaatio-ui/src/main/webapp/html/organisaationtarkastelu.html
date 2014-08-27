@@ -35,6 +35,13 @@
                 <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
                     {{model.organisaatio.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                 </div>
+                <div ng-if="model.organisaationTulevaNimi.alkuPvm">
+                    <br>
+                    {{model.organisaationTulevaNimi.alkuPvm}} <i class="icon-arrow-right"></i>
+                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
+                        {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
+                    </div>
+                </div>
             </label>
         </div>
     </div>

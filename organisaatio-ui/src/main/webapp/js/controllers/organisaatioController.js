@@ -77,7 +77,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $scope.nimenmuokkaus = nimenmuokkausModel;
 
             if (nimenmuokkausModel.mode === 'update') {
-                $log.log('Nimenmuokkaus --> nimen päivitys');
+                $log.log('Nimenmuokkaus --> update');
                 $scope.form.$setDirty();
                 $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
             }
@@ -88,16 +88,18 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                     $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
                 }
                 else {
-                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> uusi nimi heti käyttöön');
+                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> update');
                     $scope.form.$setDirty();
                     $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'
+                $log.log('Nimenmuokkaus --> ajastuksen peruutus');
                 $scope.form.$setDirty();
                 $scope.model.deleteTulevaNimi();
             }
         }, function () {
+            $scope.model.deleteTulevaNimi();
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = null;
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());

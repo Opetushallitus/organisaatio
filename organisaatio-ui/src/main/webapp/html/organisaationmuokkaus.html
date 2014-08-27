@@ -160,6 +160,18 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
+            <label>
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
+                    {{model.organisaatio.nimi[avain] | decodeAmp}} [{{avain}}]<br>
+                </div>
+                <div ng-if="model.organisaationTulevaNimi.alkuPvm">
+                    <br>
+                    {{model.organisaationTulevaNimi.alkuPvm}} <i class="icon-arrow-right"></i>
+                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
+                        {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
+                    </div>
+                </div>
+            </label>
             <button auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     class="btn" ng-click="openNimenMuokkaus()" tooltip="{{'Organisaatiot.ohje.nimenmuokkaus' | i18n}}">
                 {{'Organisaationmuokkaus.muutanimi'| i18n}}
