@@ -1,4 +1,4 @@
-app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
+app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaModel, Nimet) {
     emptyNimi = {
         "nimi" : {
             "fi" : "",
@@ -10,53 +10,24 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
 
     var model = {
         oid : "",
-        uusinNimi : emptyNimi,
         minAlkuPvm : "",
         nimi : emptyNimi,
         mode : "update",
+        historiaModel : NimiHistoriaModel,
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
             this.oid = "";
-            this.uusinNimi = emptyNimi;
             this.minAlkuPvm = "";
             this.nimi = emptyNimi;
             this.mode = "update";
-        },
-
-        // Haetaan Nimihistorian uusin nimi
-        getUusinNimi: function(nimihistoria) {
-            var nimi = null;
-            if (nimihistoria.length > 0) {
-                nimi = nimihistoria[0];
-            }
-            for(var i=0; i < nimihistoria.length; i++) {
-                if (moment(nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm))) {
-                    nimi = nimihistoria[i];
-                }
-            }
-            return nimi;
-        },
-
-        // Haetaan nimihistorian sisältämä nykyinen nimi (ei siis tuleva ajastettu nimi)
-        getCurrentNimi: function(nimihistoria) {
-            var nimi = null;
-            if (nimihistoria.length > 0) {
-                nimi = nimihistoria[0];
-            }
-            for(var i=0; i < nimihistoria.length; i++) {
-                if (moment(nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
-                        moment(nimihistoria[i].alkuPvm).isBefore(moment())) {
-                    nimi = nimihistoria[i];
-                }
-            }
-            return nimi;
+            historiaModel.clear();
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä
         // Viimeisimmän voimassaolevan nimen alkupäivämäärä tai organisaation alkupäiviämäärä.
-        getMinAlkuPvm: function(nimihistoria, organisaatioAlkuPvm) {
-            var voimassaolevaNimi = model.getCurrentNimi(nimihistoria);
+        getMinAlkuPvm: function(organisaatioAlkuPvm) {
+            var voimassaolevaNimi = model.historiaModel.getCurrentNimi();
             var minAlkuPvm = "";
 
             if('alkuPvm' in voimassaolevaNimi && moment(voimassaolevaNimi.alkuPvm).isValid()) {
@@ -70,21 +41,8 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
             return minAlkuPvm;
         },
 
-        // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
-        isAjastettuMuutos: function(nimi) {
-            var ajastettuMuutos = false;
-            if('alkuPvm' in nimi &&
-                    moment(nimi.alkuPvm).isValid() &&
-                    moment(nimi.alkuPvm).isAfter(moment())) {
-                ajastettuMuutos = true;
-            }
-            $log.debug('Ajastettu muutos: ' + ajastettuMuutos);
-
-            return ajastettuMuutos;
-        },
-
         setUusinNimiVisible: function() {
-            this.nimi = this.uusinNimi;
+            this.nimi = this.historiaModel.uusinNimi;
         },
 
         clearVisibleNimi: function() {
@@ -142,10 +100,11 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, Nimet) {
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm) {
             $log.log('refresh()');
 
+            // Alustetaan historiamalli
+            this.historiaModel.init(nimihistoria);
             this.oid = oid;
-            this.uusinNimi = this.getUusinNimi(nimihistoria);
-            this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
-            this.minAlkuPvm = this.getMinAlkuPvm(nimihistoria, organisaatioAlkuPvm);
+            this.ajastettuMuutos = this.historiaModel.ajastettuMuutos;
+            this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 
             this.setUusinNimiVisible();
         }
