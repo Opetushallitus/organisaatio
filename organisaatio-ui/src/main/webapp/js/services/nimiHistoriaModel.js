@@ -52,10 +52,12 @@ app.factory('NimiHistoriaModel', function($log) {
         // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
         isAjastettuMuutos: function(nimi) {
             var ajastettuMuutos = false;
-            if('alkuPvm' in nimi &&
-                    moment(nimi.alkuPvm).isValid() &&
-                    moment(nimi.alkuPvm).isAfter(moment())) {
-                ajastettuMuutos = true;
+            if (nimi !== null) {
+                if('alkuPvm' in nimi &&
+                        moment(nimi.alkuPvm).isValid() &&
+                        moment(nimi.alkuPvm).isAfter(moment())) {
+                    ajastettuMuutos = true;
+                }
             }
             $log.debug('Ajastettu muutos: ' + ajastettuMuutos);
 
