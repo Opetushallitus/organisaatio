@@ -964,13 +964,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNimiNotFoundException(oid);
         }
 
-        // Jos nimihistorian nykyinen nimi on sama kuin päivitettävä nimi, ei tehdä muutosta
-        if (nimi.getValues().equals(nimiEntity.getNimi().getValues())) {
-            return nimiEntity;
-        }
+        Long oldMktId = nimiEntity.getNimi().getId();
 
-        // Asetetaan organisaation nimi
+        // Päivitetään organisaation nimi, mutta päivitetään se "vanhaan" monikieliseen tekstiin
         nimiEntity.setNimi(nimi);
+        nimiEntity.setNimi(nimi);
+        nimiEntity.getNimi().setId(oldMktId);
 
         LOG.info("updating " + nimiEntity);
         try {
