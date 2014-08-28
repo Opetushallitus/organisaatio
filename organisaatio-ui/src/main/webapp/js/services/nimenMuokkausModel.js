@@ -21,7 +21,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             this.minAlkuPvm = "";
             this.nimi = emptyNimi;
             this.mode = "update";
-            historiaModel.clear();
+            this.historiaModel.clear();
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä

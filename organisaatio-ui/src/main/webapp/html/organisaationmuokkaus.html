@@ -172,9 +172,14 @@
                     </div>
                 </div>
             </label>
-            <button auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                    class="btn" ng-click="openNimenMuokkaus()" tooltip="{{'Organisaatiot.ohje.nimenmuokkaus' | i18n}}">
-                {{'Organisaationmuokkaus.muutanimi'| i18n}}
+            <button ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                    class="btn" ng-click="openNimenMuokkaus()">
+                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
+            </button>
+            <button ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+                    class="btn" ng-click="openNimenMuokkaus()">
+                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
         </div>
     </div>

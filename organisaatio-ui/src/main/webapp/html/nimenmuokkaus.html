@@ -55,13 +55,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
     </form>
     <label class="control-label">
-        {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
+        {{'Nimenmuokkaus.alkupvm' | i18n}}
     </label>
     <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
            ng-style="inputStyle"
            type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
            close-on-date-selection="true"
-           ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
+           ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
            close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
            current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
            clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
