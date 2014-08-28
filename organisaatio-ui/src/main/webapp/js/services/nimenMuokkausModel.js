@@ -41,14 +41,22 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             return minAlkuPvm;
         },
 
+        // Laitetaan uusin nimi näkyville / editoitavaksi
         setUusinNimiVisible: function() {
             this.nimi = this.historiaModel.uusinNimi;
         },
 
+        // Tyhjennetään editoitava nimi
         clearVisibleNimi: function() {
             this.nimi = emptyNimi;
         },
 
+        // Tarkastetaan onko annettu nimi ajastettu nimenmuutos
+        isAjastettuMuutos: function(nimi) {
+            return this.historiaModel.isAjastettuMuutos(nimi);
+        },
+
+        // Uuden nimen tallennus
         saveNewNimi: function() {
             Nimet.put({oid: this.oid, alkuPvm: ""}, this.nimi, function(result) {
                 $log.log(result);
@@ -60,6 +68,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             });
         },
 
+        // Nimen päivitys
         saveUpdatedNimi: function() {
             Nimet.post({oid: this.oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
                 $log.log(result);
@@ -71,6 +80,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             });
         },
 
+        // Ajastetun nimenmuutoksen poisto / peruminen
         deletePresetNimi: function() {
             Nimet.delete({oid: this.oid, alkuPvm: this.uusinNimi.alkuPvm}, function(result) {
                 $log.log(result);
@@ -82,6 +92,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             });
         },
 
+        // Tallennus, tilasta riippuen luodaan uusi nimi, päivitetään nimi tai perutaan ajastus
         save: function() {
             if (this.mode === "update") {
                 this.saveUpdatedNimi();
@@ -97,6 +108,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             }
         },
 
+        // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm) {
             $log.log('refresh()');
 

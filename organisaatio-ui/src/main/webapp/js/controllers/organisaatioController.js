@@ -38,9 +38,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
         // tai poistanut tulevan nimenmuutoksen --> suoritetaan muutos
         if ($scope.nimenmuokkaus !== null) {
-            if ($scope.nimenmuokkaus.mode === 'new' || $scope.nimenmuokkaus.mode === 'delete') {
-                $scope.nimenmuokkaus.save();
-            }
+            $scope.nimenmuokkaus.save();
         }
         $scope.model.persistOrganisaatio($scope.form);
     };
@@ -76,19 +74,15 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = nimenmuokkausModel;
 
-            if (nimenmuokkausModel.mode === 'update') {
-                $log.log('Nimenmuokkaus --> update');
-                $scope.form.$setDirty();
-                $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
-            }
-            else if (nimenmuokkausModel.mode === 'new') {
+            if (nimenmuokkausModel.mode === 'update' ||
+                    nimenmuokkausModel.mode === 'new') {
                 if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
-                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> ajastus');
+                    $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
                     $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
                 }
                 else {
-                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> update');
+                    $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
                     $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
                 }
