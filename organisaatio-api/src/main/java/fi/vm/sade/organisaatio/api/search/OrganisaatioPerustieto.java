@@ -55,6 +55,12 @@ public class OrganisaatioPerustieto implements Serializable {
     private Map<String, String> nimi = new HashMap<String, String>();
 
     private List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
+    
+    @ApiModelProperty(value = "Kielten URIt", required = true)
+    private List<String> kieletUris = new ArrayList<String>();
+    
+    @ApiModelProperty(value = "Kotipaikan URI", required = true)
+    private String kotipaikkaUri;
 
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
     private List<OrganisaatioPerustieto> children = new ArrayList<OrganisaatioPerustieto>();
@@ -300,6 +306,23 @@ public class OrganisaatioPerustieto implements Serializable {
             tyypit = new ArrayList<OrganisaatioTyyppi>();
         }
         return this.tyypit;
+    }
+    
+    @ApiModelProperty(value = "Kielten URIt", required = true)
+    public List<String> getKieletUris() {
+        if (kieletUris == null) {
+            kieletUris = new ArrayList<String>();
+        }
+        return this.kieletUris;
+    }
+    
+    @ApiModelProperty(value = "Kotipaikan URI", required = true)
+    public String getKotipaikkaUri() {
+        return kotipaikkaUri;
+    }
+
+    public void setKotipaikkaUri(String value) {
+        this.kotipaikkaUri = value;
     }
 
     /**

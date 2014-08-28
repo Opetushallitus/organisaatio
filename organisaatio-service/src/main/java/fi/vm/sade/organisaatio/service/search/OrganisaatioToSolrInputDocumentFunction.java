@@ -55,6 +55,9 @@ public class OrganisaatioToSolrInputDocumentFunction extends SolrOrgFields imple
         for (String tyyppi : org.getTyypit()) {
             add(doc, ORGANISAATIOTYYPPI, tyyppi);
         }
+        for (String kieli : org.getKielet()) {
+            add(doc, KIELI, kieli);
+        }
         add(doc, DOMAINNIMI, org.getDomainNimi());
         add(doc, OPPILAITOSTYYPPI, org.getOppilaitosTyyppi());
 

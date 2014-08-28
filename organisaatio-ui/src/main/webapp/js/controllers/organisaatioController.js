@@ -3,6 +3,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
     $scope.model.mode = "show";
+    $scope.nimenmuokkaus = null;
+
 
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
@@ -33,6 +35,13 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     };
 
     $scope.save = function() {
+        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
+        // tai poistanut tulevan nimenmuutoksen --> suoritetaan muutos
+        if ($scope.nimenmuokkaus !== null) {
+            if ($scope.nimenmuokkaus.mode === 'new' || $scope.nimenmuokkaus.mode === 'delete') {
+                $scope.nimenmuokkaus.save();
+            }
+        }
         $scope.model.persistOrganisaatio($scope.form);
     };
 
@@ -42,6 +51,59 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
 
     $scope.edit = function() {
         $location.path($location.path() + "/edit");
+    };
+
+    $scope.openNimenMuokkaus = function () {
+        $scope.modalOpen = true;
+        var modalInstance = $modal.open({
+            templateUrl: 'nimenmuokkaus.html',
+            controller: NimenMuokkausController,
+            windowClass:'modal-wide',
+            resolve: {
+                oid: function () {
+                    return $scope.oid;
+                },
+                nimihistoria: function () {
+                    return $scope.model.nimihistoria;
+                },
+                organisaatioAlkuPvm: function () {
+                    return $scope.model.organisaatio.alkuPvm;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (nimenmuokkausModel) {
+            $scope.modalOpen = false;
+            $scope.nimenmuokkaus = nimenmuokkausModel;
+
+            if (nimenmuokkausModel.mode === 'update') {
+                $log.log('Nimenmuokkaus --> update');
+                $scope.form.$setDirty();
+                $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+            }
+            else if (nimenmuokkausModel.mode === 'new') {
+                if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
+                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> ajastus');
+                    $scope.form.$setDirty();
+                    $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
+                }
+                else {
+                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> update');
+                    $scope.form.$setDirty();
+                    $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+                }
+            }
+            else { // nimenmuokkausModel.mode === 'delete'
+                $log.log('Nimenmuokkaus --> ajastuksen peruutus');
+                $scope.form.$setDirty();
+                $scope.model.deleteTulevaNimi();
+            }
+        }, function () {
+            $scope.model.deleteTulevaNimi();
+            $scope.modalOpen = false;
+            $scope.nimenmuokkaus = null;
+            $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
+        });
     };
 
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
@@ -118,7 +180,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             resolve: {
                 nimi: function() {
                     return $scope.model.uriLocalizedNames['parentnimi'];
-                },
+                }
             }
         });
 
@@ -128,7 +190,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             // peruutettiin
         });
     };
-    
+
     $scope.openEditor = function(field, lang, userlang) {
         var tinymceOptions = {
             height: 350,
@@ -166,7 +228,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 },
                 lang: function() {
                     return lang;
-                },                
+                },
                 data: function() {
                     return $scope.model.organisaatio.metadata.data;
                 },

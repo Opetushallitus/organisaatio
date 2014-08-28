@@ -94,6 +94,13 @@ public class PermissionChecker {
         return mt;
     }
 
+    public void checkUpdateOrganisationName(String oid) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
+
+        checkPermission(permissionService.userCanEditName(authContext));
+    }
+
+
     public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
 

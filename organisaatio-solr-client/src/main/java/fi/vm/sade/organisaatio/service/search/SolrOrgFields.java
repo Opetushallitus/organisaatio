@@ -27,6 +27,7 @@ public class SolrOrgFields {
     protected static final String KUNTA = "kunta_t";
     protected static final String DOMAINNIMI = "domain_t";
     protected static final String ORGANISAATIOTYYPPI = "organisaatiotyypi_ss";
+    protected static final String KIELI = "kieli_ss";
 
     protected static final String OID = "id";
     protected static final String PARENTOID = "parentoid_s";

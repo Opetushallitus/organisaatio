@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+
+This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+soon as they will be approved by the European Commission - subsequent versions
+of the EUPL (the "Licence");
+
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-->
+
+<!-- Organisaation nimen muokkaus -->
+<div class="modal-header">
+    <h3>{{'Nimenmuokkaus.title' | i18n}}</h3>
+</div>
+
+<div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
+    <form name="form" novalidate>
+        <input type="radio" ng-model="model.mode" value="update"
+               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
+        {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
+        <input type="radio" ng-model="model.mode" value="new"
+               ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
+        {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
+        <input ng-disabled="model.ajastettuMuutos === false"
+               type="radio" ng-model="model.mode" value="delete"
+               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
+        {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
+        <br>
+
+        <label class="control-label">
+            {{'Nimenmuokkaus.nimi' | i18n}}
+        </label>
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimifi" class="span6" ng-style="inputStyle"
+               ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+        <div>
+            <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
+                {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
+            </span>
+        </div>
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimisv" class="span6"  ng-style="inputStyle"
+               ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+        <input ng-disabled="model.mode === 'delete'"
+               type="text" name="nimien" class="span6"  ng-style="inputStyle"
+               ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+    </form>
+    <label class="control-label">
+        {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
+    </label>
+    <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
+           ng-style="inputStyle"
+           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
+           close-on-date-selection="true"
+           ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
+           close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+           current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+           clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+           toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+</div>
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
+        <button class="btn" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+    </div>
+</div>
+
+

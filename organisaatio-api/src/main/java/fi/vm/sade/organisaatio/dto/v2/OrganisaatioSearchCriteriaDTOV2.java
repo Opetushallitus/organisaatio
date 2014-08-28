@@ -17,6 +17,8 @@ package fi.vm.sade.organisaatio.dto.v2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -28,9 +30,10 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private boolean suunnitellut;
     private boolean lakkautetut;
 
-    private String kunta;
+    private Set<String> kunta = new HashSet<String>();
     private String organisaatiotyyppi;
-    private String oppilaitostyyppi;
+    private Set<String> oppilaitostyyppi = new HashSet<String>();
+    private Set<String> kieli = new HashSet<String>();
 
     private List<String> oidResctrictionList = new ArrayList<String>();
 
@@ -74,13 +77,15 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.lakkautetut = lakkautetut;
     }
 
-    @ApiModelProperty(value = "Haettavan organisaation kunta", required = true)
-    public String getKunta() {
+    @ApiModelProperty(value = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    public Set<String> getKunta() {
         return kunta;
     }
 
-    public void setKunta(String value) {
-        this.kunta = value;
+    public void setKunta(Set<String> value) {
+        if (value != null) {
+            this.kunta.addAll(value);
+        }
     }
 
     @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
@@ -92,13 +97,26 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.organisaatiotyyppi = value;
     }
 
-    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi", required = true)
-    public String getOppilaitosTyyppi() {
+    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    public Set<String> getOppilaitosTyyppi() {
         return oppilaitostyyppi;
     }
 
-    public void setOppilaitosTyyppi(String oppilaitostyyppi) {
-        this.oppilaitostyyppi = oppilaitostyyppi;
+    public void setOppilaitosTyyppi(Set<String> oppilaitostyyppi) {
+        if (oppilaitostyyppi != null) {
+            this.oppilaitostyyppi.addAll(oppilaitostyyppi);
+        }
+    }
+    
+    @ApiModelProperty(value = "Haettavan organisaation kieli tai lista kielistä", required = true)
+    public Set<String> getKieli() {
+        return kieli;
+    }
+
+    public void setKieli(Set<String> value) {
+        if (value != null) {
+            this.kieli.addAll(value);
+        }
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)

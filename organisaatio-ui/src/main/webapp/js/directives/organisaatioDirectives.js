@@ -123,6 +123,31 @@ app.directive('ophPattern', function($log) {
     };
 });
 
+// Kuten ophPattern, mutta asettaa joko $error-flagin (jos oph-name-format attribuutti on true) tai
+// ophPatternWarning-flagin (jos oph-name-format attribuutti on false)
+app.directive('ophNamePattern', function($log) {
+    return {
+        require: 'ngModel',
+        scope: {
+            text: "@ophNameFormat"
+        },
+        link: function(scope, elm, attrs, ctrl) {
+            var validator = function(viewValue) {
+                var isValid = (viewValue === null || typeof viewValue === 'undefined') ||
+                        (typeof viewValue === 'string' && viewValue.match(attrs.ophNamePattern));
+                if (scope.text) {
+                    ctrl.$setValidity('ophNamePattern', isValid);
+                } else {
+                    ctrl.ophPatternWarning = !isValid;
+                }
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
+        }
+    };
+});
+
 app.directive('ophNullIfZeroLength', function($log) {
     return {
         require: 'ngModel',

@@ -41,13 +41,13 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
 
 
         // poistetaan poistetut kentät listasta
-        List<YhteystietoElementtiDTO> toBeDeleted = new ArrayList<YhteystietoElementtiDTO>();
+        /*List<YhteystietoElementtiDTO> toBeDeleted = new ArrayList<YhteystietoElementtiDTO>();
         for (YhteystietoElementtiDTO kentta : dto.getAllLisatietokenttas()) {
             if (!kentta.isKaytossa()) {
                 toBeDeleted.add(kentta);
             }
         }
-        dto.getAllLisatietokenttas().removeAll(toBeDeleted);
+        dto.getAllLisatietokenttas().removeAll(toBeDeleted);*/
     }
 
     private MonikielinenTekstiTyyppi convertNimiToDto(YhteystietojenTyyppi entity) {
