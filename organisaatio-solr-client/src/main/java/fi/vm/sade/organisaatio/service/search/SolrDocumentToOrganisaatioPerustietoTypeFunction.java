@@ -60,6 +60,13 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
                         OrganisaatioTyyppi.fromValue((String) value));
             }
         }
+        values = doc.getFieldValues(KIELI);
+        if (values != null) {
+            for (Object value : values) {
+                result.getKieletUris().add((String) value);
+            }
+        }
+        result.setKotipaikkaUri(sGet(doc, KUNTA));
 
         if (doc.getFirstValue(PATH) != null) {
             result.setParentOidPath(Joiner.on("/").join(

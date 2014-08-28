@@ -64,6 +64,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,7 +131,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().length() == 0) {
+        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().size() == 0) {
             s.setOppilaitosTyyppi(null);
         }
 
@@ -380,7 +382,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
+    public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         LOG.info("Saving " + oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
@@ -391,9 +393,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            Organisaatio savedOrg = organisaatioBusinessService.save(ordto, true, true);
-            OrganisaatioRDTO ret = conversionService.convert(savedOrg, OrganisaatioRDTO.class);
-            return ret;
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true);
+            return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class), 
+                    result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving " + oid, ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
@@ -441,7 +443,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
+    public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
@@ -450,9 +452,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            Organisaatio org = organisaatioBusinessService.save(ordto, false, false);
-            OrganisaatioRDTO ret = conversionService.convert(org, OrganisaatioRDTO.class);
-            return ret;
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false);
+            return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class), 
+                    result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving new org", ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,

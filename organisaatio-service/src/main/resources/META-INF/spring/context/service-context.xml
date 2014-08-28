@@ -12,7 +12,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
     <context:component-scan base-package="fi.vm.sade.security" />
-    
+
     <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
 
 
@@ -42,7 +42,8 @@
         </property>
     </bean>
 
-    <bean id="modelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
+    <bean id="organisaatioModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
+    <bean id="organisaatioNimiModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper"/>
     <bean id="searchCriteriaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper"/>
 
     <!--

@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
@@ -177,13 +178,13 @@ public interface OrganisaatioResource {
      * @return
      */
     @GET
-    @Path("/{oid}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee yhden organisaation annetulla oid:lla",
-            notes = "Operaatio palauttaa oid:n määrittämän organisaation tiedot.",
+            value = "Hakee yhden organisaation annetulla id:llä (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi).",
+            notes = "Operaatio palauttaa id:n määrittämän organisaation tiedot.",
             response = OrganisaatioRDTO.class)
-    public OrganisaatioRDTO getOrganisaatioByOID(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
+    public OrganisaatioRDTO getOrganisaatioByOID(@ApiParam(value = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.", required = true) @PathParam("id") String oid);
 
     @POST
     @Path("/{oid}")
@@ -192,8 +193,8 @@ public interface OrganisaatioResource {
     @ApiOperation(
             value = "Päivittää oid:n määrittämän organisaation tiedot",
             notes = "Operaatio päivittää oid:n määrittämän organisaation tiedot.",
-            response = OrganisaatioRDTO.class)
-    public OrganisaatioRDTO updateOrganisaatio(@PathParam("oid") String oid, OrganisaatioRDTO ordto);
+            response = ResultRDTO.class)
+    public ResultRDTO updateOrganisaatio(@PathParam("oid") String oid, OrganisaatioRDTO ordto);
 
     @DELETE
     @Path("/{oid}")
@@ -211,8 +212,8 @@ public interface OrganisaatioResource {
     @ApiOperation(
             value = "Luo uuden organisaation",
             notes = "Operaatio luo uuden organisaation annetusta JSON:sta.",
-            response = OrganisaatioRDTO.class)
-    public OrganisaatioRDTO newOrganisaatio(OrganisaatioRDTO ordto);
+            response = ResultRDTO.class)
+    public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GET
     @Path("/myroles")

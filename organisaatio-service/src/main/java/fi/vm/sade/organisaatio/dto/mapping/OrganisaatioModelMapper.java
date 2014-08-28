@@ -15,21 +15,21 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OsoiteDTOV2;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.Osoite;
 import fi.vm.sade.organisaatio.model.Puhelinnumero;
 import fi.vm.sade.organisaatio.model.Www;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.service.util.YhteystietoUtil;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -42,23 +42,23 @@ import org.modelmapper.spi.MappingContext;
  * @author simok
  */
 public class OrganisaatioModelMapper extends ModelMapper {
-                
+
     public OrganisaatioModelMapper() {
         super();
-    
+
         // PostiOsoiteConverter
         final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> postiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
                 OsoiteModelMapper modelMapper = new OsoiteModelMapper();
-                
+
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
 
                 List<Osoite> postiOsoitteet = YhteystietoUtil.getPostiOsoitteet(mc.getSource());
 
                 // Map domain type to DTO
-                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);                            
+                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);
             }
         };
 
@@ -67,14 +67,14 @@ public class OrganisaatioModelMapper extends ModelMapper {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
                 OsoiteModelMapper modelMapper = new OsoiteModelMapper();
-                
+
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
 
                 List<Osoite> postiOsoitteet = YhteystietoUtil.getKayntiOsoitteet(mc.getSource());
 
                 // Map domain type to DTO
-                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);                            
+                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);
             }
         };
 
@@ -89,8 +89,8 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 for (Www www : wwwOsoitteet) {
                     wwwOsoiteMap.put(www.getKieli(), www.getWwwOsoite());
-                }                
-                
+                }
+
                 return wwwOsoiteMap;
             }
         };
@@ -106,8 +106,8 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 for (Email email : emailOsoitteet) {
                     emailOsoiteMap.put(email.getKieli(), email.getEmail());
-                }                
-                
+                }
+
                 return emailOsoiteMap;
             }
         };
@@ -123,12 +123,12 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 for (Puhelinnumero numero : puhelinnumerot) {
                     puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
-                }                
-                
+                }
+
                 return puhelinnumeroMap;
             }
         };
-        
+
         // faksinumeroConverter
         final Converter<List<Yhteystieto>, Map<String, String>> faksinumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
             @Override
@@ -140,24 +140,24 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 for (Puhelinnumero numero : faksinumerot) {
                     faksinumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
-                }                
-                
+                }
+
                 return faksinumeroMap;
             }
         };
-        
+
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
             protected void configure() {
                 // Monikielinen nimi
                 map().setNimi(source.getNimi().getValues());
-                
+
                 // Postiosoite
                 using(postiOsoiteConverter).map(source.getYhteystiedot()).setPostiosoite(null);
 
                 // Käyntiosoite
                 using(kayntiOsoiteConverter).map(source.getYhteystiedot()).setKayntiosoite(null);
-                
+
                 // Puhelinnumero
                 using(puhelinnumeroConverter).map(source.getYhteystiedot()).setPuhelinnumero(null);
 
