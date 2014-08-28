@@ -42,6 +42,27 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         isLeaf: function (data) {
             return data.children.length === 0;
         },
+        
+        hasActiveChildren: function (node) {
+            
+            if (node.children.length < 1)                
+            {
+                //$log.error("Lapsia ei löytynyt!");
+                return false;
+            }
+         
+            for (var i=0; i < node.children.length; i++)
+            {
+                if (isAktiivinen(node.children[i]))
+                {
+                    //$log.error("löytyi aktiivinen!");
+                     
+                    return true;
+                }
+            }
+             //$log.error("Ei löytynyt aktiivista!");
+            return false;
+        },        
 
         deleteNode: function (node) {
             // Etsitään noodin parent

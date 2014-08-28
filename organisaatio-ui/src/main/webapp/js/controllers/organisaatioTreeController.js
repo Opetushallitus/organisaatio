@@ -46,6 +46,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
         // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.isLeaf(node);
     };
+    
+     $scope.hasActiveChildren = function(node) {
+        // Tarkistetaan onko aktiivisia aliorganisaatioita
+        //return $scope.model.
+        return $scope.model.hasActiveChildren(node);
+    };                      
 
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle
@@ -68,6 +74,9 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 },
                 tyypit:  function () {
                     return $scope.model.getTyypit(node);
+                },
+                hasactivechildren: function() {
+                    return $scope.model.hasActiveChildren(node);
                 }
             }
         });
