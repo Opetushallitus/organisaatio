@@ -110,26 +110,27 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.en}})
             </span>
         </div>
-    </form>
 
-    <!-- Nimen voimassaolon alkupäivämäärä -->
-    <label class="control-label">
-        {{'Nimenmuokkaus.alkupvm' | i18n}}
-    </label>
-    <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
-           ng-style="inputStyle"
-           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
-           close-on-date-selection="true"
-           ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
-           close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-           current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-           clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-           toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+        <!-- Nimen voimassaolon alkupäivämäärä -->
+        <label class="control-label">
+            {{'Nimenmuokkaus.alkupvm' | i18n}}
+        </label>
+        <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
+               ng-style="inputStyle" ng-required="true"
+               type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
+               close-on-date-selection="true"
+               ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
+               close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+               current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+               clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+               toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+    </form>
 </div>
+
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <button class="btn" ng-disabled="!form.$dirty || form.$invalid" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
     </div>
 </div>
 
