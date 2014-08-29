@@ -22,17 +22,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
         <!-- Organisaation nimenmuutoksen moodit: update, new, delete -->
-        <input type="radio" ng-model="model.mode" value="update"
-               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
-        {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
-        <input type="radio" ng-model="model.mode" value="new"
-               ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
-        {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
-        <input ng-disabled="model.ajastettuMuutos === false"
-               type="radio" ng-model="model.mode" value="delete"
-               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
-        {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
-        <br>
+        <div ng-if="!model.uusiOrganisaatio">
+            <input type="radio" ng-model="model.mode" value="update"
+                   ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
+            {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
+            <input type="radio" ng-model="model.mode" value="new"
+                   ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
+            {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
+            <input ng-disabled="model.ajastettuMuutos === false"
+                   type="radio" ng-model="model.mode" value="delete"
+                   ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
+            {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
+
+            <br>
+        </div>
 
         <label class="control-label">
             {{'Nimenmuokkaus.nimi' | i18n}}
@@ -112,18 +115,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <!-- Nimen voimassaolon alkupäivämäärä -->
-        <label class="control-label">
-            {{'Nimenmuokkaus.alkupvm' | i18n}}
-        </label>
-        <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
-               ng-style="inputStyle" ng-required="true"
-               type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
-               close-on-date-selection="true"
-               ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
-               close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-               current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-               clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-               toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+        <div ng-if="!model.uusiOrganisaatio">
+            <label class="control-label">
+                {{'Nimenmuokkaus.alkupvm' | i18n}}
+            </label>
+            <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
+                   ng-style="inputStyle" ng-required="true"
+                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
+                   close-on-date-selection="true"
+                   ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
+                   close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                   current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                   clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                   toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+        </div>
     </form>
 </div>
 

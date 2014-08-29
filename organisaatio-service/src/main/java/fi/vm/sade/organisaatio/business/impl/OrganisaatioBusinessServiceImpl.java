@@ -381,6 +381,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity = organisaatioDAO.read(entity.getId());
         } else {
             entity = organisaatioDAO.insert(entity);
+
+            // Organisaatio on lisätty kantaa, luodaan nimihistorian ensimmäinen entry
+            createOrganisaatioNimi(entity.getOid(), entity.getNimi());
         }
 
         // Saving the parent relationship
@@ -981,6 +984,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Palautetaan päivitetty nini
         nimiEntity = organisaatioNimiDAO.read(nimiEntity.getId());
+
+        return nimiEntity;
+    }
+
+    private OrganisaatioNimi createOrganisaatioNimi(String oid, MonikielinenTeksti nimi) {
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+
+        if (orgEntity == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+
+        // Luodaan nimihistorian entry
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.addNimi(orgEntity.getId(), nimi,
+                orgEntity.getAlkuPvm(), getCurrentUser());
 
         return nimiEntity;
     }

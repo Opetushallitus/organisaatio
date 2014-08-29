@@ -1,4 +1,4 @@
-app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaModel, Nimet) {
+app.factory('NimenMuokkausModel', function($filter, $log, $location, Alert, NimiHistoriaModel, Nimet) {
 //    emptyNimi = {
 //        "nimi" : {
 //            "fi" : "",
@@ -99,6 +99,12 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
 
         // Tallennus, tilasta riippuen luodaan uusi nimi, päivitetään nimi tai perutaan ajastus
         save: function() {
+            // Uuden organisaation tapauksessa luotetaan siihen, että
+            // organisaation tallennus tallentaa myös ensimmäisen nimihistorian 
+            if (this.uusiOrganisaatio) {
+                return;
+            }
+
             if (this.mode === "update") {
                 this.saveUpdatedNimi();
             }
@@ -128,6 +134,15 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
             this.parentNimi = parentNimi;
             this.nameFormat = nameFormat;
             this.parentPattern = parentPattern;
+
+            if (/new$/.test($location.path())) {
+                this.uusiOrganisaatio = true;
+                this.mode = "new";
+            }
+            else {
+                this.uusiOrganisaatio = false;
+                this.mode = "update";
+            }
 
             this.ajastettuMuutos = this.historiaModel.ajastettuMuutos;
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
