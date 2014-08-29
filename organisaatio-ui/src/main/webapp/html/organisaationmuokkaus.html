@@ -180,6 +180,12 @@
                     class="btn" ng-click="openNimenMuokkaus()">
                 {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
+            <div ng-if="!(model.organisaatio.nimi.fi || model.organisaatio.nimi.sv || model.organisaatio.nimi.en)">
+                <input type="hidden" name="nimivirhe" ng-model="nimivirhe" required>
+                <span class="text-error" ng-show="form.nimivirhe.$error.required">
+                    {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
+                </span>
+            </div>
         </div>
     </div>
 
