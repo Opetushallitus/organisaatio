@@ -36,11 +36,17 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
 
     $scope.save = function() {
         // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
-        // tai poistanut tulevan nimenmuutoksen --> suoritetaan muutos
+        // tai poistanut tulevan nimenmuutoksen
+        // --> suoritetaan ensin nimihistorian päivitys ja sitten organisaatio
         if ($scope.nimenmuokkaus !== null) {
-            $scope.nimenmuokkaus.save();
+            $scope.nimenmuokkaus.save().then (function() {
+                $scope.model.persistOrganisaatio($scope.form);
+            });
         }
-        $scope.model.persistOrganisaatio($scope.form);
+        else {
+            $scope.model.persistOrganisaatio($scope.form);
+        }
+
     };
 
     $scope.cancel = function() {
@@ -94,12 +100,12 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
                     $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
+                    $scope.model.setTulevaNimi(angular.copy($scope.nimenmuokkaus.nimi));
                 }
                 else {
                     $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+                    $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'

@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.vm.sade.oid.service.ExceptionMessage;
@@ -29,8 +30,6 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioExistsException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameEmptyException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameFormatException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiDeleteException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiNotFoundException;
@@ -967,12 +966,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNimiNotFoundException(oid);
         }
 
-        Long oldMktId = nimiEntity.getNimi().getId();
+        // Nimet täsmää, ei tarvetta päivitykseen
+        if (Objects.equal(nimiEntity.getNimi(), nimi)) {
+            return nimiEntity;
+        }
+
+        Long oldMktId      = nimiEntity.getNimi().getId();
+        Long oldMktVersion = nimiEntity.getNimi().getVersion();
 
         // Päivitetään organisaation nimi, mutta päivitetään se "vanhaan" monikieliseen tekstiin
         nimiEntity.setNimi(nimi);
-        nimiEntity.setNimi(nimi);
         nimiEntity.getNimi().setId(oldMktId);
+        nimiEntity.getNimi().setVersion(oldMktVersion);
 
         LOG.info("updating " + nimiEntity);
         try {

@@ -1,4 +1,4 @@
-app.factory('NimenMuokkausModel', function($filter, $log, $location, Alert, NimiHistoriaModel, Nimet) {
+app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, NimiHistoriaModel, Nimet) {
 //    emptyNimi = {
 //        "nimi" : {
 //            "fi" : "",
@@ -62,61 +62,71 @@ app.factory('NimenMuokkausModel', function($filter, $log, $location, Alert, Nimi
         },
 
         // Uuden nimen tallennus
-        saveNewNimi: function() {
+        saveNewNimi: function(deferred) {
             Nimet.put({oid: this.oid, alkuPvm: ""}, this.nimi, function(result) {
                 $log.log(result);
+                deferred.resolve();
             },
             // Error case
             function(response) {
                 $log.error("Nimet put response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
+                deferred.reject();
             });
         },
 
         // Nimen päivitys
-        saveUpdatedNimi: function() {
+        saveUpdatedNimi: function(deferred) {
             Nimet.post({oid: this.oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
                 $log.log(result);
+                deferred.resolve();
             },
             // Error case
             function(response) {
                 $log.error("Nimet post response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
+                deferred.reject();
             });
         },
 
         // Ajastetun nimenmuutoksen poisto / peruminen
-        deletePresetNimi: function() {
-            Nimet.delete({oid: this.oid, alkuPvm: this.uusinNimi.alkuPvm}, function(result) {
+        deletePresetNimi: function(deferred) {
+            Nimet.delete({oid: this.oid, alkuPvm: this.historiaModel.uusinNimi.alkuPvm}, function(result) {
                 $log.log(result);
+                deferred.resolve();
             },
             // Error case
             function(response) {
                 $log.error("Nimet delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
+                deferred.reject();
             });
         },
 
         // Tallennus, tilasta riippuen luodaan uusi nimi, päivitetään nimi tai perutaan ajastus
         save: function() {
+            var deferred = $q.defer();
+
             // Uuden organisaation tapauksessa luotetaan siihen, että
-            // organisaation tallennus tallentaa myös ensimmäisen nimihistorian 
+            // organisaation tallennus tallentaa myös ensimmäisen nimihistorian
             if (this.uusiOrganisaatio) {
-                return;
+                deferred.resolve();
+                return deferred.promise;;
             }
 
             if (this.mode === "update") {
-                this.saveUpdatedNimi();
+                this.saveUpdatedNimi(deferred);
             }
             else if (this.mode === "new") {
-                this.saveNewNimi();
+                this.saveNewNimi(deferred);
             }
             else if (this.mode === "delete") {
-                this.deletePresetNimi();
+                this.deletePresetNimi(deferred);
             }
             else {
                 $log.error("Unknown mode: " + this.mode);
             }
+            return deferred.promise;
         },
 
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
