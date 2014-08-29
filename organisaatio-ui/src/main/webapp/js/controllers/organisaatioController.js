@@ -66,6 +66,21 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 },
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
+                },
+                koulutustoimija: function () {
+                    return $scope.model.isKoulutustoimija();
+                },
+                oppilaitos: function () {
+                    return $scope.model.isOppilaitos();
+                },
+                parentNimi: function () {
+                    return $scope.model.parent.nimi;
+                },
+                nameFormat: function () {
+                    return $scope.model.nameFormat;
+                },
+                parentPattern: function () {
+                    return $scope.model.parentPattern;
                 }
             }
         });

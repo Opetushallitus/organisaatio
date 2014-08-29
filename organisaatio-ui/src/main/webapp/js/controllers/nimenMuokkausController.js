@@ -1,7 +1,12 @@
-function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausModel, oid, nimihistoria, organisaatioAlkuPvm) {
+function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausModel,
+                                 oid, nimihistoria, organisaatioAlkuPvm,
+                                 koulutustoimija, oppilaitos, parentNimi,
+                                 nameFormat, parentPattern) {
 
     $scope.model = NimenMuokkausModel;
-    $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm);
+    $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm,
+                         koulutustoimija, oppilaitos, parentNimi,
+                         nameFormat, parentPattern);
 
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');

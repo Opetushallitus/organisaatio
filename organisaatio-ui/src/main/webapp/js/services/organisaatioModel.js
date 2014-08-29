@@ -1018,7 +1018,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
             model.organisaatio.tyypit = [];
             model.organisaatio.nimi = null;
             model.organisaatio.nimi = {};
-            model.organisaatio.nimi.fi = "";
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];

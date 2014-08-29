@@ -1,17 +1,17 @@
 app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaModel, Nimet) {
-    emptyNimi = {
-        "nimi" : {
-            "fi" : "",
-            "sv" : "",
-            "en" : ""
-        },
-        "alkuPvm" : ""
-    };
+//    emptyNimi = {
+//        "nimi" : {
+//            "fi" : "",
+//            "sv" : "",
+//            "en" : ""
+//        },
+//        "alkuPvm" : ""
+//    };
 
     var model = {
         oid : "",
         minAlkuPvm : "",
-        nimi : emptyNimi,
+        nimi : {},
         mode : "update",
         historiaModel : NimiHistoriaModel,
 
@@ -19,7 +19,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
         clear: function() {
             this.oid = "";
             this.minAlkuPvm = "";
-            this.nimi = emptyNimi;
+            this.nimi = {};
             this.mode = "update";
             this.historiaModel.clear();
         },
@@ -29,6 +29,11 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
         getMinAlkuPvm: function(organisaatioAlkuPvm) {
             var voimassaolevaNimi = model.historiaModel.getCurrentNimi();
             var minAlkuPvm = "";
+
+            // Uuden organisaation tapaus
+            if (voimassaolevaNimi === null) {
+                return minAlkuPvm;
+            }
 
             if('alkuPvm' in voimassaolevaNimi && moment(voimassaolevaNimi.alkuPvm).isValid()) {
                 minAlkuPvm = voimassaolevaNimi.alkuPvm;
@@ -48,7 +53,7 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
 
         // Tyhjennetään editoitava nimi
         clearVisibleNimi: function() {
-            this.nimi = emptyNimi;
+            this.nimi = {};
         },
 
         // Tarkastetaan onko annettu nimi ajastettu nimenmuutos
@@ -109,12 +114,21 @@ app.factory('NimenMuokkausModel', function($filter, $log, Alert, NimiHistoriaMod
         },
 
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
-        refresh: function(oid, nimihistoria, organisaatioAlkuPvm) {
+        refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
+                          koulutustoimija, oppilaitos, parentNimi,
+                          nameFormat, parentPattern) {
             $log.log('refresh()');
 
             // Alustetaan historiamalli
             this.historiaModel.init(nimihistoria);
+
             this.oid = oid;
+            this.koulutustoimija = koulutustoimija;
+            this.oppilaitos = oppilaitos;
+            this.parentNimi = parentNimi;
+            this.nameFormat = nameFormat;
+            this.parentPattern = parentPattern;
+
             this.ajastettuMuutos = this.historiaModel.ajastettuMuutos;
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 

@@ -1,22 +1,22 @@
 app.factory('NimiHistoriaModel', function($log) {
-    emptyNimi = {
-        "nimi" : {
-            "fi" : "",
-            "sv" : "",
-            "en" : ""
-        },
-        "alkuPvm" : ""
-    };
+//    emptyNimi = {
+//        "nimi" : {
+//            "fi" : "",
+//            "sv" : "",
+//            "en" : ""
+//        },
+//        "alkuPvm" : ""
+//    };
 
     var model = {
         nimihistoria : [],
-        uusinNimi : emptyNimi,
+        uusinNimi : {},
         ajastettuMuutos : false,
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
             this.nimihistoria = [];
-            this.uusinNimi = emptyNimi;
+            this.uusinNimi = {};
             this.ajastettuMuutos = false;
         },
 

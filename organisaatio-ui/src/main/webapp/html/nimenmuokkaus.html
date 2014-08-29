@@ -21,6 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
+        <!-- Organisaation nimenmuutoksen moodit: update, new, delete -->
         <input type="radio" ng-model="model.mode" value="update"
                ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
         {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
@@ -36,24 +37,82 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <label class="control-label">
             {{'Nimenmuokkaus.nimi' | i18n}}
         </label>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimifi" class="span6" ng-style="inputStyle"
+
+        <!-- Kentät organisaation suomenkieliselle nimelle -->
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija || model.oppilaitos"
+               type="text" name="nimifi" class="span6"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+        <input ng-disabled="!model.parentNimi.fi || model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+               type="text" name="nimifi" class="span6"
+               ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
+               oph-name-pattern="{{model.parentPattern['fi']}}" oph-name-format="{{model.nameFormat['fi']}}"
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
         <div>
             <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
                 {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
             </span>
+            <span class="text-error" ng-show="form.nimifi.$error.ophNamePattern">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.fi}})
+            </span>
+            <span class="text-warning" ng-show="form.nimifi.ophPatternWarning">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.fi}})
+            </span>
         </div>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimisv" class="span6"  ng-style="inputStyle"
+
+        <!-- Kentät organisaation ruotsinkieliselle nimelle -->
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija || model.oppilaitos"
+               type="text" name="nimisv" class="span6"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimien" class="span6"  ng-style="inputStyle"
+        <input ng-disabled="!model.parentNimi.sv || model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+               type="text" name="nimisv" class="span6"
+               ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
+               oph-name-pattern="{{model.parentPattern['sv']}}" oph-name-format="{{model.nameFormat['sv']}}"
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+        <div>
+            <span class="text-error" ng-show="form.nimisv.$error.ophNamePattern">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.sv}})
+            </span>
+            <span class="text-warning" ng-show="form.nimisv.ophPatternWarning">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.sv}})
+            </span>
+        </div>
+
+        <!-- Kentät organisaation englanninkieliselle nimelle -->
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija || model.oppilaitos"
+               type="text" name="nimien" class="span6"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+        <input ng-disabled="!model.parentNimi.en || model.mode === 'delete'" ng-style="inputStyle"
+               ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+               type="text" name="nimien" class="span6"
+               ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
+               oph-name-pattern="{{model.parentPattern['en']}}" oph-name-format="{{model.nameFormat['en']}}"
+               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+
+        <div>
+            <span class="text-error" ng-show="form.nimien.$error.ophNamePattern">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.en}})
+            </span>
+            <span class="text-warning" ng-show="form.nimien.ophPatternWarning">
+                {{'Organisaationtarkastelu.nimi'| i18n}}
+                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.en}})
+            </span>
+        </div>
     </form>
+
+    <!-- Nimen voimassaolon alkupäivämäärä -->
     <label class="control-label">
         {{'Nimenmuokkaus.alkupvm' | i18n}}
     </label>
