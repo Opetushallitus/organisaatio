@@ -554,16 +554,16 @@
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span>{{model.organisaatio.metadata.hakutoimistoEctsNimi}}</span>
-                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike">,&nbsp;
-                        {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
+                    <span> {{'Organisaationtarkastelu.ECTSnimi'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsNimi}} </span><br>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike">
+                        {{'Organisaationtarkastelu.ECTStehtavanimike'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
                     </span><br>
                     <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">
-                        {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}}
-                    </span>
+                        {{'Organisaationtarkastelu.ECTSpuhelinnumero'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}}
+                    </span><br>
                     <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail">
-                        <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">,&nbsp;</span>
-                        {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
+                        <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail"></span>
+                        {{'Organisaationtarkastelu.ECTSsahkopostiosoite'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
                     </span>
                 </label>
             </div>
