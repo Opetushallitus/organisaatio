@@ -120,6 +120,37 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
         });
     };
+    
+    $scope.openVoimassaolonMuokkaus = function () {
+        if ($scope.modalOpen) {
+            return;
+        }
+        $scope.modalOpen = true;
+        var modalInstance = $modal.open({
+            templateUrl: 'nimenmuokkaus.html',
+            controller: NimenMuokkausController,
+            windowClass:'modal-wide',
+            resolve: {
+                oid: function () {
+                    return $scope.oid;
+                },
+                nimihistoria: function () {
+                    return $scope.model.nimihistoria;
+                },
+                organisaatioAlkuPvm: function () {
+                    return $scope.model.organisaatio.alkuPvm;
+                }
+            }
+        });
+
+        modalInstance.result.then(function () {
+            $scope.modalOpen = false;
+            $log.log('Luodaan uusi nimi: xxx ');
+        }, function () {
+            $scope.modalOpen = false;
+            $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
+        });
+    };
 
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
         var modalInstance = $modal.open({

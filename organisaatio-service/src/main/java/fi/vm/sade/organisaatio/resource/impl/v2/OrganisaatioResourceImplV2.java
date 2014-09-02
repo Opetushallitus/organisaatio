@@ -25,14 +25,7 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPerustietoSuppea;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
@@ -373,5 +366,14 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
 
         return "";
+    }
+
+    @Override
+    public List<OrganisaatioMuokkausTiedotDTO> muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+        LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
+
+        ArrayList<OrganisaatioMuokkausTiedotDTO> muokatut = organisaatioBusinessService.bulkUpdatePvm(tiedot);
+
+        return muokatut;
     }
 }
