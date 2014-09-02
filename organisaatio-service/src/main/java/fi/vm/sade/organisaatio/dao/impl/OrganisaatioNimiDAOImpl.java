@@ -186,4 +186,51 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     }
 
 
+    /**
+     * Haetaan organisaatiot, joiden nimi eroaa nimihistorian current nimestä
+     * -----------------------------------------------------------------------
+     * SELECT org.*
+     * FROM organisaatio org
+     * WHERE org.nimi_mkt !=
+     * (
+     * SELECT org_nimi.nimi_mkt
+     * FROM organisaatio_nimi org_nimi
+     * WHERE org_nimi.alkupvm =
+     * (
+     * SELECT max(org_nimi2.alkupvm)
+     * FROM organisaatio_nimi org_nimi2
+     * WHERE org_nimi.organisaatio_id = org_nimi2.organisaatio_id
+     * AND org_nimi2.alkupvm <= '2014-09-01'
+     * )
+     * AND org.id = org_nimi.organisaatio_id
+     * )
+     *
+     * Ylläoleva SQL lauseke on alla kirjoitettu HQL muotoon.
+     *
+     * @return
+     **/
+    @Override
+    public List<Organisaatio> findNimiNotCurrentOrganisaatiot() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String s = "SELECT org FROM Organisaatio org "
+                + "WHERE org.nimi != "
+                + "( "
+                + "SELECT org_nimi.nimi FROM OrganisaatioNimi org_nimi "
+                + "WHERE org_nimi.alkuPvm = "
+                + "( "
+                + "SELECT MAX (org_nimi2.alkuPvm) FROM OrganisaatioNimi org_nimi2 "
+                + "WHERE org_nimi.organisaatio = org_nimi2.organisaatio "
+                + "AND org_nimi2.alkuPvm <= '" + df.format(new Date()) + "' "
+                + ") "
+                + "AND org = org_nimi.organisaatio "
+                + ")";
+
+        Query q = getEntityManager().createQuery(s);
+
+        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
+
+        return organisaatiot;
+    }
+
 }

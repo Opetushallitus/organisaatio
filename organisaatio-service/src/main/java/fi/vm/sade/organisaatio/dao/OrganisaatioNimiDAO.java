@@ -19,6 +19,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Date;
 import java.util.List;
@@ -61,5 +62,7 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
 
     public OrganisaatioNimi findCurrentNimi(Long organisaatioId);
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
+
+    public List<Organisaatio> findNimiNotCurrentOrganisaatiot();
 
 }
