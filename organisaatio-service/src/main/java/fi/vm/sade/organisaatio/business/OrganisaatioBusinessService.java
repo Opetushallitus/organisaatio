@@ -72,4 +72,6 @@ public interface OrganisaatioBusinessService {
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto);
 
     public void deleteOrganisaatioNimi(String oid, Date date);
+
+    public void updateCurrentOrganisaatioNimet();
 }
