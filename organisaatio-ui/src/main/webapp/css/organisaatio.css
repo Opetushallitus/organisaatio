@@ -80,3 +80,13 @@ input.greyed[type="text"] {
 .modal-warning {
     z-index: 120050 !important;
 }
+
+div.infotext {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    margin-bottom: 5px;
+}
+

@@ -94,6 +94,29 @@ app.directive('formatteddate', function($log, $filter) {
     };
 });
 
+app.directive('datetext', function($filter) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$formatters.push(function(data) {
+                return $filter('date')(data, "dd.MM.yyyy");
+            });
+        }
+    };
+});
+
+app.directive('noedit', function () {
+    return {
+        link: function (scope, elm, attrs) {
+          elm.bind('keypress', function(e){
+              e.preventDefault();
+              return false;
+          });
+        }
+    }   
+});
+
+
 app.directive('testField', function($log) {
     return {
         require: 'ngModel',

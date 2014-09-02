@@ -210,6 +210,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 return ret.replace(/&amp;/g, '&');
             }
         };
+        
+        this.getDecodedLocalizedValue= function(res, prefix, suffix, create, language) {
+            return getDecodedLocalizedValue(res, prefix, suffix, create, language);
+        };
 
         getMonikielinenTekstiLanguages = function(mkt) {
             ret = [];

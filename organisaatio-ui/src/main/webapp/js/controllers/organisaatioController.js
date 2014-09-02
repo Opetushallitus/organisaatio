@@ -1,9 +1,10 @@
-function OrganisaatioController($scope, $location, $routeParams, $modal, $log, OrganisaatioModel) {
+function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $timeout, OrganisaatioModel) {
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
     $scope.model.mode = "show";
     $scope.nimenmuokkaus = null;
+    $scope.voimassaolonmuokkaus = null;
 
 
     if (/new$/.test($location.path())) {
@@ -118,6 +119,60 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = null;
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
+        });
+    };
+    
+    $scope.openVoimassaolonMuokkaus = function (muokataanAlkupvm) {
+        if ($scope.modalOpen) {
+            return;
+        }
+        $scope.modalOpen = true;
+        var modalInstance = $modal.open({
+            templateUrl: 'voimassaolonmuokkaus.html',
+            controller: VoimassaolonMuokkausController,
+            windowClass:'modal-large',
+            resolve: {
+                muokataanAlkupvm: function() {
+                    return muokataanAlkupvm;
+                },
+                oid: function () {
+                    return $scope.model.organisaatio.oid;
+                },
+                nimi: function () {
+                    return $scope.model.organisaatio.nimi;
+                },
+                alkuPvm: function() {
+                    return $scope.model.organisaatio.alkuPvm;
+                },
+                lakkautusPvm: function() {
+                    return $scope.model.organisaatio.lakkautusPvm;
+                },
+                monikielinenTekstiLocalizer: function () {
+                    return $scope.model.getDecodedLocalizedValue;
+                }
+            }
+        });
+        
+        modalInstance.opened.then(function() {
+            $timeout(function() {
+                modalInstance.loadData();
+            }, 750); // Dialog opening animation may stop for the time of loading, delay allows it to open nicely first.
+        });
+
+        modalInstance.result.then(function(voimassaolonmuokkausModel) {
+            $scope.modalOpen = false;
+            $scope.voimassaolonmuokkaus = voimassaolonmuokkausModel;
+            if (voimassaolonmuokkausModel.muokataanAlkupvm) {
+                $log.log("Alku pvm: " + voimassaolonmuokkausModel.alkuPvm);
+                $scope.model.organisaatio.alkuPvm = voimassaolonmuokkausModel.alkuPvm;
+            } else {
+                $log.log("Lakkautus pvm: " + voimassaolonmuokkausModel.loppuPvm);
+                $scope.model.organisaatio.lakkautusPvm = voimassaolonmuokkausModel.lakkautusPvm;
+            }
+            $log.log('Dialogi hyväksyttiin. TODO näytä UI:ssa valitut aliorganisaatiot.');
+        }, function () {
+            $scope.modalOpen = false;
+            $log.log('Voimassaolonmuokkaus modal dismissed at: ' + new Date());
         });
     };
 
