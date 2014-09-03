@@ -17,11 +17,7 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -39,12 +35,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import org.apache.commons.lang.time.DateUtils;
 
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -635,5 +634,73 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setPaivittaja(String paivittaja) {
         this.paivittaja = paivittaja;
+    }
+
+    public boolean isPvmConstraintsOk(Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+        final Logger LOG = LoggerFactory.getLogger(Organisaatio.class);
+        LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + this.getOid() + ")");
+        final Date MIN_DATE = new Date(Long.MIN_VALUE);
+        final Date MAX_DATE = new Date(Long.MAX_VALUE);
+
+        Date actualStart = this.getAlkuPvm();
+        Date actualEnd = this.getLakkautusPvm();
+
+        OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(this.getOid());
+
+        if (ownData != null) {
+            LOG.debug("isPvmConstraintsOk(): omat tiedot löytyy listasta");
+            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm() : MIN_DATE;
+            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm() : MAX_DATE;
+            LOG.debug("uusi alku:" + actualStart + ", uusi loppu:" + actualEnd);
+        } else {
+            LOG.debug("isPvmConstraintsOk(): omia tietoja ei löydy");
+        }
+
+        // kannasta ei löytynyt ainuttakaan nullia, mutta kenttää ei myöskään oltu merkitty not nulliksi.
+        if (actualStart == null) {
+            actualStart = MIN_DATE;
+        }
+        if (minPvm == null) {
+            minPvm = MIN_DATE;
+        }
+        // Nämä pitää korjata ennen vuotta 292278994
+        if (actualEnd == null) {
+            actualEnd = MAX_DATE;
+        }
+        if (maxPvm == null) {
+            maxPvm = MAX_DATE;
+        }
+
+        LOG.debug(
+                String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s",
+                        actualStart, minPvm, actualEnd, maxPvm)
+        );
+
+        // oma alku ei saa olla isompi kuin oma loppu
+        if (actualStart.compareTo(actualEnd) > 0) {
+            LOG.error(String.format("käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", actualStart, actualEnd));
+            return false;
+        }
+        // oma alku ei saa olla pienempi kuin annettu alkupäivämäärä
+        if (actualStart.compareTo(minPvm) < 0) {
+            LOG.error(String.format("käytetty alkuPvm (%s) < min päivämäärä (%s)", actualStart, minPvm));
+            return false;
+        }
+        // oma loppu ei saa olla myöhäisempi kuin annettu loppupäivämäärä
+        if (actualEnd.compareTo(maxPvm) > 0) {
+            LOG.error(String.format("käytetty loppuPvm (%s) > max päivämäärä (%s)", actualEnd, maxPvm));
+            return false;
+        }
+
+        for(OrganisaatioSuhde suhde: this.getChildSuhteet()) {
+            LOG.debug("kysytään lapselta " + suhde.getChild().getOid());
+            if (!suhde.getChild().isPvmConstraintsOk(actualStart, actualEnd, muokkausTiedot)) {
+                LOG.error("lapsella ajat NOK");
+                return false;
+            }
+        }
+
+        LOG.debug("ajat OK");
+        return true;
     }
 }

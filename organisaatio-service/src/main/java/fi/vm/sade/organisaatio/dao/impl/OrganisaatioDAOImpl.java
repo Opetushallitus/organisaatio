@@ -474,6 +474,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 nimi, qOrganisaatio.organisaatioPoistettu, qOrganisaatio.lakkautusPvm));
     }
 
+    @Override
     public List<Organisaatio> findByOidList(List<String> oidList, int maxResults) {
         LOG.debug("findByOidList({}, {})", oidList, maxResults);
 

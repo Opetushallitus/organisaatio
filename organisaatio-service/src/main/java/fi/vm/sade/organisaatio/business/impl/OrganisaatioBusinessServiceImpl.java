@@ -42,6 +42,7 @@ import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -60,13 +61,8 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.regex.Pattern;
 import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
@@ -546,7 +542,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     /**
      * Check that given toimipistekoodi code has not been used.
      *
-     * @param org
+     * @param toimipistekoodi
      * @return
      */
     private boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
@@ -956,6 +952,77 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Poistetaan
         this.organisaatioNimiDAO.remove(nimiEntity);
+    }
+
+    @Override
+    public ArrayList<OrganisaatioMuokkausTiedotDTO> bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+        LOG.debug("bulkUpdatePvm():" + tiedot);
+        ArrayList<OrganisaatioMuokkausTiedotDTO> edited = new ArrayList<OrganisaatioMuokkausTiedotDTO>(tiedot.size());
+
+        HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<String, OrganisaatioMuokkausTiedotDTO>(tiedot.size());
+        HashMap<String, Organisaatio> organisaatioMap = new HashMap<String, Organisaatio>(tiedot.size());
+
+        for(OrganisaatioMuokkausTiedotDTO tieto:tiedot) {
+            givenData.put(tieto.getOid(), tieto);
+        }
+
+        Set<String> givenOids = givenData.keySet();
+        List<String> oids = new ArrayList<String>(givenOids);
+
+        LOG.debug("bulkUpdatePvm(): haetaan oideilla:" + oids);
+        List<Organisaatio> organisaatios = this.organisaatioDAO.findByOidList(oids, oids.size());
+
+        if (organisaatios.isEmpty()) {
+            LOG.debug("bulkUpdatePvm(): organisaatiolista tyhjä");
+            return edited; // tässä vaiheessa tyhjä lista.
+        }
+        LOG.debug("bulkUpdatePvm(): organisaatiolista:" + organisaatios);
+
+        // näiden oidien vanhemmuussuhteet on jo löydetty
+        Set<String> processed = new HashSet<String>(tiedot.size());
+        List<Organisaatio> roots = new ArrayList<Organisaatio>(tiedot.size());
+
+        // etsitään juuriorganisaatiot, eli ne, joiden vanhempaa ei löydy annetuista oideista
+        for (Organisaatio o : organisaatios) {
+            LOG.debug("bulkUpdatePvm(): käsitellään organisaatio:" + o + ",oid:" + o.getOid());
+            organisaatioMap.put(o.getOid(), o);
+            while (!processed.contains(o.getOid())) {
+                processed.add(o.getOid());
+
+                // jos vanhempaa ei löyty annetusta oidlistasta, tämä on juuriorganisaatio
+                if (!givenOids.contains(o.getParent().getOid())) {
+                    roots.add(o);
+                    break;
+                }
+                o = o.getParent();
+            }
+        }
+        LOG.debug("bulkUpdatePvm(): processed:" + processed);
+
+        boolean constraintsOK = true;
+        // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
+        for (Organisaatio o: roots) {
+            if (!o.isPvmConstraintsOk(null, null, givenData)) {
+                constraintsOK = false;
+                break;
+            }
+        }
+        if (constraintsOK) {
+            for(String oid: organisaatioMap.keySet()) {
+                OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
+                Organisaatio org = organisaatioMap.get(oid);
+
+                if (tieto != null) {
+                    org.setAlkuPvm(tieto.getAlkuPvm());
+                    org.setLakkautusPvm(tieto.getLoppuPvm());
+                    organisaatioDAO.update(org);
+
+                    edited.add(tieto);
+                }
+            }
+        }
+
+        return edited;
     }
 
     private OrganisaatioNimi updateCurrentOrganisaatioNimi(String oid, MonikielinenTeksti nimi) {

@@ -46,6 +46,8 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
 
     public Organisaatio findByOid(String oid);
 
+    List<Organisaatio> findByOidList(List<String> oidList, int maxResults);
+
     /**
      * Return parent org oids to org, optimized for the auth use.
      *
