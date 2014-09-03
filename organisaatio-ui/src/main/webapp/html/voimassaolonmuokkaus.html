@@ -9,7 +9,7 @@
             <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
                ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
             <i class="icon icon-chevron-right" style="visibility: hidden" ng-if="model.isLeaf(data)"></i>
-            <input ng-show="model.isModified" ng-change="model.makeDirty()" type="checkbox" ng-model="data.valittu" ng-disabled="data.readonly" ng-change="model.userChanged(data)">
+            <input ng-show="model.isModified" ng-change="model.checkboxChanged(data)" type="checkbox" ng-model="data.valittu" ng-disabled="data.readonly"">
             <span style="display: inline-block; width: 500px; vertical-align: top;">{{data.nimi | decodeAmp}}</span>
         </div>
         <div class="span2">
@@ -41,13 +41,13 @@
     <label ng-hide="model.muokataanAlkupvm" class="control-label">
         {{'Organisaationmuokkaus.lakkautuspvm'| i18n}}*
     </label>
-    <input  ng-show="model.muokataanAlkupvm" ng-change="model.updateTila(true)" oph-enter type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.alkuPvm"
+    <input  ng-show="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.alkuPvm"
             close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
             close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
             current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
             clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
             toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-    <input  ng-hide="model.muokataanAlkupvm" ng-change="model.updateTila(true)" oph-enter type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.lakkautusPvm"
+    <input  ng-hide="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.lakkautusPvm"
             close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
             close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
             current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
