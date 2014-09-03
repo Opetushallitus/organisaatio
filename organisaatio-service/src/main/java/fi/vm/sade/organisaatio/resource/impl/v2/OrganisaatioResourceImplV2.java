@@ -369,11 +369,11 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public List<OrganisaatioMuokkausTiedotDTO> muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
         LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
 
-        ArrayList<OrganisaatioMuokkausTiedotDTO> muokatut = organisaatioBusinessService.bulkUpdatePvm(tiedot);
+        OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
 
-        return muokatut;
+        return tulos;
     }
 }

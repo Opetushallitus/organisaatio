@@ -201,5 +201,5 @@ public interface OrganisaatioResourceV2 {
             value = "Muokkaa monta organisaatiota kerralla",
             notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
             response = OrganisaatioNimiDTOV2.class)
-    public List<OrganisaatioMuokkausTiedotDTO> muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 }

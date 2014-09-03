@@ -78,5 +78,5 @@ public interface OrganisaatioBusinessService {
 
     public void updateCurrentOrganisaatioNimet();
     
-    ArrayList<OrganisaatioMuokkausTiedotDTO> bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+    fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 }

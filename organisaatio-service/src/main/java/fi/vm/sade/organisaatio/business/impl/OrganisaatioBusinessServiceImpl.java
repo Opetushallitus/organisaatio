@@ -43,6 +43,8 @@ import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -955,9 +957,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public ArrayList<OrganisaatioMuokkausTiedotDTO> bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
         LOG.debug("bulkUpdatePvm():" + tiedot);
-        ArrayList<OrganisaatioMuokkausTiedotDTO> edited = new ArrayList<OrganisaatioMuokkausTiedotDTO>(tiedot.size());
+        OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
 
         HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<String, OrganisaatioMuokkausTiedotDTO>(tiedot.size());
         HashMap<String, Organisaatio> organisaatioMap = new HashMap<String, Organisaatio>(tiedot.size());
@@ -1000,9 +1002,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("bulkUpdatePvm(): processed:" + processed);
 
         boolean constraintsOK = true;
+        String virheViesti = "";
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o: roots) {
-            if (!o.isPvmConstraintsOk(null, null, givenData)) {
+            virheViesti = o.isPvmConstraintsOk(null, null, givenData);
+            if (!virheViesti.equals("")) {
                 constraintsOK = false;
                 break;
             }
@@ -1013,15 +1017,32 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Organisaatio org = organisaatioMap.get(oid);
 
                 if (tieto != null) {
+                    LOG.debug(String.format("bulkUpdatePvm(): ennen päivitystä: oid %s, version %s", org.getOid(), org.getVersion()));
                     org.setAlkuPvm(tieto.getAlkuPvm());
                     org.setLakkautusPvm(tieto.getLoppuPvm());
-                    organisaatioDAO.update(org);
+                    try {
+                        organisaatioDAO.update(org);
+                    } catch (OptimisticLockException ole) {
+                        edited.setMessage(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
+                        edited.setOk(false);
+                        return edited;
+                    }
 
-                    edited.add(tieto);
+                    LOG.debug(String.format("bulkUpdatePvm(): päivityksen jälkeen: oid %s, version %s", org.getOid(), org.getVersion()));
+
+                    OrganisaatioMuokkausTulosDTO tulos = new OrganisaatioMuokkausTulosDTO();
+                    tulos.setAlkuPvm(org.getAlkuPvm());
+                    tulos.setLoppuPvm(org.getLakkautusPvm());
+                    tulos.setOid(org.getOid());
+                    tulos.setVersion(org.getVersion());
+
+                    edited.lisaaTulos(tulos);
                 }
             }
         }
 
+        edited.setMessage(virheViesti);
+        edited.setOk(constraintsOK);
         return edited;
     }
 

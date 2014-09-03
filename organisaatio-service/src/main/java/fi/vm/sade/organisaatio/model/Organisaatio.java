@@ -636,7 +636,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.paivittaja = paivittaja;
     }
 
-    public boolean isPvmConstraintsOk(Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+    public String isPvmConstraintsOk(Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         final Logger LOG = LoggerFactory.getLogger(Organisaatio.class);
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + this.getOid() + ")");
         final Date MIN_DATE = new Date(Long.MIN_VALUE);
@@ -678,29 +678,34 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
         // oma alku ei saa olla isompi kuin oma loppu
         if (actualStart.compareTo(actualEnd) > 0) {
-            LOG.error(String.format("käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", actualStart, actualEnd));
-            return false;
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", this.getOid(), actualStart, actualEnd);
+            LOG.error(virhe);
+            return virhe;
         }
         // oma alku ei saa olla pienempi kuin annettu alkupäivämäärä
         if (actualStart.compareTo(minPvm) < 0) {
-            LOG.error(String.format("käytetty alkuPvm (%s) < min päivämäärä (%s)", actualStart, minPvm));
-            return false;
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", this.getOid(), actualStart, minPvm);
+            LOG.error(virhe);
+            return virhe;
         }
         // oma loppu ei saa olla myöhäisempi kuin annettu loppupäivämäärä
         if (actualEnd.compareTo(maxPvm) > 0) {
-            LOG.error(String.format("käytetty loppuPvm (%s) > max päivämäärä (%s)", actualEnd, maxPvm));
-            return false;
+            String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", this.getOid(), actualEnd, maxPvm);
+            LOG.error(virhe);
+            return virhe;
         }
 
         for(OrganisaatioSuhde suhde: this.getChildSuhteet()) {
             LOG.debug("kysytään lapselta " + suhde.getChild().getOid());
-            if (!suhde.getChild().isPvmConstraintsOk(actualStart, actualEnd, muokkausTiedot)) {
-                LOG.error("lapsella ajat NOK");
-                return false;
+            String lapsenVirhe = suhde.getChild().isPvmConstraintsOk(actualStart, actualEnd, muokkausTiedot);
+            if (!lapsenVirhe.equals("")) {
+                String virhe = String.format("lapsen %s virhe: %s", suhde.getChild().getOid(), lapsenVirhe);
+                LOG.error("lapsella ajat NOK: " + lapsenVirhe);
+                return virhe;
             }
         }
 
         LOG.debug("ajat OK");
-        return true;
+        return "";
     }
 }
