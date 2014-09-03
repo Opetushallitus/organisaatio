@@ -1,21 +1,20 @@
-function VoimassaolonMuokkausController($scope, $modalInstance, $log, NimenMuokkausModel, oid, nimihistoria, organisaatioAlkuPvm) {
+function VoimassaolonMuokkausController($scope, $modalInstance, $log, VoimassaolonMuokkausModel, muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, monikielinenTekstiLocalizer) {
 
-    $scope.model = NimenMuokkausModel;
-    $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm);
-
-    $scope.tallenna = function() {
-        $log.log('Tallenna mode: ' + $scope.model.mode);
-        if ($scope.model.mode === "update") {
-            $scope.model.saveUpdatedNimi();
-        }
-        else {
-            $scope.model.saveNewNimi();
-        }
+    $scope.model = VoimassaolonMuokkausModel;
+    
+    $scope.model.configure(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, monikielinenTekstiLocalizer);
+    
+    $modalInstance.loadData = function() {
+        $scope.model.getAliorganisaatiot();
+    }
+    
+    $scope.cancel = function() {
+        $scope.model.cancel();
+        $modalInstance.dismiss('cancel');
     };
 
-    $scope.poista = function() {
-        $log.log('Poista: ' + $scope.model.nimi);
-
-        $scope.model.deletePresetNimi();
+    $scope.accept = function() {
+        $scope.model.accept();
+        $modalInstance.close($scope.model);
     };
 }

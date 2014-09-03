@@ -76,5 +76,7 @@ public interface OrganisaatioBusinessService {
 
     public void deleteOrganisaatioNimi(String oid, Date date);
 
+    public void updateCurrentOrganisaatioNimet();
+    
     ArrayList<OrganisaatioMuokkausTiedotDTO> bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 }

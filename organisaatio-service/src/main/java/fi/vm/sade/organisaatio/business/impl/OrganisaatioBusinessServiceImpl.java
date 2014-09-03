@@ -1074,4 +1074,58 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return nimiEntity;
     }
 
+    private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {
+        // Haetaan organisaation current nimi
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(organisaatio.getId());
+
+        if (nimiEntity == null) {
+            throw new OrganisaatioNimiNotFoundException(organisaatio.getOid());
+        }
+
+        // Päivitetään organisaation nimi
+        organisaatio.setNimi(nimiEntity.getNimi());
+
+        LOG.info("updating " + organisaatio);
+        try {
+            // Päivitetään nimi
+            organisaatioDAO.update(organisaatio);
+        } catch (OptimisticLockException ole) {
+            throw new OrganisaatioModifiedException(ole);
+        }
+
+        // Palautetaan päivitetty organisaatio
+        return organisaatioDAO.read(organisaatio.getId());
+    }
+
+    @Override
+    public void updateCurrentOrganisaatioNimet() {
+        // Haetaan organisaatiot, joiden nimi ei ole nimihistorian current nimi
+        List<Organisaatio> organisaatiot = this.organisaatioNimiDAO.findNimiNotCurrentOrganisaatiot();
+
+        if (organisaatiot.isEmpty()) {
+            LOG.info("Orgnisaatioiden nimet kunnossa");
+        }
+
+        for (Organisaatio organisaatio : organisaatiot) {
+            Map<String, String> oldName;
+            oldName = new HashMap<String, String>(organisaatio.getNimi().getValues());
+
+            LOG.info("Orgnisaation nimen update tarve: " + organisaatio);
+
+            // Päiviteään organisaatiolle nimihistorian current nimi
+            organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
+
+            // Indeksoidaan organisaatio solriin uudella nimellä
+            solrIndexer.index(Lists.newArrayList(organisaatio));
+
+            // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
+            if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
+                updateOrganisaatioNameHierarchy(organisaatio, oldName);
+            }
+
+            // Päivitetään tiedot koodistoon.
+            String info = updateKoodisto(organisaatio, true);
+        }
+    }
+
 }
