@@ -1035,9 +1035,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Haetaan organisaatiot, joiden nimi ei ole nimihistorian current nimi
         List<Organisaatio> organisaatiot = this.organisaatioNimiDAO.findNimiNotCurrentOrganisaatiot();
 
+        if (organisaatiot.isEmpty()) {
+            LOG.info("Orgnisaatioiden nimet kunnossa");
+        }
+
         for (Organisaatio organisaatio : organisaatiot) {
             Map<String, String> oldName;
             oldName = new HashMap<String, String>(organisaatio.getNimi().getValues());
+
+            LOG.info("Orgnisaation nimen update tarve: " + organisaatio);
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
