@@ -1,4 +1,4 @@
-app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) {
+app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaatiot, Muokkaamonta) {
     
     var model = new function() {
         this.muokataanAlkupvm = false;
@@ -25,7 +25,7 @@ app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) 
         this.muokkauksenTila = this.Tila.MUOKKAAMATON;
         this.isDirty = false; // Käyttäjä on muuttanut voimassaoloa (mutta se voi olla sama kuin alkuperäinen)
         this.isModified = false; // Voimassaolo poikkeaa alkuperäisestä (mutta käyttäjä ei välttämättä ole muuttanut sitä tällä dialogin avauskerralla)
-        this.isAcceptable = true;
+        this.isAcceptable = true; // alkuPvm ei saa olla tyhjä mikäli muokataanAlkupvm, koska se on pakollinen tieto.
         
         this.cancel = function() {
         };
@@ -317,6 +317,7 @@ app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) 
                     
                     var treeItem = {
                         //original: item,
+                        oid: item.oid,
                         nimi: nimi,
                         tila: tila,
                         lakkautettu: lakkautettu,
@@ -336,10 +337,6 @@ app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) 
             }
             return constructedTree;
         };
-        
-        Array.prototype.extend = function (other_array) {
-            other_array.forEach(function(v) {this.push(v)}, this);
-        }
         
         this.getAliorganisaatiot = function() {
             if (model.dataLoaded) {
@@ -361,7 +358,7 @@ app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) 
                         arr.push(result.organisaatiot[i]);                                                                                                          
                         var treeRoot = constructAliorganisaatioTree(arr, 0, null);
                         treeRoot[0].readonly = true;
-                        model.aliorganisaatioTree.extend(treeRoot);
+                        model.aliorganisaatioTree.push(treeRoot[0]);
                     }
                 }
                 //$log.log("TREE:" + JSON.stringify(model.aliorganisaatioTree, null, 4));
@@ -374,6 +371,51 @@ app.factory('VoimassaolonMuokkausModel', function($filter, $log, Organisaatiot) 
                 //showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
 
             });
+        };
+        
+        addToRequestList = function(voimassaoloLista, treeLevel) {
+            for (var i = 0; i < treeLevel.length; i++) {
+                if (treeLevel[i].alkuPvmValittu || treeLevel[i].lakkautusPvmValittu) {
+                    
+                    var alkuPvm = treeLevel[i].alkuPvm;
+                    var lakkautusPvm = treeLevel[i].lakkautusPvm;
+                    
+                    if (treeLevel[i].alkuPvmValittu) {
+                        alkuPvm = model.alkuPvm;
+                    }
+                    if (treeLevel[i].loppuPvmValittu) {
+                        lakkautusPvm = model.lakkautusPvm;
+                    }
+                    voimassaoloLista.push({oid: treeLevel[i].oid, alkuPvm: pvmRajapintaMuotoon(alkuPvm), loppuPvm: pvmRajapintaMuotoon(lakkautusPvm)});
+                }
+                addToRequestList(voimassaoloLista, treeLevel[i].children);
+            }
+        };
+        
+        // Tallennus
+        this.save = function() {
+            var deferred = $q.defer();
+            
+            if (!model.aliorganisaatioTree || !model.aliorganisaatioTree.length) {
+                deferred.resolve();
+                return deferred.promise;
+            }
+            
+            var voimassaoloLista = [];
+            addToRequestList(voimassaoloLista, model.aliorganisaatioTree);
+            
+            Muokkaamonta.put(voimassaoloLista, function(result) {
+                $log.log(result);
+                deferred.resolve();
+            },
+            // Error case
+            function(response) {
+                $log.error("Voimassaolon muokkaus response: " + response.status);
+                Alert.add("error", $filter('i18n')("Voimassaolonmuokkaus.virhe", ""), true); // TODO: oikea virhekoodi
+                deferred.reject();
+            });
+
+            return deferred.promise;
         };
         
     };

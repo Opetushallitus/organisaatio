@@ -494,6 +494,13 @@ app.factory('Nimet', function($resource) {
     });
 });
 
+// Usean organisaation voimassaolon muokkaus yhdellä kertaa
+app.factory('Muokkaamonta', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
+        put: {method: 'PUT', isArray: true},
+    });
+});
+
 // Koodiston haku koodistopalvelulta koodistoUrin perusteella
 app.factory('KoodistoArrayByUri', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {

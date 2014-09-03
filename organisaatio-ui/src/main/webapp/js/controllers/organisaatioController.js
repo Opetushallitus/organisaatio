@@ -41,11 +41,23 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         // --> suoritetaan ensin nimihistorian päivitys ja sitten organisaatio
         if ($scope.nimenmuokkaus !== null) {
             $scope.nimenmuokkaus.save().then (function() {
-                $scope.model.persistOrganisaatio($scope.form);
+                if ($scope.voimassaolonmuokkaus !== null) {
+                    $scope.voimassaolonmuokkaus.save().then (function() {
+                        $scope.model.persistOrganisaatio($scope.form);
+                    });
+                } else {
+                    $scope.model.persistOrganisaatio($scope.form);
+                }
             });
         }
         else {
-            $scope.model.persistOrganisaatio($scope.form);
+            if ($scope.voimassaolonmuokkaus !== null) {
+                $scope.voimassaolonmuokkaus.save().then (function() {
+                    $scope.model.persistOrganisaatio($scope.form);
+                });
+            } else {
+                $scope.model.persistOrganisaatio($scope.form);
+            }
         }
 
     };
@@ -162,6 +174,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         modalInstance.result.then(function(voimassaolonmuokkausModel) {
             $scope.modalOpen = false;
             $scope.voimassaolonmuokkaus = voimassaolonmuokkausModel;
+            $scope.form.$setDirty();
             if (voimassaolonmuokkausModel.muokataanAlkupvm) {
                 $log.log("Alku pvm: " + voimassaolonmuokkausModel.alkuPvm);
                 $scope.model.organisaatio.alkuPvm = voimassaolonmuokkausModel.alkuPvm;
