@@ -27,6 +27,8 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         this.isModified = false; // Voimassaolo poikkeaa alkuperäisestä (mutta käyttäjä ei välttämättä ole muuttanut sitä tällä dialogin avauskerralla)
         this.isAcceptable = true; // alkuPvm ei saa olla tyhjä mikäli muokataanAlkupvm, koska se on pakollinen tieto.
         
+        this.newVersionNumber = null; // Tallennuksen yhteydessä muuttuvan organisaation versionumeron välitykseen.
+        
         this.cancel = function() {
         };
         
@@ -438,6 +440,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         
         // Tallennus
         this.save = function() {
+            model.newVersionNumber = null;
             var deferred = $q.defer();
             
             if (!model.aliorganisaatioTree || !model.aliorganisaatioTree.length) {
@@ -450,7 +453,20 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             
             Muokkaamonta.put(voimassaoloLista, function(result) {
                 $log.log(result);
-                deferred.resolve();
+                if (!result.ok) {
+                    $log.error("Voimassaolon muokkaus virhe: " + result.message);
+                    deferred.reject();
+                    // TODO: Virheen näyttö UI:ssa
+                } else {
+                    // Pick the new version
+                    for (var i = 0; i < result.tulokset.length; i++) {
+                        if (result.tulokset[i].oid == model.oid) {
+                            model.newVersionNumber = result.tulokset[i].version;
+                            break;
+                        }
+                    }
+                    deferred.resolve();
+                }
             },
             // Error case
             function(response) {

@@ -497,7 +497,7 @@ app.factory('Nimet', function($resource) {
 // Usean organisaation voimassaolon muokkaus yhdellä kertaa
 app.factory('Muokkaamonta', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
-        put: {method: 'PUT', isArray: true},
+        put: {method: 'PUT'},
     });
 });
 
