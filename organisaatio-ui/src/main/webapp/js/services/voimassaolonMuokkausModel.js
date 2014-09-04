@@ -50,12 +50,22 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             return timeToCompare > today;
         };
         
+        // Tekee karkean esivalinnan, pakotaValinnat tekee tarkemmat varmistukset ja readonly asetukset.
+        valitseKaikki = function(treeLevel, valinta) {
+            for (var i = 0; i < treeLevel.length; i++) {
+                if (treeLevel[i].level !== 0) {
+                    treeLevel[i].valittu = valinta;
+                }
+                valitseKaikki(treeLevel[i].children, valinta);
+            }
+        };
+        
         asetaTila = function() {
             var uusiTila = model.muokkauksenTila;
             if (model.muokataanAlkupvm) {
                 if (pvmRajapintaMuotoon(model.alkuPvm) === pvmRajapintaMuotoon(model.originalAlkuPvm)) {
                     uusiTila = model.Tila.MUOKKAAMATON;
-                } else if (typeof model.alkuPvm === "undefined") {
+                } else if (!model.alkuPvm) {
                     uusiTila = model.Tila.ALKU_PVM_POISTETTU;
                 } else if (isAfterToday(model.alkuPvm)) {
                     uusiTila = model.Tila.ALKU_PVM_SUUNNITELTU;
@@ -65,7 +75,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             } else  {
                 if (pvmRajapintaMuotoon(model.lakkautusPvm) === pvmRajapintaMuotoon(model.originalLakkautusPvm)) {
                     uusiTila = model.Tila.MUOKKAAMATON;
-                } else if (typeof model.lakkautusPvm === "undefined") {
+                } else if (!model.lakkautusPvm) {
                     uusiTila = model.Tila.LAKKAUTUS_PVM_POISTETTU;
                 } else if (isBeforeToday(model.lakkautusPvm)) {
                     uusiTila = model.Tila.LAKKAUTUS_PVM_ASETETTU;
@@ -78,12 +88,45 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                 }
             }
             if (uusiTila !== model.muokkauksenTila) {
+                var tilaDebug = "";
+                switch (uusiTila) {
+                    case model.Tila.MUOKKAAMATON:
+                        tilaDebug = "MUOKKAAMATON";
+                        break;
+                    case model.Tila.ALKU_PVM_POISTETTU:
+                        tilaDebug = "ALKU_PVM_POISTETTU";
+                        break;
+                    case model.Tila.ALKU_PVM_ASETETTU:
+                        tilaDebug = "ALKU_PVM_SUUNNITELTU";
+                        break;
+                    case model.Tila.LAKKAUTUS_PVM_POISTETTU:
+                        // Oletetaan että käyttäjä haluaa lähtökohtaisesti palauttaa myös aliorganisaatiot
+                        valitseKaikki(model.aliorganisaatioTree, true);
+                        tilaDebug = "LAKKAUTUS_PVM_POISTETTU";
+                        break;
+                    case model.Tila.LAKKAUTUS_PVM_ASETETTU:
+                        // Oletetaan että käyttäjä ei lähtökohtaisesti halua uudelleenlakuuattaa jo lakkautetuja aliorganisaatioita
+                        valitseKaikki(model.aliorganisaatioTree, false);
+                        tilaDebug = "LAKKAUTUS_PVM_ASETETTU";
+                        break;
+                    case model.Tila.LAKKAUTUS_PVM_SUUNNITELTU:
+                        // Oletetaan että käyttäjä ei lähtökohtaisesti halua uudelleenlakuuattaa jo lakkautetuja aliorganisaatioita
+                        valitseKaikki(model.aliorganisaatioTree, false);
+                        tilaDebug = "LAKKAUTUS_PVM_SUUNNITELTU";
+                        break;
+                    case model.Tila.LAKKAUTUS_PVM_JATKETTU:
+                        // Oletetaan että käyttäjä haluaa lähtökohtaisesti jatkaa myös aliorganisaatioiden voimassaoloa
+                        valitseKaikki(model.aliorganisaatioTree, true);
+                        tilaDebug = "LAKKAUTUS_PVM_JATKETTU";
+                        break;
+                }
+                $log.log("Tila vaihtui, uusi tila: " + tilaDebug);
                 model.muokkauksenTila = uusiTila;
             }
         };
         
         asetaAcceptable = function() {
-            model.isAcceptable = !(model.muokataanAlkupvm && typeof model.alkuPvm === "undefined");
+            model.isAcceptable = !(model.muokataanAlkupvm && !model.alkuPvm);
             if (model.muokataanAlkupvm) {
                 model.isModified = pvmRajapintaMuotoon(model.alkuPvm) !== pvmRajapintaMuotoon(model.originalAlkuPvm);
             } else {
@@ -110,16 +153,16 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         // Jos organisaation alkupäivää ollaan muuttamassa:
         // - Aliorganisaatiot joiden alkupvm olisi jäämässä aikaisemmaksi, pakotetaan muutettaviksi.
         // Lisäksi huolehditaan, että oranisaatio valitaan jos sen aliorganisaatiopuuhun on tulossa sitä laajempi voimassaolo
-        pakotaValinnat = function(treeLevel, alkuPvm, lakkautusPvm, alkuPvmMuutettu, loppuPvmMuutettu) {
+        pakotaValinnat = function(treeLevel, alkuPvm, lakkautusPvm, alkuPvmMuutettu, lakkautusPvmMuutettu, lakkautusPvmPoistettu) {
             var valintoja = false;
             for (var i = 0; i < treeLevel.length; i++) {
                 var treeItem = treeLevel[i];
                 
                 if (treeItem.level === 0) {
                     // No need to touch root
-                } else if (loppuPvmMuutettu) {
+                } else if (lakkautusPvmMuutettu) {
                     // Pakota aktiiviset aliorganisaatiot lakkautettaviksi
-                    if (treeItem.lakkautusPvm == "") {
+                    if (!treeItem.lakkautusPvm) {
                         treeItem.valittu = true;
                         treeItem.readonly = true;
                     }
@@ -132,7 +175,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                     }
                 } else if (alkuPvmMuutettu) {
                     // Pakota alkupäivättömät aliorganisaatiot (niitä ei tosin pitäisi olla)
-                    if (treeItem.alkuPvm == "") {
+                    if (!treeItem.alkuPvm) {
                         treeItem.valittu = true;
                         treeItem.readonly = true;
                     }
@@ -143,10 +186,12 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                     } else {
                         treeItem.readonly = false;
                     }
+                } else if (lakkautusPvmPoistettu) {
+                    treeItem.readonly = false;
                 }
                 
                 var aliorganisaatioPuussaValintoja = 
-                        pakotaValinnat(treeItem.children, alkuPvm, lakkautusPvm, alkuPvmMuutettu, loppuPvmMuutettu);
+                        pakotaValinnat(treeItem.children, alkuPvm, lakkautusPvm, alkuPvmMuutettu, lakkautusPvmMuutettu, lakkautusPvmPoistettu);
                 
                 if (!treeItem.valittu && aliorganisaatioPuussaValintoja) {
                     // Tarkista ettei aliorganisaatioissa olla siirtämässä luontipäivää aikaisemmaksi
@@ -154,7 +199,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                     $log.log(treeItem.nimi + " " + treeItem.alkuPvm + " " + alkuPvm + " " + alkuPvmMuutettu + " " + (alkuPvm < treeItem.alkuPvm));
                     if (alkuPvmMuutettu && (alkuPvm < treeItem.alkuPvm)) {
                         treeItem.valittu = true;
-                    } else if (loppuPvmMuutettu && (treeItem.lakkautusPvm < lakkautusPvm)) {
+                    } else if (lakkautusPvmMuutettu && (treeItem.lakkautusPvm < lakkautusPvm)) {
                         treeItem.valittu = true;
                     }
                 }
@@ -173,11 +218,13 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             var alkuPvmMuutettu = (model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU ||
                            model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU);
                    
-            var loppuPvmMuutettu = (model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU ||
+            var lakkautusPvmMuutettu = (model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU ||
                            model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU ||
                            model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU);
                    
-            pakotaValinnat(model.aliorganisaatioTree, alkuPvm.getTime(), lakkautusPvm.getTime(), alkuPvmMuutettu, loppuPvmMuutettu);
+            var lakkautusPvmPoistettu = (model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU);
+                   
+            pakotaValinnat(model.aliorganisaatioTree, alkuPvm.getTime(), lakkautusPvm.getTime(), alkuPvmMuutettu, lakkautusPvmMuutettu, lakkautusPvmPoistettu);
         }
         
         // aliorganisaatioTree:n 'valittu' kenttä näkyy käyttöliittymässä checkboxeina.
@@ -209,17 +256,17 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                 model.originalLakkautusPvm = lakkautusPvm;
             }
             model.muokataanAlkupvm = muokataanAlkupvm;
-            asetaValintojenAlkutilanne(model.aliorganisaatioTree);
             model.alkuPvm = alkuPvm;
             model.lakkautusPvm = lakkautusPvm;
             model.localizeMonikielinenTeksti = monikielinenTekstiLocalizer;
             model.oid = oid;
             model.organisaationNimi = model.localizeMonikielinenTeksti(nimi, "", "");
+
+            luoAliorganisaatioPuu(aliorganisaatioHaunTulos);
+            asetaValintojenAlkutilanne(model.aliorganisaatioTree);
             asetaAcceptable();
             asetaTila();
             asetaValintojenPakotus();
-            
-            luoAliorganisaatioPuu(aliorganisaatioHaunTulos);
         };
         
         
@@ -401,7 +448,8 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                 var arr = [];
                 arr.push(aliorganisaatioHaunTulos[i]);
                 var treeRoot = constructAliorganisaatioTree(arr, 0, null);
-                treeRoot[0].valittu = true;
+                treeRoot[0].alkuPvmValittu = true;
+                treeRoot[0].lakkautusPvmValittu = true;
                 treeRoot[0].readonly = true;
                 model.aliorganisaatioTree.push(treeRoot[0]);
             }

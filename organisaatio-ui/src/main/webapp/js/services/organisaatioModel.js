@@ -50,6 +50,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         // Aliorganisaatiohaun tulos voimassaolonmuokkaus dialogia varten.
         this.aliorganisaatioHaunTulos = {};
         this.hasAliorganisaatios = false;
+        this.aliorganisaatioTiedotHaettu = false;
 
         // Metadatan yhteystiedot mäpättynä tyypin perusteella
         this.mdyhteystiedot = {
@@ -562,11 +563,12 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     
                     // Tallennetaan vielä koko hakutulos voimassaolonmuokkausta varten
                     model.aliorganisaatioHaunTulos = childResult.organisaatiot;
+                    this.aliorganisaatioTiedotHaettu = true;
                 }
             }, function(response) {
                 // aliorganisaatiohaku ei onnistunut
                 showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
-
+                this.aliorganisaatioTiedotHaettu = true;
             });
             model.paivitys = {};
             Paivittaja.get({oid: result.oid}, function(paivitys) {
