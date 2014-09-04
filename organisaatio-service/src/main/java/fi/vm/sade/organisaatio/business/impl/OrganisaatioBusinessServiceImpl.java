@@ -1012,6 +1012,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
         if (constraintsOK) {
+            List<Organisaatio> indeksoitavat = new ArrayList<Organisaatio>(givenData.size());
             for(String oid: organisaatioMap.keySet()) {
                 OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
                 Organisaatio org = organisaatioMap.get(oid);
@@ -1037,8 +1038,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     tulos.setVersion(org.getVersion());
 
                     edited.lisaaTulos(tulos);
+
+                    indeksoitavat.add(org);
                 }
             }
+            solrIndexer.index(indeksoitavat);
         }
 
         edited.setMessage(virheViesti);
