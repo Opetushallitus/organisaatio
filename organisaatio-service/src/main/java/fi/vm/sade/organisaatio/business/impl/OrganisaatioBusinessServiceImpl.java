@@ -1012,6 +1012,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
         if (constraintsOK) {
+            for(String oid: organisaatioMap.keySet()) {
+                OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
+                Organisaatio org = organisaatioMap.get(oid);
+
+                if (tieto != null) {
+                    LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
+                    if (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm())) {
+                        String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
+                        LOG.error(String.format(virhe));
+                        edited.setMessage(virhe);
+                        edited.setOk(false);
+                        return edited;
+                    }
+                }
+            }
+
             List<Organisaatio> indeksoitavat = new ArrayList<Organisaatio>(givenData.size());
             for(String oid: organisaatioMap.keySet()) {
                 OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);

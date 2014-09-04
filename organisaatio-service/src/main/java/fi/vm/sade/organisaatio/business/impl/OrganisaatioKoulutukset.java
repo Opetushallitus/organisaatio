@@ -34,10 +34,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,8 +175,34 @@ public class OrganisaatioKoulutukset {
 
         // Tarkistetaan onko alkavia koulutuksia annetun päivämäärän jälkeen
         for (KoulutusHakutulosV1RDTO koulutus : koulutukset) {
-            if (koulutus.getKoulutuksenAlkamisPvmMax().after(after)) {
-		return true;
+            Date koulutuksenAlkamisPvmMax = koulutus.getKoulutuksenAlkamisPvmMax();
+
+            if (koulutuksenAlkamisPvmMax == null) {
+                LOG.debug("alkaviaKoulutuksia() koulutuksenAlkamisPvmMax == null");
+                Integer vuosi = koulutus.getVuosi();
+                if(vuosi == null) { // Ei koskaan vanhene?
+                    LOG.debug("alkaviaKoulutuksia() Ei vuotta, käytetään maksimiarvoa");
+                    koulutuksenAlkamisPvmMax = new Date(Long.MAX_VALUE);
+                } else {
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.YEAR, vuosi + 1);
+                    cal.set(Calendar.MONTH, Calendar.JANUARY);
+                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+
+                    cal.add(Calendar.MILLISECOND, -1);
+
+                    koulutuksenAlkamisPvmMax = cal.getTime();
+                    LOG.debug("oli vuosi, käytetään aikaa " + koulutuksenAlkamisPvmMax);
+                }
+            }
+
+            if (koulutuksenAlkamisPvmMax.after(after)) {
+        		return true;
             }
 	}
 
