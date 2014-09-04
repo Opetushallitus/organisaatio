@@ -1,12 +1,8 @@
-function VoimassaolonMuokkausController($scope, $modalInstance, $log, VoimassaolonMuokkausModel, muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, monikielinenTekstiLocalizer) {
+function VoimassaolonMuokkausController($scope, $modalInstance, $log, VoimassaolonMuokkausModel, muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, aliorganisaatioHaunTulos, monikielinenTekstiLocalizer) {
 
     $scope.model = VoimassaolonMuokkausModel;
     
-    $scope.model.configure(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, monikielinenTekstiLocalizer);
-    
-    $modalInstance.loadData = function() {
-        $scope.model.getAliorganisaatiot();
-    }
+    $scope.model.configure(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, aliorganisaatioHaunTulos, monikielinenTekstiLocalizer);
     
     $scope.cancel = function() {
         $scope.model.cancel();

@@ -10,7 +10,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         this.aliorganisaatioTree = [];
         this.localizeMonikielinenTeksti = function(){};
         this.organisaationNimi = "";
-        this.dataLoaded = false;
+        this.aliorganisaatioTreeCreated = false;
         
         this.Tila = {
             MUOKKAAMATON: 0,
@@ -203,7 +203,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             }
         };
         
-        this.configure = function(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, monikielinenTekstiLocalizer) {
+        this.configure = function(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, aliorganisaatioHaunTulos, monikielinenTekstiLocalizer) {
             if (model.originalAlkuPvm === null) {
                 model.originalAlkuPvm = alkuPvm;
                 model.originalLakkautusPvm = lakkautusPvm;
@@ -218,6 +218,8 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             asetaAcceptable();
             asetaTila();
             asetaValintojenPakotus();
+            
+            luoAliorganisaatioPuu(aliorganisaatioHaunTulos);
         };
         
         
@@ -384,39 +386,25 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             return constructedTree;
         };
         
-        this.getAliorganisaatiot = function() {
-            if (model.dataLoaded) {
+        luoAliorganisaatioPuu = function(aliorganisaatioHaunTulos) {
+            if (model.aliorganisaatioTreeCreated) {
                 return;
             }
             
-            var hakuParametrit = {};
-            hakuParametrit.aktiiviset   = true;
-            hakuParametrit.suunnitellut = true;
-            hakuParametrit.lakkautetut  = true;
-            hakuParametrit.oidRestrictionList = [model.oid];
+            if (!aliorganisaatioHaunTulos) {
+                return;
+            }
             
-            Organisaatiot.get(hakuParametrit, function(result) {
-                model.aliorganisaatioTree.length = 0;
-                //$log.log(JSON.stringify(result, null, 4));
-                if (result && result.organisaatiot) {
-                    for (var i = 0; i < result.organisaatiot.length; i++) {
-                        var arr = [];                                                                                               
-                        arr.push(result.organisaatiot[i]);                                                                                                          
-                        var treeRoot = constructAliorganisaatioTree(arr, 0, null);
-                        treeRoot[0].readonly = true;
-                        model.aliorganisaatioTree.push(treeRoot[0]);
-                    }
-                }
-                //$log.log("TREE:" + JSON.stringify(model.aliorganisaatioTree, null, 4));
-                $log.log("Data loaded.");
-                model.dataLoaded = true;
-            }, function(response) {
-                // aliorganisaatiohaku ei onnistunut
-                // TODO!!
-                $log.log('Error: ' + response);
-                //showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
-
-            });
+            model.aliorganisaatioTreeCreated = true;
+            
+            for (var i = 0; i < aliorganisaatioHaunTulos.length; i++) {
+                var arr = [];
+                arr.push(aliorganisaatioHaunTulos[i]);
+                var treeRoot = constructAliorganisaatioTree(arr, 0, null);
+                treeRoot[0].valittu = true;
+                treeRoot[0].readonly = true;
+                model.aliorganisaatioTree.push(treeRoot[0]);
+            }
         };
         
         addToRequestList = function(voimassaoloLista, treeLevel) {

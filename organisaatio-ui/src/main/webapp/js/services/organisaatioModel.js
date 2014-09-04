@@ -1,4 +1,4 @@
-app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
+app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
         KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
         KoodistoPosti, KoodistoPostiCached, KoodistoPostiVersio, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
         KoodistoOpetuskielet, KoodistoPaikkakunta, AuthService, MyRolesModel, HenkiloVirkailijat, Henkilo,
@@ -46,6 +46,10 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
 
         // Aliorganisaatioiden nimet listana
         this.aliorganisaatiot = [];
+        
+        // Aliorganisaatiohaun tulos voimassaolonmuokkaus dialogia varten.
+        this.aliorganisaatioHaunTulos = {};
+        this.hasAliorganisaatios = false;
 
         // Metadatan yhteystiedot mäpättynä tyypin perusteella
         this.mdyhteystiedot = {
@@ -532,14 +536,32 @@ app.factory('OrganisaatioModel', function(Organisaatio, Aliorganisaatiot, Koodis
                 // parenttia ei löytynyt
                 showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
             });
-            Aliorganisaatiot.get({oid: result.oid}, function(childResult) {
+            var hakuParametrit = {};
+            hakuParametrit.aktiiviset   = true;
+            hakuParametrit.suunnitellut = true;
+            hakuParametrit.lakkautetut  = true;
+            hakuParametrit.oidRestrictionList = [result.oid];
+            
+            model.hasAliorganisaatios = false;
+            model.aliorganisaatioHaunTulos = {};
+            
+            Organisaatiot.get(hakuParametrit, function(childResult) {
                 model.aliorganisaatiot.length = 0;
                 if (childResult && childResult.organisaatiot) {
                     for (var i = 0; i < childResult.organisaatiot.length; i++) {
                         if (!childResult.organisaatiot[i].lakkautusPvm) {
                             addAliorganisaatio(childResult.organisaatiot[i].children, 0);
                         }
+                        
+                        // Voimassaolon muokkausta varten
+                        if (childResult.organisaatiot[i].children.length) {
+                            // TO BE ENABLED when aliorganisaationmuokkaus is ready. Uncomment the line below to test:
+                            //model.hasAliorganisaatios = true;
+                        }
                     }
+                    
+                    // Tallennetaan vielä koko hakutulos voimassaolonmuokkausta varten
+                    model.aliorganisaatioHaunTulos = childResult.organisaatiot;
                 }
             }, function(response) {
                 // aliorganisaatiohaku ei onnistunut

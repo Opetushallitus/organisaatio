@@ -1,4 +1,4 @@
-function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $timeout, OrganisaatioModel) {
+function OrganisaatioController($scope, $location, $routeParams, $modal, $log, OrganisaatioModel) {
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
@@ -46,7 +46,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         } else {
             $scope.model.persistOrganisaatio($scope.form);
         }
-    }
+    };
 
     $scope.save = function() {
         // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
@@ -160,18 +160,15 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
                 lakkautusPvm: function() {
                     return $scope.model.organisaatio.lakkautusPvm;
                 },
+                aliorganisaatioHaunTulos: function () {
+                    return $scope.model.aliorganisaatioHaunTulos;
+                },
                 monikielinenTekstiLocalizer: function () {
                     return $scope.model.getDecodedLocalizedValue;
                 }
             }
         });
         
-        modalInstance.opened.then(function() {
-            $timeout(function() {
-                modalInstance.loadData();
-            }, 750); // Dialog opening animation may stop for the time of loading, delay allows it to open nicely first.
-        });
-
         modalInstance.result.then(function(voimassaolonmuokkausModel) {
             $scope.modalOpen = false;
             $scope.voimassaolonmuokkaus = voimassaolonmuokkausModel;
