@@ -1,7 +1,7 @@
 <!-- Organisaation voimassaolon muokkaus -->
 <script type="text/ng-template" id="aliorganisaatio_node.html">
     <div class="row">
-        <div class="span9">
+        <div class="span6">
             <!-- Käytetään "level" kertaa sama tila kuin ikoni käyttäisi -->
             <span ng-repeat="t in model.getTimes(data.level) track by $index">
                 <i class="icon icon-chevron-right" style="visibility: hidden"></i>
@@ -10,16 +10,16 @@
                ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
             <i class="icon icon-chevron-right" style="visibility: hidden" ng-if="model.isLeaf(data)"></i>
             <input ng-show="model.isModified" ng-change="model.checkboxChanged(data)" type="checkbox" ng-model="data.valittu" ng-disabled="data.readonly"">
-            <span style="display: inline-block; width: 500px; vertical-align: top;">{{data.nimi | decodeAmp}}</span>
+            <span style="display: inline-block; vertical-align: top;">{{data.nimi | decodeAmp}}</span>
         </div>
         <div class="span2">
            {{data.tyyppi}}
         </div>
-        <div class="span3">
+        <div class="span2">
            {{data.tila}}
         </div>
-        <div ng-if="model.muokataanAlkupvm" class="span3">
-           Luontipäivämäärä {{data.alkuPvm| date:'dd.MM.yyyy'}}
+        <div ng-if="model.muokataanAlkupvm" class="span2">
+           Alkupvm {{data.alkuPvm| date:'dd.MM.yyyy'}}<!-- TODO: translateable -->
         </div>
     </div>
     <ol class="unstyled" ng-if="data.expanded">

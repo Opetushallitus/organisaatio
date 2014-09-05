@@ -11,6 +11,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         this.localizeMonikielinenTeksti = function(){};
         this.organisaationNimi = "";
         this.aliorganisaatioTreeCreated = false;
+        this.aliorganisaatioHaunTulos = null;
         
         this.Tila = {
             MUOKKAAMATON: 0,
@@ -251,7 +252,16 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
         };
         
         this.configure = function(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, aliorganisaatioHaunTulos, monikielinenTekstiLocalizer) {
-            if (model.originalAlkuPvm === null) {
+            if (this.aliorganisaatioHaunTulos !== aliorganisaatioHaunTulos) {
+                // Hakutulos muuttui (onnistuneen tallennuksen seurauksena).
+                // Resetoidaan tila.
+                $log.log("(Re)create tree.");
+                this.aliorganisaatioTreeCreated = false;
+                this.aliorganisaatioHaunTulos = aliorganisaatioHaunTulos;
+                model.originalAlkuPvm = null;
+            }
+            
+            if (!model.originalAlkuPvm) {
                 model.originalAlkuPvm = alkuPvm;
                 model.originalLakkautusPvm = lakkautusPvm;
             }
@@ -443,6 +453,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
             }
             
             model.aliorganisaatioTreeCreated = true;
+            model.aliorganisaatioTree.length = 0;
             
             for (var i = 0; i < aliorganisaatioHaunTulos.length; i++) {
                 var arr = [];
@@ -465,7 +476,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                     if (treeLevel[i].alkuPvmValittu) {
                         alkuPvm = model.alkuPvm;
                     }
-                    if (treeLevel[i].loppuPvmValittu) {
+                    if (treeLevel[i].lakkautusPvmValittu) {
                         lakkautusPvm = model.lakkautusPvm;
                     }
                     voimassaoloLista.push({oid: treeLevel[i].oid, alkuPvm: pvmRajapintaMuotoon(alkuPvm), loppuPvm: pvmRajapintaMuotoon(lakkautusPvm)});
