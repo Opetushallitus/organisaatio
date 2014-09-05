@@ -557,18 +557,18 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         // Voimassaolon muokkausta varten
                         if (childResult.organisaatiot[i].children.length) {
                             // TO BE ENABLED when aliorganisaationmuokkaus is ready. Uncomment the line below to test:
-                            //model.hasAliorganisaatios = true;
+                            model.hasAliorganisaatios = true;
                         }
                     }
                     
                     // Tallennetaan vielä koko hakutulos voimassaolonmuokkausta varten
                     model.aliorganisaatioHaunTulos = childResult.organisaatiot;
-                    this.aliorganisaatioTiedotHaettu = true;
+                    model.aliorganisaatioTiedotHaettu = true;
                 }
             }, function(response) {
                 // aliorganisaatiohaku ei onnistunut
                 showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response);
-                this.aliorganisaatioTiedotHaettu = true;
+                model.aliorganisaatioTiedotHaettu = true;
             });
             model.paivitys = {};
             Paivittaja.get({oid: result.oid}, function(paivitys) {

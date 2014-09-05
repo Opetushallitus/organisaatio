@@ -1,4 +1,4 @@
-app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaatiot, Muokkaamonta) {
+app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Organisaatiot, Muokkaamonta) {
     
     var model = new function() {
         this.muokataanAlkupvm = false;
