@@ -33,21 +33,21 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
     /**
      * Luodaan uusi nimi organisaatiolle.
      *
-     * @param organisaatioId
+     * @param organisaatio
      * @param nimi
      * @param alkuPvm
      * @param paivittaja
      * @return Luotu OrganisaatioNimi
      */
-    OrganisaatioNimi addNimi(Long organisaatioId, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
+    OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
 
     /**
      * Haetaan annetun organisaation nimet
      *
-     * @param organisaatioId
+     * @param organisaatio
      * @return Annetun organisaation nimihistoria listana
      */
-    List<OrganisaatioNimi> findNimet(Long organisaatioId);
+    List<OrganisaatioNimi> findNimet(Organisaatio organisaatio);
 
     /**
      * Haetaan annetun organisaation nimet
@@ -57,10 +57,10 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
      */
     List<OrganisaatioNimi> findNimet(String organisaatioOid);
 
-    public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm);
+    public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm);
     public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm);
 
-    public OrganisaatioNimi findCurrentNimi(Long organisaatioId);
+    public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio);
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
 
     public List<Organisaatio> findNimiNotCurrentOrganisaatiot();

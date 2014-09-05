@@ -889,7 +889,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
 
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(orgEntity.getId(), alkuPvm);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(orgEntity, alkuPvm);
 
         if (nimiEntityOld == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
@@ -929,10 +929,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Haetaan poistettava entity objecti
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(orgEntity.getId(), alkuPvm);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(orgEntity, alkuPvm);
 
         // Tarkistetaan, että nimi ei ole nykyinen nimi
-        OrganisaatioNimi currentNimiEntity = this.organisaatioNimiDAO.findCurrentNimi(orgEntity.getId());
+        OrganisaatioNimi currentNimiEntity = this.organisaatioNimiDAO.findCurrentNimi(orgEntity);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
@@ -1109,7 +1109,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Luodaan nimihistorian entry
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.addNimi(orgEntity.getId(), nimi,
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.addNimi(orgEntity, nimi,
                 orgEntity.getAlkuPvm(), getCurrentUser());
 
         return nimiEntity;
@@ -1117,7 +1117,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {
         // Haetaan organisaation current nimi
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(organisaatio.getId());
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(organisaatio);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(organisaatio.getOid());
