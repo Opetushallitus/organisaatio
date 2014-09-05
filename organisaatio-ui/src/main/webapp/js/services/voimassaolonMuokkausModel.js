@@ -265,6 +265,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                 model.originalAlkuPvm = alkuPvm;
                 model.originalLakkautusPvm = lakkautusPvm;
             }
+            model.isDirty = false;
             model.muokataanAlkupvm = muokataanAlkupvm;
             model.alkuPvm = alkuPvm;
             model.lakkautusPvm = lakkautusPvm;
@@ -438,6 +439,13 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Organisaati
                         expanded: expanded};
                     //$log.log("PUSH:" + JSON.stringify(treeItem, null, 4));
                     constructedTree.push(treeItem);
+                    
+                    // Tallennuksen jälkeisessä tilanteessa käyttäjä pääsee hetken aikaa muuttamaan voimassaoloa ilman että 
+                    // voimassaolonmuokkaus dialogia aukeaa. Tämän takia varmista että original pvm on synkassa.
+                    if (item.oid == model.oid) {
+                        model.originalAlkuPvm = item.alkuPvm;
+                        model.originalLakkautusPvm = item.lakkautusPvm;
+                    }
                 }
             }
             return constructedTree;
