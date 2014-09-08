@@ -184,27 +184,18 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    type="text" name="nimifi" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
-                   oph-name-pattern="{{model.parentPattern['fi']}}" ng-disabled="!model.parent.nimi.fi" oph-name-format="{{model.nameFormat['fi']}}"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
                     {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
-                </span>
-                <span class="text-error" ng-show="form.nimifi.$error.ophNamePattern">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.fi}})
-                </span>
-                <span class="text-warning" ng-show="form.nimifi.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.fi}})
                 </span>
             </div>
         </div>
@@ -212,50 +203,28 @@
 
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
-                   oph-name-pattern="{{model.parentPattern['sv']}}" ng-disabled="!model.parent.nimi.sv" oph-name-format="{{model.nameFormat['sv']}}"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <div>
-                <span class="text-error" ng-show="form.nimisv.$error.ophNamePattern">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.sv}})
-                </span>
-                <span class="text-warning" ng-show="form.nimisv.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.sv}})
-                </span>
-            </div>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimise" type="text" name="nimien" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
-                   oph-name-pattern="{{model.parentPattern['en']}}" ng-disabled="!model.parent.nimi.en" oph-name-format="{{model.nameFormat['en']}}"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <div>
-                <span class="text-error" ng-show="form.nimise.$error.ophNamePattern">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.en}})
-                </span>
-                <span class="text-warning" ng-show="form.nimise.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.en}})
-                </span>
-            </div>
         </div>
     </div>
 

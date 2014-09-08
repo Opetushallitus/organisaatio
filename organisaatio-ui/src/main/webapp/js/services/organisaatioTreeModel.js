@@ -244,11 +244,8 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 Alert.add("warning", $filter('i18n')("Organisaatiot.eiHakutuloksia", ""), true);
             }
 
-            updateSubtree = function(node, level, expanded, parent) {
+            updateSubtree = function(node, level, expanded) {
                 node.i18nNimi = model.getNimi(node);
-                if (parent) {
-                    node.i18nNimi = node.i18nNimi.replace(model.getNimi(parent) + ", ", "");
-                }
                 if (model.isAktiivinen(node) === false) {
                     node.i18nNimi += " (" + model.getTila(node) + ")";
                 }
@@ -261,7 +258,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     expanded = false;
                 }
                 for(var i=0; i < node.children.length; i++) {
-                    this.updateSubtree(node.children[i], level + 1, expanded, node);
+                    this.updateSubtree(node.children[i], level + 1, expanded);
                 }
                 node.expanded = expanded;
             };
@@ -273,7 +270,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 if (tree.children.length > 20) {
                     expanded = false;
                 }
-                this.updateSubtree(node, 1, expanded, null);
+                this.updateSubtree(node, 1, expanded);
             });
         },
 
