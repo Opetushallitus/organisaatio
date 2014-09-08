@@ -58,28 +58,11 @@ public class OrganisaatioKoodistoClient {
     private String clientPassword;
 
     private String ticket;
-    private boolean reauthorize;
 
     public OrganisaatioKoodistoClient() {
     }
 
-    /**
-     * Configure authorization
-     *
-     * @param reauthorize If true, new ticket will be used for each request
-     */
-    public void setReauthorize(boolean reauthorize) {
-        if (this.reauthorize != reauthorize) {
-            this.ticket = null;
-        }
-        this.reauthorize = reauthorize;
-    }
-
     private void authorize() throws OrganisaatioKoodistoException {
-        if (ticket != null && reauthorize == false) {
-            LOG.debug("Using existing ticket.");
-            return;
-        }
         if (clientPassword.isEmpty() || clientUsername.isEmpty()) {
             String err = "Failed to authorize for koodisto-service because of missing username/password. Please set " +
                     "organisaatio.service.username.to.koodisto" + " and " +

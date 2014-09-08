@@ -113,28 +113,8 @@ app.directive('ophPattern', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                $log.debug("Pattern: " + attrs.ophPattern);
                 var isValid = (viewValue === null || typeof viewValue === 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
                 ctrl.$setValidity('ophPattern', isValid);
-                return viewValue;
-            };
-            ctrl.$parsers.unshift(validator);
-            ctrl.$formatters.unshift(validator);
-        }
-    };
-});
-
-// Kuten ophPattern, mutta ei aseta epävalidiksi, vaan $error-flagin sijaan asettaa ophPatternWarning-flagin
-app.directive('ophPatternWarning', function($log) {
-    return {
-        require: 'ngModel',
-        link: function(scope, elm, attrs, ctrl) {
-            var validator = function(viewValue) {
-                $log.debug("Pattern: " + attrs.ophPatternWarning);
-                var isValid = (viewValue === null || typeof viewValue === 'undefined') ||
-                        (typeof viewValue === 'string' && viewValue.match(attrs.ophPatternWarning));
-                $log.debug("isValid: " + isValid);
-                ctrl.ophPatternWarning = !isValid;
                 return viewValue;
             };
             ctrl.$parsers.unshift(validator);
@@ -368,9 +348,4 @@ app.directive('ophEnter', function() {
             });
         }
     };
-});
-
-// Pakota tekstikenttään tietty prefix
-app.directive('ophMandatoryPrefix', function() {
-
 });

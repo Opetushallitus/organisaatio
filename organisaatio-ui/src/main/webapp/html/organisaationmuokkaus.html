@@ -184,25 +184,18 @@
             {{'Organisaationtarkastelu.nimi'| i18n}}*
         </label>
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    type="text" name="nimifi" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    type="text" name="nimifi" class="span6"
                    ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
-                   oph-pattern-warning="{{model.parentPattern['fi']}}" ng-disabled="!model.parent.nimi.fi"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-                   <!-- Pakotetaan validointi OH-295 mukaan: oph-pattern="{{model.parentPattern['fi']}}" ng-disabled="!model.parent.nimi.fi" -->
             <div>
                 <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
                     {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
-                </span>
-                <!-- Pakotetaan validointi OH-295 mukaan: <span class="text-error" ng-show="form.nimifi.$error.ophPattern"> -->
-                <span class="text-warning" ng-show="form.nimifi.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.fi}})
                 </span>
             </div>
         </div>
@@ -210,46 +203,28 @@
 
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimisv" type="text" name="nimisv" class="span6"
                    ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
-                   oph-pattern-warning="{{model.parentPattern['sv']}}" ng-disabled="!model.parent.nimi.sv"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-                <!-- Pakotetaan validointi OH-295 mukaan: oph-pattern="{{model.parentPattern['sv']}}" ng-disabled="!model.parent.nimi.sv" -->
-            <div>
-                <!-- Pakotetaan validointi OH-295 mukaan: <span class="text-error" ng-show="form.nimisv.$error.ophPattern"> -->
-                <span class="text-warning" ng-show="form.nimisv.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.sv}})
-                </span>
-            </div>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos() && model.parent"
+            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                    id="nimise" type="text" name="nimien" class="span6"
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false && model.parent"
+            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                    id="nimise" type="text" name="nimien" class="span6"
                    ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
-                   oph-pattern-warning="{{model.parentPattern['en']}}" ng-disabled="!model.parent.nimi.en"
                    ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-                   <!-- Pakotetaan validointi OH-295 mukaan: oph-pattern="{{model.parentPattern['en']}}" ng-disabled="!model.parent.nimi.en" -->
-            <div>
-                <!-- Pakotetaan validointi OH-295 mukaan: <span class="text-error" ng-show="form.nimise.$error.ophPattern"> -->
-                <span class="text-warning" ng-show="form.nimise.ophPatternWarning">
-                    {{'Organisaationtarkastelu.nimi'| i18n}}
-                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parent.nimi.en}})
-                </span>
-            </div>
         </div>
     </div>
 
