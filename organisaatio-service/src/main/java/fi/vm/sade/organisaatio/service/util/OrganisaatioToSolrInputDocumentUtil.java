@@ -31,7 +31,7 @@ import org.apache.commons.lang.time.DateUtils;
  * Add Organisaatio And Organisaatio Nimihistoria to SolrInputDocument so that it can be indexed.
  */
 public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields {
-    public static SolrInputDocument apply(Organisaatio org, List<OrganisaatioNimi> nimet) {
+    public static SolrInputDocument apply(Organisaatio org) {
         Preconditions.checkNotNull(org);
         SolrInputDocument doc = new SolrInputDocument();
         add(doc, ALKUPVM, org.getAlkuPvm());
@@ -41,7 +41,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         add(doc, NIMISV, org.getNimi().getString("sv"));
 
         // Lisätään organisaation nimihistoria hakuun
-        addNimiHistoria(doc, NIMISEARCH, nimet);
+        addNimiHistoria(doc, NIMISEARCH, org.getNimet());
 
         // Haku mahdollista myös y-tunnuksella
         if (org.getYtunnus() != null) {

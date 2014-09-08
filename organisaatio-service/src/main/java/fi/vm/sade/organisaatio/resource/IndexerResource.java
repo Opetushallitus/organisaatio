@@ -118,10 +118,7 @@ public class IndexerResource {
             if (org.isOrganisaatioPoistettu()) {
                 delete.add(org.getOid());
             } else {
-
-                List<OrganisaatioNimi> nimet = organisaatioNimiDAO.findNimet(org);
-
-                docs.add(OrganisaatioToSolrInputDocumentUtil.apply(org, nimet));
+                docs.add(OrganisaatioToSolrInputDocumentUtil.apply(org));
             }
         }
         if (docs.size() > 0) {

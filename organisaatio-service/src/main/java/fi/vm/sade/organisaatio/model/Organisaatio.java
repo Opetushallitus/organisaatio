@@ -111,6 +111,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("id")
     private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
 
+    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OrderBy("alkuPvm")
+    private List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
+
+
     private String yritysmuoto;
 
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -707,5 +712,19 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
         LOG.debug("ajat OK");
         return "";
+    }
+
+    /**
+     * @return the nimet
+     */
+    public List<OrganisaatioNimi> getNimet() {
+        return Collections.unmodifiableList(nimet);
+    }
+
+    /**
+     * @param nimet the nimet to set
+     */
+    public void setNimet(List<OrganisaatioNimi> nimet) {
+        this.nimet = nimet;
     }
 }

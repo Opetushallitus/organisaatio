@@ -73,8 +73,10 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         OrganisaatioNimi orgNimi = new OrganisaatioNimi();
         orgNimi.setAlkuPvm(new Date(1));
         orgNimi.setNimi(nimi);
+        nimet.add(orgNimi);
+        org.setNimet(nimet);
 
-        SolrInputDocument doc = OrganisaatioToSolrInputDocumentUtil.apply(org, nimet);
+        SolrInputDocument doc = OrganisaatioToSolrInputDocumentUtil.apply(org);
 
         assertEquals(org.getAlkuPvm(), doc.getFieldValue(ALKUPVM));
         assertEquals(org.getLakkautusPvm(), doc.getFieldValue(LAKKAUTUSPVM));

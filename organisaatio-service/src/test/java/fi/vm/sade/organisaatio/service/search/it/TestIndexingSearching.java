@@ -39,6 +39,7 @@ import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -393,6 +394,12 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         }
 
         n = organisaatioNimiDAO.insert(n);
+
+        List<OrganisaatioNimi> nimet = new ArrayList<>();
+        nimet.add(n);
+        o.setNimet(nimet);
+
+        organisaatioDAO.getEntityManager().flush();
 
         if (parent != null) {
             final OrganisaatioSuhde suhde = organisaatioSuhdeDAO.addChild(parent.getId(), o.getId(), new Date(), null);
