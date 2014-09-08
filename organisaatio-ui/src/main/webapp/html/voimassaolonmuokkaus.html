@@ -66,7 +66,7 @@
             <div>&nbsp;</div>Myös merkityille aliorganisaatioille asetetaan voimassaolon alkupäivämääräksi {{model.alkuPvm| date:'d.M.yyyy'}}:</div>
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">Olet merkinnyt organisaation {{model.organisaationNimi}} voimassaolon suunnitelluksi alkupäivämääräksi {{model.alkuPvm| date:'d.M.yyyy'}}.
             <div>&nbsp;</div>Myös merkityille aliorganisaatioille asetetaan suunniteltu voimassaolon alkupäivämäärä {{model.alkuPvm| date:'d.M.yyyy'}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">Organisaation {{model.organisaationNimi}} suunniteltu viimeinen voimassaolopäivä on tyhjennetty. Organisaation ja sen valittujen aliorganisaatioiden lakkauttaminen perutaan.
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">Organisaation {{model.organisaationNimi}} viimeinen voimassaolopäivä on tyhjennetty. Organisaation ja sen valittujen aliorganisaatioiden lakkauttaminen perutaan.
             <div>&nbsp;</div>Merkittyjen aliorganisaatioiden lakkauttaminen perutaan:</div>
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">Olet merkinnyt organisaation {{model.organisaationNimi}} viimeiseksi voimassaolopäiväksi {{model.lakkautusPvm| date:'d.M.yyyy'}}. Organisaation lakkauttamisen yhteydessä myös valitut aliorganisaatiot lakkautetaan.
             <div>&nbsp;</div>Merkityt aliorganisaatiot lakkautetaan {{model.lakkautusPvm| date:'d.M.yyyy'}}:</div>

@@ -205,7 +205,7 @@
                        type="text" name="luontipvm" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
                        datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}">
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"  ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
@@ -213,7 +213,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                        type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -248,6 +248,9 @@
             </div>
             <div>
                 <em class="muted">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</em>
+            </div>
+            <div ng-show="model.muutettaviaAliorganisaatioita">
+                Myös {{model.muutettaviaAliorganisaatioita}} aliorganisaation voimassaoloa muutetaan.
             </div>
             <div>
                 <span class="text-error" ng-show="form.luontipvm.$error.required || form.luontipvm.$error.date">

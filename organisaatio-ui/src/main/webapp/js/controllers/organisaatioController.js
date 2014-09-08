@@ -180,7 +180,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 $log.log("Lakkautus pvm: " + voimassaolonmuokkausModel.loppuPvm);
                 $scope.model.organisaatio.lakkautusPvm = voimassaolonmuokkausModel.lakkautusPvm;
             }
-            $log.log('Dialogi hyväksyttiin. TODO näytä UI:ssa valitut aliorganisaatiot.');
+            $scope.model.muutettaviaAliorganisaatioita = voimassaolonmuokkausModel.muutettaviaAliorganisaatioita;
         }, function () {
             $scope.modalOpen = false;
             $log.log('Voimassaolonmuokkaus modal dismissed at: ' + new Date());

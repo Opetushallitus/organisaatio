@@ -51,6 +51,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         this.aliorganisaatioHaunTulos = {};
         this.hasAliorganisaatios = false;
         this.aliorganisaatioTiedotHaettu = false;
+        this.muutettaviaAliorganisaatioita = 0;
 
         // Metadatan yhteystiedot mäpättynä tyypin perusteella
         this.mdyhteystiedot = {
@@ -543,6 +544,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
             hakuParametrit.lakkautetut  = true;
             hakuParametrit.oidRestrictionList = [result.oid];
             
+            model.muutettaviaAliorganisaatioita = 0;
             model.hasAliorganisaatios = false;
             model.aliorganisaatioHaunTulos = {};
             
@@ -557,7 +559,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         // Voimassaolon muokkausta varten
                         if (childResult.organisaatiot[i].children.length) {
                             // TO BE ENABLED when aliorganisaationmuokkaus is ready. Uncomment the line below to test:
-                            model.hasAliorganisaatios = true;
+                            //model.hasAliorganisaatios = true;
                         }
                     }
                     
