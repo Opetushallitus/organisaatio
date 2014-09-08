@@ -250,7 +250,7 @@
                 <em class="muted">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</em>
             </div>
             <div ng-show="model.muutettaviaAliorganisaatioita">
-                Myös {{model.muutettaviaAliorganisaatioita}} aliorganisaation voimassaoloa muutetaan.
+                Myös {{model.muutettaviaAliorganisaatioita}} aliorganisaation voimassaoloa muutetaan. <!-- TODO: Translation -->
             </div>
             <div>
                 <span class="text-error" ng-show="form.luontipvm.$error.required || form.luontipvm.$error.date">
@@ -261,6 +261,11 @@
                     {{'Organisaationmuokkaus.validointi.alkupvmvuosi'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.dateYear">
                     {{'Organisaationmuokkaus.validointi.loppupvmvuosi'| i18n}}</span>
+                <!-- TODO: Translation -->
+                <span class="text-error" ng-show="form.$error.organisaationVoimassaolo">
+                    Tarkista päivämäärät: Organisaation lakkautuspäivämäärä ei saa olla perustamispäivämäärää aikaisempi.</span>
+                <span class="text-error" ng-show="form.$error.aliorganisaationVoimassaolo">
+                    Tarkista päivämäärät: Aliorganisaation lakkautuspäivämäärä ei saa olla kyseisen aliorganisaation perustamispäivämäärää aikaisempi.</span>
             </div>
         </div>
     </div>

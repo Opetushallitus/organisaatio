@@ -181,6 +181,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 $scope.model.organisaatio.lakkautusPvm = voimassaolonmuokkausModel.lakkautusPvm;
             }
             $scope.model.muutettaviaAliorganisaatioita = voimassaolonmuokkausModel.muutettaviaAliorganisaatioita;
+            $scope.form.$setValidity("organisaationVoimassaolo", voimassaolonmuokkausModel.isVoimassaoloValid(), $scope.form);
+            $scope.form.$setValidity("aliorganisaationVoimassaolo", voimassaolonmuokkausModel.isAliorganisaatioidenVoimassaoloValid(), $scope.form);
         }, function () {
             $scope.modalOpen = false;
             $log.log('Voimassaolonmuokkaus modal dismissed at: ' + new Date());

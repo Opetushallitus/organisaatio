@@ -281,6 +281,51 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             model.muutettaviaAliorganisaatioita = muutettavatAliorganisaatiot(model.aliorganisaatioTree, alkuPvmMuutettu, lakkautusPvmMuutettu);
         };
         
+        // Organisaation muokkaus näkymään raportointia varten
+        this.isVoimassaoloValid = function() {
+            var alkuPvm = pvmRajapintaMuotoon(model.alkuPvm);
+            var lakkautusPvm = pvmRajapintaMuotoon(model.lakkautusPvm);
+            return !(lakkautusPvm && (alkuPvm > lakkautusPvm))
+        };
+        
+        
+        isAliorganisaatiopuunVoimassaoloValid = function(treeLevel, alkuPvmMuokattu, lakkautusPvmMuokattu) {
+            for (var i = 0; i < treeLevel.length; i++) {
+                if (treeLevel[i].level !== 0) {
+                    var alkuPvm = treeLevel[i].alkuPvm;
+                    var lakkautusPvm = treeLevel[i].lakkautusPvm;
+                    
+                    if (alkuPvmMuokattu && (treeLevel[i].alkuPvmValittu)) {
+                        alkuPvm = model.alkuPvm;
+                    }
+                    if (lakkautusPvmMuokattu && (treeLevel[i].lakkautusPvmValittu)) {
+                        lakkautusPvm = model.lakkautusPvm;
+                    }
+                    alkuPvm = pvmRajapintaMuotoon(alkuPvm);
+                    lakkautusPvm = pvmRajapintaMuotoon(lakkautusPvm);
+                    if (lakkautusPvm && (alkuPvm > lakkautusPvm)) {
+                        return false;
+                    } else {
+                    }
+                }
+                var aliorganisaatioOk = isAliorganisaatiopuunVoimassaoloValid(treeLevel[i].children, alkuPvmMuokattu, lakkautusPvmMuokattu);
+                if (!aliorganisaatioOk) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        
+        // Organisaation muokkaus näkymään raportointia varten
+        this.isAliorganisaatioidenVoimassaoloValid = function() {
+            if (!model.isVoimassaoloValid()) {
+                return true; // Raportoi vain organisaatiosta, jos siinä on virhe.
+            }
+            var alkuPvmMuokattu = pvmRajapintaMuotoon(model.alkuPvm) != pvmRajapintaMuotoon(model.originalAlkuPvm);
+            var lakkautusPvmMuokattu = pvmRajapintaMuotoon(model.lakkautusPvm) != pvmRajapintaMuotoon(model.originalLakkautusPvm);
+            return isAliorganisaatiopuunVoimassaoloValid(model.aliorganisaatioTree, alkuPvmMuokattu, lakkautusPvmMuokattu);
+        };
+        
         this.configure = function(muokataanAlkupvm, oid, nimi, alkuPvm, lakkautusPvm, aliorganisaatioHaunTulos, monikielinenTekstiLocalizer) {
             if (this.aliorganisaatioHaunTulos !== aliorganisaatioHaunTulos) {
                 // Hakutulos muuttui (onnistuneen tallennuksen seurauksena).
@@ -504,22 +549,20 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             }
         };
         
-        addToRequestList = function(voimassaoloLista, treeLevel) {
+        addToRequestList = function(voimassaoloLista, treeLevel, alkuPvmMuokattu, lakkautusPvmMuokattu) {
             for (var i = 0; i < treeLevel.length; i++) {
-                if (treeLevel[i].alkuPvmValittu || treeLevel[i].lakkautusPvmValittu) {
-                    
-                    var alkuPvm = treeLevel[i].alkuPvm;
-                    var lakkautusPvm = treeLevel[i].lakkautusPvm;
-                    
-                    if (treeLevel[i].alkuPvmValittu) {
-                        alkuPvm = model.alkuPvm;
-                    }
-                    if (treeLevel[i].lakkautusPvmValittu) {
-                        lakkautusPvm = model.lakkautusPvm;
-                    }
-                    voimassaoloLista.push({oid: treeLevel[i].oid, alkuPvm: pvmRajapintaMuotoon(alkuPvm), loppuPvm: pvmRajapintaMuotoon(lakkautusPvm)});
+                var alkuPvm = treeLevel[i].alkuPvm;
+                var lakkautusPvm = treeLevel[i].lakkautusPvm;
+
+                if (alkuPvmMuokattu && (treeLevel[i].alkuPvmValittu)) {
+                    alkuPvm = model.alkuPvm;
                 }
-                addToRequestList(voimassaoloLista, treeLevel[i].children);
+                if (lakkautusPvmMuokattu && (treeLevel[i].lakkautusPvmValittu)) {
+                    lakkautusPvm = model.lakkautusPvm;
+                }
+                voimassaoloLista.push({oid: treeLevel[i].oid, alkuPvm: pvmRajapintaMuotoon(alkuPvm), loppuPvm: pvmRajapintaMuotoon(lakkautusPvm)});
+
+                addToRequestList(voimassaoloLista, treeLevel[i].children, alkuPvmMuokattu, lakkautusPvmMuokattu);
             }
         };
         
@@ -534,7 +577,9 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             }
             
             var voimassaoloLista = [];
-            addToRequestList(voimassaoloLista, model.aliorganisaatioTree);
+            var alkuPvmMuokattu = pvmRajapintaMuotoon(model.alkuPvm) != pvmRajapintaMuotoon(model.originalAlkuPvm);
+            var lakkautusPvmMuokattu = pvmRajapintaMuotoon(model.lakkautusPvm) != pvmRajapintaMuotoon(model.originalLakkautusPvm);
+            addToRequestList(voimassaoloLista, model.aliorganisaatioTree, alkuPvmMuokattu, lakkautusPvmMuokattu);
             
             Muokkaamonta.put(voimassaoloLista, function(result) {
                 $log.log(result);
