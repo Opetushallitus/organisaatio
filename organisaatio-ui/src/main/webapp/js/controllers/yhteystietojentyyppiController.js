@@ -1,6 +1,7 @@
-function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo) {
+function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $q, $log) {
+    "use strict";
     UserInfo.then(function(s) {
-        language = s.lang;
+        $window.language = s.lang;
     });
 
     $scope.model = YhteystietojentyyppiModel;
@@ -17,7 +18,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
     $scope.yttNimiLang = function(koodi) {
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.nimi.teksti) {
-                if ($scope.valittuYhteystietotyyppi.nimi.teksti[i].kieliKoodi === koodi) {
+                if ($scope.valittuYhteystietotyyppi.nimi.teksti[i].kieliKoodi.toLowerCase() === koodi.toLowerCase()) {
                     return $scope.valittuYhteystietotyyppi.nimi.teksti[i];
                 }
             }
@@ -26,7 +27,6 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                 kieliKoodi: koodi
             };
             return $scope.valittuYhteystietotyyppi.nimi.teksti.push(obj);
-            return obj;
         }
         return null;
     };
@@ -159,7 +159,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         }
     }
 
-    var obj = new Object();
+    var obj = {};
     var rajatutOppilaitostyypit = false;
 
     Object.defineProperty(obj, 'koulutustoimija', {
@@ -251,21 +251,37 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
 
     $scope.poistaYhteystietotyyppi = function() {
         if ($scope.valittuYhteystietotyyppi !== null) {
-            var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
-            if (ind !== -1) {
-                if ($scope.valittuYhteystietotyyppi.oid !== null) {
-                    $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+            var modalInstance = $modal.open({
+                templateUrl: 'yhteystiedonpoisto.html',
+                controller: YhteystietoDeleteController,
+                resolve: {
+                    nimi: function () {
+                        return $scope.yttNimiLang($window.language).value;
+                    }
+                }
+            });
 
+            modalInstance.result.then(function() {
+                $log.debug('Yhteystietotyypin poisto vahvistettu');
+
+                var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
+                if (ind !== -1) {
+                    if ($scope.valittuYhteystietotyyppi.oid !== null) {
+                        $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+
+                            $scope.model.yhteystietotyypit.splice(ind, 1);
+                            $scope.valittuYhteystietotyyppi = null;
+                        }, function(virhe) {
+                            Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
+                        });
+                    } else {
                         $scope.model.yhteystietotyypit.splice(ind, 1);
                         $scope.valittuYhteystietotyyppi = null;
-                    }, function(virhe) {
-                        Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
-                    });
-                } else {
-                    $scope.model.yhteystietotyypit.splice(ind, 1);
-                    $scope.valittuYhteystietotyyppi = null;
+                    }
                 }
-            }
+            }, function () {
+                $log.debug('Yhteystietotyypin poisto peruttu');
+            });
         }
     };
 

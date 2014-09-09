@@ -1,8 +1,7 @@
-function OrganisaatioDeleteController($scope, $modalInstance, $log, nimi, tyypit) {
+var YhteystietoDeleteController = function ($scope, $modalInstance, $log, nimi) {
     $scope.nimi = nimi;
-    $scope.tyypit = tyypit;
 
-    if (nimi && tyypit) {
-        $log.debug("Organisaation poisto (vaatii vahvistuksen): " + tyypit + " " + nimi);
+    if (nimi) {
+        $log.debug("Yhteystiedon poisto (vaatii vahvistuksen): " + nimi);
     }
-}
+};
