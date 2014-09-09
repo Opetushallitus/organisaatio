@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Preconditions;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -42,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.ValidationException;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -50,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -372,8 +375,23 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
         LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
 
-        OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
-
-        return tulos;
+        try {
+            OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
+            return tulos;
+        }  catch (ValidationException ex) {
+            LOG.warn("Error saving multiple organizations", ex);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            LOG.warn("Error saving multiple organizations", ore);
+            throw ore;
+        } catch (Throwable t) {
+            LOG.error("Error saving multiple organizations", t);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 }

@@ -34,6 +34,8 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiDeleteExceptio
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
+import fi.vm.sade.organisaatio.business.exception.AliorganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
@@ -999,68 +1001,60 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         LOG.debug("bulkUpdatePvm(): processed:" + processed);
 
-        boolean constraintsOK = true;
         String virheViesti = "";
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o: roots) {
             virheViesti = o.isPvmConstraintsOk(null, null, givenData);
             if (!virheViesti.equals("")) {
-                constraintsOK = false;
-                break;
+                LOG.error(String.format("bulkUpdatePvm() error: %s", virheViesti));
+                throw new OrganisaatioDateException();
             }
         }
-        if (constraintsOK) {
-            for(String oid: organisaatioMap.keySet()) {
-                OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-                Organisaatio org = organisaatioMap.get(oid);
+        for(String oid: organisaatioMap.keySet()) {
+            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
+            Organisaatio org = organisaatioMap.get(oid);
 
-                if (tieto != null) {
-                    LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
-                    if (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm())) {
-                        String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
-                        LOG.error(String.format(virhe));
-                        edited.setMessage(virhe);
-                        edited.setOk(false);
-                        return edited;
-                    }
+            if (tieto != null) {
+                LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
+                if (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm())) {
+                    String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
+                    LOG.error(String.format(virhe));
+                    throw new AliorganisaatioLakkautusKoulutuksiaException();
                 }
             }
-
-            List<Organisaatio> indeksoitavat = new ArrayList<>(givenData.size());
-            for(String oid: organisaatioMap.keySet()) {
-                OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-                Organisaatio org = organisaatioMap.get(oid);
-
-                if (tieto != null) {
-                    LOG.debug(String.format("bulkUpdatePvm(): ennen päivitystä: oid %s, version %s", org.getOid(), org.getVersion()));
-                    org.setAlkuPvm(tieto.getAlkuPvm());
-                    org.setLakkautusPvm(tieto.getLoppuPvm());
-                    try {
-                        organisaatioDAO.update(org);
-                    } catch (OptimisticLockException ole) {
-                        edited.setMessage(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
-                        edited.setOk(false);
-                        return edited;
-                    }
-
-                    LOG.debug(String.format("bulkUpdatePvm(): päivityksen jälkeen: oid %s, version %s", org.getOid(), org.getVersion()));
-
-                    OrganisaatioMuokkausTulosDTO tulos = new OrganisaatioMuokkausTulosDTO();
-                    tulos.setAlkuPvm(org.getAlkuPvm());
-                    tulos.setLoppuPvm(org.getLakkautusPvm());
-                    tulos.setOid(org.getOid());
-                    tulos.setVersion(org.getVersion());
-
-                    edited.lisaaTulos(tulos);
-
-                    indeksoitavat.add(org);
-                }
-            }
-            solrIndexer.index(indeksoitavat);
         }
 
-        edited.setMessage(virheViesti);
-        edited.setOk(constraintsOK);
+        List<Organisaatio> indeksoitavat = new ArrayList<>(givenData.size());
+        for(String oid: organisaatioMap.keySet()) {
+            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
+            Organisaatio org = organisaatioMap.get(oid);
+
+            if (tieto != null) {
+                LOG.debug(String.format("bulkUpdatePvm(): ennen päivitystä: oid %s, version %s", org.getOid(), org.getVersion()));
+                org.setAlkuPvm(tieto.getAlkuPvm());
+                org.setLakkautusPvm(tieto.getLoppuPvm());
+                try {
+                    organisaatioDAO.update(org);
+                } catch (OptimisticLockException ole) {
+                    LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
+                    throw new AliorganisaatioModifiedException(ole);
+                }
+
+                LOG.debug(String.format("bulkUpdatePvm(): päivityksen jälkeen: oid %s, version %s", org.getOid(), org.getVersion()));
+
+                OrganisaatioMuokkausTulosDTO tulos = new OrganisaatioMuokkausTulosDTO();
+                tulos.setAlkuPvm(org.getAlkuPvm());
+                tulos.setLoppuPvm(org.getLakkautusPvm());
+                tulos.setOid(org.getOid());
+                tulos.setVersion(org.getVersion());
+
+                edited.lisaaTulos(tulos);
+
+                indeksoitavat.add(org);
+            }
+        }
+        solrIndexer.index(indeksoitavat);
+
         return edited;
     }
 

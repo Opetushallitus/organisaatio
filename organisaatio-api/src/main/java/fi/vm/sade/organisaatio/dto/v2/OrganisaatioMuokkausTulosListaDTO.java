@@ -8,8 +8,6 @@ import java.util.List;
  * Created by jefin on 3.9.2014.
  */
 public class OrganisaatioMuokkausTulosListaDTO {
-    private String message;
-    private boolean ok;
     private List<OrganisaatioMuokkausTulosDTO> tulokset;
 
     public OrganisaatioMuokkausTulosListaDTO(int alkuKoko) {
@@ -23,8 +21,6 @@ public class OrganisaatioMuokkausTulosListaDTO {
     @Override
     public String toString() {
         return "OrganisaatioMuokkausTulosListaDTO{" +
-                "message='" + message + '\'' +
-                ", ok=" + ok +
                 ", tulokset=" + tulokset +
                 '}';
     }
@@ -37,19 +33,4 @@ public class OrganisaatioMuokkausTulosListaDTO {
         return Collections.unmodifiableList(tulokset);
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public void setOk(boolean ok) {
-        this.ok = ok;
-    }
 }

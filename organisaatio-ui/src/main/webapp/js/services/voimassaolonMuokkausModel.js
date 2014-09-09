@@ -586,25 +586,19 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             
             Muokkaamonta.put(voimassaoloLista, function(result) {
                 $log.log(result);
-                if (!result.ok) {
-                    $log.error("Voimassaolon muokkaus virhe: " + result.message);
-                    deferred.reject();
-                    // TODO: Virheen näyttö UI:ssa
-                } else {
-                    // Pick the new version
-                    for (var i = 0; i < result.tulokset.length; i++) {
-                        if (result.tulokset[i].oid == model.oid) {
-                            model.newVersionNumber = result.tulokset[i].version;
-                            break;
-                        }
+                // Pick the new version
+                for (var i = 0; i < result.tulokset.length; i++) {
+                    if (result.tulokset[i].oid == model.oid) {
+                        model.newVersionNumber = result.tulokset[i].version;
+                        break;
                     }
-                    deferred.resolve();
                 }
+                deferred.resolve();
             },
             // Error case
             function(response) {
-                $log.error("Voimassaolon muokkaus response: " + response.status);
-                Alert.add("error", $filter('i18n')("Voimassaolonmuokkaus.virhe", ""), true); // TODO: oikea virhekoodi
+                $log.error("Voimassaolonmuokkaus tallennusvrhe: " + response.status);
+                showAndLogError("Voimassaolonmuokkaus.tallennusvirhe", response);
                 deferred.reject();
             });
 
