@@ -375,38 +375,78 @@ public class OrganisaatioRDTO implements Serializable {
         this._metadata = _metadata;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Sähköpostiosoite", required = true)
     public String getEmailOsoite() {
         return _emailOsoite;
     }
 
+    /**
+     * @param _emailOsoite
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setEmailOsoite(String _emailOsoite) {
         this._emailOsoite = _emailOsoite;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Faxin numero", required = true)
     public String getFaksinumero() {
         return _faksinumero;
     }
 
+    /**
+     * @param _faksinumero
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setFaksinumero(String _faksinumero) {
         this._faksinumero = _faksinumero;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Puhelinnumero", required = true)
     public String getPuhelinnumero() {
         return _puhelinnumero;
     }
 
+    /**
+     * @param _puhelinnumero
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setPuhelinnumero(String _puhelinnumero) {
         this._puhelinnumero = _puhelinnumero;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "WWW-osoite", required = true)
     public String getWwwOsoite() {
         return _wwwOsoite;
     }
 
+    /**
+     * @param _wwwOsoite
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setWwwOsoite(String _wwwOsoite) {
         this._wwwOsoite = _wwwOsoite;
     }
