@@ -1,0 +1,29 @@
+<!-- Organisaation Poisto -->
+<div class="modal-header">
+    <h3>{{'Organisaationpoisto.otsikko' | i18n}}</h3>
+</div>
+
+<div class="modal-body">
+    <div class="form-fluid">
+        {{'Organisaationpoisto.vahvistus' | i18n}}
+    </div>
+    <div>
+        <strong>{{tyypit}}, {{nimi}}</strong>
+    </div>
+    
+   
+    <div ng-show={{!hasactivechildren}}>
+        <strong> 
+        {{'Organisaationpoisto.varoituslapsista' | i18n}}
+        </strong>
+    </div>
+      
+</div>
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
+        <button class="btn" ng-click="$close()">{{'Organisaationpoisto.ok' | i18n}}</button>
+    </div>
+</div>
+
+
