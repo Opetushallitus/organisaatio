@@ -153,6 +153,8 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
+                + "organisaatio_id = " + organisaatioId
+                + " AND "
                 + "alkupvm = (SELECT MAX (o.alkuPvm) "
                 + "FROM OrganisaatioNimi o "
                 + "WHERE "
