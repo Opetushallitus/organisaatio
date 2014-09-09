@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
+ * Käyttää tarjonta palvelua selvittääkseen organisaation tulevia koulutuksia.
  *
  * @author simok
  */
@@ -94,7 +95,7 @@ public class OrganisaatioKoulutukset {
     }
 
     private List<KoulutusHakutulosV1RDTO> getOrganisaatioKoulutukset(JsonElement organisaatioTulos) {
-        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
 
         JsonElement koulutusTulokset = organisaatioTulos.getAsJsonObject().get("tulokset");
 
@@ -116,7 +117,7 @@ public class OrganisaatioKoulutukset {
     }
 
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
-        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         InputStream jsonStream;
 
         try {
@@ -165,6 +166,14 @@ public class OrganisaatioKoulutukset {
         return koulutukset;
     }
 
+    /**
+     * Tarkistaa onko annetulla organisaatiolla alkavia koulutuksia annetun
+     * päivämäärän jälkeen.
+     *
+     * @param oid
+     * @param after
+     * @return Boolean, joka kertoo onko alkavia koulutuksia vai ei.
+     */
     public boolean alkaviaKoulutuksia(String oid, Date after) {
         List<KoulutusHakutulosV1RDTO> koulutukset  = haeKoulutukset(oid);
 

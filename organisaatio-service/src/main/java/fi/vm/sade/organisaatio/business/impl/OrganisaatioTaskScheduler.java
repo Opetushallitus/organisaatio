@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
+ * Organisaation ajastukset.
  *
  * @author simok
  */
@@ -39,6 +40,10 @@ public class OrganisaatioTaskScheduler {
     @Value("${organisaatio-service.scheduled.name.update.cron.expression}")
     private String nameUpdateCronExpression;
 
+    /**
+     * Laukaisee ajastetusti organisaatioiden nimenpäivityksen / nimenpäivityksen
+     * tarkistuksen.
+     */
     @Scheduled(cron = "${organisaatio-service.scheduled.name.update.cron.expression}")
     public void scheduledNameUpdate()
     {
