@@ -45,7 +45,7 @@ import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.lop.BinaryData;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
-import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatTiedotTyyppiFunction;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
