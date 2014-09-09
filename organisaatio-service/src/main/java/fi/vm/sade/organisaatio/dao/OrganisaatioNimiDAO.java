@@ -31,7 +31,7 @@ import java.util.List;
 public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
 
     /**
-     * Luodaan uusi nimi organisaatiolle.
+     * Luodaan uusi nimi organisaatiolle annetuilla tiedoilla.
      *
      * @param organisaatio
      * @param nimi
@@ -57,12 +57,45 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
      */
     List<OrganisaatioNimi> findNimet(String organisaatioOid);
 
+    /**
+     * Haetaan annetun organisaation nimi, annetulla nimen voimassaolon alkupäivämäärällä.
+     *
+     * @param organisaatio
+     * @param alkuPvm
+     * @return
+     */
     public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm);
+
+    /**
+     * Haetaan annetun organisaation (oid) nimi, annetulla nimen voimassaolon alkupäivämäärällä.
+     *
+     * @param organisaatioOid
+     * @param alkuPvm
+     * @return
+     */
     public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm);
 
+    /**
+     * Haetaan annetun organisaation nykyinen nimi.
+     *
+     * @param organisaatio
+     * @return
+     */
     public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio);
+
+    /**
+     * Haetaan annetun organisaation (oid) nykyinen nimi.
+     *
+     * @param organisaatioOid
+     * @return
+     */
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
 
+    /**
+     * Haetaan organisaatiot, joiden nimi ei ole sama kuin nimihistorian current nimi.
+     *
+     * @return
+     */
     public List<Organisaatio> findNimiNotCurrentOrganisaatiot();
 
 }

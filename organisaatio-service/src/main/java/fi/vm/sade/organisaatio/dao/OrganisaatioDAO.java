@@ -23,8 +23,9 @@ import java.util.List;
  * @author simok
  */
 public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
-    
+
     /**
+     * Haetaan organisaatioita annetuilla hakukriteereillä
      *
      * @param kieliList kielirajaus kielivalikoima-koodiston koodiUreja: ["kielivalikoima_en", "kielivalikoima_sv"]
      * @param kuntaList kuntarajaus kunta-koodiston koodiUreja: ["kunta_905", "kunta_401"]
@@ -44,8 +45,21 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
             List<String> oidList,
             int limit);
 
+    /**
+     * Haetaan organisaatiota oidin perusteella.
+     *
+     * @param oid
+     * @return
+     */
     public Organisaatio findByOid(String oid);
 
+    /**
+     * Haetaan organisaatioita oidlistan perusteella.
+     *
+     * @param oidList
+     * @param maxResults
+     * @return
+     */
     List<Organisaatio> findByOidList(List<String> oidList, int maxResults);
 
     /**
@@ -63,7 +77,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<Organisaatio> findParentsTo(String oid);
 
     /**
-     * Find the children of given parent organisation.
+     * Haetaan annetun parent organisaation lapset.
      *
      * @param parentId
      * @return
@@ -72,11 +86,17 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
 
     /**
      * Palautetaan oph organisaation alla olevat Ryhmä tyyppiset organisaatiot
-     * 
+     *
      * @return
      */
     public List<Organisaatio> findGroups();
-    
+
+    /**
+     * Tarkistetaan onko annetulle ytunnukselle olemassa jo aktiivinen organisaatio.
+     *
+     * @param ytunnus
+     * @return
+     */
     boolean isYtunnusAvailable(String ytunnus);
-    
+
 }
