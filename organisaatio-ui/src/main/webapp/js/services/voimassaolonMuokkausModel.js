@@ -205,6 +205,9 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                         treeItem.valittu = true;
                     } else if (lakkautusPvmMuutettu && (treeItem.lakkautusPvm < lakkautusPvm)) {
                         treeItem.valittu = true;
+                    // Jos aliorganisaation lakkautuspäivä poistetaan, myös parentin lakkautuspäivä pitää poistaa
+                    } else if (lakkautusPvmPoistettu && (treeItem.lakkautusPvm)) {
+                        treeItem.valittu = true;
                     }
                 }
                 
