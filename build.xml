@@ -3,7 +3,7 @@
 
     <target name="deploy-to-remote-tomcat">
         <property name="oph.name" value="organisaatio"/>
-        <property name="pom.version" value="10.0-SNAPSHOT"/>
+        <property name="pom.version" value="12.0-SNAPSHOT"/>
 		
         <property name="maven.repo" value="${user.home}/.m2/repository"/>
         <property name="tomcat.name" value="tomcat_${oph.name}"/>
