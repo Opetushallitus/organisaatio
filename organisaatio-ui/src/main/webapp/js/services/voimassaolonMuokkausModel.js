@@ -64,6 +64,17 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             }
         };
         
+        valitseJosSamaLakkautuspvm = function(treeLevel, lakkautusPvm) {
+            for (var i = 0; i < treeLevel.length; i++) {
+                if (treeLevel[i].level !== 0) {
+                    if (pvmRajapintaMuotoon(treeLevel[i].lakkautusPvm) === lakkautusPvm) {
+                        treeLevel[i].valittu = true;
+                    }
+                }
+                valitseJosSamaLakkautuspvm(treeLevel[i].children, lakkautusPvm);
+            }
+        };
+        
         asetaTila = function() {
             var uusiTila = model.muokkauksenTila;
             if (model.muokataanAlkupvm) {
@@ -111,11 +122,15 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                     case model.Tila.LAKKAUTUS_PVM_ASETETTU:
                         // Oletetaan että käyttäjä ei lähtökohtaisesti halua uudelleenlakuuattaa jo lakkautetuja aliorganisaatioita
                         valitseKaikki(model.aliorganisaatioTree, false);
+                        // ..paitsi jos käyttäjä on siirtämässä "koko organisaationpuun" lakkautuspäivämäärää
+                        valitseJosSamaLakkautuspvm(model.aliorganisaatioTree, pvmRajapintaMuotoon(model.originalLakkautusPvm));
                         tilaDebug = "LAKKAUTUS_PVM_ASETETTU";
                         break;
                     case model.Tila.LAKKAUTUS_PVM_SUUNNITELTU:
                         // Oletetaan että käyttäjä ei lähtökohtaisesti halua uudelleenlakuuattaa jo lakkautetuja aliorganisaatioita
                         valitseKaikki(model.aliorganisaatioTree, false);
+                        // ..paitsi jos käyttäjä on siirtämässä "koko organisaationpuun" lakkautuspäivämäärää
+                        valitseJosSamaLakkautuspvm(model.aliorganisaatioTree, pvmRajapintaMuotoon(model.originalLakkautusPvm));
                         tilaDebug = "LAKKAUTUS_PVM_SUUNNITELTU";
                         break;
                     case model.Tila.LAKKAUTUS_PVM_JATKETTU:
@@ -200,7 +215,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                 if (!treeItem.valittu && aliorganisaatioPuussaValintoja) {
                     // Tarkista ettei aliorganisaatioissa olla siirtämässä luontipäivää aikaisemmaksi
                     // tai lakkautuspäivää myöhäisemmäksi kuin tällä niiden parentilla (jos, niin valitse tämäkin).
-                    $log.log(treeItem.nimi + " " + treeItem.alkuPvm + " " + alkuPvm + " " + alkuPvmMuutettu + " " + (alkuPvm < treeItem.alkuPvm));
                     if (alkuPvmMuutettu && (alkuPvm < treeItem.alkuPvm)) {
                         treeItem.valittu = true;
                     } else if (lakkautusPvmMuutettu && (treeItem.lakkautusPvm < lakkautusPvm)) {
@@ -376,7 +390,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
         };
 
         this.isLeaf = function(aliorganisaatio) {
-            //$log.log(aliorganisaatio.nimi);
             return aliorganisaatio.children.length === 0;
         };
         
@@ -435,8 +448,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             var aloitus = pvmRajapintaMuotoon(alkuPvm);
             var lakkautus = pvmRajapintaMuotoon(lakkautusPvm);
             
-            //$log.log(today + " " + aloitus + " " + lakkautus);
-
             if (aloitus) {
                 
                 if (aloitus > today) {
@@ -465,7 +476,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                 
                 for (var i = 0; i < aliOrgList.length; i++) {
                     var item = aliOrgList[i];
-                    //$log.log("ITEM:" + JSON.stringify(item, null, 4));
                     
                     var lakkautusPvm = "";
                     if (item.lakkautusPvm) {
@@ -515,7 +525,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                         readonly: false,
                         children: children,
                         expanded: expanded};
-                    //$log.log("PUSH:" + JSON.stringify(treeItem, null, 4));
                     constructedTree.push(treeItem);
                     
                     // Tallennuksen jälkeisessä tilanteessa käyttäjä pääsee hetken aikaa muuttamaan voimassaoloa ilman että 
@@ -585,7 +594,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             addToRequestList(voimassaoloLista, model.aliorganisaatioTree, alkuPvmMuokattu, lakkautusPvmMuokattu);
             
             Muokkaamonta.put(voimassaoloLista, function(result) {
-                $log.log(result);
                 // Pick the new version
                 for (var i = 0; i < result.tulokset.length; i++) {
                     if (result.tulokset[i].oid == model.oid) {

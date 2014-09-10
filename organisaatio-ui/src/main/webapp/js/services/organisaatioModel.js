@@ -558,8 +558,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         
                         // Voimassaolon muokkausta varten
                         if (childResult.organisaatiot[i].children.length) {
-                            // TO BE ENABLED when aliorganisaationmuokkaus is ready. Uncomment the line below to test:
-                            //model.hasAliorganisaatios = true;
+                            model.hasAliorganisaatios = true;
                         }
                     }
                     
