@@ -94,6 +94,10 @@ app.config(['$provide', function($provide) {
         }]);
 }]);
 
+app.config(function(datepickerConfig) {
+    datepickerConfig.startingDay = 1;
+});
+
 app.run(function(OrganisaatioInitAuth, UserInfo) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"

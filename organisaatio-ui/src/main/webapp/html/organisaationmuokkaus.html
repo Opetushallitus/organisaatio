@@ -195,7 +195,6 @@
         </label>
         <div class="controls">
             <div>
-                <!-- Voimassaolonmuokkaus dialog is TO BE ENABLED, currently under development. To test, modify "TO BE ENABLED" in organisaatioModel.js -->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="luontipvm" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
