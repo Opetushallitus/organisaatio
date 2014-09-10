@@ -1016,7 +1016,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             if (tieto != null) {
                 LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
-                if (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm())) {
+                if ((tieto.getLoppuPvm() != null) && (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
                     String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
                     LOG.error(String.format(virhe));
                     throw new AliorganisaatioLakkautusKoulutuksiaException();
