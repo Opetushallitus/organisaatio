@@ -1,18 +1,29 @@
-function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $q, $log) {
+/*global YhteystietoDeleteController:false, MuuYhteystietoController:false, angular:false */
+function YhteystietojentyyppiController($scope, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $log) {
     "use strict";
+    var language;
+
+    var vaihtoehtoisetKielikoodit = {
+        fi: ['sv', 'en'],
+        sv: ['fi', 'en'],
+        en: ['fi', 'sv']
+    };
+
     UserInfo.then(function(s) {
-        $window.language = s.lang;
+        language = s.lang.toLowerCase();
     });
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.valittuYhteystietotyyppi = null;
 
     $scope.localizeYhteystietotyypinNimi = function(yt) {
-        for (var k in yt.nimi.teksti) {
-            if (yt.nimi.teksti[k].kieliKoodi === language.toLowerCase()) {
-                return yt.nimi.teksti[k].value;
-            }
-        }
+        var kaannokset = {};
+
+        angular.forEach(yt.nimi.teksti, function (entry, key) {
+            kaannokset[entry.kieliKoodi] = entry.value;
+        });
+
+        return kaannokset[language] || kaannokset[vaihtoehtoisetKielikoodit[language][0]] || kaannokset[vaihtoehtoisetKielikoodit[language][1]];
     };
 
     $scope.yttNimiLang = function(koodi) {
@@ -47,7 +58,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
             }
         }
         return true;
-    }
+    };
     
     function _match(item, filt) {
         for (var i in filt) {
@@ -204,7 +215,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         },
         set: function(t) {
             _orgTypeMod(t, 'OPPILAITOS');
-            rajatutOppilaitostyypit &= !t;
+            rajatutOppilaitostyypit = rajatutOppilaitostyypit && !t;
         }
     });
 
@@ -256,7 +267,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                 controller: YhteystietoDeleteController,
                 resolve: {
                     nimi: function () {
-                        return $scope.yttNimiLang($window.language).value;
+                        return $scope.yttNimiLang(language).value;
                     }
                 }
             });

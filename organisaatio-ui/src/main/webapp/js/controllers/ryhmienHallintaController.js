@@ -1,6 +1,15 @@
-function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienHallintaModel, Organisaatio, Aliorganisaatiot, Alert, UserInfo, RyhmaKoodisto) {
+function RyhmienHallintaController($scope, $filter, $routeParams, RyhmienHallintaModel, Alert, UserInfo, RyhmaKoodisto) {
+    "use strict";
+    var language;
+
+    var vaihtoehtoisetKielikoodit = {
+        fi: ['sv', 'en'],
+        sv: ['fi', 'en'],
+        en: ['fi', 'sv']
+    };
+
     UserInfo.then(function(s) {
-        language = s.lang;
+        language = s.lang.toLowerCase();
     });
 
     $scope.model = RyhmienHallintaModel;
@@ -9,11 +18,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $log, RyhmienH
     $scope.koodisto = RyhmaKoodisto;
 
     $scope.localizeNimi = function(ryhma) {
-        for (var k in ryhma.nimi) {
-            if (k === language.toLowerCase()) {
-                return (ryhma.nimi[k] === null ? "" : ryhma.nimi[k]);
-            }
-        }
+        return ryhma.nimi[language] || ryhma.nimi[vaihtoehtoisetKielikoodit[language][0]] || ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
     };
 
     $scope.luoUusi = function() {
