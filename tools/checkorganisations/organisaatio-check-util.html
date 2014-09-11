@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="organisaatio-check-util.js"></script>
+    <title>Organisaatio check util</title>
+    <style>
+        .message {
+            display: block;
+            margin:2px;
+        }
+        .log {
+            color: black;
+            background: palegreen;
+        }
+        .warn {
+            background:lemonchiffon;
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+<p id="huom">Huom: Tämä tiedosto ja javascript-tiedosto pitää kopioida käsin jonnekin "näkyviin" samalle palvelimelle jossa organisaatiopalvelu sijaitsee, se ei toimi muuten.</p>
+<button id="go">Suorita kysely</button>
+<div id="output">
+    <div id="vaihe1"></div>
+    <div id="solr-valmistui"></div>
+    <div id="tulos"></div>
+</div>
+</body>
+</html>
