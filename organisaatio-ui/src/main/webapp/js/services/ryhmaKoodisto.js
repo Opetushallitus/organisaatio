@@ -59,7 +59,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
                     // Default-arvojen lähde: Confluence / Ryhmien määrittely
                     {uri: 'organisaatio', nimi: $filter('i18n')("Ryhmienhallinta.organisaatio", "")},
                     {uri: 'hakukohde', nimi: $filter('i18n')("Ryhmienhallinta.hakukohde", "")},
-                    {uri: 'perustetyoryhma', nimi: $filter('i18n')("Ryhmienhallinta.perustetyoryhma", "")}
+                    {uri: 'perustetyoryhma', nimi: $filter('i18n')("Ryhmienhallinta.perustetyoryhma", "")},
+                    {uri: 'koulutus', nimi: $filter('i18n')("Ryhmienhallinta.koulutus", "")}
                 ]
             },
             {
@@ -72,7 +73,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
                     {uri: 'hakukohde_rajaava', nimi: $filter('i18n')("Ryhmienhallinta.rajaava", "")},
                     {uri: 'hakukohde_priorisoiva', nimi: $filter('i18n')("Ryhmienhallinta.priorisoiva", "")},
                     {uri: 'hakukohde_liiteosoite', nimi: $filter('i18n')("Ryhmienhallinta.liiteosoite", "")},
-                    {uri: 'perusteiden_laadinta', nimi: $filter('i18n')("Ryhmienhallinta.perusteidenlaadinta", "")}
+                    {uri: 'perusteiden_laadinta', nimi: $filter('i18n')("Ryhmienhallinta.perusteidenlaadinta", "")},
+                    {uri: 'kayttooikeus', nimi: $filter('i18n')("Ryhmienhallinta.kayttooikeus", "")}
                 ]
             }
         ];
