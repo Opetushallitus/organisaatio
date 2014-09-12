@@ -1,6 +1,6 @@
 #
 # TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
-# 
+#
 # Tämä tiedosto toimii pohjana oph-configuration/common.properties tiedostolle,
 # joka asettaa tomcatin ympäristökohtaiset arvot.
 #
@@ -81,7 +81,7 @@ oid.webservice.url.backend=${host.ilb}/services/oidService
 organisaatio.rest.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/hae
 organisaatio.webservice.url.backend=https\://${host.virkailija}/organisaatio-service/services/organisaatioService
 organisaatio-ui.authentication-service-url.rest=https://${host.virkailija}/authentication-service/resources/
-organisaatio-ui.cas.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/myroles
+organisaatio-ui.cas.url=https://${host.virkailija}/cas/myroles
 organisaatio-ui.koodisto-service-url.rest=https://${host.virkailija}/koodisto-service/rest/
 organisaatio-ui.lokalisaatio-service-url.rest=https://${host.virkailija}/lokalisointi/cxf/rest/
 organisaatio-ui.organisaatio-service-url.rest=https://${host.virkailija}/organisaatio-service/rest/
