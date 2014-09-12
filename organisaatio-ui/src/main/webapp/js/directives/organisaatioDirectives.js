@@ -200,6 +200,7 @@ app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
+            
             var parserValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
@@ -212,12 +213,11 @@ app.directive('namesCombinedField', function() {
             ctrl.$parsers.unshift(parserValidator);
 
             var formatterValidator = function(viewValue) {
-                scope.form.nimifi.$setValidity('namescombinedrequired', true);
-
-                if (!viewValue && !scope.form.nimifi.$viewValue &&
-                        !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
-                    scope.form.nimifi.$setValidity('namescombinedrequired', false);
-                }
+                var valid = viewValue || 
+                        (ctrl.$name !== 'nimifi' && scope.form.nimifi.$viewValue) ||
+                        (ctrl.$name !== 'nimisv' && scope.form.nimisv.$viewValue) ||
+                        (ctrl.$name !== 'nimien' && scope.form.nimien.$viewValue);
+                scope.form.nimifi.$setValidity('namescombinedrequired', valid);
                 return viewValue;
             };
             ctrl.$formatters.unshift(formatterValidator);
