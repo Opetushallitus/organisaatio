@@ -90,3 +90,6 @@ input[type="checkbox"], input[type="radio"] {
     margin-bottom: 5px;
 }
 
+.pending-delete {
+    text-decoration: line-through;
+}
