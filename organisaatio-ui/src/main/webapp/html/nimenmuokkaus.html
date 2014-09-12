@@ -119,7 +119,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <label class="control-label">
                 {{'Nimenmuokkaus.alkupvm' | i18n}}
             </label>
-            <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
+            <input ng-if="model.mode !== 'update' && model.mode !== 'delete'" oph-enter
                    ng-style="inputStyle" ng-required="true"
                    type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
                    close-on-date-selection="true"
@@ -128,6 +128,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                    current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                    clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                    toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+            <input ng-if="model.mode === 'update' || model.mode === 'delete'" oph-enter
+                   ng-style="inputStyle" ng-required="true" ng-disabled="true"
+                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.nimi.alkuPvm"
+                   ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"/>
         </div>
     </form>
 </div>
