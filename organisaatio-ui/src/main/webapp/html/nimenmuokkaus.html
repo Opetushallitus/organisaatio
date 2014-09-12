@@ -47,7 +47,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                type="text" name="nimifi" class="span6"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="!model.parentNimi.fi || model.mode === 'delete'" ng-style="inputStyle"
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
                type="text" name="nimifi" class="span6"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
@@ -73,7 +73,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                type="text" name="nimisv" class="span6"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="!model.parentNimi.sv || model.mode === 'delete'" ng-style="inputStyle"
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
                type="text" name="nimisv" class="span6"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
@@ -96,7 +96,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                type="text" name="nimien" class="span6"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="!model.parentNimi.en || model.mode === 'delete'" ng-style="inputStyle"
+        <input ng-disabled="model.mode === 'delete'" ng-style="inputStyle"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
                type="text" name="nimien" class="span6"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
