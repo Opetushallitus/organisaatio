@@ -8,3 +8,4 @@ update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.
 update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.70156317326' and toimipistekoodi = '0165701';
 update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.78513447389' and toimipistekoodi = '0169401';
 update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.64534001231' and toimipistekoodi = '0231801';
+update organisaatio set opetuspisteenjarjnro = '07', toimipistekoodi = '1005207' where oid = '1.2.246.562.10.2014021213184872255537' and toimipistekoodi = '1005238';
