@@ -204,11 +204,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return organisaatiot;
     }
 
-    private void appendParentOrganisation(List<OrgPerustieto> ret, String poid, boolean suunnitellut, boolean lakkautetut) {
+    private void appendParentOrganisation(List<OrgPerustieto> ret, String poid, boolean suunnitellut, boolean poistetut) {
 
         QOrganisaatio qOrganisaatio = new QOrganisaatio("a");
         BooleanExpression whereExpression = qOrganisaatio.oid.eq(poid);
-        if (!lakkautetut) {
+        if (!poistetut) {
             whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.eq(false));
         }
 
@@ -222,13 +222,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
     }
 
-    private void appendChildOrganisations(List<OrgPerustieto> ret, Set<String> procOids, OrgPerustieto parent, Set<String> oids, boolean suunnitellut, boolean lakkautetut) {
+    private void appendChildOrganisations(List<OrgPerustieto> ret, Set<String> procOids, OrgPerustieto parent, Set<String> oids, boolean suunnitellut, boolean poistetut) {
 
         String noidPath = parent.getParentOidPath() + parent.getOid() + "|";
 
         QOrganisaatio qOrganisaatio = new QOrganisaatio("a");
         BooleanExpression whereExpression = qOrganisaatio.parentOidPath.startsWith(noidPath);
-        if (!lakkautetut) {
+        if (!poistetut) {
             whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.eq(false));
         }
 
@@ -704,12 +704,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        BooleanExpression whereExpr = null;
+        BooleanExpression whereExpr = org.organisaatioPoistettu.isFalse();
 
         // Select by Org tyyppi
         if (type != null) {
             // whereExpr = org.tyypit.contains(type.value());
-            whereExpr = org.organisaatiotyypitStr.like("%" + type.value() + "%");
+            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.value() + "%"));
         }
 
 // TODO org + lastmodified?
@@ -745,25 +745,25 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public Organisaatio findByYTunnus(String oid) {
         LOG.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid)).singleResult(org);
+        return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
     public Organisaatio findByVirastoTunnus(String oid) {
         LOG.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid)).singleResult(org);
+        return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
     public Organisaatio findByOppilaitoskoodi(String oid) {
         LOG.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid)).singleResult(org);
+        return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
     public Organisaatio findByToimipistekoodi(String oid) {
         LOG.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid)).singleResult(org);
+        return new JPAQuery(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
     @Override
