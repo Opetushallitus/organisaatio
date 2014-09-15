@@ -1,0 +1,10 @@
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.255787576410' and toimipistekoodi = '0165401';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.2014042514082007985435' and toimipistekoodi = '0190301';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.2014041814420657444022' and toimipistekoodi = '100880201';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.46107551528' and toimipistekoodi = '0165601';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.42171525977' and toimipistekoodi = '0028201';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.46273628811' and toimipistekoodi = '0162301';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.65985472409' and toimipistekoodi = '0166101';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.70156317326' and toimipistekoodi = '0165701';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.78513447389' and toimipistekoodi = '0169401';
+update organisaatio set opetuspisteenjarjnro = '01' where oid = '1.2.246.562.10.64534001231' and toimipistekoodi = '0231801';
