@@ -82,7 +82,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         BooleanExpression expression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime)).and(qSuhde.child.id.eq(childId));
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.parent, qOrganisaatio).fetch()
-                .where(expression)
+                .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
                 .list(qSuhde);
         
@@ -116,7 +116,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.child, qOrganisaatio).fetch()
-                .where(expression)
+                .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
                 .list(qSuhde);
         
