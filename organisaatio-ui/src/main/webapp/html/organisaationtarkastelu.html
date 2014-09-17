@@ -523,10 +523,10 @@
                         LinkedIn: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
                     </span>
                     <span ng-repeat="(index,value) in model.organisaatio.metadata.data.TWITTER" ng-if="index === model.smlang">
-                        Twitter: <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
+                        Twitter: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
                     </span>
                     <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU" ng-if="index === model.smlang">
-                        <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
+                        Muu: <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
                     </span>
                 </label>
             </div>

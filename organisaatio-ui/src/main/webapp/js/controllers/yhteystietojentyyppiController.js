@@ -1,23 +1,35 @@
-function YhteystietojentyyppiController($scope, $window, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo) {
+/*global YhteystietoDeleteController:false, MuuYhteystietoController:false, angular:false */
+function YhteystietojentyyppiController($scope, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $log) {
+    "use strict";
+    var language;
+
+    var vaihtoehtoisetKielikoodit = {
+        fi: ['sv', 'en'],
+        sv: ['fi', 'en'],
+        en: ['fi', 'sv']
+    };
+
     UserInfo.then(function(s) {
-        language = s.lang;
+        language = s.lang.toLowerCase();
     });
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.valittuYhteystietotyyppi = null;
 
     $scope.localizeYhteystietotyypinNimi = function(yt) {
-        for (var k in yt.nimi.teksti) {
-            if (yt.nimi.teksti[k].kieliKoodi === language.toLowerCase()) {
-                return yt.nimi.teksti[k].value;
-            }
-        }
+        var kaannokset = {};
+
+        angular.forEach(yt.nimi.teksti, function (entry, key) {
+            kaannokset[entry.kieliKoodi] = entry.value;
+        });
+
+        return kaannokset[language] || kaannokset[vaihtoehtoisetKielikoodit[language][0]] || kaannokset[vaihtoehtoisetKielikoodit[language][1]];
     };
 
     $scope.yttNimiLang = function(koodi) {
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.nimi.teksti) {
-                if ($scope.valittuYhteystietotyyppi.nimi.teksti[i].kieliKoodi === koodi) {
+                if ($scope.valittuYhteystietotyyppi.nimi.teksti[i].kieliKoodi.toLowerCase() === koodi.toLowerCase()) {
                     return $scope.valittuYhteystietotyyppi.nimi.teksti[i];
                 }
             }
@@ -26,7 +38,6 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
                 kieliKoodi: koodi
             };
             return $scope.valittuYhteystietotyyppi.nimi.teksti.push(obj);
-            return obj;
         }
         return null;
     };
@@ -47,7 +58,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
             }
         }
         return true;
-    }
+    };
     
     function _match(item, filt) {
         for (var i in filt) {
@@ -159,7 +170,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         }
     }
 
-    var obj = new Object();
+    var obj = {};
     var rajatutOppilaitostyypit = false;
 
     Object.defineProperty(obj, 'koulutustoimija', {
@@ -204,7 +215,7 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
         },
         set: function(t) {
             _orgTypeMod(t, 'OPPILAITOS');
-            rajatutOppilaitostyypit &= !t;
+            rajatutOppilaitostyypit = rajatutOppilaitostyypit && !t;
         }
     });
 
@@ -251,21 +262,37 @@ function YhteystietojentyyppiController($scope, $window, $filter, $modal, Yhteys
 
     $scope.poistaYhteystietotyyppi = function() {
         if ($scope.valittuYhteystietotyyppi !== null) {
-            var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
-            if (ind !== -1) {
-                if ($scope.valittuYhteystietotyyppi.oid !== null) {
-                    $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+            var modalInstance = $modal.open({
+                templateUrl: 'yhteystiedonpoisto.html',
+                controller: YhteystietoDeleteController,
+                resolve: {
+                    nimi: function () {
+                        return $scope.yttNimiLang(language).value;
+                    }
+                }
+            });
 
+            modalInstance.result.then(function() {
+                $log.debug('Yhteystietotyypin poisto vahvistettu');
+
+                var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
+                if (ind !== -1) {
+                    if ($scope.valittuYhteystietotyyppi.oid !== null) {
+                        $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+
+                            $scope.model.yhteystietotyypit.splice(ind, 1);
+                            $scope.valittuYhteystietotyyppi = null;
+                        }, function(virhe) {
+                            Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
+                        });
+                    } else {
                         $scope.model.yhteystietotyypit.splice(ind, 1);
                         $scope.valittuYhteystietotyyppi = null;
-                    }, function(virhe) {
-                        Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
-                    });
-                } else {
-                    $scope.model.yhteystietotyypit.splice(ind, 1);
-                    $scope.valittuYhteystietotyyppi = null;
+                    }
                 }
-            }
+            }, function () {
+                $log.debug('Yhteystietotyypin poisto peruttu');
+            });
         }
     };
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="organisaatio-check-util.js"></script>
+    <title>Organisaatio check util</title>
+    <style>
+        .message {
+            display: block;
+            margin:2px;
+        }
+        .log {
+            color: black;
+            background: palegreen;
+        }
+        .warn {
+            background:lemonchiffon;
+            color: orange;
+        }
+        .error {
+            background: lightpink;
+            color: darkred;
+        }
+    </style>
+</head>
+<body>
+<label>Juuriosoite:<input type="url" id="root-url" value="/"></label>
+<p id="huom">Huom: Tämä tiedosto ja javascript-tiedosto pitää kopioida käsin jonnekin "näkyviin"</p>
+<button id="go">Aloita</button>
+<button id="stop" style="display: none">Pysäytä</button>
+<div id="output">
+    <div class="output" id="vaihe1"></div>
+    <div class="output" id="solr-valmistui"></div>
+    <div class="output" id="tulos"></div>
+    <div class="output" id="puuttuvat-edistys"></div>
+    <div class="output" id="puuttuvat"></div>
+    <div class="output" id="error"></div>
+</div>
+</body>
+</html>
