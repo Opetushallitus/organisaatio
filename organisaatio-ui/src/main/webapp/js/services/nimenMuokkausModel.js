@@ -14,6 +14,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         nimi : {},
         mode : "update",
         historiaModel : NimiHistoriaModel,
+        parentNimi : {},
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
@@ -22,6 +23,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             this.nimi = {};
             this.mode = "update";
             this.historiaModel.clear();
+            this.parentNimi = {};
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä
@@ -133,18 +135,17 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
                           koulutustoimija, oppilaitos, parentNimi,
-                          nameFormat, parentPattern) {
+                          nameFormat) {
             $log.log('refresh()');
 
             // Alustetaan historiamalli
-            this.historiaModel.init(nimihistoria);
+            this.historiaModel.init(nimihistoria, koulutustoimija || oppilaitos ? null : parentNimi);
 
             this.oid = oid;
             this.koulutustoimija = koulutustoimija;
             this.oppilaitos = oppilaitos;
-            this.parentNimi = parentNimi;
             this.nameFormat = nameFormat;
-            this.parentPattern = parentPattern;
+            this.parentNimi = parentNimi;
 
             if (/new$/.test($location.path())) {
                 this.uusiOrganisaatio = true;
@@ -159,7 +160,20 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 
             this.setUusinNimiVisible();
+        },
+
+        accept: function() {
+            this.historiaModel.accept();
+            ['fi', 'sv', 'en'].forEach(function(key) {
+                if (!model.koulutustoimija && !model.oppilaitos && model.nimi.nimi[key] && model.parentNimi[key]) {
+                    if (!model.nimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
+                        !model.nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                        model.nimi.nimi[key] = model.parentNimi[key] + ", " + model.nimi.nimi[key];
+                    }
+                }
+            });
         }
+
     };
 
     return model;

@@ -42,14 +42,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
 
         <!-- Kentät organisaation suomenkieliselle nimelle -->
+        <div class="controls">
+        <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.fi}}"/>
+        <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
         <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija || model.oppilaitos"
                type="text" name="nimifi" class="span6"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+        <input ng-disabled="model.mode === 'delete' || !model.parentNimi.fi" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
-               type="text" name="nimifi" class="span6"
+               type="text" name="nimifi" class="span4"
                ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
                oph-name-pattern="{{model.parentPattern['fi']}}" oph-name-format="{{model.nameFormat['fi']}}"
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -66,16 +69,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.fi}})
             </span>
         </div>
+        </div>
 
         <!-- Kentät organisaation ruotsinkieliselle nimelle -->
+        <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.sv}}"/>
+        <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
         <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija || model.oppilaitos"
                type="text" name="nimisv" class="span6"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+        <input ng-disabled="model.mode === 'delete' || !model.parentNimi.sv" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
-               type="text" name="nimisv" class="span6"
+               type="text" name="nimisv" class="span4"
                ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
                oph-name-pattern="{{model.parentPattern['sv']}}" oph-name-format="{{model.nameFormat['sv']}}"
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
@@ -91,14 +97,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <!-- Kentät organisaation englanninkieliselle nimelle -->
+        <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.en}}"/>
+        <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
         <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija || model.oppilaitos"
                type="text" name="nimien" class="span6"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+        <input ng-disabled="model.mode === 'delete' || !model.parentNimi.en" ng-class="{'pending-delete' : model.mode==='delete'}"
                ng-if="model.koulutustoimija === false && model.oppilaitos === false"
-               type="text" name="nimien" class="span6"
+               type="text" name="nimien" class="span4"
                ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
                oph-name-pattern="{{model.parentPattern['en']}}" oph-name-format="{{model.nameFormat['en']}}"
                ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>

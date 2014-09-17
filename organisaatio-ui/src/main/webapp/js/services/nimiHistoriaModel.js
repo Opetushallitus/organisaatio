@@ -12,11 +12,14 @@ app.factory('NimiHistoriaModel', function($log) {
         nimihistoria : [],
         uusinNimi : {},
         ajastettuMuutos : false,
+        parentNimi : null,
+        currentNimi : {},
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
             this.nimihistoria = [];
             this.uusinNimi = {};
+            this.currentNimi = {};
             this.ajastettuMuutos = false;
         },
 
@@ -65,12 +68,43 @@ app.factory('NimiHistoriaModel', function($log) {
         },
 
         // Init NimiHistoriaModel uudella nimihistorialla
-        init: function(nimihistoria) {
+        init: function(nimihistoria, parentNimi) {
             $log.log('init()');
-
+            this.parentNimi = parentNimi || null;
             this.nimihistoria = nimihistoria;
             this.uusinNimi = this.getUusinNimi(nimihistoria);
             this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
+            this.currentNimi = this.getCurrentNimi(nimihistoria);
+            if (parentNimi) {
+                // Poistetaan parent prefix nimestä
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (model.currentNimi.nimi[key] && model.parentNimi[key]) {
+                        model.currentNimi.nimi[key] = model.currentNimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
+                    }
+                });
+            }
+            $log.log("init done");
+        },
+
+        accept: function() {
+            if (this.parentNimi) {
+                // Lisätään parentnimi prefix
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (model.uusinNimi.nimi[key] && model.parentNimi[key]) {
+                        $log.log(model.nimihistoria);
+                        if (!model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
+                            !model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                            model.uusinNimi.nimi[key] = model.parentNimi[key] + ", " + model.uusinNimi.nimi[key];
+                        }
+                    }
+                    if (model.currentNimi.nimi[key] && model.parentNimi[key]) {
+                        if (!model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
+                            !model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                            model.currentNimi.nimi[key] = model.parentNimi[key] + ", " + model.currentNimi.nimi[key];
+                        }
+                    }
+                });
+            }
         }
     };
 

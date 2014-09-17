@@ -225,7 +225,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
                     }
                 }
                 
-                if (treeItem.valittu || aliorganisaatioPuussaValintoja) {
+                if (treeItem.valittu || aliorganisaatioPuussaValintoja) {
                     valintoja = true;
                 }
             }
