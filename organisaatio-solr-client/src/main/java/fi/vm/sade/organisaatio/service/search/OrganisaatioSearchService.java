@@ -243,7 +243,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         if (restrictionList.size() > 0) {
             // filter based on restriction list
             q.addFilterQuery(String.format("%s:(%s)", PATH, Joiner.on(" ")
-                    .join(restrictionList), OID));
+                    .join(restrictionList)));
         }
         // also filter out oph (TODO do not index oph)
         q.addFilterQuery(String.format("-%s:%s", OID, rootOrganisaatioOid));
