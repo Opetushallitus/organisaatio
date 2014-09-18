@@ -784,10 +784,11 @@ public class OrganisaatioServiceImpl
 
         //convert yhteyshenkilö
         if (dto.getEctsYhteyshenkilo() != null) {
-            metadata.setHakutoimistoEctsNimi(dto.getEctsYhteyshenkilo().getKokoNimi());
-            metadata.setHakutoimistoEctsPuhelin(dto.getEctsYhteyshenkilo().getPuhelin());
-            metadata.setHakutoimistoEctsEmail(dto.getEctsYhteyshenkilo().getEmail());
-            metadata.setHakutoimistoEctsTehtavanimike(dto.getEctsYhteyshenkilo().getTitteli());
+            MonikielinenTeksti kokonimi = new MonikielinenTekstiTyyppiToEntityFunction().apply(dto.getOpintotoimistoNimi());
+            metadata.setHakutoimistoEctsNimi_old(dto.getEctsYhteyshenkilo().getKokoNimi());
+            metadata.setHakutoimistoEctsPuhelin_old(dto.getEctsYhteyshenkilo().getPuhelin());
+            metadata.setHakutoimistoEctsEmail_old(dto.getEctsYhteyshenkilo().getEmail());
+            metadata.setHakutoimistoEctsTehtavanimike_old(dto.getEctsYhteyshenkilo().getTitteli());
         } else {
             metadata.setHakutoimistoEctsNimi(null);
             metadata.setHakutoimistoEctsPuhelin(null);

@@ -215,10 +215,10 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         OrganisaatioMetaDataRDTO t = new OrganisaatioMetaDataRDTO();
 
-        t.setHakutoimistoEctsEmail(s.getHakutoimistoEctsEmail());
-        t.setHakutoimistoEctsNimi(s.getHakutoimistoEctsNimi());
-        t.setHakutoimistoEctsPuhelin(s.getHakutoimistoEctsPuhelin());
-        t.setHakutoimistoEctsTehtavanimike(s.getHakutoimistoEctsTehtavanimike());
+        t.setHakutoimistoEctsEmail(convertMKTToMap(s.getHakutoimistoEctsEmail()));
+        t.setHakutoimistoEctsNimi(convertMKTToMap(s.getHakutoimistoEctsNimi()));
+        t.setHakutoimistoEctsPuhelin(convertMKTToMap(s.getHakutoimistoEctsPuhelin()));
+        t.setHakutoimistoEctsTehtavanimike(convertMKTToMap(s.getHakutoimistoEctsTehtavanimike()));
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
         t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));

@@ -841,12 +841,27 @@
     </div>
 
     <div ng-show="ectsexpanded" ng-form="hakutoimistoectsnimi">
+        <tabset>
+            <tab select="model.ectslang='+'">
+                <tab-heading>
+                    <span class="icon-plus-sign"></span>
+                </tab-heading>
+            </tab>
+            <tab ng-repeat="tab in model.mkSections.ects.tabs"
+                 active="tab.active"
+                 select="model.ectslang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('ects', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                </tab-heading>
+            </tab>
+        </tabset>        
+        
         <div class="control-group">
             <label class="control-label">
                 {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
             </label>
             <div class="controls">
-                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi" class="span6"
+                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]" class="span6"
                        typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
                        typeahead-on-select="model.setEctsNimi($item)" oph-enter>
             </div>
@@ -857,7 +872,7 @@
             </label>
             <div class="controls">
                 <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
+                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]"
                        ng-maxlength="255" oph-enter
                        ng-required="false"/>
                 <div>
@@ -873,7 +888,7 @@
             </label>
             <div class="controls">
                 <input id="ectspuhelin" type="text" name="ectspuhelin" oph-enter
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin"
+                       ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]"
                        ng-required="false" oph-null-if-zero-length oph-pattern="^[\d \-\+]*$"/>
                 <div>
                     <span class="text-error" ng-show="hakutoimistoectsnimi.ectspuhelin.$error.ophPattern">
@@ -890,7 +905,7 @@
             <div class="controls">
                 <div>
                     <input id="ectsemail" type="email" name="ectsemail" class="span6" maxlength="255" oph-enter
-                           ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail"
+                           ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"
                            ng-required="false" oph-null-if-zero-length/>
                     <span class="text-error" ng-show="hakutoimistoectsnimi.ectsemail.$error.email">
                         {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
