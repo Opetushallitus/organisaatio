@@ -75,7 +75,7 @@ app.factory('NimiHistoriaModel', function($log) {
             this.uusinNimi = this.getUusinNimi(nimihistoria);
             this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
             this.currentNimi = this.getCurrentNimi(nimihistoria);
-            if (parentNimi) {
+            if (parentNimi && model.currentNimi) {
                 // Poistetaan parent prefix nimestä
                 ['fi', 'sv', 'en'].forEach(function(key) {
                     if (model.currentNimi.nimi[key] && model.parentNimi[key]) {
@@ -90,14 +90,14 @@ app.factory('NimiHistoriaModel', function($log) {
             if (this.parentNimi) {
                 // Lisätään parentnimi prefix
                 ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (model.uusinNimi.nimi[key] && model.parentNimi[key]) {
+                    if (model.uusinNimi && model.uusinNimi.nimi[key] && model.parentNimi[key]) {
                         $log.log(model.nimihistoria);
                         if (!model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
                             !model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
                             model.uusinNimi.nimi[key] = model.parentNimi[key] + ", " + model.uusinNimi.nimi[key];
                         }
                     }
-                    if (model.currentNimi.nimi[key] && model.parentNimi[key]) {
+                    if (model.currentNimi && model.currentNimi.nimi[key] && model.parentNimi[key]) {
                         if (!model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
                             !model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
                             model.currentNimi.nimi[key] = model.parentNimi[key] + ", " + model.currentNimi.nimi[key];

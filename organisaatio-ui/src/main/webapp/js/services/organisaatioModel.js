@@ -440,6 +440,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
+            model.organisaationTulevaNimi = {};
+            model.organisaationTulevaNimi.nimi = {};
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 refreshParent(parentResult);

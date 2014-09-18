@@ -141,6 +141,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                    type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.nimi.alkuPvm"
                    ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"/>
         </div>
+        <div>
+            <span ng-if="model.mode !== 'update' && model.mode !== 'delete'"
+                  class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
+                {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
+        </div>
     </form>
 </div>
 
