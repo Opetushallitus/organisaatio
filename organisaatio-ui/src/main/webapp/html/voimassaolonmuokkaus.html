@@ -58,19 +58,26 @@
             <div>&nbsp;</div>
             <div ng-show="model.muokkauksenTila === model.Tila.MUOKKAAMATON">{{'Organisaationmuokkaus.voimassaolo.muokkaamaton'| i18n}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
+            
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_POISTETTU">
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.merkitty'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.alkuPvmAsetettu'| i18n}} {{model.alkuPvm| date:'d.M.yyyy'}}.
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatioilleAlkupvm'| i18n}} {{model.alkuPvm| date:'d.M.yyyy'}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.merkitty'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.alkuPvmSuunniteltu'| i18n}} {{model.alkuPvm| date:'d.M.yyyy'}}.
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatioilleSuunniteltuAlkupvm'| i18n}} {{model.alkuPvm| date:'d.M.yyyy'}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">{{'Organisaationmuokkaus.voimassaolo.organisaation'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.lakkautusPvmPoistettu'| i18n}}. {{'Organisaationmuokkaus.voimassaolo.lakkauttaminenPerutaan'| i18n}}.
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.asetettu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
+            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.asetettuAliorganisaatioille'| i18n : [model.formatDate(model.alkuPvm)]}}</div>
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.suunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
+            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.suunniteltuAliorganisaatioille'| i18n: [model.formatDate(model.alkuPvm)]}}</div>
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusTyhjennetty'| i18n : [model.organisaationNimi]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatioidenLakkauttaminenPerutaan'| i18n}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.merkitty'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.lakkautusPvmAsetettu'| i18n}} {{model.lakkautusPvm| date:'d.M.yyyy'}}. {{'Organisaationmuokkaus.voimassaolo.aliorganisaatioidenLakkautus'| i18n}}.
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiotLakkautetaan'| i18n}} {{model.lakkautusPvm| date:'d.M.yyyy'}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.merkitty'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.lakkautusPvmSuunniteltu'| i18n}} {{model.lakkautusPvm| date:'d.M.yyyy'}}. {{'Organisaationmuokkaus.voimassaolo.aliorganisaatioidenTulevaLakkautus'| i18n}}.
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiotTullaanLakkauttamaan'| i18n}} {{model.lakkautusPvm| date:'d.M.yyyy'}}:</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusPvmJatkettu'| i18n}} {{model.organisaationNimi}} {{'Organisaationmuokkaus.voimassaolo.voimassaoloaikaa'| i18n}}. {{'Organisaationmuokkaus.voimassaolo.aktiiviseksi'| i18n}}.
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
+            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
+            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
+            
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">{{'Organisaationmuokkaus.voimassaolo.jatkettu'| i18n : [model.organisaationNimi]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiotAktiivisiksi'| i18n}}:</div>
         </div>
         <div class="well">

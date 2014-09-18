@@ -613,6 +613,10 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Orga
             return deferred.promise;
         };
         
+        this.formatDate = function(pvm) {
+            return $filter('date')(pvm,'d.M.yyyy');
+        };
+        
     };
         
     return model;

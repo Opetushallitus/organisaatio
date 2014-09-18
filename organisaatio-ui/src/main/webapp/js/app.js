@@ -10,8 +10,8 @@ angular.module('localization', [])
         initialized = true;
     });
 
-    return function (localisationKey) {
-        return initialized ? LocalisationService.t(localisationKey) : '...';
+    return function (localisationKey, parameters) {
+        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
     };
 }]);
 
