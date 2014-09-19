@@ -1726,16 +1726,16 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         };
 
         this.setEctsNimi = function(henkilo) {
-            Console.log("AAA setECTSnimi");
+            
             Henkilo.get({hlooid: henkilo.tiedot.oidHenkilo}, function(result) {
                 if (result.yhteystiedotRyhma.length > 0) {
                     for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystiedot.length; i++) {
                         if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
-                            Console.log("AAA YHTEYSTIETO_PUHELINNUMERO");
+                           
                             model.organisaatio.metadata.hakutoimistoEctsPuhelin = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
                         }
                         if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
-                             Console.log("AAA YHTEYSTIETO_SAHKOPOSTI");
+                             
                             model.organisaatio.metadata.hakutoimistoEctsEmail = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
                         }
                     }
