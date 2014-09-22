@@ -53,7 +53,8 @@
             clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
             toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
     <div>
-        <span ng-show="!model.isAcceptable" class="text-error">{{'Organisaationmuokkaus.luontipvm'| i18n}} {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}.</span>
+        <span ng-show="!model.isAcceptable && model.muokataanAlkupvm" class="text-error">{{'Organisaationmuokkaus.luontipvm'| i18n}} {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}. {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}.</span>
+        <span ng-show="!model.isAcceptable && !model.muokataanAlkupvm" class="text-error">{{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}.</span>
         <div class="infotext">
             <div>&nbsp;</div>
             <div ng-show="model.muokkauksenTila === model.Tila.MUOKKAAMATON">{{'Organisaationmuokkaus.voimassaolo.muokkaamaton'| i18n}}
