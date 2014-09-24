@@ -115,17 +115,6 @@
             <!-- autentikaatiossa excludaavat xerceksen, pitäisikö tässäkin? -->
         </dependency>
 
-        <dependency>
-            <artifactId>aspectjrt</artifactId>
-            <groupId>org.aspectj</groupId>
-            <version>${aspectj.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>aspectjweaver</artifactId>
-            <groupId>org.aspectj</groupId>
-            <version>${aspectj.version}</version>
-        </dependency>
-
         <!-- Tapahtumalogi -->
         <dependency>
             <groupId>fi.vm.sade.log</groupId>
