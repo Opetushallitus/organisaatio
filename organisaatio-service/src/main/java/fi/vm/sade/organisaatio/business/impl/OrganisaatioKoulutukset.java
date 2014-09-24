@@ -95,7 +95,7 @@ public class OrganisaatioKoulutukset {
     }
 
     private List<KoulutusHakutulosV1RDTO> getOrganisaatioKoulutukset(JsonElement organisaatioTulos) {
-        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
 
         JsonElement koulutusTulokset = organisaatioTulos.getAsJsonObject().get("tulokset");
 
@@ -117,7 +117,7 @@ public class OrganisaatioKoulutukset {
     }
 
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
-        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
+        List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<KoulutusHakutulosV1RDTO>();
         InputStream jsonStream;
 
         try {

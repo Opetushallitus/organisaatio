@@ -246,7 +246,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Map<String, String> oldName = null;
         if (updating) {
             Organisaatio oldOrg = organisaatioDAO.findByOid(model.getOid());
-            oldName = new HashMap<>(oldOrg.getNimi().getValues());
+            oldName = new HashMap<String, String>(oldOrg.getNimi().getValues());
         }
 
         // Luodaan tallennettava entity objekti
@@ -423,7 +423,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private List<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, List<YhteystietoArvo> nys,
             boolean updating) {
 
-        Map<String, YhteystietoArvo> ov = new HashMap<>();
+        Map<String, YhteystietoArvo> ov = new HashMap<String, YhteystietoArvo>();
 
         for (YhteystietoArvo ya : yhteystietoArvoDAO.findByOrganisaatio(org)) {
             if (!isAllowed(org, ya.getKentta().getYhteystietojenTyyppi())) {
@@ -433,7 +433,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        List<YhteystietoArvo> ret = new ArrayList<>();
+        List<YhteystietoArvo> ret = new ArrayList<YhteystietoArvo>();
 
         for (YhteystietoArvo ya : nys) {
             List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiDAO.findBy("oid", ya.getKentta().getYhteystietojenTyyppi().getOid());
@@ -601,7 +601,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 return null;
             }
 
-            List<OrganisaatioSuhde> children = new ArrayList<>();
+            List<OrganisaatioSuhde> children = new ArrayList<OrganisaatioSuhde>();
             getDescendantSuhteet(oppilaitosE, children);
             int nextVal = children.size() + 1;
 
@@ -958,15 +958,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("bulkUpdatePvm():" + tiedot);
         OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
 
-        HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<>(tiedot.size());
-        HashMap<String, Organisaatio> organisaatioMap = new HashMap<>(tiedot.size());
+        HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<String, OrganisaatioMuokkausTiedotDTO>(tiedot.size());
+        HashMap<String, Organisaatio> organisaatioMap = new HashMap<String, Organisaatio>(tiedot.size());
 
         for(OrganisaatioMuokkausTiedotDTO tieto:tiedot) {
             givenData.put(tieto.getOid(), tieto);
         }
 
         Set<String> givenOids = givenData.keySet();
-        List<String> oids = new ArrayList<>(givenOids);
+        List<String> oids = new ArrayList<String>(givenOids);
 
         LOG.debug("bulkUpdatePvm(): haetaan oideilla:" + oids);
         List<Organisaatio> organisaatios = this.organisaatioDAO.findByOidList(oids, oids.size());
@@ -978,8 +978,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("bulkUpdatePvm(): organisaatiolista:" + organisaatios);
 
         // näiden oidien vanhemmuussuhteet on jo löydetty
-        Set<String> processed = new HashSet<>(tiedot.size());
-        List<Organisaatio> roots = new ArrayList<>(tiedot.size());
+        Set<String> processed = new HashSet<String>(tiedot.size());
+        List<Organisaatio> roots = new ArrayList<Organisaatio>(tiedot.size());
 
         // etsitään juuriorganisaatiot, eli ne, joiden vanhempaa ei löydy annetuista oideista
         for (Organisaatio o : organisaatios) {
@@ -1021,7 +1021,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        List<Organisaatio> indeksoitavat = new ArrayList<>(givenData.size());
+        List<Organisaatio> indeksoitavat = new ArrayList<Organisaatio>(givenData.size());
         for(String oid: organisaatioMap.keySet()) {
             OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
             Organisaatio org = organisaatioMap.get(oid);
@@ -1138,7 +1138,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         for (Organisaatio organisaatio : organisaatiot) {
             Map<String, String> oldName;
-            oldName = new HashMap<>(organisaatio.getNimi().getValues());
+            oldName = new HashMap<String, String>(organisaatio.getNimi().getValues());
 
             LOG.info("Orgnisaation nimen update tarve: " + organisaatio);
 
