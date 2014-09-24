@@ -24,9 +24,10 @@
     "eqnull": true,
     "globals": {
         "angular": false,
-          "$": false,
-          "_": true,
-          "moment": false
+        "$": false,
+        "_": true,
+        "moment": false,
+        "app": false
     }
 }
 

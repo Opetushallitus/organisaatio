@@ -1,6 +1,6 @@
 app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaatio) {
 
-    var model = new function() {
+    var model = function() {
         var ryhmat = [];
         this.groups = ryhmat;
 

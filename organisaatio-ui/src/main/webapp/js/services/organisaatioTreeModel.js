@@ -42,39 +42,39 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         isLeaf: function (data) {
             return data.children.length === 0;
         },
-        
+
         hasActiveChildren: function (node) {
-            
-            if (node.children.length < 1)                
+
+            if (node.children.length < 1)
             {
                 //$log.error("Lapsia ei löytynyt!");
                 return false;
             }
-         
+
             for (var i=0; i < node.children.length; i++)
             {
-                if (isAktiivinen(node.children[i]))
+                if (this.isAktiivinen(node.children[i]))
                 {
                     //$log.error("löytyi aktiivinen!");
-                     
+
                     return true;
                 }
             }
              //$log.error("Ei löytynyt aktiivista!");
             return false;
-        },        
+        },
 
         deleteNode: function (node) {
             // Etsitään noodin parent
-            findParent = function(parentNode) {
+            var findParent = function(parentNode) {
                 var parent;
                 for(var i=0; i < parentNode.children.length; i++) {
                     if (node === parentNode.children[i]) {
                         return parentNode;
                     }
                 }
-                for(var i=0; i < parentNode.children.length; i++) {
-                    parent = findParent(parentNode.children[i]);
+                for(var j=0; j < parentNode.children.length; j++) {
+                    parent = findParent(parentNode.children[j]);
                     if (parent) {
                         return parent;
                     }
@@ -83,7 +83,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             };
 
             // Etsitään noodin parenttia, jotta voidaan poistaa se parentista
-            parent = findParent(tree);
+            var parent = findParent(tree);
 
             // Jos parent löytyi niin postetaan se children listalta
             if (parent) {
@@ -104,7 +104,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
 
         getNimiForOid: function (oid) {
             // Etsitään noodi oidin perusteella
-            findOid = function(node) {
+            var findOid = function(node) {
                 var tempNode;
                 if (node.oid && oid === node.oid) {
                     return node;
@@ -119,7 +119,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
             };
 
             // Etsitään noodia jonka oid on annettu oid
-            node = findOid(tree);
+            var node = findOid(tree);
 
             // Jos parent löytyi niin postetaan se children listalta
             if (node) {
@@ -265,7 +265,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 Alert.add("warning", $filter('i18n')("Organisaatiot.eiHakutuloksia", ""), true);
             }
 
-            updateSubtree = function(node, level, expanded, parent) {
+            var updateSubtree = function(node, level, expanded, parent) {
                 node.i18nNimi = model.getNimi(node);
                 if (parent) {
                     node.i18nNimi = node.i18nNimi.replace(model.getNimi(parent) + ", ", "");
@@ -294,7 +294,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 if (tree.children.length > 20) {
                     expanded = false;
                 }
-                this.updateSubtree(node, 1, expanded, null);
+                updateSubtree(node, 1, expanded, null);
             });
         },
 

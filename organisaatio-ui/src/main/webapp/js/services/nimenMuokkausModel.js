@@ -114,7 +114,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             // organisaation tallennus tallentaa myös ensimmäisen nimihistorian
             if (this.uusiOrganisaatio) {
                 deferred.resolve();
-                return deferred.promise;;
+                return deferred.promise;
             }
 
             if (this.mode === "update") {
