@@ -43,6 +43,8 @@ public class OrganisaatioKoodisto {
 
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
+    private boolean reauthorize;
+
     /**
      * Luo instanssin ja alustaa gson:in
      */
@@ -54,6 +56,7 @@ public class OrganisaatioKoodisto {
         if (client == null) {
             client = new OrganisaatioKoodistoClient();
         }
+        client.setReauthorize(reauthorize);
         return client;
     }
 
@@ -142,9 +145,11 @@ public class OrganisaatioKoodisto {
      * yhteishaunkoulukoodi_<yhteishaunkoulukoodi>
      *
      * @param entity Organisaatio
+     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     *
      * @return true jos koodiston päivittäminen onnistui, false muuten
      */
-    public String paivitaKoodisto(Organisaatio entity) {
+    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         /*
          * Koodiston koodit
          *     [0]: koodiUri
@@ -159,6 +164,8 @@ public class OrganisaatioKoodisto {
         };
         int URI_INDEX = 0;
         int TUNNISTE_INDEX = 1;
+
+        this.reauthorize = reauthorize;
 
         for (Object[] koodiAlkio : koodiLista) {
             String uri = (String) koodiAlkio[URI_INDEX];

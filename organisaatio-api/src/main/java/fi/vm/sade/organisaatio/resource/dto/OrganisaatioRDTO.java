@@ -27,10 +27,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
  * REST.
- * 
+ *
  * .. well, actually "OrganisaatioDTO" and "Organisaatio" were already used and
  * I wanted to avoid confusion. :)
- * 
+ *
  * "Natural key":
  * <ul>
  * <li>Koulutustoimija - y-tunnus</li>
@@ -38,7 +38,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * <li>Toimipiste - oppilaitosnro + toimipisteenjärjestysnumero (konkatenoituna)
  * sekä yhkoulukoodi</li>
  * </ul>
- * 
+ *
  * @author mlyly
  */
 @ApiModel(value = "Organisaation tiedot")
@@ -95,9 +95,9 @@ public class OrganisaatioRDTO implements Serializable {
     private Map<String, String> _postiosoite;
 
     private Map<String, String> _kayntiosoite;
-    
+
     private List<Map<String, String>> _yhteystiedot;
-    
+
     private String _kuvaus;
 
     private Map<String, String> _kuvaus2;
@@ -162,7 +162,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Kielten URIt", required = true)
     public List<String> getKieletUris() {
         if (_kieletUris == null) {
-            _kieletUris = new ArrayList<String>();
+            _kieletUris = new ArrayList<>();
         }
         return _kieletUris;
     }
@@ -200,7 +200,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     public Map<String, String> getNimi() {
         if (_nimi == null) {
-            _nimi = new HashMap<String, String>();
+            _nimi = new HashMap<>();
         }
         return _nimi;
     }
@@ -240,7 +240,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Tyypit", required = true)
     public List<String> getTyypit() {
         if (_tyypit == null) {
-            _tyypit = new ArrayList<String>();
+            _tyypit = new ArrayList<>();
         }
         return _tyypit;
     }
@@ -270,7 +270,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Vuosiluokat", required = true)
     public List<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
-            _vuosiluokat = new ArrayList<String>();
+            _vuosiluokat = new ArrayList<>();
         }
         return _vuosiluokat;
     }
@@ -282,7 +282,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Ryhmatyypit", required = true)
     public List<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
-            _ryhmatyypit = new ArrayList<String>();
+            _ryhmatyypit = new ArrayList<>();
         }
         return _ryhmatyypit;
     }
@@ -294,7 +294,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Kayttoryhmat", required = true)
     public List<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
-            _kayttoryhmat = new ArrayList<String>();
+            _kayttoryhmat = new ArrayList<>();
         }
         return _kayttoryhmat;
     }
@@ -306,7 +306,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Käyntiosoite", required = true)
     public Map<String, String> getKayntiosoite() {
         if (_kayntiosoite == null) {
-            _kayntiosoite = new HashMap<String, String>();
+            _kayntiosoite = new HashMap<>();
         }
         return _kayntiosoite;
     }
@@ -318,7 +318,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Postiosoite", required = true)
     public Map<String, String> getPostiosoite() {
         if (_postiosoite == null) {
-            _postiosoite = new HashMap<String, String>();
+            _postiosoite = new HashMap<>();
         }
         return _postiosoite;
     }
@@ -339,7 +339,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Toinen kuvaus", required = true)
     public Map<String, String> getKuvaus2() {
         if (_kuvaus2 == null) {
-            _kuvaus2 = new HashMap<String, String>();
+            _kuvaus2 = new HashMap<>();
         }
         return _kuvaus2;
     }
@@ -375,38 +375,78 @@ public class OrganisaatioRDTO implements Serializable {
         this._metadata = _metadata;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Sähköpostiosoite", required = true)
     public String getEmailOsoite() {
         return _emailOsoite;
     }
 
+    /**
+     * @param _emailOsoite
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setEmailOsoite(String _emailOsoite) {
         this._emailOsoite = _emailOsoite;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Faxin numero", required = true)
     public String getFaksinumero() {
         return _faksinumero;
     }
 
+    /**
+     * @param _faksinumero
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setFaksinumero(String _faksinumero) {
         this._faksinumero = _faksinumero;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "Puhelinnumero", required = true)
     public String getPuhelinnumero() {
         return _puhelinnumero;
     }
 
+    /**
+     * @param _puhelinnumero
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setPuhelinnumero(String _puhelinnumero) {
         this._puhelinnumero = _puhelinnumero;
     }
 
+    /**
+     * @return
+     * @deprecated Do not use this method! Use getYhteystiedot() instead!
+     */
+    @Deprecated
     @ApiModelProperty(value = "WWW-osoite", required = true)
     public String getWwwOsoite() {
         return _wwwOsoite;
     }
 
+    /**
+     * @param _wwwOsoite
+     * @deprecated Do not use this method! Use setYhteystiedot() instead!
+     */
+    @Deprecated
     public void setWwwOsoite(String _wwwOsoite) {
         this._wwwOsoite = _wwwOsoite;
     }
@@ -447,7 +487,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     public List<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
-            _yhteystiedot = new ArrayList<Map<String, String>>();
+            _yhteystiedot = new ArrayList<>();
         }
         return _yhteystiedot;
     }

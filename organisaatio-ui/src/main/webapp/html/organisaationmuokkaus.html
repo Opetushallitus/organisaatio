@@ -154,7 +154,6 @@
         </div>
     </div>
 
-    <!-- Nimenmuutos development vaiheessa
     <div class="control-group">
         <label class="control-label">
             {{'Organisaationtarkastelu.nimi'| i18n}}*
@@ -166,65 +165,27 @@
                 </div>
                 <div ng-if="model.organisaationTulevaNimi.alkuPvm">
                     <br>
-                    {{model.organisaationTulevaNimi.alkuPvm}} <i class="icon-arrow-right"></i>
+                    {{model.organisaationTulevaNimi.alkuPvm | date:'dd.MM.yyyy'}} <i class="icon-arrow-right"></i>
                     <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
                         {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                     </div>
                 </div>
             </label>
-            <button auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                    class="btn" ng-click="openNimenMuokkaus()" tooltip="{{'Organisaatiot.ohje.nimenmuokkaus' | i18n}}">
-                {{'Organisaationmuokkaus.muutanimi'| i18n}}
+            <button ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                    class="btn" ng-click="openNimenMuokkaus()">
+                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
-        </div>
-    </div>
-    -->
-    <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.nimi'| i18n}}*
-        </label>
-        <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
-                   type="text" name="nimifi" class="span6"
-                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                   type="text" name="nimifi" class="span6"
-                   ng-model="model.organisaatio.nimi.fi" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-            <div>
-                <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
+            <button ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
+                    class="btn" ng-click="openNimenMuokkaus()">
+                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
+            </button>
+            <div ng-if="!(model.organisaatio.nimi.fi || model.organisaatio.nimi.sv || model.organisaatio.nimi.en)">
+                <input type="hidden" name="nimivirhe" ng-model="nimivirhe" required>
+                <span class="text-error" ng-show="form.nimivirhe.$error.required">
                     {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
                 </span>
             </div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
-                   id="nimisv" type="text" name="nimisv" class="span6"
-                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                   id="nimisv" type="text" name="nimisv" class="span6"
-                   ng-model="model.organisaatio.nimi.sv" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
-                   id="nimise" type="text" name="nimien" class="span6"
-                   auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                   ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
-            <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
-                   id="nimise" type="text" name="nimien" class="span6"
-                   ng-model="model.organisaatio.nimi.en" oph-decode-name oph-enter
-                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
         </div>
     </div>
 
@@ -234,7 +195,16 @@
         </label>
         <div class="controls">
             <div>
-                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                       auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                       type="text" name="luontipvm2" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
+                       datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}">
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                       type="text" name="luontipvm2" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
+                       datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
+                       ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}">
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"  ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
@@ -242,7 +212,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-                <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                        type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -250,7 +220,16 @@
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 &nbsp;-&nbsp;
-                <input ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
+                        type="text" name="lakkautuspvm2" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
+                        datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
+                        ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}" >
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                        type="text" name="lakkautuspvm2" tooltip="{{'Organisaationmuokkaus.ohje.aloitamuokkaus' | i18n }}"
+                        datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
+                        ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}" >
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true" oph-enter
                        type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
@@ -258,7 +237,7 @@
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
-                <input ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                        type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
@@ -269,6 +248,9 @@
             <div>
                 <em class="muted">{{'Organisaationmuokkaus.ohje.alkupvm'| i18n}}</em>
             </div>
+            <div ng-show="model.muutettaviaAliorganisaatioita">
+                {{'Organisaationmuokkaus.voimassaolo.info' | i18n: [model.muutettaviaAliorganisaatioita]}}
+            </div>
             <div>
                 <span class="text-error" ng-show="form.luontipvm.$error.required || form.luontipvm.$error.date">
                     {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
@@ -278,6 +260,11 @@
                     {{'Organisaationmuokkaus.validointi.alkupvmvuosi'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.dateYear">
                     {{'Organisaationmuokkaus.validointi.loppupvmvuosi'| i18n}}</span>
+               
+                <span class="text-error" ng-show="form.$error.organisaationVoimassaolo">
+                    {{'Organisaationmuokkaus.validointi.voimassaolo'| i18n}}</span>
+                <span class="text-error" ng-show="form.$error.aliorganisaationVoimassaolo">
+                    {{'Organisaationmuokkaus.validointi.aliorganisaationVoimassaolo'| i18n}}</span>
             </div>
         </div>
     </div>
@@ -854,12 +841,27 @@
     </div>
 
     <div ng-show="ectsexpanded" ng-form="hakutoimistoectsnimi">
+        <tabset>
+            <tab select="model.ectslang='+'">
+                <tab-heading>
+                    <span class="icon-plus-sign"></span>
+                </tab-heading>
+            </tab>
+            <tab ng-repeat="tab in model.mkSections.ects.tabs"
+                 active="tab.active"
+                 select="model.ectslang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('ects', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
+                </tab-heading>
+            </tab>
+        </tabset>        
+        
         <div class="control-group">
             <label class="control-label">
                 {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
             </label>
             <div class="controls">
-                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi" class="span6"
+                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]" class="span6"
                        typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
                        typeahead-on-select="model.setEctsNimi($item)" oph-enter>
             </div>
@@ -870,7 +872,7 @@
             </label>
             <div class="controls">
                 <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike"
+                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]"
                        ng-maxlength="255" oph-enter
                        ng-required="false"/>
                 <div>
@@ -886,7 +888,7 @@
             </label>
             <div class="controls">
                 <input id="ectspuhelin" type="text" name="ectspuhelin" oph-enter
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin"
+                       ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]"
                        ng-required="false" oph-null-if-zero-length oph-pattern="^[\d \-\+]*$"/>
                 <div>
                     <span class="text-error" ng-show="hakutoimistoectsnimi.ectspuhelin.$error.ophPattern">
@@ -903,7 +905,7 @@
             <div class="controls">
                 <div>
                     <input id="ectsemail" type="email" name="ectsemail" class="span6" maxlength="255" oph-enter
-                           ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail"
+                           ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"
                            ng-required="false" oph-null-if-zero-length/>
                     <span class="text-error" ng-show="hakutoimistoectsnimi.ectsemail.$error.email">
                         {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}

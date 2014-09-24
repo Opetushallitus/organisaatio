@@ -31,7 +31,7 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
@@ -72,6 +72,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -414,9 +415,29 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     private Organisaatio removeOrganisaatioByOid(String oid, Set<String> reindex) {
+         
         Organisaatio removed = organisaatioDAO.markRemoved(oid);
         reindex.add(oid);
         return removed.getParent();
+    }
+    
+    private void recursivelyRemoveOrganisaatioByOid(List<Organisaatio> nodestoberemovedlist, Organisaatio node, Set<String> reindex, Organisaatio po) {
+        int count = node.getChildCount(null, null);
+                  
+         if ( 0 < count ){ 
+            
+            List <Organisaatio> children;
+            children = organisaatioDAO.findChildren(node.getOid(), false, true);
+            
+            nodestoberemovedlist.addAll(children);
+            if (children.size() == 1){
+                recursivelyRemoveOrganisaatioByOid(nodestoberemovedlist, children.get(0), reindex, po);
+            }
+         }
+         else if (count == 0){            
+            nodestoberemovedlist.add(node);
+         }        
+        
     }
 
     @Override
@@ -430,14 +451,40 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         Set<String> reindex = new HashSet<String>();
-        Organisaatio po = removeOrganisaatioByOid(oid, reindex);
-
+        
+                       
+        Organisaatio po = null;
+        List <Organisaatio> polist = new ArrayList<Organisaatio>();
+                        
+        List<Organisaatio> nodestoberemovedlist = new ArrayList<Organisaatio>();
+        
+        //Do the delete for the actual organization also
+        // Set the parent to be removed
+        polist.add(organisaatioDAO.findByOid(oid));
+        reindex.add(oid);
+        
+        recursivelyRemoveOrganisaatioByOid(nodestoberemovedlist, (organisaatioDAO.findByOid(oid)), reindex, po);
+        
+        for(Organisaatio org : nodestoberemovedlist)
+        {
+            LOG.debug("Handling removables, oid: " + org.getOid());
+            po = removeOrganisaatioByOid(org.getOid(), reindex); 
+            if (po != null){
+                 LOG.debug("Handling removable organisation, oid: " + org.getOid());
+                polist.add(po);
+            }
+        }
+        // now remove the parent
+        organisaatioDAO.markRemoved(oid);
+        
         solrIndexer.delete(new ArrayList<String>(reindex));
 
         // päivittää aliorganisaatioiden lukumäärän parenttiin
-        if (po != null) {
-            solrIndexer.index(Arrays.asList(po));
+        if (polist != null) {
+            solrIndexer.index(polist);
         }
+        
+        //////////////////////////////////
         return "{\"message\": \"deleted\"}";
     }
 

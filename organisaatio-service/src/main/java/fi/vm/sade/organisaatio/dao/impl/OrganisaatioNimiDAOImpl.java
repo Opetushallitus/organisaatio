@@ -22,7 +22,6 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.QOrganisaatioNimi;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,12 +44,13 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     OrganisaatioDAOImpl organisaatioDAO;
 
     @Override
-    public OrganisaatioNimi addNimi(Long organisaatioId, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja) {
-        LOG.info("addNimi({}, {}, {})", new Object[]{organisaatioId, alkuPvm, nimi.getValues()});
-
-        if (organisaatioId == null) {
+    public OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja) {
+        if (organisaatio == null) {
             throw new IllegalArgumentException();
         }
+
+        LOG.info("addNimi({}, {}, {})", new Object[]{organisaatio.getOid(), alkuPvm, nimi.getValues()});
+
         if (alkuPvm == null) {
             alkuPvm = new Date();
         }
@@ -58,8 +58,6 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
         //
         // Luodaan uusi nimi organisaatiolle (nimihistorian entry)
         //
-        Organisaatio organisaatio = organisaatioDAO.read(organisaatioId);
-
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.setOrganisaatio(organisaatio);
         organisaatioNimi.setAlkuPvm(alkuPvm);
@@ -72,39 +70,26 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     }
 
     @Override
-    public List<OrganisaatioNimi> findNimet(Long organisaatioId) {
-        if (organisaatioId == null) {
-            throw new IllegalArgumentException("organisaatioId cannot be null");
-        }
+    public List<OrganisaatioNimi> findNimet(Organisaatio organisaatio) {
+        LOG.info("findNimet({})", organisaatio.getOid());
 
-        LOG.info("findNimet({})", organisaatioId);
-
-        QOrganisaatioNimi qOrganisaatioNimi = QOrganisaatioNimi.organisaatioNimi;
-
-        // Haetaan organisaatio
-        BooleanExpression whereExpression = qOrganisaatioNimi.organisaatio.id.eq(organisaatioId);
-
-        return new JPAQuery(getEntityManager())
-                .from(qOrganisaatioNimi)
-                .where(whereExpression)
-                .distinct()
-                .list(qOrganisaatioNimi);
+        return findBy("organisaatio", organisaatio);
     }
 
     @Override
     public List<OrganisaatioNimi> findNimet(String organisaatioOid) {
         Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
 
-        return this.findNimet(organisaatio.getId());
+        return this.findNimet(organisaatio);
     }
 
     @Override
-    public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm) {
-        if (organisaatioId == null) {
-            throw new IllegalArgumentException("organisaatioId cannot be null");
+    public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm) {
+        if (organisaatio == null) {
+            throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.info("findNimi({}, {})", new Object[]{organisaatioId, alkuPvm});
+        LOG.info("findNimi({}, {})", new Object[]{organisaatio.getId(), alkuPvm});
 
         // Kyselyä kokeilty myös QueryDsl:llä
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
@@ -114,7 +99,7 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatioId
+                + "organisaatio_id = " + organisaatio.getId()
                 + " and "
                 + "alkupvm = '" + df.format(alkuPvm) + "'";
 
@@ -128,7 +113,7 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
             return organisaatioNimet.get(0);
         }
 
-        LOG.info("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatioId, alkuPvm});
+        LOG.info("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId(), alkuPvm});
 
         return null;
     }
@@ -138,27 +123,27 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm) {
         Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
 
-        return this.findNimi(organisaatio.getId(), alkuPvm);
+        return this.findNimi(organisaatio, alkuPvm);
     }
 
     @Override
-    public OrganisaatioNimi findCurrentNimi(Long organisaatioId) {
-        if (organisaatioId == null) {
-            throw new IllegalArgumentException("organisaatioId cannot be null");
+    public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio) {
+        if (organisaatio == null) {
+            throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.info("findCurrentNimi({})", new Object[]{organisaatioId});
+        LOG.info("findCurrentNimi({})", new Object[]{organisaatio.getId()});
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatioId
+                + "organisaatio_id = " + organisaatio.getId()
                 + " AND "
                 + "alkupvm = (SELECT MAX (o.alkuPvm) "
                 + "FROM OrganisaatioNimi o "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatioId
+                + "organisaatio_id = " + organisaatio.getId()
                 + " AND "
                 + "alkupvm <= '" + df.format(new Date()) + "')";
 
@@ -172,7 +157,7 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
             return organisaatioNimet.get(0);
         }
 
-        LOG.info("findNimi({}) --> OrganisaatioNimi not found", new Object[]{organisaatioId});
+        LOG.info("findNimi({}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId()});
 
         return null;
     }
@@ -182,8 +167,55 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid) {
         Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
 
-        return this.findCurrentNimi(organisaatio.getId());
+        return this.findCurrentNimi(organisaatio);
     }
 
+
+    /**
+     * Haetaan organisaatiot, joiden nimi eroaa nimihistorian current nimestä
+     * -----------------------------------------------------------------------
+     * SELECT org.*
+     * FROM organisaatio org
+     * WHERE org.nimi_mkt !=
+     * (
+     * SELECT org_nimi.nimi_mkt
+     * FROM organisaatio_nimi org_nimi
+     * WHERE org_nimi.alkupvm =
+     * (
+     * SELECT max(org_nimi2.alkupvm)
+     * FROM organisaatio_nimi org_nimi2
+     * WHERE org_nimi.organisaatio_id = org_nimi2.organisaatio_id
+     * AND org_nimi2.alkupvm <= '2014-09-01'
+     * )
+     * AND org.id = org_nimi.organisaatio_id
+     * )
+     *
+     * Ylläoleva SQL lauseke on alla kirjoitettu HQL muotoon.
+     *
+     * @return
+     **/
+    @Override
+    public List<Organisaatio> findNimiNotCurrentOrganisaatiot() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String s = "SELECT org FROM Organisaatio org "
+                + "WHERE org.nimi != "
+                + "( "
+                + "SELECT org_nimi.nimi FROM OrganisaatioNimi org_nimi "
+                + "WHERE org_nimi.alkuPvm = "
+                + "( "
+                + "SELECT MAX (org_nimi2.alkuPvm) FROM OrganisaatioNimi org_nimi2 "
+                + "WHERE org_nimi.organisaatio = org_nimi2.organisaatio "
+                + "AND org_nimi2.alkuPvm <= '" + df.format(new Date()) + "' "
+                + ") "
+                + "AND org = org_nimi.organisaatio "
+                + ")";
+
+        Query q = getEntityManager().createQuery(s);
+
+        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
+
+        return organisaatiot;
+    }
 
 }

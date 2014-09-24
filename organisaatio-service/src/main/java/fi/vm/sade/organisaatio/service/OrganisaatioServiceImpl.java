@@ -45,7 +45,7 @@ import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.lop.BinaryData;
 import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
-import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatTiedotTyyppiFunction;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
@@ -784,10 +784,11 @@ public class OrganisaatioServiceImpl
 
         //convert yhteyshenkilö
         if (dto.getEctsYhteyshenkilo() != null) {
-            metadata.setHakutoimistoEctsNimi(dto.getEctsYhteyshenkilo().getKokoNimi());
-            metadata.setHakutoimistoEctsPuhelin(dto.getEctsYhteyshenkilo().getPuhelin());
-            metadata.setHakutoimistoEctsEmail(dto.getEctsYhteyshenkilo().getEmail());
-            metadata.setHakutoimistoEctsTehtavanimike(dto.getEctsYhteyshenkilo().getTitteli());
+            MonikielinenTeksti kokonimi = new MonikielinenTekstiTyyppiToEntityFunction().apply(dto.getOpintotoimistoNimi());
+            metadata.setHakutoimistoEctsNimi_old(dto.getEctsYhteyshenkilo().getKokoNimi());
+            metadata.setHakutoimistoEctsPuhelin_old(dto.getEctsYhteyshenkilo().getPuhelin());
+            metadata.setHakutoimistoEctsEmail_old(dto.getEctsYhteyshenkilo().getEmail());
+            metadata.setHakutoimistoEctsTehtavanimike_old(dto.getEctsYhteyshenkilo().getTitteli());
         } else {
             metadata.setHakutoimistoEctsNimi(null);
             metadata.setHakutoimistoEctsPuhelin(null);

@@ -10,8 +10,8 @@ angular.module('localization', [])
         initialized = true;
     });
 
-    return function (localisationKey) {
-        return initialized ? LocalisationService.t(localisationKey) : '...';
+    return function (localisationKey, parameters) {
+        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
     };
 }]);
 
@@ -93,6 +93,10 @@ app.config(['$provide', function($provide) {
             return $sniffer;
         }]);
 }]);
+
+app.config(function(datepickerConfig) {
+    datepickerConfig.startingDay = 1;
+});
 
 app.run(function(OrganisaatioInitAuth, UserInfo) {
     // Tehdään autentikoitu get servicelle
@@ -491,6 +495,13 @@ app.factory('Nimet', function($resource) {
         post: {method: 'POST'},
         put: {method: 'PUT'},
         delete: {method: 'DELETE'}
+    });
+});
+
+// Usean organisaation voimassaolon muokkaus yhdellä kertaa
+app.factory('Muokkaamonta', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
+        put: {method: 'PUT'},
     });
 });
 

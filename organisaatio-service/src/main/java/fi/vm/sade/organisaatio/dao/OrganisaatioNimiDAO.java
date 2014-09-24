@@ -19,6 +19,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Date;
 import java.util.List;
@@ -30,23 +31,23 @@ import java.util.List;
 public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
 
     /**
-     * Luodaan uusi nimi organisaatiolle.
+     * Luodaan uusi nimi organisaatiolle annetuilla tiedoilla.
      *
-     * @param organisaatioId
+     * @param organisaatio
      * @param nimi
      * @param alkuPvm
      * @param paivittaja
      * @return Luotu OrganisaatioNimi
      */
-    OrganisaatioNimi addNimi(Long organisaatioId, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
+    OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
 
     /**
      * Haetaan annetun organisaation nimet
      *
-     * @param organisaatioId
+     * @param organisaatio
      * @return Annetun organisaation nimihistoria listana
      */
-    List<OrganisaatioNimi> findNimet(Long organisaatioId);
+    List<OrganisaatioNimi> findNimet(Organisaatio organisaatio);
 
     /**
      * Haetaan annetun organisaation nimet
@@ -56,10 +57,45 @@ public interface OrganisaatioNimiDAO extends JpaDAO<OrganisaatioNimi, Long>  {
      */
     List<OrganisaatioNimi> findNimet(String organisaatioOid);
 
-    public OrganisaatioNimi findNimi(Long organisaatioId, Date alkuPvm);
+    /**
+     * Haetaan annetun organisaation nimi, annetulla nimen voimassaolon alkupäivämäärällä.
+     *
+     * @param organisaatio
+     * @param alkuPvm
+     * @return
+     */
+    public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm);
+
+    /**
+     * Haetaan annetun organisaation (oid) nimi, annetulla nimen voimassaolon alkupäivämäärällä.
+     *
+     * @param organisaatioOid
+     * @param alkuPvm
+     * @return
+     */
     public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm);
 
-    public OrganisaatioNimi findCurrentNimi(Long organisaatioId);
+    /**
+     * Haetaan annetun organisaation nykyinen nimi.
+     *
+     * @param organisaatio
+     * @return
+     */
+    public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio);
+
+    /**
+     * Haetaan annetun organisaation (oid) nykyinen nimi.
+     *
+     * @param organisaatioOid
+     * @return
+     */
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
+
+    /**
+     * Haetaan organisaatiot, joiden nimi ei ole sama kuin nimihistorian current nimi.
+     *
+     * @return
+     */
+    public List<Organisaatio> findNimiNotCurrentOrganisaatiot();
 
 }

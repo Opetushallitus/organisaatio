@@ -9,6 +9,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
         <class>fi.vm.sade.organisaatio.model.Organisaatio</class>
+        <class>fi.vm.sade.organisaatio.model.OrganisaatioNimi</class>
         <class>fi.vm.sade.organisaatio.model.OrganisaatioSuhde</class>
         <class>fi.vm.sade.organisaatio.model.HistoryMetadata</class>
         <class>fi.vm.sade.organisaatio.model.Yhteystieto</class>

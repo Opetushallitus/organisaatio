@@ -15,6 +15,8 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
@@ -67,9 +69,39 @@ public interface OrganisaatioBusinessService {
      */
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid);
 
+    /**
+     *
+     * @param oid
+     * @param nimidto
+     * @return
+     */
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto);
 
+    /**
+     *
+     * @param oid
+     * @param date
+     * @param nimidto
+     * @return
+     */
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto);
 
+    /**
+     *
+     * @param oid
+     * @param date
+     */
     public void deleteOrganisaatioNimi(String oid, Date date);
+
+    /**
+     *
+     */
+    public void updateCurrentOrganisaatioNimet();
+
+    /**
+     *
+     * @param tiedot
+     * @return
+     */
+    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 }

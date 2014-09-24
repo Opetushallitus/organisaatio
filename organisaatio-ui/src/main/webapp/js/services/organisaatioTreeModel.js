@@ -42,6 +42,27 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
         isLeaf: function (data) {
             return data.children.length === 0;
         },
+        
+        hasActiveChildren: function (node) {
+            
+            if (node.children.length < 1)                
+            {
+                //$log.error("Lapsia ei löytynyt!");
+                return false;
+            }
+         
+            for (var i=0; i < node.children.length; i++)
+            {
+                if (isAktiivinen(node.children[i]))
+                {
+                    //$log.error("löytyi aktiivinen!");
+                     
+                    return true;
+                }
+            }
+             //$log.error("Ei löytynyt aktiivista!");
+            return false;
+        },        
 
         deleteNode: function (node) {
             // Etsitään noodin parent
@@ -244,8 +265,11 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 Alert.add("warning", $filter('i18n')("Organisaatiot.eiHakutuloksia", ""), true);
             }
 
-            updateSubtree = function(node, level, expanded) {
+            updateSubtree = function(node, level, expanded, parent) {
                 node.i18nNimi = model.getNimi(node);
+                if (parent) {
+                    node.i18nNimi = node.i18nNimi.replace(model.getNimi(parent) + ", ", "");
+                }
                 if (model.isAktiivinen(node) === false) {
                     node.i18nNimi += " (" + model.getTila(node) + ")";
                 }
@@ -258,7 +282,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     expanded = false;
                 }
                 for(var i=0; i < node.children.length; i++) {
-                    this.updateSubtree(node.children[i], level + 1, expanded);
+                    this.updateSubtree(node.children[i], level + 1, expanded, node);
                 }
                 node.expanded = expanded;
             };
@@ -270,7 +294,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 if (tree.children.length > 20) {
                     expanded = false;
                 }
-                this.updateSubtree(node, 1, expanded);
+                this.updateSubtree(node, 1, expanded, null);
             });
         },
 

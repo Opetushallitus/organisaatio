@@ -50,6 +50,23 @@ public class OrganisaatioMetaData extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private MonikielinenTeksti nimi;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hakutoimistoectsemailmkt")
+    private MonikielinenTeksti hakutoimistoEctsEmailmkt;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hakutoimistoectsnimimkt")
+    private MonikielinenTeksti hakutoimistoEctsNimimkt;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hakutoimistoectstehtavanimikemkt")
+    private MonikielinenTeksti hakutoimistoEctsTehtavanimikemkt;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hakutoimistoectspuhelinmkt")
+    private MonikielinenTeksti hakutoimistoEctsPuhelinmkt;
+    
+    
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private BinaryData kuva;
 
@@ -73,36 +90,69 @@ public class OrganisaatioMetaData extends BaseEntity {
         this.hakutoimistoNimi = hakutoimistoNimi;
     }
 
-    public String getHakutoimistoEctsNimi() {
+    public String getHakutoimistoEctsNimi_old() {
         return hakutoimistoEctsNimi;
     }
+    
+    public MonikielinenTeksti getHakutoimistoEctsNimi() {
+        return hakutoimistoEctsNimimkt;
+    }
 
-    public void setHakutoimistoEctsNimi(String hakutoimistoEctsNimi) {
+    public void setHakutoimistoEctsNimi_old(String hakutoimistoEctsNimi) {
         this.hakutoimistoEctsNimi = hakutoimistoEctsNimi;
     }
+    
+    public void setHakutoimistoEctsNimi(MonikielinenTeksti hakutoimistoEctsNimi) {
+        this.hakutoimistoEctsNimimkt = hakutoimistoEctsNimi;
+    }
 
-    public String getHakutoimistoEctsTehtavanimike() {
+    public String getHakutoimistoEctsTehtavanimike_old() {
         return hakutoimistoEctsTehtavanimike;
     }
+    
+    public MonikielinenTeksti getHakutoimistoEctsTehtavanimike() {
+        return hakutoimistoEctsTehtavanimikemkt;
+    }
 
-    public void setHakutoimistoEctsTehtavanimike(String hakutoimistoEctsTehtavanimike) {
+    public void setHakutoimistoEctsTehtavanimike_old(String hakutoimistoEctsTehtavanimike) {
         this.hakutoimistoEctsTehtavanimike = hakutoimistoEctsTehtavanimike;
     }
+    
+    public void setHakutoimistoEctsTehtavanimike(MonikielinenTeksti hakutoimistoEctsTehtavanimike) {
+        this.hakutoimistoEctsTehtavanimikemkt = hakutoimistoEctsTehtavanimike;
+    }
 
-    public String getHakutoimistoEctsEmail() {
+    public String getHakutoimistoEctsEmail_old() {
         return hakutoimistoEctsEmail;
     }
-
-    public void setHakutoimistoEctsEmail(String hakutoimistoEctsSahkoposti) {
-        this.hakutoimistoEctsEmail = hakutoimistoEctsSahkoposti;
+    
+    public MonikielinenTeksti getHakutoimistoEctsEmail() {
+        return hakutoimistoEctsEmailmkt;
     }
 
-    public String getHakutoimistoEctsPuhelin() {
+    public void setHakutoimistoEctsEmail_old(String hakutoimistoEctsSahkoposti) {
+        this.hakutoimistoEctsEmail= hakutoimistoEctsSahkoposti;
+    }
+
+    
+    public void setHakutoimistoEctsEmail(MonikielinenTeksti hakutoimistoEctsSahkoposti) {
+        this.hakutoimistoEctsEmailmkt = hakutoimistoEctsSahkoposti;
+    }
+    
+    public String getHakutoimistoEctsPuhelin_old() {
         return hakutoimistoEctsPuhelin;
     }
+    
+    public MonikielinenTeksti getHakutoimistoEctsPuhelin() {
+        return hakutoimistoEctsPuhelinmkt;
+    }
 
-    public void setHakutoimistoEctsPuhelin(String hakutoimistoEctsPuhelin) {
+    public void setHakutoimistoEctsPuhelin_old(String hakutoimistoEctsPuhelin) {
         this.hakutoimistoEctsPuhelin = hakutoimistoEctsPuhelin;
+    }
+    
+    public void setHakutoimistoEctsPuhelin(MonikielinenTeksti hakutoimistoEctsPuhelin) {
+        this.hakutoimistoEctsPuhelinmkt = hakutoimistoEctsPuhelin;
     }
 
     // ects koordinaattori
@@ -110,6 +160,11 @@ public class OrganisaatioMetaData extends BaseEntity {
     private String hakutoimistoEctsTehtavanimike;
     private String hakutoimistoEctsEmail;
     private String hakutoimistoEctsPuhelin;
+    
+    //private MonikielinenTeksti hakutoimistoEctsNimi_mkt;
+    //private MonikielinenTeksti hakutoimistoEctsTehtavanimike_mkt;
+    //private MonikielinenTeksti hakutoimistoEctsEmailmkt;
+    //private MonikielinenTeksti hakutoimistoEctsPuhelin_mkt;
 
     public BinaryData getKuva() {
         return kuva;

@@ -94,6 +94,29 @@ app.directive('formatteddate', function($log, $filter) {
     };
 });
 
+app.directive('datetext', function($filter) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$formatters.push(function(data) {
+                return $filter('date')(data, "dd.MM.yyyy");
+            });
+        }
+    };
+});
+
+app.directive('noedit', function () {
+    return {
+        link: function (scope, elm, attrs) {
+          elm.bind('keypress', function(e){
+              e.preventDefault();
+              return false;
+          });
+        }
+    }   
+});
+
+
 app.directive('testField', function($log) {
     return {
         require: 'ngModel',
@@ -115,6 +138,31 @@ app.directive('ophPattern', function($log) {
             var validator = function(viewValue) {
                 var isValid = (viewValue === null || typeof viewValue === 'undefined') || (typeof viewValue === 'string' && viewValue.match(attrs.ophPattern));
                 ctrl.$setValidity('ophPattern', isValid);
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
+        }
+    };
+});
+
+// Kuten ophPattern, mutta asettaa joko $error-flagin (jos oph-name-format attribuutti on true) tai
+// ophPatternWarning-flagin (jos oph-name-format attribuutti on false)
+app.directive('ophNamePattern', function($log) {
+    return {
+        require: 'ngModel',
+        scope: {
+            text: "@ophNameFormat"
+        },
+        link: function(scope, elm, attrs, ctrl) {
+            var validator = function(viewValue) {
+                var isValid = (viewValue === null || typeof viewValue === 'undefined') ||
+                        (typeof viewValue === 'string' && viewValue.match(attrs.ophNamePattern));
+                if (scope.text) {
+                    ctrl.$setValidity('ophNamePattern', isValid);
+                } else {
+                    ctrl.ophPatternWarning = !isValid;
+                }
                 return viewValue;
             };
             ctrl.$parsers.unshift(validator);
@@ -152,6 +200,7 @@ app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
+            
             var parserValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
@@ -164,12 +213,11 @@ app.directive('namesCombinedField', function() {
             ctrl.$parsers.unshift(parserValidator);
 
             var formatterValidator = function(viewValue) {
-                scope.form.nimifi.$setValidity('namescombinedrequired', true);
-
-                if (!viewValue && !scope.form.nimifi.$viewValue &&
-                        !scope.form.nimisv.$viewValue && !scope.form.nimien.$viewValue) {
-                    scope.form.nimifi.$setValidity('namescombinedrequired', false);
-                }
+                var valid = viewValue || 
+                        (ctrl.$name !== 'nimifi' && scope.form.nimifi.$viewValue) ||
+                        (ctrl.$name !== 'nimisv' && scope.form.nimisv.$viewValue) ||
+                        (ctrl.$name !== 'nimien' && scope.form.nimien.$viewValue);
+                scope.form.nimifi.$setValidity('namescombinedrequired', valid);
                 return viewValue;
             };
             ctrl.$formatters.unshift(formatterValidator);

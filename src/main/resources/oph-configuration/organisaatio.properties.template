@@ -30,6 +30,7 @@ server.name={{ansible_hostname}}
 organisaatio.solr.url={{organisaatio_solr_url}}
 organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
 organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koodisto}}
+organisaatio-service.scheduled.name.update.cron.expression=0 0 0-6/1 * * ?
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService

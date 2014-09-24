@@ -17,4 +17,5 @@ nb-configuration.xml
 phantomjsdriver.log
 /build
 /.gradle
-
+**/pom.xml.versionsBackup
+**/*.orig
