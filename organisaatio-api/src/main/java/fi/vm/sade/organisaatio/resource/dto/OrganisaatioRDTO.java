@@ -27,10 +27,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
  * REST.
- *
+ * 
  * .. well, actually "OrganisaatioDTO" and "Organisaatio" were already used and
  * I wanted to avoid confusion. :)
- *
+ * 
  * "Natural key":
  * <ul>
  * <li>Koulutustoimija - y-tunnus</li>
@@ -38,7 +38,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * <li>Toimipiste - oppilaitosnro + toimipisteenjärjestysnumero (konkatenoituna)
  * sekä yhkoulukoodi</li>
  * </ul>
- *
+ * 
  * @author mlyly
  */
 @ApiModel(value = "Organisaation tiedot")
@@ -95,9 +95,9 @@ public class OrganisaatioRDTO implements Serializable {
     private Map<String, String> _postiosoite;
 
     private Map<String, String> _kayntiosoite;
-
+    
     private List<Map<String, String>> _yhteystiedot;
-
+    
     private String _kuvaus;
 
     private Map<String, String> _kuvaus2;
@@ -162,7 +162,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Kielten URIt", required = true)
     public List<String> getKieletUris() {
         if (_kieletUris == null) {
-            _kieletUris = new ArrayList<>();
+            _kieletUris = new ArrayList<String>();
         }
         return _kieletUris;
     }
@@ -200,7 +200,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     public Map<String, String> getNimi() {
         if (_nimi == null) {
-            _nimi = new HashMap<>();
+            _nimi = new HashMap<String, String>();
         }
         return _nimi;
     }
@@ -240,7 +240,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Tyypit", required = true)
     public List<String> getTyypit() {
         if (_tyypit == null) {
-            _tyypit = new ArrayList<>();
+            _tyypit = new ArrayList<String>();
         }
         return _tyypit;
     }
@@ -270,7 +270,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Vuosiluokat", required = true)
     public List<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
-            _vuosiluokat = new ArrayList<>();
+            _vuosiluokat = new ArrayList<String>();
         }
         return _vuosiluokat;
     }
@@ -282,7 +282,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Ryhmatyypit", required = true)
     public List<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
-            _ryhmatyypit = new ArrayList<>();
+            _ryhmatyypit = new ArrayList<String>();
         }
         return _ryhmatyypit;
     }
@@ -294,7 +294,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Kayttoryhmat", required = true)
     public List<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
-            _kayttoryhmat = new ArrayList<>();
+            _kayttoryhmat = new ArrayList<String>();
         }
         return _kayttoryhmat;
     }
@@ -306,7 +306,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Käyntiosoite", required = true)
     public Map<String, String> getKayntiosoite() {
         if (_kayntiosoite == null) {
-            _kayntiosoite = new HashMap<>();
+            _kayntiosoite = new HashMap<String, String>();
         }
         return _kayntiosoite;
     }
@@ -318,7 +318,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Postiosoite", required = true)
     public Map<String, String> getPostiosoite() {
         if (_postiosoite == null) {
-            _postiosoite = new HashMap<>();
+            _postiosoite = new HashMap<String, String>();
         }
         return _postiosoite;
     }
@@ -339,7 +339,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Toinen kuvaus", required = true)
     public Map<String, String> getKuvaus2() {
         if (_kuvaus2 == null) {
-            _kuvaus2 = new HashMap<>();
+            _kuvaus2 = new HashMap<String, String>();
         }
         return _kuvaus2;
     }
@@ -487,7 +487,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     public List<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
-            _yhteystiedot = new ArrayList<>();
+            _yhteystiedot = new ArrayList<Map<String, String>>();
         }
         return _yhteystiedot;
     }
