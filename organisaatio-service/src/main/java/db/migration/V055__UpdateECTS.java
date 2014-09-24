@@ -53,7 +53,7 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
                 for (int i = 1; i <= metadata.getColumnCount(); i++) {
                     String cname = metadata.getColumnName(i);
                     int ctype = metadata.getColumnType(i);
-                    
+
                     switch (ctype) {
                         case Types.VARCHAR: // hakutoimistoectsemail,hakutoimistoectsnimi,hakutoimistoectspuhelin,hakutoimistoectstehtavanimike
                             r.put(cname, rs.getString(cname));
@@ -69,21 +69,21 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
                 }
 
                 LOG.debug("  read from db : organisaatiometadata = {}", r);
-                
+
                 return r;
             }
         });
-        
+
         // Move strings to monikielinenteksti_values
         for (Map orgmd : resultSet) {
-            
+
             handleOrganisaatiometadata(orgmd, jdbcTemplate);
-            
+
         }
 
         LOG.info("migrate()... done.");
     }
-    
+
     private int getNextHibernateSequence(JdbcTemplate jdbcTemplate) {
         // Returns next global id
         List<Map> resultSet = jdbcTemplate.query("SELECT nextval('public.hibernate_sequence')", new RowMapper<Map>() {
@@ -95,7 +95,7 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
                 for (int i = 1; i <= metadata.getColumnCount(); i++) {
                     String cname = metadata.getColumnName(i);
                     int ctype = metadata.getColumnType(i);
-                    
+
                     switch (ctype) {
                         case Types.BIGINT: // id
                             r.put(cname, rs.getInt(cname));
@@ -109,13 +109,13 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
                 return r;
             }
         });
-        
+
         for (Map m : resultSet) {
-            return (int) m.get("nextval");
+            return (Integer) m.get("nextval");
         }
         return 0;
     }
-    
+
     private int insertNewMkt(String teksti, JdbcTemplate jdbcTemplate) {
         int mkt_id = getNextHibernateSequence(jdbcTemplate);
 
@@ -142,9 +142,9 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
         }
         return mkt_id;
     }
-    
+
     private void handleOrganisaatiometadata(Map md, JdbcTemplate jdbcTemplate) {
-        int id = (int) md.get("id");
+        int id = (Integer) md.get("id");
         String hakutoimistoectsemail = (String) md.get("hakutoimistoectsemail");
         String hakutoimistoectsnimi = (String) md.get("hakutoimistoectsnimi");
         String hakutoimistoectspuhelin = (String) md.get("hakutoimistoectspuhelin");
@@ -153,7 +153,7 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
         int nimi_mkt_id = 0;
         int puhelin_mkt_id = 0;
         int tehtavanimike_mkt_id = 0;
-        
+
         if (hakutoimistoectsemail != null && hakutoimistoectsemail.length() > 0) {
             email_mkt_id = insertNewMkt(hakutoimistoectsemail, jdbcTemplate);
         }
@@ -166,9 +166,9 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
         if (hakutoimistoectstehtavanimike != null && hakutoimistoectstehtavanimike.length() > 0) {
             tehtavanimike_mkt_id = insertNewMkt(hakutoimistoectstehtavanimike, jdbcTemplate);
         }
-        
+
         String update = "";
-        
+
         if (email_mkt_id != 0) {
             update += "hakutoimistoectsemailmkt="+email_mkt_id;
         }
@@ -190,7 +190,7 @@ public class V055__UpdateECTS implements SpringJdbcMigration {
             }
             update += "hakutoimistoectstehtavanimikemkt="+tehtavanimike_mkt_id;
         }
-        
+
         // Update the metadata
         int result = jdbcTemplate.update("UPDATE organisaatiometadata SET " + update + " WHERE id=?", id);
         if (result < 0 || result > 1) {
