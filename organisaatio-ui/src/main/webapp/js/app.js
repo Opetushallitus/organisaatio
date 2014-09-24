@@ -17,7 +17,7 @@ angular.module('localization', [])
 
 app.filter('fixHttpLink',function () {
     return function (text) {
-        proto = text.split("://");
+        var proto = text.split("://");
         return (proto.length>1 ? proto[0] : "http") + "://" + proto[proto.length-1];
     };
 });
@@ -229,8 +229,7 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
 }]);
 
 app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter', function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
-        var initAuthService;
-        return initAuthService = {
+        return  {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {
                     $log.log("Organisaatio Auth Init.");
@@ -501,7 +500,7 @@ app.factory('Nimet', function($resource) {
 // Usean organisaation voimassaolon muokkaus yhdellä kertaa
 app.factory('Muokkaamonta', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
-        put: {method: 'PUT'},
+        put: {method: 'PUT'}
     });
 });
 
