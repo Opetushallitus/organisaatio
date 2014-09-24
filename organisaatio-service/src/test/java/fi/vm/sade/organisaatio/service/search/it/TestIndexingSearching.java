@@ -395,7 +395,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
 
         n = organisaatioNimiDAO.insert(n);
 
-        List<OrganisaatioNimi> nimet = new ArrayList<>();
+        List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
         nimet.add(n);
         o.setNimet(nimet);
 
