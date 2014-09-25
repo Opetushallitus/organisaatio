@@ -46,7 +46,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
         });
     };
 
-    var model = function() {
+    var model = new function() {
         this.ryhmatyypit = [];
         this.kayttoryhmat = [];
 
