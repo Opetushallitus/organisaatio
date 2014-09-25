@@ -1,6 +1,6 @@
 app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamonta) {
 
-    var model = function() {
+    var model = new function() {
         this.muokataanAlkupvm = false;
         this.alkuPvm = 0;
         this.lakkautusPvm = 0;
@@ -32,25 +32,25 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamont
         this.newVersionNumber = null; // Tallennuksen yhteydessä muuttuvan organisaation versionumeron välitykseen.
 
         this.cancel = function() {
-            this.laskeMuutettavatAliorganisaatiot();
+            laskeMuutettavatAliorganisaatiot();
         };
 
         this.accept = function() {
-            this.otaTalteenValintojenLopputilanne(model.aliorganisaatioTree);
-            this.laskeMuutettavatAliorganisaatiot();
+            otaTalteenValintojenLopputilanne(model.aliorganisaatioTree);
+            laskeMuutettavatAliorganisaatiot();
         };
 
         var isBeforeToday = function(date) {
             var today = +new Date();
-            today = this.pvmRajapintaMuotoon(today);
-            var timeToCompare = this.pvmRajapintaMuotoon(date);
+            today = pvmRajapintaMuotoon(today);
+            var timeToCompare = pvmRajapintaMuotoon(date);
             return timeToCompare < today;
         };
 
         var isAfterToday = function(date) {
             var today = +new Date();
-            today = this.pvmRajapintaMuotoon(today);
-            var timeToCompare = this.pvmRajapintaMuotoon(date);
+            today = pvmRajapintaMuotoon(today);
+            var timeToCompare = pvmRajapintaMuotoon(date);
             return timeToCompare > today;
         };
 
@@ -286,7 +286,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamont
         };
 
         // Organisaation muokkaus näkymään raportointia varten
-        this.laskeMuutettavatAliorganisaatiot = function() {
+        var laskeMuutettavatAliorganisaatiot = function() {
             var alkuPvmMuutettu = false;
             var lakkautusPvmMuutettu = false;
             if (pvmRajapintaMuotoon(model.alkuPvm) !== pvmRajapintaMuotoon(model.originalAlkuPvm)) {
