@@ -1,3 +1,5 @@
+// Ajo 
+// jshint --config jshint_config.json organisaatio-ui/src/main/webapp/js/*.js organisaatio-ui/src/main/webapp/js/*/*.js
 {
     "sub": true,
     "asi": true,

@@ -282,7 +282,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                     expanded = false;
                 }
                 for(var i=0; i < node.children.length; i++) {
-                    this.updateSubtree(node.children[i], level + 1, expanded, node);
+                    updateSubtree(node.children[i], level + 1, expanded, node);
                 }
                 node.expanded = expanded;
             };
