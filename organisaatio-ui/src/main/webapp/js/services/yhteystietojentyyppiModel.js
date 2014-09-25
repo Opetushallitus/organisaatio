@@ -2,7 +2,7 @@ app.factory('YhteystietojentyyppiModel', function(
         KoodistoOppilaitostyypit, KoodistoKoodi,
         Yhteystietojentyyppi, YhteystietojentyypinPoisto)  {
 
-    var model = function() {
+    var model = new function() {
         var organisaatiotyypit = {},
                 oppilaitostyypit = [],
                 yhteystietotyypit = [],
