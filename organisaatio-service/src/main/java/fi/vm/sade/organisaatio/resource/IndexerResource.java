@@ -23,7 +23,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
