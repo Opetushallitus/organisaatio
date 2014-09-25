@@ -380,7 +380,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity = organisaatioDAO.insert(entity);
 
             // Organisaatio on lisätty kantaa, luodaan nimihistorian ensimmäinen entry
-            createOrganisaatioNimi(entity.getOid(), entity.getNimi());
+            OrganisaatioNimi nimi = createOrganisaatioNimi(entity.getOid(), entity.getNimi());
+
+            // Lisätään nimet entityyn (solr indeksointia varten)
+            List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
+            nimet.add(nimi);
+            entity.setNimet(nimet);
         }
 
         // Saving the parent relationship

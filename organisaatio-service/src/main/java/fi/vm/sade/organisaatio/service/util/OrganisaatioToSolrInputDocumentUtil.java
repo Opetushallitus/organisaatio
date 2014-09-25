@@ -15,22 +15,24 @@
 
 package fi.vm.sade.organisaatio.service.util;
 
-import fi.vm.sade.organisaatio.service.search.SolrOrgFields;
-import java.util.Date;
-
-import org.apache.solr.common.SolrInputDocument;
-
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.service.search.SolrOrgFields;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.solr.common.SolrInputDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Add Organisaatio And Organisaatio Nimihistoria to SolrInputDocument so that it can be indexed.
  */
 public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields {
+    private static Logger LOG = LoggerFactory.getLogger("OrganisaatioToSolrInputDocumentUtil");
+
     public static SolrInputDocument apply(Organisaatio org) {
         Preconditions.checkNotNull(org);
         SolrInputDocument doc = new SolrInputDocument();
@@ -86,7 +88,11 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
     }
 
     private static void addNimiHistoria(SolrInputDocument doc, String fieldName, List<OrganisaatioNimi> nimet) {
+        if (nimet.isEmpty()) {
+            LOG.warn("Nimihistoriassa ei nimiä!");
+        }
         for (OrganisaatioNimi nimi : nimet) {
+            LOG.debug("Nimihistoria " + fieldName + ": " + Joiner.on(", ").join(nimi.getNimi().getValues().values()));
             Date today = new Date();
             if (nimi.getAlkuPvm() != null) {
                 // Lisätään nimi kaikilla kielillä, jos nimen voimassaolopäivämäärä on tänään tai aiemmin
