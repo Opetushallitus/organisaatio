@@ -12,7 +12,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         oid : "",
         minAlkuPvm : "",
         nimi : {},
-        mode : "update",
+        mode : "new",
         historiaModel : NimiHistoriaModel,
         parentNimi : {},
 
@@ -21,7 +21,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             this.oid = "";
             this.minAlkuPvm = "";
             this.nimi = {};
-            this.mode = "update";
+            this.mode = "new";
             this.historiaModel.clear();
             this.parentNimi = {};
         },
@@ -149,17 +149,18 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
 
             if (/new$/.test($location.path())) {
                 this.uusiOrganisaatio = true;
-                this.mode = "new";
             }
             else {
                 this.uusiOrganisaatio = false;
-                this.mode = "update";
             }
+            this.mode = "new";
 
             this.ajastettuMuutos = this.historiaModel.ajastettuMuutos;
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 
-            this.setUusinNimiVisible();
+            if (this.mode==="update") {
+                this.setUusinNimiVisible();
+            }
         },
 
         accept: function() {
