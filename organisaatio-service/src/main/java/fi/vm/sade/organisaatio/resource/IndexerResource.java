@@ -87,7 +87,10 @@ public class IndexerResource {
                     if (clean) {
                         solr.deleteByQuery("*:*");
                     }
-                } catch (SolrServerException | IOException e) {
+                } catch (SolrServerException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -126,7 +129,9 @@ public class IndexerResource {
                 LOG.info("Committing changes to index.", docs.size());
                 solr.commit(true, true, false);
                 LOG.info("Done.");
-            } catch (SolrServerException | IOException e) {
+            } catch (SolrServerException e) {
+                LOG.error("Indexing failed", e);
+            } catch (IOException e) {
                 LOG.error("Indexing failed", e);
             }
         }
@@ -140,7 +145,9 @@ public class IndexerResource {
                 solr.deleteById(delete);
                 solr.commit(true, true, false);
                 LOG.info("Committing changes to index.");
-            } catch (SolrServerException | IOException e) {
+            } catch (SolrServerException e) {
+                LOG.error("Deleting failed", e);
+            } catch (IOException e) {
                 LOG.error("Deleting failed", e);
             }
         }
