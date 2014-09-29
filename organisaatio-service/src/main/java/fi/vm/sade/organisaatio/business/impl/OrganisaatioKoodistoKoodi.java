@@ -43,6 +43,7 @@ public class OrganisaatioKoodistoKoodi {
     protected String voimassaLoppuPvm;
 
     protected List<OrganisaatioKoodistoKoodiMetadata> metadata = new ArrayList<OrganisaatioKoodistoKoodiMetadata>();
+    protected List<OrganisaatioKoodistoIncludesCodeElements> includesCodeElements = new ArrayList<OrganisaatioKoodistoIncludesCodeElements>();
 
     public String getKoodiUri() {
         return koodiUri;
@@ -106,6 +107,14 @@ public class OrganisaatioKoodistoKoodi {
 
     public void setMetadata(List<OrganisaatioKoodistoKoodiMetadata> metadata) {
         this.metadata = metadata;
+    }
+
+    public List<OrganisaatioKoodistoIncludesCodeElements> getIncludesCodeElements() {
+        return includesCodeElements;
+    }
+
+    public void setIncludesCodeElements(List<OrganisaatioKoodistoIncludesCodeElements> includesCodeElements) {
+        this.includesCodeElements = includesCodeElements;
     }
 
     public Long getVersion() {
