@@ -260,7 +260,7 @@
                     {{'Organisaationmuokkaus.validointi.alkupvmvuosi'| i18n}}. </span>
                 <span class="text-error" ng-show="form.lakkautuspvm.$error.dateYear">
                     {{'Organisaationmuokkaus.validointi.loppupvmvuosi'| i18n}}</span>
-               
+
                 <span class="text-error" ng-show="form.$error.organisaationVoimassaolo">
                     {{'Organisaationmuokkaus.validointi.voimassaolo'| i18n}}</span>
                 <span class="text-error" ng-show="form.$error.aliorganisaationVoimassaolo">
@@ -854,63 +854,75 @@
                     {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('ects', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
                 </tab-heading>
             </tab>
-        </tabset>        
-        
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]" class="span6"
-                       typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
-                       typeahead-on-select="model.setEctsNimi($item)" oph-enter>
+        </tabset>
+        <div ng-if="model.ectslang === '+'">
+            <div class="control-group">
+                <select id="maa" ng-model="model.mkSections.ects.placeholder"
+                        ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.isokielet | orderBy:'nimi'" ng-required="false"
+                        ng-click="model.addMkLang('ects')">
+                    <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
+                </select>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]"
-                       ng-maxlength="255" oph-enter
-                       ng-required="false"/>
-                <div>
-                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectsnimike.$error.maxlength">
-                        {{'Organisaationmuokkaus.validation.maxpituus255'| i18n}}
-                    </span>
+        <div ng-show="model.ectslang !== '+'" ng-repeat='tab in model.mkSections.ects.tabs'>
+            <div ng-show='tab.lang === model.ectslang'>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationmuokkaus.hakutoimistoectsnimi'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]" class="span6"
+                               typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
+                               typeahead-on-select="model.setEctsNimi($item)" oph-enter>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}
-            </label>
-            <div class="controls">
-                <input id="ectspuhelin" type="text" name="ectspuhelin" oph-enter
-                       ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]"
-                       ng-required="false" oph-null-if-zero-length oph-pattern="^[\d \-\+]*$"/>
-                <div>
-                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectspuhelin.$error.ophPattern">
-                        {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
-                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
-                    </span>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationmuokkaus.hakutoimistoectstehtavanimike'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="ectsnimike" type="text" name="ectsnimike" class="span6"
+                               ng-model="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]"
+                               ng-maxlength="255" oph-enter
+                               ng-required="false"/>
+                        <div>
+                            <span class="text-error" ng-show="hakutoimistoectsnimi.ectsnimike.$error.maxlength">
+                                {{'Organisaationmuokkaus.validation.maxpituus255'| i18n}}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">
-                {{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}
-            </label>
-            <div class="controls">
-                <div>
-                    <input id="ectsemail" type="email" name="ectsemail" class="span6" maxlength="255" oph-enter
-                           ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"
-                           ng-required="false" oph-null-if-zero-length/>
-                    <span class="text-error" ng-show="hakutoimistoectsnimi.ectsemail.$error.email">
-                        {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
-                        {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
-                    </span>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationmuokkaus.hakutoimistoectspuhelin'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <input id="ectspuhelin" type="text" name="ectspuhelin" oph-enter
+                               ng-model="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]"
+                               ng-required="false" oph-null-if-zero-length oph-pattern="^[\d \-\+]*$"/>
+                        <div>
+                            <span class="text-error" ng-show="hakutoimistoectsnimi.ectspuhelin.$error.ophPattern">
+                                {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        {{'Organisaationmuokkaus.hakutoimistoectsemail'| i18n}}
+                    </label>
+                    <div class="controls">
+                        <div>
+                            <input id="ectsemail" type="email" name="ectsemail" class="span6" maxlength="255" oph-enter
+                                   ng-model="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"
+                                   ng-required="false" oph-null-if-zero-length/>
+                            <span class="text-error" ng-show="hakutoimistoectsnimi.ectsemail.$error.email">
+                                {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                                {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

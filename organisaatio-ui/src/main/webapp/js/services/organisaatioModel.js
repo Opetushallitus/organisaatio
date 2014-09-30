@@ -319,12 +319,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     }
                 }
                 
-                ////////
                 if (result.metadata.ectstiedot) {
                     var ectslangs = {'kieli_fi#1': true, 'kieli_sv#1': true, 'kieli_en#1': true};
-                    //for (var i = 0; i < model.organisaatio.metadata.ectstiedot.lenght; i++) {
-                    //    ectslangs[model.organisaatio.metadata.ectstiedot[i].kieli] = true;
-                    //}
                     for (var i = 0; i < model.organisaatio.metadata.ectstiedot.lenght; i++) {
                         ectslangs[model.organisaatio.metadata.ectstiedot[i].kieli] = true;
                     }
@@ -337,8 +333,6 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         }, 0);
                     }
                 }
-                
-                /////////
             }
         };
 
