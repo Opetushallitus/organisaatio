@@ -1,4 +1,4 @@
-function OrganisaatioController($scope, $location, $routeParams, $modal, $log, OrganisaatioModel) {
+function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $injector, OrganisaatioModel) {
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
@@ -34,7 +34,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         var m = {'fi': '0--', 'sv': '1--', 'en': '2--'};
         return m[lang] || '3--' + lang;
     };
-    
+
     $scope.save2 = function() {
         if ($scope.voimassaolonmuokkaus !== null) {
             $scope.voimassaolonmuokkaus.save().then (function() {
@@ -134,7 +134,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());
         });
     };
-    
+
     $scope.openVoimassaolonMuokkaus = function (muokataanAlkupvm) {
         if ($scope.modalOpen) {
             return;
@@ -168,7 +168,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 }
             }
         });
-        
+
         modalInstance.result.then(function(voimassaolonmuokkausModel) {
             $scope.modalOpen = false;
             $scope.voimassaolonmuokkaus = voimassaolonmuokkausModel;
@@ -337,4 +337,12 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
     }());
 
     $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
+
+    $scope.isLoading = function() {
+        var loadingService = $injector.get('loadingService');
+        if (loadingService) {
+            return loadingService.isLoading();
+        }
+        return false;
+    };
 }
