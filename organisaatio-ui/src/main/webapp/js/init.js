@@ -26,14 +26,15 @@ function organisaatioInitialize() {
         xdr.onprogress = function () { };
         xdr.ontimeout = function () { };
         xdr.onerror = function () {
-            window.LOCALISATION_DATA = [];
+            window.APP_LOCALISATION_DATA = [];
             if (window.console) {
                 console.log('There was an error while loading the localisation info!');
             }
+            initOrganisaatioApp();
         };
         setTimeout(function () {
             xdr.send();
-        });
+        }, 1);
     } else {
         jQuery.ajax(localisationUrl, {
             dataType: 'json',
@@ -46,10 +47,11 @@ function organisaatioInitialize() {
                 initOrganisaatioApp();
             },
             error: function(xhr, status) {
-                window.LOCALISATION_DATA = [];
+                window.APP_LOCALISATION_DATA = [];
                 if (window.console) {
                     console.log('There was an error while loading the localisation info: ', status, xhr);
                 }
+                initOrganisaatioApp();
             }
         });
     }
