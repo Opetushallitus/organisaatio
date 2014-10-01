@@ -1,4 +1,4 @@
-app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamonta) {
+app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Muokkaamonta) {
 
     var model = new function() {
         this.muokataanAlkupvm = false;
@@ -30,6 +30,12 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamont
         this.isAcceptable = true; // alkuPvm ei saa olla tyhjä mikäli muokataanAlkupvm, koska se on pakollinen tieto.
 
         this.newVersionNumber = null; // Tallennuksen yhteydessä muuttuvan organisaation versionumeron välitykseen.
+
+        // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
+        var showAndLogError = function(msg, response) {
+            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
+            $log.error(msg + " (status: " + response.status + ")");
+        };
 
         var isBeforeToday = function(date) {
             var today = +new Date();
@@ -590,8 +596,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Muokkaamont
             },
             // Error case
             function(response) {
-                $log.error("Voimassaolonmuokkaus tallennusvrhe: " + response.status);
-                this.showAndLogError("Voimassaolonmuokkaus.tallennusvirhe", response);
+                showAndLogError("Voimassaolonmuokkaus.tallennusvirhe", response);
                 deferred.reject();
             });
 
