@@ -6,6 +6,33 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
     $scope.nimenmuokkaus = null;
     $scope.voimassaolonmuokkaus = null;
 
+    // Käsitellään muokkausnäkymästä poistuminen
+    $scope.$on("$locationChangeStart", function(event, next, current) {
+        // Tallennetaan next url ja kysytään käyttäjältä haluaako siirtyä vai jatkaa.
+        // Jos käyttäjä haluaa siirtyä seuraavalle sivulle --> location change
+        var next = next;
+        $log.log("Location change: " + current +" -> " + next);
+
+        if ($scope.form.$dirty) {
+            event.preventDefault();
+            $scope.modalOpen = true;
+            var modalInstance = $modal.open({
+                templateUrl: 'organisaationmuokkauksenperuutus.html',
+                controller: OrganisaatioCancelController,
+                resolve: {}
+            });
+
+            modalInstance.result.then(function() {
+                $log.debug('Poistutaan muokkauksesta');
+                $scope.modalOpen = false;
+                $scope.form.$setPristine();
+                $location.path(next);
+            }, function() {
+                $scope.modalOpen = false;
+                $log.debug('Jatketaan muokkausta');
+            });
+        }
+    });
 
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
@@ -38,7 +65,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
     $scope.save2 = function() {
         if ($scope.voimassaolonmuokkaus !== null) {
             $scope.voimassaolonmuokkaus.save().then (function() {
-                if ($scope.voimassaolonmuokkaus.newVersionNumber != null) {
+                if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
                     $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
                 }
                 $scope.model.persistOrganisaatio($scope.form);
@@ -65,6 +92,12 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
 
     $scope.cancel = function() {
         $location.path("/");
+    };
+
+    $scope.view = function() {
+        if (/edit$/.test($location.path())) {
+            $location.path($location.path().replace("/edit", ""));
+        }
     };
 
     $scope.edit = function() {
