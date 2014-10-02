@@ -18,7 +18,7 @@ app.factory('NimiHistoriaModel', function($log) {
         // Nimi rakenne stringiksi (ei alkupäivämäärää)
         nimiToString: function(nimi) {
             var nimiStr = '';
-            if ('nimi' in nimi) {
+            if (nimi && 'nimi' in nimi) {
                 ['fi', 'sv', 'en'].forEach(function(key) {
                     if (key in nimi.nimi)
                         nimiStr += '[' + key + '] ' + nimi.nimi[key];
