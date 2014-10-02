@@ -7,6 +7,13 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
     $scope.voimassaolonmuokkaus = null;
     $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
 
+    // Destruktorityyliin putsataan jäljet
+    $scope.clear = function() {
+        if ($scope.nimenmuokkaus) {
+            $scope.nimenmuokkaus.clear();
+        }
+    };
+
     // Käsitellään muokkausnäkymästä poistuminen
     $scope.$on("$locationChangeStart", function(event, next, current) {
         // Tallennetaan next url ja kysytään käyttäjältä haluaako siirtyä vai jatkaa.
@@ -27,11 +34,15 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
                 $log.debug('Poistutaan muokkauksesta');
                 $scope.modalOpen = false;
                 $scope.form.$setPristine();
+                $scope.clear();
                 $location.path(next);
             }, function() {
                 $scope.modalOpen = false;
                 $log.debug('Jatketaan muokkausta');
             });
+        }
+        else {
+            $scope.clear();
         }
     });
 
