@@ -5,6 +5,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
     $scope.model.mode = "show";
     $scope.nimenmuokkaus = null;
     $scope.voimassaolonmuokkaus = null;
+    $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
 
     // Käsitellään muokkausnäkymästä poistuminen
     $scope.$on("$locationChangeStart", function(event, next, current) {
@@ -34,6 +35,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         }
     });
 
+    // Tarkistetaan organisaation muokkauksen moodi, uusi organisaatio vai vanhan muokkaus
+    // Uuden organisaation tapauksessa organisaation luonti voi perustua YTJ:stä saatavaan tietoon
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
         if ('ytunnus' in $routeParams) {
@@ -57,6 +60,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         }
     };
 
+    // Kielet järjestykseen FI, SV, EN
     $scope.orderByLang = function(lang) {
         var m = {'fi': '0--', 'sv': '1--', 'en': '2--'};
         return m[lang] || '3--' + lang;
@@ -75,6 +79,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         }
     };
 
+    // Organisaation tallennus
     $scope.save = function() {
         // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
         // tai poistanut tulevan nimenmuutoksen
@@ -90,20 +95,24 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
 
     };
 
+    // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
     $scope.cancel = function() {
         $location.path("/");
     };
 
+    // Siirtyminen organisaation tarkastelunäkymään
     $scope.view = function() {
         if (/edit$/.test($location.path())) {
             $location.path($location.path().replace("/edit", ""));
         }
     };
 
+    // Siirtyminen organisaation muokkausnäkymään
     $scope.edit = function() {
         $location.path($location.path() + "/edit");
     };
 
+    // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;
         var modalInstance = $modal.open({
@@ -168,6 +177,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         });
     };
 
+    // Voimassaolon muokkauksen modaalin dialogin avaus
     $scope.openVoimassaolonMuokkaus = function (muokataanAlkupvm) {
         if ($scope.modalOpen) {
             return;
@@ -222,6 +232,7 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         });
     };
 
+    // Ytj-tietojen haun modaalin dialogin avaus
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
@@ -245,30 +256,6 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
             $log.log('Modal dismissed at: ' + new Date());
             $scope.modalOpen = false;
         });
-    };
-
-    $scope.peruutaOrganisaationmuokkaus = function(dirty) {
-        if (dirty === false) {
-            // jos ei ole muutettu ei tarvitse kysyä vahvistusta
-            $location.path($location.path().substr(0, $location.path().lastIndexOf("/")));
-        } else {
-            $scope.modalOpen = true;
-            var modalInstance = $modal.open({
-                templateUrl: 'organisaationmuokkauksenperuutus.html',
-                controller: OrganisaatioCancelController,
-                resolve: {}
-            });
-
-            modalInstance.result.then(function() {
-                $log.debug('Peruutus vahvistettu');
-                $scope.modalOpen = false;
-                // Siirry tarkastelu-sivulle
-                $location.path($location.path().substr(0, $location.path().lastIndexOf("/")));
-            }, function() {
-                $scope.modalOpen = false;
-                $log.debug('Peruutusta ei vahvistettu');
-            });
-        }
     };
 
     // Muodostaa listan invalid-komponenteista
@@ -369,8 +356,8 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         return !!window.FileReader;
     }());
 
-    $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
-
+    // Tarkastetaan ollaanko lataamassa vielä sisältöä
+    // Jos lataus on kesken, ei kannata näyttää käyttäjälle ilmoitusta puuttuvista tiedoista
     $scope.isLoading = function() {
         var loadingService = $injector.get('loadingService');
         if (loadingService) {
