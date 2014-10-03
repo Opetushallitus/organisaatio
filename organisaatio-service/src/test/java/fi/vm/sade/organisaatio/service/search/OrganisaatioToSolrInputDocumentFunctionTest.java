@@ -15,6 +15,12 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
+import com.google.common.collect.Lists;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.ALKUPVM;
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.LAKKAUTUSPVM;
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.NIMIEN;
@@ -26,27 +32,21 @@ import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.ORGANISAATIOT
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.PARENTOID;
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.PATH;
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.YTUNNUS;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.apache.solr.common.SolrInputDocument;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Date;
-
-import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 
 public class OrganisaatioToSolrInputDocumentFunctionTest {
 
     @Test
     public void test() {
-        final OrganisaatioToSolrInputDocumentFunction converter = new OrganisaatioToSolrInputDocumentFunction();
         Organisaatio org = new Organisaatio();
-        
+
         org.setAlkuPvm(new Date(1));
         org.setLakkautusPvm(new Date());
         org.setDomainNimi("domain.fi");
@@ -69,8 +69,15 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
         org.setYtunnus("123456-7");
 
-        SolrInputDocument doc = converter.apply(org);
-        
+        List<OrganisaatioNimi> nimet = new ArrayList<>();
+        OrganisaatioNimi orgNimi = new OrganisaatioNimi();
+        orgNimi.setAlkuPvm(new Date(1));
+        orgNimi.setNimi(nimi);
+        nimet.add(orgNimi);
+        org.setNimet(nimet);
+
+        SolrInputDocument doc = OrganisaatioToSolrInputDocumentUtil.apply(org);
+
         assertEquals(org.getAlkuPvm(), doc.getFieldValue(ALKUPVM));
         assertEquals(org.getLakkautusPvm(), doc.getFieldValue(LAKKAUTUSPVM));
         assertEquals(org.getNimi().getString("en"), doc.getFieldValue(NIMIEN));

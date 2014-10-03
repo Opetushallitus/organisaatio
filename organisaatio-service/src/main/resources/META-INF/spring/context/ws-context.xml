@@ -97,6 +97,7 @@
                 <ref bean="swaggerResourceJSON" />
                 <ref bean="tempfileResource"/>
                 <ref bean="sessionResource"/>
+                <ref bean="organisaatioDevResource"/>
             </list>
         </property>
         <property name="providers">

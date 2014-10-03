@@ -12,17 +12,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
+
 package fi.vm.sade.organisaatio.business.exception;
 
 /**
- * Exception luokka tilanteeseen, jossa organisaatioon tallennettavassa datassa on koodistouri ilman versiota.
- * 
+ * Exception tilanteeseen, jossa organisaatioon tallennettavassa datassa on koodistouri ilman versiota.
+ *
  * @author simok
- * 
+ *
  */
 public class NoVersionInKoodistoUriException extends OrganisaatioBusinessException {
 
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     public NoVersionInKoodistoUriException(String message) {
         super(message);

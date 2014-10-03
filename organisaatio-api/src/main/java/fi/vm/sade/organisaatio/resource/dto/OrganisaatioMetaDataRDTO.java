@@ -39,6 +39,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
 
     private Map<String, String> _nimi;
 
+    /*
     private String _hakutoimistoEctsEmail;
 
     private String _hakutoimistoEctsNimi;
@@ -46,6 +47,15 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
     private String _hakutoimistoEctsPuhelin;
 
     private String _hakutoimistoEctsTehtavanimike;
+    */
+    
+    private Map<String, String> _hakutoimistoEctsEmail;
+
+    private Map<String, String> _hakutoimistoEctsNimi;
+
+    private Map<String, String> _hakutoimistoEctsPuhelin;
+
+    private Map<String, String> _hakutoimistoEctsTehtavanimike;
 
     private String _koodi;
 
@@ -71,38 +81,38 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Hakutoimiston ECTS sähköpostiosoite", required = true)
-    public String getHakutoimistoEctsEmail() {
+    public Map<String, String> getHakutoimistoEctsEmail() {
         return _hakutoimistoEctsEmail;
     }
 
-    public void setHakutoimistoEctsEmail(String _hakutoimistoEctsEmail) {
+    public void setHakutoimistoEctsEmail(Map<String, String> _hakutoimistoEctsEmail) {
         this._hakutoimistoEctsEmail = _hakutoimistoEctsEmail;
     }
 
     @ApiModelProperty(value = "Hakutoimiston ECTS nimi", required = true)
-    public String getHakutoimistoEctsNimi() {
+    public Map<String, String> getHakutoimistoEctsNimi() {
         return _hakutoimistoEctsNimi;
     }
 
-    public void setHakutoimistoEctsNimi(String _hakutoimistoEctsNimi) {
+    public void setHakutoimistoEctsNimi(Map<String, String> _hakutoimistoEctsNimi) {
         this._hakutoimistoEctsNimi = _hakutoimistoEctsNimi;
     }
 
     @ApiModelProperty(value = "Hakutoimiston ECTS puhelinnumero", required = true)
-    public String getHakutoimistoEctsPuhelin() {
+    public Map<String, String> getHakutoimistoEctsPuhelin() {
         return _hakutoimistoEctsPuhelin;
     }
 
-    public void setHakutoimistoEctsPuhelin(String _hakutoimistoEctsPuhelin) {
+    public void setHakutoimistoEctsPuhelin(Map<String, String> _hakutoimistoEctsPuhelin) {
         this._hakutoimistoEctsPuhelin = _hakutoimistoEctsPuhelin;
     }
 
     @ApiModelProperty(value = "Hakutoimiston ECTS tehtävänimike", required = true)
-    public String getHakutoimistoEctsTehtavanimike() {
+    public Map<String, String> getHakutoimistoEctsTehtavanimike() {
         return _hakutoimistoEctsTehtavanimike;
     }
 
-    public void setHakutoimistoEctsTehtavanimike(String _hakutoimistoEctsTehtavanimike) {
+    public void setHakutoimistoEctsTehtavanimike(Map<String, String>_hakutoimistoEctsTehtavanimike) {
         this._hakutoimistoEctsTehtavanimike = _hakutoimistoEctsTehtavanimike;
     }
 

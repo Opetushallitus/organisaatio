@@ -548,22 +548,33 @@
     </div>
 
     <div ng-show="ectsexpanded">
-        <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi">
+        
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.ects.tabs"
+                 active="tab.active"
+                 select="model.ectslang=tab.lang">
+                <tab-heading>
+                    {{model.uriLocalizedNames[tab.lang]}}
+                </tab-heading>
+            </tab>
+        </tabset>
+        
+        <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span>{{model.organisaatio.metadata.hakutoimistoEctsNimi}}</span>
-                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike">,&nbsp;
-                        {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike}}
+                    <span> {{'Organisaationtarkastelu.ECTSnimi'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]}} </span><br>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]">
+                        {{'Organisaationtarkastelu.ECTStehtavanimike'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]}}
                     </span><br>
-                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">
-                        {{model.organisaatio.metadata.hakutoimistoEctsPuhelin}}
-                    </span>
-                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail">
-                        <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin">,&nbsp;</span>
-                        {{model.organisaatio.metadata.hakutoimistoEctsEmail}}
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]">
+                        {{'Organisaationtarkastelu.ECTSpuhelinnumero'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]}}
+                    </span><br>
+                    <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]">
+                        <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"></span>
+                        {{'Organisaationtarkastelu.ECTSsahkopostiosoite'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]}}
                     </span>
                 </label>
             </div>
@@ -641,7 +652,6 @@
         <hr>
     </div> <!-- oeexpanded -->
 
-    <!-- Nimihistoriaa ei näytetä vielä -> odotetaan nimenmuokkaustoteutusta.
     <div class="row">
         <div class="span4">
             <div class="view-row-label">
@@ -659,7 +669,7 @@
             <div class="row">
                     <div class="span8" data-ng-include data-src="'nimihistorialista.html'"></div>
             </div>
-    </div> --><!-- nhexpanded -->
+    </div> <!-- nhexpanded -->
 
     <div class="row" ng-show='model.parent.oid!=="1.2.246.562.10.00000000001"'>
         <div class="span4">

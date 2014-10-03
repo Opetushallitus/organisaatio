@@ -21,56 +21,148 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
     <form name="form" novalidate>
-        <input type="radio" ng-model="model.mode" value="update"
-               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': ''}">
-        {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
-        <input type="radio" ng-model="model.mode" value="new"
-               ng-change="model.clearVisibleNimi(); inputStyle={'text-decoration': ''}">
-        {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
-        <input ng-disabled="model.ajastettuMuutos === false"
-               type="radio" ng-model="model.mode" value="delete"
-               ng-change="model.setUusinNimiVisible(); inputStyle={'text-decoration': 'line-through'}">
-        {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
-        <br>
+        <!-- Organisaation nimenmuutoksen moodit: update, new, delete -->
+        <div ng-if="!model.uusiOrganisaatio">
+            <input type="radio" ng-model="model.mode" value="new"
+                   ng-change="newNimiMode(form)">
+            {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
+            <input type="radio" ng-model="model.mode" value="update"
+                   ng-change="updateNimiMode(form)">
+            {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
+            <input ng-disabled="model.ajastettuMuutos === false"
+                   type="radio" ng-model="model.mode" value="delete"
+                   ng-change="cancelNimenMuutosMode(form)">
+            {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
+
+            <br>
+        </div>
 
         <label class="control-label">
             {{'Nimenmuokkaus.nimi' | i18n}}
         </label>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimifi" class="span6" ng-style="inputStyle"
-               ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
-               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
-        <div>
-            <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
-                {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
-            </span>
+
+        <!-- Kentät organisaation suomenkieliselle nimelle -->
+        <div class="controls" ng-show="model.parentNimi.fi">
+            <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.fi}}"/>
+            <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
+            <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija || model.oppilaitos"
+                   type="text" name="nimifi" class="span6"
+                   ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-disabled="model.mode === 'delete' || !model.parentNimi.fi" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+                   type="text" name="nimifi" class="span4"
+                   ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
+                   oph-name-pattern="{{model.parentPattern['fi']}}" oph-name-format="{{model.nameFormat['fi']}}"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+            <div>
+                <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
+                    {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
+                </span>
+                <span class="text-error" ng-show="form.nimifi.$error.ophNamePattern">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.fi}})
+                </span>
+                <span class="text-warning" ng-show="form.nimifi.ophPatternWarning">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.fi}})
+                </span>
+            </div>
         </div>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimisv" class="span6"  ng-style="inputStyle"
-               ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
-               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
-        <input ng-disabled="model.mode === 'delete'"
-               type="text" name="nimien" class="span6"  ng-style="inputStyle"
-               ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
-               ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+
+        <!-- Kentät organisaation ruotsinkieliselle nimelle -->
+        <div ng-show="model.parentNimi.sv">
+            <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.sv}}"/>
+            <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
+            <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija || model.oppilaitos"
+                   type="text" name="nimisv" class="span6"
+                   ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-disabled="model.mode === 'delete' || !model.parentNimi.sv" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+                   type="text" name="nimisv" class="span4"
+                   ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter
+                   oph-name-pattern="{{model.parentPattern['sv']}}" oph-name-format="{{model.nameFormat['sv']}}"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+            <div>
+                <span class="text-error" ng-show="form.nimisv.$error.ophNamePattern">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.sv}})
+                </span>
+                <span class="text-warning" ng-show="form.nimisv.ophPatternWarning">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.sv}})
+                </span>
+            </div>
+        </div>
+
+        <!-- Kentät organisaation englanninkieliselle nimelle -->
+        <div ng-show="model.parentNimi.en">
+            <input class="span4" ng-if="model.koulutustoimija === false && model.oppilaitos === false" type="text" disabled placeholder="{{model.parentNimi.en}}"/>
+            <span ng-if="model.koulutustoimija === false && model.oppilaitos === false">, </span>
+            <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija || model.oppilaitos"
+                   type="text" name="nimien" class="span6"
+                   ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+            <input ng-disabled="model.mode === 'delete' || !model.parentNimi.en" ng-class="{'pending-delete' : model.mode==='delete'}"
+                   ng-if="model.koulutustoimija === false && model.oppilaitos === false"
+                   type="text" name="nimien" class="span4"
+                   ng-model="model.nimi.nimi.en" oph-decode-name oph-enter
+                   oph-name-pattern="{{model.parentPattern['en']}}" oph-name-format="{{model.nameFormat['en']}}"
+                   ie-placeholder placeholder="{{'Organisaationmuokkaus.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+
+            <div>
+                <span class="text-error" ng-show="form.nimien.$error.ophNamePattern">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.en}})
+                </span>
+                <span class="text-warning" ng-show="form.nimien.ophPatternWarning">
+                    {{'Organisaationtarkastelu.nimi'| i18n}}
+                    {{'Organisaationmuokkaus.validointi.virheellinen'| i18n}}. {{'Organisaationtarkastelu.nimi.alku'| i18n}} ({{model.parentNimi.en}})
+                </span>
+            </div>
+        </div>
+        <div ng-if="!model.parentNimi.fi || !model.parentNimi.sv || !model.parentNimi.en">
+            <div>
+                <em class="muted">{{'Organisaationmuokkaus.ohje.nimenkielet'| i18n}}</em>
+            </div>
+        </div>
+        <br>
+
+        <!-- Nimen voimassaolon alkupäivämäärä -->
+        <div ng-if="!model.uusiOrganisaatio">
+            <label class="control-label">
+                {{'Nimenmuokkaus.alkupvm' | i18n}}
+            </label>
+            <input ng-if="model.mode !== 'update' && model.mode !== 'delete'" oph-enter
+                   ng-class="{'pending-delete' : model.mode==='delete'}" ng-required="true"
+                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
+                   close-on-date-selection="true"
+                   ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"
+                   close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                   current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                   clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                   toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
+            <input ng-if="model.mode === 'update' || model.mode === 'delete'" oph-enter
+                   ng-class="{'pending-delete' : model.mode==='delete'}" ng-required="true" ng-disabled="true"
+                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.nimi.alkuPvm"
+                   ie-placeholder placeholder="{{'Nimenmuokkaus.alkupvm.placeholder'| i18n}}"/>
+        </div>
+        <div>
+            <span ng-if="model.mode !== 'update' && model.mode !== 'delete'"
+                  class="text-error" ng-show="form.alkupvm.$error.required || form.alkupvm.$error.date">
+                {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}. </span>
+        </div>
     </form>
-    <label class="control-label">
-        {{'Nimenmuokkaus.uusinimi.alkupvm' | i18n}}
-    </label>
-    <input ng-disabled="model.mode === 'update' || model.mode === 'delete'" oph-enter
-           ng-style="inputStyle"
-           type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
-           close-on-date-selection="true"
-           ie-placeholder placeholder="{{'Organisaationmuokkaus.nimenalkupvm'| i18n}}"
-           close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-           current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-           clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-           toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"/>
 </div>
+
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
     </div>
 </div>
 

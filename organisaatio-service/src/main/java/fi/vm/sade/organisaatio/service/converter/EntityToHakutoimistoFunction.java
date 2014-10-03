@@ -43,10 +43,10 @@ public class EntityToHakutoimistoFunction implements Function<OrganisaatioMetaDa
         dto.setOpintotoimistoNimi(toMonikielinenTekstiTyyppiFunction.apply(metadata.getHakutoimistoNimi()));
 
         YhteyshenkiloTyyppi yhteyshenkilo = new YhteyshenkiloTyyppi();
-        yhteyshenkilo.setEmail(metadata.getHakutoimistoEctsEmail());
-        yhteyshenkilo.setKokoNimi(metadata.getHakutoimistoEctsNimi());
-        yhteyshenkilo.setPuhelin(metadata.getHakutoimistoEctsPuhelin());
-        yhteyshenkilo.setTitteli(metadata.getHakutoimistoEctsTehtavanimike());
+        yhteyshenkilo.setEmail(metadata.getHakutoimistoEctsEmail_old());
+        yhteyshenkilo.setKokoNimi(metadata.getHakutoimistoEctsNimi_old());
+        yhteyshenkilo.setPuhelin(metadata.getHakutoimistoEctsPuhelin_old());
+        yhteyshenkilo.setTitteli(metadata.getHakutoimistoEctsTehtavanimike_old());
         dto.setEctsYhteyshenkilo(yhteyshenkilo);
 
         dto.getOpintotoimistoYhteystiedot().addAll(

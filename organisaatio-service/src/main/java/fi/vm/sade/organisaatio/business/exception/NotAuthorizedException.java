@@ -12,10 +12,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
+
 package fi.vm.sade.organisaatio.business.exception;
 
-public class NotAuthorizedException extends
-        OrganisaatioBusinessException {
+public class NotAuthorizedException extends OrganisaatioBusinessException {
 
     private static final long serialVersionUID = 1L;
 

@@ -440,7 +440,7 @@ var parentResult = {
 
         $httpBackend.expectGET(/organisaatio\/auth\?noCache=.*/).respond("");
 
-        $httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
+        //$httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
 
         $httpBackend.expectGET(/v1\/localisation\/authorize\?noCache=.*/).respond(200, {});
 
@@ -448,7 +448,7 @@ var parentResult = {
 
         $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.11111111111\?noCache=.*/).respond(parentResult);
 
-        $httpBackend.expectGET(/organisaatio\/hae\?oidRestrictionList=1.2.246.562.10.99999999999/).respond("{}");
+        $httpBackend.expectGET(/organisaatio\/v2\/hierarkia\/hae\?noCache=.*&aktiiviset=true&lakkautetut=true&oidRestrictionList=1.2.246.562.10.99999999999&suunnitellut=true/).respond("{}");
 
         $httpBackend.expectGET(/organisaatio\/v2\/1.2.246.562.10.99999999999\/paivittaja\?noCache=.*/).respond("{}");
 

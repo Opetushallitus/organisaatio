@@ -18,6 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+
+        <!-- OPH Versions -->
         <generic.version>9.0-SNAPSHOT</generic.version>
         <sade-generic.version>9.0-SNAPSHOT</sade-generic.version>
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
@@ -26,6 +28,9 @@
         <rajapinnat.ytj.version>7.0-SNAPSHOT</rajapinnat.ytj.version>
         <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
 
+        <!-- Versions -->
+        <java.version>1.7</java.version>
+        <aspectj.version>1.7.0</aspectj.version>
         <maven.war.plugin.version>2.4</maven.war.plugin.version>
         <swagger.version>1.3.0</swagger.version>
         <solr.version>4.2.0</solr.version>
@@ -43,20 +48,54 @@
         <module>organisaatio-ui</module>
     </modules>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <debug>${compiler.debug}</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.3.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencyManagement>
         <dependencies>
 
-	    <dependency>
-	   	<groupId>org.jasig.cas.client</groupId>
-   		<artifactId>cas-client-support-distributed-ehcache</artifactId>
-   		<version>3.1.12</version>
-		<exclusions>
-		        <exclusion>
-          			<groupId>net.sf.ehcache</groupId>
-          			<artifactId>ehcache</artifactId>
-        		</exclusion>
-      		</exclusions>
-	    </dependency>
+            <dependency>
+                <groupId>org.jasig.cas.client</groupId>
+                <artifactId>cas-client-support-distributed-ehcache</artifactId>
+                <version>3.1.12</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.sf.ehcache</groupId>
+                        <artifactId>ehcache</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
@@ -76,12 +115,6 @@
                 <version>${jgroups.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang.version}</version>
-            </dependency>
-            
         </dependencies>
     </dependencyManagement>
 

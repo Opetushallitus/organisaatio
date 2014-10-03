@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Preconditions;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -25,21 +26,14 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPerustietoSuppea;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
@@ -49,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.ValidationException;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -57,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -373,5 +369,29 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
 
         return "";
+    }
+
+    @Override
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+        LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
+
+        try {
+            OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
+            return tulos;
+        }  catch (ValidationException ex) {
+            LOG.warn("Error saving multiple organizations", ex);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            LOG.warn("Error saving multiple organizations", ore);
+            throw ore;
+        } catch (Throwable t) {
+            LOG.error("Error saving multiple organizations", t);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 }

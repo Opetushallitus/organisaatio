@@ -1,11 +1,11 @@
 app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaatio) {
 
-    var model = new function() {
-        var ryhmat = [];
-        this.groups = ryhmat;
+    var model = {
+        ryhmat : [],
+        groups : [],
 
-        this.reload = function(parentOid, callback, virheCallback) {
-            ryhmat.length = 0;
+        reload : function(parentOid, callback, virheCallback) {
+            model.ryhmat.length = 0;
             Ryhmat.get({oid: parentOid}, function(result) {
                 result.forEach(function(ryhma) {
                     if (!ryhma.kuvaus2) {
@@ -18,13 +18,14 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                     if (ryhma.kayttoryhmat.length===0) {
                         ryhma.kayttoryhmat = [''];
                     }
-                    ryhmat.push(ryhma);
+                    model.ryhmat.push(ryhma);
                 });
+                model.groups = model.ryhmat;
                 callback();
             }, virheCallback);
-        };
+        },
 
-        this.create = function(parentOid) {
+        create : function(parentOid) {
             var ryhma = {
                 version: 0,
                 parentOid: parentOid,
@@ -43,11 +44,11 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                     "kieli_en#1": null
                 }
             };
-            ryhmat.push(ryhma);
+            model.ryhmat.push(ryhma);
             return ryhma;
-        };
+        },
 
-        this.save = function(ryhma, callback, virheCallback) {
+        save : function(ryhma, callback, virheCallback) {
             var fn;
             if (ryhma.oid === null) {
                 fn = UusiOrganisaatio.put;
@@ -55,31 +56,31 @@ app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaa
                 fn = Organisaatio.post;
             }
             fn(ryhma, function(result) {
-                var ind = ryhmat.indexOf(ryhma);
+                var ind = model.ryhmat.indexOf(ryhma);
                 if (ind !== -1) {
-                    ryhmat.splice(ind, 1);
+                    model.ryhmat.splice(ind, 1);
                 }
-                ryhmat.push(result);
+                model.ryhmat.push(result);
                 callback(result);
             }, virheCallback);
-        };
+        },
 
-        this.delete = function(ryhma, callback, virheCallback) {
-            var ind = ryhmat.indexOf(ryhma);
+        delete : function(ryhma, callback, virheCallback) {
+            var ind = model.ryhmat.indexOf(ryhma);
             if (ryhma.oid !== null) {
                 Organisaatio.delete(ryhma, function(result) {
                     if (ind !== -1) {
-                        ryhmat.splice(ind, 1);
+                        model.ryhmat.splice(ind, 1);
                     }
                     callback();
                 }, virheCallback);
             } else {
                 if (ind !== -1) {
-                    ryhmat.splice(ind, 1);
+                    model.ryhmat.splice(ind, 1);
                 }
                 callback();
             }
-        };
+        }
 
     };
 

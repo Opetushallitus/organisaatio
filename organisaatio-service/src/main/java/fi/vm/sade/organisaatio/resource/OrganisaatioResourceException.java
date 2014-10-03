@@ -17,7 +17,6 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;

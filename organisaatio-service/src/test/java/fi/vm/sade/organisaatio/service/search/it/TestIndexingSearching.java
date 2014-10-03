@@ -15,15 +15,37 @@
  */
 package fi.vm.sade.organisaatio.service.search.it;
 
+import com.google.common.collect.Lists;
+import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.api.model.GenericFault;
+import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
+import fi.vm.sade.organisaatio.api.model.types.RemoveByOidType;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
+import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.Osoite;
+import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.resource.IndexerResource;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
+import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
 import junit.framework.Assert;
-
 import org.apache.solr.client.solrj.SolrServerException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,29 +57,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Lists;
-
-import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.api.model.GenericFault;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
-import fi.vm.sade.organisaatio.api.model.types.RemoveByOidType;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
-import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
-import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 
 /**
  * Indexes set of orgs in a hierarchy, indexes org data, searches org data from index and compares the result with current implementation.
@@ -78,6 +77,8 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     OrganisaatioDAOImpl organisaatioDAO;
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    @Autowired
+    protected OrganisaatioNimiDAO organisaatioNimiDAO;
     final Random r = new Random(0);
     @Autowired
     OrganisaatioResource res;
@@ -300,15 +301,15 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
 
     /**
      * Compare result from solr with result from organisaatio service.
-     * 
+     *
      * @param wantedResults
      */
     private void assertResultMatches(OrganisaatioSearchCriteria apiSearchCriteria, String... wantedResults) {
         final int count = wantedResults.length;
-        
+
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(apiSearchCriteria, SearchCriteria.class);
-        
+
         final List<OrganisaatioPerustieto> search = searchService.searchHierarchy(searchCriteria);
         final List<String> wantedResultsList = Lists.newArrayList(wantedResults);
 
@@ -356,6 +357,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         LOG.info("createOrganisaatio({})", nimi);
 
         Organisaatio o = new Organisaatio();
+        OrganisaatioNimi n = new OrganisaatioNimi();
 
         if (nimi.equals(ROOT_NAME)) {
             o.setOid(rootOrganisaatioOid);
@@ -383,6 +385,21 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         o.setYhteystiedot(oYhteystiedot);
 
         o = organisaatioDAO.insert(o);
+
+        n.setOrganisaatio(o);
+        n.setNimi(o.getNimi());
+        n.setAlkuPvm(o.getAlkuPvm());
+        if (n.getAlkuPvm() == null) {
+            n.setAlkuPvm(new Date());
+        }
+
+        n = organisaatioNimiDAO.insert(n);
+
+        List<OrganisaatioNimi> nimet = new ArrayList<>();
+        nimet.add(n);
+        o.setNimet(nimet);
+
+        organisaatioDAO.getEntityManager().flush();
 
         if (parent != null) {
             final OrganisaatioSuhde suhde = organisaatioSuhdeDAO.addChild(parent.getId(), o.getId(), new Date(), null);

@@ -1,4 +1,4 @@
-app.factory('uploadService', function($q, $log) {
+app.factory('uploadService', function($q) {
     var onLoad = function(reader, deferred, scope) {
         return function() {
             scope.$apply(function() {

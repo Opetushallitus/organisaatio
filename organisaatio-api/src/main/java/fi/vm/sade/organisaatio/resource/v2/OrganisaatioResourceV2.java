@@ -20,14 +20,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHakutulosSuppeaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLOPTietoDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
-import fi.vm.sade.organisaatio.dto.v2.YhteystiedotSearchCriteriaDTOV2;
-import java.util.Date;
+import fi.vm.sade.organisaatio.dto.v2.*;
+
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -198,4 +192,14 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
             response = String.class)
     public String deleteOrganisaatioNimi(@PathParam("oid") String oid, @PathParam("date") DateParam date);
+
+    @PUT
+    @Path("/muokkaamonta")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Muokkaa monta organisaatiota kerralla",
+            notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
+            response = OrganisaatioNimiDTOV2.class)
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 }

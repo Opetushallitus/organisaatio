@@ -1,5 +1,5 @@
 app.factory('YhteystietojentyyppiModel', function(
-        KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoKoodi,
+        KoodistoOppilaitostyypit, KoodistoKoodi,
         Yhteystietojentyyppi, YhteystietojentyypinPoisto)  {
 
     var model = new function() {

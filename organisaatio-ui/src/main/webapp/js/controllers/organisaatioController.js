@@ -1,11 +1,53 @@
-function OrganisaatioController($scope, $location, $routeParams, $modal, $log, OrganisaatioModel) {
+function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $injector, OrganisaatioModel) {
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
     $scope.model.mode = "show";
     $scope.nimenmuokkaus = null;
+    $scope.voimassaolonmuokkaus = null;
+    $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
 
+    // Destruktorityyliin putsataan jäljet
+    $scope.clear = function() {
+        if ($scope.nimenmuokkaus) {
+            $scope.nimenmuokkaus.clear();
+        }
+    };
 
+    // Käsitellään muokkausnäkymästä poistuminen
+    $scope.$on("$locationChangeStart", function(event, next, current) {
+        // Tallennetaan next url ja kysytään käyttäjältä haluaako siirtyä vai jatkaa.
+        // Jos käyttäjä haluaa siirtyä seuraavalle sivulle --> location change
+        var next = next;
+        $log.log("Location change: " + current +" -> " + next);
+
+        if ($scope.form.$dirty) {
+            event.preventDefault();
+            $scope.modalOpen = true;
+            var modalInstance = $modal.open({
+                templateUrl: 'organisaationmuokkauksenperuutus.html',
+                controller: OrganisaatioCancelController,
+                resolve: {}
+            });
+
+            modalInstance.result.then(function() {
+                $log.debug('Poistutaan muokkauksesta');
+                $scope.modalOpen = false;
+                $scope.form.$setPristine();
+                $scope.clear();
+                $location.path(next);
+            }, function() {
+                $scope.modalOpen = false;
+                $log.debug('Jatketaan muokkausta');
+            });
+        }
+        else {
+            $scope.clear();
+        }
+    });
+
+    // Tarkistetaan organisaation muokkauksen moodi, uusi organisaatio vai vanhan muokkaus
+    // Uuden organisaation tapauksessa organisaation luonti voi perustua YTJ:stä saatavaan tietoon
     if (/new$/.test($location.path())) {
         $scope.model.mode = "new";
         if ('ytunnus' in $routeParams) {
@@ -29,30 +71,59 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         }
     };
 
+    // Kielet järjestykseen FI, SV, EN
     $scope.orderByLang = function(lang) {
         var m = {'fi': '0--', 'sv': '1--', 'en': '2--'};
         return m[lang] || '3--' + lang;
     };
 
-    $scope.save = function() {
-        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
-        // tai poistanut tulevan nimenmuutoksen --> suoritetaan muutos
-        if ($scope.nimenmuokkaus !== null) {
-            if ($scope.nimenmuokkaus.mode === 'new' || $scope.nimenmuokkaus.mode === 'delete') {
-                $scope.nimenmuokkaus.save();
-            }
+    $scope.save2 = function() {
+        if ($scope.voimassaolonmuokkaus !== null) {
+            $scope.voimassaolonmuokkaus.save().then (function() {
+                if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
+                    $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
+                }
+                $scope.model.persistOrganisaatio($scope.form);
+            });
+        } else {
+            $scope.model.persistOrganisaatio($scope.form);
         }
-        $scope.model.persistOrganisaatio($scope.form);
     };
 
+    // Organisaation tallennus
+    $scope.save = function() {
+        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
+        // tai poistanut tulevan nimenmuutoksen
+        // --> suoritetaan ensin nimihistorian päivitys ja sitten organisaatio
+        if ($scope.nimenmuokkaus !== null) {
+            $scope.nimenmuokkaus.save().then (function() {
+                $scope.save2();
+            });
+        }
+        else {
+            $scope.save2();
+        }
+
+    };
+
+    // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
     $scope.cancel = function() {
         $location.path("/");
     };
 
+    // Siirtyminen organisaation tarkastelunäkymään
+    $scope.view = function() {
+        if (/edit$/.test($location.path())) {
+            $location.path($location.path().replace("/edit", ""));
+        }
+    };
+
+    // Siirtyminen organisaation muokkausnäkymään
     $scope.edit = function() {
         $location.path($location.path() + "/edit");
     };
 
+    // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;
         var modalInstance = $modal.open({
@@ -68,6 +139,21 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
                 },
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
+                },
+                koulutustoimija: function () {
+                    return $scope.model.isKoulutustoimija();
+                },
+                oppilaitos: function () {
+                    return $scope.model.isOppilaitos();
+                },
+                parentNimi: function () {
+                    return $scope.model.parent.nimi;
+                },
+                nameFormat: function () {
+                    return $scope.model.nameFormat;
+                },
+                parentPattern: function () {
+                    return $scope.model.parentPattern;
                 }
             }
         });
@@ -76,21 +162,17 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = nimenmuokkausModel;
 
-            if (nimenmuokkausModel.mode === 'update') {
-                $log.log('Nimenmuokkaus --> update');
-                $scope.form.$setDirty();
-                $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
-            }
-            else if (nimenmuokkausModel.mode === 'new') {
+            if (nimenmuokkausModel.mode === 'update' ||
+                    nimenmuokkausModel.mode === 'new') {
                 if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
-                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> ajastus');
+                    $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setTulevaNimi($scope.nimenmuokkaus.nimi);
+                    $scope.model.setTulevaNimi(angular.copy($scope.nimenmuokkaus.nimi));
                 }
                 else {
-                    $log.log('Nimenmuokkaus --> uuden nimen luonti --> update');
+                    $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setNimi($scope.nimenmuokkaus.nimi.nimi);
+                    $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'
@@ -106,6 +188,62 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         });
     };
 
+    // Voimassaolon muokkauksen modaalin dialogin avaus
+    $scope.openVoimassaolonMuokkaus = function (muokataanAlkupvm) {
+        if ($scope.modalOpen) {
+            return;
+        }
+        $scope.modalOpen = true;
+        var modalInstance = $modal.open({
+            templateUrl: 'voimassaolonmuokkaus.html',
+            controller: VoimassaolonMuokkausController,
+            windowClass:'modal-large',
+            resolve: {
+                muokataanAlkupvm: function() {
+                    return muokataanAlkupvm;
+                },
+                oid: function () {
+                    return $scope.model.organisaatio.oid;
+                },
+                nimi: function () {
+                    return $scope.model.organisaatio.nimi;
+                },
+                alkuPvm: function() {
+                    return $scope.model.organisaatio.alkuPvm;
+                },
+                lakkautusPvm: function() {
+                    return $scope.model.organisaatio.lakkautusPvm;
+                },
+                aliorganisaatioHaunTulos: function () {
+                    return $scope.model.aliorganisaatioHaunTulos;
+                },
+                monikielinenTekstiLocalizer: function () {
+                    return $scope.model.getDecodedLocalizedValue;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(voimassaolonmuokkausModel) {
+            $scope.modalOpen = false;
+            $scope.voimassaolonmuokkaus = voimassaolonmuokkausModel;
+            $scope.form.$setDirty();
+            if (voimassaolonmuokkausModel.muokataanAlkupvm) {
+                $log.log("Alku pvm: " + voimassaolonmuokkausModel.alkuPvm);
+                $scope.model.organisaatio.alkuPvm = voimassaolonmuokkausModel.alkuPvm;
+            } else {
+                $log.log("Lakkautus pvm: " + voimassaolonmuokkausModel.loppuPvm);
+                $scope.model.organisaatio.lakkautusPvm = voimassaolonmuokkausModel.lakkautusPvm;
+            }
+            $scope.model.muutettaviaAliorganisaatioita = voimassaolonmuokkausModel.muutettaviaAliorganisaatioita;
+            $scope.form.$setValidity("organisaationVoimassaolo", voimassaolonmuokkausModel.isVoimassaoloValid(), $scope.form);
+            $scope.form.$setValidity("aliorganisaationVoimassaolo", voimassaolonmuokkausModel.isAliorganisaatioidenVoimassaoloValid(), $scope.form);
+        }, function () {
+            $scope.modalOpen = false;
+            $log.log('Voimassaolonmuokkaus modal dismissed at: ' + new Date());
+        });
+    };
+
+    // Ytj-tietojen haun modaalin dialogin avaus
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
@@ -129,30 +267,6 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
             $log.log('Modal dismissed at: ' + new Date());
             $scope.modalOpen = false;
         });
-    };
-
-    $scope.peruutaOrganisaationmuokkaus = function(dirty) {
-        if (dirty === false) {
-            // jos ei ole muutettu ei tarvitse kysyä vahvistusta
-            $location.path($location.path().substr(0, $location.path().lastIndexOf("/")));
-        } else {
-            $scope.modalOpen = true;
-            var modalInstance = $modal.open({
-                templateUrl: 'organisaationmuokkauksenperuutus.html',
-                controller: OrganisaatioCancelController,
-                resolve: {}
-            });
-
-            modalInstance.result.then(function() {
-                $log.debug('Peruutus vahvistettu');
-                $scope.modalOpen = false;
-                // Siirry tarkastelu-sivulle
-                $location.path($location.path().substr(0, $location.path().lastIndexOf("/")));
-            }, function() {
-                $scope.modalOpen = false;
-                $log.debug('Peruutusta ei vahvistettu');
-            });
-        }
     };
 
     // Muodostaa listan invalid-komponenteista
@@ -253,5 +367,13 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, O
         return !!window.FileReader;
     }());
 
-    $scope.tempFileUrl = SERVICE_URL_BASE + 'tempfile/';
+    // Tarkastetaan ollaanko lataamassa vielä sisältöä
+    // Jos lataus on kesken, ei kannata näyttää käyttäjälle ilmoitusta puuttuvista tiedoista
+    $scope.isLoading = function() {
+        var loadingService = $injector.get('loadingService');
+        if (loadingService) {
+            return loadingService.isLoading();
+        }
+        return false;
+    };
 }

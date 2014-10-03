@@ -43,6 +43,8 @@ public class OrganisaatioKoodisto {
 
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
+    private boolean reauthorize;
+
     /**
      * Luo instanssin ja alustaa gson:in
      */
@@ -54,6 +56,7 @@ public class OrganisaatioKoodisto {
         if (client == null) {
             client = new OrganisaatioKoodistoClient();
         }
+        client.setReauthorize(reauthorize);
         return client;
     }
 
@@ -66,7 +69,7 @@ public class OrganisaatioKoodisto {
      * @return Koodiobjekti tai null jos ei löytynyt
      */
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
-        String json = getClient().get("/rest/json/" + koodistoUri + "/koodi/" + koodistoUri + "_" + tunniste);
+        String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1");
         LOG.debug("Haettiin koodi: " + (json == null ? null : json.toString()));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
     }
@@ -142,9 +145,11 @@ public class OrganisaatioKoodisto {
      * yhteishaunkoulukoodi_<yhteishaunkoulukoodi>
      *
      * @param entity Organisaatio
+     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     *
      * @return true jos koodiston päivittäminen onnistui, false muuten
      */
-    public String paivitaKoodisto(Organisaatio entity) {
+    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         /*
          * Koodiston koodit
          *     [0]: koodiUri
@@ -159,6 +164,8 @@ public class OrganisaatioKoodisto {
         };
         int URI_INDEX = 0;
         int TUNNISTE_INDEX = 1;
+
+        this.reauthorize = reauthorize;
 
         for (Object[] koodiAlkio : koodiLista) {
             String uri = (String) koodiAlkio[URI_INDEX];
@@ -197,6 +204,112 @@ public class OrganisaatioKoodisto {
                         LOG.debug("Lakkautuspvm poistettu");
                         koodi.setVoimassaLoppuPvm(null);
                         muuttunut = true;
+                    }
+
+                    // include-relaatiot tällä hetkellä koodistossa
+                    Map<String, OrganisaatioKoodistoIncludesCodeElements> koodiIncludeUris = new HashMap<String, OrganisaatioKoodistoIncludesCodeElements>();
+                    for (OrganisaatioKoodistoIncludesCodeElements ie : koodi.getIncludesCodeElements()) {
+                        if (ie.getCodeElementUri().startsWith("posti_")) {
+                            if (entity.getKayntiosoite() != null && entity.getKayntiosoite().getPostinumero() != null) {
+                                String entityArvo = entity.getKayntiosoite().getPostinumero().split("#")[0];
+                                if (!entityArvo.endsWith(ie.getCodeElementValue())) {
+                                    LOG.debug("Postiosoite muuttunut");
+                                    ie.setCodeElementUri(entityArvo);
+                                    ie.setCodeElementValue(entityArvo.split("posti_")[1]);
+                                    ie.setCodeElementVersion("1");
+                                    muuttunut = true;
+                                }
+                            }
+                        } else if (ie.getCodeElementUri().startsWith("kunta_")) {
+                            if (entity.getKotipaikka() != null) {
+                                String entityArvo = entity.getKotipaikka().split("#")[0];
+                                if (!entityArvo.endsWith(ie.getCodeElementValue())) {
+                                    LOG.debug("Kotipaikka muuttunut");
+                                    ie.setCodeElementUri(entityArvo);
+                                    ie.setCodeElementValue(entityArvo.split("kunta_")[1]);
+                                    ie.setCodeElementVersion("1");
+                                    muuttunut = true;
+                                }
+                            }
+                        } else if (ie.getCodeElementUri().startsWith("oppilaitostyyppi_")) {
+                            if (entity.getOppilaitosTyyppi() != null) {
+                                String entityArvo = entity.getOppilaitosTyyppi().split("#")[0];
+                                if (!entityArvo.endsWith(ie.getCodeElementValue())) {
+                                    LOG.debug("Oppilaitostyyppi muuttunut");
+                                    ie.setCodeElementUri(entityArvo);
+                                    ie.setCodeElementValue(entityArvo.split("oppilaitostyyppi_")[1]);
+                                    ie.setCodeElementVersion("1");
+                                    muuttunut = true;
+                                }
+                            }
+                        } else if (ie.getCodeElementUri().startsWith("oppilaitoksenopetuskieli_")) {
+                            if (entity.getKielet() != null) {
+                                for (String kieli : entity.getKielet()) {
+                                    String entityArvo = kieli.split("#")[0];
+                                    if (!entityArvo.endsWith(ie.getCodeElementValue())) {
+                                        LOG.debug("Oppilaitoksenopetuskieli muuttunut");
+                                        ie.setCodeElementUri(entityArvo);
+                                        ie.setCodeElementValue(entityArvo.split("oppilaitoksenopetuskieli_")[1]);
+                                        ie.setCodeElementVersion("1");
+                                        muuttunut = true;
+                                    }
+                                }
+                            }
+                        }
+                        LOG.debug("PUT " + ie.getCodeElementUri());
+                        koodiIncludeUris.put(ie.getCodeElementUri(), ie);
+                    }
+                    // Tarkistetaan pitääkö tallentaa uusia include-relaatioita
+                    if (entity.getKayntiosoite()!=null && entity.getKayntiosoite().getPostinumero()!=null &&
+                            !entity.getKayntiosoite().getPostinumero().isEmpty()) {
+                        if (!koodiIncludeUris.containsKey(entity.getKayntiosoite().getPostinumero().split("#")[0])) {
+                            LOG.debug("!CONTAINS: " + entity.getKayntiosoite().getPostinumero().split("#")[0]);
+                            LOG.debug("Postiosoite lisätty");
+                            OrganisaatioKoodistoIncludesCodeElements ie = new OrganisaatioKoodistoIncludesCodeElements();
+                            ie.setCodeElementUri(entity.getKayntiosoite().getPostinumero().split("#")[0]);
+                            ie.setCodeElementValue(entity.getKayntiosoite().getPostinumero().split("#")[0].split("posti_")[1]);
+                            ie.setCodeElementVersion("1");
+                            koodi.getIncludesCodeElements().add(ie);
+                            muuttunut = true;
+                        }
+                    }
+                    if (entity.getKotipaikka()!=null && !entity.getKotipaikka().isEmpty()) {
+                        if (!koodiIncludeUris.containsKey(entity.getKotipaikka().split("#")[0])) {
+                            LOG.debug("!CONTAINS: " + entity.getKotipaikka());
+                            LOG.debug("Kotipaikka lisätty");
+                            OrganisaatioKoodistoIncludesCodeElements ie = new OrganisaatioKoodistoIncludesCodeElements();
+                            ie.setCodeElementUri(entity.getKotipaikka().split("#")[0]);
+                            ie.setCodeElementValue(entity.getKotipaikka().split("#")[0].split("kunta_")[1]);
+                            ie.setCodeElementVersion("1");
+                            koodi.getIncludesCodeElements().add(ie);
+                            muuttunut = true;
+                        }
+                    }
+                    if (entity.getOppilaitosTyyppi()!=null && !entity.getOppilaitosTyyppi().isEmpty()) {
+                        if (!koodiIncludeUris.containsKey(entity.getOppilaitosTyyppi().split("#")[0])) {
+                            LOG.debug("!CONTAINS: " + entity.getOppilaitosTyyppi());
+                            LOG.debug("Oppilaitostyyppi lisätty");
+                            OrganisaatioKoodistoIncludesCodeElements ie = new OrganisaatioKoodistoIncludesCodeElements();
+                            ie.setCodeElementUri(entity.getOppilaitosTyyppi().split("#")[0]);
+                            ie.setCodeElementValue(entity.getOppilaitosTyyppi().split("#")[0].split("oppilaitostyyppi_")[1]);
+                            ie.setCodeElementVersion("1");
+                            koodi.getIncludesCodeElements().add(ie);
+                            muuttunut = true;
+                        }
+                    }
+                    if (entity.getKielet()!=null && !entity.getKielet().isEmpty()) {
+                        for (String kieli : entity.getKielet()) {
+                            if (!koodiIncludeUris.containsKey(kieli.split("#")[0])) {
+                                LOG.debug("!CONTAINS: " + kieli);
+                                LOG.debug("Oppilaitoksenopetuskieli lisätty");
+                                OrganisaatioKoodistoIncludesCodeElements ie = new OrganisaatioKoodistoIncludesCodeElements();
+                                ie.setCodeElementUri(kieli.split("#")[0]);
+                                ie.setCodeElementValue(kieli.split("#")[0].split("oppilaitoksenopetuskieli_")[1]);
+                                ie.setCodeElementVersion("1");
+                                koodi.getIncludesCodeElements().add(ie);
+                                muuttunut = true;
+                            }
+                        }
                     }
 
                     // Koodin nimet tällä hetkellä koodistossa

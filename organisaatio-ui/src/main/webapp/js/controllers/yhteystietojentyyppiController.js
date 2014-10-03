@@ -1,4 +1,3 @@
-/*global YhteystietoDeleteController:false, MuuYhteystietoController:false, angular:false */
 function YhteystietojentyyppiController($scope, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $log) {
     "use strict";
     var language;
@@ -41,7 +40,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal, Yhteystietojent
         }
         return null;
     };
-    
+
     $scope.yttNimiUnique = function(nimi) {
         if (nimi === "") {
             return true; // Ignore empty strings.
@@ -59,7 +58,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal, Yhteystietojent
         }
         return true;
     };
-    
+
     function _match(item, filt) {
         for (var i in filt) {
             if (typeof filt[i] === 'string') {
