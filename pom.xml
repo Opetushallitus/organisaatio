@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>11.3</version>
+    <version>11.6</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
 
