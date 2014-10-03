@@ -23,7 +23,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -87,10 +86,7 @@ public class IndexerResource {
                     if (clean) {
                         solr.deleteByQuery("*:*");
                     }
-                } catch (SolrServerException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (SolrServerException | IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -129,9 +125,7 @@ public class IndexerResource {
                 LOG.info("Committing changes to index.", docs.size());
                 solr.commit(true, true, false);
                 LOG.info("Done.");
-            } catch (SolrServerException e) {
-                LOG.error("Indexing failed", e);
-            } catch (IOException e) {
+            } catch (SolrServerException | IOException e) {
                 LOG.error("Indexing failed", e);
             }
         }
@@ -145,9 +139,7 @@ public class IndexerResource {
                 solr.deleteById(delete);
                 solr.commit(true, true, false);
                 LOG.info("Committing changes to index.");
-            } catch (SolrServerException e) {
-                LOG.error("Deleting failed", e);
-            } catch (IOException e) {
+            } catch (SolrServerException | IOException e) {
                 LOG.error("Deleting failed", e);
             }
         }

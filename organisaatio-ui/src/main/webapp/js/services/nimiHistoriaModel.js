@@ -15,8 +15,22 @@ app.factory('NimiHistoriaModel', function($log) {
         parentNimi : null,
         currentNimi : {},
 
+        // Nimi rakenne stringiksi (ei alkupäivämäärää)
+        nimiToString: function(nimi) {
+            var nimiStr = '';
+            if (nimi && 'nimi' in nimi) {
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (key in nimi.nimi)
+                        nimiStr += '[' + key + '] ' + nimi.nimi[key];
+                });
+            }
+            return nimiStr;
+        },
+
         // Tyhjenneteään mallin tiedot
         clear: function() {
+            $log.debug('NimiHistoriaModel::clear()');
+
             this.nimihistoria = [];
             this.uusinNimi = {};
             this.currentNimi = {};
@@ -34,6 +48,8 @@ app.factory('NimiHistoriaModel', function($log) {
                     nimi = this.nimihistoria[i];
                 }
             }
+
+            $log.debug('NimiHistoriaModel::getUusinNimi() ' + model.nimiToString(nimi));
             return nimi;
         },
 
@@ -49,6 +65,8 @@ app.factory('NimiHistoriaModel', function($log) {
                     nimi = this.nimihistoria[i];
                 }
             }
+
+            $log.debug('NimiHistoriaModel::getCurrentNimi() ' + model.nimiToString(nimi));
             return nimi;
         },
 
@@ -62,17 +80,17 @@ app.factory('NimiHistoriaModel', function($log) {
                     ajastettuMuutos = true;
                 }
             }
-            $log.debug('Ajastettu muutos: ' + ajastettuMuutos);
 
+            $log.debug('NimiHistoriaModel::isAjastettuMuutos() ' + model.nimiToString(nimi) + " = " + ajastettuMuutos);
             return ajastettuMuutos;
         },
 
         // Init NimiHistoriaModel uudella nimihistorialla
         init: function(nimihistoria, parentNimi) {
-            $log.log('init()');
+            $log.log('NimiHistoriaModel::init()');
             this.parentNimi = parentNimi || null;
             this.nimihistoria = nimihistoria;
-            this.uusinNimi = this.getUusinNimi(nimihistoria);
+            this.uusinNimi = angular.copy(this.getUusinNimi(nimihistoria));
             this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
             this.currentNimi = this.getCurrentNimi(nimihistoria);
             if (parentNimi && model.currentNimi) {
@@ -83,7 +101,7 @@ app.factory('NimiHistoriaModel', function($log) {
                     }
                 });
             }
-            $log.log("init done");
+            $log.log("NimiHistoriaModel::init() done");
         },
 
         accept: function() {

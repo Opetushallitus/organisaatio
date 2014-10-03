@@ -440,7 +440,7 @@ var parentResult = {
 
         $httpBackend.expectGET(/organisaatio\/auth\?noCache=.*/).respond("");
 
-        $httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
+        //$httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
 
         $httpBackend.expectGET(/v1\/localisation\/authorize\?noCache=.*/).respond(200, {});
 

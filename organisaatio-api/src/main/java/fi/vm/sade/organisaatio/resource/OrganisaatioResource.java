@@ -216,15 +216,6 @@ public interface OrganisaatioResource {
     public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GET
-    @Path("/myroles")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(
-            value = "Hakee autentikoituneen käyttäjän roolit",
-            notes = "Operaatio palauttaa samat kuin /cas/myroles. HUOM! Testikäyttöön tarkoitettu.",
-            response = String.class)
-    public String getRoles();
-
-    @GET
     @Path("/yhteystietometadata")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(

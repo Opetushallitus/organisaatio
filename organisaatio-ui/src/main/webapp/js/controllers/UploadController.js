@@ -3,7 +3,7 @@
         $scope.progress = 0;
         uploadService.readAsDataUrl(filename, $scope)
                       .then(function(result) {
-                          organisaatio = $scope.$parent.model.organisaatio;
+                          var organisaatio = $scope.$parent.model.organisaatio;
                           if (!organisaatio.metadata) {
                               organisaatio.metadata = {};
                           }

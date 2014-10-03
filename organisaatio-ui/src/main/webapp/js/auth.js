@@ -90,15 +90,15 @@ app.factory('AuthService', function ($q, $http, $timeout, MyRolesModel) {
 
     // OPH check -- voidaan ohittaa organisaatioiden haku
     var ophRead = function (service, model) {
-        return (model.myroles.indexOf(service + READ + "_" + OPH_ORG) > -1
-            || model.myroles.indexOf(service + UPDATE + "_" + OPH_ORG) > -1
-            || model.myroles.indexOf(service + CRUD + "_" + OPH_ORG) > -1);
+        return (model.myroles.indexOf(service + READ + "_" + OPH_ORG) > -1   ||
+                model.myroles.indexOf(service + UPDATE + "_" + OPH_ORG) > -1 ||
+                model.myroles.indexOf(service + CRUD + "_" + OPH_ORG) > -1);
 
     };
 
     var ophUpdate = function (service, model) {
-        return (model.myroles.indexOf(service + UPDATE + "_" + OPH_ORG) > -1
-            || model.myroles.indexOf(service + CRUD + "_" + OPH_ORG) > -1);
+        return (model.myroles.indexOf(service + UPDATE + "_" + OPH_ORG) > -1 ||
+                model.myroles.indexOf(service + CRUD + "_" + OPH_ORG) > -1);
     };
 
     var ophCrud = function (service, model) {

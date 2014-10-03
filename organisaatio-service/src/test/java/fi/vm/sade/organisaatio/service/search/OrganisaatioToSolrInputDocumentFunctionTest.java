@@ -69,7 +69,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
         org.setYtunnus("123456-7");
 
-        List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
+        List<OrganisaatioNimi> nimet = new ArrayList<>();
         OrganisaatioNimi orgNimi = new OrganisaatioNimi();
         orgNimi.setAlkuPvm(new Date(1));
         orgNimi.setNimi(nimi);

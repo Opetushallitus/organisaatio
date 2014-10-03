@@ -27,10 +27,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
  * REST.
- * 
+ *
  * .. well, actually "OrganisaatioDTO" and "Organisaatio" were already used and
  * I wanted to avoid confusion. :)
- * 
+ *
  * "Natural key":
  * <ul>
  * <li>Koulutustoimija - y-tunnus</li>
@@ -38,7 +38,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * <li>Toimipiste - oppilaitosnro + toimipisteenjärjestysnumero (konkatenoituna)
  * sekä yhkoulukoodi</li>
  * </ul>
- * 
+ *
  * @author mlyly
  */
 @ApiModel(value = "Organisaation tiedot")
@@ -95,9 +95,9 @@ public class OrganisaatioRDTO implements Serializable {
     private Map<String, String> _postiosoite;
 
     private Map<String, String> _kayntiosoite;
-    
+
     private List<Map<String, String>> _yhteystiedot;
-    
+
     private String _kuvaus;
 
     private Map<String, String> _kuvaus2;

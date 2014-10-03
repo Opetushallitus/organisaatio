@@ -1,13 +1,20 @@
 var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
 
 angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService) {
+.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', '$log', '$injector', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService, $log, $injector) {
     var initialized = false;
 
     UserInfo.then(function(s) {
 
         LocalisationService.setLocale(s.lang.toLowerCase());
         initialized = true;
+
+        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) || (window.APP_LOCALISATION_DATA.length === 0)) {
+            Alert = $injector.get("Alert");
+            $log.error("Failed to load localisations.");
+            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+        }
+
     });
 
     return function (localisationKey, parameters) {
@@ -17,7 +24,7 @@ angular.module('localization', [])
 
 app.filter('fixHttpLink',function () {
     return function (text) {
-        proto = text.split("://");
+        var proto = text.split("://");
         return (proto.length>1 ? proto[0] : "http") + "://" + proto[proto.length-1];
     };
 });
@@ -229,8 +236,7 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
 }]);
 
 app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter', function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
-        var initAuthService;
-        return initAuthService = {
+        return  {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {
                     $log.log("Organisaatio Auth Init.");
@@ -501,7 +507,7 @@ app.factory('Nimet', function($resource) {
 // Usean organisaation voimassaolon muokkaus yhdellä kertaa
 app.factory('Muokkaamonta', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
-        put: {method: 'PUT'},
+        put: {method: 'PUT'}
     });
 });
 

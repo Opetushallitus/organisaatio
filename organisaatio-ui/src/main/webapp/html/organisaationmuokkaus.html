@@ -366,7 +366,7 @@
                     </label>
                 </a>
             </div>
-            <span class="text-error span4" ng-show="form.yhteystiedot.$invalid">
+            <span class="text-error span4" ng-show="form.yhteystiedot.$invalid && model.yhteystiedot.postinumerot">
                 {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
             </span>
         </div>
@@ -443,7 +443,7 @@
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.postinumero'| i18n}}" typeahead-editable="true"
-                       ng-required="model.yhteystiedot[model.ytlang].posti.osoite"
+                       ng-required="model.yhteystiedot.postinumerot && model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
                 &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti, model.ytlang)}}
                 <div>
@@ -1193,20 +1193,20 @@
 </div>
 -->
 
-<div class="row fixed-footer" ng-if="modalOpen == false">
+<div class="row fixed-footer" ng-if="modalOpen === false">
     <div ng-show="model.mode === 'edit'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="isLoading()===false && form.$invalid===true" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="peruutaOrganisaationmuokkaus(form.$dirty)">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>

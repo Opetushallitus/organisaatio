@@ -2,8 +2,8 @@ app.factory('YritysValintaModel', function($filter, $log, Alert,
                                            YTJYritysTiedot, YTJYritystenTiedot) {
     var model = {
         hakuString: "",
-        yritykset: new Array(),
-        
+        yritykset: [],
+
         isYTunnus: function(str) {
             // Y-Tunnus on muotoa NNNNNNN-T
             if (str.length !== 9) {
@@ -19,8 +19,8 @@ app.factory('YritysValintaModel', function($filter, $log, Alert,
             }
             return true;
         },
-                    
-        
+
+
         refresh: function() {
             $log.log('refresh()');
             var start = +new Date();
@@ -32,11 +32,11 @@ app.factory('YritysValintaModel', function($filter, $log, Alert,
                     $log.log("Haku kesti: " +diff);
                     model.yritykset.length = 0;
                     model.yritykset.push(result);
-                    
+
                     if (model.yritykset.length === 0) {
                         Alert.add("warnign", $filter('i18n')("YritysValinta.eiHakutuloksia", ""), true, true);
                     }
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("YTJYritysTiedot response: " + response.status);
@@ -49,11 +49,11 @@ app.factory('YritysValintaModel', function($filter, $log, Alert,
                     var diff = end - start;
                     $log.log("Haku kesti: " +diff);
                     model.yritykset = result;
-                    
+
                     if (model.hakuString.length>0 && model.yritykset.length === 0) {
                         Alert.add("warnign", $filter('i18n')("YritysValinta.eiHakutuloksia", ""), true, true);
                     }
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("YTJYritystenTiedot response: " + response.status);

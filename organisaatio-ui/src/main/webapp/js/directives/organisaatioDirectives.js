@@ -1,4 +1,4 @@
-app.directive('formatteddate', function($log, $filter) {
+app.directive('formatteddate', function($log) {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -18,6 +18,8 @@ app.directive('formatteddate', function($log, $filter) {
                 $log.log("Validation starts");
                 $log.log("Element value= "+element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
 
+                var date;
+
                 if (viewValue === undefined) {
                     $log.log("ViewValue undefined");
                     ctrl.$setValidity('date', false);
@@ -35,7 +37,7 @@ app.directive('formatteddate', function($log, $filter) {
                 if (typeof viewValue === "object" && moment(viewValue).isValid()) {
                     $log.log("Valid object ViewValue= " + viewValue);
 
-                    var date = moment(viewValue);
+                    date = moment(viewValue);
                     if (!isRangeValid(date.toDate())) {
                         ctrl.$setValidity('dateYear', false);
                         return viewValue;
@@ -51,7 +53,7 @@ app.directive('formatteddate', function($log, $filter) {
                         ctrl.$setValidity('date', false);
                         return undefined;
                     }
-                    var date = moment(viewValue, 'DD.MM.YYYY');
+                    date = moment(viewValue, 'DD.MM.YYYY');
                     if (!date.isValid()) {
                         $log.log("String ViewValue invalid");
                         ctrl.$setValidity('date', false);
@@ -113,7 +115,7 @@ app.directive('noedit', function () {
               return false;
           });
         }
-    }   
+    }
 });
 
 
@@ -200,7 +202,7 @@ app.directive('namesCombinedField', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
-            
+
             var parserValidator = function(viewValue) {
                 scope.form.nimifi.$setValidity('namescombinedrequired', true);
 
@@ -213,7 +215,7 @@ app.directive('namesCombinedField', function() {
             ctrl.$parsers.unshift(parserValidator);
 
             var formatterValidator = function(viewValue) {
-                var valid = viewValue || 
+                var valid = viewValue ||
                         (ctrl.$name !== 'nimifi' && scope.form.nimifi.$viewValue) ||
                         (ctrl.$name !== 'nimisv' && scope.form.nimisv.$viewValue) ||
                         (ctrl.$name !== 'nimien' && scope.form.nimien.$viewValue);
@@ -235,9 +237,9 @@ app.directive('addressCombinedField', function() {
                 if (scope.optional) {
                     return viewValue;
                 }
-                if (!(scope.form.kayntiosoitefi.$viewValue && scope.form.postiosoitefi.$viewValue)
-                        && !(scope.form.kayntiosoitesv.$viewValue && scope.form.postiosoitesv.$viewValue)
-                        && !scope.form.kayntiosoitekv.$viewValue && scope.form.postiosoitekv.$viewValue) {
+                if (!(scope.form.kayntiosoitefi.$viewValue && scope.form.postiosoitefi.$viewValue) &&
+                        !(scope.form.kayntiosoitesv.$viewValue && scope.form.postiosoitesv.$viewValue) &&
+                        !scope.form.kayntiosoitekv.$viewValue && scope.form.postiosoitekv.$viewValue) {
                     scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', false);
                     returnUndefined = true;
                 }
@@ -336,7 +338,7 @@ app.directive('ophSetDirty', function($log) {
 });
 
 // Konvertoi &amp; => &
-app.directive("ophDecodeName", function($compile, $log) {
+app.directive("ophDecodeName", function($log) {
     return {
         require: 'ngModel',
         restrict: "A",

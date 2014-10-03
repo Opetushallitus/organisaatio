@@ -24,14 +24,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <!-- Organisaation nimenmuutoksen moodit: update, new, delete -->
         <div ng-if="!model.uusiOrganisaatio">
             <input type="radio" ng-model="model.mode" value="new"
-                   ng-change="model.clearVisibleNimi()">
+                   ng-change="newNimiMode(form)">
             {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
             <input type="radio" ng-model="model.mode" value="update"
-                   ng-change="model.setUusinNimiVisible()">
+                   ng-change="updateNimiMode(form)">
             {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
             <input ng-disabled="model.ajastettuMuutos === false"
                    type="radio" ng-model="model.mode" value="delete"
-                   ng-change="model.setUusinNimiVisible()">
+                   ng-change="cancelNimenMuutosMode(form)">
             {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>
 
             <br>
@@ -162,7 +162,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button class="btn" ng-disabled="!form.$dirty || form.$invalid" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
     </div>
 </div>
 
