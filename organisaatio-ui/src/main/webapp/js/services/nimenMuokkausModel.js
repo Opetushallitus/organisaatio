@@ -18,6 +18,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
+            $log.debug('NimenMuokkausModel::clear()');
             this.oid = "";
             this.minAlkuPvm = "";
             this.nimi = {};
@@ -54,7 +55,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             this.nimi = this.historiaModel.uusinNimi;
         },
 
-        uusinNimiChanged: function() {
+        isUusinNimiChanged: function() {
             if (angular.equals(this.historiaModel.uusinNimi, this.historiaModel.getUusinNimi())) {
                 return false;
             }
@@ -143,6 +144,10 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
                           koulutustoimija, oppilaitos, parentNimi,
                           nameFormat) {
+            if (this.oid === oid) {
+                $log.log('NimenMuokkausModel::refresh() Using old instance');
+                return;
+            }
             $log.log('NimenMuokkausModel::refresh()');
 
             // Alustetaan historiamalli

@@ -27,7 +27,7 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
         $log.debug('NimenMuokkausController::updateNimiMode()');
         $scope.model.setUusinNimiVisible();
         $log.debug($scope);
-        if ($scope.model.uusinNimiChanged() === false) {
+        if ($scope.model.isUusinNimiChanged() === false) {
             form.$setPristine();
         }
     };

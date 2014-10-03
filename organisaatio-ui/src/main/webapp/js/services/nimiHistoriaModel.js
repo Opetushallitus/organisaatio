@@ -101,7 +101,7 @@ app.factory('NimiHistoriaModel', function($log) {
                     }
                 });
             }
-            $log.log("NimiHistoriaModel::ini() done");
+            $log.log("NimiHistoriaModel::init() done");
         },
 
         accept: function() {
