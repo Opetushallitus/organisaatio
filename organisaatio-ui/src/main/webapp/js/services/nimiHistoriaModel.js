@@ -87,10 +87,10 @@ app.factory('NimiHistoriaModel', function($log) {
 
         // Init NimiHistoriaModel uudella nimihistorialla
         init: function(nimihistoria, parentNimi) {
-            $log.log('init()');
+            $log.log('NimiHistoriaModel::init()');
             this.parentNimi = parentNimi || null;
             this.nimihistoria = nimihistoria;
-            this.uusinNimi = this.getUusinNimi(nimihistoria);
+            this.uusinNimi = angular.copy(this.getUusinNimi(nimihistoria));
             this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
             this.currentNimi = this.getCurrentNimi(nimihistoria);
             if (parentNimi && model.currentNimi) {

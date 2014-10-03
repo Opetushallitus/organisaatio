@@ -17,4 +17,25 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
         $modalInstance.close($scope.model);
         $scope.model.accept();
     };
+
+    $scope.newNimiMode = function(form) {
+        $log.debug('NimenMuokkausController::newNimiMode()');
+        $scope.model.clearVisibleNimi();
+    };
+
+    $scope.updateNimiMode = function(form) {
+        $log.debug('NimenMuokkausController::updateNimiMode()');
+        $scope.model.setUusinNimiVisible();
+        $log.debug($scope);
+        if ($scope.model.uusinNimiChanged() === false) {
+            form.$setPristine();
+        }
+    };
+
+    $scope.cancelNimenMuutosMode = function(form) {
+        $log.debug('NimenMuokkausController::cancelNimenMuutosMode()');
+        $scope.model.setUusinNimiVisible();
+    };
+
+
 }

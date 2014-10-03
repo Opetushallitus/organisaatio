@@ -44,7 +44,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             else {
                 minAlkuPvm = organisaatioAlkuPvm;
             }
-            $log.debug('Minimi alkupvm: ' + minAlkuPvm);
+            $log.debug('NimenMuokkausModel::getMinAlkuPvm() ' + minAlkuPvm);
 
             return minAlkuPvm;
         },
@@ -52,6 +52,13 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         // Laitetaan uusin nimi näkyville / editoitavaksi
         setUusinNimiVisible: function() {
             this.nimi = this.historiaModel.uusinNimi;
+        },
+
+        uusinNimiChanged: function() {
+            if (angular.equals(this.historiaModel.uusinNimi, this.historiaModel.getUusinNimi())) {
+                return false;
+            }
+            return true;
         },
 
         // Tyhjennetään editoitava nimi
@@ -72,7 +79,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("Nimet put response: " + response.status);
+                $log.error("NimenMuokkausModel::saveNewNimi() Nimet put response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -86,7 +93,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("Nimet post response: " + response.status);
+                $log.error("NimenMuokkausModel::saveUpdatedNimi() Nimet post response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -100,7 +107,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("Nimet delete response: " + response.status);
+                $log.error("NimenMuokkausModel::deletePresetNimi() Nimet delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -136,7 +143,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
                           koulutustoimija, oppilaitos, parentNimi,
                           nameFormat) {
-            $log.log('refresh()');
+            $log.log('NimenMuokkausModel::refresh()');
 
             // Alustetaan historiamalli
             this.historiaModel.init(nimihistoria, koulutustoimija || oppilaitos ? null : parentNimi);
