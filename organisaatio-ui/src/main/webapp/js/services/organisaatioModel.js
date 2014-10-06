@@ -700,7 +700,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         (KoodistoKoodi.getLanguage() === "SV" ? yt.nimiSv : (
                                 KoodistoKoodi.getLanguage() === "EN" ? yt.nimiEn : yt.nimi));
 
-                for (var ytlang in ytlangs) {
+                for (var i in ytlangs) {
+                    var ytlang = ytlangs[i];
                     // Lisätään jos arvoa ei ole
                     var arvo = null;
                     for (var a in model.organisaatio.yhteystietoArvos) {
