@@ -43,7 +43,7 @@
                         <contextHandler implementation="org.eclipse.jetty.webapp.WebAppContext">
                             <contextPath>/organisaatio-service</contextPath>
                             <resourceBase>
-                                ${basedir}/../organisaatio-service/target/organisaatio-service-12.0-SNAPSHOT
+                                ${basedir}/../organisaatio-service/target/organisaatio-service-${version}
                             </resourceBase>
                             <configurationClasses>
                                 <configurationClass>org.eclipse.jetty.webapp.WebInfConfiguration</configurationClass>
