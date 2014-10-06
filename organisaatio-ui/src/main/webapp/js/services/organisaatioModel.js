@@ -1269,6 +1269,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         };
 
         this.persistOrganisaatio = function(orgForm) {
+            var deferred = $q.defer();
             formatDates();
             selectAddressType(false);
             selectAddressType(true);
@@ -1285,9 +1286,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (result.status==="WARNING") {
                         model.alert = Alert.add("warn", $filter('i18n')(result.info), false);
                     }
+                    deferred.resolve();
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
+                    deferred.reject();
                 });
             } else {
                 UusiOrganisaatio.put(model.organisaatio, function(result) {
@@ -1302,11 +1305,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (result.status==="WARNING") {
                         model.alert = Alert.add("warn", $filter('i18n')(result.info), false);
                     }
+                    deferred.resolve();
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
+                    deferred.reject();
                 });
             }
+            return deferred.promise;
         };
 
         this.toggleCheckOrganisaatio = function(organisaatiotyyppi) {

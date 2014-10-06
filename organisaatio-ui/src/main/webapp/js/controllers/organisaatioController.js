@@ -77,33 +77,26 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         return m[lang] || '3--' + lang;
     };
 
-    $scope.save2 = function() {
-        if ($scope.voimassaolonmuokkaus !== null) {
-            $scope.voimassaolonmuokkaus.save().then (function() {
-                if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
-                    $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
-                }
-                $scope.model.persistOrganisaatio($scope.form);
-            });
-        } else {
-            $scope.model.persistOrganisaatio($scope.form);
-        }
-    };
-
-    // Organisaation tallennus
     $scope.save = function() {
-        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
-        // tai poistanut tulevan nimenmuutoksen
-        // --> suoritetaan ensin nimihistorian päivitys ja sitten organisaatio
-        if ($scope.nimenmuokkaus !== null) {
-            $scope.nimenmuokkaus.save().then (function() {
-                $scope.save2();
-            });
-        }
-        else {
-            $scope.save2();
-        }
-
+        $scope.model.persistOrganisaatio($scope.form).then(function() {
+            if ($scope.voimassaolonmuokkaus !== null) {
+                $scope.voimassaolonmuokkaus.save().then(function() {
+                    if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
+                        $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
+                    }
+                    // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
+                    // tai poistanut tulevan nimenmuutoksen
+                    // --> suoritetaan ensin nimihistorian päivitys
+                    if ($scope.nimenmuokkaus !== null) {
+                        $scope.nimenmuokkaus.save();
+                    }
+                });
+            } else {
+                if ($scope.nimenmuokkaus !== null) {
+                    $scope.nimenmuokkaus.save();
+                }
+            }
+        });
     };
 
     // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
