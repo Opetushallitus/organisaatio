@@ -1,5 +1,6 @@
 // Loads Localisation data from Lokalisaatiopalvelu prior to initializing the Angular App
 function organisaatioInitialize() {
+    jQuery.support.cors = true;
 
     function initOrganisaatioApp() {
         angular.element(document).ready(function() {
@@ -7,52 +8,28 @@ function organisaatioInitialize() {
         });
     }
 
-    var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
-    if (window.console) {
-        console.log('Loading localisation info from: ', localisationUrl);
+    function logRequest(xhr, status) {
+        console.log("LOG "+status+": "+xhr.status+" "+xhr.statusText, xhr);
     }
 
-    if (typeof new XMLHttpRequest().responseType !== 'string' && window.XDomainRequest) { //IE8 and IE9
-        var xdr = new XDomainRequest();
-        xdr.open("get", localisationUrl);
-        xdr.onload = function () {
-            var data = jQuery.parseJSON(xdr.responseText);
-            window.APP_LOCALISATION_DATA = data;
-            if (window.console) {
-                console.log('Localisation info was successfully loaded.');
-            }
+    //
+    // Ladataan organisaatioiden lokalisoinnit
+    //
+    var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
+    console.log("** Loading localisation info; from: ", localisationUrl);
+    jQuery.ajax(localisationUrl, {
+        dataType: 'json',
+        crossDomain: true,
+        complete: logRequest,
+        success: function(xhr, status) {
+            window.APP_LOCALISATION_DATA = xhr;
+            console.log('Localisation info was successfully loaded.');
             initOrganisaatioApp();
-        };
-        xdr.onprogress = function () { };
-        xdr.ontimeout = function () { };
-        xdr.onerror = function () {
+        },
+        error: function(xhr, status) {
             window.APP_LOCALISATION_DATA = [];
-            if (window.console) {
-                console.log('There was an error while loading the localisation info!');
-            }
+            console.log('There was an error while loading the localisation info: ', status, xhr);
             initOrganisaatioApp();
-        };
-        setTimeout(function () {
-            xdr.send();
-        }, 1);
-    } else {
-        jQuery.ajax(localisationUrl, {
-            dataType: 'json',
-            crossDomain: true,
-            success: function(xhr, status) {
-                window.APP_LOCALISATION_DATA = xhr;
-                if (window.console) {
-                    console.log('Localisation info was successfully loaded.');
-                }
-                initOrganisaatioApp();
-            },
-            error: function(xhr, status) {
-                window.APP_LOCALISATION_DATA = [];
-                if (window.console) {
-                    console.log('There was an error while loading the localisation info: ', status, xhr);
-                }
-                initOrganisaatioApp();
-            }
-        });
-    }
+        }
+    });
 }
