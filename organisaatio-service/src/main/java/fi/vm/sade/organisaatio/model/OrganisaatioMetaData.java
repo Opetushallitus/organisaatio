@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.model.lop;
+package fi.vm.sade.organisaatio.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,14 +24,11 @@ import java.util.Set;
 import javax.persistence.*;
 
 import fi.vm.sade.generic.model.BaseEntity;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
 import org.hibernate.annotations.Table;
 
 /**
  * LOP related metadata. Always accosiated with a Organisation.
- * 
+ *
  * @author mlyly
  */
 @Entity
@@ -53,20 +50,20 @@ public class OrganisaatioMetaData extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hakutoimistoectsemailmkt")
     private MonikielinenTeksti hakutoimistoEctsEmailmkt;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hakutoimistoectsnimimkt")
     private MonikielinenTeksti hakutoimistoEctsNimimkt;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hakutoimistoectstehtavanimikemkt")
     private MonikielinenTeksti hakutoimistoEctsTehtavanimikemkt;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hakutoimistoectspuhelinmkt")
     private MonikielinenTeksti hakutoimistoEctsPuhelinmkt;
-    
-    
+
+
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private BinaryData kuva;
 
@@ -77,7 +74,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     @OneToMany(orphanRemoval=true, cascade = CascadeType.ALL)
     @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
-    
+
     public List<Yhteystieto> getYhteystiedot() {
         return yhteystiedot;
     }
@@ -90,81 +87,37 @@ public class OrganisaatioMetaData extends BaseEntity {
         this.hakutoimistoNimi = hakutoimistoNimi;
     }
 
-    public String getHakutoimistoEctsNimi_old() {
-        return hakutoimistoEctsNimi;
-    }
-    
     public MonikielinenTeksti getHakutoimistoEctsNimi() {
         return hakutoimistoEctsNimimkt;
     }
 
-    public void setHakutoimistoEctsNimi_old(String hakutoimistoEctsNimi) {
-        this.hakutoimistoEctsNimi = hakutoimistoEctsNimi;
-    }
-    
     public void setHakutoimistoEctsNimi(MonikielinenTeksti hakutoimistoEctsNimi) {
         this.hakutoimistoEctsNimimkt = hakutoimistoEctsNimi;
     }
 
-    public String getHakutoimistoEctsTehtavanimike_old() {
-        return hakutoimistoEctsTehtavanimike;
-    }
-    
     public MonikielinenTeksti getHakutoimistoEctsTehtavanimike() {
         return hakutoimistoEctsTehtavanimikemkt;
     }
 
-    public void setHakutoimistoEctsTehtavanimike_old(String hakutoimistoEctsTehtavanimike) {
-        this.hakutoimistoEctsTehtavanimike = hakutoimistoEctsTehtavanimike;
-    }
-    
     public void setHakutoimistoEctsTehtavanimike(MonikielinenTeksti hakutoimistoEctsTehtavanimike) {
         this.hakutoimistoEctsTehtavanimikemkt = hakutoimistoEctsTehtavanimike;
     }
 
-    public String getHakutoimistoEctsEmail_old() {
-        return hakutoimistoEctsEmail;
-    }
-    
     public MonikielinenTeksti getHakutoimistoEctsEmail() {
         return hakutoimistoEctsEmailmkt;
     }
 
-    public void setHakutoimistoEctsEmail_old(String hakutoimistoEctsSahkoposti) {
-        this.hakutoimistoEctsEmail= hakutoimistoEctsSahkoposti;
-    }
-
-    
     public void setHakutoimistoEctsEmail(MonikielinenTeksti hakutoimistoEctsSahkoposti) {
         this.hakutoimistoEctsEmailmkt = hakutoimistoEctsSahkoposti;
     }
-    
-    public String getHakutoimistoEctsPuhelin_old() {
-        return hakutoimistoEctsPuhelin;
-    }
-    
+
     public MonikielinenTeksti getHakutoimistoEctsPuhelin() {
         return hakutoimistoEctsPuhelinmkt;
     }
 
-    public void setHakutoimistoEctsPuhelin_old(String hakutoimistoEctsPuhelin) {
-        this.hakutoimistoEctsPuhelin = hakutoimistoEctsPuhelin;
-    }
-    
     public void setHakutoimistoEctsPuhelin(MonikielinenTeksti hakutoimistoEctsPuhelin) {
         this.hakutoimistoEctsPuhelinmkt = hakutoimistoEctsPuhelin;
     }
-
-    // ects koordinaattori
-    private String hakutoimistoEctsNimi;
-    private String hakutoimistoEctsTehtavanimike;
-    private String hakutoimistoEctsEmail;
-    private String hakutoimistoEctsPuhelin;
-    
-    //private MonikielinenTeksti hakutoimistoEctsNimi_mkt;
-    //private MonikielinenTeksti hakutoimistoEctsTehtavanimike_mkt;
-    //private MonikielinenTeksti hakutoimistoEctsEmailmkt;
-    //private MonikielinenTeksti hakutoimistoEctsPuhelin_mkt;
 
     public BinaryData getKuva() {
         return kuva;
@@ -200,7 +153,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     /**
      * Creates a keyed <code>dataKey</code> MonikielinenTeksti (translations)
      * entry.
-     * 
+     *
      * @param dataKey
      *            Used key, for example "genericInformationAboutCostOfLiving".
      * @param languageCode
@@ -241,7 +194,7 @@ public class OrganisaatioMetaData extends BaseEntity {
 
     /**
      * Get correct translated text with all languages.
-     * 
+     *
      * @param dataKey
      * @return
      */
@@ -252,7 +205,7 @@ public class OrganisaatioMetaData extends BaseEntity {
 
     /**
      * Get named value for given language.
-     * 
+     *
      * @param dataKey
      * @param languageCode
      * @return

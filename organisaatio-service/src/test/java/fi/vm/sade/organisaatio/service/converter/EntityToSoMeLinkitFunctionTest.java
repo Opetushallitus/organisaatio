@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import fi.vm.sade.organisaatio.api.model.types.SoMeLinkkiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.SoMeLinkkiTyyppiTyyppi;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 
 public class EntityToSoMeLinkitFunctionTest {
 

@@ -25,7 +25,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
- * 
+ *
  * @author mlyly
  */
 @ApiModel(value = "Organisaation metatiedot")
@@ -39,16 +39,6 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
 
     private Map<String, String> _nimi;
 
-    /*
-    private String _hakutoimistoEctsEmail;
-
-    private String _hakutoimistoEctsNimi;
-
-    private String _hakutoimistoEctsPuhelin;
-
-    private String _hakutoimistoEctsTehtavanimike;
-    */
-    
     private Map<String, String> _hakutoimistoEctsEmail;
 
     private Map<String, String> _hakutoimistoEctsNimi;

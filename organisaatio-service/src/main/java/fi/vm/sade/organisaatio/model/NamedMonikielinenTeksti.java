@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.model.lop;
+package fi.vm.sade.organisaatio.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

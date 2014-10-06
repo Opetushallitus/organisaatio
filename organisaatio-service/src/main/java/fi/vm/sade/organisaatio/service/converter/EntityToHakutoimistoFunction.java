@@ -22,7 +22,7 @@ import com.google.common.base.Function;
 import fi.vm.sade.organisaatio.api.model.types.HakutoimistoTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteyshenkiloTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 
 public class EntityToHakutoimistoFunction implements Function<OrganisaatioMetaData, HakutoimistoTyyppi> {
 
@@ -43,10 +43,10 @@ public class EntityToHakutoimistoFunction implements Function<OrganisaatioMetaDa
         dto.setOpintotoimistoNimi(toMonikielinenTekstiTyyppiFunction.apply(metadata.getHakutoimistoNimi()));
 
         YhteyshenkiloTyyppi yhteyshenkilo = new YhteyshenkiloTyyppi();
-        yhteyshenkilo.setEmail(metadata.getHakutoimistoEctsEmail_old());
-        yhteyshenkilo.setKokoNimi(metadata.getHakutoimistoEctsNimi_old());
-        yhteyshenkilo.setPuhelin(metadata.getHakutoimistoEctsPuhelin_old());
-        yhteyshenkilo.setTitteli(metadata.getHakutoimistoEctsTehtavanimike_old());
+        yhteyshenkilo.setEmail(metadata.getHakutoimistoEctsEmail().getString("fi"));
+        yhteyshenkilo.setKokoNimi(metadata.getHakutoimistoEctsNimi().getString("fi"));
+        yhteyshenkilo.setPuhelin(metadata.getHakutoimistoEctsPuhelin().getString("fi"));
+        yhteyshenkilo.setTitteli(metadata.getHakutoimistoEctsTehtavanimike().getString("fi"));
         dto.setEctsYhteyshenkilo(yhteyshenkilo);
 
         dto.getOpintotoimistoYhteystiedot().addAll(
