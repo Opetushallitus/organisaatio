@@ -44,6 +44,8 @@ public class OrganisaatioKoodistoKoodi {
 
     protected List<OrganisaatioKoodistoKoodiMetadata> metadata = new ArrayList<OrganisaatioKoodistoKoodiMetadata>();
     protected List<OrganisaatioKoodistoIncludesCodeElements> includesCodeElements = new ArrayList<OrganisaatioKoodistoIncludesCodeElements>();
+    protected List<OrganisaatioKoodistoWithinCodeElements> withinCodeElements = new ArrayList<OrganisaatioKoodistoWithinCodeElements>();
+    protected List<OrganisaatioKoodistoLevelsWithCodeElements> levelsWithCodeElements = new ArrayList<OrganisaatioKoodistoLevelsWithCodeElements>();
 
     public String getKoodiUri() {
         return koodiUri;
