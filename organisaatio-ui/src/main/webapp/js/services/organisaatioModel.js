@@ -742,10 +742,15 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]]) {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]] = {};
                     }
+                    // Luodaan elementti kielelle, jos sitä ei ole
                     if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang]) {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
                     }
 
+                    // Laitetaan yhteystietoarvo editoitavaksi jos se on käytössä tai
+                    // arvo on asetettu. Näin voidaan editoida vielä käytöstä poistettua
+                    // arvoa.
+                    // HUOM! Rajapinnan yli tulee "YhteystietoElementti.kaytossa" string muodossa!
                     if ((arvo["YhteystietoElementti.kaytossa"] === true) ||
                             (arvo["YhteystietoElementti.kaytossa"] === "true") ||
                             (arvo["YhteystietoArvo.arvoText"] !== null))
