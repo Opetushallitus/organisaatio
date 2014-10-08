@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.api.model.types.HakutoimistoTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteyshenkiloTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
 
 public class EntityToHakutoimistoFunction implements Function<OrganisaatioMetaData, HakutoimistoTyyppi> {
 
@@ -43,10 +44,10 @@ public class EntityToHakutoimistoFunction implements Function<OrganisaatioMetaDa
         dto.setOpintotoimistoNimi(toMonikielinenTekstiTyyppiFunction.apply(metadata.getHakutoimistoNimi()));
 
         YhteyshenkiloTyyppi yhteyshenkilo = new YhteyshenkiloTyyppi();
-        yhteyshenkilo.setEmail(metadata.getHakutoimistoEctsEmail().getString("fi"));
-        yhteyshenkilo.setKokoNimi(metadata.getHakutoimistoEctsNimi().getString("fi"));
-        yhteyshenkilo.setPuhelin(metadata.getHakutoimistoEctsPuhelin().getString("fi"));
-        yhteyshenkilo.setTitteli(metadata.getHakutoimistoEctsTehtavanimike().getString("fi"));
+        yhteyshenkilo.setEmail(MonikielinenTekstiUtil.getTextInAnyLang(metadata.getHakutoimistoEctsEmail()));
+        yhteyshenkilo.setKokoNimi(MonikielinenTekstiUtil.getTextInAnyLang(metadata.getHakutoimistoEctsNimi()));
+        yhteyshenkilo.setPuhelin(MonikielinenTekstiUtil.getTextInAnyLang(metadata.getHakutoimistoEctsPuhelin()));
+        yhteyshenkilo.setTitteli(MonikielinenTekstiUtil.getTextInAnyLang(metadata.getHakutoimistoEctsTehtavanimike()));
         dto.setEctsYhteyshenkilo(yhteyshenkilo);
 
         dto.getOpintotoimistoYhteystiedot().addAll(

@@ -17,17 +17,40 @@ package fi.vm.sade.organisaatio.service.util;
 
 
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author hpy
  */
 public class MonikielinenTekstiUtil {
+    private static Logger LOG = LoggerFactory.getLogger("MonikielinenTekstiUtil");
+
+    // Palauttaa monikielisen tekstin jollain kielellä
+    public static String getTextInAnyLang(MonikielinenTeksti teksti) {
+        if (teksti == null) {
+            return null;
+        }
+        if (teksti.getValues().containsKey("fi")) {
+            return teksti.getString("fi");
+        }
+        else if (teksti.getValues().containsKey("sv")) {
+            return teksti.getString("sv");
+        }
+        else if (teksti.getValues().containsKey("en")) {
+            return teksti.getString("en");
+        }
+        return null;
+    }
+
     // Returns true if the two MonikielinenTekstis have same value in any kieliKoodi.
     public static boolean haveSameText(MonikielinenTekstiTyyppi teksti, MonikielinenTekstiTyyppi teksti2) {
         return MonikielinenTekstiUtil.haveSameText(teksti, teksti2, true);
     }
+
     // Returns true if the two MonikielinenTekstis have same value in any kieliKoodi (except if ignoreEmptyValues is true and the same values are empty strings).
     public static boolean haveSameText(MonikielinenTekstiTyyppi monikielinenTekstiTyyppi, MonikielinenTekstiTyyppi monikielinenTekstiTyyppi2, boolean ignoreEmptyValues) {
         List<MonikielinenTekstiTyyppi.Teksti> teksti, teksti2;
