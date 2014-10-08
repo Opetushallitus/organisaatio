@@ -1,4 +1,15 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
+var app = angular.module('organisaatio',
+['ngResource',
+    'loading',
+    'ngRoute',
+    'Logging',
+    'localisation',
+    'localization',
+    'ui.bootstrap',
+    'ngSanitize',
+    'ui.tinymce',
+    'ngCookies',
+    'ngIdle']);
 
 angular.module('localization', [])
 .filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', '$log', '$injector', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService, $log, $injector) {
