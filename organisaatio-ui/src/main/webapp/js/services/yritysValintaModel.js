@@ -1,5 +1,8 @@
 app.factory('YritysValintaModel', function($filter, $log, Alert,
                                            YTJYritysTiedot, YTJYritystenTiedot) {
+
+    $log = $log.getInstance("YritysValintaModel");
+
     var model = {
         hakuString: "",
         yritykset: [],

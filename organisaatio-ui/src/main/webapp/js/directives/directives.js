@@ -1,4 +1,6 @@
 app.directive('auth', function($animate, $timeout, $log, AuthService) {
+    $log = $log.getInstance("auth directive");
+
     return {
         link: function($scope, element, attrs) {
             var disable = false;

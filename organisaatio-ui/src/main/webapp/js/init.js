@@ -9,7 +9,7 @@ function organisaatioInitialize() {
     }
 
     function logRequest(xhr, status) {
-        console.log("LOG "+status+": "+xhr.status+" "+xhr.statusText, xhr);
+        console.log("** Localisation request "+status+": "+xhr.status+" "+xhr.statusText, xhr);
     }
 
     //
@@ -23,12 +23,12 @@ function organisaatioInitialize() {
         complete: logRequest,
         success: function(xhr, status) {
             window.APP_LOCALISATION_DATA = xhr;
-            console.log('Localisation info was successfully loaded.');
+            console.log('** Localisation info was successfully loaded.');
             initOrganisaatioApp();
         },
         error: function(xhr, status) {
             window.APP_LOCALISATION_DATA = [];
-            console.log('There was an error while loading the localisation info: ', status, xhr);
+            console.log('** There was an error while loading the localisation info: ', status, xhr);
             initOrganisaatioApp();
         }
     });

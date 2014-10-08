@@ -14,6 +14,8 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
 //        "aliOrganisaatioMaara" : 0
 //      }
 
+    $log = $log.getInstance("OrganisaatioTreeModel");
+
     var tree = {id: "ROOT", expanded: false, children: []};
 
     var model = {
@@ -251,7 +253,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, Alert, Organisa
                 hakuParametrit.oidRestrictionList = hakuehdot.rajatutOrganisaatiot;
             }
 
-            $log.log(hakuParametrit);
+            $log.log("Hakuparametrit ", hakuParametrit);
 
             return hakuParametrit;
         },

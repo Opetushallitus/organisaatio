@@ -3,6 +3,8 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
                                  koulutustoimija, oppilaitos, parentNimi,
                                  nameFormat, parentPattern) {
 
+    $log = $log.getInstance("NimenMuokkausController");
+
     $scope.model = NimenMuokkausModel;
     $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm,
                          koulutustoimija, oppilaitos, parentNimi,
@@ -19,21 +21,20 @@ function NimenMuokkausController($scope, $modalInstance, $log, NimenMuokkausMode
     };
 
     $scope.newNimiMode = function(form) {
-        $log.debug('NimenMuokkausController::newNimiMode()');
+        $log.debug('newNimiMode()');
         $scope.model.clearVisibleNimi();
     };
 
     $scope.updateNimiMode = function(form) {
-        $log.debug('NimenMuokkausController::updateNimiMode()');
+        $log.debug('updateNimiMode()');
         $scope.model.setUusinNimiVisible();
-        $log.debug($scope);
         if ($scope.model.isUusinNimiChanged() === false) {
             form.$setPristine();
         }
     };
 
     $scope.cancelNimenMuutosMode = function(form) {
-        $log.debug('NimenMuokkausController::cancelNimenMuutosMode()');
+        $log.debug('cancelNimenMuutosMode()');
         $scope.model.setUusinNimiVisible();
     };
 

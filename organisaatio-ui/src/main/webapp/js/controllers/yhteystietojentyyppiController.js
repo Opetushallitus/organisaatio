@@ -1,5 +1,7 @@
 function YhteystietojentyyppiController($scope, $filter, $modal, YhteystietojentyyppiModel, Alert, UserInfo, $log) {
     "use strict";
+    $log = $log.getInstance("YhteystietojentyyppiController");
+
     var language;
 
     var vaihtoehtoisetKielikoodit = {

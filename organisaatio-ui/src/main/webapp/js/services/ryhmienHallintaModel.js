@@ -1,5 +1,7 @@
 app.factory('RyhmienHallintaModel', function(Ryhmat, Organisaatio, UusiOrganisaatio) {
 
+    $log = $log.getInstance("RyhmienHallintaModel");
+
     var model = {
         ryhmat : [],
         groups : [],

@@ -4,6 +4,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         KoodistoOpetuskielet, KoodistoPaikkakunta, HenkiloVirkailijat, Henkilo,
         HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, Nimet, NimiHistoriaModel,
         $filter, $log, $timeout, $location, $q, $cookieStore) {
+
+    $log = $log.getInstance("OrganisaatioModel");
+
     var model = new function() {
         this.organisaatio = {};
 

@@ -35,10 +35,10 @@ var app = angular.module('localisation', ['ngResource']);
  */
 app.factory('Localisations', function($log, $resource, $window) {
 
-    //$log = $log.getInstance("Localisations");
+    $log = $log.getInstance("Localisations");
 
     var uri = $window.LOKALISAATIO_URL_BASE + 'v1/localisation';
-    $log.debug("Localisations() - uri = ", uri);
+    $log.debug("uri = ", uri);
 
     return $resource(uri + "/:id", {
         id: '@id'
@@ -127,7 +127,7 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  */
 app.service('LocalisationService', function($log, $window, Localisations, UserInfo, $injector) {
 
-    //$log = $log.getInstance("LocalisationService");
+    $log = $log.getInstance("LocalisationService");
 
     // $log.debug("LocalisationService()");
 
@@ -136,8 +136,8 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
-    
-    
+
+
     this.callLocalisationAuthorizeIfNecessary = function() {
         var self = this;
         if (!this.localisationAuthorizeCalled) {
@@ -200,7 +200,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
             params = [params];
         }
 
-        return translation.replace(/{(\d+)}/g, 
+        return translation.replace(/{(\d+)}/g,
             function(match, number) {
                 return params[number] || match;
             });
@@ -256,12 +256,12 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns {v.value}
      */
     this.getRawTranslation = function(key, locale) {
-        var localisation, translation, id; 
+        var localisation, translation, id;
     	if (!angular.isString(key)) {
     		throw new Error("Illegal translation key: '"+key+"'");
     	}
         if (!angular.isString(locale)) locale = this.getLocale();
-    	
+
         // Get translations by locale and key
         localisation = this.localisationMapByLocaleAndKey[locale] && this.localisationMapByLocaleAndKey[locale][key];
 
@@ -402,7 +402,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
                 mapByLocale = tmp[localisation.locale];
             }
             mapByLocale[localisation.key] = localisation;
-            
+
             if (this.isEmpty(localisation.value)) {
                 $log.warn("EMPTY localisation: ", localisation);
             }
@@ -452,7 +452,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
 app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval) {
-    //log = $log.getInstance("LocalisationCtrl");
+    $log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
 

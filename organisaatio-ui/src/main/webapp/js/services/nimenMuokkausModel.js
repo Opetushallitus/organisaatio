@@ -8,6 +8,8 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
 //        "alkuPvm" : ""
 //    };
 
+    $log = $log.getInstance("NimenMuokkausModel");
+
     var model = {
         oid : "",
         minAlkuPvm : "",

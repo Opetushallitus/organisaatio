@@ -2,6 +2,8 @@ app.factory('YhteystietojentyyppiModel', function(
         KoodistoOppilaitostyypit, KoodistoKoodi,
         Yhteystietojentyyppi, YhteystietojentyypinPoisto)  {
 
+    $log = $log.getInstance("YhteystietojentyyppiModel");
+
     var model = new function() {
         var organisaatiotyypit = {},
                 oppilaitostyypit = [],

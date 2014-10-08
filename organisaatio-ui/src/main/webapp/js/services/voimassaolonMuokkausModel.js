@@ -1,5 +1,7 @@
 app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, Alert, Muokkaamonta) {
 
+    $log = $log.getInstance("VoimassaolonMuokkausModel");
+
     var model = new function() {
         this.muokataanAlkupvm = false;
         this.alkuPvm = 0;

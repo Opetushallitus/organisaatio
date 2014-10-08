@@ -8,6 +8,8 @@ app.factory('NimiHistoriaModel', function($log) {
 //        "alkuPvm" : ""
 //    };
 
+    $log = $log.getInstance("NimiHistoriaModel");
+
     var model = {
         nimihistoria : [],
         uusinNimi : {},
@@ -29,7 +31,7 @@ app.factory('NimiHistoriaModel', function($log) {
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
-            $log.debug('NimiHistoriaModel::clear()');
+            $log.debug('clear()');
 
             this.nimihistoria = [];
             this.uusinNimi = {};
@@ -49,7 +51,7 @@ app.factory('NimiHistoriaModel', function($log) {
                 }
             }
 
-            $log.debug('NimiHistoriaModel::getUusinNimi() ' + model.nimiToString(nimi));
+            $log.debug('getUusinNimi() ' + model.nimiToString(nimi));
             return nimi;
         },
 
@@ -66,7 +68,7 @@ app.factory('NimiHistoriaModel', function($log) {
                 }
             }
 
-            $log.debug('NimiHistoriaModel::getCurrentNimi() ' + model.nimiToString(nimi));
+            $log.debug('getCurrentNimi() ' + model.nimiToString(nimi));
             return nimi;
         },
 
@@ -81,13 +83,13 @@ app.factory('NimiHistoriaModel', function($log) {
                 }
             }
 
-            $log.debug('NimiHistoriaModel::isAjastettuMuutos() ' + model.nimiToString(nimi) + " = " + ajastettuMuutos);
+            $log.debug('isAjastettuMuutos() ' + model.nimiToString(nimi) + " = " + ajastettuMuutos);
             return ajastettuMuutos;
         },
 
         // Init NimiHistoriaModel uudella nimihistorialla
         init: function(nimihistoria, parentNimi) {
-            $log.log('NimiHistoriaModel::init()');
+            $log.log('init()');
             this.parentNimi = parentNimi || null;
             this.nimihistoria = nimihistoria;
             this.uusinNimi = angular.copy(this.getUusinNimi(nimihistoria));
@@ -101,7 +103,7 @@ app.factory('NimiHistoriaModel', function($log) {
                     }
                 });
             }
-            $log.log("NimiHistoriaModel::init() done");
+            $log.log("init() done");
         },
 
         accept: function() {

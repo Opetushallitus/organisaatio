@@ -1,6 +1,9 @@
 function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, Alert, Organisaatio,
                                     HakuehdotModel, OrganisaatioTreeModel) {
+
+    $log = $log.getInstance("OrganisaatioTreeController");
+
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
@@ -46,12 +49,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
         // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.isLeaf(node);
     };
-    
+
      $scope.hasActiveChildren = function(node) {
         // Tarkistetaan onko aktiivisia aliorganisaatioita
         //return $scope.model.
         return $scope.model.hasActiveChildren(node);
-    };                      
+    };
 
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle

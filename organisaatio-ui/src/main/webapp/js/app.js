@@ -13,6 +13,9 @@ var app = angular.module('organisaatio',
 
 angular.module('localization', [])
 .filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', '$log', '$injector', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService, $log, $injector) {
+
+    $log = $log.getInstance("localization");
+
     var initialized = false;
 
     UserInfo.then(function(s) {
@@ -246,7 +249,10 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
     return deferred.promise;
 }]);
 
-app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter', function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
+app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter',
+    function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
+        $log = $log.getInstance("OrganisaatioInitAuth");
+
         return  {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {

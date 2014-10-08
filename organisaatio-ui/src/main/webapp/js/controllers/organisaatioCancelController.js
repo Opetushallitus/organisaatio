@@ -1,4 +1,6 @@
 function OrganisaatioCancelController($scope, $modalInstance, $log, OrganisaatioModel) {
+    $log = $log.getInstance("OrganisaatioCancelController");
+
     $log.debug("Organisaation muokkauksen peruutus (vaatii vahvistuksen)");
     $scope.model = OrganisaatioModel;
 

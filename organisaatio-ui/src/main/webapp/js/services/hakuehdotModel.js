@@ -3,6 +3,9 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                                        KoodistoOrganisaatiotyypit,
                                        KoodistoOppilaitostyypit,
                                        KoodistoKoodi) {
+
+    $log = $log.getInstance("HakuehdotModel");
+
     var model = {
         organisaatioRajausVisible: false,
         organisaatioRajaus: false,
@@ -33,17 +36,17 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     model.oppilaitostyyppi ||
                     model.organisaatioRajaus) {
                 return false;
-            }   
+            }
             return true;
         },
-        
+
         isTilaValid: function() {
             if (!model.aktiiviset && !model.suunnitellut && !model.lakkautetut) {
                 return false;
-            }   
+            }
             return true;
         },
-        
+
         refreshIfNeeded: function() {
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
@@ -52,19 +55,19 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     result.forEach(function(kuntaKoodi) {
                         var paikkakunta = {"uri": kuntaKoodi.koodiUri,
                             "arvo":kuntaKoodi.koodiArvo};
-                        
+
                         paikkakunta.nimi = KoodistoKoodi.getLocalizedName(kuntaKoodi);
                         model.paikkakunnat.push(paikkakunta);
                     });
                     $log.log('paikkakunnat: ' +  model.paikkakunnat.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-                
+
                 KoodistoOrganisaatiotyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(orgTyyppiKoodi) {
                         var organisaatioTyyppi = {"uri": orgTyyppiKoodi.koodiUri,
@@ -74,14 +77,14 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                         model.organisaatiotyypit.push(organisaatioTyyppi);
                     });
                     $log.log('organisaatiotyypit: ' +  model.organisaatiotyypit.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-                
+
                 KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(oplTyyppiKoodi) {
                         var oppilaitosTyyppi = {"uri": oplTyyppiKoodi.koodiUri,
@@ -91,14 +94,14 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                         model.oppilaitostyypit.push(oppilaitosTyyppi);
                     });
                     $log.log('oppilaitostyypit: ' +  model.oppilaitostyypit.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-            }          
+            }
         },
 
         resetTarkemmatEhdot: function () {
@@ -121,7 +124,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             model.suunnitellut= true;
             model.lakkautetut= false;
         },
-        
+
         init: function () {
             var deferred = $q.defer();
             AuthService.getOrganizations("APP_ORGANISAATIOHALLINTA").then(function(organisations){
@@ -148,8 +151,8 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             });
             return deferred.promise;
         }
-        
+
         };
-        
+
     return model;
 });
