@@ -746,7 +746,9 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
                     }
 
-                    if ((arvo["YhteystietoElementti.kaytossa"] === true) || (arvo["YhteystietoArvo.arvoText"] !== null))
+                    if ((arvo["YhteystietoElementti.kaytossa"] === true) ||
+                            (arvo["YhteystietoElementti.kaytossa"] === "true") ||
+                            (arvo["YhteystietoArvo.arvoText"] !== null))
                     {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang].push(arvo);
                     }
