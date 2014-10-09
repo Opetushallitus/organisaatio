@@ -75,9 +75,7 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
     var initialized = false;
 
     UserInfo.then(function(s) {
-
-        //LocalisationService.setLocale(s.lang.toLowerCase());
-        LocalisationService.setLocale('sv');
+        LocalisationService.setLocale(s.lang.toLowerCase());
         initialized = true;
 
         if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
