@@ -14,12 +14,14 @@
  European Union Public Licence for more details.
  */
 
-app.factory('YritysValintaModel', function($filter, $log,
+app.factory('YritysValintaModel', function($filter, $log, $injector,
                                            Alert,
                                            YTJYritysTiedot,
                                            YTJYritystenTiedot) {
 
     $log = $log.getInstance("YritysValintaModel");
+
+    var loadingService = $injector.get('loadingService');
 
     var model = {
         hakuString: "",
@@ -60,6 +62,7 @@ app.factory('YritysValintaModel', function($filter, $log,
                 },
                 // Error case
                 function(response) {
+                    loadingService.onErrorHandled();
                     $log.error("YTJYritysTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });
@@ -77,6 +80,7 @@ app.factory('YritysValintaModel', function($filter, $log,
                 },
                 // Error case
                 function(response) {
+                    loadingService.onErrorHandled();
                     $log.error("YTJYritystenTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });
