@@ -21,10 +21,10 @@
         <class>fi.vm.sade.organisaatio.model.YhteystietoArvo</class>
         <class>fi.vm.sade.organisaatio.model.Www</class>
         <class>fi.vm.sade.organisaatio.model.MonikielinenTeksti</class>
-
-        <class>fi.vm.sade.organisaatio.model.lop.BinaryData</class>
-        <class>fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData</class>
-        <class>fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti</class>
+        
+        <class>fi.vm.sade.organisaatio.model.BinaryData</class>
+        <class>fi.vm.sade.organisaatio.model.OrganisaatioMetaData</class>
+        <class>fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti</class>
 
         <properties>
 			<property name="hibernate.hbm2ddl.auto" value="update" />

@@ -15,12 +15,10 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OsoiteDTOV2;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.Osoite;
 import fi.vm.sade.organisaatio.model.Puhelinnumero;
 import fi.vm.sade.organisaatio.model.Www;

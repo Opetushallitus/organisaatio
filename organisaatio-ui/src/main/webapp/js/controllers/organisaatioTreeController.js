@@ -1,6 +1,25 @@
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
+
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
+
 function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, Alert, Organisaatio,
                                     HakuehdotModel, OrganisaatioTreeModel) {
+
+    $log = $log.getInstance("OrganisaatioTreeController");
+
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
     $scope.tarkemmatHakuehdotVisible = false;
@@ -46,12 +65,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
         // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.isLeaf(node);
     };
-    
+
      $scope.hasActiveChildren = function(node) {
         // Tarkistetaan onko aktiivisia aliorganisaatioita
         //return $scope.model.
         return $scope.model.hasActiveChildren(node);
-    };                      
+    };
 
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle

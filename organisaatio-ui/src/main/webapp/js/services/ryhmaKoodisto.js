@@ -16,6 +16,8 @@
 
 app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, KoodistoKoodi, Alert) {
 
+    $log = $log.getInstance("RyhmaKoodisto");
+
     var showAndLogError = function(msg, response) {
         model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
         $log.error(msg + " (status: " + response.status + ")");
@@ -26,13 +28,15 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, Koo
      * Parametrit:
      *   uri: koodistoUri
      *   resultArray: Array johon koodi-itemit tallennetaan
-     *   defaultArray: jos tyyppiä Array, palautetaan virhetilanteessa eikä näytetä virheilmoitusta. Jos muu kuin Array, näytetään virheilmoitus.
+     *   defaultArray: jos tyyppiä Array, palautetaan virhetilanteessa eikä näytetä virheilmoitusta.
+     *                 Jos muu kuin Array, näytetään virheilmoitus.
      */
     var getKoodistoArray = function(uri, resultArray, defaultArray) {
         KoodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
-                resultArray.push({uri: rTyyppiKoodi.koodiUri + "#" + rTyyppiKoodi.versio, nimi: KoodistoKoodi.getLocalizedName(rTyyppiKoodi)});
+                resultArray.push({uri: rTyyppiKoodi.koodiUri + "#" + rTyyppiKoodi.versio,
+                                  nimi: KoodistoKoodi.getLocalizedName(rTyyppiKoodi)});
             });
         }, function(response) {
             // koodeja ei löytynyt

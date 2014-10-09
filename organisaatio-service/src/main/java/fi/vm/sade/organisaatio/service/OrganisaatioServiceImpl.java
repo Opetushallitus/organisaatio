@@ -42,8 +42,8 @@ import fi.vm.sade.organisaatio.api.model.types.*;
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.model.lop.BinaryData;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.BinaryData;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
@@ -785,10 +785,22 @@ public class OrganisaatioServiceImpl
         //convert yhteyshenkilö
         if (dto.getEctsYhteyshenkilo() != null) {
             MonikielinenTeksti kokonimi = new MonikielinenTekstiTyyppiToEntityFunction().apply(dto.getOpintotoimistoNimi());
-            metadata.setHakutoimistoEctsNimi_old(dto.getEctsYhteyshenkilo().getKokoNimi());
-            metadata.setHakutoimistoEctsPuhelin_old(dto.getEctsYhteyshenkilo().getPuhelin());
-            metadata.setHakutoimistoEctsEmail_old(dto.getEctsYhteyshenkilo().getEmail());
-            metadata.setHakutoimistoEctsTehtavanimike_old(dto.getEctsYhteyshenkilo().getTitteli());
+
+            MonikielinenTeksti mtEctsNimi = new MonikielinenTeksti();
+            mtEctsNimi.addString("fi", dto.getEctsYhteyshenkilo().getKokoNimi());
+            metadata.setHakutoimistoEctsNimi(mtEctsNimi);
+
+            MonikielinenTeksti mtEctsPuhelin = new MonikielinenTeksti();
+            mtEctsPuhelin.addString("fi", dto.getEctsYhteyshenkilo().getPuhelin());
+            metadata.setHakutoimistoEctsPuhelin(mtEctsPuhelin);
+
+            MonikielinenTeksti mtEctsEmail = new MonikielinenTeksti();
+            mtEctsEmail.addString("fi", dto.getEctsYhteyshenkilo().getEmail());
+            metadata.setHakutoimistoEctsEmail(mtEctsEmail);
+
+            MonikielinenTeksti mtEctsTehtavanimike = new MonikielinenTeksti();
+            mtEctsTehtavanimike.addString("fi", dto.getEctsYhteyshenkilo().getTitteli());
+            metadata.setHakutoimistoEctsTehtavanimike(mtEctsTehtavanimike);
         } else {
             metadata.setHakutoimistoEctsNimi(null);
             metadata.setHakutoimistoEctsPuhelin(null);

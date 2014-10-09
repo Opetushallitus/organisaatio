@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Function;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioKuvailevatTiedotTyyppi;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 
 /**
  * Convert entity -> dto

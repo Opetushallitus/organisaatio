@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.api.model.types.KuvailevaTietoTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.KuvailevaTietoTyyppiTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 
 public class EntityToVapaatKuvauksetFunction implements Function<OrganisaatioMetaData, List<KuvailevaTietoTyyppi>> {
 

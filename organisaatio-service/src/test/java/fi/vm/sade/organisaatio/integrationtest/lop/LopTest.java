@@ -31,8 +31,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.tarjoaja.service.KoulutustarjoajaPublicServiceImpl;
 import org.junit.Before;
 import org.powermock.reflect.Whitebox;

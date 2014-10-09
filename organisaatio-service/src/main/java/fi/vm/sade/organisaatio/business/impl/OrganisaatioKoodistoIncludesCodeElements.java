@@ -21,8 +21,7 @@ package fi.vm.sade.organisaatio.business.impl;
      */
 public class OrganisaatioKoodistoIncludesCodeElements {
     private String codeElementUri;
-    private String codeElementVersion;
-    private String codeElementValue;
+    private int codeElementVersion;
     private boolean passive;
     
     public String getCodeElementUri() {
@@ -33,20 +32,12 @@ public class OrganisaatioKoodistoIncludesCodeElements {
         this.codeElementUri = codeElementUri;
     }
 
-    public String getCodeElementVersion() {
+    public int getCodeElementVersion() {
         return codeElementVersion;
     }
 
-    public void setCodeElementVersion(String codeElementVersion) {
+    public void setCodeElementVersion(int codeElementVersion) {
         this.codeElementVersion = codeElementVersion;
-    }
-
-    public String getCodeElementValue() {
-        return codeElementValue;
-    }
-
-    public void setCodeElementValue(String codeElementValue) {
-        this.codeElementValue = codeElementValue;
     }
 
     public boolean isPassive() {

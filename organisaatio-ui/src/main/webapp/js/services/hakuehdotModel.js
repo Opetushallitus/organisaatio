@@ -1,8 +1,28 @@
-app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
+
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
+
+app.factory('HakuehdotModel', function($q, $filter, $log,
+                                       AuthService, Alert,
                                        KoodistoPaikkakunnat,
                                        KoodistoOrganisaatiotyypit,
                                        KoodistoOppilaitostyypit,
                                        KoodistoKoodi) {
+
+    $log = $log.getInstance("HakuehdotModel");
+
     var model = {
         organisaatioRajausVisible: false,
         organisaatioRajaus: false,
@@ -20,12 +40,20 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
         organisaatiotyypit: [],
         oppilaitostyypit: [],
 
+        /**
+         * Pakotetaan hakuehtoihin tarvittavien koodistotietojen päivitys.
+         */
         refresh: function() {
             $log.log('refresh()');
             model.refreshed = false;
             model.refreshIfNeeded();
         },
 
+        /**
+         * Tarkistetaan onko hakuehdot tyhjät.
+         *
+         * @returns {Boolean} true, jos hakuehdot tyhjät
+         */
         isEmpty: function() {
             if (model.nimiTaiTunnus ||
                     model.kunta ||
@@ -33,17 +61,24 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     model.oppilaitostyyppi ||
                     model.organisaatioRajaus) {
                 return false;
-            }   
+            }
             return true;
         },
-        
+
+        /**
+         * Tarkistetaan onko hakuehdoissa olevat organisaation tilat valideja.
+         * Jotta haun tuloksena saadaan organisaatioita, pitää haussa olla joku
+         * organisaation tiloista mukana.
+         *
+         * @returns {Boolean} true, jos validi
+         */
         isTilaValid: function() {
             if (!model.aktiiviset && !model.suunnitellut && !model.lakkautetut) {
                 return false;
-            }   
+            }
             return true;
         },
-        
+
         refreshIfNeeded: function() {
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
@@ -52,19 +87,19 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                     result.forEach(function(kuntaKoodi) {
                         var paikkakunta = {"uri": kuntaKoodi.koodiUri,
                             "arvo":kuntaKoodi.koodiArvo};
-                        
+
                         paikkakunta.nimi = KoodistoKoodi.getLocalizedName(kuntaKoodi);
                         model.paikkakunnat.push(paikkakunta);
                     });
                     $log.log('paikkakunnat: ' +  model.paikkakunnat.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-                
+
                 KoodistoOrganisaatiotyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(orgTyyppiKoodi) {
                         var organisaatioTyyppi = {"uri": orgTyyppiKoodi.koodiUri,
@@ -74,14 +109,14 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                         model.organisaatiotyypit.push(organisaatioTyyppi);
                     });
                     $log.log('organisaatiotyypit: ' +  model.organisaatiotyypit.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-                
+
                 KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(oplTyyppiKoodi) {
                         var oppilaitosTyyppi = {"uri": oplTyyppiKoodi.koodiUri,
@@ -91,14 +126,14 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
                         model.oppilaitostyypit.push(oppilaitosTyyppi);
                     });
                     $log.log('oppilaitostyypit: ' +  model.oppilaitostyypit.length);
-                }, 
+                },
                 // Error case
                 function(response) {
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
                 });
-            }          
+            }
         },
 
         resetTarkemmatEhdot: function () {
@@ -121,7 +156,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             model.suunnitellut= true;
             model.lakkautetut= false;
         },
-        
+
         init: function () {
             var deferred = $q.defer();
             AuthService.getOrganizations("APP_ORGANISAATIOHALLINTA").then(function(organisations){
@@ -148,8 +183,8 @@ app.factory('HakuehdotModel', function($q, $filter, $log, AuthService, Alert,
             });
             return deferred.promise;
         }
-        
+
         };
-        
+
     return model;
 });

@@ -1,4 +1,21 @@
-app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, NimiHistoriaModel, Nimet) {
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
+
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
+
+app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
+                                           Alert, NimiHistoriaModel, Nimet) {
 //    emptyNimi = {
 //        "nimi" : {
 //            "fi" : "",
@@ -7,6 +24,8 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
 //        },
 //        "alkuPvm" : ""
 //    };
+
+    $log = $log.getInstance("NimenMuokkausModel");
 
     var model = {
         oid : "",
@@ -18,7 +37,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
-            $log.debug('NimenMuokkausModel::clear()');
+            $log.debug('clear()');
             this.oid = "";
             this.minAlkuPvm = "";
             this.nimi = {};
@@ -45,7 +64,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             else {
                 minAlkuPvm = organisaatioAlkuPvm;
             }
-            $log.debug('NimenMuokkausModel::getMinAlkuPvm() ' + minAlkuPvm);
+            $log.debug('getMinAlkuPvm() ' + minAlkuPvm);
 
             return minAlkuPvm;
         },
@@ -80,7 +99,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("NimenMuokkausModel::saveNewNimi() Nimet put response: " + response.status);
+                $log.error("saveNewNimi() Nimet put response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -94,7 +113,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("NimenMuokkausModel::saveUpdatedNimi() Nimet post response: " + response.status);
+                $log.error("saveUpdatedNimi() Nimet post response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -108,7 +127,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
             },
             // Error case
             function(response) {
-                $log.error("NimenMuokkausModel::deletePresetNimi() Nimet delete response: " + response.status);
+                $log.error("deletePresetNimi() Nimet delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
                 deferred.reject();
             });
@@ -145,10 +164,10 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location, Alert, 
                           koulutustoimija, oppilaitos, parentNimi,
                           nameFormat) {
             if (this.oid === oid) {
-                $log.log('NimenMuokkausModel::refresh() Using old instance');
+                $log.log('refresh() Using old instance');
                 return;
             }
-            $log.log('NimenMuokkausModel::refresh()');
+            $log.log('refresh()');
 
             // Alustetaan historiamalli
             this.historiaModel.init(nimihistoria, koulutustoimija || oppilaitos ? null : parentNimi);

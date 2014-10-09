@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.tarjoaja.service.types.FindByOrganizationOidRequestType;
 import fi.vm.sade.tarjoaja.service.types.FindByOrganizationOidResponseType;
 import fi.vm.sade.tarjoaja.service.types.KielistettyTekstiTyyppi;

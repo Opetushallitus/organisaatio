@@ -28,17 +28,17 @@
  *
  * @author mlyly
  */
-var app = angular.module('localisation', ['ngResource']);
+var app = angular.module('Localisation', ['ngResource', 'Logging']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
  */
 app.factory('Localisations', function($log, $resource, $window) {
 
-    //$log = $log.getInstance("Localisations");
+    $log = $log.getInstance("Localisations");
 
     var uri = $window.LOKALISAATIO_URL_BASE + 'v1/localisation';
-    $log.debug("Localisations() - uri = ", uri);
+    $log.debug("uri = ", uri);
 
     return $resource(uri + "/:id", {
         id: '@id'
@@ -67,6 +67,31 @@ app.factory('Localisations', function($log, $resource, $window) {
 
 });
 
+app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
+    function (UserInfo, LocalisationService, $log, $injector) {
+
+    $log = $log.getInstance("localization");
+
+    var initialized = false;
+
+    UserInfo.then(function(s) {
+        LocalisationService.setLocale(s.lang.toLowerCase());
+        initialized = true;
+
+        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+                (window.APP_LOCALISATION_DATA.length === 0)) {
+            Alert = $injector.get("Alert");
+            $log.error("Failed to load localisations.");
+            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+        }
+
+    });
+
+    return function (localisationKey, parameters) {
+        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
+    };
+}]);
+
 /**
  * UI-directive for using translations.
  *
@@ -84,7 +109,7 @@ app.factory('Localisations', function($log, $resource, $window) {
  */
 app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationService) {
 
-        //$log = $log.getInstance("<tt>");
+        $log = $log.getInstance("<tt>");
 
         return {
             restrict: 'A',
@@ -127,7 +152,7 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  */
 app.service('LocalisationService', function($log, $window, Localisations, UserInfo, $injector) {
 
-    //$log = $log.getInstance("LocalisationService");
+    $log = $log.getInstance("LocalisationService");
 
     // $log.debug("LocalisationService()");
 
@@ -136,16 +161,16 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
-    
-    
+
+
     this.callLocalisationAuthorizeIfNecessary = function() {
         var self = this;
         if (!this.localisationAuthorizeCalled) {
             self.localisationAuthorizeCalled = true;
             Localisations.authorize({id: "authorize"}, function(result) {
-                $log.info("  callLocalisationAuthorizeIfNecessary - success!");
+                $log.info("callLocalisationAuthorizeIfNecessary - success!");
             }, function(err) {
-                $log.info("  callLocalisationAuthorizeIfNecessary FAILED", err);
+                $log.info("callLocalisationAuthorizeIfNecessary FAILED", err);
                 self.disableSystemErrorDialog();
             });
         }
@@ -159,13 +184,14 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     this.getLocale = function() {
         // Default fallback
         if (!angular.isDefined(this.locale)) {
-            $log.warn("  aha! undefined locale - using fi!");
+            $log.warn("aha! undefined locale - using fi!");
             this.locale = "fi";
         }
         return this.locale;
     };
 
     this.setLocale = function(value) {
+        $log.info("setLocale: " + value);
         this.locale = value;
     };
 
@@ -187,7 +213,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
                 this.disableSystemErrorDialog();
             });
         }
-    }
+    };
 
     // Localisations: MAP[locale][key] = {key, locale, value};
     // This map is used for quick access to the localisation (which are in list)
@@ -200,7 +226,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
             params = [params];
         }
 
-        return translation.replace(/{(\d+)}/g, 
+        return translation.replace(/{(\d+)}/g,
             function(match, number) {
                 return params[number] || match;
             });
@@ -210,12 +236,17 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * Get translation, fill in possible parameters.
      *
      * @param {String} key
-     * @param {String} locale, if undefined get it vie getLocale()
+     * @param {String} locale if undefined get it vie getLocale()
      * @param {Array} params
      * @returns {String} translation value, parameters replaced
      */
     this.getTranslation = function(key, locale, params) {
         var result = this.getRawTranslation(key, locale);
+
+        // Lets try finnish in case other locale failed
+        if (!angular.isDefined(result) && locale !== 'fi') {
+            result = this.getRawTranslation(key, 'fi');
+        }
 
         if (!angular.isDefined(result)) {
             // Make it visible that a translation is missing
@@ -256,12 +287,12 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns {v.value}
      */
     this.getRawTranslation = function(key, locale) {
-        var localisation, translation, id; 
+        var localisation, translation, id;
     	if (!angular.isString(key)) {
     		throw new Error("Illegal translation key: '"+key+"'");
     	}
         if (!angular.isString(locale)) locale = this.getLocale();
-    	
+
         // Get translations by locale and key
         localisation = this.localisationMapByLocaleAndKey[locale] && this.localisationMapByLocaleAndKey[locale][key];
 
@@ -402,7 +433,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
                 mapByLocale = tmp[localisation.locale];
             }
             mapByLocale[localisation.key] = localisation;
-            
+
             if (this.isEmpty(localisation.value)) {
                 $log.warn("EMPTY localisation: ", localisation);
             }
@@ -452,7 +483,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
 app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval) {
-    //log = $log.getInstance("LocalisationCtrl");
+    $log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
 

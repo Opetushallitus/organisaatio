@@ -1,26 +1,31 @@
-var app = angular.module('organisaatio', ['ngResource', 'loading', 'ngRoute', 'localisation','localization', 'ui.bootstrap', 'ngSanitize', 'ui.tinymce', 'ngCookies', 'ngIdle']);
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
 
-angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', '$log', '$injector', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService, $log, $injector) {
-    var initialized = false;
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
 
-    UserInfo.then(function(s) {
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
 
-        LocalisationService.setLocale(s.lang.toLowerCase());
-        initialized = true;
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
 
-        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) || (window.APP_LOCALISATION_DATA.length === 0)) {
-            Alert = $injector.get("Alert");
-            $log.error("Failed to load localisations.");
-            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
-        }
+var app = angular.module('organisaatio',
+['ngResource',
+    'Loading',
+    'ngRoute',
+    'Logging',
+    'Localisation',
+    'ui.bootstrap',
+    'ngSanitize',
+    'ui.tinymce',
+    'ngCookies',
+    'ngIdle']);
 
-    });
-
-    return function (localisationKey, parameters) {
-        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
-    };
-}]);
 
 app.filter('fixHttpLink',function () {
     return function (text) {
@@ -235,7 +240,10 @@ app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
     return deferred.promise;
 }]);
 
-app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter', function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
+app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter',
+    function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
+        $log = $log.getInstance("OrganisaatioInitAuth");
+
         return  {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {
