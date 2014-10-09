@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-var mod = angular.module('loading', []);
+var mod = angular.module('Loading', []);
 
 mod.factory('loadingService', function() {
   var service = {

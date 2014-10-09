@@ -16,41 +16,16 @@
 
 var app = angular.module('organisaatio',
 ['ngResource',
-    'loading',
+    'Loading',
     'ngRoute',
     'Logging',
-    'localisation',
-    'localization',
+    'Localisation',
     'ui.bootstrap',
     'ngSanitize',
     'ui.tinymce',
     'ngCookies',
     'ngIdle']);
 
-angular.module('localization', [])
-.filter('i18n', ['$rootScope','$locale', '$window', '$http', 'UserInfo', 'LocalisationService', '$log', '$injector', function ($rootScope, $locale, $window, $http, UserInfo, LocalisationService, $log, $injector) {
-
-    $log = $log.getInstance("localization");
-
-    var initialized = false;
-
-    UserInfo.then(function(s) {
-
-        LocalisationService.setLocale(s.lang.toLowerCase());
-        initialized = true;
-
-        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) || (window.APP_LOCALISATION_DATA.length === 0)) {
-            Alert = $injector.get("Alert");
-            $log.error("Failed to load localisations.");
-            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
-        }
-
-    });
-
-    return function (localisationKey, parameters) {
-        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
-    };
-}]);
 
 app.filter('fixHttpLink',function () {
     return function (text) {

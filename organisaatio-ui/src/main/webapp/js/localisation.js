@@ -28,7 +28,7 @@
  *
  * @author mlyly
  */
-var app = angular.module('localisation', ['ngResource', 'Logging']);
+var app = angular.module('Localisation', ['ngResource', 'Logging']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
@@ -67,6 +67,32 @@ app.factory('Localisations', function($log, $resource, $window) {
 
 });
 
+app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
+    function (UserInfo, LocalisationService, $log, $injector) {
+
+    $log = $log.getInstance("localization");
+
+    var initialized = false;
+
+    UserInfo.then(function(s) {
+
+        LocalisationService.setLocale(s.lang.toLowerCase());
+        initialized = true;
+
+        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+                (window.APP_LOCALISATION_DATA.length === 0)) {
+            Alert = $injector.get("Alert");
+            $log.error("Failed to load localisations.");
+            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+        }
+
+    });
+
+    return function (localisationKey, parameters) {
+        return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
+    };
+}]);
+
 /**
  * UI-directive for using translations.
  *
@@ -84,7 +110,7 @@ app.factory('Localisations', function($log, $resource, $window) {
  */
 app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationService) {
 
-        //$log = $log.getInstance("<tt>");
+        $log = $log.getInstance("<tt>");
 
         return {
             restrict: 'A',
