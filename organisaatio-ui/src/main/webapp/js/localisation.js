@@ -76,7 +76,8 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
 
     UserInfo.then(function(s) {
 
-        LocalisationService.setLocale(s.lang.toLowerCase());
+        //LocalisationService.setLocale(s.lang.toLowerCase());
+        LocalisationService.setLocale('sv');
         initialized = true;
 
         if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
@@ -169,9 +170,9 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
         if (!this.localisationAuthorizeCalled) {
             self.localisationAuthorizeCalled = true;
             Localisations.authorize({id: "authorize"}, function(result) {
-                $log.info("  callLocalisationAuthorizeIfNecessary - success!");
+                $log.info("callLocalisationAuthorizeIfNecessary - success!");
             }, function(err) {
-                $log.info("  callLocalisationAuthorizeIfNecessary FAILED", err);
+                $log.info("callLocalisationAuthorizeIfNecessary FAILED", err);
                 self.disableSystemErrorDialog();
             });
         }
@@ -185,13 +186,14 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     this.getLocale = function() {
         // Default fallback
         if (!angular.isDefined(this.locale)) {
-            $log.warn("  aha! undefined locale - using fi!");
+            $log.warn("aha! undefined locale - using fi!");
             this.locale = "fi";
         }
         return this.locale;
     };
 
     this.setLocale = function(value) {
+        $log.info("setLocale: " + value);
         this.locale = value;
     };
 
@@ -242,6 +244,11 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      */
     this.getTranslation = function(key, locale, params) {
         var result = this.getRawTranslation(key, locale);
+
+        // Lets try finnish in case other locale failed
+        if (!angular.isDefined(result) && locale !== 'fi') {
+            result = this.getRawTranslation(key, 'fi');
+        }
 
         if (!angular.isDefined(result)) {
             // Make it visible that a translation is missing
