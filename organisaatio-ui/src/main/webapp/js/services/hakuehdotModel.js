@@ -40,12 +40,20 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
         organisaatiotyypit: [],
         oppilaitostyypit: [],
 
+        /**
+         * Pakotetaan hakuehtoihin tarvittavien koodistotietojen päivitys.
+         */
         refresh: function() {
             $log.log('refresh()');
             model.refreshed = false;
             model.refreshIfNeeded();
         },
 
+        /**
+         * Tarkistetaan onko hakuehdot tyhjät.
+         *
+         * @returns {Boolean} true, jos hakuehdot tyhjät
+         */
         isEmpty: function() {
             if (model.nimiTaiTunnus ||
                     model.kunta ||
@@ -57,6 +65,13 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
             return true;
         },
 
+        /**
+         * Tarkistetaan onko hakuehdoissa olevat organisaation tilat valideja.
+         * Jotta haun tuloksena saadaan organisaatioita, pitää haussa olla joku
+         * organisaation tiloista mukana.
+         *
+         * @returns {Boolean} true, jos validi
+         */
         isTilaValid: function() {
             if (!model.aktiiviset && !model.suunnitellut && !model.lakkautetut) {
                 return false;

@@ -213,7 +213,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
                 this.disableSystemErrorDialog();
             });
         }
-    }
+    };
 
     // Localisations: MAP[locale][key] = {key, locale, value};
     // This map is used for quick access to the localisation (which are in list)
@@ -236,7 +236,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * Get translation, fill in possible parameters.
      *
      * @param {String} key
-     * @param {String} locale, if undefined get it vie getLocale()
+     * @param {String} locale if undefined get it vie getLocale()
      * @param {Array} params
      * @returns {String} translation value, parameters replaced
      */
