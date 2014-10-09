@@ -23,35 +23,27 @@ app.factory('YhteystietojentyyppiModel', function($log,
     $log = $log.getInstance("YhteystietojentyyppiModel");
 
     var model = new function() {
-        var organisaatiotyypit = {},
-                oppilaitostyypit = [],
-                yhteystietotyypit = [],
-                oppilaitostyypitMap = {};
+        this.oppilaitostyypit = [];
+        this.yhteystietotyypit = [];
+        this.oppilaitostyypitMap = {};
 
-        this.organisaatiotyypit = organisaatiotyypit;
-        this.oppilaitostyypit = oppilaitostyypit;
-        this.yhteystietotyypit = yhteystietotyypit;
-        this.oppilaitostyypitMap = oppilaitostyypitMap;
-
-        function loadYhteystietotyypit() {
+        var loadYhteystietotyypit = function() {
             Yhteystietojentyyppi.get({}, function(tyypit) {
                 tyypit.forEach(function(t) {
-                    yhteystietotyypit.push(t);
+                    model.yhteystietotyypit.push(t);
                 });
             });
-        }
+        };
 
-        function loadOppilaitostyypit() {
+        var loadOppilaitostyypit =  function() {
             KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(tyypit) {
                 tyypit.forEach(function(t) {
-                    oppilaitostyypit.push({id: t.koodiUri + '#' + t.versio, nimi: KoodistoKoodi.getLocalizedName(t)});
-                    oppilaitostyypitMap[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);
+                    model.oppilaitostyypit.push({id: t.koodiUri + '#' + t.versio, nimi: KoodistoKoodi.getLocalizedName(t)});
+                    model.oppilaitostyypitMap[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);
                 });
                 loadYhteystietotyypit();
             });
-        }
-
-        loadOppilaitostyypit();
+        };
 
         this.uusiYtt = function() {
             var obj = {
@@ -70,7 +62,7 @@ app.factory('YhteystietojentyyppiModel', function($log,
                 sovellettavatOppilaitostyyppis: [],
                 allLisatietokenttas: []
             };
-            yhteystietotyypit.push(obj);
+            model.yhteystietotyypit.push(obj);
             return obj;
         };
 
@@ -82,11 +74,11 @@ app.factory('YhteystietojentyyppiModel', function($log,
                 fn = Yhteystietojentyyppi.post;
             }
             fn(ytt, function(tyyppi) {
-                var ind = yhteystietotyypit.indexOf(ytt);
+                var ind = model.yhteystietotyypit.indexOf(ytt);
                 if (ind !== -1) {
-                    yhteystietotyypit.splice(ind, 1);
+                    model.yhteystietotyypit.splice(ind, 1);
                 }
-                yhteystietotyypit.push(tyyppi);
+                model.yhteystietotyypit.push(tyyppi);
                 callback(tyyppi);
             }, virheCallback);
         };
@@ -96,14 +88,14 @@ app.factory('YhteystietojentyyppiModel', function($log,
         };
 
         function clearOppilaitostyypitMap() {
-            for (var k in oppilaitostyypitMap) {
-                delete oppilaitostyypitMap[k];
+            for (var k in model.oppilaitostyypitMap) {
+                delete model.oppilaitostyypitMap[k];
             }
         }
 
         this.reload = function() {
-            yhteystietotyypit.splice(0, yhteystietotyypit.length);
-            oppilaitostyypit.splice(0, oppilaitostyypit.length);
+            model.yhteystietotyypit.splice(0, model.yhteystietotyypit.length);
+            model.oppilaitostyypit.splice(0, model.oppilaitostyypit.length);
             clearOppilaitostyypitMap();
             loadOppilaitostyypit();
         };

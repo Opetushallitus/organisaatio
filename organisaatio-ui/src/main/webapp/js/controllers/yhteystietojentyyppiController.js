@@ -33,6 +33,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal, $log,
     });
 
     $scope.model = YhteystietojentyyppiModel;
+    $scope.model.reload();
     $scope.valittuYhteystietotyyppi = null;
 
     $scope.localizeYhteystietotyypinNimi = function(yt) {
