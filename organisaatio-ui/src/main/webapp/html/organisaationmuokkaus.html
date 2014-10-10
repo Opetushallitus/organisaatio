@@ -1210,7 +1210,7 @@
             <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="isLoading()===false && form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <p>
 </div>
