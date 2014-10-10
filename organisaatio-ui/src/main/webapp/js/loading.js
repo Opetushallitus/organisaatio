@@ -1,8 +1,8 @@
 angular.module('Loading', ['Localisation'])
 
-.factory('loadingService', function($log) {
+.factory('LoadingService', function($log) {
 
-    $log = $log.getInstance("loadingService");
+    $log = $log.getInstance("LoadingService");
 
     var service = {
         requestCount: 0,
@@ -91,7 +91,7 @@ angular.module('Loading', ['Localisation'])
             if (service.errorHandlingRequested) {
     		service.errorHandlingRequested=false;
             } else if (service.errorHandlingRequested===null) {
-    		throw "loadingService.onErrorHandled called from outside of error callback";
+    		throw "LoadingService.onErrorHandled called from outside of error callback";
             }
         },
 
@@ -106,27 +106,27 @@ angular.module('Loading', ['Localisation'])
   return service;
 })
 
-.factory('onStartInterceptor', function(loadingService) {
+.factory('onStartInterceptor', function(LoadingService) {
     return function (data, headersGetter) {
-        loadingService.beforeRequest();
+        LoadingService.beforeRequest();
         return data;
     };
 })
 
-.factory('onCompleteInterceptor', function(loadingService, $q) {
+.factory('onCompleteInterceptor', function(LoadingService, $q) {
     return function(promise) {
         function decrementRequestCountSuccess(response) {
-                    loadingService.afterRequest(true, response);
+                    LoadingService.afterRequest(true, response);
             return response;
         };
         function decrementRequestCountError(response) {
             var ret = $q.reject(response);
             return {then: function(callback, errback) {
                     ret.then(callback, function(reason){
-                        loadingService.errorHandlingRequested = true;
+                        LoadingService.errorHandlingRequested = true;
                         var ret = errback(reason);
-                        loadingService.afterRequest(!loadingService.errorHandlingRequested, response);
-                        loadingService.errorHandlingRequested = null;
+                        LoadingService.afterRequest(!LoadingService.errorHandlingRequested, response);
+                        LoadingService.errorHandlingRequested = null;
                     });
                 }
             };
@@ -143,10 +143,10 @@ angular.module('Loading', ['Localisation'])
     $http.defaults.transformRequest.push(onStartInterceptor);
 })
 
-.controller('LoadingCtrl', function($scope, $rootElement, $modal, loadingService) {
+.controller('LoadingCtrl', function($scope, $rootElement, $modal, LoadingService) {
 
     var ctrl = $scope;
-    loadingService.scope = ctrl;
+    LoadingService.scope = ctrl;
 
     $scope.restart = function() {
     	location.hash = "";
@@ -157,7 +157,7 @@ angular.module('Loading', ['Localisation'])
         $modal.open({
             controller: function($scope, $modalInstance) {
                 $scope.commit = function() {
-                    loadingService.commit();
+                    LoadingService.commit();
                     $modalInstance.dismiss();
                 };
                 $scope.restart = function() {
@@ -170,7 +170,7 @@ angular.module('Loading', ['Localisation'])
     }
 
     $scope.$watch(function() {
-        return loadingService.isLoading();
+        return LoadingService.isLoading();
     }, function(value) {
         $scope.loading = value;
         if(value) {
@@ -181,7 +181,7 @@ angular.module('Loading', ['Localisation'])
     });
 
     $scope.$watch(function() {
-        return loadingService.errors;
+        return LoadingService.errors;
     }, function(value, oldv) {
         if(value>0 && oldv===0) {
             showErrorDialog();
@@ -189,15 +189,15 @@ angular.module('Loading', ['Localisation'])
     });
 
     $scope.isModal = function() {
-    	return loadingService.isModal();
+    	return LoadingService.isModal();
     };
 
     $scope.isError = function() {
-    	return loadingService.isError();
+    	return LoadingService.isError();
     };
 
     $scope.isTimeout = function(major) {
-    	return major ? loadingService.timeoutMajor : loadingService.timeoutMinor;
+    	return major ? LoadingService.timeoutMajor : LoadingService.timeoutMinor;
     };
 
 });

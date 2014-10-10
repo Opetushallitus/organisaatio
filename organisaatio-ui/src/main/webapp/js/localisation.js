@@ -390,12 +390,12 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
      * @returns {undefined}
      */
     this.disableSystemErrorDialog = function() {
-        var loadingService = $injector.get('loadingService');
+        var loadingService = $injector.get('LoadingService');
         if (loadingService) {
-            $log.debug("  disable system error dialog.");
-            //loadingService.onErrorHandled();
+            $log.debug("disable system error dialog.");
+            loadingService.onErrorHandled();
         } else {
-            $log.warn("  FAILED TO disable system error dialog. Sorry about that.");
+            $log.warn("FAILED TO disable system error dialog. Sorry about that.");
         }
     };
 

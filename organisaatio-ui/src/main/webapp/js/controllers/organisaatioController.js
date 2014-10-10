@@ -385,7 +385,7 @@ function OrganisaatioController($scope, $location,
     // Tarkastetaan ollaanko lataamassa vielä sisältöä
     // Jos lataus on kesken, ei kannata näyttää käyttäjälle ilmoitusta puuttuvista tiedoista
     $scope.isLoading = function() {
-        var loadingService = $injector.get('loadingService');
+        var loadingService = $injector.get('LoadingService');
         if (loadingService) {
             return loadingService.isLoading();
         }
