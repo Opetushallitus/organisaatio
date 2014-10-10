@@ -14,11 +14,14 @@
  European Union Public Licence for more details.
  */
 
-function YhteystietojentyyppiController($scope, $filter, $modal, $log,
+function YhteystietojentyyppiController($scope, $filter, $modal,
+                                        $log, $injector,
                                         YhteystietojentyyppiModel,
                                         Alert, UserInfo) {
     "use strict";
+
     $log = $log.getInstance("YhteystietojentyyppiController");
+    var loadingService = $injector.get('LoadingService');
 
     var language;
 
@@ -304,7 +307,10 @@ function YhteystietojentyyppiController($scope, $filter, $modal, $log,
 
                             $scope.model.yhteystietotyypit.splice(ind, 1);
                             $scope.valittuYhteystietotyyppi = null;
-                        }, function(virhe) {
+                        },
+                        // Error case
+                        function(virhe) {
+                            loadingService.onErrorHandled();
                             Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
                         });
                     } else {
@@ -322,7 +328,10 @@ function YhteystietojentyyppiController($scope, $filter, $modal, $log,
         if ($scope.valittuYhteystietotyyppi !== null) {
             $scope.model.save($scope.valittuYhteystietotyyppi, function(tallennettuYtt) {
                 $scope.valittuYhteystietotyyppi = tallennettuYtt;
-            }, function(virhe) {
+            },
+            // Error case
+            function(virhe) {
+                loadingService.onErrorHandled();
                 Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
             });
         }

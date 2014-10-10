@@ -14,7 +14,8 @@
  European Union Public Licence for more details.
  */
 
-app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
+app.factory('NimenMuokkausModel', function($q, $filter, $log,
+                                           $location, $injector,
                                            Alert, NimiHistoriaModel, Nimet) {
 //    emptyNimi = {
 //        "nimi" : {
@@ -26,6 +27,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
 //    };
 
     $log = $log.getInstance("NimenMuokkausModel");
+    var loadingService = $injector.get('LoadingService');
 
     var model = {
         oid : "",
@@ -99,6 +101,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
             },
             // Error case
             function(response) {
+                loadingService.onErrorHandled();
                 $log.error("saveNewNimi() Nimet put response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
                 deferred.reject();
@@ -113,6 +116,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
             },
             // Error case
             function(response) {
+                loadingService.onErrorHandled();
                 $log.error("saveUpdatedNimi() Nimet post response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
                 deferred.reject();
@@ -127,6 +131,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log, $location,
             },
             // Error case
             function(response) {
+                loadingService.onErrorHandled();
                 $log.error("deletePresetNimi() Nimet delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
                 deferred.reject();

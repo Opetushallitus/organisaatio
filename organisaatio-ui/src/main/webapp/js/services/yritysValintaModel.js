@@ -20,7 +20,6 @@ app.factory('YritysValintaModel', function($filter, $log, $injector,
                                            YTJYritystenTiedot) {
 
     $log = $log.getInstance("YritysValintaModel");
-
     var loadingService = $injector.get('LoadingService');
 
     var model = {

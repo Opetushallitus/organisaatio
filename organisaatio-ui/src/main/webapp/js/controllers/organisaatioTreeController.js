@@ -15,10 +15,13 @@
  */
 
 function OrganisaatioTreeController($scope, $location, $filter,
-                                    $modal, $log, Alert, Organisaatio,
+                                    $modal, $log, $injector,
+                                    Alert, Organisaatio,
                                     HakuehdotModel, OrganisaatioTreeModel) {
 
     $log = $log.getInstance("OrganisaatioTreeController");
+
+    var loadingService = $injector.get('LoadingService');
 
     $scope.hakuehdot = HakuehdotModel;
     $scope.model     = OrganisaatioTreeModel;
@@ -111,6 +114,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
             },
             // Error case
             function(response) {
+                loadingService.onErrorHandled();
                 $log.error("Organisaatio delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", ""), true);
             });
