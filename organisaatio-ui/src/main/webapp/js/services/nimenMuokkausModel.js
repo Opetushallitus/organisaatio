@@ -95,6 +95,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
 
         // Uuden nimen tallennus
         saveNewNimi: function(deferred) {
+            $log.debug('saveNewNimi()');
             Nimet.put({oid: this.oid, alkuPvm: ""}, this.nimi, function(result) {
                 $log.log(result);
                 deferred.resolve();
@@ -110,6 +111,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
 
         // Nimen päivitys
         saveUpdatedNimi: function(deferred) {
+            $log.debug('saveUpdatedNimi()');
             Nimet.post({oid: this.oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
                 $log.log(result);
                 deferred.resolve();
@@ -125,6 +127,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
 
         // Ajastetun nimenmuutoksen poisto / peruminen
         deletePresetNimi: function(deferred) {
+            $log.debug('deletePresetNimi()');
             Nimet.delete({oid: this.oid, alkuPvm: this.historiaModel.uusinNimi.alkuPvm}, function(result) {
                 $log.log(result);
                 deferred.resolve();
