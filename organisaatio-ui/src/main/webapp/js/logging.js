@@ -84,8 +84,8 @@ app.config(["$provide", function($provide) {
                 $delegate.info = prepareLogFn(_$log.info, "I", "?");
                 $delegate.warn = prepareLogFn(_$log.warn, "W", "?");
                 $delegate.debug = prepareLogFn(_$log.debug, "D", "?");
-                // $delegate.error = prepareLogFn(_$log.error, "E", "?");
-                $delegate.error = _$log.error;
+                $delegate.error = prepareLogFn(_$log.error, "E", "?");
+                //$delegate.error = _$log.error;
 
                 // Class spesific implementations
                 $delegate.getInstance = function(logClass) {
@@ -94,8 +94,8 @@ app.config(["$provide", function($provide) {
                         info : prepareLogFn(_$log.info, "I", logClass),
                         warn : prepareLogFn(_$log.warn, "W", logClass),
                         debug : prepareLogFn(_$log.debug, "D", logClass),
-                        // error : prepareLogFn(_$log.error, "E", logClass)
-                        error : _$log.error
+                        error : prepareLogFn(_$log.error, "E", logClass)
+                        //error : _$log.error
                     };
                 };
 
