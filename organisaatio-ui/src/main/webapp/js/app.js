@@ -106,6 +106,7 @@ app.config(['$provide', function($provide) {
         }]);
 }]);
 
+// Konfiguroidaan DatePicker alkamaan viikon maanantaista (defaul = sunnuntai)
 app.config(function(datepickerConfig) {
     datepickerConfig.startingDay = 1;
 });
@@ -215,46 +216,59 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     }
 ]);
 
-app.factory('UserInfo', ['$q', '$http', '$log', function($q, $http, $log) {
-    var deferred = $q.defer();
+app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
+    function($q, $http, $log, $injector) {
+        $log = $log.getInstance("UserInfo");
+        var loadingService = $injector.get('LoadingService');
 
-    (function() {
-        var instance = {};
-        instance.lang = 'FI';
-        $http.get(CAS_ME_URL).success(function(result) {
-            $log.debug(result);
-            var lang = angular.fromJson(result).lang;
-            if (lang) {
-                // Toistaiseksi vain SV on tuettu FI:n lisäksi
-                instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
+        var deferred = $q.defer();
+
+        (function() {
+            var instance = {};
+            instance.lang = 'FI';
+            $http.get(CAS_ME_URL).success(function(result) {
+                $log.debug("Success on " + CAS_ME_URL, result);
+                var lang = angular.fromJson(result).lang;
+                if (lang) {
+                    // Toistaiseksi vain SV on tuettu FI:n lisäksi
+                    instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
+                    deferred.resolve(instance);
+                } else {
+                    $log.debug('failed parsing result, defaulting to FI');
+                    deferred.resolve(instance);
+                }
+            }).error(function(data, status, headers, config) {
+                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + instance.lang);
+                loadingService.onErrorHandled();
                 deferred.resolve(instance);
-            } else {
-                $log.debug('failed parsing result, defaulting to FI');
-                deferred.resolve(instance);
-            }
-        }).error(function(data, status, headers, config) {
-            deferred.resolve(instance);
-        });
-    })();
+            });
+        })();
+        return deferred.promise;
+    }
+]);
 
-    return deferred.promise;
-}]);
-
-app.factory('OrganisaatioInitAuth', ['$log', 'Alert', 'OrganisaatioAuthGET', '$timeout', '$filter',
-    function($log, Alert, OrganisaatioAuthGET, $timeout, $filter) {
+app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
+                                     'Alert', 'OrganisaatioAuthGET',
+    function($log, $timeout, $filter, $injector, Alert, OrganisaatioAuthGET) {
         $log = $log.getInstance("OrganisaatioInitAuth");
+
+        var loadingService = $injector.get('LoadingService');
 
         return  {
             init: function() {
                 OrganisaatioAuthGET.get({}, function(result) {
                     $log.log("Organisaatio Auth Init.");
                 },
-                // Error case
+                // Error case, ensimmäinen yritys
                 function(response) {
+                    loadingService.onErrorHandled();
                     $timeout(function() {
                         OrganisaatioAuthGET.get({}, function(result) {
                             $log.log("Organisaatio Auth Init, second try.");
-                        }, function(response) {
+                        },
+                        // Error case, toinen yritys
+                        function(response) {
+                            loadingService.onErrorHandled();
                             Alert.add("error", $filter('i18n')("Organisaatiot.yleinenVirhe", ""), true);
                             $log.error("Organisaatio Auth Init failed, response: " + response.status);
                         });
