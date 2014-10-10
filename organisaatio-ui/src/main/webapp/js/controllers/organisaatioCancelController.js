@@ -14,24 +14,24 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioCancelController($scope, $modalInstance, $log,
-                                      OrganisaatioModel) {
+function OrganisaatioCancelController($scope, $modalInstance, $log) {
 
     $log = $log.getInstance("OrganisaatioCancelController");
 
     $log.debug("Organisaation muokkauksen peruutus (vaatii vahvistuksen)");
-    $scope.model = OrganisaatioModel;
 
     $scope.cancel = function() {
+        $log.debug("cancel() --> Peruuta");
         $modalInstance.dismiss('cancel');
     };
 
     $scope.continueWithoutSave = function() {
+        $log.debug("continueWithoutSave() --> Jatka tallentamatta");
         $modalInstance.close();
     };
 
     $scope.continueSave = function() {
-        $scope.model.persistOrganisaatio();
-        $modalInstance.close();
+        $log.debug("continueSave() --> Tallenna ja jatka");
+        $modalInstance.close('save');
     };
 }
