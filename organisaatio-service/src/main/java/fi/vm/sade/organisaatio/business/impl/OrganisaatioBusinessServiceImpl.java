@@ -826,6 +826,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // toimipisteellä ei ole oppilaitosta vastaavaa tämänkielistä nimeä
                         // Pitää lisätä manuaalisesti
                         LOG.debug("Name[" + key + "] does not exist.");
+                        childChanged = true;
                     } else if (oldChildName.startsWith(oldParentName)) {
                         // päivitetään toimipisteen nimen alkuosa
                         childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
@@ -843,6 +844,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
                         // Pitää korjata formaatti manuaalisesti
                         LOG.debug("Name[" + key + "] is of invalid format: \"" + childnimi.getString(key) + "\".");
+                        childChanged = true;
                     }
                 }
                 if (childChanged == true) {
