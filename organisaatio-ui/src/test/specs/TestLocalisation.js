@@ -16,7 +16,7 @@ describe('Module: Localisation', function() {
       $provide.value('$window', $window);
     });
 
-    module('localisation');
+    module('Localisation');
 
     inject(function($injector) {
       LocalisationService = $injector.get('LocalisationService');
@@ -132,7 +132,7 @@ describe('Module: Localisation', function() {
     });
 
   });
-  
+
   describe('Directive: tt', function() {
     var elem, compileTemplate, scope;
 

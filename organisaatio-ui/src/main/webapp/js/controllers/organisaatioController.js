@@ -1,4 +1,26 @@
-function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $injector, OrganisaatioModel) {
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
+
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
+
+function OrganisaatioController($scope, $location,
+                                $routeParams, $modal,
+                                $log, $injector,
+                                OrganisaatioModel) {
+
+    $log = $log.getInstance("OrganisaatioController");
+
     $scope.oid = $routeParams.oid;
     $scope.model = OrganisaatioModel;
     $scope.modalOpen = false; // Käytetään piilottamaan tallennuslaatikko, kun modaali dialogi auki
@@ -77,33 +99,26 @@ function OrganisaatioController($scope, $location, $routeParams, $modal, $log, $
         return m[lang] || '3--' + lang;
     };
 
-    $scope.save2 = function() {
-        if ($scope.voimassaolonmuokkaus !== null) {
-            $scope.voimassaolonmuokkaus.save().then (function() {
-                if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
-                    $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
-                }
-                $scope.model.persistOrganisaatio($scope.form);
-            });
-        } else {
-            $scope.model.persistOrganisaatio($scope.form);
-        }
-    };
-
-    // Organisaation tallennus
     $scope.save = function() {
-        // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
-        // tai poistanut tulevan nimenmuutoksen
-        // --> suoritetaan ensin nimihistorian päivitys ja sitten organisaatio
-        if ($scope.nimenmuokkaus !== null) {
-            $scope.nimenmuokkaus.save().then (function() {
-                $scope.save2();
-            });
-        }
-        else {
-            $scope.save2();
-        }
-
+        $scope.model.persistOrganisaatio($scope.form).then(function() {
+            if ($scope.voimassaolonmuokkaus !== null) {
+                $scope.voimassaolonmuokkaus.save().then(function() {
+                    if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
+                        $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
+                    }
+                    // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
+                    // tai poistanut tulevan nimenmuutoksen
+                    // --> suoritetaan ensin nimihistorian päivitys
+                    if ($scope.nimenmuokkaus !== null) {
+                        $scope.nimenmuokkaus.save();
+                    }
+                });
+            } else {
+                if ($scope.nimenmuokkaus !== null) {
+                    $scope.nimenmuokkaus.save();
+                }
+            }
+        });
     };
 
     // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään

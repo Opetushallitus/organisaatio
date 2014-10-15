@@ -1,9 +1,33 @@
-app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoSearchKoodis, KoodistoKoodi,
-        KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit, KoodistoPaikkakunnat, KoodistoMaat,
-        KoodistoPosti, KoodistoPostiCached, KoodistoPostiVersio, KoodistoVuosiluokat, UusiOrganisaatio, YTJYritysTiedot, Alert,
-        KoodistoOpetuskielet, KoodistoPaikkakunta, HenkiloVirkailijat, Henkilo,
-        HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi, Paivittaja, Nimet, NimiHistoriaModel,
-        $filter, $log, $timeout, $location, $q, $cookieStore) {
+/*
+ Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+
+ This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ soon as they will be approved by the European Commission - subsequent versions
+ of the EUPL (the "Licence");
+
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ European Union Public Licence for more details.
+ */
+
+app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot,
+                                          KoodistoSearchKoodis, KoodistoKoodi,
+                                          KoodistoOrganisaatiotyypit, KoodistoOppilaitostyypit,
+                                          KoodistoPaikkakunnat, KoodistoMaat, KoodistoPosti,
+                                          KoodistoPostiCached, KoodistoPostiVersio,
+                                          KoodistoVuosiluokat, UusiOrganisaatio,
+                                          YTJYritysTiedot, Alert, KoodistoOpetuskielet,
+                                          KoodistoPaikkakunta, HenkiloVirkailijat, Henkilo,
+                                          HenkiloKayttooikeus, KoodistoKieli, Yhteystietojentyyppi,
+                                          Paivittaja, Nimet, NimiHistoriaModel,
+                                          $filter, $log, $timeout, $location, $q, $cookieStore) {
+
+    $log = $log.getInstance("OrganisaatioModel");
+
     var model = new function() {
         this.organisaatio = {};
 
@@ -700,7 +724,8 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                         (KoodistoKoodi.getLanguage() === "SV" ? yt.nimiSv : (
                                 KoodistoKoodi.getLanguage() === "EN" ? yt.nimiEn : yt.nimi));
 
-                for (var ytlang in ytlangs) {
+                for (var i in ytlangs) {
+                    var ytlang = ytlangs[i];
                     // Lisätään jos arvoa ei ole
                     var arvo = null;
                     for (var a in model.organisaatio.yhteystietoArvos) {
@@ -741,11 +766,18 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]]) {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]] = {};
                     }
+                    // Luodaan elementti kielelle, jos sitä ei ole
                     if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang]) {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
                     }
 
-                    if ((arvo["YhteystietoElementti.kaytossa"] === true) || (arvo["YhteystietoArvo.arvoText"] !== null))
+                    // Laitetaan yhteystietoarvo editoitavaksi jos se on käytössä tai
+                    // arvo on asetettu. Näin voidaan editoida vielä käytöstä poistettua
+                    // arvoa.
+                    // HUOM! Rajapinnan yli tulee "YhteystietoElementti.kaytossa" string muodossa!
+                    if ((arvo["YhteystietoElementti.kaytossa"] === true) ||
+                            (arvo["YhteystietoElementti.kaytossa"] === "true") ||
+                            (arvo["YhteystietoArvo.arvoText"] !== null))
                     {
                         model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang].push(arvo);
                     }
@@ -1269,6 +1301,7 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
         };
 
         this.persistOrganisaatio = function(orgForm) {
+            var deferred = $q.defer();
             formatDates();
             selectAddressType(false);
             selectAddressType(true);
@@ -1285,9 +1318,11 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (result.status==="WARNING") {
                         model.alert = Alert.add("warn", $filter('i18n')(result.info), false);
                     }
+                    deferred.resolve();
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
+                    deferred.reject();
                 });
             } else {
                 UusiOrganisaatio.put(model.organisaatio, function(result) {
@@ -1302,11 +1337,14 @@ app.factory('OrganisaatioModel', function(Organisaatio, Organisaatiot, KoodistoS
                     if (result.status==="WARNING") {
                         model.alert = Alert.add("warn", $filter('i18n')(result.info), false);
                     }
+                    deferred.resolve();
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");
+                    deferred.reject();
                 });
             }
+            return deferred.promise;
         };
 
         this.toggleCheckOrganisaatio = function(organisaatiotyyppi) {

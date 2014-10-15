@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Function;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioKuvaTyyppi;
-import fi.vm.sade.organisaatio.model.lop.BinaryData;
+import fi.vm.sade.organisaatio.model.BinaryData;
 
 public class EntityToOrganisaatioKuvaTyyppiFunction implements Function<BinaryData, OrganisaatioKuvaTyyppi> {
 

@@ -1,4 +1,6 @@
 app.directive('formatteddate', function($log) {
+    $log = $log.getInstance("formatteddate directive");
+
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -120,6 +122,8 @@ app.directive('noedit', function () {
 
 
 app.directive('testField', function($log) {
+    $log = $log.getInstance("testField directive");
+
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
@@ -263,6 +267,8 @@ app.directive('addressCombinedField', function() {
 });
 
 app.directive('uniqueYhteystietojenTyyppiField', function($log) {
+    $log = $log.getInstance("uniqueYhteystietojenTyyppiField directive");
+
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
@@ -355,6 +361,8 @@ app.directive("ophDecodeName", function($log) {
 });
 
 app.directive('ophFileupload', function($log, $http) {
+    $log = $log.getInstance("ophFileupload directive");
+
     $log.info('init file upload');
     return {
         restrict: 'A',

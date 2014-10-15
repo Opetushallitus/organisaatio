@@ -39,7 +39,6 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import org.apache.commons.lang.time.DateUtils;
 
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
-import fi.vm.sade.organisaatio.model.lop.OrganisaatioMetaData;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.slf4j.Logger;

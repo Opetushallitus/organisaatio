@@ -30,7 +30,7 @@ import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.lop.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
