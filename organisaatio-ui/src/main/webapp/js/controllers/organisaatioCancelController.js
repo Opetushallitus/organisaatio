@@ -14,11 +14,13 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioCancelController($scope, $modalInstance, $log) {
+function OrganisaatioCancelController($scope, $modalInstance, $log, invalid) {
 
     $log = $log.getInstance("OrganisaatioCancelController");
 
     $log.debug("Organisaation muokkauksen peruutus (vaatii vahvistuksen)");
+
+    $scope.invalid = invalid;
 
     $scope.cancel = function() {
         $log.debug("cancel() --> Peruuta");

@@ -57,7 +57,11 @@ function OrganisaatioController($scope, $location,
             var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: OrganisaatioCancelController,
-                resolve: {}
+                resolve: {
+                    invalid: function () {
+                        return $scope.form.$invalid;
+                    }
+                }
             });
 
             // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun
