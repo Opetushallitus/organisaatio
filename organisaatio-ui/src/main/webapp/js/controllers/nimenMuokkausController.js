@@ -44,7 +44,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.updateNimiMode = function(form) {
         $log.debug('updateNimiMode()');
-        $scope.model.setUusinNimiVisible();
+        $scope.model.setUusinNimiVisible(koulutustoimija, oppilaitos, parentNimi);
         if ($scope.model.isUusinNimiChanged() === false) {
             form.$setPristine();
         }

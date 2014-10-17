@@ -72,8 +72,9 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
         },
 
         // Laitetaan uusin nimi näkyville / editoitavaksi
-        setUusinNimiVisible: function() {
+        setUusinNimiVisible: function(koulutustoimija, oppilaitos, parentNimi) {
             this.nimi = this.historiaModel.uusinNimi;
+            if (!koulutustoimija && !oppilaitos) this.historiaModel.fixParentPrefix(parentNimi, this.nimi);
         },
 
         isUusinNimiChanged: function() {
@@ -173,6 +174,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
                           nameFormat) {
             if (this.oid === oid) {
                 $log.log('refresh() Using old instance');
+                this.historiaModel.fixParentPrefix(koulutustoimija || oppilaitos ? null : parentNimi, this.nimi);
                 return;
             }
             $log.log('refresh()');
