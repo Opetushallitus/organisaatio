@@ -167,7 +167,7 @@
                     <br>
                     {{model.organisaationTulevaNimi.alkuPvm | date:'dd.MM.yyyy'}} <i class="icon-arrow-right"></i>
                     <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
-                        {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
+                        <span ng-if="model.organisaationTulevaNimi.nimi[avain]">{{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]</span><br>
                     </div>
                 </div>
             </label>
