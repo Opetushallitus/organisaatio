@@ -40,8 +40,8 @@
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
-                <input type="hidden" name="orgtyypit" ng-model="orgtyypit" required>
-                <span class="text-error" ng-show="form.orgtyypit.$error.required">
+                <input type="hidden" name="organisaatiotyyppi" ng-model="organisaatiotyyppi" required>
+                <span class="text-error" ng-show="form.organisaatiotyyppi.$error.required">
                     {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
@@ -129,8 +129,8 @@
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.oppilaitosTyyppiUri">
-                <input type="hidden" name="oltyyppivirhe" ng-model="oltyyppivirhe" required>
-                <span class="text-error" ng-show="form.oltyyppivirhe.$error.required">
+                <input type="hidden" name="oppilaitostyyppi" ng-model="oppilaitostyyppi" required>
+                <span class="text-error" ng-show="form.oppilaitostyyppi.$error.required">
                     {{'Organisaationtarkastelu.oppilaitostyyppi'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
@@ -181,8 +181,8 @@
                 {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
             <div ng-if="!(model.organisaatio.nimi.fi || model.organisaatio.nimi.sv || model.organisaatio.nimi.en)">
-                <input type="hidden" name="nimivirhe" ng-model="nimivirhe" required>
-                <span class="text-error" ng-show="form.nimivirhe.$error.required">
+                <input type="hidden" name="nimi" ng-model="nimi" required>
+                <span class="text-error" ng-show="form.nimi.$error.required">
                     {{'Organisaationmuokkaus.ohje.nimet'| i18n}}
                 </span>
             </div>
@@ -279,8 +279,8 @@
                 <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
             </select>
             <div ng-if="!model.organisaatio.kotipaikkaUri">
-                <input type="hidden" name="kotipaikkavirhe" ng-model="kotipaikkavirhe" required>
-                <span class="text-error" ng-show="form.kotipaikkavirhe.$error.required">
+                <input type="hidden" name="kotipaikka" ng-model="kotipaikka" required>
+                <span class="text-error" ng-show="form.kotipaikka.$error.required">
                     {{'Organisaationtarkastelu.kotipaikka'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
@@ -301,8 +301,8 @@
                 <em class="muted">{{'Organisaationmuokkaus.ohje.maa'| i18n}}</em>
             </div>
             <div ng-if="!model.organisaatio.maaUri">
-                <input type="hidden" name="maavirhe" ng-model="maavirhe" required>
-                <span class="text-error" ng-show="form.maavirhe.$error.required">
+                <input type="hidden" name="maa" ng-model="maa" required>
+                <span class="text-error" ng-show="form.maa.$error.required">
                     {{'Organisaationtarkastelu.maa'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
@@ -325,8 +325,8 @@
                 <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
             </select>
             <div ng-if="model.organisaatio.kieletUris.length === 0">
-                <input type="hidden" name="kielivirhe" ng-model="kielivirhe" required>
-                <span class="text-error" ng-show="form.kielivirhe.$error.required">
+                <input type="hidden" name="kieli" ng-model="kieli" required>
+                <span class="text-error" ng-show="form.kieli.$error.required">
                     {{'Organisaationtarkastelu.kieli'| i18n}}
                     {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
                 </span>
