@@ -859,7 +859,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
-        return organisaatioNimiDAO.findNimet(oid);
+        try {
+            return organisaatioNimiDAO.findNimet(oid);
+        }
+        catch (IllegalArgumentException ex) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
     }
 
     @Override

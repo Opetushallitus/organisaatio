@@ -15,8 +15,6 @@
 
 package fi.vm.sade.organisaatio.dao.impl;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
@@ -71,6 +69,10 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
 
     @Override
     public List<OrganisaatioNimi> findNimet(Organisaatio organisaatio) {
+        if (organisaatio == null) {
+            throw new IllegalArgumentException("organisaatio cannot be null");
+        }
+
         LOG.info("findNimet({})", organisaatio.getOid());
 
         return findBy("organisaatio", organisaatio);
