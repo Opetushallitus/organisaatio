@@ -19,8 +19,10 @@ import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +153,13 @@ public class OrganisaatioKoodisto {
     private boolean paivitaCodeElements(List<String> entityRelaatiot, List<OrganisaatioKoodistoKoodiCodeElements> elements) {
         boolean muuttunut = false;
 
+        // Tehdään prefix-lista korvattavien relaatioiden vertailua varten
+        Map<String, Object> entityRelaatiotPrefixlist = new HashMap<String, Object>();
+        for (String rel : entityRelaatiot) {
+            entityRelaatiotPrefixlist.put(rel.split("_")[0], null);
+        }
+
+
         // Listaa kaikki koodiston nykyiset relaatiot
         Map<String, OrganisaatioKoodistoKoodiCodeElements> koodistoRelaatiot = new HashMap<String, OrganisaatioKoodistoKoodiCodeElements>();
         for (OrganisaatioKoodistoKoodiCodeElements ie : elements) {
@@ -159,12 +168,7 @@ public class OrganisaatioKoodisto {
 
         // Poista koodistosta kaikki ne relaatiot, joita ei ole enää organisaatiossa
         for (String kRel : koodistoRelaatiot.keySet()) {
-           // Haa, ihan kaikkia ei poistetakaan koska ne tulee koodistoon muuta kautta kuin organisaation tiedoista...
-            if (kRel.startsWith("urheilijankoulutus_")) {
-                // Ei kosketa
-            } else if (kRel.startsWith("yhteishaunkoulukoodi_")) {
-                // Jätetään rauhaan
-            } else if (!entityRelaatiot.contains(kRel)) {
+            if (entityRelaatiotPrefixlist.containsKey(kRel.split("_")[0])) {
                 OrganisaatioKoodistoKoodiCodeElements e = koodistoRelaatiot.get(kRel);
                 if (e != null && !e.isPassive()) {
                     LOG.debug("Remove includesCodeElements relation: " + kRel);
@@ -173,10 +177,9 @@ public class OrganisaatioKoodisto {
                 }
             }
         }
-
         // Lisää koodistoon ne organisaation relaatiot joita siellä ei vielä ole
         for (String oRel : entityRelaatiot) {
-            if (oRel!=null && !koodistoRelaatiot.containsKey(oRel)) {
+            if (oRel!=null) {
                 LOG.debug("Add includesCodeElements relation: " + oRel);
                 OrganisaatioKoodistoKoodiCodeElements e = new OrganisaatioKoodistoKoodiCodeElements();
                 e.setCodeElementUri(oRel.split("#")[0]);
@@ -208,7 +211,10 @@ public class OrganisaatioKoodisto {
             if (entity.getOppilaitosKoodi()!=null) {
                 for (OrganisaatioSuhde s :entity.getChildSuhteet()) {
                     if (s.getOpetuspisteenJarjNro()!=null) {
-                        entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + s.getOpetuspisteenJarjNro());
+                        Organisaatio child = s.getChild();
+                        if (child!=null && !OrganisaatioUtil.isPassive(child) && !child.isOrganisaatioPoistettu()) {
+                            entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + s.getOpetuspisteenJarjNro());
+                        }
                     }
                 }
             }
@@ -251,9 +257,12 @@ public class OrganisaatioKoodisto {
      * @param entity Organisaatio
      * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
      *
-     * @return true jos koodiston päivittäminen onnistui, false muuten
+     * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+        if (entity==null || entity.isOrganisaatioPoistettu() || OrganisaatioUtil.isPassive(entity)) {
+            return null;
+        }
         /*
          * Koodiston koodit
          *     [0]: koodiUri
