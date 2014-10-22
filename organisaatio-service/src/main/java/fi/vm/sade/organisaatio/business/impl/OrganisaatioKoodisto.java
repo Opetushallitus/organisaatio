@@ -148,9 +148,9 @@ public class OrganisaatioKoodisto {
      *
      * @param entityRelaatiot Organisaation entityssä olevat relaatiot
      * @param elements Koodin nykyiset relaatiot.
-     * @return
+     * @return true jos elements-listaa päivitettiin, false muuten
      */
-    private boolean paivitaCodeElements(List<String> entityRelaatiot, List<OrganisaatioKoodistoKoodiCodeElements> elements) {
+    protected boolean paivitaCodeElements(List<String> entityRelaatiot, List<OrganisaatioKoodistoKoodiCodeElements> elements) {
         boolean muuttunut = false;
 
         // Tehdään prefix-lista korvattavien relaatioiden vertailua varten
