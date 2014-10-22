@@ -34,6 +34,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.accept = function() {
         $modalInstance.close($scope.model);
+        $scope.model.setModified(true);
         $scope.model.accept();
     };
 
@@ -44,7 +45,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.updateNimiMode = function(form) {
         $log.debug('updateNimiMode()');
-        $scope.model.setUusinNimiVisible();
+        $scope.model.setUusinNimiVisible(koulutustoimija, oppilaitos, parentNimi);
         if ($scope.model.isUusinNimiChanged() === false) {
             form.$setPristine();
         }

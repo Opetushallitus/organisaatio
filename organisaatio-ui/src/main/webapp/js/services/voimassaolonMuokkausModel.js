@@ -14,10 +14,11 @@
  European Union Public Licence for more details.
  */
 
-app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log,
+app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
                                                   Alert, Muokkaamonta) {
 
     $log = $log.getInstance("VoimassaolonMuokkausModel");
+    var loadingService = $injector.get('LoadingService');
 
     var model = new function() {
         this.muokataanAlkupvm = false;
@@ -52,8 +53,9 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log,
 
         // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
         var showAndLogError = function(msg, response) {
-            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
+            loadingService.onErrorHandled();
             $log.error(msg + " (status: " + response.status + ")");
+            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
         };
 
         var isBeforeToday = function(date) {

@@ -158,7 +158,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         return opts;
     }
-    
+
     private OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaSuppea(OrganisaatioSearchCriteriaDTOV2 hakuEhdot, boolean tyypit) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
@@ -176,14 +176,14 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         ohts.setNumHits(tulos.getNumHits());
         ohts.setOrganisaatiot(convertLaajaToSuppea(tulos.getOrganisaatiot(), tyypit));
 
-        return ohts;        
+        return ohts;
     }
 
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatioHierarkiaSuppea(hakuEhdot, false);
     }
-    
+
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatioHierarkiaSuppea(hakuEhdot, true);
@@ -227,12 +227,12 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         return ohts;
     }
-    
+
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatiotSuppea(hakuEhdot, false);
     }
-    
+
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatiotSuppea(hakuEhdot, true);

@@ -14,13 +14,15 @@
  European Union Public Licence for more details.
  */
 
-app.factory('YhteystietojentyyppiModel', function($log,
+app.factory('YhteystietojentyyppiModel', function($log, $injector,
+                                                  Alert,
                                                   KoodistoOppilaitostyypit,
                                                   KoodistoKoodi,
                                                   Yhteystietojentyyppi,
                                                   YhteystietojentyypinPoisto)  {
 
     $log = $log.getInstance("YhteystietojentyyppiModel");
+    var loadingService = $injector.get('LoadingService');
 
     var model = new function() {
         this.oppilaitostyypit = [];
@@ -32,6 +34,12 @@ app.factory('YhteystietojentyyppiModel', function($log,
                 tyypit.forEach(function(t) {
                     model.yhteystietotyypit.push(t);
                 });
+            },
+            // Error case
+            function(response) {
+                loadingService.onErrorHandled();
+                $log.error("Yhteystietojentyyppi response: " + response.status);
+                Alert.add("error", $filter('i18n')("Yhteystietotyypit.hakuvirhe", ""), true);
             });
         };
 
@@ -42,6 +50,12 @@ app.factory('YhteystietojentyyppiModel', function($log,
                     model.oppilaitostyypitMap[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);
                 });
                 loadYhteystietotyypit();
+            },
+            // Error case
+            function(response) {
+                loadingService.onErrorHandled();
+                $log.error("KoodistoOppilaitostyypit response: " + response.status);
+                Alert.add("error", $filter('i18n')("Organisaatiot.koodistovirhe", ""), true);
             });
         };
 

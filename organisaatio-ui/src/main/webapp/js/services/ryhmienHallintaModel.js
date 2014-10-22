@@ -14,7 +14,9 @@
  European Union Public Licence for more details.
  */
 
-app.factory('RyhmienHallintaModel', function($log, Ryhmat, Organisaatio, UusiOrganisaatio) {
+app.factory('RyhmienHallintaModel', function($log,
+                                             Ryhmat, Organisaatio,
+                                             UusiOrganisaatio) {
 
     $log = $log.getInstance("RyhmienHallintaModel");
 

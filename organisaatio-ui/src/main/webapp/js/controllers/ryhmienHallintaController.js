@@ -15,9 +15,14 @@
  */
 
 function RyhmienHallintaController($scope, $filter, $routeParams,
+                                   $log, $injector,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
     "use strict";
+
+    $log = $log.getInstance("RyhmienHallintaController");
+    var loadingService = $injector.get('LoadingService');
+
     var language;
 
     var vaihtoehtoisetKielikoodit = {
@@ -50,6 +55,8 @@ function RyhmienHallintaController($scope, $filter, $routeParams,
             $scope.model.delete($scope.currentGroup, function(result) {
                 $scope.currentGroup = null;
             }, function(error) {
+                loadingService.onErrorHandled();
+                $log.warn("Failed to delete group: ", $scope.currentGroup);
                 Alert.add("error", error, false);
             });
         }
@@ -61,6 +68,8 @@ function RyhmienHallintaController($scope, $filter, $routeParams,
                 $scope.currentGroup = savedGroup;
                 $scope.form.$setPristine();
             }, function(error) {
+                loadingService.onErrorHandled();
+                $log.warn("Failed to save group: ", $scope.currentGroup);
                 Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
             });
         }
@@ -71,12 +80,15 @@ function RyhmienHallintaController($scope, $filter, $routeParams,
         $scope.model.reload($routeParams.parentoid, function(result) {
             $scope.form.$setPristine();
         }, function(error) {
+            loadingService.onErrorHandled();
+            $log.warn("Failed to reloud groups: ", $routeParams.parentoid);
             Alert.add("error", error, false);
         });
     };
 
     $scope.model.reload($routeParams.parentoid, function(result) {
     }, function(error) {
+        loadingService.onErrorHandled();
         Alert.add("error", error, false);
     });
 }
