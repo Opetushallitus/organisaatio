@@ -202,8 +202,9 @@ public class OrganisaatioKoodisto {
     private boolean paivitaIncludesCodeElements(Organisaatio entity, OrganisaatioKoodistoKoodi koodi) {
         List<String> entityRelaatiot = new ArrayList<String>();
         if (koodi.getKoodiUri().startsWith("oppilaitosnumero_")) {
-            if (entity.getKayntiosoite() != null && entity.getKayntiosoite().getPostinumero() != null) {
-                entityRelaatiot.add(entity.getKayntiosoite().getPostinumero());
+            if (entity.getPostiosoite() != null && entity.getPostiosoite().getPostinumero() != null &&
+                    !entity.getPostiosoite().getPostinumero().startsWith("posti_00000")) {
+                entityRelaatiot.add(entity.getPostiosoite().getPostinumero());
             }
             entityRelaatiot.add(entity.getKotipaikka());
             entityRelaatiot.add(entity.getOppilaitosTyyppi());
