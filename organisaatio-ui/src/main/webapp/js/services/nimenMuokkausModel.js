@@ -30,6 +30,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
     var loadingService = $injector.get('LoadingService');
 
     var model = {
+        modified : false,
         oid : "",
         minAlkuPvm : "",
         nimi : {},
@@ -40,12 +41,22 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
         // Tyhjenneteään mallin tiedot
         clear: function() {
             $log.debug('clear()');
+            this.modified = false;
             this.oid = "";
             this.minAlkuPvm = "";
             this.nimi = {};
             this.mode = "new";
             this.historiaModel.clear();
             this.parentNimi = {};
+        },
+
+        /**
+         * Asetetaan mallin tila "tarvitsee tallennusta" / ei tallennustarvetta
+         *
+         * @param {Boolean} modified Tarvitseeko tallennusta
+         */
+        setModified: function(modified) {
+            this.modified = modified;
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä
@@ -146,6 +157,12 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
         save: function() {
             var deferred = $q.defer();
 
+            // Ei muutoksia, ei tarvitse tallennusta
+            if (this.modified === false) {
+                deferred.resolve();
+                return deferred.promise;
+            }
+
             // Uuden organisaation tapauksessa luotetaan siihen, että
             // organisaation tallennus tallentaa myös ensimmäisen nimihistorian
             if (this.uusiOrganisaatio) {
@@ -165,6 +182,9 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
             else {
                 $log.error("Unknown mode: " + this.mode);
             }
+
+            this.setModified(false);
+
             return deferred.promise;
         },
 
@@ -172,7 +192,7 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
                           koulutustoimija, oppilaitos, parentNimi,
                           nameFormat) {
-            if (this.oid === oid) {
+            if (this.oid === oid && this.modified) {
                 $log.log('refresh() Using old instance');
                 this.historiaModel.fixParentPrefix(koulutustoimija || oppilaitos ? null : parentNimi, this.nimi);
                 return;

@@ -209,6 +209,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         // Nimihistoria
         this.nimihistoria = [];
 
+        // Organisaation nykyinen nimi
+        this.organisaationCurrentNimi = {};
+        this.organisaationCurrentNimi.nimi = {};
+
         // Organisaation tuleva nimi (ajastettu nimenmuutos)
         this.organisaationTulevaNimi = {};
         this.organisaationTulevaNimi.nimi = {};
@@ -273,6 +277,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.setTulevaNimi = function(tulevaNimi) {
             model.organisaationTulevaNimi = tulevaNimi;
+        };
+
+        this.setCurrentNimi = function(currentNimi) {
+            model.organisaationCurrentNimi = currentNimi;
         };
 
         var initMk = function(mkSection) {
@@ -503,6 +511,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         var refresh = function(result) {
+            $log.info("refresh()");
+
             $log.info("refresh: mode=" + model.mode);
             // tyhjennetään mahdolliset vanhat ytj tiedot
             model.ytjTiedot = {};
@@ -513,6 +523,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
+            model.organisaationCurrentNimi = {};
+            model.organisaationCurrentNimi.nimi = {};
             model.organisaationTulevaNimi = {};
             model.organisaationTulevaNimi.nimi = {};
 
@@ -687,6 +699,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 var nimiHistoriaModel = NimiHistoriaModel;
                 nimiHistoriaModel.init(nimihistoria);
 
+                model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
+
                 // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
                 if (nimiHistoriaModel.ajastettuMuutos) {
                     model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
@@ -710,7 +724,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
         };
 
+        this.refresh = function(organisaatio) {
+            $log.info("refresh(): " + organisaatio.oid);
+            refresh(organisaatio);
+        };
+
         this.refreshIfNeeded = function(oid) {
+            $log.info("refreshIfNeeded(): " + oid);
             if (oid) {
                 if (model.keepsavestatus) {
                     model.keepsavestatus = false;
@@ -1356,11 +1376,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     }
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennettu") + " " + new Date().toTimeString().substr(0, 8);
                     Alert.closeAlert(model.alert);
-                    refresh(result.organisaatio);
                     if (result.status==="WARNING") {
                         model.alert = Alert.add("warn", $filter('i18n')(result.info), false);
                     }
-                    deferred.resolve();
+                    deferred.resolve(result.organisaatio);
                 }, function(response) {
                     showAndLogError("Organisaationmuokkaus.tallennusvirhe", response);
                     model.savestatus = $filter('i18n')("Organisaationmuokkaus.tallennusvirhe");

@@ -34,6 +34,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.accept = function() {
         $modalInstance.close($scope.model);
+        $scope.model.setModified(true);
         $scope.model.accept();
     };
 

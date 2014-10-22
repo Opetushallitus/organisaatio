@@ -124,10 +124,13 @@ function OrganisaatioController($scope, $location,
     // Organisaation tallennus
     // Tallentaa myös mahdollisen nimihistorian ja voimassaolon periytymän
     $scope.save = function() {
+        $log.info("save(): " + $scope.model.organisaatio.oid);
+
         var deferred = $q.defer();
 
         $log.info("Saving organisaatio: " + $scope.model.organisaatio.oid);
-        $scope.model.persistOrganisaatio($scope.form).then(function() {
+        $scope.model.persistOrganisaatio($scope.form).then(function(organisaatio) {
+//        $scope.model.persistOrganisaatio($scope.form).then(function() {
             if ($scope.voimassaolonmuokkaus !== null) {
                 $scope.voimassaolonmuokkaus.save().then(function() {
                     if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
@@ -138,14 +141,14 @@ function OrganisaatioController($scope, $location,
                     // --> suoritetaan ensin nimihistorian päivitys
                     if ($scope.nimenmuokkaus !== null) {
                         $scope.nimenmuokkaus.save().then(function() {
-                            deferred.resolve();
+                            deferred.resolve(null);
                         }, function(reason) {
                             $log.warn("Failed with nimenmuokkaus.save()! " + reason);
                             deferred.reject();
                         });
                     }
                     else {
-                        deferred.resolve();
+                        deferred.resolve(organisaatio);
                     }
                 }, function(reason) {
                     $log.warn("Failed with voimassaolonmuokkaus.save()! " + reason);
@@ -154,14 +157,14 @@ function OrganisaatioController($scope, $location,
             } else {
                 if ($scope.nimenmuokkaus !== null) {
                     $scope.nimenmuokkaus.save().then(function() {
-                        deferred.resolve();
+                        deferred.resolve(null);
                     }, function(reason) {
                         $log.warn("Failed with nimenmuokkaus.save()! " + reason);
                         deferred.reject();
                     });
                 }
                 else {
-                    deferred.resolve();
+                    deferred.resolve(organisaatio);
                 }
             }
         }, function(reason) {
@@ -170,6 +173,23 @@ function OrganisaatioController($scope, $location,
         });
 
         return deferred.promise;
+    };
+
+    // Organisaation tallennus ja refresh
+    $scope.saveAndRefresh = function() {
+        $log.info("saveAndRefresh(): " + $scope.model.organisaatio.oid);
+
+        $scope.save().then(function(organisaatio) {
+            if (organisaatio === null) {
+                $scope.model.refreshIfNeeded($scope.oid);
+            }
+            else {
+                $scope.model.refresh(organisaatio);
+            }
+
+        }, function(reason) {
+            $scope.model.refreshIfNeeded($scope.oid);
+        });
     };
 
     // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
@@ -238,7 +258,7 @@ function OrganisaatioController($scope, $location,
                 else {
                     $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
+                    $scope.model.setCurrentNimi(angular.copy($scope.nimenmuokkaus.nimi));
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'
