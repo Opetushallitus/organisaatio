@@ -261,6 +261,12 @@ function OrganisaatioController($scope, $location,
                     $scope.form.$setDirty();
                     $scope.model.setCurrentNimi(angular.copy($scope.nimenmuokkaus.nimi));
                     $scope.model.resetTulevaNimi();
+
+                    // Uuden organisaation tapauksessa laitetaan nimi myös organisaatiomalliin
+                    // (tallentuu sen kautta)
+                    if (nimenmuokkausModel.mode === 'new') {
+                        $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
+                    }
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'
