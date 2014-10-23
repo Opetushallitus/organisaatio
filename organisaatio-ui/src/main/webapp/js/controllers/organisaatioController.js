@@ -254,11 +254,13 @@ function OrganisaatioController($scope, $location,
                     $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
                     $scope.model.setTulevaNimi(angular.copy($scope.nimenmuokkaus.nimi));
+                    $scope.model.resetCurrentNimi();
                 }
                 else {
                     $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
                     $scope.model.setCurrentNimi(angular.copy($scope.nimenmuokkaus.nimi));
+                    $scope.model.resetTulevaNimi();
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'

@@ -279,8 +279,30 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaationTulevaNimi = tulevaNimi;
         };
 
+        this.resetTulevaNimi = function() {
+            $log.log('resetTulevaNimi()');
+            var nimiHistoriaModel = NimiHistoriaModel;
+
+            // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
+            if (nimiHistoriaModel.ajastettuMuutos) {
+                model.organisaationTulevaNimi = angular.copy(nimiHistoriaModel.getUusinNimi());
+            }
+            else {
+                // Organisaation tuleva nimi (ajastettu nimenmuutos)
+                model.organisaationTulevaNimi = {};
+                model.organisaationTulevaNimi.nimi = {};
+            }
+        };
+        
         this.setCurrentNimi = function(currentNimi) {
             model.organisaationCurrentNimi = currentNimi;
+        };
+
+        this.resetCurrentNimi = function() {
+            $log.log('resetCurrentNimi()');
+            var nimiHistoriaModel = NimiHistoriaModel;
+
+            model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
         };
 
         var initMk = function(mkSection) {
