@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>12.1</version>
+        <version>12.2</version>
     </parent>
 
     <artifactId>organisaatio-solr-client</artifactId>
