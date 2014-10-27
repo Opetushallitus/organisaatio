@@ -7,13 +7,16 @@
     <div class="form-fluid">
         {{'Organisaationmuokkaus.peruutuskysymys' | i18n}}
     </div>
+    <em ng-show="invalid===true" class="form-fluid muted">
+        {{'Organisaationmuokkaus.validation.lomake' | i18n}}, {{ 'Organisaationmuokkaus.eivoitallentaa' | i18n }}.
+    </em>
 </div>
 
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="continueWithoutSave()">{{'Organisaationmuokkaus.jatkatallentamatta' | i18n}}</button>
         <button class="btn" ng-click="cancel()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="continueSave()">{{'Organisaationmuokkaus.tallennajajatka' | i18n}}</button>
+        <button class="btn" ng-disabled="invalid===true" ng-click="continueSave()">{{'Organisaationmuokkaus.tallennajajatka' | i18n}}</button>
     </div>
 </div>
 

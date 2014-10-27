@@ -154,7 +154,7 @@ public class OrganisaatioKoodistoClient {
      */
     public void put(String json) throws OrganisaatioKoodistoException {
         HttpContext localContext = new BasicHttpContext();
-        String uri = "/rest/codeelement";
+        String uri = "/rest/codeelement/save";
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
         authorize();

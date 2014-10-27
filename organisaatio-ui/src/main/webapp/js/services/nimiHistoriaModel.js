@@ -103,6 +103,17 @@ app.factory('NimiHistoriaModel', function($log) {
             return ajastettuMuutos;
         },
 
+        // Poistetaan parent prefix nimestä
+        fixParentPrefix: function(parentNimi, nimi) {
+            if (parentNimi && nimi) {
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (nimi.nimi[key] && model.parentNimi[key]) {
+                        nimi.nimi[key] = nimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
+                    }
+                });
+            }
+        },
+
         // Init NimiHistoriaModel uudella nimihistorialla
         init: function(nimihistoria, parentNimi) {
             $log.log('init()');
@@ -113,11 +124,11 @@ app.factory('NimiHistoriaModel', function($log) {
             this.currentNimi = this.getCurrentNimi(nimihistoria);
             if (parentNimi && model.currentNimi) {
                 // Poistetaan parent prefix nimestä
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (model.currentNimi.nimi[key] && model.parentNimi[key]) {
-                        model.currentNimi.nimi[key] = model.currentNimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
-                    }
-                });
+                this.fixParentPrefix(parentNimi, model.currentNimi);
+            }
+            if (parentNimi && model.uusinNimi) {
+                // Poistetaan parent prefix nimestä
+                this.fixParentPrefix(parentNimi, model.uusinNimi);
             }
             $log.log("init() done");
         },

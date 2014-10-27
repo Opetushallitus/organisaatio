@@ -14,11 +14,14 @@
  European Union Public Licence for more details.
  */
 
-app.factory('RyhmaKoodisto', function($q, $log, $filter, KoodistoArrayByUri, KoodistoKoodi, Alert) {
+app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
+                                      KoodistoArrayByUri, KoodistoKoodi, Alert) {
 
     $log = $log.getInstance("RyhmaKoodisto");
+    var loadingService = $injector.get('LoadingService');
 
     var showAndLogError = function(msg, response) {
+        loadingService.onErrorHandled();
         model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
         $log.error(msg + " (status: " + response.status + ")");
     };

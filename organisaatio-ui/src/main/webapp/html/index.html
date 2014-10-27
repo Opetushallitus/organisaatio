@@ -46,6 +46,7 @@
 
     <!-- app js-->
     <script type="text/javascript" src="../js/logging.js"></script>
+    <script type="text/javascript" src="../js/loading.js"></script>
     <script type="text/javascript" src="../js/app.js"></script>
     <script type="text/javascript" src="../js/auth.js"></script>
     <script type="text/javascript" src="../js/localisation.js"></script>
@@ -111,9 +112,31 @@
             <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: true}" type="alert.type" close="alert.close()" ng-cloak>{{ alert.msg }}</alert>
         </div>
     </div>
-    <div ng-controller="LoadingCtrl">
-        <div ng-show="loading" style="position: fixed; left: 0px; top: 0px; background: gold; padding: 0.3em; font-weight: bold; z-index: 1060; width: 100%; text-align: center;" ng-cloak>{{'Organisaatiot.loading' | i18n}}</div>
-    </div>
+    <div data-ng-controller="LoadingCtrl">
+        <div id="ajax-loader" class="pre-init max ng-class: { max:isModal(), min:!isModal(), lowered:isError() }" ng-show="loading">
+            <div class="frame">
+                <img class="spinner" alt="{{ t('loading')}}" src="../img/ajax-loader-big.gif" />
+                <span class="post-init spinner-msg" tt="loading" ng-show="!isError() && isTimeout(false)"></span>
+                <div class="post-init timeout" ng-show="!isError() && isTimeout(true)">
+                    <p tt="loading.timeout">Taustapalvelin vastaa pyyntöihin epätavallisen hitaasti, joka voi johtua joko toimintahäiriöstä
+                        tai järjestelmän väliaikaisesta kuormituksesta.</p>
+
+                    <a href bg-click="restart()" class="btn float-right">
+                        <span tt="tarjonta.tekninenvirhe.restart"></span> <img src="../img/icon16-refresh.png"/>
+                    </a>
+                </div>
+            </div>
+            <div class="fail">
+                <hr/>
+                <p>Palvelussa on hetkellinen häiriö, yritä hetken kuluttua uudelleen.</p>
+
+                <p>Tillfällig avbrott i tjänsten, försök på nytt om en stund.</p>
+
+                <hr/>
+                <a href onclick="location.reload()" class="btn"> <img src="../img/icon16-refresh.png"/> </a>
+            </div>
+        </div>
+    </div><!-- /LoadingCtrl -->
     <script>organisaatioInitialize();</script>
 </body>
 

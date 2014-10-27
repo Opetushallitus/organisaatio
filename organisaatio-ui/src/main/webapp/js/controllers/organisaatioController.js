@@ -16,7 +16,7 @@
 
 function OrganisaatioController($scope, $location,
                                 $routeParams, $modal,
-                                $log, $injector,
+                                $log, $injector, $q,
                                 OrganisaatioModel) {
 
     $log = $log.getInstance("OrganisaatioController");
@@ -43,21 +43,41 @@ function OrganisaatioController($scope, $location,
         var next = next;
         $log.log("Location change: " + current +" -> " + next);
 
+        var changeLocation = function() {
+            $log.debug('Poistutaan muokkauksesta');
+            $scope.modalOpen = false;
+            $scope.form.$setPristine();
+            $scope.clear();
+            $location.path(next);
+        };
+
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
             var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: OrganisaatioCancelController,
-                resolve: {}
+                resolve: {
+                    invalid: function () {
+                        return $scope.form.$invalid;
+                    }
+                }
             });
 
-            modalInstance.result.then(function() {
-                $log.debug('Poistutaan muokkauksesta');
-                $scope.modalOpen = false;
-                $scope.form.$setPristine();
-                $scope.clear();
-                $location.path(next);
+            // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun
+            // organisaation, niin odotetaan tallennusvaihe loppuun ja
+            // siirrytää vasta sitten uuteen osoitteeseen.
+            modalInstance.result.then(function (save) {
+                if (save) {
+                    $scope.save().then(function() {
+                        changeLocation();
+                    }, function(reason) {
+                        changeLocation();
+                    });
+                }
+                else {
+                   changeLocation();
+                }
             }, function() {
                 $scope.modalOpen = false;
                 $log.debug('Jatketaan muokkausta');
@@ -83,6 +103,8 @@ function OrganisaatioController($scope, $location,
         $scope.model.mode = "edit";
     }
 
+    $log.info("Mode: " + $scope.model.mode);
+
     $scope.model.refreshIfNeeded($scope.oid);
 
     $scope.organisaatioNimiLangs = function(nimi) {
@@ -99,8 +121,16 @@ function OrganisaatioController($scope, $location,
         return m[lang] || '3--' + lang;
     };
 
+    // Organisaation tallennus
+    // Tallentaa myös mahdollisen nimihistorian ja voimassaolon periytymän
     $scope.save = function() {
-        $scope.model.persistOrganisaatio($scope.form).then(function() {
+        $log.info("save(): " + $scope.model.organisaatio.oid);
+
+        var deferred = $q.defer();
+
+        $log.info("Saving organisaatio: " + $scope.model.organisaatio.oid);
+        $scope.model.persistOrganisaatio($scope.form).then(function(organisaatio) {
+//        $scope.model.persistOrganisaatio($scope.form).then(function() {
             if ($scope.voimassaolonmuokkaus !== null) {
                 $scope.voimassaolonmuokkaus.save().then(function() {
                     if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
@@ -110,14 +140,55 @@ function OrganisaatioController($scope, $location,
                     // tai poistanut tulevan nimenmuutoksen
                     // --> suoritetaan ensin nimihistorian päivitys
                     if ($scope.nimenmuokkaus !== null) {
-                        $scope.nimenmuokkaus.save();
+                        $scope.nimenmuokkaus.save().then(function() {
+                            deferred.resolve(null);
+                        }, function(reason) {
+                            $log.warn("Failed with nimenmuokkaus.save()! " + reason);
+                            deferred.reject();
+                        });
                     }
+                    else {
+                        deferred.resolve(organisaatio);
+                    }
+                }, function(reason) {
+                    $log.warn("Failed with voimassaolonmuokkaus.save()! " + reason);
+                    deferred.reject();
                 });
             } else {
                 if ($scope.nimenmuokkaus !== null) {
-                    $scope.nimenmuokkaus.save();
+                    $scope.nimenmuokkaus.save().then(function() {
+                        deferred.resolve(null);
+                    }, function(reason) {
+                        $log.warn("Failed with nimenmuokkaus.save()! " + reason);
+                        deferred.reject();
+                    });
+                }
+                else {
+                    deferred.resolve(organisaatio);
                 }
             }
+        }, function(reason) {
+            $log.info("Failed to save organisaatio: " + $scope.model.organisaatio.oid + " " + reason);
+            deferred.reject();
+        });
+
+        return deferred.promise;
+    };
+
+    // Organisaation tallennus ja refresh
+    $scope.saveAndRefresh = function() {
+        $log.info("saveAndRefresh(): " + $scope.model.organisaatio.oid);
+
+        $scope.save().then(function(organisaatio) {
+            if (organisaatio === null) {
+                $scope.model.refreshIfNeeded($scope.oid);
+            }
+            else {
+                $scope.model.refresh(organisaatio);
+            }
+
+        }, function(reason) {
+            $scope.model.refreshIfNeeded($scope.oid);
         });
     };
 
@@ -183,11 +254,19 @@ function OrganisaatioController($scope, $location,
                     $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
                     $scope.model.setTulevaNimi(angular.copy($scope.nimenmuokkaus.nimi));
+                    $scope.model.resetCurrentNimi();
                 }
                 else {
                     $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
                     $scope.form.$setDirty();
-                    $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
+                    $scope.model.setCurrentNimi(angular.copy($scope.nimenmuokkaus.nimi));
+                    $scope.model.resetTulevaNimi();
+
+                    // Uuden organisaation tapauksessa laitetaan nimi myös organisaatiomalliin
+                    // (tallentuu sen kautta)
+                    if (nimenmuokkausModel.mode === 'new') {
+                        $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
+                    }
                 }
             }
             else { // nimenmuokkausModel.mode === 'delete'
@@ -385,7 +464,7 @@ function OrganisaatioController($scope, $location,
     // Tarkastetaan ollaanko lataamassa vielä sisältöä
     // Jos lataus on kesken, ei kannata näyttää käyttäjälle ilmoitusta puuttuvista tiedoista
     $scope.isLoading = function() {
-        var loadingService = $injector.get('loadingService');
+        var loadingService = $injector.get('LoadingService');
         if (loadingService) {
             return loadingService.isLoading();
         }

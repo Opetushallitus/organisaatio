@@ -64,6 +64,7 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.*;
@@ -826,6 +827,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // toimipisteellä ei ole oppilaitosta vastaavaa tämänkielistä nimeä
                         // Pitää lisätä manuaalisesti
                         LOG.debug("Name[" + key + "] does not exist.");
+                        childChanged = true;
                     } else if (oldChildName.startsWith(oldParentName)) {
                         // päivitetään toimipisteen nimen alkuosa
                         childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
@@ -843,6 +845,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
                         // Pitää korjata formaatti manuaalisesti
                         LOG.debug("Name[" + key + "] is of invalid format: \"" + childnimi.getString(key) + "\".");
+                        childChanged = true;
                     }
                 }
                 if (childChanged == true) {
@@ -857,7 +860,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
-        return organisaatioNimiDAO.findNimet(oid);
+        try {
+            return organisaatioNimiDAO.findNimet(oid);
+        }
+        catch (IllegalArgumentException ex) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
     }
 
     @Override
@@ -876,6 +884,23 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Insertoidaan kantaan
         nimiEntity = organisaatioNimiDAO.insert(nimiEntity);
+
+        // Jos nimi tulee nykyiseksi nimeksi, niin päivitetään se myös organisaatioon.
+        if (OrganisaatioNimiUtil.isCurrentNimi(nimiEntity)) {
+            // Asetetaan organisaation nimi ja nimihistorian nykyinen nimi
+            // osoittamaan varmasti samaan monikieliseen tekstiin
+            orgEntity.setNimi(nimiEntity.getNimi());
+
+            LOG.info("updating " + orgEntity);
+            try {
+                organisaatioDAO.update(orgEntity);
+            } catch (OptimisticLockException ole) {
+                throw new OrganisaatioModifiedException(ole);
+            }
+
+            // Indeksoidaan organisaatio solriin uudella nimellä
+            solrIndexer.index(Lists.newArrayList(orgEntity));
+        }
 
         return nimiEntity;
     }

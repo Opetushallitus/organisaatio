@@ -1,64 +1,203 @@
-/*
- Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+angular.module('Loading', ['Localisation'])
 
- This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- soon as they will be approved by the European Commission - subsequent versions
- of the EUPL (the "Licence");
+.factory('LoadingService', function($log) {
 
- You may not use this work except in compliance with the Licence.
- You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+    $log = $log.getInstance("LoadingService");
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- European Union Public Licence for more details.
- */
+    var service = {
+        requestCount: 0,
+        operationCount: 0,
+        errors: 0,
+        modal:false,
+        timeout: null,
+        timeoutMinor: false,
+        timeoutMajor: false,
+        scope: null,
+        errorHandlingRequested: null,
+        isEnabled: true,
 
-var mod = angular.module('Loading', []);
+        timeoutShort: 1000, //window.CONFIG.env["ui.timeout.short"],
+        timeoutLong: 60000, //window.CONFIG.env["ui.timeout.long"],
 
-mod.factory('loadingService', function() {
-  var service = {
-    requestCount: 0,
-    isLoading: function() {
-      return service.requestCount > 0;
-    }
-  };
+        isLoading: function() {
+            return (service.requestCount > 0 || service.operationCount > 0) && service.isEnabled;
+        },
+        isModal: function() {
+            return service.requestCount > 0;
+        },
+        isError: function() {
+            return service.errors!==0;
+        },
+        beforeOperation: function() {
+            //$log.log("LOADING beforeOperation", service);
+            service.operationCount++;
+        },
+        afterOperation: function() {
+            //$log.log("LOADING afterOperation", service);
+            service.operationCount--;
+        },
+        beforeRequest: function() {
+            //$log.log("LOADING beforeRequest", service);
+            service.modal = true;
+            service.startTimeout();
+            service.requestCount++;
+        },
+        afterRequest: function(success, req) {
+            //$log.log("LOADING afterRequest "+success, service);
+            if (success) {
+        	service.requestCount--;
+            } else {
+                $log.warn("Error afterRequest ", req);
+    		service.errors++;
+            }
+            service.clearTimeout();
+        },
+        commit: function() {
+            //$log.log("LOADING commit", service);
+            service.requestCount -= service.errors;
+            service.errors = 0;
+            service.clearTimeout();
+        },
+        clearTimeout: function() {
+            //$log.log("LOADING clearTimeout", service);
+            if (service.requestCount===0 && service.timeout!==null) {
+    		window.clearTimeout(service.timeout);
+    		service.timeout = null;
+    		service.timeoutMinor = false;
+    		service.timeoutMajor = false;
+            }
+        },
+        startTimeout: function() {
+            //$log.log("LOADING startTimeout", service);
+            if (service.timeout!==null) {
+    		return;
+            }
+            service.timeout = window.setTimeout(function(){
+    		service.timeoutMinor = true;
+    		service.scope.$apply();
+
+    		service.timeout = window.setTimeout(function(){
+                    service.timeoutMajor = true;
+                    service.scope.$apply();
+        	}, service.timeoutShort);
+
+            }, service.timeoutLong);
+        },
+
+        /**
+         * Kutsutaan error-callbackissa; estää teknisen virheen dialogin näytön.
+         */
+        onErrorHandled: function() {
+            if (service.errorHandlingRequested) {
+    		service.errorHandlingRequested=false;
+            } else if (service.errorHandlingRequested===null) {
+    		throw "LoadingService.onErrorHandled called from outside of error callback";
+            }
+        },
+
+        /**
+         * Disabloi spinneri
+         */
+        setSpinnerEnabled: function(enabled) {
+            service.isEnabled = enabled;
+        }
+    };
+
   return service;
-});
+})
 
-mod.factory('onStartInterceptor', function(loadingService) {
+.factory('onStartInterceptor', function(LoadingService) {
     return function (data, headersGetter) {
-        loadingService.requestCount++;
+        LoadingService.beforeRequest();
         return data;
     };
-});
+})
 
-mod.factory('onCompleteInterceptor', function(loadingService, $q) {
-  return function(promise) {
-    var decrementRequestCountSuccess = function(response) {
-        loadingService.requestCount--;
-        return response;
-    };
-    var decrementRequestCountError = function(response) {
-        loadingService.requestCount--;
-        return $q.reject(response);
-    };
+.factory('onCompleteInterceptor', function(LoadingService, $q) {
+    return function(promise) {
+        function decrementRequestCountSuccess(response) {
+                    LoadingService.afterRequest(true, response);
+            return response;
+        };
+        function decrementRequestCountError(response) {
+            var ret = $q.reject(response);
+            return {then: function(callback, errback) {
+                    ret.then(callback, function(reason){
+                        LoadingService.errorHandlingRequested = true;
+                        var ret = errback(reason);
+                        LoadingService.afterRequest(!LoadingService.errorHandlingRequested, response);
+                        LoadingService.errorHandlingRequested = null;
+                    });
+                }
+            };
+        };
     return promise.then(decrementRequestCountSuccess, decrementRequestCountError);
   };
-});
+})
 
-mod.config(function($httpProvider) {
+.config(function($httpProvider) {
     $httpProvider.responseInterceptors.push('onCompleteInterceptor');
-});
+})
 
-mod.run(function($http, onStartInterceptor) {
+.run(function($http, onStartInterceptor) {
     $http.defaults.transformRequest.push(onStartInterceptor);
-});
+})
 
-mod.controller('LoadingCtrl', function($scope, loadingService) {
+.controller('LoadingCtrl', function($scope, $rootElement, $modal, LoadingService) {
+
+    var ctrl = $scope;
+    LoadingService.scope = ctrl;
+
+    $scope.restart = function() {
+    	location.hash = "";
+    	location.reload();
+    };
+
+    function showErrorDialog() {
+        $modal.open({
+            controller: function($scope, $modalInstance) {
+                $scope.commit = function() {
+                    LoadingService.commit();
+                    $modalInstance.dismiss();
+                };
+                $scope.restart = function() {
+                    ctrl.restart();
+                };
+            },
+            templateUrl: "loading-error-dialog.html"
+            //scope: ns
+        });
+    }
+
     $scope.$watch(function() {
-        return loadingService.isLoading();
+        return LoadingService.isLoading();
     }, function(value) {
         $scope.loading = value;
+        if(value) {
+          $rootElement.addClass('spinner');
+        } else {
+          $rootElement.removeClass('spinner');
+        }
     });
+
+    $scope.$watch(function() {
+        return LoadingService.errors;
+    }, function(value, oldv) {
+        if(value>0 && oldv===0) {
+            showErrorDialog();
+        }
+    });
+
+    $scope.isModal = function() {
+    	return LoadingService.isModal();
+    };
+
+    $scope.isError = function() {
+    	return LoadingService.isError();
+    };
+
+    $scope.isTimeout = function(major) {
+    	return major ? LoadingService.timeoutMajor : LoadingService.timeoutMinor;
+    };
+
 });

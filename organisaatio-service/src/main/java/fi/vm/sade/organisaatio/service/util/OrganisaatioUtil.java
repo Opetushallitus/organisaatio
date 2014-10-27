@@ -77,4 +77,14 @@ public abstract class OrganisaatioUtil {
         // Kumpikaan ei ole null --> tarkastetaan onko sama päivä
         return DateUtils.isSameDay(pvm1, pvm2);
     }
+
+    /**
+     * Tarkistaa onko organisaatio passivoitu eli lakkautettu
+     * @param o Organisaatio
+     * @return true jos organisaatio on passiivinen, false muuten
+     */
+    public static boolean isPassive(Organisaatio o) {
+        return o.getLakkautusPvm()==null ? false : o.getLakkautusPvm().before(new Date());
+    }
+
 }

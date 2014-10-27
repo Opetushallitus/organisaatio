@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.factory('HakuehdotModel', function($q, $filter, $log,
+app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                                        AuthService, Alert,
                                        KoodistoPaikkakunnat,
                                        KoodistoOrganisaatiotyypit,
@@ -22,6 +22,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
                                        KoodistoKoodi) {
 
     $log = $log.getInstance("HakuehdotModel");
+    var loadingService = $injector.get('LoadingService');
 
     var model = {
         organisaatioRajausVisible: false,
@@ -95,6 +96,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
                 },
                 // Error case
                 function(response) {
+                    loadingService.onErrorHandled();
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
@@ -112,6 +114,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
                 },
                 // Error case
                 function(response) {
+                    loadingService.onErrorHandled();
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
@@ -129,6 +132,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
                 },
                 // Error case
                 function(response) {
+                    loadingService.onErrorHandled();
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
@@ -160,7 +164,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log,
         init: function () {
             var deferred = $q.defer();
             AuthService.getOrganizations("APP_ORGANISAATIOHALLINTA").then(function(organisations){
-                        "use strict";
+                "use strict";
                 $log.debug("Käyttäjän organisaatiot:" + organisations);
 
                 // Jos OPH käyttäjä, niin ei näytetä organisaatiorajausta

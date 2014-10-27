@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.factory('OrganisaatioTreeModel', function($q, $filter, $log,
+app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                                               Alert, Organisaatiot) {
 // organisaatiot[]
 //     {
@@ -32,6 +32,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log,
 //      }
 
     $log = $log.getInstance("OrganisaatioTreeModel");
+    var loadingService = $injector.get('LoadingService');
 
     var tree = {id: "ROOT", expanded: false, children: []};
 
@@ -335,6 +336,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log,
             },
             // Error case
             function(response) {
+                loadingService.onErrorHandled();
                 $log.error("Organisaatiot response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
 

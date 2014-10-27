@@ -548,7 +548,7 @@
     </div>
 
     <div ng-show="ectsexpanded">
-        
+
         <tabset>
             <tab ng-repeat="tab in model.mkSections.ects.tabs"
                  active="tab.active"
@@ -558,7 +558,7 @@
                 </tab-heading>
             </tab>
         </tabset>
-        
+
         <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]">
             <label class="control-label">
                 {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
@@ -719,7 +719,7 @@
         <hr>
     </div> <!-- aoexpanded -->
 
-    <div class="row fixed-footer" ng-if="modalOpen == false">
+    <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn btn-primary" ng-click="edit()" tooltip="{{'Organisaatiot.ohje.muokkaa' | i18n}}"

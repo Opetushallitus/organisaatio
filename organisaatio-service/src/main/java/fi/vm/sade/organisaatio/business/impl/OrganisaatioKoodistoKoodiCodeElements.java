@@ -19,7 +19,7 @@ package fi.vm.sade.organisaatio.business.impl;
      * OrganisaatioKoodistoIncludesCodeElements-luokka on osa Koodi:a jonka 
      * gson serialisoi/unserialisoi REST-kutsujen JSON:sta.
      */
-public class OrganisaatioKoodistoIncludesCodeElements {
+public class OrganisaatioKoodistoKoodiCodeElements {
     private String codeElementUri;
     private int codeElementVersion;
     private boolean passive;

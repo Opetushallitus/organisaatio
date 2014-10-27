@@ -43,9 +43,9 @@ public class OrganisaatioKoodistoKoodi {
     protected String voimassaLoppuPvm;
 
     protected List<OrganisaatioKoodistoKoodiMetadata> metadata = new ArrayList<OrganisaatioKoodistoKoodiMetadata>();
-    protected List<OrganisaatioKoodistoIncludesCodeElements> includesCodeElements = new ArrayList<OrganisaatioKoodistoIncludesCodeElements>();
-    protected List<OrganisaatioKoodistoWithinCodeElements> withinCodeElements = new ArrayList<OrganisaatioKoodistoWithinCodeElements>();
-    protected List<OrganisaatioKoodistoLevelsWithCodeElements> levelsWithCodeElements = new ArrayList<OrganisaatioKoodistoLevelsWithCodeElements>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> includesCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> withinCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> levelsWithCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
 
     public String getKoodiUri() {
         return koodiUri;
@@ -111,12 +111,28 @@ public class OrganisaatioKoodistoKoodi {
         this.metadata = metadata;
     }
 
-    public List<OrganisaatioKoodistoIncludesCodeElements> getIncludesCodeElements() {
+    public List<OrganisaatioKoodistoKoodiCodeElements> getIncludesCodeElements() {
         return includesCodeElements;
     }
 
-    public void setIncludesCodeElements(List<OrganisaatioKoodistoIncludesCodeElements> includesCodeElements) {
+    public void setIncludesCodeElements(List<OrganisaatioKoodistoKoodiCodeElements> includesCodeElements) {
         this.includesCodeElements = includesCodeElements;
+    }
+
+    public List<OrganisaatioKoodistoKoodiCodeElements> getWithinCodeElements() {
+        return withinCodeElements;
+    }
+
+    public void setWithinCodeElements(List<OrganisaatioKoodistoKoodiCodeElements> withinCodeElements) {
+        this.withinCodeElements = withinCodeElements;
+    }
+
+    public List<OrganisaatioKoodistoKoodiCodeElements> getLevelsWithCodeElements() {
+        return levelsWithCodeElements;
+    }
+
+    public void setLevelsWithCodeElements(List<OrganisaatioKoodistoKoodiCodeElements> levelsWithCodeElements) {
+        this.levelsWithCodeElements = levelsWithCodeElements;
     }
 
     public Long getVersion() {

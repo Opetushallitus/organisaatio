@@ -5,8 +5,8 @@ app.directive('formatteddate', function($log) {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-            var maxDate = scope[attrs.max];
-            var minDate = scope[attrs.min];
+            var maxDate = moment(attrs.max);
+            var minDate = moment(attrs.min);
 
             function isRangeValid(date) {
                 if (date < minDate || date > maxDate) {
