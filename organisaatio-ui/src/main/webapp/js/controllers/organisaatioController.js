@@ -221,7 +221,7 @@ function OrganisaatioController($scope, $location,
                     return $scope.oid;
                 },
                 nimihistoria: function () {
-                    return $scope.model.nimihistoria;
+                    return $scope.model.organisaatio.nimet;
                 },
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
