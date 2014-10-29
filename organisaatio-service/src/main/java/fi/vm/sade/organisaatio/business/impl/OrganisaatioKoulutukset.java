@@ -168,9 +168,10 @@ public class OrganisaatioKoulutukset {
     }
 
     /**
-     * Tarkistaa onko annetulla organisaatiolla julkaistuja alkavia koulutuksia
-     * annetun päivämäärän jälkeen.
-     * HUOM! Vain Julkaistut alkavat koulutukset huomioidaan.
+     * Tarkistaa onko annetulla organisaatiolla alkavia koulutuksia annetun
+     * päivämäärän jälkeen.
+     * HUOM! Vain "KOPIOITU", "VALMIS", "LUONNOS" ja "JULKAISTU" tilaiset
+     * alkavat koulutukset huomioidaan.
      *
      * @param oid
      * @param after
@@ -213,7 +214,10 @@ public class OrganisaatioKoulutukset {
             }
 
             if (koulutuksenAlkamisPvmMax.after(after) &&
-                    koulutus.getTila() == TarjontaTila.JULKAISTU) {
+                    (koulutus.getTila() == TarjontaTila.JULKAISTU ||
+                    koulutus.getTila() == TarjontaTila.KOPIOITU ||
+                    koulutus.getTila() == TarjontaTila.VALMIS ||
+                    koulutus.getTila() == TarjontaTila.LUONNOS)) {
                 return true;
             }
 	}
