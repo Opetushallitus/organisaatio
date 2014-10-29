@@ -1191,12 +1191,18 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaatio = {};
             model.organisaatio.tyypit = [];
             model.organisaatio.nimi = null;
+            model.organisaatio.nimet = [];
             model.organisaatio.nimi = {};
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];
             model.yhteystiedot = {};
             model.mdyhteystiedot = {};
+            model.organisaationCurrentNimi = {};
+            model.organisaationCurrentNimi.nimi = {};
+            model.organisaationTulevaNimi = {};
+            model.organisaationTulevaNimi.nimi = {};
+
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";
 
