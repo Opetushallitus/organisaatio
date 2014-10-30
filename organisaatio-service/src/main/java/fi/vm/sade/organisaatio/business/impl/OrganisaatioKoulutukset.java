@@ -217,8 +217,7 @@ public class OrganisaatioKoulutukset {
                     (koulutus.getTila() == TarjontaTila.JULKAISTU ||
                     koulutus.getTila() == TarjontaTila.KOPIOITU ||
                     koulutus.getTila() == TarjontaTila.VALMIS ||
-                    koulutus.getTila() == TarjontaTila.LUONNOS ||
-                    koulutus.getTila() == TarjontaTila.PERUTTU)) {
+                    koulutus.getTila() == TarjontaTila.LUONNOS)) {
                 return true;
             }
 	}
