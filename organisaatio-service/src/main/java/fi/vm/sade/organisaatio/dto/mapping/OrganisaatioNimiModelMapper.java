@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.dto.mapping;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import java.util.Map;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -55,6 +56,22 @@ public class OrganisaatioNimiModelMapper extends ModelMapper {
         });
 
         this.addMappings(new PropertyMap<OrganisaatioNimiDTOV2, OrganisaatioNimi>() {
+            @Override
+            protected void configure() {
+                // Monikielinen teksti -- nimi
+                using(monikielinentTekstiConverter).map(source.getNimi()).setNimi(null);
+            }
+        });
+
+        this.addMappings(new PropertyMap<OrganisaatioNimi, OrganisaatioNimiRDTO>() {
+            @Override
+            protected void configure() {
+                // Monikielinen nimi
+                map().setNimi(source.getNimi().getValues());
+            }
+        });
+
+        this.addMappings(new PropertyMap<OrganisaatioNimiRDTO, OrganisaatioNimi>() {
             @Override
             protected void configure() {
                 // Monikielinen teksti -- nimi

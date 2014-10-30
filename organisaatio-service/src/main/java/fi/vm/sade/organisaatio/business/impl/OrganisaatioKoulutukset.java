@@ -29,6 +29,7 @@ import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
+import fi.vm.sade.tarjonta.shared.types.TarjontaTila;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -169,6 +170,8 @@ public class OrganisaatioKoulutukset {
     /**
      * Tarkistaa onko annetulla organisaatiolla alkavia koulutuksia annetun
      * päivämäärän jälkeen.
+     * HUOM! Vain "KOPIOITU", "VALMIS", "LUONNOS" ja "JULKAISTU" tilaiset
+     * alkavat koulutukset huomioidaan.
      *
      * @param oid
      * @param after
@@ -177,8 +180,8 @@ public class OrganisaatioKoulutukset {
     public boolean alkaviaKoulutuksia(String oid, Date after) {
         List<KoulutusHakutulosV1RDTO> koulutukset  = haeKoulutukset(oid);
 
-        // Ei alkavia koulutuksia
-        if (koulutukset.isEmpty()) {
+        // Ei alkavia koulutuksia tai after == null
+        if (koulutukset.isEmpty() || after == null) {
             return false;
         }
 
@@ -210,8 +213,13 @@ public class OrganisaatioKoulutukset {
                 }
             }
 
-            if (koulutuksenAlkamisPvmMax.after(after)) {
-        		return true;
+            if (koulutuksenAlkamisPvmMax.after(after) &&
+                    (koulutus.getTila() == TarjontaTila.JULKAISTU ||
+                    koulutus.getTila() == TarjontaTila.KOPIOITU ||
+                    koulutus.getTila() == TarjontaTila.VALMIS ||
+                    koulutus.getTila() == TarjontaTila.LUONNOS ||
+                    koulutus.getTila() == TarjontaTila.PERUTTU)) {
+                return true;
             }
 	}
 

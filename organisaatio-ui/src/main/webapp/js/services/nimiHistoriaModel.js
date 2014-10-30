@@ -58,6 +58,10 @@ app.factory('NimiHistoriaModel', function($log) {
         // Haetaan Nimihistorian uusin nimi
         getUusinNimi: function() {
             var nimi = null;
+            if (!angular.isDefined(this.nimihistoria) || this.nimihistoria === null) {
+                $log.warn('getUusinNimi() Nimihistoria == null or undefined');
+                return nimi;
+            }
             if (this.nimihistoria.length > 0) {
                 nimi = this.nimihistoria[0];
             }
@@ -74,6 +78,10 @@ app.factory('NimiHistoriaModel', function($log) {
         // Haetaan nimihistorian sisältämä nykyinen nimi (ei siis tuleva ajastettu nimi)
         getCurrentNimi: function() {
             var nimi = null;
+            if (!angular.isDefined(this.nimihistoria) || this.nimihistoria === null) {
+                $log.warn('getUusinNimi() Nimihistoria == null or undefined');
+                return nimi;
+            }
             if (this.nimihistoria.length > 0) {
                 nimi = this.nimihistoria[0];
             }
