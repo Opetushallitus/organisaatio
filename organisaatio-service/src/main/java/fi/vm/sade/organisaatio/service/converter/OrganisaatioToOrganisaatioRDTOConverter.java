@@ -15,6 +15,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -29,7 +30,9 @@ import fi.vm.sade.organisaatio.model.BinaryData;
 import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.solr.common.util.Base64;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +72,14 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setMaaUri(s.getMaa());
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
+
+        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+        // Define the target list type for mapping
+        Type organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
+
+        // Map domain type to DTO
+        t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+
         // t.set(s.getNimiLyhenne());
         // t.set(s.getOpetuspisteenJarjNro());
         t.setOppilaitosKoodi(s.getOppilaitosKoodi());

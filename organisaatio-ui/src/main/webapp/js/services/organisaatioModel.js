@@ -28,7 +28,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           KoodistoPaikkakunta, HenkiloVirkailijat,
                                           Henkilo, HenkiloKayttooikeus,
                                           KoodistoKieli, Yhteystietojentyyppi,
-                                          Paivittaja, Nimet, NimiHistoriaModel) {
+                                          Paivittaja, NimiHistoriaModel) {
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
@@ -206,9 +206,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         // YTJ rajapinnan kautta saadut yrityksen tiedot
         this.ytjTiedot = {};
 
-        // Nimihistoria
-        this.nimihistoria = [];
-
         // Organisaation nykyinen nimi
         this.organisaationCurrentNimi = {};
         this.organisaationCurrentNimi.nimi = {};
@@ -293,7 +290,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 model.organisaationTulevaNimi.nimi = {};
             }
         };
-        
+
         this.setCurrentNimi = function(currentNimi) {
             model.organisaationCurrentNimi = currentNimi;
         };
@@ -545,10 +542,22 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
-            model.organisaationCurrentNimi = {};
-            model.organisaationCurrentNimi.nimi = {};
-            model.organisaationTulevaNimi = {};
-            model.organisaationTulevaNimi.nimi = {};
+
+            // Päivitetään nimihistoria
+            var nimiHistoriaModel = NimiHistoriaModel;
+            nimiHistoriaModel.init(model.organisaatio.nimet);
+
+            model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
+
+            // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
+            if (nimiHistoriaModel.ajastettuMuutos) {
+                model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
+            }
+            else {
+                model.organisaationTulevaNimi = {};
+                model.organisaationTulevaNimi.nimi = {};
+            }
+
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 // For loop index
@@ -713,27 +722,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 // Päivittäjän haku ei onnistunut
                 showAndLogError("Organisaationtarkastelu.paivittajahakuvirhe", response);
             });
-
-            model.nimihistoria = [];
-            Nimet.get({oid: result.oid}, function(nimihistoria) {
-                model.nimihistoria = nimihistoria;
-
-                var nimiHistoriaModel = NimiHistoriaModel;
-                nimiHistoriaModel.init(nimihistoria);
-
-                model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
-
-                // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
-                if (nimiHistoriaModel.ajastettuMuutos) {
-                    model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
-                }
-            },
-            // Error case
-            function(response) {
-                // nimihistorian haku ei onnistunut
-                showAndLogError("Organisaationtarkastelu.nimihistoriahakuvirhe", response);
-            });
-          };
+        };
 
         var addAliorganisaatio = function(aliOrgList, level) {
             if (aliOrgList) {
@@ -1202,12 +1191,18 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaatio = {};
             model.organisaatio.tyypit = [];
             model.organisaatio.nimi = null;
+            model.organisaatio.nimet = [];
             model.organisaatio.nimi = {};
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];
             model.yhteystiedot = {};
             model.mdyhteystiedot = {};
+            model.organisaationCurrentNimi = {};
+            model.organisaationCurrentNimi.nimi = {};
+            model.organisaationTulevaNimi = {};
+            model.organisaationTulevaNimi.nimi = {};
+
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";
 

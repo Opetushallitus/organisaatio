@@ -68,6 +68,8 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Map<String, String> _nimi;
 
+    private List<OrganisaatioNimiRDTO> _nimet;
+
     private String _maaUri;
 
     private String _domainNimi;
@@ -198,6 +200,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kotipaikkaUri = _kotipaikkaUri;
     }
 
+    @ApiModelProperty(value = "Nimi", required = true)
     public Map<String, String> getNimi() {
         if (_nimi == null) {
             _nimi = new HashMap<String, String>();
@@ -205,9 +208,20 @@ public class OrganisaatioRDTO implements Serializable {
         return _nimi;
     }
 
-    @ApiModelProperty(value = "Nimi", required = true)
     public void setNimi(Map<String, String> _nimi) {
         this._nimi = _nimi;
+    }
+
+    @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
+    public List<OrganisaatioNimiRDTO> getNimet() {
+         if (_nimet == null) {
+            _nimet = new ArrayList<OrganisaatioNimiRDTO>();
+        }
+        return _nimet;
+    }
+
+    public void setNimet(List<OrganisaatioNimiRDTO> _nimet) {
+        this._nimet = _nimet;
     }
 
     @ApiModelProperty(value = "Oppilaitoksen koodi", required = true)
