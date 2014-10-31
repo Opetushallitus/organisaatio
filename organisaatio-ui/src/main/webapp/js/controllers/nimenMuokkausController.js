@@ -15,12 +15,20 @@
  */
 
 function NimenMuokkausController($scope, $modalInstance, $log,
-                                 NimenMuokkausModel,
+                                 NimenMuokkausModel, NimiHistoriaModel,
                                  oid, nimihistoria, organisaatioAlkuPvm,
                                  koulutustoimija, oppilaitos, parentNimi,
                                  nameFormat, parentPattern) {
 
     $log = $log.getInstance("NimenMuokkausController");
+
+    $scope.organisaatioNimiLangs = function(nimi) {
+        if (nimi) {
+            return Object.keys(nimi);
+        } else {
+            return undefined;
+        }
+    };
 
     $scope.model = NimenMuokkausModel;
     $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm,
@@ -33,9 +41,12 @@ function NimenMuokkausController($scope, $modalInstance, $log,
     };
 
     $scope.accept = function() {
-        $modalInstance.close($scope.model);
-        $scope.model.setModified(true);
         $scope.model.accept();
+
+        var nimiHistoriaModel = NimiHistoriaModel;
+        nimiHistoriaModel.setNimihistoria(angular.copy($scope.model.getNimiHistoria()));
+
+        $modalInstance.close($scope.model);
     };
 
     $scope.newNimiMode = function(form) {

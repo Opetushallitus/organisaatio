@@ -110,7 +110,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("id")
     private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
 
-    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
     private List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
 

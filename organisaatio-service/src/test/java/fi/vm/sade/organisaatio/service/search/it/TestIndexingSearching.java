@@ -384,8 +384,6 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         List<Yhteystieto> oYhteystiedot = Lists.newArrayList(createOsoite());
         o.setYhteystiedot(oYhteystiedot);
 
-        o = organisaatioDAO.insert(o);
-
         n.setOrganisaatio(o);
         n.setNimi(o.getNimi());
         n.setAlkuPvm(o.getAlkuPvm());
@@ -393,11 +391,11 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
             n.setAlkuPvm(new Date());
         }
 
-        n = organisaatioNimiDAO.insert(n);
-
         List<OrganisaatioNimi> nimet = new ArrayList<>();
         nimet.add(n);
         o.setNimet(nimet);
+
+        o = organisaatioDAO.insert(o);
 
         organisaatioDAO.getEntityManager().flush();
 

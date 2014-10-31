@@ -14,9 +14,8 @@
  European Union Public Licence for more details.
  */
 
-app.factory('NimenMuokkausModel', function($q, $filter, $log,
-                                           $location, $injector,
-                                           Alert, NimiHistoriaModel, Nimet) {
+app.factory('NimenMuokkausModel', function($log, $location,
+                                           NimiHistoriaModel) {
 //    emptyNimi = {
 //        "nimi" : {
 //            "fi" : "",
@@ -27,16 +26,16 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
 //    };
 
     $log = $log.getInstance("NimenMuokkausModel");
-    var loadingService = $injector.get('LoadingService');
 
     var model = {
-        modified : false,
         oid : "",
         minAlkuPvm : "",
         nimi : {},
+        muokattavaNimihistoria : [],
         mode : "new",
         historiaModel : NimiHistoriaModel,
         parentNimi : {},
+        uusinNimi : {},
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
@@ -46,17 +45,14 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
             this.minAlkuPvm = "";
             this.nimi = {};
             this.mode = "new";
-            this.historiaModel.clear();
             this.parentNimi = {};
+            this.uusinNimi = {};
         },
 
-        /**
-         * Asetetaan mallin tila "tarvitsee tallennusta" / ei tallennustarvetta
-         *
-         * @param {Boolean} modified Tarvitseeko tallennusta
-         */
-        setModified: function(modified) {
-            this.modified = modified;
+        // Palautetaan muokattu nimihistoria
+        getNimiHistoria: function() {
+            $log.debug('getNimiHistoria()');
+            return this.muokattavaNimihistoria;
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä
@@ -84,8 +80,8 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
 
         // Laitetaan uusin nimi näkyville / editoitavaksi
         setUusinNimiVisible: function(koulutustoimija, oppilaitos, parentNimi) {
-            this.nimi = this.historiaModel.uusinNimi;
-            if (!koulutustoimija && !oppilaitos) this.historiaModel.fixParentPrefix(parentNimi, this.nimi);
+            this.nimi = this.uusinNimi;
+            if (!koulutustoimija && !oppilaitos) this.fixParentPrefix(parentNimi, this.nimi);
         },
 
         isUusinNimiChanged: function() {
@@ -105,87 +101,16 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
             return this.historiaModel.isAjastettuMuutos(nimi);
         },
 
-        // Uuden nimen tallennus
-        saveNewNimi: function(deferred) {
-            $log.debug('saveNewNimi()');
-            Nimet.put({oid: this.oid, alkuPvm: ""}, this.nimi, function(result) {
-                $log.log(result);
-                deferred.resolve();
-            },
-            // Error case
-            function(response) {
-                loadingService.onErrorHandled();
-                $log.error("saveNewNimi() Nimet put response: " + response.status);
-                Alert.add("error", $filter('i18n')("Nimenmuokkaus.uusinimi.virhe", ""), true);
-                deferred.reject();
-            });
-        },
-
-        // Nimen päivitys
-        saveUpdatedNimi: function(deferred) {
-            $log.debug('saveUpdatedNimi()');
-            Nimet.post({oid: this.oid, alkuPvm: this.nimi.alkuPvm}, this.nimi, function(result) {
-                $log.log(result);
-                deferred.resolve();
-            },
-            // Error case
-            function(response) {
-                loadingService.onErrorHandled();
-                $log.error("saveUpdatedNimi() Nimet post response: " + response.status);
-                Alert.add("error", $filter('i18n')("Nimenmuokkaus.updatenimi.virhe", ""), true);
-                deferred.reject();
-            });
-        },
-
-        // Ajastetun nimenmuutoksen poisto / peruminen
-        deletePresetNimi: function(deferred) {
-            $log.debug('deletePresetNimi()');
-            Nimet.delete({oid: this.oid, alkuPvm: this.historiaModel.uusinNimi.alkuPvm}, function(result) {
-                $log.log(result);
-                deferred.resolve();
-            },
-            // Error case
-            function(response) {
-                loadingService.onErrorHandled();
-                $log.error("deletePresetNimi() Nimet delete response: " + response.status);
-                Alert.add("error", $filter('i18n')("Nimenmuokkaus.deletenimi.virhe", ""), true);
-                deferred.reject();
-            });
-        },
-
-        // Tallennus, tilasta riippuen luodaan uusi nimi, päivitetään nimi tai perutaan ajastus
-        save: function() {
-            var deferred = $q.defer();
-
-            // Ei muutoksia, ei tarvitse tallennusta
-            if (this.modified === false) {
-                deferred.resolve();
-                return deferred.promise;
+        // Poistetaan parent prefix nimestä
+        fixParentPrefix: function(parentNimi, nimi) {
+            $log.log('fixParentPrefix()');
+            if (parentNimi && nimi) {
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (nimi.nimi[key] && model.parentNimi[key]) {
+                        nimi.nimi[key] = nimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
+                    }
+                });
             }
-
-            // Uuden organisaation tapauksessa luotetaan siihen, että
-            // organisaation tallennus tallentaa myös ensimmäisen nimihistorian
-            if (this.uusiOrganisaatio) {
-                deferred.resolve();
-                return deferred.promise;
-            }
-
-            if (this.mode === "update") {
-                this.saveUpdatedNimi(deferred);
-            }
-            else if (this.mode === "new") {
-                this.saveNewNimi(deferred);
-            }
-            else if (this.mode === "delete") {
-                this.deletePresetNimi(deferred);
-            }
-            else {
-                $log.error("Unknown mode: " + this.mode);
-            }
-
-            this.setModified(false);
-
-            return deferred.promise;
         },
 
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
@@ -194,19 +119,18 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
                           nameFormat) {
             if (this.oid === oid && this.modified) {
                 $log.log('refresh() Using old instance');
-                this.historiaModel.fixParentPrefix(koulutustoimija || oppilaitos ? null : parentNimi, this.nimi);
+                this.fixParentPrefix(koulutustoimija || oppilaitos ? null : parentNimi, this.nimi);
                 return;
             }
             $log.log('refresh()');
-
-            // Alustetaan historiamalli
-            this.historiaModel.init(nimihistoria, koulutustoimija || oppilaitos ? null : parentNimi);
 
             this.oid = oid;
             this.koulutustoimija = koulutustoimija;
             this.oppilaitos = oppilaitos;
             this.nameFormat = nameFormat;
             this.parentNimi = parentNimi;
+            this.muokattavaNimihistoria = angular.copy(nimihistoria);
+            this.uusinNimi = this.historiaModel.getUusinNimi(this.muokattavaNimihistoria);
 
             if (/new$/.test($location.path())) {
                 this.uusiOrganisaatio = true;
@@ -216,26 +140,40 @@ app.factory('NimenMuokkausModel', function($q, $filter, $log,
             }
             this.mode = "new";
 
-            this.ajastettuMuutos = this.historiaModel.ajastettuMuutos;
+            this.ajastettuMuutos = this.historiaModel.isAjastettuMuutos(this.uusinNimi);
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 
             if (this.mode==="update") {
                 this.setUusinNimiVisible();
             }
+
+            if (parentNimi && this.uusinNimi) {
+                // Poistetaan parent prefix nimestä
+                this.fixParentPrefix(parentNimi, this.uusinNimi);
+            }
         },
 
         accept: function() {
-            this.historiaModel.accept();
+            if (model.koulutustoimija || model.oppilaitos) {
+                return;
+            }
+
+            // Lisätään parentnimi prefix
             ['fi', 'sv', 'en'].forEach(function(key) {
-                if (!model.koulutustoimija && !model.oppilaitos && model.nimi.nimi[key] && model.parentNimi[key]) {
+                if (model.nimi.nimi[key] && model.parentNimi[key]) {
                     if (!model.nimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
-                        !model.nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                            !model.nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
                         model.nimi.nimi[key] = model.parentNimi[key] + ", " + model.nimi.nimi[key];
+                    }
+                }
+                if (model.uusinNimi && model.uusinNimi.nimi[key] && model.parentNimi[key]) {
+                    if (!model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
+                            !model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                        model.uusinNimi.nimi[key] = model.parentNimi[key] + ", " + model.uusinNimi.nimi[key];
                     }
                 }
             });
         }
-
     };
 
     return model;
