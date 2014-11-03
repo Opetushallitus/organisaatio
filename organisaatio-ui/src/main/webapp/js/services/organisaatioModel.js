@@ -269,7 +269,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             var nimi = nimiHistoriaModel.getNimi();
             var tulevaNimi = nimiHistoriaModel.getAjastettuNimi();
-
             model.organisaatio.nimi = nimi.nimi;
 
             // Jos tuleva nimi on sama kuin organisaation validi nimi
@@ -535,14 +534,19 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             nimiHistoriaModel.setNimihistoria(model.organisaatio.nimet);
 
             // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
-            if (nimiHistoriaModel.isAjastettuMuutos()) {
-                model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
+            var tulevaNimi = nimiHistoriaModel.getAjastettuNimi();
+            var nimi = nimiHistoriaModel.getNimi();
+
+            // Jos tuleva nimi on sama kuin organisaation validi nimi
+            // niin kyseessa on uusi tulevaisuuden organisaatio
+            if (tulevaNimi !== null && angular.equals(nimi, tulevaNimi) === false) {
+                model.organisaationTulevaNimi = tulevaNimi;
             }
             else {
+                // Tyhjennetään tuleva nimi
                 model.organisaationTulevaNimi = {};
                 model.organisaationTulevaNimi.nimi = {};
             }
-
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 // For loop index
@@ -1177,6 +1181,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaatio.tyypit = [];
             model.organisaatio.nimi = null;
             model.organisaatio.nimet = [];
+            model.originalNimet = model.organisaatio.nimet;
             model.organisaatio.nimi = {};
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
@@ -1386,6 +1391,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     deferred.reject();
                 });
             } else {
+                // Asetetaan organisaation nimen alkupäiväksi organisaation alkupäivä
+                model.organisaatio.nimet[0].alkuPvm = model.organisaatio.alkuPvm;
+
                 UusiOrganisaatio.put(model.organisaatio, function(result) {
                     //console.log(result);
                     if (orgForm) {
