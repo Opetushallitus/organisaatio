@@ -527,6 +527,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
 
+            // Otetaan talteen organisaation nimihistoria ennen muutoksia.
+            model.originalNimet = model.organisaatio.nimet;
+
             // Päivitetään nimihistoria
             var nimiHistoriaModel = NimiHistoriaModel;
             nimiHistoriaModel.setNimihistoria(model.organisaatio.nimet);

@@ -16,8 +16,9 @@
 
 function NimenMuokkausController($scope, $modalInstance, $log,
                                  NimenMuokkausModel, NimiHistoriaModel,
-                                 oid, nimihistoria, organisaatioAlkuPvm,
-                                 koulutustoimija, oppilaitos, parentNimi,
+                                 oid, nimihistoria, originalNimihistoria,
+                                 organisaatioAlkuPvm, koulutustoimija,
+                                 oppilaitos, parentNimi,
                                  nameFormat, parentPattern) {
 
     $log = $log.getInstance("NimenMuokkausController");
@@ -35,6 +36,8 @@ function NimenMuokkausController($scope, $modalInstance, $log,
                          koulutustoimija, oppilaitos, parentNimi,
                          nameFormat);
 
+    $scope.originalNimihistoria = originalNimihistoria;
+
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
         $scope.model.clear();
@@ -44,19 +47,21 @@ function NimenMuokkausController($scope, $modalInstance, $log,
         $scope.model.accept();
 
         var nimiHistoriaModel = NimiHistoriaModel;
-        nimiHistoriaModel.setNimihistoria(angular.copy($scope.model.getNimiHistoria()));
+        nimiHistoriaModel.setNimihistoria(angular.copy($scope.model.getNimihistoria()));
 
         $modalInstance.close($scope.model);
     };
 
     $scope.newNimiMode = function(form) {
         $log.debug('newNimiMode()');
+        $scope.model.setNimihistoria($scope.originalNimihistoria);
         $scope.model.clearVisibleNimi();
     };
 
     $scope.updateNimiMode = function(form) {
         $log.debug('updateNimiMode()');
-        $scope.model.setUusinNimiVisible(koulutustoimija, oppilaitos, parentNimi);
+        $scope.model.setNimihistoria($scope.originalNimihistoria);
+        $scope.model.setUusinNimiVisible();
         if ($scope.model.isUusinNimiChanged() === false) {
             form.$setPristine();
         }
@@ -64,6 +69,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.cancelNimenMuutosMode = function(form) {
         $log.debug('cancelNimenMuutosMode()');
+        $scope.model.setNimihistoria($scope.originalNimihistoria);
         $scope.model.setUusinNimiVisible();
     };
 

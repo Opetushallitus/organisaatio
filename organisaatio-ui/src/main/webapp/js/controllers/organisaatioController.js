@@ -199,6 +199,9 @@ function OrganisaatioController($scope, $location,
                 nimihistoria: function () {
                     return $scope.model.organisaatio.nimet;
                 },
+                originalNimihistoria: function () {
+                    return $scope.model.originalNimet;
+                },
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
                 },
