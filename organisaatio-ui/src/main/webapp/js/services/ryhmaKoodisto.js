@@ -42,6 +42,10 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
                                   nimi: KoodistoKoodi.getLocalizedName(rTyyppiKoodi)});
             });
         }, function(response) {
+            // TODO Poistetaan virheen käsittely,
+            // kun koodistosta saadaan ryhmätyypit ja käyttöryhmät
+            loadingService.onErrorHandled();
+
             // koodeja ei löytynyt
             if (defaultArray instanceof Array) {
                 defaultArray.forEach(function(rTyyppiKoodi) {
