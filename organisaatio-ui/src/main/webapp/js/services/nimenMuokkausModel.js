@@ -77,7 +77,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
         // Haetaan uuden nimen minimialkupäivämäärä
         // Viimeisimmän voimassaolevan nimen alkupäivämäärä tai organisaation alkupäiviämäärä.
         getMinAlkuPvm: function(organisaatioAlkuPvm) {
-            var voimassaolevaNimi = model.historiaModel.getCurrentNimi();
+            var voimassaolevaNimi = model.historiaModel.getCurrentNimi(this.muokattavaNimihistoria);
             var minAlkuPvm = "";
 
             // Uuden organisaation tapaus
@@ -111,9 +111,15 @@ app.factory('NimenMuokkausModel', function($log, $location,
             return true;
         },
 
-        // Tyhjennetään editoitava nimi
-        clearVisibleNimi: function() {
-            this.nimi = {};
+        // Luodaan organisaatiolle uusi nimi
+        createNewNimi: function() {
+            var emptyNimi = {
+                "nimi" : {
+                },
+                "alkuPvm" : ""
+            };
+            this.nimi = emptyNimi;
+            this.muokattavaNimihistoria.push(this.nimi);
         },
 
         // Tarkastetaan onko annettu nimi ajastettu nimenmuutos

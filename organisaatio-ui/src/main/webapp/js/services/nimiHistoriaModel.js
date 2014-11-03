@@ -97,19 +97,24 @@ app.factory('NimiHistoriaModel', function($log) {
         },
 
         // Haetaan nimihistorian sisältämä nykyinen nimi (ei siis tuleva ajastettu nimi)
-        getCurrentNimi: function() {
+        getCurrentNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
             var nimi = null;
-            if (!angular.isDefined(this.nimihistoria) || this.nimihistoria === null) {
-                $log.warn('getUusinNimi() Nimihistoria == null or undefined');
+            if (!angular.isDefined(historia) || historia === null) {
+                $log.warn('getUusinNimi() historia == null or undefined');
                 return nimi;
             }
-            if (this.nimihistoria.length > 0) {
-                nimi = this.nimihistoria[0];
+            if (historia.length > 0) {
+                nimi = historia[0];
             }
-            for(var i=0; i < this.nimihistoria.length; i++) {
-                if (moment(this.nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
-                        moment(this.nimihistoria[i].alkuPvm).isBefore(moment())) {
-                    nimi = this.nimihistoria[i];
+            for(var i=0; i < historia.length; i++) {
+                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
+                        moment(historia[i].alkuPvm).isBefore(moment())) {
+                    nimi = historia[i];
                 }
             }
 

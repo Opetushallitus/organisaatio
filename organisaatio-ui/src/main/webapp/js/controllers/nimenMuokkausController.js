@@ -23,21 +23,6 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $log = $log.getInstance("NimenMuokkausController");
 
-    $scope.organisaatioNimiLangs = function(nimi) {
-        if (nimi) {
-            return Object.keys(nimi);
-        } else {
-            return undefined;
-        }
-    };
-
-    $scope.model = NimenMuokkausModel;
-    $scope.model.refresh(oid, nimihistoria, organisaatioAlkuPvm,
-                         koulutustoimija, oppilaitos, parentNimi,
-                         nameFormat);
-
-    $scope.originalNimihistoria = originalNimihistoria;
-
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
         $scope.model.clear();
@@ -50,12 +35,13 @@ function NimenMuokkausController($scope, $modalInstance, $log,
         nimiHistoriaModel.setNimihistoria(angular.copy($scope.model.getNimihistoria()));
 
         $modalInstance.close($scope.model);
+        $scope.model.clear();
     };
 
     $scope.newNimiMode = function(form) {
         $log.debug('newNimiMode()');
         $scope.model.setNimihistoria($scope.originalNimihistoria);
-        $scope.model.clearVisibleNimi();
+        $scope.model.createNewNimi();
     };
 
     $scope.updateNimiMode = function(form) {
@@ -73,5 +59,26 @@ function NimenMuokkausController($scope, $modalInstance, $log,
         $scope.model.setUusinNimiVisible();
     };
 
+    $scope.organisaatioNimiLangs = function(nimi) {
+        if (nimi) {
+            return Object.keys(nimi);
+        } else {
+            return undefined;
+        }
+    };
+
+    $scope.model = NimenMuokkausModel;
+
+    // Muokataan suoraan alkuperäistä nimihistoriaa
+    // Siis, jos käyttäjä käy nimenmuokkauksessa useaan kertaan
+    // niin aina muokataan back-endiin tallennettua historiaa.
+    // Muokkaus ei siis jatku edellistä tilanteesta
+    $scope.model.refresh(oid, originalNimihistoria, organisaatioAlkuPvm,
+                         koulutustoimija, oppilaitos, parentNimi,
+                         nameFormat);
+
+    $scope.originalNimihistoria = originalNimihistoria;
+
+    $scope.newNimiMode($scope.form);
 
 }
