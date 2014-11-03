@@ -122,6 +122,18 @@ app.factory('NimenMuokkausModel', function($log, $location,
             this.muokattavaNimihistoria.push(this.nimi);
         },
 
+        // Poistetaan uusin nimi historiasta
+        deleteUusinNimi: function() {
+            this.nimi = angular.copy(this.uusinNimi)
+
+            for(var i=0; i < this.muokattavaNimihistoria.length; i++) {
+                if (this.uusinNimi === this.muokattavaNimihistoria[i]) {
+                    this.muokattavaNimihistoria.splice(i, 1);
+                }
+            }
+            if (!this.koulutustoimija && !this.oppilaitos) this.removeParentPrefix(this.nimi);
+        },
+
         // Tarkastetaan onko annettu nimi ajastettu nimenmuutos
         isAjastettuMuutos: function(nimi) {
             return this.historiaModel.isAjastettuMuutos(nimi);

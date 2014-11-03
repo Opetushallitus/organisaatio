@@ -56,7 +56,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
     $scope.cancelNimenMuutosMode = function(form) {
         $log.debug('cancelNimenMuutosMode()');
         $scope.model.setNimihistoria($scope.originalNimihistoria);
-        $scope.model.setUusinNimiVisible();
+        $scope.model.deleteUusinNimi();
     };
 
     $scope.organisaatioNimiLangs = function(nimi) {

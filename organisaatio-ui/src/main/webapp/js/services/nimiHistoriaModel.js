@@ -123,7 +123,12 @@ app.factory('NimiHistoriaModel', function($log) {
         },
 
         // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
-        isAjastettuMuutos: function(nimi) {
+        isAjastettuMuutos: function(tarkistettavaNimi) {
+            var nimi = tarkistettavaNimi;
+            if (!angular.isDefined(nimi) || nimi === null) {
+                nimi = this.getUusinNimi();
+            }
+
             var ajastettuMuutos = false;
             if (nimi !== null) {
                 if('alkuPvm' in nimi &&

@@ -535,7 +535,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             nimiHistoriaModel.setNimihistoria(model.organisaatio.nimet);
 
             // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
-            if (nimiHistoriaModel.ajastettuMuutos) {
+            if (nimiHistoriaModel.isAjastettuMuutos()) {
                 model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
             }
             else {
