@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function NimenMuokkausController($scope, $modalInstance, $log,
+function NimenMuokkausController($scope, $modalInstance, $log, $location,
                                  NimenMuokkausModel, NimiHistoriaModel,
                                  oid, nimihistoria, originalNimihistoria,
                                  organisaatioAlkuPvm, koulutustoimija,
@@ -42,13 +42,16 @@ function NimenMuokkausController($scope, $modalInstance, $log,
         $log.debug('newNimiMode()');
         $scope.model.setNimihistoria($scope.originalNimihistoria);
         $scope.model.createNewNimi();
+        if (/new$/.test($location.path())) {
+            $scope.model.setNimi($scope.model.getEditedNimi());
+        }
     };
 
     $scope.updateNimiMode = function(form) {
         $log.debug('updateNimiMode()');
         $scope.model.setNimihistoria($scope.originalNimihistoria);
-        $scope.model.setUusinNimiVisible();
-        if ($scope.model.isUusinNimiChanged() === false) {
+        $scope.model.setEditedNimiVisible();
+        if ($scope.model.isEditedNimiChanged() === false) {
             form.$setPristine();
         }
     };
@@ -79,6 +82,7 @@ function NimenMuokkausController($scope, $modalInstance, $log,
 
     $scope.originalNimihistoria = originalNimihistoria;
 
+    var nimiHistoriaModel = NimiHistoriaModel;
+    $scope.model.setEditedNimi(angular.copy(nimiHistoriaModel.getNimi(nimihistoria)));
     $scope.newNimiMode($scope.form);
-
 }

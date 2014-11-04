@@ -51,19 +51,29 @@ app.factory('NimiHistoriaModel', function($log) {
         // Palauttaa nimihistorian perusteella organisaation nimen.
         // Nimi on joko tämänhetkinen (voimassaoloajaltaan nykyinen) nimi
         // tai sitten uudelle organisaatiolle tulevaisuuden nimi.
-        getNimi: function() {
-            var nimi = this.getCurrentNimi();
+        getNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
+            var nimi = this.getCurrentNimi(historia);
 
             if (nimi === null) {
-                return this.getUusinNimi();
+                return this.getUusinNimi(historia);
             }
 
             return nimi;
         },
 
         // Haetaan Nimihistorian ajastettu
-        getAjastettuNimi: function() {
-            var uusinNimi = this.getUusinNimi();
+        getAjastettuNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
+            var uusinNimi = this.getUusinNimi(historia);
 
             // Jos nimi on ajastettu ja eroaa tule
             if (this.isAjastettuMuutos(uusinNimi) === false) {

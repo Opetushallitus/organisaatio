@@ -68,6 +68,32 @@ app.factory('NimenMuokkausModel', function($log, $location,
             }
         },
 
+        // Asetetaan muokattu versio ogranisaation nykyisestä nimestä
+        setEditedNimi: function(nimi) {
+            $log.debug('setEditedNimi()', nimi);
+            var emptyNimi = {
+                "nimi" : {
+                },
+                "alkuPvm" : ""
+            };
+
+            if (nimi === null) {
+                nimi = emptyNimi;
+            }
+
+            this.editedNimi = nimi;
+            this.originalEditedNimi = angular.copy(nimi);
+
+            // Poistetaan parent prefix nimestä
+            this.removeParentPrefix(this.editedNimi);
+            this.removeParentPrefix(this.originalEditedNimi);
+        },
+
+        // Haetaan muokattu versio ogranisaation nykyisestä nimestä
+        getEditedNimi: function() {
+            return this.editedNimi;
+        },
+
         // Palautetaan muokattu nimihistoria
         getNimihistoria: function() {
             $log.debug('getNimiHistoria()');
@@ -98,14 +124,27 @@ app.factory('NimenMuokkausModel', function($log, $location,
         },
 
         // Laitetaan uusin nimi näkyville / editoitavaksi
-        setUusinNimiVisible: function() {
+        setEditedNimiVisible: function() {
             this.nimi = this.uusinNimi;
-            if (!this.koulutustoimija && !this.oppilaitos) this.removeParentPrefix(this.nimi);
+            this.setNimi(this.editedNimi);
+        },
+
+        // Laitetaan annettu nimi editoitavaksi
+        setNimi: function(nimi) {
+            $log.debug('setNimi()', nimi);
+            for(var i=0; i < this.muokattavaNimihistoria.length; i++) {
+                if (this.nimi === this.muokattavaNimihistoria[i]) {
+                    this.muokattavaNimihistoria[i].nimi = nimi.nimi;
+                    this.muokattavaNimihistoria[i].alkuPvm = nimi.alkuPvm;
+                }
+            }
+
+            this.removeParentPrefix(this.nimi);
         },
 
         // Tarkistetaan onko uusin nimi muuttunut
-        isUusinNimiChanged: function() {
-            if (angular.equals(this.uusinNimi, this.uusinNimiOrig)) {
+        isEditedNimiChanged: function() {
+            if (angular.equals(this.editedNimi, this.originalEditedNimi)) {
                 return false;
             }
             return true;
@@ -131,7 +170,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
                     this.muokattavaNimihistoria.splice(i, 1);
                 }
             }
-            if (!this.koulutustoimija && !this.oppilaitos) this.removeParentPrefix(this.nimi);
+            this.removeParentPrefix(this.nimi);
         },
 
         // Tarkastetaan onko annettu nimi ajastettu nimenmuutos
@@ -141,7 +180,12 @@ app.factory('NimenMuokkausModel', function($log, $location,
 
         // Poistetaan parent prefix nimestä
         removeParentPrefix: function(nimi) {
+            if (this.koulutustoimija || this.oppilaitos) {
+                return;
+            }
+
             $log.log('removeParentPrefix()');
+
             if (model.parentNimi && nimi) {
                 ['fi', 'sv', 'en'].forEach(function(key) {
                     if (nimi.nimi[key] && model.parentNimi[key]) {
@@ -153,6 +197,12 @@ app.factory('NimenMuokkausModel', function($log, $location,
 
         // Lisätään parent prefix nimeen
         addParentPrefix: function(nimi) {
+            if (this.koulutustoimija || this.oppilaitos) {
+                return;
+            }
+
+            $log.log('addParentPrefix()');
+
             if (model.parentNimi && nimi) {
                 ['fi', 'sv', 'en'].forEach(function(key) {
                     if (nimi.nimi[key] && model.parentNimi[key]) {
@@ -175,9 +225,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
             this.setNimihistoria(nimihistoria);
 
             this.uusinNimiOrig = angular.copy(this.uusinNimi);
-            if (!this.koulutustoimija && !this.oppilaitos) {
-                this.removeParentPrefix(this.uusinNimiOrig);
-            }
+            this.removeParentPrefix(this.uusinNimiOrig);
 
             this.oid = oid;
             this.koulutustoimija = koulutustoimija;
@@ -200,9 +248,6 @@ app.factory('NimenMuokkausModel', function($log, $location,
         },
 
         accept: function() {
-            if (model.koulutustoimija || model.oppilaitos) {
-                return;
-            }
             this.addParentPrefix(model.nimi);
             this.addParentPrefix(model.uusinNimi);
         }
