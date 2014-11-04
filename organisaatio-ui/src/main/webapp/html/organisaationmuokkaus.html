@@ -171,6 +171,7 @@
                     </div>
                 </div>
             </label>
+            <!-- Tällä näytetään muokattu nimihistoria
             <table class="table table-striped">
                 <thead><tr><th>{{'Organisaationtarkastelu.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.nimi' | i18n}}</th></tr></thead>
                 <tbody>
@@ -184,6 +185,7 @@
                     </tr>
                 </tbody>
             </table>
+            -->
             <button ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                     auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     class="btn" ng-click="openNimenMuokkaus()">
