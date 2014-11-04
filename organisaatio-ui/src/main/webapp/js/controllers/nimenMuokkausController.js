@@ -52,7 +52,9 @@ function NimenMuokkausController($scope, $modalInstance, $log, $location,
         $scope.model.setNimihistoria($scope.originalNimihistoria);
         $scope.model.setEditedNimiVisible();
         if ($scope.model.isEditedNimiChanged() === false) {
-            form.$setPristine();
+            if (angular.isDefined(form) && form !== null) {
+                form.$setPristine();
+            }
         }
     };
 
@@ -84,5 +86,11 @@ function NimenMuokkausController($scope, $modalInstance, $log, $location,
 
     var nimiHistoriaModel = NimiHistoriaModel;
     $scope.model.setEditedNimi(angular.copy(nimiHistoriaModel.getNimi(nimihistoria)));
-    $scope.newNimiMode($scope.form);
+
+    if ($scope.model.isSuunniteltuOrganisaatio()) {
+        $scope.model.mode = "update";
+        $scope.updateNimiMode();
+    } else {
+        $scope.newNimiMode();
+    }
 }

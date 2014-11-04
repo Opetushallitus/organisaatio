@@ -39,13 +39,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <!-- Organisaation nimenmuutoksen moodit: update, new, delete -->
         <div ng-if="!model.uusiOrganisaatio">
-            <input type="radio" ng-model="model.mode" value="new"
+            <input ng-disabled="model.suunniteltuOrganisaatio === true"
+                   type="radio" ng-model="model.mode" value="new"
                    ng-change="newNimiMode(form)">
             {{'Nimenmuokkaus.luoUusiNimi' | i18n}} <br/>
             <input type="radio" ng-model="model.mode" value="update"
                    ng-change="updateNimiMode(form)">
             {{'Nimenmuokkaus.korjaaNimi' | i18n}} <br/>
-            <input ng-disabled="model.ajastettuMuutos === false"
+            <input ng-disabled="model.ajastettuMuutos === false || model.suunniteltuOrganisaatio === true"
                    type="radio" ng-model="model.mode" value="delete"
                    ng-change="cancelNimenMuutosMode(form)">
             {{'Nimenmuokkaus.peruutaNimenmuutos' | i18n}} <br/>

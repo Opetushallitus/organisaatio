@@ -39,6 +39,8 @@ app.factory('NimenMuokkausModel', function($log, $location,
         uusinNimiOrig : {},
         koulutustoimija : false,
         oppilaitos : false,
+        suunniteltuOrganisaatio : false,
+        ajastettuMuutos : false,
 
         // Tyhjenneteään mallin tiedot
         clear: function() {
@@ -52,6 +54,8 @@ app.factory('NimenMuokkausModel', function($log, $location,
             this.uusinNimiOrig = {};
             this.koulutustoimija = false;
             this.oppilaitos = false;
+            this.suunniteltuOrganisaatio = false;
+            this.ajastettuMuutos = false;
         },
 
         // Asetetaan nimihistoria, jota tullaan muokkaamaan
@@ -62,10 +66,24 @@ app.factory('NimenMuokkausModel', function($log, $location,
 
             this.ajastettuMuutos = this.historiaModel.isAjastettuMuutos(this.uusinNimi);
 
+            // Tarkistetaan onko kyseessä suunniteltu organisaatio
+            // Siis nykyinen nimi tulevaisuudessa.
+            var nimi = this.historiaModel.getNimi(this.muokattavaNimihistoria);
+            if (this.historiaModel.isAjastettuMuutos(nimi)) {
+                this.suunniteltuOrganisaatio = true;
+            }
+            else {
+                this.suunniteltuOrganisaatio = false;
+            }
+
             if (this.parentNimi && this.uusinNimi) {
                 // Poistetaan parent prefix nimestä
                 this.removeParentPrefix(this.uusinNimi);
             }
+        },
+
+        isSuunniteltuOrganisaatio: function() {
+            return this.suunniteltuOrganisaatio;
         },
 
         // Asetetaan muokattu versio ogranisaation nykyisestä nimestä
