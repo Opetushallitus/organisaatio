@@ -154,19 +154,6 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
-    public boolean isAllowed(Organisaatio org, YhteystietojenTyyppi yad) {
-        if (org.getOppilaitosTyyppi() != null
-                && yad.getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
-            return true;
-        }
-        for (String otype : org.getTyypit()) {
-            if (yad.getSovellettavatOrganisaatioTyyppis().contains(otype)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void checkVersionInKoodistoUris(OrganisaatioRDTO model) {
         // kotipaikka
 
