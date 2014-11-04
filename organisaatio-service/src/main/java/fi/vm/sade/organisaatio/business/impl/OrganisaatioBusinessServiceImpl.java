@@ -351,24 +351,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             nimi.setOrganisaatio(entity);
         }
 
-        /** @TODO --> Tarkistetaan, ettei nimihistoriaa muuteta muuta kuin nykyisen tai uusimman nimen osalta */
-        // Tarkistetaan, että nimen alkupäivämäärä ei ole NULL
-        checker.checkNimihistoriaAlkupvm(entity.getNimet());
+        // Nimihistoriaan liittyvät tarkistukset (HUOM! Ei koske Ryhmiä)
+        if (OrganisaatioUtil.isRyhma(entity) == false) {
+            /** @TODO --> Tarkistetaan, ettei nimihistoriaa muuteta muuta kuin nykyisen tai uusimman nimen osalta */
+            // Tarkistetaan, että nimen alkupäivämäärä ei ole NULL
+            checker.checkNimihistoriaAlkupvm(entity.getNimet());
 
-        // Tarkistetaan, että nimihistoriassa on organisaatiolle validi nimi
-        MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(entity.getNimet());
-        if (nimi == null) {
-            throw new OrganisaatioNameHistoryNotValidException();
+            // Tarkistetaan, että nimihistoriassa on organisaatiolle validi nimi
+            MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(entity.getNimet());
+            if (nimi == null) {
+                throw new OrganisaatioNameHistoryNotValidException();
+            }
+
+            // Tarkistetaan, että organisaatiolle asetettu nimi ei ole
+            // ristiriidassa nimihistorian kanssa
+            if (nimi.getValues().equals(entity.getNimi().getValues()) == false) {
+                throw new OrganisaatioNameHistoryNotValidException();
+            }
+
+            // Asetetaan organisaatiolle sama nimi instanssi kuin nimihistoriassa
+            entity.setNimi(nimi);
         }
-
-        // Tarkistetaan, että organisaatiolle asetettu nimi ei ole
-        // ristiriidassa nimihistorian kanssa
-        if (nimi.getValues().equals(entity.getNimi().getValues()) == false) {
-            throw new OrganisaatioNameHistoryNotValidException();
-        }
-
-        // Asetetaan organisaatiolle sama nimi instanssi kuin nimihistoriassa
-        entity.setNimi(nimi);
 
         // Asetetaan tyypit "organisaatio" taulun kenttään
         String tyypitStr = "";
