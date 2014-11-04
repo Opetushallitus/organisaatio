@@ -35,6 +35,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
      *                 Jos muu kuin Array, näytetään virheilmoitus.
      */
     var getKoodistoArray = function(uri, resultArray, defaultArray) {
+        /* Poistetaan koodikommentti kun toteutetaan: https://jira.oph.ware.fi/jira/browse/OVT-8892
         KoodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
@@ -42,10 +43,6 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
                                   nimi: KoodistoKoodi.getLocalizedName(rTyyppiKoodi)});
             });
         }, function(response) {
-            // TODO Poistetaan virheen käsittely,
-            // kun koodistosta saadaan ryhmätyypit ja käyttöryhmät
-            loadingService.onErrorHandled();
-
             // koodeja ei löytynyt
             if (defaultArray instanceof Array) {
                 defaultArray.forEach(function(rTyyppiKoodi) {
@@ -55,6 +52,15 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
                 showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
             }
         });
+        **/
+        // Käytetään default arvoja, kunnes koodistossa tarvittava koodistot: ks. OVT-8892
+        if (defaultArray instanceof Array) {
+            defaultArray.forEach(function(rTyyppiKoodi) {
+                resultArray.push(rTyyppiKoodi);
+            });
+        } else {
+            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+        }
     };
 
     var model = new function() {
