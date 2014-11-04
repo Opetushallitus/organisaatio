@@ -28,10 +28,6 @@ app.factory('NimiHistoriaModel', function($log) {
 
     var model = {
         nimihistoria : [],
-        uusinNimi : {},
-        ajastettuMuutos : false,
-        parentNimi : null,
-        currentNimi : {},
 
         // Nimi rakenne stringiksi (ei alkupäivämäärää)
         nimiToString: function(nimi) {
@@ -50,24 +46,59 @@ app.factory('NimiHistoriaModel', function($log) {
             $log.debug('clear()');
 
             this.nimihistoria = [];
-            this.uusinNimi = {};
-            this.currentNimi = {};
-            this.ajastettuMuutos = false;
+        },
+
+        // Palauttaa nimihistorian perusteella organisaation nimen.
+        // Nimi on joko tämänhetkinen (voimassaoloajaltaan nykyinen) nimi
+        // tai sitten uudelle organisaatiolle tulevaisuuden nimi.
+        getNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
+            var nimi = this.getCurrentNimi(historia);
+
+            if (nimi === null) {
+                return this.getUusinNimi(historia);
+            }
+
+            return nimi;
+        },
+
+        // Haetaan Nimihistorian ajastettu
+        getAjastettuNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
+            var uusinNimi = this.getUusinNimi(historia);
+
+            // Jos nimi on ajastettu ja eroaa tule
+            if (this.isAjastettuMuutos(uusinNimi) === false) {
+                return null;
+            }
+            return uusinNimi;
         },
 
         // Haetaan Nimihistorian uusin nimi
-        getUusinNimi: function() {
+        getUusinNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
             var nimi = null;
-            if (!angular.isDefined(this.nimihistoria) || this.nimihistoria === null) {
-                $log.warn('getUusinNimi() Nimihistoria == null or undefined');
+            if (!angular.isDefined(historia) || historia === null) {
+                $log.warn('getUusinNimi() historia == null or undefined');
                 return nimi;
             }
-            if (this.nimihistoria.length > 0) {
-                nimi = this.nimihistoria[0];
+            if (historia.length > 0) {
+                nimi = historia[0];
             }
-            for(var i=0; i < this.nimihistoria.length; i++) {
-                if (moment(this.nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm))) {
-                    nimi = this.nimihistoria[i];
+            for(var i=0; i < historia.length; i++) {
+                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm))) {
+                    nimi = historia[i];
                 }
             }
 
@@ -76,19 +107,24 @@ app.factory('NimiHistoriaModel', function($log) {
         },
 
         // Haetaan nimihistorian sisältämä nykyinen nimi (ei siis tuleva ajastettu nimi)
-        getCurrentNimi: function() {
+        getCurrentNimi: function(nimiHistoria) {
+            var historia = nimiHistoria;
+            if (!angular.isDefined(historia) || historia === null) {
+                historia = this.nimihistoria;
+            }
+
             var nimi = null;
-            if (!angular.isDefined(this.nimihistoria) || this.nimihistoria === null) {
-                $log.warn('getUusinNimi() Nimihistoria == null or undefined');
+            if (!angular.isDefined(historia) || historia === null) {
+                $log.warn('getUusinNimi() historia == null or undefined');
                 return nimi;
             }
-            if (this.nimihistoria.length > 0) {
-                nimi = this.nimihistoria[0];
+            if (historia.length > 0) {
+                nimi = historia[0];
             }
-            for(var i=0; i < this.nimihistoria.length; i++) {
-                if (moment(this.nimihistoria[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
-                        moment(this.nimihistoria[i].alkuPvm).isBefore(moment())) {
-                    nimi = this.nimihistoria[i];
+            for(var i=0; i < historia.length; i++) {
+                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
+                        moment(historia[i].alkuPvm).isBefore(moment())) {
+                    nimi = historia[i];
                 }
             }
 
@@ -97,7 +133,12 @@ app.factory('NimiHistoriaModel', function($log) {
         },
 
         // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
-        isAjastettuMuutos: function(nimi) {
+        isAjastettuMuutos: function(tarkistettavaNimi) {
+            var nimi = tarkistettavaNimi;
+            if (!angular.isDefined(nimi) || nimi === null) {
+                nimi = this.getUusinNimi();
+            }
+
             var ajastettuMuutos = false;
             if (nimi !== null) {
                 if('alkuPvm' in nimi &&
@@ -111,56 +152,18 @@ app.factory('NimiHistoriaModel', function($log) {
             return ajastettuMuutos;
         },
 
-        // Poistetaan parent prefix nimestä
-        fixParentPrefix: function(parentNimi, nimi) {
-            if (parentNimi && nimi) {
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (nimi.nimi[key] && model.parentNimi[key]) {
-                        nimi.nimi[key] = nimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
-                    }
-                });
-            }
+        // Palauttaa nimihistorian
+        getNimihistoria: function() {
+            return this.nimihistoria;
         },
 
-        // Init NimiHistoriaModel uudella nimihistorialla
-        init: function(nimihistoria, parentNimi) {
+        // Alustetaan NimiHistoriaModel uudella nimihistorialla
+        setNimihistoria: function(nimihistoria) {
             $log.log('init()');
-            this.parentNimi = parentNimi || null;
             this.nimihistoria = nimihistoria;
-            this.uusinNimi = angular.copy(this.getUusinNimi(nimihistoria));
-            this.ajastettuMuutos = this.isAjastettuMuutos(this.uusinNimi);
-            this.currentNimi = this.getCurrentNimi(nimihistoria);
-            if (parentNimi && model.currentNimi) {
-                // Poistetaan parent prefix nimestä
-                this.fixParentPrefix(parentNimi, model.currentNimi);
-            }
-            if (parentNimi && model.uusinNimi) {
-                // Poistetaan parent prefix nimestä
-                this.fixParentPrefix(parentNimi, model.uusinNimi);
-            }
+
             $log.log("init() done");
         },
-
-        accept: function() {
-            if (this.parentNimi) {
-                // Lisätään parentnimi prefix
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (model.uusinNimi && model.uusinNimi.nimi[key] && model.parentNimi[key]) {
-                        $log.log(model.nimihistoria);
-                        if (!model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
-                            !model.uusinNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
-                            model.uusinNimi.nimi[key] = model.parentNimi[key] + ", " + model.uusinNimi.nimi[key];
-                        }
-                    }
-                    if (model.currentNimi && model.currentNimi.nimi[key] && model.parentNimi[key]) {
-                        if (!model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
-                            !model.currentNimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
-                            model.currentNimi.nimi[key] = model.parentNimi[key] + ", " + model.currentNimi.nimi[key];
-                        }
-                    }
-                });
-            }
-        }
     };
 
     return model;

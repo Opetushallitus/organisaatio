@@ -206,10 +206,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         // YTJ rajapinnan kautta saadut yrityksen tiedot
         this.ytjTiedot = {};
 
-        // Organisaation nykyinen nimi
-        this.organisaationCurrentNimi = {};
-        this.organisaationCurrentNimi.nimi = {};
-
         // Organisaation tuleva nimi (ajastettu nimenmuutos)
         this.organisaationTulevaNimi = {};
         this.organisaationTulevaNimi.nimi = {};
@@ -267,39 +263,26 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return getDecodedLocalizedValue(res, prefix, suffix, create, language);
         };
 
-        this.deleteTulevaNimi = function() {
-            model.organisaationTulevaNimi = {};
-            model.organisaationTulevaNimi.nimi = {};
-        };
-
-        this.setTulevaNimi = function(tulevaNimi) {
-            model.organisaationTulevaNimi = tulevaNimi;
-        };
-
-        this.resetTulevaNimi = function() {
-            $log.log('resetTulevaNimi()');
+        this.setNimet = function() {
+            $log.log('setNimet()');
             var nimiHistoriaModel = NimiHistoriaModel;
 
-            // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
-            if (nimiHistoriaModel.ajastettuMuutos) {
-                model.organisaationTulevaNimi = angular.copy(nimiHistoriaModel.getUusinNimi());
+            var nimi = nimiHistoriaModel.getNimi();
+            var tulevaNimi = nimiHistoriaModel.getAjastettuNimi();
+            model.organisaatio.nimi = nimi.nimi;
+
+            // Jos tuleva nimi on sama kuin organisaation validi nimi
+            // niin kyseessa on uusi tulevaisuuden organisaatio
+            if (tulevaNimi !== null && angular.equals(nimi, tulevaNimi) === false) {
+                model.organisaationTulevaNimi = tulevaNimi;
             }
             else {
-                // Organisaation tuleva nimi (ajastettu nimenmuutos)
+                // Tyhjennetään tuleva nimi
                 model.organisaationTulevaNimi = {};
                 model.organisaationTulevaNimi.nimi = {};
             }
-        };
 
-        this.setCurrentNimi = function(currentNimi) {
-            model.organisaationCurrentNimi = currentNimi;
-        };
-
-        this.resetCurrentNimi = function() {
-            $log.log('resetCurrentNimi()');
-            var nimiHistoriaModel = NimiHistoriaModel;
-
-            model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
+            model.organisaatio.nimet = nimiHistoriaModel.getNimihistoria();
         };
 
         var initMk = function(mkSection) {
@@ -543,21 +526,27 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
 
+            // Otetaan talteen organisaation nimihistoria ennen muutoksia.
+            model.originalNimet = model.organisaatio.nimet;
+
             // Päivitetään nimihistoria
             var nimiHistoriaModel = NimiHistoriaModel;
-            nimiHistoriaModel.init(model.organisaatio.nimet);
-
-            model.organisaationCurrentNimi = angular.copy(nimiHistoriaModel.getCurrentNimi());
+            nimiHistoriaModel.setNimihistoria(model.organisaatio.nimet);
 
             // Haetaan nimihistorian uusin nimi, joka tulevaisuudessa ja laitetaan se tulevaksi
-            if (nimiHistoriaModel.ajastettuMuutos) {
-                model.organisaationTulevaNimi = nimiHistoriaModel.getUusinNimi();
+            var tulevaNimi = nimiHistoriaModel.getAjastettuNimi();
+            var nimi = nimiHistoriaModel.getNimi();
+
+            // Jos tuleva nimi on sama kuin organisaation validi nimi
+            // niin kyseessa on uusi tulevaisuuden organisaatio
+            if (tulevaNimi !== null && angular.equals(nimi, tulevaNimi) === false) {
+                model.organisaationTulevaNimi = tulevaNimi;
             }
             else {
+                // Tyhjennetään tuleva nimi
                 model.organisaationTulevaNimi = {};
                 model.organisaationTulevaNimi.nimi = {};
             }
-
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
                 // For loop index
@@ -1192,14 +1181,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaatio.tyypit = [];
             model.organisaatio.nimi = null;
             model.organisaatio.nimet = [];
+            model.originalNimet = model.organisaatio.nimet;
             model.organisaatio.nimi = {};
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];
             model.yhteystiedot = {};
             model.mdyhteystiedot = {};
-            model.organisaationCurrentNimi = {};
-            model.organisaationCurrentNimi.nimi = {};
             model.organisaationTulevaNimi = {};
             model.organisaationTulevaNimi.nimi = {};
 
@@ -1403,6 +1391,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     deferred.reject();
                 });
             } else {
+                // Asetetaan organisaation nimen alkupäiväksi organisaation alkupäivä
+                model.organisaatio.nimet[0].alkuPvm = model.organisaatio.alkuPvm;
+
                 UusiOrganisaatio.put(model.organisaatio, function(result) {
                     //console.log(result);
                     if (orgForm) {

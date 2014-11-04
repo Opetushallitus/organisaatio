@@ -122,7 +122,7 @@ function OrganisaatioController($scope, $location,
     };
 
     // Organisaation tallennus
-    // Tallentaa myös mahdollisen nimihistorian ja voimassaolon periytymän
+    // Tallentaa myös mahdollisen voimassaolon periytymän
     $scope.save = function() {
         $log.info("save(): " + $scope.model.organisaatio.oid);
 
@@ -130,42 +130,18 @@ function OrganisaatioController($scope, $location,
 
         $log.info("Saving organisaatio: " + $scope.model.organisaatio.oid);
         $scope.model.persistOrganisaatio($scope.form).then(function(organisaatio) {
-//        $scope.model.persistOrganisaatio($scope.form).then(function() {
             if ($scope.voimassaolonmuokkaus !== null) {
                 $scope.voimassaolonmuokkaus.save().then(function() {
                     if ($scope.voimassaolonmuokkaus.newVersionNumber !== null) {
                         $scope.model.organisaatio.version = $scope.voimassaolonmuokkaus.newVersionNumber;
                     }
-                    // Nimenmuokkauksen kautta on käyttäjä on luonut uuden nimen nimihistoriaan
-                    // tai poistanut tulevan nimenmuutoksen
-                    // --> suoritetaan ensin nimihistorian päivitys
-                    if ($scope.nimenmuokkaus !== null) {
-                        $scope.nimenmuokkaus.save().then(function() {
-                            deferred.resolve(null);
-                        }, function(reason) {
-                            $log.warn("Failed with nimenmuokkaus.save()! " + reason);
-                            deferred.reject();
-                        });
-                    }
-                    else {
-                        deferred.resolve(organisaatio);
-                    }
+                    deferred.resolve(organisaatio);
                 }, function(reason) {
                     $log.warn("Failed with voimassaolonmuokkaus.save()! " + reason);
                     deferred.reject();
                 });
             } else {
-                if ($scope.nimenmuokkaus !== null) {
-                    $scope.nimenmuokkaus.save().then(function() {
-                        deferred.resolve(null);
-                    }, function(reason) {
-                        $log.warn("Failed with nimenmuokkaus.save()! " + reason);
-                        deferred.reject();
-                    });
-                }
-                else {
-                    deferred.resolve(organisaatio);
-                }
+                deferred.resolve(organisaatio);
             }
         }, function(reason) {
             $log.info("Failed to save organisaatio: " + $scope.model.organisaatio.oid + " " + reason);
@@ -223,6 +199,9 @@ function OrganisaatioController($scope, $location,
                 nimihistoria: function () {
                     return $scope.model.organisaatio.nimet;
                 },
+                originalNimihistoria: function () {
+                    return $scope.model.originalNimet;
+                },
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
                 },
@@ -248,34 +227,9 @@ function OrganisaatioController($scope, $location,
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = nimenmuokkausModel;
 
-            if (nimenmuokkausModel.mode === 'update' ||
-                    nimenmuokkausModel.mode === 'new') {
-                if ($scope.nimenmuokkaus.isAjastettuMuutos($scope.nimenmuokkaus.nimi)) {
-                    $log.log('Nimenmuokkaus --> ajastus --> ' + nimenmuokkausModel.mode);
-                    $scope.form.$setDirty();
-                    $scope.model.setTulevaNimi(angular.copy($scope.nimenmuokkaus.nimi));
-                    $scope.model.resetCurrentNimi();
-                }
-                else {
-                    $log.log('Nimenmuokkaus --> päivitys --> ' + nimenmuokkausModel.mode);
-                    $scope.form.$setDirty();
-                    $scope.model.setCurrentNimi(angular.copy($scope.nimenmuokkaus.nimi));
-                    $scope.model.resetTulevaNimi();
-
-                    // Uuden organisaation tapauksessa laitetaan nimi myös organisaatiomalliin
-                    // (tallentuu sen kautta)
-                    if (nimenmuokkausModel.mode === 'new') {
-                        $scope.model.setNimi(angular.copy($scope.nimenmuokkaus.nimi.nimi));
-                    }
-                }
-            }
-            else { // nimenmuokkausModel.mode === 'delete'
-                $log.log('Nimenmuokkaus --> ajastuksen peruutus');
-                $scope.form.$setDirty();
-                $scope.model.deleteTulevaNimi();
-            }
+            $scope.form.$setDirty();
+            $scope.model.setNimet();
         }, function () {
-            $scope.model.deleteTulevaNimi();
             $scope.modalOpen = false;
             $scope.nimenmuokkaus = null;
             $log.log('Nimenmuokkaus modal dismissed at: ' + new Date());

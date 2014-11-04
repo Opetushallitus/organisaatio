@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.generic.service.conversion.AbstractToDomainConverter;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -29,8 +30,11 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.model.BinaryData;
 import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.solr.common.util.Base64;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +75,21 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setMaa(t.getMaaUri());
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
-        s.setNimihaku(convertNimiMapToNimihaku(t.getNimi()));
+
+        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+
+        // Define the target list type for mapping
+        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
+
+        // Map DTO to domain type
+        s.setNimet((List<OrganisaatioNimi>) organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
+
+        // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
+        MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(s.getNimet());
+        if (nimi != null) {
+            s.setNimihaku(convertNimiMapToNimihaku(nimi.getValues()));
+        }
+
         // t.set(s.getNimiLyhenne());
         s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
         s.setOppilaitosKoodi(t.getOppilaitosKoodi());
