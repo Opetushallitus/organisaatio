@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.factory('YhteystietojentyyppiModel', function($log, $injector,
+app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
                                                   Alert,
                                                   KoodistoOppilaitostyypit,
                                                   KoodistoKoodi,

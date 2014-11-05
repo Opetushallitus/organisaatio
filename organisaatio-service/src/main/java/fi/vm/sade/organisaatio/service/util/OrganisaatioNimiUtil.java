@@ -16,8 +16,10 @@
 package fi.vm.sade.organisaatio.service.util;
 
 
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,53 @@ import org.slf4j.LoggerFactory;
 public class OrganisaatioNimiUtil {
     private static Logger LOG = LoggerFactory.getLogger("OrganisaatioNimiUtil");
 
-    public static boolean isCurrentNimi(OrganisaatioNimi nimi) {
+    /**
+     * Palauttaa nimihistorian perusteella organisaation nimen.
+     * Nimi on joko tämänhetkinen (voimassaoloajaltaan nykyinen) nimi
+     * tai sitten uudelle organisaatiolle tulevaisuuden nimi.
+     *
+     * @param nimet
+     * @return
+     */
+    public static MonikielinenTeksti getNimi(List<OrganisaatioNimi> nimet) {
+        OrganisaatioNimi currentNimi = null;
+        for (OrganisaatioNimi nimi : nimet) {
+            if (isValidCurrentNimi(nimi)) {
+                if (currentNimi == null) {
+                    currentNimi = nimi;
+                }
+                else if (nimi.getAlkuPvm().after(currentNimi.getAlkuPvm())) {
+                    currentNimi = nimi;
+                }
+            }
+        }
+
+        if (currentNimi == null) {
+            return getUusinNimi(nimet);
+        }
+
+        return currentNimi.getNimi();
+    }
+
+    public static MonikielinenTeksti getUusinNimi(List<OrganisaatioNimi> nimet) {
+        OrganisaatioNimi uusinNimi = null;
+        for (OrganisaatioNimi nimi : nimet) {
+            if (uusinNimi == null) {
+                uusinNimi = nimi;
+            }
+            else if (nimi.getAlkuPvm().after(uusinNimi.getAlkuPvm())) {
+                uusinNimi = nimi;
+            }
+        }
+        if (uusinNimi == null) {
+            LOG.warn("Uusin nimi not found!");
+            return null;
+        }
+
+        return uusinNimi.getNimi();
+    }
+
+    public static boolean isValidCurrentNimi(OrganisaatioNimi nimi) {
         if (nimi.getAlkuPvm() != null) {
             Date today = new Date();
 

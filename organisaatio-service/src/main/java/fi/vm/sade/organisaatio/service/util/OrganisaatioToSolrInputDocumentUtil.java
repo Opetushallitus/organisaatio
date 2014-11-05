@@ -93,13 +93,10 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         }
         for (OrganisaatioNimi nimi : nimet) {
             LOG.debug("Nimihistoria " + fieldName + ": " + Joiner.on(", ").join(nimi.getNimi().getValues().values()));
-            Date today = new Date();
-            if (nimi.getAlkuPvm() != null) {
-                // Lisätään nimi kaikilla kielillä, jos nimen voimassaolopäivämäärä on tänään tai aiemmin
-                if (nimi.getAlkuPvm().before(today) || DateUtils.isSameDay(nimi.getAlkuPvm(), today)) {
-                    for (String nimiValue : nimi.getNimi().getValues().values())
-                        add(doc, fieldName, nimiValue);
-                }
+
+            // Lisätään nimi kaikilla kielillä
+            for (String nimiValue : nimi.getNimi().getValues().values()) {
+                add(doc, fieldName, nimiValue);
             }
         }
     }

@@ -80,8 +80,8 @@ app.factory('RyhmienHallintaModel', function($log,
                 if (ind !== -1) {
                     model.ryhmat.splice(ind, 1);
                 }
-                model.ryhmat.push(result);
-                callback(result);
+                model.ryhmat.push(result.organisaatio);
+                callback(result.organisaatio);
             }, virheCallback);
         },
 
