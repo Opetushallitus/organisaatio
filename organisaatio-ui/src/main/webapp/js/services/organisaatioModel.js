@@ -1245,12 +1245,19 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.fillYritysTiedot = function(yritystiedot) {
+            $log.debug('fillYritysTiedot(): ', yritystiedot);
+            var nimi = {
+                "nimi" : {
+                },
+                "alkuPvm" : ""
+            };
+
             // Tarkistetaan "kenttien" olemassaolo, sillä yritystiedot voidaan täyttää myöhemminkin
             if (yritystiedot.nimi) {
-                model.organisaatio.nimi.fi = yritystiedot.nimi;
+                nimi.nimi.fi = yritystiedot.nimi;
             }
             if (yritystiedot.svNimi) {
-                model.organisaatio.nimi.sv = yritystiedot.svNimi;
+                nimi.nimi.sv = yritystiedot.svNimi;
             }
             if (yritystiedot.ytunnus) {
                 model.organisaatio.ytunnus = yritystiedot.ytunnus;
@@ -1287,6 +1294,15 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
+
+            // Lisätään nimi nimihistoriaan, jos se eroaa nykyisestä nimestä
+            var nimiHistoriaModel = NimiHistoriaModel;
+            if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
+                nimi.alkuPvm = model.organisaatio.ytjpaivitysPvm;
+                nimiHistoriaModel.getNimihistoria().push(nimi);
+                this.setNimet();
+            }
+
         };
 
         // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
