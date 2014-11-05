@@ -1245,22 +1245,19 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.fillYritysTiedot = function(yritystiedot) {
-            // parse a date in dd.MM.yyyy format
-            var parseDate = function(input) {
-                if (!input) {
-                    return;
-                }
-                var parts = input.split('.');
-                // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-                return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
+            $log.debug('fillYritysTiedot(): ', yritystiedot);
+            var nimi = {
+                "nimi" : {
+                },
+                "alkuPvm" : ""
             };
 
             // Tarkistetaan "kenttien" olemassaolo, sillä yritystiedot voidaan täyttää myöhemminkin
             if (yritystiedot.nimi) {
-                model.organisaatio.nimi.fi = yritystiedot.nimi;
+                nimi.nimi.fi = yritystiedot.nimi;
             }
             if (yritystiedot.svNimi) {
-                model.organisaatio.nimi.sv = yritystiedot.svNimi;
+                nimi.nimi.sv = yritystiedot.svNimi;
             }
             if (yritystiedot.ytunnus) {
                 model.organisaatio.ytunnus = yritystiedot.ytunnus;
@@ -1285,7 +1282,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             if (yritystiedot.aloitusPvm) {
-                model.organisaatio.alkuPvm = parseDate(yritystiedot.aloitusPvm);
+                model.organisaatio.alkuPvm = moment(yritystiedot.aloitusPvm, 'DD.MM.YYYY');
             }
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
@@ -1297,6 +1294,15 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
+
+            // Lisätään nimi nimihistoriaan, jos se eroaa nykyisestä nimestä
+            var nimiHistoriaModel = NimiHistoriaModel;
+            if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
+                nimi.alkuPvm = model.organisaatio.ytjpaivitysPvm;
+                nimiHistoriaModel.getNimihistoria().push(nimi);
+                this.setNimet();
+            }
+
         };
 
         // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
@@ -1939,17 +1945,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.getOrganisaationTila = function() {
-
-            // parse a date in dd.MM.yyyy format
-            parseDate = function(input) {
-                if (!input) {
-                    return;
-                }
-                var parts = input.split('.');
-                // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-                return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
-            };
-
             var today = +new Date();
             today = this.formatDate(today);
 

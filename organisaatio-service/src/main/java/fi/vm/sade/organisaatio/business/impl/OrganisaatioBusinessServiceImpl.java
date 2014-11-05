@@ -23,11 +23,8 @@ import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
-import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioExistsException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiDeleteException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNimiModifiedException;
@@ -36,7 +33,6 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.AliorganisaatioModifiedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
-import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
@@ -63,7 +59,6 @@ import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
-import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
@@ -199,7 +194,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             if (model.getOppilaitosKoodi() != null && model.getOppilaitosKoodi().length() > 0) {
-                if (checkLearningInstitutionCodeIsUniqueAndNotUsed(model)) {
+                if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(model)) {
                     throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
                 }
             }
@@ -241,7 +236,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Validointi: koodistoureissa pitää olla versiotieto
-        checkVersionInKoodistoUris(model);
+        checker.checkVersionInKoodistoUris(model);
 
         Map<String, String> oldName = null;
         if (updating) {
@@ -259,7 +254,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE)
                 || organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE)) &&
                 !organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
-            checkToimipisteNimiFormat(entity, parentOrg.getNimi());
+            checker.checkToimipisteNimiFormat(entity, parentOrg.getNimi());
         }
 
         // Asetetaan päivittäjä ja päivityksen aikaleima
@@ -280,24 +275,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
             if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
                 LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
-                checkOrganisaatioHierarchy(entity, model.getParentOid());
+                checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
             }
 
             // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
             if (!entity.getTyypit().containsAll(orgEntity.getTyypit())
                     || !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
                 LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
-                checkOrganisaatioHierarchy(entity, model.getParentOid());
+                checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
             }
 
             // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
             if (OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), orgEntity.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
-                checkLakkautusAlkavatKoulutukset(entity);
+                checker.checkLakkautusAlkavatKoulutukset(entity);
             }
         } else {
             // Tarkistetaan organisaatio hierarkia
-            checkOrganisaatioHierarchy(entity, model.getParentOid());
+            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
         }
 
         // Generoidaan oidit
@@ -318,7 +313,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // If inserting, check if ytunnus allready exists in the database
         if (!updating && entity.getYtunnus() != null) {
-            checkYtunnusIsUniqueAndNotUsed(entity.getYtunnus());
+            checker.checkYtunnusIsUniqueAndNotUsed(entity.getYtunnus());
         }
 
         entity.setOrganisaatioPoistettu(false);
@@ -542,38 +537,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return (org.getTyypit() != null) && (org.getTyypit().contains(organisaatioTyyppi.value()));
     }
 
-    /**
-     * Check that given code has not been used.
-     *
-     * @param org
-     * @return
-     */
-    private boolean checkLearningInstitutionCodeIsUniqueAndNotUsed(OrganisaatioRDTO org) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("oppilaitosKoodi", org.getOppilaitosKoodi().trim());
-        if (orgs != null && orgs.size() > 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Check that given toimipistekoodi code has not been used.
-     *
-     * @param toimipistekoodi
-     * @return
-     */
-    private boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
-        if (orgs != null && orgs.size() > 0) {
-            // toimipistekoodi on jo olemassa
-            LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
-            return false;
-        }
-
-        return true;
-    }
-
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
             if (OrganisaatioUtil.isRyhma(organisaatio)) {
@@ -626,7 +589,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
             for (i = nextVal; i < 100; i++) {
                 jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
-                if (checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
+                if (checker.checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
                     entity.setOpetuspisteenJarjNro(jarjNro);
                     return jarjNro;
                 }
@@ -652,44 +615,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-    }
-
-    /**
-     * This is called when new organisaatio is saved - so there cannot be any
-     * existing ytunnus.
-     *
-     * @param ytunnus
-     */
-    private void checkYtunnusIsUniqueAndNotUsed(String ytunnus) {
-        if (ytunnus != null && !organisaatioDAO.isYtunnusAvailable(ytunnus)) {
-            throw new YtunnusException();
-        }
-    }
-
-    private void checkOrganisaatioHierarchy(Organisaatio organisaatio, String parentOid) {
-        LOG.debug("checkOrganisaatioHierarchy()");
-
-        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
-        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioDAO.findByOid(parentOid) : null;
-        if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio))) {
-            //check children
-            if (organisaatio.getId() != null) { // we can have children only if we are already saved
-                List<Organisaatio> children = organisaatioDAO.findChildren(organisaatio.getId());
-                for (Organisaatio child : children) {
-                    if (!validator.apply(Maps.immutableEntry(organisaatio, child))) {
-                        throw new OrganisaatioHierarchyException();
-                    }
-                }
-            }
-        } else {
-            throw new OrganisaatioHierarchyException();
-        }
-    }
-
-    private void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
-        if (organisaatioKoulutukset.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
-            throw new OrganisaatioLakkautusKoulutuksiaException();
-        }
     }
 
     private String updateKoodisto(Organisaatio entity, boolean reauthorize) {
@@ -748,75 +673,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
-    }
-
-    private void checkVersionInKoodistoUris(OrganisaatioRDTO model) {
-        // kotipaikka
-
-        // maa
-        // metadata.hakutoimistonNimi
-        // metadata.data
-        // kielet
-        for (int i = 0; i < model.getKieletUris().size(); ++i) {
-            if (model.getKieletUris().get(i).matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + model.getKieletUris().get(i));
-                throw new NoVersionInKoodistoUriException();
-            }
-        }
-
-        // oppilaitostyyppi
-        if (isEmpty(model.getOppilaitosTyyppiUri()) == false) {
-            if (model.getOppilaitosTyyppiUri().matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + model.getOppilaitosTyyppiUri());
-                throw new NoVersionInKoodistoUriException();
-            }
-        }
-
-        // yhteystieto.postinumero
-        // yhteystieto.kieli
-        for (int i = 0; i < model.getYhteystiedot().size(); ++i) {
-            if (model.getYhteystiedot().get(i).containsKey("kieli")) {
-                if (model.getYhteystiedot().get(i).get("kieli").matches(uriWithVersionRegExp) == false) {
-                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + model.getYhteystiedot().get(i).get("kieli"));
-                    throw new NoVersionInKoodistoUriException();
-                }
-            }
-        }
-    }
-
-    private void checkToimipisteNimiFormat(Organisaatio entity, MonikielinenTeksti parentNimi) {
-        LOG.debug("checkToimipisteNimiFormat");
-        MonikielinenTeksti nimi = entity.getNimi();
-        for (String key : nimi.getValues().keySet()) {
-            String p = parentNimi.getString(key);
-            String n = nimi.getString(key);
-            if (p != null && !p.isEmpty() && n != null) {
-                if (!n.startsWith(p)) {
-                    // TODO: Korjataanko formatti (1), palautetaan virhe (2) vai hyväksytään (3)?
-                    /* 1
-                     // Korjataan nimi oikeaan formaattiin
-                     nimi.addString(key, n.isEmpty() ? p : p + ", " + n);
-                     LOG.debug("Name[" + key + "] fixed from \"" + n + "\" to \"" + nimi.getString(key) + "\".");
-                     */
-                    LOG.warn("Invalid organisation name format: For toimipiste, name must be prefixed with parent name (lang:" + key
-                            + ", name:" + n + ", parentname:" + p + ")");
-                    /* 2
-                    throw new OrganisaatioNameFormatException();
-                    */
-                    /* 3
-                    OK
-                    */
-                } else {
-                    // OK
-                    LOG.debug("Name format OK for lang " + key);
-                }
-            } else {
-                // TODO: Heitetäänkö poikkeus vai hyväksytäänkö?
-                LOG.warn("Organisation name missing: For toimipiste, name must be given in all languages parent name exists (lang:" + key
-                        + ", name:" + n + ", parentname:" + p + ")");
-                //throw new OrganisaatioNameEmptyException();
-            }
-        }
     }
 
     private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
