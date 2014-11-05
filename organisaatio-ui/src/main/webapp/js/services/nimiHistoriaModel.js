@@ -163,7 +163,7 @@ app.factory('NimiHistoriaModel', function($log) {
             this.nimihistoria = nimihistoria;
 
             $log.log("init() done");
-        },
+        }
     };
 
     return model;

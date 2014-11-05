@@ -59,7 +59,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
                 resultArray.push(rTyyppiKoodi);
             });
         } else {
-            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
+            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe");
         }
     };
 
