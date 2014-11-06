@@ -27,7 +27,6 @@ import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
@@ -77,10 +76,15 @@ public class OrganisaatioBusinessChecker {
      * @param nimet
      */
     public void checkNimihistoriaAlkupvm(List<OrganisaatioNimi> nimet) {
+        Set alkuPvms = new HashSet();
         for (OrganisaatioNimi nimi : nimet) {
             if (nimi.getAlkuPvm() == null) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
+            if (alkuPvms.contains(nimi.getAlkuPvm())) {
+                throw new OrganisaatioNameHistoryNotValidException();
+            }
+            alkuPvms.add(nimi.getAlkuPvm());
         }
     }
 
