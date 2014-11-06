@@ -19,3 +19,4 @@ phantomjsdriver.log
 /.gradle
 **/pom.xml.versionsBackup
 **/*.orig
+solr-data/

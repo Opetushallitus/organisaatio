@@ -13,19 +13,21 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.service.search.it;
+package fi.vm.sade.organisaatio.service.search;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
-
 @Component
-@Profile("embedded-solr")
+@Profile(value = {"embedded-solr"})
 public class EmbeddedSolrServerFactory extends SolrServerFactory {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     EmbeddedSolrServer server = null;
 
@@ -36,8 +38,9 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
     private String SolrData;
 
     public SolrServer getSolrServer() {
+        log.info("**** Using embedded Solr server ****");
         if (server == null) {
-            System.setProperty("solr.solr.home", "src/main/resources/solr");
+            System.setProperty("solr.solr.home", "../organisaatio-service/src/main/resources/solr");
             System.setProperty("solr.data.dir", "target/solr-data");
             CoreContainer.Initializer initializer = new CoreContainer.Initializer();
             CoreContainer coreContainer = initializer.initialize();
