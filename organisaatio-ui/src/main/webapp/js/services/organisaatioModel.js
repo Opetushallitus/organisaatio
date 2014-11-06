@@ -1294,12 +1294,17 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
+            nimi.alkuPvm = model.organisaatio.ytjpaivitysPvm;
 
             // Lisätään nimi nimihistoriaan, jos se eroaa nykyisestä nimestä
             var nimiHistoriaModel = NimiHistoriaModel;
             if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
-                nimi.alkuPvm = model.organisaatio.ytjpaivitysPvm;
-                nimiHistoriaModel.getNimihistoria().push(nimi);
+                if (nimiHistoriaModel.getNimi().alkuPvm === nimi.alkuPvm) {
+                    nimiHistoriaModel.getNimi().nimi = nimi.nimi;
+                }
+                else {
+                    nimiHistoriaModel.getNimihistoria().push(nimi);
+                }
                 this.setNimet();
             }
 
