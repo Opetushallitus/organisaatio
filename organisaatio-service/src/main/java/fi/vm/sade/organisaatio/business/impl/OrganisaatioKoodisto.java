@@ -22,7 +22,6 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +73,7 @@ public class OrganisaatioKoodisto {
      * @return Koodiobjekti tai null jos ei löytynyt
      */
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
+        tunniste = tunniste.replace("-", "");
         String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1");
         LOG.debug("Haettiin koodi: " + (json == null ? null : json.toString()));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
