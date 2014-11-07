@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function RyhmienHallintaController($scope, $filter, $routeParams,
+function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
                                    $log, $injector,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
@@ -52,12 +52,28 @@ function RyhmienHallintaController($scope, $filter, $routeParams,
 
     $scope.poista = function() {
         if ($scope.currentGroup !== null) {
-            $scope.model.delete($scope.currentGroup, function(result) {
-                $scope.currentGroup = null;
-            }, function(error) {
-                loadingService.onErrorHandled();
-                $log.warn("Failed to delete group: ", $scope.currentGroup);
-                Alert.add("error", error, false);
+            var modalInstance = $modal.open({
+                templateUrl: 'ryhmanpoisto.html',
+                controller: RyhmaDeleteController,
+                resolve: {
+                    nimi: function () {
+                        return $scope.localizeNimi($scope.currentGroup);
+                    }
+                }
+            });
+
+            modalInstance.result.then(function() {
+                $log.debug('Ryhmän poisto vahvistettu');
+
+                $scope.model.delete($scope.currentGroup, function(result) {
+                    $scope.currentGroup = null;
+                }, function(error) {
+                    loadingService.onErrorHandled();
+                    $log.warn("Failed to delete group: ", $scope.currentGroup);
+                    Alert.add("error", error, false);
+                });
+            }, function () {
+                $log.debug('Ryhmän poisto peruttu');
             });
         }
     };

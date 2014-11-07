@@ -190,7 +190,6 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
      * AND org_nimi2.alkupvm <= '2014-09-01'
      * )
      * AND org.id = org_nimi.organisaatio_id
-     * LIMIT 1
      * )
      *
      * Ylläoleva SQL lauseke on alla kirjoitettu HQL muotoon.
@@ -212,7 +211,6 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
                 + "AND org_nimi2.alkuPvm <= '" + df.format(new Date()) + "' "
                 + ") "
                 + "AND org = org_nimi.organisaatio "
-                + "LIMIT 1 "
                 + ")";
 
         Query q = getEntityManager().createQuery(s);
