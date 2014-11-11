@@ -17,8 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.WWW_PATTERN;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
@@ -34,17 +32,18 @@ import fi.vm.sade.security.xssfilter.XssFilterListener;
 @EntityListeners(XssFilterListener.class)
 public class Www extends Yhteystieto {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
+    // Huom. Alunperin www pattern tuli tuolta: fi.vm.sade.generic.common.validation.ValidationConstants.WWW_PATTERN;
     @NotNull
-    @Pattern(regexp = "[-a-zA-Z0-9+&@#/%ÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%ÄäÖö=~_|]", message = "{validation.invalid.www}")
+    @Pattern(regexp = "^(https?)(:\\/\\/)([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
     @FilterXss
     private String wwwOsoite;
-    
+
     public Www() {
         this.yhteystietoOid = "" + System.currentTimeMillis() + Math.random();
     }
-    
+
     public Www(String oid) {
         this.yhteystietoOid = (oid != null) ? oid : "" + System.currentTimeMillis() + Math.random();
     }
