@@ -3326,16 +3326,16 @@
   </wsdl:binding>
   <wsdl:service name="YritysTiedot">
     <wsdl:port name="YritysTiedotSoap" binding="tns:YritysTiedotSoap">
-      <soap:address location="http://www.ytj.fi/yritystiedot.asmx" />
+      <soap:address location="https://www.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotSoap12" binding="tns:YritysTiedotSoap12">
-      <soap12:address location="http://www.ytj.fi/yritystiedot.asmx" />
+      <soap12:address location="https://www.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotHttpGet" binding="tns:YritysTiedotHttpGet">
-      <http:address location="http://www.ytj.fi/yritystiedot.asmx" />
+      <http:address location="https://www.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotHttpPost" binding="tns:YritysTiedotHttpPost">
-      <http:address location="http://www.ytj.fi/yritystiedot.asmx" />
+      <http:address location="https://www.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
