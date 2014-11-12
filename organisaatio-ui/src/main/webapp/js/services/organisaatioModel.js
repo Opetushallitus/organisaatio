@@ -123,6 +123,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             hpsamaosoite: {}
         };
 
+        this.url = {
+            autofill: 'http://',
+            validator: '^(https?)(:\/\/)([-a-zA-Z0-9+&@#\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\/%ÅåÄäÖö=~_|])'
+        };
+
         // Sosiaalinen media
         this.some = [];
         this.sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
@@ -1298,7 +1303,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // Lisätään nimi nimihistoriaan, jos se eroaa nykyisestä nimestä
             var nimiHistoriaModel = NimiHistoriaModel;
-            if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
+
+            // Uuden organisaation tapauksess ei ole nimihistoriaa
+            if (nimiHistoriaModel.getNimi() === null) {
+                nimiHistoriaModel.getNimihistoria().push(nimi);
+                this.setNimet();
+            }
+            else if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
                 if (nimiHistoriaModel.getNimi().alkuPvm === nimi.alkuPvm) {
                     nimiHistoriaModel.getNimi().nimi = nimi.nimi;
                 }
@@ -1900,7 +1911,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.localize = function(name) {
             var ret = $filter('i18n')("Organisaationtarkastelu." + name);
-            if (ret.indexOf("[")===0) {
+            // Jos ei löydy käännöstä tarkastelun puolelta, katsotaan onko muokkauksen puolella.
+            if (ret.indexOf("Missing translation ")===0) {
                 ret = $filter('i18n')("Organisaationmuokkaus." + name);
             }
             return ret;

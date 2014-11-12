@@ -555,10 +555,11 @@
             <div class="controls">
                 <input id="wwwosoite" type="text" name="wwwosoite" class="span6" maxlength="255"
                        ng-model="model.yhteystiedot[model.ytlang].www.www" oph-null-if-zero-length oph-enter
-                       ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false" codes-combined-field/>
+                       ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false"
+                       http-prefix oph-pattern="{{model.url.validator}}"/>
                 <div>
-                    <span class="text-error" ng-show="yhteystiedot.wwwosoite.$error.codescombinedrequired">
-                        {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                    <span class="text-error" ng-show="yhteystiedot.wwwosoite.$error.ophPattern">
+                        {{'Organisaationmuokkaus.validation.some'| i18n}}</span>
                 </div>
             </div>
         </div>
@@ -825,10 +826,11 @@
                     <div class="controls">
                         <input id="mdwwwosoite" type="text" name="mdwwwosoite" class="span6" maxlength="255"
                                ng-model="model.mdyhteystiedot[model.hplang].www.www" oph-null-if-zero-length oph-enter
-                               ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false"/>
+                               ie-placeholder placeholder="{{'Organisaationtarkastelu.wwwosoite'| i18n}}" ng-required="false"
+                               http-prefix oph-pattern="{{model.url.validator}}"/>
                         <div>
-                            <span class="text-error" ng-show="hakijapalvelut.mdwwwosoite.$error.codescombinedrequired">
-                                {{'codes.validation.codescombinedrequired'| i18n}}</span>
+                            <span class="text-error" ng-show="hakijapalvelut.mdwwwosoite.$error.ophPattern">
+                                {{'Organisaationmuokkaus.validation.some'| i18n}}</span>
                         </div>
                     </div>
                 </div>
@@ -951,7 +953,8 @@
             <div>
                 <a href="" ng-model="someexpanded" ng-click="someexpanded = !someexpanded">
                     <label>
-                        <span ng-class="{'icon-chevron-down':someexpanded, 'icon-chevron-right':!someexpanded}"></span> {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+                        <span ng-class="{'icon-chevron-down':someexpanded, 'icon-chevron-right':!someexpanded}"></span>
+                        {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
                     </label>
                 </a>
             </div>

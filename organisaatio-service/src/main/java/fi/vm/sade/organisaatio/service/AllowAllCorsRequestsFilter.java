@@ -42,7 +42,7 @@ public class AllowAllCorsRequestsFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        LOG.info("doFilter()");
+        LOG.debug("doFilter()");
 
         if (response instanceof HttpServletResponse) {
             HttpServletRequest req = (HttpServletRequest) request;
