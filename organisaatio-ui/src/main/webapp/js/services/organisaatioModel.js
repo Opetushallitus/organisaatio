@@ -1303,7 +1303,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // Lisätään nimi nimihistoriaan, jos se eroaa nykyisestä nimestä
             var nimiHistoriaModel = NimiHistoriaModel;
-            if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
+
+            // Uuden organisaation tapauksess ei ole nimihistoriaa
+            if (nimiHistoriaModel.getNimi() === null) {
+                nimiHistoriaModel.getNimihistoria().push(nimi);
+                this.setNimet();
+            }
+            else if (angular.equals(nimiHistoriaModel.getNimi().nimi, nimi.nimi) === false) {
                 if (nimiHistoriaModel.getNimi().alkuPvm === nimi.alkuPvm) {
                     nimiHistoriaModel.getNimi().nimi = nimi.nimi;
                 }
