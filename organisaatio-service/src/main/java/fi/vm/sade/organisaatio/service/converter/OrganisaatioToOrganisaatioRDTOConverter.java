@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.Email;
@@ -167,7 +168,12 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         Map<String, String> result = new HashMap<String, String>();
 
         if (nimi != null) {
-            result.putAll(nimi.getValues());
+            // Lisätään vastauksiin kaikki nimen kielet, joissa tekstiä
+            for (Map.Entry<String, String> entry : nimi.getValues().entrySet()) {
+                if (isNullOrEmpty(entry.getValue()) == false) {
+                    result.put(entry.getKey(), entry.getValue());
+                }
+            }
         }
 
         return result;
