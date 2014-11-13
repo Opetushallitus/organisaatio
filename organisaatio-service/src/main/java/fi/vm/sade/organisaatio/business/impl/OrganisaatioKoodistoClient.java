@@ -18,6 +18,7 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -110,6 +111,11 @@ public class OrganisaatioKoodistoClient {
         }
     }
 
+    private String createKoodistoServiceParameters() {
+        // Estetään cachen käyttö
+        return "?noCache=" + new Date().getTime();
+    }
+
     /**
      * Hae koodi URIn mukaan
      *
@@ -120,10 +126,11 @@ public class OrganisaatioKoodistoClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
-        LOG.debug("GET " + koodistoServiceUrl + uri);
+        String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
+        LOG.debug("GET " + url);
         String json = null;
         HttpClient client = new DefaultHttpClient();
-        HttpGet get = new HttpGet(koodistoServiceUrl + uri);
+        HttpGet get = new HttpGet(url);
         try {
             HttpResponse resp = client.execute(get);
             json = EntityUtils.toString(resp.getEntity(), "UTF-8");
@@ -138,7 +145,7 @@ public class OrganisaatioKoodistoClient {
                 throw new OrganisaatioKoodistoException(err);
             }
         } catch (IOException e) {
-            String err = "Failed to GET " + koodistoServiceUrl + uri + ": " + e.getMessage();
+            String err = "Failed to GET " + url + ": " + e.getMessage();
             LOG.error(err);
             throw new OrganisaatioKoodistoException(err);
         }
