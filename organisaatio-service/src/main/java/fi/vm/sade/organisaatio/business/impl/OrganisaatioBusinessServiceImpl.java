@@ -676,6 +676,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
+        updateOrganisaatioNameHierarchy(oppilaitos, oldName, true);
+    }
+
+    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, boolean updatePaivittaja) {
         LOG.debug("updateOrganisaatioNameHierarchy()");
 
         if (oppilaitos.getId() != null) {
@@ -697,11 +701,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     } else if (oldChildName.startsWith(oldParentName)) {
                         // päivitetään toimipisteen nimen alkuosa
                         childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
-                        try {
-                            child.setPaivittaja(getCurrentUser());
-                            child.setPaivitysPvm(new Date());
-                        } catch (Throwable t) {
-                            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
+
+                        // Päivitetään organisaation päivittäjän tiedot
+                        if (updatePaivittaja) {
+                            try {
+                                child.setPaivittaja(getCurrentUser());
+                                child.setPaivitysPvm(new Date());
+                            } catch (Throwable t) {
+                                throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
+                            }
                         }
                         organisaatioDAO.update(child);
                         childChanged = true;
@@ -997,7 +1005,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
             if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
-                updateOrganisaatioNameHierarchy(organisaatio, oldName);
+                // Ei päivitetä organisaation päivittäjää nimenmuutoksen yhteydessä
+                updateOrganisaatioNameHierarchy(organisaatio, oldName, false);
             }
 
             // Päivitetään tiedot koodistoon.
