@@ -15,10 +15,12 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
+import java.util.HashMap;
 import java.util.Map;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -36,7 +38,8 @@ public class OrganisaatioNimiModelMapper extends ModelMapper {
         super();
 
         // Monikielinen teksti
-        final Converter<Map<String, String>, MonikielinenTeksti> monikielinentTekstiConverter = new Converter<Map<String, String>, MonikielinenTeksti>() {
+        final Converter<Map<String, String>, MonikielinenTeksti> monikielinentTekstiConverter =
+                new Converter<Map<String, String>, MonikielinenTeksti>() {
             @Override
             public MonikielinenTeksti convert(MappingContext<Map<String, String>, MonikielinenTeksti> mc) {
                 MonikielinenTeksti mt = new MonikielinenTeksti();
@@ -47,11 +50,28 @@ public class OrganisaatioNimiModelMapper extends ModelMapper {
             }
         };
 
+        // Poistetaan tyhjät stringit
+        final Converter<Map<String, String>, Map<String, String>> mapRemoveEmptyValuesConverter =
+                new Converter<Map<String, String>, Map<String, String>>() {
+            @Override
+            public Map<String, String> convert(MappingContext<Map<String, String>, Map<String, String>> mc) {
+                Map<String, String> result = new HashMap<>();
+                for (Map.Entry<String, String> entry : mc.getSource().entrySet()) {
+                    if (isNullOrEmpty(entry.getValue()) == false) {
+                        result.put(entry.getKey(), entry.getValue());
+                    }
+                }
+
+                return result;
+            }
+        };
+
         this.addMappings(new PropertyMap<OrganisaatioNimi, OrganisaatioNimiDTOV2>() {
             @Override
             protected void configure() {
-                // Monikielinen nimi
-                map().setNimi(source.getNimi().getValues());
+                // Monikielinen nimi --> Map<String, String>
+                // Lisätään kaikki nimen kieliversiot, jotka eivät ole tyhjiä
+                using(mapRemoveEmptyValuesConverter).map(source.getNimi().getValues()).setNimi(null);
             }
         });
 
@@ -66,8 +86,9 @@ public class OrganisaatioNimiModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<OrganisaatioNimi, OrganisaatioNimiRDTO>() {
             @Override
             protected void configure() {
-                // Monikielinen nimi
-                map().setNimi(source.getNimi().getValues());
+                // Monikielinen nimi --> Map<String, String>
+                // Lisätään kaikki nimen kieliversiot, jotka eivät ole tyhjiä
+                using(mapRemoveEmptyValuesConverter).map(source.getNimi().getValues()).setNimi(null);
             }
         });
 
