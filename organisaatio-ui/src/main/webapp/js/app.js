@@ -23,6 +23,7 @@ var app = angular.module('organisaatio',
     'ui.bootstrap',
     'ngSanitize',
     'ui.tinymce',
+    'ui.select',
     'ngCookies',
     'ngIdle']);
 
