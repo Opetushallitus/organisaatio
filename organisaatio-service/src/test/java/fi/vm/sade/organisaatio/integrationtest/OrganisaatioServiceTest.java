@@ -187,7 +187,6 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 //        LOG.info("STATISTICS: {}", emfImpl.getSessionFactory().getStatistics());
     }
 
-
     @Test
     public void createKoulutustoimija_happyPath() throws GenericFault {
         String nimi = "createxxxxx";
@@ -768,13 +767,13 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         for (OrganisaatioDTO org:result) {
             LOG.debug("ORG: {}",org.getOid() );
         }
-        assertEquals(4, result.size());
+        assertEquals(5, result.size());
 
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, true,null);
         result = organisaatioService.searchOrganisaatios(searchCriteria);
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
 
 //        //Asserting that if searching for ytunnus searchStr bar returns empty
 //        searchCriteria = createOrgSearchCriteria(null, null, "bar", true, false, true, true,null);
@@ -787,7 +786,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
 //        assertEquals(1, result.size());
 
         //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
-        searchCriteria = createOrgSearchCriteria(null, "Ammattikorkeakoulut", null, true, true,null);
+        searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, true, null);
         result = organisaatioService.searchOrganisaatios(searchCriteria);
         assertEquals(2, result.size());
     }
@@ -822,7 +821,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
                 rootcount ++;
             }
         }
-        Assert.assertEquals(7, count);
+        Assert.assertEquals(8, count);
         Assert.assertEquals(1, rootcount);
     }
 
@@ -838,7 +837,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
                 rootcount ++;
             }
         }
-        Assert.assertEquals(7, count);
+        Assert.assertEquals(8, count);
         Assert.assertEquals(1, rootcount);
     }
 
@@ -855,7 +854,7 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
                 rootcount ++;
             }
         }
-        Assert.assertEquals(4, count);
+        Assert.assertEquals(5, count);
         Assert.assertEquals(0, rootcount);
     }
 
@@ -875,7 +874,8 @@ public class OrganisaatioServiceTest extends SecurityAwareTestBase {
         param.setSearchOid("1.2.246.562.24.00000000001");
 
         OrganisaatioOidListType result = organisaatioService.findChildrenOidsByOid(param);
-        assertTrue(result.getOrganisaatioOidList() != null && result.getOrganisaatioOidList().size() == 6);
+        assertNotNull(result.getOrganisaatioOidList());
+        assertEquals(7, result.getOrganisaatioOidList().size());
     }
 
 //    @Test

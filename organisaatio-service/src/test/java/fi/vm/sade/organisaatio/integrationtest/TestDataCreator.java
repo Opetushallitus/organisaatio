@@ -17,38 +17,42 @@
 
 package fi.vm.sade.organisaatio.integrationtest;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.model.Email;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.Osoite;
+import fi.vm.sade.organisaatio.model.Puhelinnumero;
+import fi.vm.sade.organisaatio.model.Www;
+import fi.vm.sade.organisaatio.model.Yhteystieto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-
 /**
- *
  * @author Tuomas Katva
  */
 @Component
+@Transactional
 public class TestDataCreator {
 
     @Autowired
     OrganisaatioDAOImpl organisaatioDAO;
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    @Autowired
+    OrganisaatioNimiDAO organisaatioNimiDAO;
 
     public void createInitialTestData() {
 
@@ -61,11 +65,12 @@ public class TestDataCreator {
         Organisaatio rootOfAllEvil = initCreateOrLoad("opetushallitus", "6666666-6", null, null, null, null, "1.2.246.562.24.00000000001");
 
         Organisaatio root = initCreateOrLoad("root test koulutustoimija", "1234567-1", rootOfAllEvil, null, null, null, "1.2.2004.1");
-        Organisaatio node1 = initCreateOrLoad("node1 asd", "1234567-2", root, futureStart.getTime(), null, "Ammattikorkeakoulut", "1.2.2004.2");
-        Organisaatio node2 = initCreateOrLoad("node2 foo", "1234567-3", root, null, pastStop.getTime(), "Yliopistot", "1.2.2004.3");
-        Organisaatio node22 = initCreateOrLoad("node22 foo bar", "1234567-4", node2, null, null, "Yliopistot", "1.2.2004.4");
+        Organisaatio node1 = initCreateOrLoad("node1 asd", "1234567-2", root, futureStart.getTime(), null, "oppilaitostyyppi_41#1", "1.2.2004.2");
+        Organisaatio node2 = initCreateOrLoad("node2 foo", "1234567-3", root, null, pastStop.getTime(), "oppilaitostyyppi_42#1", "1.2.2004.3");
+        Organisaatio node22 = initCreateOrLoad("node22 foo bar", "1234567-4", node2, null, null, "oppilaitostyyppi_42#1", "1.2.2004.4");
+        Organisaatio node23 = initCreateOrLoad("node23 foo bar", "1234568-4", node2, null, null, "oppilaitostyyppi_42#1", "1.2.2005.4");
         Organisaatio root2 = initCreateOrLoad("root2 test2 koulutustoimija2", "1234567-5", rootOfAllEvil, futureStart.getTime(), null, null, "1.2.2004.5");
-        Organisaatio nodex = initCreateOrLoad("nodex bar", "1234567-6", root2, null, pastStop.getTime(), "Ammattikorkeakoulut", "1.2.2004.6");
+        Organisaatio nodex = initCreateOrLoad("nodex bar", "1234567-6", root2, null, pastStop.getTime(), "oppilaitostyyppi_41#1", "1.2.2004.6");
     }
 
     private Organisaatio initCreateOrLoad(String nimi, String ytunnus, Organisaatio parent, Date startDate, Date endDate, String oppilaitostyyppi, String oid) {
@@ -76,7 +81,8 @@ public class TestDataCreator {
             }
             Organisaatio organisaatio = new Organisaatio();
             organisaatio.setOid(oid);
-            organisaatio.setNimi(setNimiValue("fi", nimi));//((Fi(nimi);
+            OrganisaatioNimi orgNimi = createNimi("fi", nimi);
+            organisaatio.setNimi(orgNimi.getNimi());//((Fi(nimi);
             organisaatio.setNimihaku(nimi);
             organisaatio.setYtunnus(ytunnus);
             organisaatio.setKotipaikka("Helsinki");
@@ -86,18 +92,21 @@ public class TestDataCreator {
             organisaatio.setOrganisaatioPoistettu(false);
             if (parent != null) {
                 if (!parent.getOid().equals("1.2.246.562.24.00000000001")) {
-                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
-                organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
+                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
+                    organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
                 } else {
-                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
+                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
                 }
-            } else  {
+            } else {
                 organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
             }
 
             createYhteystietos(organisaatio);
 
             organisaatio = organisaatioDAO.insert(organisaatio);
+
+            orgNimi.setOrganisaatio(organisaatio);
+            organisaatioNimiDAO.insert(orgNimi);
 
             if (parent != null) {
                 OrganisaatioSuhde suhde = organisaatioSuhdeDAO.addChild(parent.getId(), organisaatio.getId(), Calendar.getInstance().getTime(), null);
@@ -112,10 +121,19 @@ public class TestDataCreator {
         }
     }
 
+    private OrganisaatioNimi createNimi(String lang, String nimi) {
+        MonikielinenTeksti monikielinenTeksti = setNimiValue(lang, nimi);
+        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
+        organisaatioNimi.setNimi(monikielinenTeksti);
+        organisaatioNimi.setAlkuPvm(new Date(0));
+        return organisaatioNimi;
+    }
+
     private MonikielinenTeksti setNimiValue(String lang, String value) {
-    	MonikielinenTeksti nimi = new MonikielinenTeksti();
-    	nimi.addString(lang, value);
-    	return nimi;
+        MonikielinenTeksti nimi = new MonikielinenTeksti();
+        nimi.addString(lang, value);
+
+        return nimi;
     }
 
     private void createYhteystietos(Organisaatio organisaatio) {
@@ -141,6 +159,9 @@ public class TestDataCreator {
         email.setOrganisaatio(organisaatio);
         yhteystiedot.add(email);
 
+        for (Yhteystieto yt : yhteystiedot) {
+            yt.setKieli("kieli_fi#1");
+        }
         organisaatio.setYhteystiedot(yhteystiedot);
 
     }

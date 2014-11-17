@@ -266,6 +266,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
+        boolean parentChanged = false;
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             mergeAuxData(entity, orgEntity);
@@ -276,6 +277,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
                 LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
                 checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+                parentChanged = true;
             }
 
             // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
@@ -414,6 +416,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
         if (updating && parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
             updateOrganisaatioNameHierarchy(entity, oldName);
+        }
+
+        // Parent changed update children.
+        if (parentChanged) {
+            updateChildren(entity);
         }
 
         // Päivitä tiedot koodistoon.
@@ -673,6 +680,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
+    }
+
+    private void updateChildren(Organisaatio parent) {
+        List<Organisaatio> children = organisaatioDAO.findChildren(parent.getId());
+        for (Organisaatio child : children) {
+            // Create new parent id / oid paths for child.
+            createParentPath(child, parent.getOid());
+            organisaatioDAO.update(child);
+        }
+        solrIndexer.index(children);
     }
 
     private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {

@@ -1,9 +1,19 @@
 package fi.vm.sade.organisaatio.resource;
 
-import java.util.Random;
-
+import com.google.common.base.Joiner;
+import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.integrationtest.TestDataCreator;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import junit.framework.Assert;
-
+import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,85 +23,123 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Joiner;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
-import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.api.model.GenericFault;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
-import fi.vm.sade.organisaatio.integrationtest.OrganisaatioTstUtils;
-
-@ContextConfiguration(locations = { "classpath:spring/test-context.xml" })
+@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
 @ActiveProfiles("embedded-solr")
 public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     OrganisaatioResource res;
-
-    Random r = new Random(0);
-
-    private static final Logger LOG = LoggerFactory
-            .getLogger(OrganisaatioDAOImplTest.class);
+    @Autowired
+    TestDataCreator dataUtil;
+    @Autowired
+    IndexerResource solrIndexer;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
-    @Autowired
-    OrganisaatioService organisaatioService;
+    @Override
+    @Before
+    public void before() {
+        super.before();
+        Locale.setDefault(Locale.US); // because of validaton messages
+        //TODO: This should be replaced with more direct data injection system. (DBUnit / Spring JDBC Template).
+        dataUtil.createInitialTestData();
+        solrIndexer.reBuildIndex(true); //rebuild index
+    }
 
-    // @Autowired
-    // OrganisaatioDAOImpl organisaatioDAO;
-    //
-    // @Autowired
-    // OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    @Override
+    @After
+    public void after() {
+    }
 
     @Test
-    public void test() throws Exception {
-        LOG.info("doTest()...");
-        OrganisaatioDTO a = createOrganisaatio("A", null);
-        OrganisaatioDTO b = createOrganisaatio("B", a);
-        OrganisaatioDTO c = createOrganisaatio("C", b);
-        OrganisaatioDTO d = createOrganisaatio("D", c);
-        OrganisaatioDTO e = createOrganisaatio("E", d);
-
+    public void testParentOids() throws Exception {
         String reference = Joiner.on("/").join(
-                new String[] { rootOrganisaatioOid, a.getOid(), b.getOid(),
-                        c.getOid(), d.getOid(), e.getOid() });
+                new String[]{rootOrganisaatioOid, "1.2.2004.1", "1.2.2004.3", "1.2.2005.4"});
 
-        String s = res.parentoids(e.getOid());
+        String s = res.parentoids("1.2.2005.4");
         Assert.assertEquals(reference, s);
-
     }
 
-    int c = 0;
+    @Test
+    public void testChangeParentOid() throws Exception {
+        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3");
+        LOG.info("Path: {}", node2foo.getParentOidPath());
+        LOG.info("Names: {}", node2foo.getNimet());
 
-    private OrganisaatioDTO createOrganisaatio(String nimi,
-            OrganisaatioDTO parent) throws GenericFault {
-        LOG.info("createOrganisaatio({})", nimi);
-
-        OrganisaatioDTO o = new OrganisaatioDTO();
-        if (parent != null) {
-            o.setParentOid(parent.getOid());
+        for (OrganisaatioRDTO child : res.children(node2foo.getOid())) {
+            LOG.info("Child path: {}", child.getParentOidPath());
         }
-        o.setOid(Long.toString(c++));
-        o.getTyypit().add(OrganisaatioTyyppi.MUU_ORGANISAATIO);
+        // Change parent from root -> root2
+        String parentOid = "1.2.2004.5";
+        node2foo.setParentOid(parentOid);
+        ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
+        Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
+        LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
 
-        o.setNimi(new MonikielinenTekstiTyyppi());
-        o.getNimi().getTeksti().add(new Teksti(nimi, "FI"));
-
-        o.getYhteystiedot().add(OrganisaatioTstUtils.DEFAULT_POSTIOSOITE);
-
-        o = organisaatioService.createOrganisaatio(o, true);
-
-        return o;
+        List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid());
+        Assert.assertEquals("Children count should match!", 2, children.size());
+        for (OrganisaatioRDTO child : children) {
+            LOG.info("Child oid path: {}, id path: {}", child.getParentOidPath());
+            Assert.assertEquals("Child parent oid path should match!",
+                    updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
+        }
     }
 
+    @Test
+    public void testSearchOrganisaatios() throws Exception {
+        //Finding all koulutustoimijat
+        OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null, null, true, null);
+        OrganisaatioHakutulos result = res.searchHierarchy(searchCriteria);
+        assertEquals(5, result.getNumHits());
+
+        //List roots
+        ArrayList<String> oidList = new ArrayList<String>();
+        oidList.add("1.2.2004.1");
+        oidList.add("1.2.2004.5");
+        searchCriteria = createOrgSearchCriteria(null, null, null, true, oidList);
+        result = res.searchHierarchy(searchCriteria);
+        for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
+            LOG.debug("ORG: {}", org.getOid());
+        }
+        assertEquals(5, result.getNumHits());
+
+        //Finding all organisaatios with bar in name
+        searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
+        result = res.searchHierarchy(searchCriteria);
+        assertEquals(3, result.getNumHits());
+
+        //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
+        searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
+        result = res.searchHierarchy(searchCriteria);
+        assertEquals(2, result.getNumHits());
+    }
+
+    private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
+                                                               boolean suunnitellut, List<String> oids) {
+        OrganisaatioSearchCriteria sc = new OrganisaatioSearchCriteria();
+        sc.setOrganisaatioTyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
+        Set<String> tyypit = new HashSet<>();
+        if (!StringUtils.isEmpty(oppilaitosTyyppi)) {
+            tyypit.add(oppilaitosTyyppi);
+        }
+        sc.setOppilaitosTyyppi(tyypit);
+        sc.setSearchStr(searchStr);
+        sc.setSuunnitellut(suunnitellut);
+        if (oids != null) {
+            sc.setOidRestrictionList(oids);
+        }
+        return sc;
+
+    }
 }

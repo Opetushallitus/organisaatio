@@ -15,11 +15,13 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -31,17 +33,25 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
 
     EmbeddedSolrServer server = null;
 
-    // @Value("${foo}")
-    private String SolrHome;
+    @Value("${organisaatio.embedded-solr.home:#{null}}")
+    private String solrHome;
 
-    // @Value("${foo}")
-    private String SolrData;
+    @Value("${organisaatio.embedded-solr.dataDir:#{null}}")
+    private String solrData;
 
     public SolrServer getSolrServer() {
         log.info("**** Using embedded Solr server ****");
+        if (StringUtils.isEmpty(solrHome)) {
+            solrHome = "../organisaatio-service/src/main/resources/solr/";
+        }
+
+        if (StringUtils.isEmpty(solrData)) {
+            solrData = "target/solr-data";
+        }
+
         if (server == null) {
-            System.setProperty("solr.solr.home", "../organisaatio-service/src/main/resources/solr");
-            System.setProperty("solr.data.dir", "target/solr-data");
+            System.setProperty("solr.solr.home", solrHome);
+            System.setProperty("solr.data.dir", solrData);
             CoreContainer.Initializer initializer = new CoreContainer.Initializer();
             CoreContainer coreContainer = initializer.initialize();
             server = new EmbeddedSolrServer(coreContainer, "organisaatiot");
