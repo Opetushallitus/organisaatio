@@ -17,7 +17,7 @@ Union Public Licence for more details. -->
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>12.4</version>
+        <version>13.0</version>
     </parent>
 
     <artifactId>organisaatio-api</artifactId>
