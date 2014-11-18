@@ -37,8 +37,13 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
+    $scope.currentGroupSelection = {};
 
     $scope.koodisto = RyhmaKoodisto;
+
+    $scope.valitseRyhma = function(group) {
+        $scope.currentGroup = group;
+    };
 
     $scope.localizeNimi = function(ryhma) {
         return ryhma.nimi[language] ||
@@ -48,6 +53,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.luoUusi = function() {
         $scope.currentGroup = $scope.model.create($routeParams.parentoid);
+        $scope.currentGroupSelection = {};
     };
 
     $scope.poista = function() {
@@ -67,6 +73,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
                 $scope.model.delete($scope.currentGroup, function(result) {
                     $scope.currentGroup = null;
+                    $scope.currentGroupSelection = {};
                 }, function(error) {
                     loadingService.onErrorHandled();
                     $log.warn("Failed to delete group: ", $scope.currentGroup);
@@ -82,6 +89,8 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
         if ($scope.currentGroup !== null) {
             $scope.model.save($scope.currentGroup, function(savedGroup) {
                 $scope.currentGroup = savedGroup;
+                $scope.currentGroupSelection = {};
+                $scope.currentGroupSelection.selected = savedGroup;
                 $scope.form.$setPristine();
             }, function(error) {
                 loadingService.onErrorHandled();
@@ -93,6 +102,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.peruuta = function() {
         $scope.currentGroup = null;
+        $scope.currentGroupSelection = {};
         $scope.model.reload($routeParams.parentoid, function(result) {
             $scope.form.$setPristine();
         }, function(error) {
