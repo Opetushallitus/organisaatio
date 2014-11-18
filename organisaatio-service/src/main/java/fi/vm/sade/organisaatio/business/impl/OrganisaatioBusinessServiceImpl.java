@@ -166,6 +166,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     metadata.getNimi().setId(orgMetadata.getNimi().getId());
                     metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
                 }
+                if (orgMetadata.getHakutoimistoEctsNimi() != null) {
+                    metadata.getHakutoimistoEctsNimi().setId(orgMetadata.getHakutoimistoEctsNimi().getId());
+                    metadata.getHakutoimistoEctsNimi().setVersion(orgMetadata.getHakutoimistoEctsNimi().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsEmail() != null) {
+                    metadata.getHakutoimistoEctsEmail().setId(orgMetadata.getHakutoimistoEctsEmail().getId());
+                    metadata.getHakutoimistoEctsEmail().setVersion(orgMetadata.getHakutoimistoEctsEmail().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsPuhelin() != null) {
+                    metadata.getHakutoimistoEctsPuhelin().setId(orgMetadata.getHakutoimistoEctsPuhelin().getId());
+                    metadata.getHakutoimistoEctsPuhelin().setVersion(orgMetadata.getHakutoimistoEctsPuhelin().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsTehtavanimike() != null) {
+                    metadata.getHakutoimistoEctsTehtavanimike().setId(orgMetadata.getHakutoimistoEctsTehtavanimike().getId());
+                    metadata.getHakutoimistoEctsTehtavanimike().setVersion(orgMetadata.getHakutoimistoEctsTehtavanimike().getVersion());
+                }
                 for (NamedMonikielinenTeksti value : metadata.getValues()) {
                     MonikielinenTeksti mkt = orgMetadata.getNamedValue(value.getKey());
                     if (mkt != null) {

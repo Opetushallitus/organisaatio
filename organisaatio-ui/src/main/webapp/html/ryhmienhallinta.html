@@ -1,10 +1,16 @@
 <form name="mainform" class="form-horizontal" novalidate>
     <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
 
-    <select ng-model="currentGroup" class="span6" ng-disabled="(currentGroup && form.$dirty) || model.groups.length===0"
-            ng-options="localizeNimi(group) for group in model.groups">
-        <option value="">{{'RyhmienHallinta.valitseRyhma'| i18n}}</option>
-    </select>
+    <div class="control-group">
+            <ui-select class="span10" style="left: -20px;" ng-model="currentGroupSelection.selected" theme="selectize" ng-disabled="disabled"
+                       on-select="valitseRyhma($item)">
+                <ui-select-match placeholder="{{'RyhmienHallinta.valitseRyhma'| i18n}}">{{localizeNimi($select.selected)}}</ui-select-match>
+                <ui-select-choices repeat="group in model.groups | filter: $select.search">
+                    <span ng-bind-html-unsafe="group.nimi.fi | highlight: $select">{{localizeNimi(group)}}</span>
+                </ui-select-choices>
+            </ui-select>
+    </div>
+
     <hr>
 
     <div ng-show="currentGroup" ng-form="form">

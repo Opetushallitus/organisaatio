@@ -44,7 +44,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
-import org.hibernate.criterion.LikeExpression;
 
 /**
  * @author tommiha
@@ -929,25 +928,41 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return string.like(criteriaUri + "#%");
     }
 
+    /**
+     * Haetaan aktiiviset organisaatiot, joka ovat tyyppiä 'Ryhmä'
+     * -----------------------------------------------------------
+     * SELECT *
+     * FROM organisaatio
+     * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
+     * AND organisaatiopoistettu = FALSE
+     * AND organisaatiotyypitstr = 'Ryhma|'
+     *
+     *
+     * Toinen tapa hakea on hakea kaikki ryhmät tyypit taulusta
+     *
+     * SELECT org.*
+     * FROM organisaatio org
+     * RIGHT JOIN organisaatio_tyypit tp
+     * ON org.id = tp.organisaatio_id
+     * WHERE tp.tyypit = 'Ryhma'
+     * AND org.organisaatiopoistettu = FALSE
+     * AND org.parentoidpath = '|1.2.246.562.10.00000000001|'
+     *
+     * @return
+     **/
     @Override
     public List<Organisaatio> findGroups() {
         LOG.debug("findGroups()");
 
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        String s = "SELECT org FROM Organisaatio org "
+                + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
+                + "AND org.organisaatioPoistettu = FALSE "
+                + "AND org.organisaatiotyypitStr = 'Ryhma|'";
 
-        // Haetaan vain organisaatiot, joiden parent on root
-        BooleanExpression whereExpression = qOrganisaatio.parentOidPath.eq("|" + ophOid + "|");
+        Query q = getEntityManager().createQuery(s);
 
-        // Haetaan vain organisaatiot joita ei ole poistettu
-        whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.isFalse());
+        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
 
-        // Haetaan vain organisaatiot joiden tyyppi on Ryhmä
-        whereExpression = whereExpression.and(qOrganisaatio.tyypit.contains(OrganisaatioTyyppi.RYHMA.value()));
-
-        return new JPAQuery(getEntityManager())
-                .from(qOrganisaatio)
-                .where(whereExpression)
-                .distinct()
-                .list(qOrganisaatio);
+        return organisaatiot;
     }
 }
