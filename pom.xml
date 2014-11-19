@@ -12,7 +12,7 @@
     <parent>
         <groupId>fi.vm.sade.generic</groupId>
         <artifactId>build-parent</artifactId>
-        <version>9.0-SNAPSHOT</version>
+        <version>13.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -118,17 +118,4 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>oph-sade-artifactory-snapshots</id>
-            <url>http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>oph-sade-artifactory-releases</id>
-            <url>http://penaali.hard.ware.fi/artifactory/oph-sade-release-local</url>
-        </repository>
-    </repositories>
 </project>
