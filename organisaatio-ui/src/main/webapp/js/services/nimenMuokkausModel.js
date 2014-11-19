@@ -213,8 +213,21 @@ app.factory('NimenMuokkausModel', function($log, $location,
             }
         },
 
+        // Poistetaan tyhjät nimet
+        removeEmptyNimi: function(nimi) {
+            if (nimi) {
+                ['fi', 'sv', 'en'].forEach(function(key) {
+                    if (typeof nimi.nimi[key] === 'undefined') {
+                        delete nimi.nimi[key];
+                    }
+                });
+            }
+        },
+
         // Lisätään parent prefix nimeen
         addParentPrefix: function(nimi) {
+            this.removeEmptyNimi(nimi);
+
             if (this.koulutustoimija || this.oppilaitos) {
                 return;
             }
