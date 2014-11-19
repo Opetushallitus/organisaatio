@@ -131,7 +131,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
-    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
     @Override
     @Transactional(readOnly = true)
