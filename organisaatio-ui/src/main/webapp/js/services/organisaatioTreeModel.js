@@ -63,25 +63,8 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             return data.children.length === 0;
         },
 
-        hasActiveChildren: function (node) {
-
-            if (node.children.length < 1)
-            {
-                //$log.error("Lapsia ei löytynyt!");
-                return false;
-            }
-
-            for (var i=0; i < node.children.length; i++)
-            {
-                if (this.isAktiivinen(node.children[i]))
-                {
-                    //$log.error("löytyi aktiivinen!");
-
-                    return true;
-                }
-            }
-             //$log.error("Ei löytynyt aktiivista!");
-            return false;
+        hasChildren: function (node) {
+            return node.aliOrganisaatioMaara !== 0;
         },
 
         deleteNode: function (node) {

@@ -408,8 +408,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
+        // Uuden organisaation tapauksessa uudelleenindeksoidaan myös parent
         if (OrganisaatioUtil.isRyhma(entity) == false) {
-            solrIndexer.index(Lists.newArrayList(entity));
+            solrIndexer.index(entity);
+
+            if (!updating && parentOrg != null) {
+                solrIndexer.index(parentOrg);
+            }
         }
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet

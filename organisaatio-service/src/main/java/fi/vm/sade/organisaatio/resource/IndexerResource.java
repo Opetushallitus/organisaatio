@@ -98,8 +98,25 @@ public class IndexerResource {
         return Integer.toString(count);
     }
 
+    public void delete(String organisaatioOid) {
+        final List<String> organisaatioOids = Lists.newArrayList();
+
+        organisaatioOids.add(organisaatioOid);
+
+        deleteDocs(organisaatioOids);
+    }
+
+
     public void delete(List<String> organisaatioOids) {
         deleteDocs(organisaatioOids);
+    }
+
+    public void index(Organisaatio organisaatio) {
+        List<Organisaatio> organisaatiot = Lists.newArrayList();
+
+        organisaatiot.add(organisaatio);
+
+        index(organisaatiot);
     }
 
     public void index(List<Organisaatio> organisaatiot) {
