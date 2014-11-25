@@ -131,7 +131,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
-    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
     @Override
     @Transactional(readOnly = true)
@@ -714,6 +713,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // Pitää lisätä manuaalisesti
                         LOG.debug("Name[" + key + "] does not exist.");
                         childChanged = true;
+                    } else if (newParentName == null) {
+                        // oppilaitoksen nimi poistettu, ei muuteta toimipisteen nimeä
                     } else if (oldChildName.startsWith(oldParentName)) {
                         // päivitetään toimipisteen nimen alkuosa
                         childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
