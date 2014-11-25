@@ -6,7 +6,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>13.0</version>
+        <version>13.1</version>
     </parent>
 
     <groupId>fi.vm.sade.organisaatio</groupId>
