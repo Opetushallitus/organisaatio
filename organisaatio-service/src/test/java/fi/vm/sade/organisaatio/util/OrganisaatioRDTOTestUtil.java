@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * @author simok
  */
-public final class OrganisaatioTestUtil {
+public final class OrganisaatioRDTOTestUtil {
 
     public static final Map<String, String> DEFAULT_KAYNTIOSOITE = createOsoite(OsoiteTyyppi.KAYNTI, "Kayntiosoite 2B", "posti_00550", "Helsinki");
     public static final Map<String, String> DEFAULT_POSTIOSOITE = createOsoite(OsoiteTyyppi.POSTI, "Postiosoite 1A", "00550", "Helsinki");
@@ -50,7 +50,7 @@ public final class OrganisaatioTestUtil {
 
     public static final String OPH_OID = "1.2.246.562.24.00000000001";
 
-    private OrganisaatioTestUtil() {
+    private OrganisaatioRDTOTestUtil() {
 
     }
 
@@ -172,7 +172,7 @@ public final class OrganisaatioTestUtil {
         organisaatio.setNimet(Lists.newArrayList(nimiRDTO));
 
         if (isNullOrEmpty(oid)) {
-            organisaatio.setOid(OrganisaatioTestOidUtil.createOid());
+            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
         }
         else {
             organisaatio.setOid(oid);

@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author simok
  */
-public final class OrganisaatioTestOidUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioTestOidUtil.class);
+public final class OrganisaatioOidTestUtil {
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioOidTestUtil.class);
 
     private static final String root = "1.2.246.562.";
     private static final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
@@ -48,7 +48,7 @@ public final class OrganisaatioTestOidUtil {
                                         NodeClassCode.ROOLI
                                         };
 
-    private OrganisaatioTestOidUtil() {
+    private OrganisaatioOidTestUtil() {
 
     }
 

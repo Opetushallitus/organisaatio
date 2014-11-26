@@ -39,18 +39,18 @@ import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ActiveProfiles("embedded-solr")
-public class OrganisaatioResourceTest extends SecurityAwareTestBase {
+public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
 
     @Autowired
     OrganisaatioResource res;
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
     @Test
-    public void test() throws Exception {
+    public void testDelete() throws Exception {
         LOG.info("doTest()...");
         OrganisaatioRDTO a = createOrganisaatio("A", null);
         OrganisaatioRDTO b = createOrganisaatio("B", a);
