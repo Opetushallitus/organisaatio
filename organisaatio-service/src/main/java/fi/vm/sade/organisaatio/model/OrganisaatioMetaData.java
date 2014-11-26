@@ -75,58 +75,6 @@ public class OrganisaatioMetaData extends BaseEntity {
     @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
-    public List<Yhteystieto> getYhteystiedot() {
-        return yhteystiedot;
-    }
-
-    public MonikielinenTeksti getHakutoimistoNimi() {
-        return hakutoimistoNimi;
-    }
-
-    public void setHakutoimistoNimi(MonikielinenTeksti hakutoimistoNimi) {
-        this.hakutoimistoNimi = hakutoimistoNimi;
-    }
-
-    public MonikielinenTeksti getHakutoimistoEctsNimi() {
-        return hakutoimistoEctsNimimkt;
-    }
-
-    public void setHakutoimistoEctsNimi(MonikielinenTeksti hakutoimistoEctsNimi) {
-        this.hakutoimistoEctsNimimkt = hakutoimistoEctsNimi;
-    }
-
-    public MonikielinenTeksti getHakutoimistoEctsTehtavanimike() {
-        return hakutoimistoEctsTehtavanimikemkt;
-    }
-
-    public void setHakutoimistoEctsTehtavanimike(MonikielinenTeksti hakutoimistoEctsTehtavanimike) {
-        this.hakutoimistoEctsTehtavanimikemkt = hakutoimistoEctsTehtavanimike;
-    }
-
-    public MonikielinenTeksti getHakutoimistoEctsEmail() {
-        return hakutoimistoEctsEmailmkt;
-    }
-
-    public void setHakutoimistoEctsEmail(MonikielinenTeksti hakutoimistoEctsSahkoposti) {
-        this.hakutoimistoEctsEmailmkt = hakutoimistoEctsSahkoposti;
-    }
-
-    public MonikielinenTeksti getHakutoimistoEctsPuhelin() {
-        return hakutoimistoEctsPuhelinmkt;
-    }
-
-    public void setHakutoimistoEctsPuhelin(MonikielinenTeksti hakutoimistoEctsPuhelin) {
-        this.hakutoimistoEctsPuhelinmkt = hakutoimistoEctsPuhelin;
-    }
-
-    public BinaryData getKuva() {
-        return kuva;
-    }
-
-    public void setKuva(BinaryData kuva) {
-        this.kuva = kuva;
-    }
-
     /**
      * Code(?) for this LOP.
      */
@@ -145,6 +93,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date muokkausPvm = new Date();
+
 
     //
     // Getters setters with "logic"
@@ -238,9 +187,62 @@ public class OrganisaatioMetaData extends BaseEntity {
         return getNimi() == null ? null : getNimi().getString(languageCode);
     }
 
+    
     //
     // Getters setters
     //
+
+    public List<Yhteystieto> getYhteystiedot() {
+        return yhteystiedot;
+    }
+
+    public MonikielinenTeksti getHakutoimistoNimi() {
+        return hakutoimistoNimi;
+    }
+
+    public void setHakutoimistoNimi(MonikielinenTeksti hakutoimistoNimi) {
+        this.hakutoimistoNimi = hakutoimistoNimi;
+    }
+
+    public MonikielinenTeksti getHakutoimistoEctsNimi() {
+        return hakutoimistoEctsNimimkt;
+    }
+
+    public void setHakutoimistoEctsNimi(MonikielinenTeksti hakutoimistoEctsNimi) {
+        this.hakutoimistoEctsNimimkt = hakutoimistoEctsNimi;
+    }
+
+    public MonikielinenTeksti getHakutoimistoEctsTehtavanimike() {
+        return hakutoimistoEctsTehtavanimikemkt;
+    }
+
+    public void setHakutoimistoEctsTehtavanimike(MonikielinenTeksti hakutoimistoEctsTehtavanimike) {
+        this.hakutoimistoEctsTehtavanimikemkt = hakutoimistoEctsTehtavanimike;
+    }
+
+    public MonikielinenTeksti getHakutoimistoEctsEmail() {
+        return hakutoimistoEctsEmailmkt;
+    }
+
+    public void setHakutoimistoEctsEmail(MonikielinenTeksti hakutoimistoEctsSahkoposti) {
+        this.hakutoimistoEctsEmailmkt = hakutoimistoEctsSahkoposti;
+    }
+
+    public MonikielinenTeksti getHakutoimistoEctsPuhelin() {
+        return hakutoimistoEctsPuhelinmkt;
+    }
+
+    public void setHakutoimistoEctsPuhelin(MonikielinenTeksti hakutoimistoEctsPuhelin) {
+        this.hakutoimistoEctsPuhelinmkt = hakutoimistoEctsPuhelin;
+    }
+
+    public BinaryData getKuva() {
+        return kuva;
+    }
+
+    public void setKuva(BinaryData kuva) {
+        this.kuva = kuva;
+    }
 
     public Organisaatio getOrganisation() {
         return organisation;

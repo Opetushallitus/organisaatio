@@ -131,21 +131,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
-    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
-            int limit) {
-
-        return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
-    }
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
@@ -165,6 +150,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if (orgMetadata.getNimi() != null) {
                     metadata.getNimi().setId(orgMetadata.getNimi().getId());
                     metadata.getNimi().setVersion(orgMetadata.getNimi().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsNimi() != null) {
+                    metadata.getHakutoimistoEctsNimi().setId(orgMetadata.getHakutoimistoEctsNimi().getId());
+                    metadata.getHakutoimistoEctsNimi().setVersion(orgMetadata.getHakutoimistoEctsNimi().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsEmail() != null) {
+                    metadata.getHakutoimistoEctsEmail().setId(orgMetadata.getHakutoimistoEctsEmail().getId());
+                    metadata.getHakutoimistoEctsEmail().setVersion(orgMetadata.getHakutoimistoEctsEmail().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsPuhelin() != null) {
+                    metadata.getHakutoimistoEctsPuhelin().setId(orgMetadata.getHakutoimistoEctsPuhelin().getId());
+                    metadata.getHakutoimistoEctsPuhelin().setVersion(orgMetadata.getHakutoimistoEctsPuhelin().getVersion());
+                }
+                if (orgMetadata.getHakutoimistoEctsTehtavanimike() != null) {
+                    metadata.getHakutoimistoEctsTehtavanimike().setId(orgMetadata.getHakutoimistoEctsTehtavanimike().getId());
+                    metadata.getHakutoimistoEctsTehtavanimike().setVersion(orgMetadata.getHakutoimistoEctsTehtavanimike().getVersion());
                 }
                 for (NamedMonikielinenTeksti value : metadata.getValues()) {
                     MonikielinenTeksti mkt = orgMetadata.getNamedValue(value.getKey());
@@ -409,8 +410,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
+        // Uuden organisaation tapauksessa uudelleenindeksoidaan myös parent
         if (OrganisaatioUtil.isRyhma(entity) == false) {
-            solrIndexer.index(Lists.newArrayList(entity));
+            solrIndexer.index(entity);
+
+            if (!updating && parentOrg != null) {
+                solrIndexer.index(parentOrg);
+            }
         }
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
@@ -715,6 +721,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // Pitää lisätä manuaalisesti
                         LOG.debug("Name[" + key + "] does not exist.");
                         childChanged = true;
+                    } else if (newParentName == null) {
+                        // oppilaitoksen nimi poistettu, ei muuteta toimipisteen nimeä
                     } else if (oldChildName.startsWith(oldParentName)) {
                         // päivitetään toimipisteen nimen alkuosa
                         childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));

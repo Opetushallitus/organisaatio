@@ -568,6 +568,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param oid
      * @return parent
      */
+    @Override
     public Organisaatio markRemoved(String oid) {
         Organisaatio org = findByOid(oid);
 

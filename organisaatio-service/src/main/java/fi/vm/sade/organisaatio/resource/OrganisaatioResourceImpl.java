@@ -61,16 +61,15 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
@@ -91,6 +90,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
+    @Autowired
+    private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
     @Autowired
@@ -409,32 +410,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
-    private Organisaatio removeOrganisaatioByOid(String oid, Set<String> reindex) {
-
-        Organisaatio removed = organisaatioDAO.markRemoved(oid);
-        reindex.add(oid);
-        return removed.getParent();
-    }
-
-    private void recursivelyRemoveOrganisaatioByOid(List<Organisaatio> nodestoberemovedlist, Organisaatio node, Set<String> reindex, Organisaatio po) {
-        int count = node.getChildCount(null, null);
-
-         if ( 0 < count ){
-
-            List <Organisaatio> children;
-            children = organisaatioDAO.findChildren(node.getOid(), false, true);
-
-            nodestoberemovedlist.addAll(children);
-            if (children.size() == 1){
-                recursivelyRemoveOrganisaatioByOid(nodestoberemovedlist, children.get(0), reindex, po);
-            }
-         }
-         else if (count == 0){
-            nodestoberemovedlist.add(node);
-         }
-
-    }
-
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatio(String oid) {
@@ -444,41 +419,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             LOG.warn("Not authorized to delete organisation: " + oid);
             throw new OrganisaatioResourceException(nae);
         }
-        Set<String> reindex = new HashSet<>();
 
-
-        Organisaatio po = null;
-        List <Organisaatio> polist = new ArrayList<>();
-
-        List<Organisaatio> nodestoberemovedlist = new ArrayList<>();
-
-        //Do the delete for the actual organization also
-        // Set the parent to be removed
-        polist.add(organisaatioDAO.findByOid(oid));
-        reindex.add(oid);
-
-        recursivelyRemoveOrganisaatioByOid(nodestoberemovedlist, (organisaatioDAO.findByOid(oid)), reindex, po);
-
-        for(Organisaatio org : nodestoberemovedlist)
-        {
-            LOG.debug("Handling removables, oid: " + org.getOid());
-            po = removeOrganisaatioByOid(org.getOid(), reindex);
-            if (po != null){
-                 LOG.debug("Handling removable organisation, oid: " + org.getOid());
-                polist.add(po);
-            }
-        }
-        // now remove the parent
-        organisaatioDAO.markRemoved(oid);
-
-        solrIndexer.delete(new ArrayList<>(reindex));
-
-        // päivittää aliorganisaatioiden lukumäärän parenttiin
-        if (polist != null) {
-            solrIndexer.index(polist);
+        try {
+            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
+            LOG.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error deleting org", sbe);
+            throw new OrganisaatioResourceException(sbe);
         }
 
-        //////////////////////////////////
         return "{\"message\": \"deleted\"}";
     }
 
