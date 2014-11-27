@@ -17,8 +17,8 @@
 function NimenMuokkausController($scope, $modalInstance, $log, $location,
                                  NimenMuokkausModel, NimiHistoriaModel,
                                  oid, nimihistoria, originalNimihistoria,
-                                 organisaatioAlkuPvm, koulutustoimija,
-                                 oppilaitos, parentNimi,
+                                 organisaatioAlkuPvm,
+                                 toimipiste, parentNimi,
                                  nameFormat, parentPattern) {
 
     $log = $log.getInstance("NimenMuokkausController");
@@ -79,8 +79,7 @@ function NimenMuokkausController($scope, $modalInstance, $log, $location,
     // niin aina muokataan back-endiin tallennettua historiaa.
     // Muokkaus ei siis jatku edellistä tilanteesta
     $scope.model.refresh(oid, originalNimihistoria, organisaatioAlkuPvm,
-                         koulutustoimija, oppilaitos, parentNimi,
-                         nameFormat);
+                         toimipiste, parentNimi, nameFormat);
 
     $scope.originalNimihistoria = originalNimihistoria;
 

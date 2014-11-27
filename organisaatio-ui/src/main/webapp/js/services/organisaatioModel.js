@@ -653,6 +653,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 });
                 model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
                 model.koodisto.localizedOppilaitos = "Oppilaitos";
+                model.koodisto.localizedToimipiste = "Toimipiste";
             },
             // Error case
             function(response) {
@@ -853,6 +854,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (oid === null || (oid !== model.koodisto.oid)) {
                 model.koodisto.localizedOppilaitos = "";
                 model.koodisto.localizedKoulutustoimija = "";
+                model.koodisto.localizedToimipiste = "";
                 model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
                 KoodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
@@ -887,6 +889,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                 model.koodisto.localizedKoulutustoimija = localizedOrgType;
                             } else if (orgTyyppiKoodi.koodiArvo === "02") {
                                 model.koodisto.localizedOppilaitos = localizedOrgType;
+                            } else if (orgTyyppiKoodi.koodiArvo === "03") {
+                                model.koodisto.localizedToimipiste = localizedOrgType;
                             }
                             if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
                                 model.koodisto.ophOrganisaatiot.push(localizedOrgType);
@@ -1707,6 +1711,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         this.isKoulutustoimija = function() {
             if (model.organisaatio.tyypit) {
                 return model.organisaatio.tyypit.indexOf(model.koodisto.localizedKoulutustoimija) !== -1;
+            }
+            return false;
+        };
+
+        this.isToimipiste = function() {
+            if (model.organisaatio.tyypit) {
+                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedToimipiste) !== -1;
             }
             return false;
         };
