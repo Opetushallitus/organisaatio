@@ -168,6 +168,19 @@ public class OrganisaatioKoulutukset {
     }
 
     /**
+     * Tarkistaa onko annetulla organisaatiolla alkavia koulutuksia tämän
+     * päivämäärän jälkeen.
+     * HUOM! Vain "KOPIOITU", "VALMIS", "LUONNOS" ja "JULKAISTU" tilaiset
+     * alkavat koulutukset huomioidaan.
+     *
+     * @param oid
+     * @return Boolean, joka kertoo onko alkavia koulutuksia vai ei.
+     */
+    public boolean alkaviaKoulutuksia(String oid) {
+        return alkaviaKoulutuksia(oid, new Date());
+    }
+
+    /**
      * Tarkistaa onko annetulla organisaatiolla alkavia koulutuksia annetun
      * päivämäärän jälkeen.
      * HUOM! Vain "KOPIOITU", "VALMIS", "LUONNOS" ja "JULKAISTU" tilaiset
