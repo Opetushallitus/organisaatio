@@ -66,13 +66,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
     $scope.isDeleteAllowed = function(node) {
         // Tarkistetaan ettei ole aliorganisaatioita
-        return $scope.model.isLeaf(node);
-    };
-
-     $scope.hasActiveChildren = function(node) {
-        // Tarkistetaan onko aktiivisia aliorganisaatioita
-        //return $scope.model.
-        return $scope.model.hasActiveChildren(node);
+        return $scope.model.hasChildren(node) === false;
     };
 
     $scope.isCreateSubAllowed = function(node) {
@@ -96,9 +90,6 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 },
                 tyypit:  function () {
                     return $scope.model.getTyypit(node);
-                },
-                hasactivechildren: function() {
-                    return $scope.model.hasActiveChildren(node);
                 }
             }
         });
@@ -116,7 +107,8 @@ function OrganisaatioTreeController($scope, $location, $filter,
             function(response) {
                 loadingService.onErrorHandled();
                 $log.error("Organisaatio delete response: " + response.status);
-                Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", ""), true);
+                Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", "") + ' '
+                                + $filter('i18n')(response.data.errorKey), true);
             });
 
         }, function () {

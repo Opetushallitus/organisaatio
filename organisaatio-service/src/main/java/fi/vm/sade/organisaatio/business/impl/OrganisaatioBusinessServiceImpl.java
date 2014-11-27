@@ -132,20 +132,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private static final String parentSeparator = "|";
     private static final String parentSplitter = "\\|";
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
-            int limit) {
-
-        return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
-    }
-
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
             if (orgEntity.getKuvaus2() != null) {
@@ -422,8 +408,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
+        // Uuden organisaation tapauksessa uudelleenindeksoidaan myös parent
         if (OrganisaatioUtil.isRyhma(entity) == false) {
-            solrIndexer.index(Lists.newArrayList(entity));
+            solrIndexer.index(entity);
+
+            if (!updating && parentOrg != null) {
+                solrIndexer.index(parentOrg);
+            }
         }
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet

@@ -34,6 +34,7 @@ import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
@@ -69,6 +70,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioBusinessService organisaatioBusinessService;
 
     @Autowired
+    private OrganisaatioFindBusinessService organisaatioFindBusinessService;
+
+    @Autowired
     private OrganisaatioModelMapper organisaatioModelMapper;
 
     @Autowired
@@ -99,7 +103,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
 
-        List<Organisaatio> organisaatiot = organisaatioBusinessService.findBySearchCriteria(
+        List<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
                 hakuEhdot.getOppilaitostyyppiList(),
@@ -140,7 +144,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
-        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<OrganisaatioPerustietoSuppea>();
+        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
             OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
@@ -270,7 +274,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         if (nimi != null) {
             result.putAll(nimi.getValues());
