@@ -81,6 +81,7 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     public void testParentDelete() throws Exception {
         LOG.info("testParentDelete()...");
 
+        // Organisaatiota ei saa poistaa, jos sillä on aliorganisaatioita
         try {
             res.deleteOrganisaatio(ab.getOid());
             fail();
@@ -94,6 +95,7 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     public void testAlkaviaKoulutuksiaDelete() throws Exception {
         LOG.info("testAlkaviaKoulutuksiaDelete()...");
 
+        // Organisaatiota ei saa poistaa, jos sillä on alkavia koulutuksia
         try {
             res.deleteOrganisaatio(ad.getOid());
             fail();
@@ -107,6 +109,8 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     public void testSuccessfulDelete() throws Exception {
         LOG.info("testSuccessfulDelete()...");
 
+        // Organisaatiolla ei ole aliorganisaatioita eikä alkavia koulutuksia
+        // --> saa poistaa
         res.deleteOrganisaatio(abc.getOid());
     }
 
