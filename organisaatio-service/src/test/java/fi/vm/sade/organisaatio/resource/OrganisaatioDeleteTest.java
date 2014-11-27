@@ -15,27 +15,29 @@
 
 package fi.vm.sade.organisaatio.resource;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Joiner;
-
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioKoulutukset;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
+import static junit.framework.Assert.fail;
+import org.junit.Before;
+import org.kubek2k.springockito.annotations.ReplaceWithMock;
+import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 
-@ContextConfiguration(locations = { "classpath:spring/test-context.xml" })
+@ContextConfiguration(loader = SpringockitoContextLoader.class, locations = { "classpath:spring/test-context.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ActiveProfiles("embedded-solr")
@@ -44,26 +46,68 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     @Autowired
     OrganisaatioResource res;
 
+    @ReplaceWithMock
+    @Autowired
+    private OrganisaatioKoulutukset koulutukset;
+
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
 
-    @Value("${root.organisaatio.oid}")
-    private String rootOrganisaatioOid;
+    private OrganisaatioRDTO a, ab, abc, ad;
+
+    @Before
+    public void setUp() {
+        LOG.info("setUp()...");
+
+        //      A
+        //     / \
+        //   AB  AD (koulutuksia)
+        //   /
+        // ABC
+
+        a   = createOrganisaatio("A", null);
+        ab  = createOrganisaatio("AB", a);
+        abc = createOrganisaatio("ABC", ab);
+        ad  = createOrganisaatio("AD", a);
+
+        MockitoAnnotations.initMocks(this);
+
+        // Mock toteutukset alkavien koulutusten pyynnöille
+        when(koulutukset.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
+        when(koulutukset.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
+        when(koulutukset.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
+    }
 
     @Test
-    public void testDelete() throws Exception {
-        LOG.info("doTest()...");
-        OrganisaatioRDTO a = createOrganisaatio("A", null);
-        OrganisaatioRDTO b = createOrganisaatio("B", a);
-        OrganisaatioRDTO c = createOrganisaatio("C", b);
-        OrganisaatioRDTO d = createOrganisaatio("D", c);
-        OrganisaatioRDTO e = createOrganisaatio("E", d);
+    public void testParentDelete() throws Exception {
+        LOG.info("testParentDelete()...");
 
-        String reference = Joiner.on("/").join(
-                new String[] { rootOrganisaatioOid, a.getOid(), b.getOid(),
-                        c.getOid(), d.getOid(), e.getOid() });
+        try {
+            res.deleteOrganisaatio(ab.getOid());
+            fail();
+        } catch (OrganisaatioResourceException e) {
+            // expected
+            // could also check for message of exception, etc.
+        }
+    }
 
-        String s = res.parentoids(e.getOid());
-        Assert.assertEquals(reference, s);
+    @Test
+    public void testAlkaviaKoulutuksiaDelete() throws Exception {
+        LOG.info("testAlkaviaKoulutuksiaDelete()...");
+
+        try {
+            res.deleteOrganisaatio(ad.getOid());
+            fail();
+        } catch (OrganisaatioResourceException e) {
+            // expected
+            // could also check for message of exception, etc.
+        }
+    }
+
+    @Test
+    public void testSuccessfulDelete() throws Exception {
+        LOG.info("testSuccessfulDelete()...");
+
+        res.deleteOrganisaatio(abc.getOid());
     }
 
     private OrganisaatioRDTO createOrganisaatio(String nimi, OrganisaatioRDTO parent) {
