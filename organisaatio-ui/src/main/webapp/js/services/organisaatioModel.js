@@ -698,8 +698,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.paivitys = {};
             Paivittaja.get({oid: result.oid}, function(paivitys) {
                 if (paivitys.paivitysPvm) {
-                    var pvm = new Date(paivitys.paivitysPvm);
-                    model.paivitys.pvm = pvm.toLocaleDateString() + ' ' + pvm.toLocaleTimeString();
+                    var pvm = moment(new Date(paivitys.paivitysPvm));
+                    model.paivitys.pvm = pvm.format('DD.MM.YYYY h:mm:ss');
                     Henkilo.get({hlooid: paivitys.paivittaja}, function(paivittaja_hlo) {
                         model.paivitys.paivittaja = paivittaja_hlo.etunimet + ' ' + paivittaja_hlo.sukunimi;
                     },
