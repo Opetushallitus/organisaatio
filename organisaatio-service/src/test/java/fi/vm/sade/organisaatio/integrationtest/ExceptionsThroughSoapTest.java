@@ -28,13 +28,13 @@ public class ExceptionsThroughSoapTest {
     @Autowired
     private OrganisaatioService organisaatioService;
 
-    @Ignore
+    /*@Ignore
     @Test
     public void clientSideServiceProxyThrowsBusinessExceptions() throws Exception {
         OrganisaatioTstUtils.checkBusinessException(organisaatioService);
     }
+    */
 
-    
     /*@BeforeClass
     public static void startJetty() throws Exception {
         server = JettyTstUtils.startJettyWithCxf(7070,
