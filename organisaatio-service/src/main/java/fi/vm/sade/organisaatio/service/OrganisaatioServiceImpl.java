@@ -20,20 +20,17 @@ import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsExcep
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import fi.vm.sade.generic.common.DateHelper;
-import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.organisaatio.api.model.GenericFault;
 import fi.vm.sade.organisaatio.api.model.types.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatTiedotTyyppiFunction;
@@ -118,9 +115,9 @@ public class OrganisaatioServiceImpl
     @Override
     public List<OrganizationStructureType> getOrganizationStructure(@WebParam(name = "oids", targetNamespace = "http://model.api.organisaatio.sade.vm.fi/types") List<String> oids) {
         if (oids == null) {
-            oids = new ArrayList<String>();
+            oids = new ArrayList<>();
         }
-        List<OrganizationStructureType> r = new ArrayList<OrganizationStructureType>();
+        List<OrganizationStructureType> r = new ArrayList<>();
         //TODO: refaktoroi konvertteriin
         for (OrgStructure o : organisaatioDAO.getOrganizationStructure(oids)) {
             OrganizationStructureType ot = new OrganizationStructureType();
@@ -197,10 +194,10 @@ public class OrganisaatioServiceImpl
     public List<OrganisaatioDTO> findParentsTo(String organisaatioId) {
         LOG.debug("findParentsTo({})", organisaatioId);
         if (organisaatioId == null || organisaatioId.trim().equalsIgnoreCase(ophOid)) {
-            return new ArrayList<OrganisaatioDTO>();
+            return new ArrayList<>();
         } else {
 
-            List<OrganisaatioDTO> path = new ArrayList<OrganisaatioDTO>();
+            List<OrganisaatioDTO> path = new ArrayList<>();
             OrganisaatioDTO organisaatio = this.convertToDTO(this.organisaatioDAO.findByOid(organisaatioId));
             LOG.debug("parent path: {}", organisaatio.getParentOidPath());
             String[] oids = (organisaatio.getParentOidPath() != null) ? organisaatio.getParentOidPath().split(parentSplitter) : new String[0];
@@ -226,7 +223,7 @@ public class OrganisaatioServiceImpl
      * @return
      */
     private List<OrganisaatioDTO> convertListToDto(List<Organisaatio> organisaatios) {
-        List<OrganisaatioDTO> orgDtos = new ArrayList<OrganisaatioDTO>();
+        List<OrganisaatioDTO> orgDtos = new ArrayList<>();
         for (Organisaatio org : organisaatios) {
             orgDtos.add(convertToDTO(org));
         }
@@ -283,7 +280,7 @@ public class OrganisaatioServiceImpl
         } else {
             // Get result (max MAX RESULTS branches)
             List<Organisaatio> orgsE = Lists.newArrayList(Iterables.filter(organisaatioDAO.findDescendantsByOidList(oids, maxResults), new Predicate<Organisaatio>() {
-                final HashSet<String> seen = new HashSet<String>();
+                final HashSet<String> seen = new HashSet<>();
 
                 @Override
                 public boolean apply(Organisaatio org) {
@@ -310,14 +307,14 @@ public class OrganisaatioServiceImpl
         LOG.debug("findYhteystietoMetadataForOrganisaatio()");
 
         if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
-            return new ArrayList<YhteystietojenTyyppiDTO>();
+            return new ArrayList<>();
         }
 
         List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(organisaatioTyyppi);
         if (entitys == null) {
             return null;
         }
-        List<YhteystietojenTyyppiDTO> result = new ArrayList<YhteystietojenTyyppiDTO>();
+        List<YhteystietojenTyyppiDTO> result = new ArrayList<>();
         for (YhteystietojenTyyppi entity : entitys) {
             result.add((YhteystietojenTyyppiDTO) converterFactory.convertToDTO(entity));
         }
@@ -348,7 +345,7 @@ public class OrganisaatioServiceImpl
         if (entitys == null) {
             return null;
         }
-        List<YhteystietojenTyyppiDTO> result = new ArrayList<YhteystietojenTyyppiDTO>();
+        List<YhteystietojenTyyppiDTO> result = new ArrayList<>();
         for (YhteystietojenTyyppi entity : entitys) {
             result.add((YhteystietojenTyyppiDTO) converterFactory.convertToDTO(entity));
         }
