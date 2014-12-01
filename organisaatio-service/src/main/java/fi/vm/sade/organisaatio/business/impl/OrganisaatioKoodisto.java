@@ -320,6 +320,20 @@ public class OrganisaatioKoodisto {
                         muuttunut = true;
                     }
 
+                    // Tarkistetaan onko alkupäivämäärä muuttunut
+                    if (entity.getAlkuPvm() != null) {
+                        String alkupvm = new SimpleDateFormat("yyyy-MM-dd").format(entity.getAlkuPvm());
+                        if (!alkupvm.equals(koodi.getVoimassaAlkuPvm())) {
+                            LOG.debug("Alkupvm muuttunut");
+                            koodi.setVoimassaAlkuPvm(alkupvm);
+                            muuttunut = true;
+                        }
+                    } else if (koodi.getVoimassaAlkuPvm() != null && !koodi.getVoimassaAlkuPvm().isEmpty()) {
+                        LOG.debug("Alkupvm poistettu");
+                        koodi.setVoimassaAlkuPvm(null);
+                        muuttunut = true;
+                    }
+
                     // Koodin nimet tällä hetkellä koodistossa
                     Map<String, OrganisaatioKoodistoKoodiMetadata> koodiNyt = new HashMap<String, OrganisaatioKoodistoKoodiMetadata>();
                     for (OrganisaatioKoodistoKoodiMetadata km : koodi.getMetadata()) {
