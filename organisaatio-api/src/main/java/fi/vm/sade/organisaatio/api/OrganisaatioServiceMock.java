@@ -6,7 +6,6 @@
 package fi.vm.sade.organisaatio.api;
 
 import static fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper.getClosest;
-import static fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper.getTyyppisStrForOrganisaatio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,22 +114,6 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         return new FindBasicOrganisaatioChildsToOidTypesResponse();
     }
 
-
-
-    @Override
-    public RemoveByOidResponseType removeOrganisaatioByOid(RemoveByOidType parameters) throws GenericFault {
-        OrganisaatioDTO foundOrg = null;
-        for (OrganisaatioDTO org:repo) {
-            if (org.getOid().trim().equals(parameters.getOid().trim())) {
-                foundOrg = org;
-            }
-        }
-        if (foundOrg != null) {
-            repo.remove(foundOrg);
-        }
-
-        return new RemoveByOidResponseType();
-    }
 
     @Override
     public OrganisaatioOidListType findChildrenOidsByOid(OrganisaatioSearchOidType parameters) {
@@ -301,28 +284,6 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         return organisaatio;
     }
 
-    private OrganisaatioDTO create(String nimi, String ytunnus, OrganisaatioDTO parent, Date start, Date stop, String oppilaitosTyyppi, String oid) {
-        OrganisaatioDTO organisaatio = new OrganisaatioDTO();
-        organisaatio.setOid(oid);
-        // organisaatio.setNimiFi(nimi);
-        // organisaatio.setNimiLyhenne(nimi);
-        organisaatio.setKotipaikka("Helsinki");
-        organisaatio.setYritysmuoto("oy");
-        organisaatio.setAlkuPvm(start);
-        organisaatio.setLakkautusPvm(stop);
-        if (parent != null) {
-            organisaatio.setParentOid(parent.getOid());
-            organisaatio.getTyypit().addAll(getDefTyypit());
-            organisaatio.setOppilaitosKoodi(ytunnus);
-            organisaatio.setOppilaitosTyyppi(oppilaitosTyyppi);
-        } else {
-            organisaatio.getTyypit().addAll(Arrays.asList(new OrganisaatioTyyppi[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA}));
-            organisaatio.setYtunnus(ytunnus);
-        }
-        save(organisaatio);
-        return organisaatio;
-    }
-
     private OsoiteDTO createOsoite(String type, String osoite, String postinumero, String postitoimipaikka) {
         //"type?", "Mannerheiminkatu 1", "00100", "Helsinki"
         OsoiteDTO osoiteDTO = new OsoiteDTO();
@@ -413,38 +374,9 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         return org;
     }
 
-    @Override
-    public OrganisaatioDTO createOrganisaatio(OrganisaatioDTO organisaatio, boolean skipValidation) throws GenericFault {
-        create(organisaatio);
-        checkOrganisaatioHierarchy(organisaatio);
-        log.log(Level.INFO, "CREATED child organisaatio: {0}, parent: {1} - {2}", new Object[]{getClosest(Locale.getDefault(), organisaatio), organisaatio.getParentOid(), findByOid(organisaatio.getParentOid())});
-
-        return organisaatio;
-    }
-
-//    @Override
-//    public void updateYhteystieto(YhteystietoDTO yhteystieto) throws GenericFault {
-//        List<YhteystietoDTO> newYts = new ArrayList<YhteystietoDTO>();
-//        for (YhteystietoDTO curYt : this.ytRepo) {
-//            if (curYt.getYhteystietoOid().equals(yhteystieto.getYhteystietoOid())) {
-//                newYts.add(yhteystieto);
-//            } else {
-//                newYts.add(curYt);
-//            }
-//        }
-//    }
 
     public List<OrganisaatioDTO> findAllChildrenWithOid(String parentOidParam) {
         return findChildrenTo(parentOidParam);
-    }
-
-
-
-    @Override
-    public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) throws GenericFault {
-        yhteystietojenTyyppi = populateIds(yhteystietojenTyyppi);
-        this.yttRepo.add(yhteystietojenTyyppi);
-        return yhteystietojenTyyppi;
     }
 
     @Override
@@ -470,55 +402,6 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         }
          return false;
      }
-
-    private YhteystietojenTyyppiDTO populateIds(YhteystietojenTyyppiDTO dto) {
-
-        if (dto.getOid() == null) {
-            dto.setOid(createOid());
-
-        }
-
-        List<YhteystietoElementtiDTO> fields = dto.getAllLisatietokenttas();
-        if (fields != null) {
-            for (YhteystietoElementtiDTO field : fields) {
-                if (field != null && field.getOid() == null) {
-                    field.setOid(createOid());
-                }
-            }
-        }
-
-        return dto;
-
-    }
-
-//    @Override
-//    public YhteystietoDTO createYhteystieto(YhteystietoDTO yhteystieto) throws GenericFault {
-//        if (yhteystieto.getYhteystietoOid() == null) {
-//            yhteystieto.setYhteystietoOid(createOid());
-//        }
-//        this.ytRepo.add(yhteystieto);
-//        return yhteystieto;
-//
-//    }
-
-    @Override
-    public void updateYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) throws GenericFault {
-        //throw new UnsupportedOperationException("Not supported yet.");
-        yhteystietojenTyyppi = this.populateIds(yhteystietojenTyyppi);
-        List<YhteystietojenTyyppiDTO> newYttRepo = new ArrayList<YhteystietojenTyyppiDTO>();
-        for (YhteystietojenTyyppiDTO curYtt : this.yttRepo) {
-            if (curYtt.getOid().equals(yhteystietojenTyyppi.getOid())) {
-                newYttRepo.add(yhteystietojenTyyppi);
-            } else {
-                newYttRepo.add(curYtt);
-            }
-        }
-    }
-
-//    @Override
-//    public List<YhteystietoDTO> findYhteystietos(SearchCriteriaDTO yhteystietoSearchCriteria) {
-//        return this.ytRepo;
-//    }
 
     @Override
     public List<YhteystietoArvoDTO> findYhteystietoArvosForOrganisaatio(String organisaatioOid) {
@@ -571,37 +454,6 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
             }
         }
         return null;
-    }
-
-//    @Override
-//    public YhteystietoDTO readYhteystieto(String yhteystietoOid) {
-//       for (YhteystietoDTO curYt : this.ytRepo) {
-//           if (curYt.getYhteystietoOid().equals(yhteystietoOid)) {
-//               return curYt;
-//           }
-//       }
-//       return null;
-//    }
-
-    @Override
-    public OrganisaatioDTO updateOrganisaatio(OrganisaatioDTO organisaatio, boolean skipValidation) throws GenericFault {
-
-        log.log(Level.INFO, "OrganisaatioServiceMock.update...");
-        // poistetaan alkup
-        List<OrganisaatioDTO> newRepo = new ArrayList<OrganisaatioDTO>();
-        for (OrganisaatioDTO temp : repo) {
-
-            if (temp.getOid().equals(organisaatio.getOid())) {
-                newRepo.add(organisaatio);
-            }
-            else {
-                newRepo.add(temp);
-            }
-        }
-        // tallennetaan
-        //return createOrganisaatio(organisaatio);
-        repo = newRepo;
-        return organisaatio;
     }
 
     @Override
@@ -701,59 +553,8 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         return false;
     }
 
-    private void checkOrganisaatioHierarchy(OrganisaatioDTO model) throws GenericFault {
-        String parentOid = model.getParentOid();
-        if (parentOid == null) {
-            return;
-        }
-        for (OrganisaatioDTO curDto : repo) {
-            if (curDto.getOid().equals(parentOid)
-                    && (curDto.getParentOid() != null)
-                    && !isOverlap(getTyyppisStrForOrganisaatio(model),  getTyyppisStrForOrganisaatio(curDto))) {
-                throw new GenericFault("exception.organisaatio.hierarchy");
-            }
-        }
-    }
-
-    private boolean isOverlap(List<String> tyypit, List<String> parentTyypit) {
-        boolean isOverlap =false;
-        for (String curTyyppi : tyypit) {
-            if (parentTyypit.contains(curTyyppi)) {
-                isOverlap = true;
-            }
-        }
-        return isOverlap;
-    }
-
-    private OrganisaatioDTO create(OrganisaatioDTO model) throws GenericFault {
-        if (model.getOid() == null) {
-            model.setOid(createOid());
-        }
-
-        log.log(Level.INFO, "CREATE: {0} - {1}", new Object[]{getClosest(Locale.getDefault(),  model), model});
-        if (getClosest(Locale.getDefault(),  model).equals("CAUSE_ERROR")) {
-            throw new GenericFault(GENERIC_ERROR);
-        }
-
-        try {
-            return save(model);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private String createOid() {
         return System.currentTimeMillis() + "" + Math.random();
     }
-
-
-	@Override
-	public void removeYhteystietojenTyyppiByOid(String oid)
-			throws GenericFault {
-		// TODO Auto-generated method stub
-
-	}
-
 
 }

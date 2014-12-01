@@ -9,14 +9,8 @@
     <xs:element name="findBasicOrganisaatioChildsToOidResponse" type="findBasicOrganisaatioChildsToOidTypesResponse"/>
     <xs:element name="findBasicParentOrganisaatioParameter" type="findBasicParentOrganisaatioTypesParameter"/>
     <xs:element name="findBasicParentOrganisaatioResponse" type="findBasicParentOrganisaatioTypesResponse"/>
-    <xs:element name="createOrganisaatio" type="CreateOrganisaatioType"/>
-    <xs:element name="createOrganisaatioResponse" type="CreateOrganisaatioResponseType"/>
-    <!--    <xs:element name="findAllChildrenWithOid" type="FindAllChildrenWithOidType"/>
-        <xs:element name="findAllChildrenWithOidResponse" type="FindAllChildrenWithOidResponseType"/>-->
     <xs:element name="findAll" type="FindAllType"/>
     <xs:element name="findAllResponse" type="FindAllResponseType"/>
-    <xs:element name="removeByOid" type="RemoveByOidType"/>
-    <xs:element name="removeByOidResponse" type="RemoveByOidResponseType"/>
     <xs:element name="findByOid" type="FindByOidType"/>
     <xs:element name="findByOidList" type="FindByOidListType"/>
     <xs:element name="findByOidListResponse" type="FindByOidListResponseType"/>
@@ -33,8 +27,6 @@
     <xs:element name="findParentsToResponse" type="FindParentsToResponseType"/>
     <xs:element name="searchOrganisaatios" type="SearchOrganisaatiosType"/>
     <xs:element name="searchOrganisaatiosResponse" type="SearchOrganisaatiosResponseType"/>
-    <xs:element name="updateOrganisaatio" type="UpdateOrganisaatioType"/>
-    <xs:element name="updateOrganisaatioResponse" type="UpdateOrganisaatioResponseType"/>
     <xs:element name="ping" type="PingType"/>
     <xs:element name="pingResponse" type="PingResponseType"/>
     <xs:element name="genericFaultInfo" type="GenericFaultInfoType"></xs:element>
@@ -48,12 +40,6 @@
 
     <xs:element name="findYhteystietojenTyyppis" type="FindYhteystietojenTyyppisType"/>
     <xs:element name="findYhteystietojenTyyppisResponse" type="FindYhteystietojenTyyppisResponseType"/>
-    <xs:element name="createYhteystietojenTyyppi" type="CreateYhteystietojenTyyppiType"/>
-    <xs:element name="createYhteystietojenTyyppiResponse" type="CreateYhteystietojenTyyppiResponseType"/>
-    <xs:element name="updateYhteystietojenTyyppi" type="UpdateYhteystietojenTyyppiType"/>
-    <xs:element name="updateYhteystietojenTyyppiResponse" type="UpdateYhteystietojenTyyppiResponseType"/>
-    <xs:element name="removeYhteystietojenTyyppiByOid" type="RemoveByOidType"/>
-    <xs:element name="removeYhteystietojenTyyppiByOidResponse" type="RemoveByOidResponseType"/>
     <xs:element name="readYhteystietojenTyyppi" type="ReadYhteystietojenTyyppiType"/>
     <xs:element name="readYhteystietojenTyyppiResponse" type="ReadYhteystietojenTyyppiResponseType"/>
     <xs:element name="findYhteystietoMetadataForOrganisaatio" type="FindYhteystietoMetadataForOrganisaatioType"/>
@@ -65,10 +51,6 @@
 
     <xs:element name="findYhteystietos" type="FindYhteystietosType"/>
     <xs:element name="findYhteystietosResponse" type="FindYhteystietosResponseType"/>
-    <xs:element name="createYhteystieto" type="CreateYhteystietoType"/>
-    <xs:element name="createYhteystietoResponse" type="CreateYhteystietoResponseType"/>
-    <xs:element name="updateYhteystieto" type="UpdateYhteystietoType"/>
-    <xs:element name="updateYhteystietoResponse" type="UpdateYhteystietoResponseType"/>
     <xs:element name="readYhteystieto" type="ReadYhteystietoType"/>
     <xs:element name="readYhteystietoResponse" type="ReadYhteystietoResponseType"/>
 
@@ -861,14 +843,6 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="RemoveByOidType">
-        <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="oid" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="RemoveByOidResponseType">
-        <xs:sequence/>
-    </xs:complexType>
     <xs:complexType name="FindByOidType">
         <xs:sequence>
             <xs:element minOccurs="0" name="oid" type="xs:string"/>
@@ -909,17 +883,6 @@
             <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="organisaatioDTO"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="CreateOrganisaatioType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="organisaatio" type="organisaatioDTO"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="skipValidation" type="xs:boolean" default="false"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="CreateOrganisaatioResponseType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="return" type="organisaatioDTO"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="FindChildrenToOrganisaatioType">
         <xs:sequence>
             <xs:element minOccurs="0" name="oid" type="xs:string"/>
@@ -933,17 +896,6 @@
     <xs:complexType name="FindChildrenToResponseType">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="organisaatioDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateOrganisaatioType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="organisaatio" type="organisaatioDTO"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="skipValidation" type="xs:boolean" default="false"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateOrganisaatioResponseType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="return" type="organisaatioDTO"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="SearchOrganisaatiosType">
@@ -1019,24 +971,6 @@
             <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="yhteystietojenTyyppiDTO"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="CreateYhteystietojenTyyppiType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="yhteystietojenTyyppi" type="yhteystietojenTyyppiDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="CreateYhteystietojenTyyppiResponseType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="return" type="yhteystietojenTyyppiDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateYhteystietojenTyyppiType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="yhteystietojenTyyppi" type="yhteystietojenTyyppiDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateYhteystietojenTyyppiResponseType">
-        <xs:sequence/>
-    </xs:complexType>
     <xs:complexType name="ReadYhteystietojenTyyppiType">
         <xs:sequence>
             <xs:element minOccurs="0" name="yhteystietojenTyyppiOid" type="xs:string"/>
@@ -1079,24 +1013,6 @@
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="yhteystietoDTO"/>
         </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="CreateYhteystietoType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="yhteystieto" type="yhteystietoDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="CreateYhteystietoResponseType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="return" type="yhteystietoDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateYhteystietoType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="yhteystieto" type="yhteystietoDTO"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="UpdateYhteystietoResponseType">
-        <xs:sequence/>
     </xs:complexType>
     <xs:complexType name="ReadYhteystietoType">
         <xs:sequence>

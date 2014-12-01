@@ -28,7 +28,10 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
+import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 
 /**
  * @author Antti
@@ -43,13 +46,16 @@ public class ValidationMessagesTest {
     public static final Locale FI = new Locale("fi", "FI");
     @Autowired
     protected OrganisaatioService organisaatioService;
-    
+
     @Autowired
     TestDataCreator dataUtil;
-    
+
+    @Autowired
+    OrganisaatioResource res;
+
     @Autowired
     private ConverterFactory converterFactory;
-    
+
     @Before
     public void setUp() {
         dataUtil.createInitialTestData();
@@ -64,7 +70,7 @@ public class ValidationMessagesTest {
         organisaatio.setNimi(setNimiValue("fi", "x"));
         // organisaatio.setNimiLyhenne("x");
         EmailDTO email = new EmailDTO();
-        
+
         Organisaatio orgEntity = this.converterFactory.convertOrganisaatioToJPA(organisaatio, true);//convertToJPA(organisaatio, Organisaatio.class, true);
         Email emailEntity = this.converterFactory.convertYhteystietoToJPA(email, true);
 
@@ -83,27 +89,22 @@ public class ValidationMessagesTest {
 
         // ValidationExceptionin lokalisoitu viesti
         //RootOrganisaatioModelDTO model = new RootOrganisaatioModelDTO();
-        OrganisaatioDTO model = new OrganisaatioDTO();
-        /*List<OrganisaatioTyyppiDTO> tyypit= Arrays.asList(
-                new OrganisaatioTyyppiDTO[]{
-                new OrganisaatioTyyppiDTO(OrganisaatioTyyppiDTO.KOULUTUSTOIMIJA_STRING)});*/
-        model.getTyypit().add(OrganisaatioTyyppi.KOULUTUSTOIMIJA);//getOrganisaatio().setTyypit(tyypit);
-        model.setNimi(setNimiValue("fi", "x"));
+        OrganisaatioRDTO organisaatioRDTO = OrganisaatioRDTOTestUtil.createKoulutustoimija("x", "1234567-8", null);
+
         try {
-            organisaatioService.createOrganisaatio(model, false);//createKoulutustoimija(model);
+            res.newOrganisaatio(organisaatioRDTO).getOrganisaatio();
             Assert.fail("should throw ValidtionException");
-        } catch (GenericFault e) {
-            Assert.assertTrue(e.getMessage().contains("validation.exception")); 
-            
+        } catch (Throwable e) {
+            Assert.assertTrue(e.getMessage().contains("validation.exception"));
         }
-        
+
         /*catch (ValidationException e) {
             Assert.assertTrue("wrong Organisaatio.nimiFi validation error: "+e.getMessage(), e.getMessage().contains("Kent\u00e4n pituuden tulee olla 3 - 100"));
         } catch (OrganisaatioHierarchyException ex) {
             Assert.fail("OrganisaatioHierarchyException was thrown while creating organisaatio");
         }*/
     }
-    
+
     private MonikielinenTekstiTyyppi setNimiValue(String lang, String value) {
     	MonikielinenTekstiTyyppi nimiT = new MonikielinenTekstiTyyppi();
     	Teksti nimiTeksti = new Teksti();
@@ -113,13 +114,13 @@ public class ValidationMessagesTest {
     	return nimiT;
     }
 
-    
+
     @Test
     //@Ignore
     public void testMultilingualValidationMessages() throws ValidationException {
         EmailDTO email = new EmailDTO();
         email.setEmail(null);
-        
+
         Email emailEntity = this.converterFactory.convertYhteystietoToJPA(email, true);
 
         setLocale(FI);

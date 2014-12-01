@@ -14,8 +14,6 @@ import fi.vm.sade.organisaatio.api.model.types.OsoiteDTO;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 /**
@@ -79,35 +77,6 @@ public class OrganisaatioConverter extends Converter<OrganisaatioDTO, Organisaat
         }
         dto.getYhteystiedot().addAll(filteredYts);
         dto.getMuutOsoitteet().addAll(muutOs);
-    }
-
-    @Override
-    public void setValuesToJPA(OrganisaatioDTO dto, Organisaatio entity, boolean merge) {
-        /*if ((dto.getParentOid() != null) && (this.organisaatioDAO.findByOid(dto.getParentOid()) != null) ) {
-            entity.setParent(this.organisaatioDAO.findByOid(dto.getParentOid()));//entityManager.find(Organisaatio.class, dto.getParentOid()));
-        }*/
-    }
-
-    public void setValuesToJPA(OrganisaatioDTO dto, Organisaatio entity, boolean merge, OrganisaatioDAOImpl organisaatioDAO) {
-        entity.setVuosiluokat(dto.getVuosiluokat());
-        entity.setRyhmatyypit(dto.getRyhmatyypit());
-        entity.setKayttoryhmat(dto.getKayttoryhmat());
-        entity.setKielet(dto.getKielet());
-        convertNimiToEntity(dto, entity);
-    }
-
-    private void convertNimiToEntity(OrganisaatioDTO dto, Organisaatio entity) {
-    	if (dto.getNimi() == null) {
-    		return;
-    	}
-    	MonikielinenTeksti nimiE = new MonikielinenTeksti();
-    	String nimihaku = "";
-    	for (Teksti curTeksti : dto.getNimi().getTeksti()) {
-    		nimiE.addString(curTeksti.getKieliKoodi(), curTeksti.getValue());
-    		nimihaku += "," + curTeksti.getValue();
-    	}
-    	entity.setNimihaku(nimihaku);
-    	entity.setNimi(nimiE);
     }
 
     private void setParentAndTyypit(OrganisaatioDTO organisaatioDTO, Organisaatio organisaatio) {

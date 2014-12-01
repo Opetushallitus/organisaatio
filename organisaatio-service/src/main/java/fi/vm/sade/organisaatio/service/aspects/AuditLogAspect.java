@@ -19,7 +19,6 @@ package fi.vm.sade.organisaatio.service.aspects;/*
 import fi.vm.sade.log.client.LoggerHelper;
 import fi.vm.sade.log.model.Tapahtuma;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.api.model.types.RemoveByOidType;
 import java.util.Date;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -159,12 +158,12 @@ public class AuditLogAspect {
                 }
                 break;
             case OPERATION_TYPE_DELETE:
-                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof RemoveByOidType) {
-                    String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
-                    logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
-                } else {
-                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
-                }
+//                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof RemoveByOidType) {
+//                    String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
+//                    logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
+//                } else {
+//                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+//                }
                 break;
         }
     }
