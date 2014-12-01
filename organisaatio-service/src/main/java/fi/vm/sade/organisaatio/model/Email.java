@@ -17,8 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.EMAIL_PATTERN;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
@@ -34,9 +32,12 @@ import fi.vm.sade.security.xssfilter.XssFilterListener;
 @EntityListeners(XssFilterListener.class)
 public class Email extends Yhteystieto {
 
-	private static final long serialVersionUID = 1L;
-	
-	@NotNull
+    private static final long serialVersionUID = 1L;
+
+    private static final String  EMAIL_PATTERN =
+        "^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
+    @NotNull
     @Pattern(regexp = EMAIL_PATTERN, message = "{validation.invalid.email}")
     @FilterXss
     private String email;
