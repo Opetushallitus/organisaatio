@@ -205,11 +205,8 @@ function OrganisaatioController($scope, $location,
                 organisaatioAlkuPvm: function () {
                     return $scope.model.organisaatio.alkuPvm;
                 },
-                koulutustoimija: function () {
-                    return $scope.model.isKoulutustoimija();
-                },
-                oppilaitos: function () {
-                    return $scope.model.isOppilaitos();
+                toimipiste: function () {
+                    return $scope.model.isToimipiste();
                 },
                 parentNimi: function () {
                     return $scope.model.parent.nimi;

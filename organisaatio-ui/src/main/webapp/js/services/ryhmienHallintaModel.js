@@ -14,15 +14,18 @@
  European Union Public Licence for more details.
  */
 
-app.factory('RyhmienHallintaModel', function($log,
+app.factory('RyhmienHallintaModel', function($log, $injector,
                                              Ryhmat, Organisaatio,
+                                             Paivittaja, Henkilo,
                                              UusiOrganisaatio) {
 
     $log = $log.getInstance("RyhmienHallintaModel");
+    var loadingService = $injector.get('LoadingService');
 
     var model = {
         ryhmat : [],
         groups : [],
+        paivitys : {},
 
         reload : function(parentOid, callback, virheCallback) {
             model.ryhmat.length = 0;
@@ -41,6 +44,33 @@ app.factory('RyhmienHallintaModel', function($log,
                     model.ryhmat.push(ryhma);
                 });
                 model.groups = model.ryhmat;
+                callback();
+            }, virheCallback);
+        },
+
+        clearUpdateInfo : function() {
+            $log.debug("clearUpdateInfo()");
+            model.paivitys = {};
+        },
+
+        loadUpdateInfo : function(oid, callback, virheCallback) {
+            $log.debug("loadUpdateInfo() : " + oid);
+            model.paivitys = {};
+            Paivittaja.get({oid: oid}, function(paivitys) {
+                if (paivitys.paivitysPvm) {
+                    var pvm = moment(new Date(paivitys.paivitysPvm));
+                    model.paivitys.pvm = pvm.format('DD.MM.YYYY h:mm:ss');
+                    Henkilo.get({hlooid: paivitys.paivittaja}, function(paivittaja_hlo) {
+                        model.paivitys.paivittaja = paivittaja_hlo.etunimet + ' ' + paivittaja_hlo.sukunimi;
+                    },
+                    // Error case
+                    function(response) {
+                        $log.warn("Failed to get Henkilo!", response);
+                        $log.debug("disable system error dialog.");
+                        loadingService.onErrorHandled();
+                        model.paivitys.paivittaja = paivitys.paivittaja;
+                    });
+                }
                 callback();
             }, virheCallback);
         },

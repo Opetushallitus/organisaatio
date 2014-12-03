@@ -99,4 +99,12 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      */
     boolean isYtunnusAvailable(String ytunnus);
 
+    /**
+     * Merkitään organisaatio poistetuksi ja palautetaan organisaation parent.
+     * Organisaation voi poistaa vain, jos sillä ei ole lapsiorganisaatioita.
+     *
+     * @param oid Poistettavan organisaation oid
+     * @return Poistettavan organisaation parent
+     */
+    public Organisaatio markRemoved(String oid);
 }

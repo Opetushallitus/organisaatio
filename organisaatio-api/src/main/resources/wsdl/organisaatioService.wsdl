@@ -18,22 +18,6 @@
         <wsdl:part element="ns1:pingResponse" name="parameters">
         </wsdl:part>
     </wsdl:message>
-    <wsdl:message name="createOrganisaatio">
-        <wsdl:part element="ns1:createOrganisaatio" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="createOrganisaatioResponse">
-        <wsdl:part element="ns1:createOrganisaatioResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateOrganisaatio">
-        <wsdl:part element="ns1:updateOrganisaatio" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateOrganisaatioResponse">
-        <wsdl:part element="ns1:updateOrganisaatioResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
     <wsdl:message name="findParentsTo">
         <wsdl:part element="ns1:findParentsTo" name="parameters">
         </wsdl:part>
@@ -56,14 +40,6 @@
     </wsdl:message>
     <wsdl:message name="searchOrganisaatiosResponse">
         <wsdl:part element="ns1:searchOrganisaatiosResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="removeByOid">
-        <wsdl:part element="ns1:removeByOid" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="removeByOidResponse">
-        <wsdl:part element="ns1:removeByOidResponse" name="parameters">
         </wsdl:part>
     </wsdl:message>
     <wsdl:message name="findByOid">
@@ -124,22 +100,6 @@
         <wsdl:part element="ns1:findYhteystietojenTyyppisResponse" name="parameters">
         </wsdl:part>
     </wsdl:message>
-    <wsdl:message name="createYhteystietojenTyyppi">
-        <wsdl:part element="ns1:createYhteystietojenTyyppi" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="createYhteystietojenTyyppiResponse">
-        <wsdl:part element="ns1:createYhteystietojenTyyppiResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateYhteystietojenTyyppi">
-        <wsdl:part element="ns1:updateYhteystietojenTyyppi" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateYhteystietojenTyyppiResponse">
-        <wsdl:part element="ns1:updateYhteystietojenTyyppiResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
     <wsdl:message name="readYhteystietojenTyyppi">
         <wsdl:part element="ns1:readYhteystietojenTyyppi" name="parameters">
         </wsdl:part>
@@ -172,30 +132,6 @@
     </wsdl:message>
     <wsdl:message name="findYhteystietosResponse">
         <wsdl:part element="ns1:findYhteystietosResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="createYhteystieto">
-        <wsdl:part element="ns1:createYhteystieto" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="createYhteystietoResponse">
-        <wsdl:part element="ns1:createYhteystietoResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="removeYhteystietojenTyyppiByOid">
-        <wsdl:part element="ns1:removeYhteystietojenTyyppiByOid" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="removeYhteystietojenTyyppiByOidResponse">
-        <wsdl:part element="ns1:removeYhteystietojenTyyppiByOidResponse" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateYhteystieto">
-        <wsdl:part element="ns1:updateYhteystieto" name="parameters">
-        </wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="updateYhteystietoResponse">
-        <wsdl:part element="ns1:updateYhteystietoResponse" name="parameters">
         </wsdl:part>
     </wsdl:message>
     <wsdl:message name="readYhteystieto">
@@ -232,36 +168,6 @@
             <wsdl:input message="tns:ping" name="ping">
             </wsdl:input>
             <wsdl:output message="tns:pingResponse" name="pingResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="createOrganisaatio">
-            <wsdl:documentation>
-                Organisaation luominen.
-            </wsdl:documentation>
-            <wsdl:input message="tns:createOrganisaatio" name="createOrganisaatio">
-            </wsdl:input>
-            <wsdl:output message="tns:createOrganisaatioResponse" name="createOrganisaatioResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="removeOrganisaatioByOid">
-            <wsdl:documentation>
-                Poistaa annetun organisaation (identifioidaan OID:lla) ja sen lapset.
-            </wsdl:documentation>
-            <wsdl:input message="tns:removeByOid" name="removeByOid">
-            </wsdl:input>
-            <wsdl:output message="tns:removeByOidResponse" name="removeByOidResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="updateOrganisaatio">
-            <wsdl:documentation>
-                Organisaation tietojen päivittäminen.
-            </wsdl:documentation>
-            <wsdl:input message="tns:updateOrganisaatio" name="updateOrganisaatio">
-            </wsdl:input>
-            <wsdl:output message="tns:updateOrganisaatioResponse" name="updateOrganisaatioResponse">
             </wsdl:output>
             <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
         </wsdl:operation>
@@ -384,36 +290,6 @@
             <wsdl:output message="tns:findYhteystietojenTyyppisResponse" name="findYhteystietojenTyyppisResponse">
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="createYhteystietojenTyyppi">
-            <wsdl:documentation>
-                Luo uusi yhteystietojenTyyppi-objekti.
-            </wsdl:documentation>
-            <wsdl:input message="tns:createYhteystietojenTyyppi" name="createYhteystietojenTyyppi">
-            </wsdl:input>
-            <wsdl:output message="tns:createYhteystietojenTyyppiResponse" name="createYhteystietojenTyyppiResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="updateYhteystietojenTyyppi">
-            <wsdl:documentation>
-                Päivitä annettu yhteystietojenTyyppi-objekti.
-            </wsdl:documentation>
-            <wsdl:input message="tns:updateYhteystietojenTyyppi" name="updateYhteystietojenTyyppi">
-            </wsdl:input>
-            <wsdl:output message="tns:updateYhteystietojenTyyppiResponse" name="updateYhteystietojenTyyppiResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="removeYhteystietojenTyyppiByOid">
-            <wsdl:documentation>
-                Poistaa halutun yhteystietojen tyyppi - olion annetulla OID:lla.
-            </wsdl:documentation>
-            <wsdl:input message="tns:removeYhteystietojenTyyppiByOid" name="removeYhteystietojenTyyppiByOid">
-            </wsdl:input>
-            <wsdl:output message="tns:removeYhteystietojenTyyppiByOidResponse" name="removeYhteystietojenTyyppiByOidResponse">
-            </wsdl:output>
-            <wsdl:fault name="fault" message="tns:genericFault"></wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="readYhteystietojenTyyppi">
             <wsdl:documentation>
                 Lataa yhteystietojen tyyppi objekti.
@@ -458,24 +334,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output name="pingResponse">
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="createOrganisaatio">
-            <soap:operation soapAction="" style="document" />
-            <wsdl:input name="createOrganisaatio">
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output name="createOrganisaatioResponse">
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="updateOrganisaatio">
-            <soap:operation soapAction="" style="document" />
-            <wsdl:input name="updateOrganisaatio">
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output name="updateOrganisaatioResponse">
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
@@ -562,24 +420,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output name="findYhteystietojenTyyppisResponse">
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="createYhteystietojenTyyppi">
-            <soap:operation soapAction="" style="document" />
-            <wsdl:input name="createYhteystietojenTyyppi">
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output name="createYhteystietojenTyyppiResponse">
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="updateYhteystietojenTyyppi">
-            <soap:operation soapAction="" style="document" />
-            <wsdl:input name="updateYhteystietojenTyyppi">
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output name="updateYhteystietojenTyyppiResponse">
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
