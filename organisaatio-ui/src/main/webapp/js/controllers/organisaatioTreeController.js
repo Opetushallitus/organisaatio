@@ -65,8 +65,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
     };
 
     $scope.isDeleteAllowed = function(node) {
-        // Tarkistetaan ettei ole aliorganisaatioita
         return $scope.model.hasChildren(node) === false;
+    };
+
+    $scope.isMoveAllowed = function(node) {
+        //todo: ehdot?
+        return true; //$scope.model.isLeaf(node);
     };
 
     $scope.isCreateSubAllowed = function(node) {
@@ -78,6 +82,35 @@ function OrganisaatioTreeController($scope, $location, $filter,
                 !$scope.model.isTyyppi(node, "Koulutustoimija") &&
                 !$scope.model.isTyyppi(node, "Muu organisaatio") &&
                 !$scope.model.isTyyppi(node, "Oppisopimustoimipiste");
+    };
+
+    $scope.moveOrganisaatio = function (node) {
+        var modalInstance = $modal.open({
+            templateUrl: 'organisaationsiirto.html',
+            controller: OrganisaatioMoveController,
+            resolve: {
+                nimi: function () {
+                    return $scope.model.getNimi(node);
+                },
+                node: function () {
+                    return node;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(options) {
+
+            options.organisaatio.parentOid = options.newParentOrganization.oid;
+
+            Organisaatio.post(options.organisaatio, function(result) {
+                $log.info('Organisaatio siirretty osaksi: ' + node.oid);
+            });
+
+
+            if (!$scope.hakuehdot.isEmpty()) {
+                $scope.model.refresh($scope.hakuehdot);
+            }
+        });
     };
 
     $scope.deleteOrganisaatio = function (node) {

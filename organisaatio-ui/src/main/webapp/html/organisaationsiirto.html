@@ -1,0 +1,91 @@
+<!-- Organisaation Poisto -->
+<div class="modal-header">
+    <h3>TT_Siirrä organisaatio toisen organisaation osaksi</h3>
+</div>
+
+<div class="modal-body">
+
+    <div class="form-fluid">
+
+        TT_Siirrettävä organisaatio: {{nimi}}
+        <br />
+        <br />
+        <form>
+            <fieldset>
+                <label>TT_Uusi emo-organisaatio</label>
+
+                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled"
+                           on-select="select($item)">
+                    <ui-select-match placeholder="TT_Uusi emo-organisaatio">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search }">
+                        <span>{{suggest.name}}</span>
+                    </ui-select-choices>
+                </ui-select>
+
+                <!--
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="options.mergeSelf">
+                    TT_Siirrettävä organisaatio sulautetaan uuteen emo-organisaatioon
+                </label>
+                <span class="help-block">TT_Ohjeistusteksti täällä</span>
+                -->
+            </fieldset>
+             <!--
+            <br />
+            <label>TT_Siirrettävän organisaation aliorganisaatiot</label>
+
+
+            <label class="radio">
+                <input type="radio" name="suborganization" id="suborganization1" value="move" ng-model="options.suborganization">
+                TT_Siirretään organisaation mukana
+            </label>
+            <label class="radio">
+                <input type="radio" name="suborganization" id="suborganization2" value="remove" ng-model="options.suborganization">
+                TT_Lakkautetaan
+            </label>
+              -->
+            <br />
+            <label>TT_Siirrettään organisaatioon ja mukana siirrettäviin aliorgnisaatioihin liittyvät koulutukset ja hakukohteet</label>
+
+            <label class="radio">
+                <input type="radio" name="educationAndStudyTarget" id="educationAndStudyTarget1" value="move" ng-model="options.educationAndStudyTarget">
+                TT_Siirretään organisaation mukana
+            </label>
+            <label class="radio">
+                <input type="radio" name="educationAndStudyTarget" id="educationAndStudyTarget2" value="remove" ng-model="options.educationAndStudyTarget">
+                TT_Lakkautetaan
+            </label>
+
+            <br />
+
+            <label>TT_Siirros tulee voimaan</label>
+
+            <input  oph-enter type="text"
+                    name="luontipvm"
+                    formatteddate
+                    datepicker-popup="dd.MM.yyyy"
+                    min="'1990-01-01'"
+                    max="'2030-12-31'"
+                    ng-model="options.date"
+                    close-on-date-selection="true"
+                    ie-placeholder
+                    placeholder="TT_Siirros päivämäärä"
+                    close-text=""
+                    current-text=""
+                    clear-text=""
+                    toggle-weeks-text=""
+                    required/>
+        </form>
+    </div>
+
+</div>
+
+
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
+        <button class="btn" ng-click="$close(options)">{{'Organisaationpoisto.ok' | i18n}}</button>
+    </div>
+</div>
+
+
