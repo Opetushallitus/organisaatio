@@ -19,11 +19,12 @@ import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 /**
  * By default executes tests as CRUD_USER, override before to customize
  */
-public class SecurityAwareTestBase {
+public class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
     
     @Value("${root.organisaatio.oid}")
     protected String ophOid;

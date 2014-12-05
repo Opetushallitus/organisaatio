@@ -247,6 +247,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.182</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- TODO: versiot superiin jos käytetään tätä oikeasti -->
         <dependency>
             <groupId>net.sf.dozer</groupId>

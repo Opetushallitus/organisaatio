@@ -263,6 +263,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setPaivittaja(getCurrentUser());
             entity.setPaivitysPvm(new Date());
         } catch (Throwable t) {
+            LOG.error("Could not set updater for organisation!", t);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
 
@@ -426,7 +427,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Parent changed update children.
         if (parentChanged) {
-            updateChildren(entity);
+            updateChildrenRecursive(entity);
         }
 
         // Päivitä tiedot koodistoon.
@@ -688,12 +689,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return val == null || val.isEmpty();
     }
 
-    private void updateChildren(Organisaatio parent) {
+    private void updateChildrenRecursive(Organisaatio parent) {
         List<Organisaatio> children = organisaatioDAO.findChildren(parent.getId());
+        if (children == null || children.isEmpty()) {
+            return;
+        }
+
         for (Organisaatio child : children) {
             // Create new parent id / oid paths for child.
             createParentPath(child, parent.getOid());
             organisaatioDAO.update(child);
+            updateChildrenRecursive(child);
         }
         solrIndexer.index(children);
     }
@@ -982,6 +988,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(indeksoitavat);
 
         return edited;
+    }
+
+    @Override
+    public List<Organisaatio> processNewOrganisaatioSuhdeChanges() {
+        List<Organisaatio> results = new ArrayList<>();
+        List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
+        for (OrganisaatioSuhde os : suhdeList) {
+            LOG.info("Processing {}", os);
+            Organisaatio child = os.getChild();
+            createParentPath(child, os.getParent().getOid());
+            organisaatioDAO.update(child);
+            solrIndexer.index(child);
+
+            updateChildrenRecursive(child);
+
+            results.add(child);
+        }
+        return results;
     }
 
     private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {

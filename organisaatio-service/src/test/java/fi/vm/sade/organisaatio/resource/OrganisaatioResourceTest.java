@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
-import fi.vm.sade.organisaatio.integrationtest.TestDataCreator;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import junit.framework.Assert;
@@ -23,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,14 +34,13 @@ import java.util.Set;
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("embedded-solr")
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     OrganisaatioResource res;
-    @Autowired
-    TestDataCreator dataUtil;
     @Autowired
     IndexerResource solrIndexer;
 
@@ -52,14 +52,14 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     public void before() {
         super.before();
         Locale.setDefault(Locale.US); // because of validaton messages
-        //TODO: This should be replaced with more direct data injection system. (DBUnit / Spring JDBC Template).
-        dataUtil.createInitialTestData();
+        executeSqlScript("data/basic_organisaatio_data.sql", false);
         solrIndexer.reBuildIndex(true); //rebuild index
     }
 
     @Override
     @After
     public void after() {
+        executeSqlScript("data/truncate_tables.sql", false);
     }
 
     @Test
@@ -112,12 +112,12 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(5, result.getNumHits());
+        assertEquals(6, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
         result = res.searchHierarchy(searchCriteria);
-        assertEquals(3, result.getNumHits());
+        assertEquals(4, result.getNumHits());
 
         //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);

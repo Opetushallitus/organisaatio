@@ -16,6 +16,7 @@ import com.mysema.query.types.expr.BooleanExpression;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -195,6 +196,38 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         if (parentRelation != null) {
             this.remove(parentRelation);
         }
+    }
+
+    @Override
+    public List<OrganisaatioSuhde> findForDay(Date day) {
+        if (day == null) {
+            return new ArrayList<>();
+        }
+
+        Calendar from = Calendar.getInstance();
+        from.setTime(day);
+        Calendar to = Calendar.getInstance();
+        to.setTime(day);
+
+        zeroTime(from);
+        zeroTime(to);
+
+        to.add(Calendar.DAY_OF_MONTH, 1);
+        to.add(Calendar.SECOND, -1);
+
+        QOrganisaatioSuhde organisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+        JPAQuery query = new JPAQuery(getEntityManager())
+                .from(organisaatioSuhde)
+                .where(organisaatioSuhde.alkuPvm.between(from.getTime(), to.getTime()))
+                .orderBy(organisaatioSuhde.alkuPvm.asc());
+        return query.list(organisaatioSuhde);
+    }
+
+    private void zeroTime(Calendar from) {
+        from.set(Calendar.HOUR_OF_DAY, 0);
+        from.set(Calendar.MINUTE, 0);
+        from.set(Calendar.SECOND, 0);
+        from.set(Calendar.MILLISECOND, 0);
     }
 
     private void logRelation(String message, OrganisaatioSuhde relation) {
