@@ -653,6 +653,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 });
                 model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
                 model.koodisto.localizedOppilaitos = "Oppilaitos";
+                model.koodisto.localizedToimipiste = "Toimipiste";
             },
             // Error case
             function(response) {
@@ -697,8 +698,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.paivitys = {};
             Paivittaja.get({oid: result.oid}, function(paivitys) {
                 if (paivitys.paivitysPvm) {
-                    var pvm = new Date(paivitys.paivitysPvm);
-                    model.paivitys.pvm = pvm.toLocaleDateString() + ' ' + pvm.toLocaleTimeString();
+                    var pvm = moment(new Date(paivitys.paivitysPvm));
+                    model.paivitys.pvm = pvm.format('DD.MM.YYYY h:mm:ss');
                     Henkilo.get({hlooid: paivitys.paivittaja}, function(paivittaja_hlo) {
                         model.paivitys.paivittaja = paivittaja_hlo.etunimet + ' ' + paivittaja_hlo.sukunimi;
                     },
@@ -853,6 +854,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (oid === null || (oid !== model.koodisto.oid)) {
                 model.koodisto.localizedOppilaitos = "";
                 model.koodisto.localizedKoulutustoimija = "";
+                model.koodisto.localizedToimipiste = "";
                 model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
                 KoodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
@@ -887,6 +889,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                 model.koodisto.localizedKoulutustoimija = localizedOrgType;
                             } else if (orgTyyppiKoodi.koodiArvo === "02") {
                                 model.koodisto.localizedOppilaitos = localizedOrgType;
+                            } else if (orgTyyppiKoodi.koodiArvo === "03") {
+                                model.koodisto.localizedToimipiste = localizedOrgType;
                             }
                             if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
                                 model.koodisto.ophOrganisaatiot.push(localizedOrgType);
@@ -1195,6 +1199,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.mdyhteystiedot = {};
             model.organisaationTulevaNimi = {};
             model.organisaationTulevaNimi.nimi = {};
+            model.muutettaviaAliorganisaatioita = 0;
 
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";
@@ -1707,6 +1712,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         this.isKoulutustoimija = function() {
             if (model.organisaatio.tyypit) {
                 return model.organisaatio.tyypit.indexOf(model.koodisto.localizedKoulutustoimija) !== -1;
+            }
+            return false;
+        };
+
+        this.isToimipiste = function() {
+            if (model.organisaatio.tyypit) {
+                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedToimipiste) !== -1;
             }
             return false;
         };

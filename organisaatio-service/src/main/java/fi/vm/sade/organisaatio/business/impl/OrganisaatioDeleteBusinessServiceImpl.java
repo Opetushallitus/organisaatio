@@ -66,7 +66,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
         }
 
         // Poistettavalla organisaatiolla ei saa olla alkavia koulutuksia
-        if (organisaatioKoulutukset.alkaviaKoulutuksia(org.getOid(), new Date())) {
+        if (organisaatioKoulutukset.alkaviaKoulutuksia(org.getOid())) {
             LOG.warn("Cannot to be deleted: " + oid + " contains 'koulutuksia'");
             throw new OrganisaatioDeleteKoulutuksiaException();
         }

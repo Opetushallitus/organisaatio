@@ -37,8 +37,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
         parentNimi : {},
         uusinNimi : {},
         uusinNimiOrig : {},
-        koulutustoimija : false,
-        oppilaitos : false,
+        toimipiste : false,
         suunniteltuOrganisaatio : false,
         ajastettuMuutos : false,
 
@@ -52,8 +51,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
             this.parentNimi = {};
             this.uusinNimi = {};
             this.uusinNimiOrig = {};
-            this.koulutustoimija = false;
-            this.oppilaitos = false;
+            this.toimipiste = false;
             this.suunniteltuOrganisaatio = false;
             this.ajastettuMuutos = false;
         },
@@ -198,18 +196,16 @@ app.factory('NimenMuokkausModel', function($log, $location,
 
         // Poistetaan parent prefix nimestä
         removeParentPrefix: function(nimi) {
-            if (this.koulutustoimija || this.oppilaitos) {
-                return;
-            }
+            if (this.toimipiste) {
+                $log.log('removeParentPrefix()');
 
-            $log.log('removeParentPrefix()');
-
-            if (model.parentNimi && nimi) {
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (nimi.nimi[key] && model.parentNimi[key]) {
-                        nimi.nimi[key] = nimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
-                    }
-                });
+                if (model.parentNimi && nimi) {
+                    ['fi', 'sv', 'en'].forEach(function(key) {
+                        if (nimi.nimi[key] && model.parentNimi[key]) {
+                            nimi.nimi[key] = nimi.nimi[key].replace(model.parentNimi[key] + ", ", "");
+                        }
+                    });
+                }
             }
         },
 
@@ -228,28 +224,27 @@ app.factory('NimenMuokkausModel', function($log, $location,
         addParentPrefix: function(nimi) {
             this.removeEmptyNimi(nimi);
 
-            if (this.koulutustoimija || this.oppilaitos) {
-                return;
-            }
+            if (this.toimipiste) {
+                $log.log('addParentPrefix()');
 
-            $log.log('addParentPrefix()');
-
-            if (model.parentNimi && nimi) {
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (nimi.nimi[key] && model.parentNimi[key]) {
-                        if (!nimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
-                                !nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
-                            nimi.nimi[key] = model.parentNimi[key] + ", " + nimi.nimi[key];
+                if (model.parentNimi && nimi) {
+                    ['fi', 'sv', 'en'].forEach(function(key) {
+                        if (nimi.nimi[key] && model.parentNimi[key]) {
+                            if (!nimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
+                                    !nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                                nimi.nimi[key] = model.parentNimi[key] + ", " + nimi.nimi[key];
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         },
 
 
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
         refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
-                          koulutustoimija, oppilaitos, parentNimi,
+                          //koulutustoimija, oppilaitos,
+                          toimipiste, parentNimi,
                           nameFormat) {
             $log.log('refresh()');
 
@@ -259,8 +254,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
             this.removeParentPrefix(this.uusinNimiOrig);
 
             this.oid = oid;
-            this.koulutustoimija = koulutustoimija;
-            this.oppilaitos = oppilaitos;
+            this.toimipiste = toimipiste;
             this.nameFormat = nameFormat;
             this.parentNimi = parentNimi;
 

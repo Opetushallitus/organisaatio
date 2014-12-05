@@ -967,6 +967,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
+                    updateKoodisto(org, false);
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);

@@ -313,6 +313,18 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.kubek2k</groupId>
+            <artifactId>springockito</artifactId>
+            <scope>test</scope>
+            <version>${springockito.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kubek2k</groupId>
+            <artifactId>springockito-annotations</artifactId>
+            <scope>test</scope>
+            <version>${springockito.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.mysema.querydsl</groupId>

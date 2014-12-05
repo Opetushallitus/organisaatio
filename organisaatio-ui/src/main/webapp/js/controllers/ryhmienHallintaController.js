@@ -41,8 +41,22 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.koodisto = RyhmaKoodisto;
 
+    $scope.updateUpdateInfo = function() {
+        if ($scope.currentGroup === null || $scope.currentGroup.oid === null) {
+            $scope.model.clearUpdateInfo();
+        }
+        else {
+            $scope.model.loadUpdateInfo($scope.currentGroup.oid, function(result) {
+            }, function(error) {
+                loadingService.onErrorHandled();
+                Alert.add("error", error, false);
+            });
+        }
+    };
+
     $scope.valitseRyhma = function(group) {
         $scope.currentGroup = group;
+        $scope.updateUpdateInfo();
     };
 
     $scope.localizeNimi = function(ryhma) {
@@ -53,6 +67,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.luoUusi = function() {
         $scope.currentGroup = $scope.model.create($routeParams.parentoid);
+        $scope.updateUpdateInfo();
         $scope.currentGroupSelection = {};
     };
 
@@ -73,6 +88,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
                 $scope.model.delete($scope.currentGroup, function(result) {
                     $scope.currentGroup = null;
+                    $scope.updateUpdateInfo();
                     $scope.currentGroupSelection = {};
                 }, function(error) {
                     loadingService.onErrorHandled();
@@ -89,6 +105,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
         if ($scope.currentGroup !== null) {
             $scope.model.save($scope.currentGroup, function(savedGroup) {
                 $scope.currentGroup = savedGroup;
+                $scope.updateUpdateInfo();
                 $scope.currentGroupSelection = {};
                 $scope.currentGroupSelection.selected = savedGroup;
                 $scope.form.$setPristine();
@@ -102,6 +119,7 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
 
     $scope.peruuta = function() {
         $scope.currentGroup = null;
+        $scope.updateUpdateInfo();
         $scope.currentGroupSelection = {};
         $scope.model.reload($routeParams.parentoid, function(result) {
             $scope.form.$setPristine();

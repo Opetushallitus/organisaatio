@@ -17,11 +17,10 @@ package fi.vm.sade.organisaatio.service.search.it;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.api.model.GenericFault;
 import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
-import fi.vm.sade.organisaatio.api.model.types.RemoveByOidType;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioKoulutukset;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
@@ -47,8 +46,13 @@ import java.util.Random;
 import java.util.UUID;
 import junit.framework.Assert;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kubek2k.springockito.annotations.ReplaceWithMock;
+import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +65,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Indexes set of orgs in a hierarchy, indexes org data, searches org data from index and compares the result with current implementation.
  */
-@ContextConfiguration(locations = { "classpath:spring/test-context.xml" })
+@ContextConfiguration(loader = SpringockitoContextLoader.class, locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ActiveProfiles("embedded-solr")
@@ -88,8 +92,18 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     OrganisaatioSearchService searchService;
     @Autowired
     SearchCriteriaModelMapper searchCriteriaModelMapper;
+
+    @ReplaceWithMock
+    @Autowired
+    private OrganisaatioKoulutukset koulutukset;
+
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testHierarchySearch() throws SolrServerException, IOException {
@@ -343,14 +357,10 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     }
 
     private void deleteOrg(String oid) {
-        RemoveByOidType type = new RemoveByOidType();
-        type.setOid(oid);
-        try {
-            organisaatioService.removeOrganisaatioByOid(type);
-        } catch (GenericFault e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // Mock toteutukset alkavien koulutusten pyynnöille
+        when(koulutukset.alkaviaKoulutuksia(oid)).thenReturn(false);
+
+        res.deleteOrganisaatio(oid);
     }
 
     private Organisaatio createOrganisaatio(String nimi, Organisaatio parent, Date... startStop) {
