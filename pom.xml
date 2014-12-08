@@ -20,8 +20,7 @@
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
         <!-- OPH Versions -->
-        <generic.version>9.0-SNAPSHOT</generic.version>
-        <sade-generic.version>9.0-SNAPSHOT</sade-generic.version>
+        <generic.version>9.1-SNAPSHOT</generic.version>
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
         <log.client.version>8.0-SNAPSHOT</log.client.version>
         <oid.api.version>8.0-SNAPSHOT</oid.api.version>
