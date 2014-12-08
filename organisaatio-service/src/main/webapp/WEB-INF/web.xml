@@ -35,7 +35,7 @@
     <!-- CORS (cross domain) support for rest services -->
     <filter>
         <filter-name>AllowAllCorsFilter</filter-name>
-        <filter-class>fi.vm.sade.organisaatio.service.AllowAllCorsRequestsFilter</filter-class>
+        <filter-class>fi.vm.sade.generic.servlet.AllowAllCorsRequestsInDevModeServletFilter</filter-class>
     </filter>
 
     <filter-mapping>
