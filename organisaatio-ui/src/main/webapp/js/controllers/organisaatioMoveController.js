@@ -17,22 +17,7 @@
 function OrganisaatioMoveController($scope, $modalInstance, $log, Organisaatio, Organisaatiot, nimi, node) {
 
     $scope.nimi = nimi;
-
     $scope.suggests = [];
-    //['1.2.246.562.10.346830761110','1.2.246.562.10.97053458523','1.2.246.562.10.48442622063', '1.2.246.562.10.53542906168'];
-
-
-    var parametrit = {"searchstr": "", "aktiiviset": true, "suunnitellut": true, "lakkautetut": false}
-
-    Organisaatiot.get(parametrit, function (result) {
-        var values = result.organisaatiot.map(function (org) {
-            return {
-                "name": org.nimi.fi,
-                "oid": org.oid
-            };
-        });
-        $scope.suggests = $scope.suggests.concat(values);
-    });
 
     $scope.options = {
         newParentOrganization: null,        //possible values move, remove
@@ -43,14 +28,19 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, Organisaatio, 
         date: new Date()
     };
 
-    $scope.select = function (org) {
-        $scope.options.newParentOrganization = org.oid;
-    };
-
     Organisaatio.get({oid: node.oid}, function (result) {
             $scope.options.organisaatio = result;
         }
     );
 
-
+    var parametrit = {"searchstr": "", "aktiiviset": true, "suunnitellut": true, "lakkautetut": false};
+    Organisaatiot.get(parametrit, function (result) {
+        var values = result.organisaatiot.map(function (org) {
+            return {
+                "name": org.nimi.fi,
+                "oid": org.oid
+            };
+        });
+        $scope.suggests = $scope.suggests.concat(values);
+    });
 }
