@@ -102,14 +102,16 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
             options.organisaatio.parentOid = options.newParentOrganization.oid;
 
-            Organisaatio.post(options.organisaatio, function(result) {
+            function reply() {
                 $log.info('Organisaatio siirretty osaksi: ' + node.oid);
-            });
 
-
-            if (!$scope.hakuehdot.isEmpty()) {
-                $scope.model.refresh($scope.hakuehdot);
+                if (!$scope.hakuehdot.isEmpty()) {
+                    $scope.model.refresh($scope.hakuehdot);
+                }
             }
+
+            Organisaatio.post(options.organisaatio, reply);
+
         });
     };
 
