@@ -995,9 +995,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public List<Organisaatio> processNewOrganisaatioSuhdeChanges() {
         List<Organisaatio> results = new ArrayList<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
+        Set<Organisaatio> affectedParents = new HashSet<>();
         for (OrganisaatioSuhde os : suhdeList) {
             LOG.info("Processing {}", os);
+            affectedParents.add(os.getParent());
+
             Organisaatio child = os.getChild();
+            // Find previous parent organisation.
+            List<OrganisaatioSuhde> parentRelations = child.getParentSuhteet();
+            Collections.reverse(parentRelations);
+            if (parentRelations.size() > 1) {
+                Organisaatio oldParent = parentRelations.get(1).getParent();
+                affectedParents.add(oldParent);
+            }
             createParentPath(child, os.getParent().getOid());
             organisaatioDAO.update(child);
             solrIndexer.index(child);
@@ -1006,6 +1016,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             results.add(child);
         }
+
+        // Update index for affected parent organisations.
+        solrIndexer.index(new ArrayList<>(affectedParents));
+
         return results;
     }
 

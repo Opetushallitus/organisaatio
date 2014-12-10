@@ -101,7 +101,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         //Finding all koulutustoimijat
         OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null, null, true, null);
         OrganisaatioHakutulos result = res.searchHierarchy(searchCriteria);
-        assertEquals(5, result.getNumHits());
+        assertEquals(6, result.getNumHits());
 
         //List roots
         ArrayList<String> oidList = new ArrayList<String>();
@@ -112,12 +112,12 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(6, result.getNumHits());
+        assertEquals(7, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
         result = res.searchHierarchy(searchCriteria);
-        assertEquals(4, result.getNumHits());
+        assertEquals(5, result.getNumHits());
 
         //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
