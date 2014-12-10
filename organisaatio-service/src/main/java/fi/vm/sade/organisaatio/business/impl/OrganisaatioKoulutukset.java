@@ -203,11 +203,15 @@ public class OrganisaatioKoulutukset {
             Date koulutuksenAlkamisPvmMax = koulutus.getKoulutuksenAlkamisPvmMax();
 
             if (koulutuksenAlkamisPvmMax == null) {
-                LOG.debug("alkaviaKoulutuksia() koulutuksenAlkamisPvmMax == null");
+                LOG.info("Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: " + koulutus.getOid());
                 Integer vuosi = koulutus.getVuosi();
-                if(vuosi == null) { // Ei koskaan vanhene?
-                    LOG.debug("alkaviaKoulutuksia() Ei vuotta, käytetään maksimiarvoa");
-                    koulutuksenAlkamisPvmMax = new Date(Long.MAX_VALUE);
+
+                if(vuosi == null) {
+                    // Koulutukselta puuttuu kausi ja vuosi --> "valmistava koulutus"
+                    // eli se on sidottu johonkin toiseen koulutukseen. Ei estä esim.
+                    // organisaation lakkauttamista.
+                    LOG.info("Missing 'kausi' and 'vuosi' for koulutus: " + koulutus.getOid());
+                    continue;
                 } else {
                     Calendar cal = Calendar.getInstance();
                     cal.set(Calendar.YEAR, vuosi + 1);
