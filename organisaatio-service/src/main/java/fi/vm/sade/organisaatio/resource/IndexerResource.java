@@ -20,8 +20,8 @@ import com.google.common.collect.Lists;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
@@ -52,7 +52,7 @@ public class IndexerResource {
     private static final Logger LOG = LoggerFactory.getLogger(IndexerResource.class);
 
     @Autowired(required = true)
-    private OrganisaatioDAOImpl organisaatioDAOImpl;
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
     protected OrganisaatioNimiDAO organisaatioNimiDAO;
@@ -72,7 +72,7 @@ public class IndexerResource {
     @Produces("text/plain")
     @ApiOperation(value = "Rakentaa indeksin uudelleen", notes = "Operaatio rakentaa indeksin uudelleen.", response = String.class)
     public String reBuildIndex(@ApiParam(value = "Tyhjennetäänkö indeksi ensin", required = true) @QueryParam("clean") final boolean clean) {
-        Preconditions.checkNotNull(organisaatioDAOImpl, "need dao!");
+        Preconditions.checkNotNull(organisaatioDAO, "need dao!");
         Preconditions.checkNotNull(transactionManager, "need TM!");
 
         // sigh... annotations, for some reason, did not work
@@ -81,7 +81,7 @@ public class IndexerResource {
             @Override
             public Integer doInTransaction(TransactionStatus arg0) {
 
-                List<Organisaatio> organisaatiot = organisaatioDAOImpl.findAll();
+                List<Organisaatio> organisaatiot = organisaatioDAO.findAll();
                 try {
                     if (clean) {
                         solr.deleteByQuery("*:*");

@@ -696,9 +696,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param startIndex
      * @param lastModifiedBefore
      * @param lastModifiedSince
-     * @parem type Organisation type
+     * @param type Organisation type
      * @return
      */
+    @Override
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type) {
 
         LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
@@ -742,24 +743,52 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return q.list(org.oid);
     }
 
+    /**
+     * Haetaan organisaatiota Y-Tunnuksen perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByYTunnus(String oid) {
         LOG.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota virastotunnuksen perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByVirastoTunnus(String oid) {
         LOG.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota oppilaitoskoodin perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByOppilaitoskoodi(String oid) {
         LOG.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota toimipistekoodin perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByToimipistekoodi(String oid) {
         LOG.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
