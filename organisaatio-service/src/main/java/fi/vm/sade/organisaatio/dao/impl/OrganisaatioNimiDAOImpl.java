@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.dao.impl;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -39,7 +40,7 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioNimiDAOImpl.class);
 
     @Autowired(required = true)
-    OrganisaatioDAOImpl organisaatioDAO;
+    OrganisaatioDAO organisaatioDAO;
 
     @Override
     public OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja) {

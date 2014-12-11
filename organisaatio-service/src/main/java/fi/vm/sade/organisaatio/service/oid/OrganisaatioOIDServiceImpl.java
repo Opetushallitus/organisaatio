@@ -12,18 +12,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
+
 package fi.vm.sade.organisaatio.service.oid;
 
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.oid.service.types.NodeClassData;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Organisaation OID generointi toimii kuin OIDServiceMock, mutta tarkistaa ettei
  * kannassa jo ole generoitua OID:a.
- * 
+ *
  * Esimerkkejä generoiduista OID:sta:
  * <pre>
  * 1.2.246.562.5.2013052409561013582688
@@ -45,28 +46,28 @@ import org.springframework.beans.factory.annotation.Autowired;
  * </pre>
  *
  * (<a>https://confluence.oph.ware.fi/confluence/display/TD/OID-palvelu</a>)
- * 
- * @author simok 
+ *
+ * @author simok
  */
 public class OrganisaatioOIDServiceImpl implements OIDService {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    
-    @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
 
     @Autowired
-    private YhteystietoDAOImpl yhteystietoDAO;
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
-    private YhteystietoArvoDAOImpl yhteystietoArvoDAO;
-    
+    private YhteystietoDAO yhteystietoDAO;
+
     @Autowired
-    private YhteystietoElementtiDAOImpl yhteystietoElementtiDAO;
-            
+    private YhteystietoArvoDAO yhteystietoArvoDAO;
+
     @Autowired
-    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
-            
-    
+    private YhteystietoElementtiDAO yhteystietoElementtiDAO;
+
+    @Autowired
+    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+
+
 
     private final String root = "1.2.246.562.";
     private final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
@@ -96,7 +97,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
 
     @Override
     public List<NodeClassData> getNodeClasses() throws ExceptionMessage {
-        List<NodeClassData> list = new ArrayList<NodeClassData>();
+        List<NodeClassData> list = new ArrayList<>();
 
         for (int i = 0; i < values.length; i++) {
             NodeClassData data = new NodeClassData();
@@ -125,7 +126,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             // Generate TEKN_5 oid
             valueIndex = 0;
         }
-        
+
         return generateOid(values[valueIndex]);
     }
 
@@ -133,10 +134,10 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         LOG.debug("Generating new OID for node class: " + nodeClassValue);
         boolean generateNew = true;
         String newOid = null;
-        
+
         while (generateNew) {
             newOid = root + nodeClassValue + "." + generateRandom();
-            
+
             if (oidAvailable(newOid, nodeClassValue)) {
                 generateNew = false;
             }
@@ -145,7 +146,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         LOG.debug("New oid generated: " + newOid);
         return newOid;
     }
-        
+
     private String generateRandom() {
 
         long min = 1000000000L;
@@ -211,12 +212,12 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             // Yhteystietoihin liittyvistä tauluista ei löytynyt oidia
             return true;
         }
-        
+
         LOG.warn("Unknown node class value: " + nodeClassValue);
-        
+
         return false;
     }
-    
+
     private NodeClassCode nodeClassValueToCode(String nodeClassValue) {
         int valueIndex = -1;
         for (int i = 0; i < values.length; i++) {

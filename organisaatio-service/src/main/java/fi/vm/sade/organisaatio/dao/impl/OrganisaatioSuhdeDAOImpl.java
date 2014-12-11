@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ */
+
 package fi.vm.sade.organisaatio.dao.impl;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
@@ -13,11 +28,13 @@ import org.springframework.stereotype.Repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.expr.BooleanExpression;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author mlyly
@@ -28,7 +45,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioSuhdeDAOImpl.class);
 
     @Autowired(required = true)
-    OrganisaatioDAOImpl organisaatioDAO;
+    OrganisaatioDAO organisaatioDAO;
 
     // USE CASES:
     //
@@ -85,7 +102,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
                 .list(qSuhde);
-        
+
         if (suhteet != null && !suhteet.isEmpty()) {
             return suhteet.get(0);
         }
@@ -105,32 +122,32 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         if (atTime == null) {
             atTime = new Date();
         }
-        
+
         LOG.info("findChildrenTo({}, {})", parentId, atTime);
-        
+
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
-        
+
         BooleanExpression expression = (qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime))).and(qSuhde.parent.id.eq(parentId));
-                
-        
+
+
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.child, qOrganisaatio).fetch()
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
                 .list(qSuhde);
-        
-        List<Long> foundChildIds = new ArrayList<Long>();
-        List<OrganisaatioSuhde> result = new ArrayList<OrganisaatioSuhde>();
+
+        List<Long> foundChildIds = new ArrayList<>();
+        List<OrganisaatioSuhde> result = new ArrayList<>();
         for (OrganisaatioSuhde curSuhde : suhteet) {
             Organisaatio parent = findParentTo(curSuhde.getChild().getId(), atTime).getParent();
             if (!(foundChildIds.contains(curSuhde.getChild().getId()))
-                    && parent.getId() == parentId) {
+                    && Objects.equals(parent.getId(), parentId)) {
                 foundChildIds.add(curSuhde.getChild().getId());
                 result.add(curSuhde);
             }
         }
-        
+
         return result;
     }
 
@@ -206,7 +223,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
                             relation.getAlkuPvm(), relation.getLoppuPvm()});
         }
     }
-    
+
 
 
 }
