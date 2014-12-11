@@ -17,6 +17,7 @@
 
 package fi.vm.sade.organisaatio.dao.impl;
 
+import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
 import org.springframework.stereotype.Repository;
 
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
@@ -26,6 +27,6 @@ import fi.vm.sade.organisaatio.model.Yhteystieto;
  * @author Antti Salonen
  */
 @Repository
-public class YhteystietoDAOImpl extends AbstractJpaDAOImpl<Yhteystieto, Long> {
+public class YhteystietoDAOImpl extends AbstractJpaDAOImpl<Yhteystieto, Long> implements YhteystietoDAO {
 
 }

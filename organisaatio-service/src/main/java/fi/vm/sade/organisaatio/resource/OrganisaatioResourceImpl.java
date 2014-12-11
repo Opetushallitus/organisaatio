@@ -23,7 +23,6 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -62,6 +61,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 
@@ -95,7 +95,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
     @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
+    private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
     @Autowired
