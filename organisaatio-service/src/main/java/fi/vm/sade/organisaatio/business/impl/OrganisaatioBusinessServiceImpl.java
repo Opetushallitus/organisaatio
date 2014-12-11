@@ -269,6 +269,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
         boolean parentChanged = false;
+        Organisaatio oldParent = null;
         if (updating) {
             Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
             mergeAuxData(entity, orgEntity);
@@ -280,6 +281,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
                 checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
                 parentChanged = true;
+                oldParent = orgEntity.getParent();
             }
 
             // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
@@ -415,7 +417,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (OrganisaatioUtil.isRyhma(entity) == false) {
             solrIndexer.index(entity);
 
-            if (!updating && parentOrg != null) {
+            if ((parentChanged || !updating) && parentOrg != null) {
                 solrIndexer.index(parentOrg);
             }
         }
@@ -425,9 +427,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             updateOrganisaatioNameHierarchy(entity, oldName);
         }
 
-        // Parent changed update children.
+        // Parent changed update children and reindex old parent.
         if (parentChanged) {
             updateChildrenRecursive(entity);
+            solrIndexer.index(oldParent);
         }
 
         // Päivitä tiedot koodistoon.
@@ -439,7 +442,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
         OrganisaatioSuhde curSuhde = organisaatioSuhdeDAO.findParentTo(child.getId(), null);
         if (parent != null && (curSuhde == null || curSuhde.getParent().getId().equals(parent.getId()) == false)) {
-            curSuhde = organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
+            if (curSuhde != null) {
+                // Set end date for current parent relation before create new one.
+                curSuhde.setLoppuPvm(new Date());
+                organisaatioSuhdeDAO.update(curSuhde);
+            }
+            organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), new Date(), opJarjNro);
         }
         child.setParentSuhteet(organisaatioSuhdeDAO.findBy("child", child));
         return this.organisaatioDAO.findByOid(child.getOid());

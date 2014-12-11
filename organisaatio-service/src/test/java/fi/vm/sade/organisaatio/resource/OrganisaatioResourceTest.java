@@ -8,6 +8,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
+import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -40,9 +41,9 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    OrganisaatioResource res;
+    private OrganisaatioResource res;
     @Autowired
-    IndexerResource solrIndexer;
+    private IndexerResource solrIndexer;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -73,15 +74,14 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Test
     public void testChangeParentOid() throws Exception {
-        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3");
-        LOG.info("Path: {}", node2foo.getParentOidPath());
-        LOG.info("Names: {}", node2foo.getNimet());
-
-        for (OrganisaatioRDTO child : res.children(node2foo.getOid())) {
-            LOG.info("Child path: {}", child.getParentOidPath());
-        }
-        // Change parent from root -> root2
+        String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
+
+        assertChildCountFromIndex(oldParentOid, 2);
+        assertChildCountFromIndex(parentOid, 0);
+
+        // Change parent from root -> root2
+        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3");
         node2foo.setParentOid(parentOid);
         ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
         Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
@@ -94,6 +94,9 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             Assert.assertEquals("Child parent oid path should match!",
                     updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
         }
+
+        assertChildCountFromIndex(oldParentOid, 1);
+        assertChildCountFromIndex(parentOid, 1);
     }
 
     @Test

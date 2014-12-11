@@ -17,13 +17,11 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -37,9 +35,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Tests for {@link fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessServiceImpl} class.
@@ -56,8 +52,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private OrganisaatioBusinessService service;
-    @Autowired
-    private OrganisaatioSearchService search;
     @Autowired
     private IndexerResource indexer;
     @Autowired
@@ -88,8 +82,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String oldParentOid = "1.2.2004.1";
         String newParentOid = "1.2.2004.5";
 
-        assertFromIndex(oldParentOid, 2);
-        assertFromIndex(newParentOid, 0);
+        assertChildCountFromIndex(oldParentOid, 2);
+        assertChildCountFromIndex(newParentOid, 0);
 
         // Make new organisaatiosuhde change
         Date time = new Date();
@@ -114,17 +108,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParentOidPath(modified, "1.2.2005.4");
         checkParentOidPath(org, "1.2.2005.5");
 
-        assertFromIndex(oldParentOid, 1);
-        assertFromIndex(newParentOid, 1);
-    }
-
-    private void assertFromIndex(String oid, int childCount) {
-        Set<String> oidSet = new HashSet<>();
-        oidSet.add(oid);
-        List<OrganisaatioPerustieto> list = search.findByOidSet(oidSet);
-        Assert.assertEquals("Search result size should match for oid: " + oid, 1, list.size());
-        OrganisaatioPerustieto fromIndex = list.get(0);
-        Assert.assertEquals("Sub organisation count should match for oid: " + oid, childCount, fromIndex.getAliOrganisaatioMaara());
+        assertChildCountFromIndex(oldParentOid, 1);
+        assertChildCountFromIndex(newParentOid, 1);
     }
 
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
