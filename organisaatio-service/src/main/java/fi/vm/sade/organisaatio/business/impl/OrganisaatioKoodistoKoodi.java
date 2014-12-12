@@ -42,10 +42,10 @@ public class OrganisaatioKoodistoKoodi {
 
     protected String voimassaLoppuPvm;
 
-    protected List<OrganisaatioKoodistoKoodiMetadata> metadata = new ArrayList<OrganisaatioKoodistoKoodiMetadata>();
-    protected List<OrganisaatioKoodistoKoodiCodeElements> includesCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
-    protected List<OrganisaatioKoodistoKoodiCodeElements> withinCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
-    protected List<OrganisaatioKoodistoKoodiCodeElements> levelsWithCodeElements = new ArrayList<OrganisaatioKoodistoKoodiCodeElements>();
+    protected List<OrganisaatioKoodistoKoodiMetadata> metadata = new ArrayList<>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> includesCodeElements = new ArrayList<>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> withinCodeElements = new ArrayList<>();
+    protected List<OrganisaatioKoodistoKoodiCodeElements> levelsWithCodeElements = new ArrayList<>();
 
     public String getKoodiUri() {
         return koodiUri;

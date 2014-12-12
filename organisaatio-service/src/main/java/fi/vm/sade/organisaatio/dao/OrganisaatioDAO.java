@@ -166,4 +166,12 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
+
+    /**
+     * Haetaan tällä hetkellä voimassaolevat toimipisteet,
+     * joilta puuttuu yhteishaun koulukoodi
+     *
+     * @return Toimipisteet, joilta puuttuu yhteishaun koulukoodi
+     */
+    List<Organisaatio> findYHKoulukoodiMissing();
 }
