@@ -1033,32 +1033,4 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         return organisaatiot;
     }
-
-    /**
-     * -- Haetaan tällä hetkellä voimassaolevat toimipisteet, joilta puuttuu yhteishaun koulukoodi
-     *
-     * SELECT oid, nimihaku, organisaatiotyypitstr, yhteishaunkoulukoodi, lakkautuspvm
-     * FROM organisaatio
-     * WHERE (yhteishaunkoulukoodi IS NULL OR yhteishaunkoulukoodi = '')
-     * AND organisaatiotyypitstr like '%Toimipiste%'
-     * AND organisaatiopoistettu = false
-     * AND (lakkautuspvm IS NULL OR lakkautuspvm > '2014-12-10')
-     *
-     **/
-    @Override
-    public List<Organisaatio> findYHKoulukoodiMissing() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-        String s = "SELECT org FROM Organisaatio org "
-                + "WHERE (yhteishaunKoulukoodi IS NULL or yhteishaunKoulukoodi = '') "
-                + "AND organisaatiotyypitStr like '%Toimipiste%' "
-                + "AND organisaatioPoistettu = false "
-                + "AND (lakkautusPvm IS NULL OR lakkautusPvm > '" + df.format(new Date()) + "')";
-
-        Query q = getEntityManager().createQuery(s);
-
-        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
-
-        return organisaatiot;
-    }
 }

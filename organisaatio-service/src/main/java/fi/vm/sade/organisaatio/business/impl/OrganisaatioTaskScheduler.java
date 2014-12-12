@@ -40,9 +40,6 @@ public class OrganisaatioTaskScheduler {
     @Value("${organisaatio-service.scheduled.name.update.cron.expression}")
     private String nameUpdateCronExpression;
 
-    @Value("${organisaatio-service.scheduled.yhkoodi.update.cron.expression}")
-    private String yhkoodiUpdateCronExpression;
-
     /**
      * Laukaisee ajastetusti organisaatioiden nimenpäivityksen / nimenpäivityksen
      * tarkistuksen.
@@ -54,17 +51,5 @@ public class OrganisaatioTaskScheduler {
 
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
 
-    }
-
-    /**
-     * Laukaisee ajastetusti organisaatioiden yhteishaun koulukoodin
-     * tarkistuksen.
-     */
-    @Scheduled(cron = "${organisaatio-service.scheduled.yhkoodi.update.cron.expression}")
-    public void scheduledYHKoulukoodiUpdate()
-    {
-        LOG.debug("scheduledNameUpdate(): Cron Expression: {}, Current time: " + new Date(), yhkoodiUpdateCronExpression);
-
-        organisaatioBusinessService.updateYHKoulukoodit();
     }
  }

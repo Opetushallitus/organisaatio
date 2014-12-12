@@ -78,12 +78,6 @@ public interface OrganisaatioBusinessService {
     public void updateCurrentOrganisaatioNimet();
 
     /**
-     * Päivitetään niiden organisaatioiden yhteishaun koulukoodit, joilta se puuttuu ja joille
-     * sellainen löytyy koodistosta.
-     */
-    public void updateYHKoulukoodit();
-
-    /**
      *
      * @param tiedot
      * @return

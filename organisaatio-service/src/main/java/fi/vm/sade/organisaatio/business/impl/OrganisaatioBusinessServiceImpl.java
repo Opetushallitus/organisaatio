@@ -126,9 +126,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
 
-    @Autowired
-    private OrganisaatioYHKoulukoodi organisaatioYHKoulukoodi;
-
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -1025,35 +1022,4 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             String info = updateKoodisto(organisaatio, true);
         }
     }
-
-    @Override
-    public void updateYHKoulukoodit() {
-        // Haetaan organisaatiot, joilta puuttuu yhteishaun koulukoodi
-        List<Organisaatio> organisaatiot = this.organisaatioDAO.findYHKoulukoodiMissing();
-
-        if (organisaatiot.isEmpty()) {
-            LOG.info("Orgnisaatioiden yhteishaun koulukoodit kunnossa");
-        }
-
-        // - Käydään läpi organisaatiot
-        // - Haetaan organisaatiolle koodistosta yhteishaun koulukoodi
-        // - Päivitetään organisaatiolle koulukoodi
-        for (Organisaatio organisaatio : organisaatiot) {
-            String yhKoodi = organisaatioYHKoulukoodi.getYhKoulukoodi(organisaatio);
-
-            LOG.info("Orgnisaation yhteishaun koulukoodin update tarve: " + organisaatio);
-
-            if (yhKoodi == null) {
-                LOG.warn("Orgnisaatiolle ei löytynyt yhteishaun koulukoodia: " + organisaatio);
-            }
-            else {
-                organisaatio.setYhteishaunKoulukoodi(yhKoodi);
-                this.organisaatioDAO.update(organisaatio);
-
-                LOG.info("Orgnisaatiolle päivitetty yhteishaun koulukoodi: " +
-                        organisaatio.getOid() + " yhkoodi: " + yhKoodi);
-            }
-        }
-    }
-
 }
