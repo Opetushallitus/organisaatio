@@ -49,8 +49,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
@@ -84,13 +84,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     @Autowired
+    private OrganisaatioFindBusinessService organisaatioFindBusinessService;
+    @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
-    @Autowired
-    protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
     @Autowired
     private ConversionService conversionService;
 
@@ -143,7 +143,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> children(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
-        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
+        Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<OrganisaatioRDTO> childList = new LinkedList<>();
         if (parentOrg != null) {
             List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
@@ -158,7 +158,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public String childoids(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
-        Organisaatio parentOrg = organisaatioDAO.findByOid(oid);
+        Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<String> childOidList = new LinkedList<>();
         if (parentOrg != null) {
             List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
@@ -218,25 +218,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
-        // Search order
-        // 1. OID
-        // 2. Y-TUNNUS
-        // 3. VIRASTOTUNNUS
-        // 4. OPPILAITOSKOODI
-        // 5. TOIMIPISTEKOODI
-        Organisaatio o = organisaatioDAO.findByOid(oid);
-        if (o == null) {
-            o = organisaatioDAO.findByYTunnus(oid);
-        }
-        if (o == null) {
-            o = organisaatioDAO.findByVirastoTunnus(oid);
-        }
-        if (o == null) {
-            o = organisaatioDAO.findByOppilaitoskoodi(oid);
-        }
-        if (o == null) {
-            o = organisaatioDAO.findByToimipistekoodi(oid);
-        }
+        Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
         OrganisaatioRDTO result = conversionService.convert(o, OrganisaatioRDTO.class);
 
@@ -351,7 +333,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public List<OrganisaatioRDTO> groups(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
 
-        List<Organisaatio> entitys = organisaatioDAO.findGroups();
+        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
         if (entitys == null) {
             return null;
         }
