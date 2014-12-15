@@ -25,6 +25,22 @@ import java.util.List;
 public interface OrganisaatioFindBusinessService {
 
     /**
+     * Idllä haku (Id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi, toimipistekoodi)
+     *
+     * Search order
+     *  1. OID
+     *  2. Y-TUNNUS
+     *  3. VIRASTOTUNNUS
+     *  4. OPPILAITOSKOODI
+     *  5. TOIMIPISTEKOODI
+     *
+     * @param id Id, joka voi olla: oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi
+     *
+     * @return Organisaatio
+     */
+    public Organisaatio findById(String id);
+
+    /**
      * @param kieliList kielirajaus kielivalikoima-koodiston koodiUreja: ["kielivalikoima_en", "kielivalikoima_sv"]
      * @param kuntaList kuntarajaus kunta-koodiston koodiUreja: ["kunta_407", "kunta_604"]
      * @param oppilaitostyyppiList oppilaitostyyppirajaus oppilaitostyyppi-koodiston koodiUreja: ["oppilaitostyyppi_19", "oppilaitostyyppi_91"]
@@ -42,5 +58,11 @@ public interface OrganisaatioFindBusinessService {
             List<String> ytunnusList,
             List<String> oidList,
             int limit);
+
+    /**
+     * Haetaan kannasta kaikki ryhmät.
+     * @return Ryhmät
+     */
+    public List<Organisaatio> findGroups();
 
 }

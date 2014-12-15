@@ -51,4 +51,29 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
         return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organisaatio> findGroups() {
+        return organisaatioDAO.findGroups();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Organisaatio findById(String id) {
+        Organisaatio o = organisaatioDAO.findByOid(id);
+        if (o == null) {
+            o = organisaatioDAO.findByYTunnus(id);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByVirastoTunnus(id);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByOppilaitoskoodi(id);
+        }
+        if (o == null) {
+            o = organisaatioDAO.findByToimipistekoodi(id);
+        }
+        return o;
+    }
 }
