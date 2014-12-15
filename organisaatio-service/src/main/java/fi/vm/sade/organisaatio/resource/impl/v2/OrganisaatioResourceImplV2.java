@@ -219,10 +219,13 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
+
+        // Lukumäärä tuloksiin
+        tulos.setNumHits(organisaatiot.size());
 
         OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
 
