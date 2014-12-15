@@ -166,4 +166,5 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
+
 }

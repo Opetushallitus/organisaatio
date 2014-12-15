@@ -1085,5 +1085,4 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             String info = updateKoodisto(organisaatio, true);
         }
     }
-
 }
