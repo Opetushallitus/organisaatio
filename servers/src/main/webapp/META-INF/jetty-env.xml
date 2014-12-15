@@ -9,7 +9,7 @@
                 <Set name="User">oph</Set>
                 <Set name="Password">oph</Set>
                 <Set name="DatabaseName">organisaatio</Set>
-                <Set name="ServerName">192.168.56.101</Set>
+                <Set name="ServerName"></Set>
                 <Set name="PortNumber">5432</Set>
             </New>
         </Arg>
