@@ -14,33 +14,60 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioMoveController($scope, $modalInstance, $log, Organisaatio, Organisaatiot, nimi, node) {
+function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotFlat, Organisaatio, nimi, node) {
+
+
+    $log = $log.getInstance("OrganisaatioMoveController");
 
     $scope.nimi = nimi;
     $scope.suggests = [];
+    $scope.highestOrganization = false;
 
     $scope.options = {
-        newParentOrganization: null,        //possible values move, remove
-        //suborganization: "move",
-        //possible values move, remove
-        educationAndStudyTarget: "move",
-        //date
+        newParentOrganization: null,
+        merge: false,
         date: new Date()
     };
 
+    function updateSearch() {
+        var organizationType = "Oppilaitos";
+        var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
+        var koulutustoimija = currentOrganizationTypes.indexOf("Koulutustoimija") > -1;
+
+        if (koulutustoimija) {
+            organizationType = 'Koulutustoimija';
+            $scope.highestOrganization = true;
+            $scope.options.merge = true;
+        } else if( $scope.options.merge ) {
+            organizationType = 'Oppilaitos';
+        }  else {
+            organizationType = 'Koulutustoimija';
+        }
+
+        var parametrit = {"searchstr": "", "aktiiviset": true, "suunnitellut": true, "organisaatiotyyppi": organizationType, "lakkautetut": false};
+        OrganisaatiotFlat.get(parametrit, function (result) {
+            var values = result.organisaatiot.map(function (org) {
+                return {
+                    "name": org.nimi.fi,
+                    "oid": org.oid
+                };
+            });
+            $scope.suggests = $scope.suggests.concat(values);
+        }, function (error) {
+            $log.error("Organisaatioiden lataus epäonnistui ", error);
+            Alert.add("error", error, false);
+        });
+    }
+
+    $scope.updateSearch = updateSearch;
+
     Organisaatio.get({oid: node.oid}, function (result) {
             $scope.options.organisaatio = result;
+            updateSearch();
+        }, function (error) {
+            $log.error("organisaation tietojen lataus epäonnistui ", error);
+            Alert.add("error", error, false);
         }
     );
 
-    var parametrit = {"searchstr": "", "aktiiviset": true, "suunnitellut": true, "lakkautetut": false};
-    Organisaatiot.get(parametrit, function (result) {
-        var values = result.organisaatiot.map(function (org) {
-            return {
-                "name": org.nimi.fi,
-                "oid": org.oid
-            };
-        });
-        $scope.suggests = $scope.suggests.concat(values);
-    });
 }

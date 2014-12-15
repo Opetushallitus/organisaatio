@@ -21,6 +21,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
@@ -39,8 +40,7 @@ public interface OrganisaatioBusinessService {
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
-
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) throws ValidationException;
     /**
      * @param oid
      * @return
@@ -85,4 +85,20 @@ public interface OrganisaatioBusinessService {
      * @return List of changed organisations.
      */
     public List<Organisaatio> processNewOrganisaatioSuhdeChanges();
+
+    /**
+     * Siirtää organisaatiota puussa toisen parentin alle
+     * @param organisaatio Siirrettävä organisaatio
+     * @param newParent Kohde organisaatio
+     * @param date Siirto pvm
+     */
+    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date);
+
+    /**
+     * Yhdistää kaksi organisaatiota
+     * @param self Siirrettävän organisaatio
+     * @param newParent Kohde organisaatio
+     * @param date Siirto pvm
+     */
+    public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
 }

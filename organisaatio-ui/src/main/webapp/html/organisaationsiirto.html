@@ -3,15 +3,24 @@
     <h3>{{'organisaatio.move.topic' | i18n}}</h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" style='height: 600px; overflow-y: visible;'>
 
     <div class="form-fluid">
         {{'organisaatio.move.to.be.moved' | i18n}}: {{nimi}}
         <br/>
         <br/>
 
-        <form>
+        <form name="form">
             <fieldset>
+
+                <label class="checkbox">
+                    <input type="checkbox" ng-disabled="highestOrganization" ng-change="updateSearch()" ng-model="options.merge">
+                    {{'organisaatio.move.merge.to.parent.organization' | i18n}}
+                </label>
+                <!--span class="help-block">TT_Ohjeistusteksti täällä</span-->
+
+                </br>
+
                 <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
 
                 <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled">
@@ -23,21 +32,9 @@
                     </ui-select-choices>
                 </ui-select>
 
-                <br/>
-                <label>{{'organisaatio.move.training' | i18n}}</label>
-
-                <label class="radio">
-                    <input type="radio" name="educationAndStudyTarget" id="educationAndStudyTarget1" value="move"
-                           ng-model="options.educationAndStudyTarget">
-                    {{'organisaatio.move.with.organization' | i18n}}
-                </label>
-                <label class="radio">
-                    <input type="radio" name="educationAndStudyTarget" id="educationAndStudyTarget2" value="remove"
-                           ng-model="options.educationAndStudyTarget">
-                    {{'organisaatio.move.discontinue' | i18n}}
-                </label>
 
                 <br/>
+
 
                 <label>{{'organisaatio.move.comes.into.effect' | i18n}}</label>
 
@@ -51,23 +48,27 @@
                        close-on-date-selection="true"
                        ie-placeholder
                        placeholder="{{'organisaatio.move.date' | i18n}}"
-                       close-text=""
-                       current-text=""
-                       clear-text=""
-                       toggle-weeks-text=""
+                       close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                       current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                       clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                       toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"
                        required/>
             </fieldset>
+
+
         </form>
     </div>
 
 </div>
 
-
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="$close(options)">{{'Organisaationpoisto.ok' | i18n}}</button>
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="$close(options)">
+            {{'Organisaationpoisto.ok' | i18n}}
+        </button>
     </div>
 </div>
+
 
 

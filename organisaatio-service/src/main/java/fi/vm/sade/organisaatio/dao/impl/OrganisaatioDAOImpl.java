@@ -141,6 +141,21 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .getSingleResult()).intValue() == 0;
     }
 
+    @Override
+    public List<Organisaatio> findModifiedSince(Date lastModifiedSince) {
+        LOG.debug("findModifiedSince({})", lastModifiedSince);
+
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+
+        BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
+
+        return new JPAQuery(getEntityManager())
+                .from(qOrganisaatio)
+                .where(whereExpression)
+                .distinct()
+                .list(qOrganisaatio);
+    }
+
     public List<Organisaatio> findOrganisaatioByNimiLike(String organisaatioNimi, int firstResult, int maxResults) {
         LOG.debug("findOrganisaatioByNimiLike()");
         Query query = getEntityManager().createQuery("SELECT o FROM Organisaatio o WHERE UPPER(o.nimiFi) LIKE :orgnimi OR UPPER(o.nimiSv) LIKE :orgnimi "

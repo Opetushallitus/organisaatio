@@ -314,6 +314,15 @@ app.factory('Organisaatio', function($resource) {
     });
 });
 
+
+// Organisaation siiro puussa
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932/organisaatiosuhde
+app.factory('OrganisaatioSiirto', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/organisaatiosuhde", {oid: "@oid"}, {
+        post:{method:   "POST"}
+    });
+});
+
 // Organisaation luonti organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('UusiOrganisaatio', function($resource) {
@@ -334,6 +343,13 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/hierarkia/hae", {}, {
+        get: {method: 'GET'}
+    });
+});
+
+// Organisaatioiden haku ilman hierrarkiaa
+app.factory('OrganisaatiotFlat', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae/tyyppi", {}, {
         get: {method: 'GET'}
     });
 });

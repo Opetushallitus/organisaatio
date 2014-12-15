@@ -16,7 +16,7 @@
 
 function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, $injector,
-                                    Alert, Organisaatio,
+                                    Alert, Organisaatio, OrganisaatioSiirto,
                                     HakuehdotModel, OrganisaatioTreeModel) {
 
     $log = $log.getInstance("OrganisaatioTreeController");
@@ -69,8 +69,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
     };
 
     $scope.isMoveAllowed = function(node) {
-        //todo: ehdot?
-        return true; //$scope.model.isLeaf(node);
+        return $scope.model.isTyyppi(node, "OPPILAITOS") || $scope.model.isTyyppi(node, "KOULUTUSTOIMIJA");
     };
 
     $scope.isCreateSubAllowed = function(node) {
@@ -98,19 +97,44 @@ function OrganisaatioTreeController($scope, $location, $filter,
             }
         });
 
-        modalInstance.result.then(function(options) {
+        modalInstance.result.then(function (options) {
 
-            options.organisaatio.parentOid = options.newParentOrganization.oid;
 
-            function reply() {
-                $log.info('Organisaatio siirretty osaksi: ' + node.oid);
-
-                if (!$scope.hakuehdot.isEmpty()) {
-                    $scope.model.refresh($scope.hakuehdot);
+            var confirm = $modal.open({
+                templateUrl: 'organisaatiosiirtovarmistus.html',
+                controller: function ($scope, current, newParent) {
+                    $scope.current = current;
+                    $scope.newParent = newParent;
+                },
+                resolve: {
+                    current: function () {
+                        return $scope.model.getNimi(node);
+                    },
+                    newParent: function () {
+                        return options.newParentOrganization.name;
+                    }
                 }
-            }
+            });
 
-            Organisaatio.post(options.organisaatio, reply);
+            confirm.result.then(function () {
+
+                function reply() {
+                    $log.info('Organisaatio siirretty osaksi: ' + node.oid);
+
+                    if (!$scope.hakuehdot.isEmpty()) {
+                        $scope.model.refresh($scope.hakuehdot);
+                    }
+                }
+
+                var params = {
+                    oid: options.organisaatio.oid,
+                    moveDate: moment(options.date).format('YYYY-MM-DD'),
+                    merge: options.merge
+                };
+
+                OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply);
+            });
+
 
         });
     };

@@ -192,6 +192,47 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
     /**
+     * If child has a "current" parent, this actually "moves" child under another parent.
+     *
+     * @param parentId
+     * @param childId
+     * @param startingFrom null == now
+     * @param organisaatioSuhdeTyyppi
+     * @return created relation
+     */
+    @Override
+    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
+        LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
+
+        if (parentId == null || childId == null) {
+            throw new IllegalArgumentException();
+        }
+        if (startingFrom == null) {
+            startingFrom = new Date();
+        }
+
+        //
+        // Create the new relation
+        //
+        Organisaatio parent = organisaatioDAO.read(parentId);
+        Organisaatio child = organisaatioDAO.read(childId);
+
+        OrganisaatioSuhde childRelation = new OrganisaatioSuhde();
+        childRelation.setSuhdeTyyppi(organisaatioSuhdeTyyppi);
+        childRelation.setAlkuPvm(startingFrom);
+        childRelation.setLoppuPvm(null);
+        childRelation.setChild(child);
+        childRelation.setParent(parent);
+        childRelation.setOpetuspisteenJarjNro(opetuspisteenJarjNro);
+
+        childRelation = insert(childRelation);
+
+        logRelation("  Created new child relation: ", childRelation);
+
+        return childRelation;
+    }
+
+    /**
      * Updates existing parent-child relation for give parent-child.
      * If parent is null ANY valid relation for child will be dated to be ended.
      *

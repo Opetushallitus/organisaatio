@@ -50,7 +50,6 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
                 kaannokset[vaihtoehtoisetKielikoodit[language][0]] ||
                 kaannokset[vaihtoehtoisetKielikoodit[language][1]];
     };
-
     $scope.yttNimiLang = function(koodi) {
         if ($scope.valittuYhteystietotyyppi !== null) {
             for (var i in $scope.valittuYhteystietotyyppi.nimi.teksti) {

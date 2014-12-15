@@ -166,5 +166,11 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
-
+    /***
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
+     *
+     * @param lastModifiedSince päivämäärä
+     * @return
+     */
+    List<Organisaatio> findModifiedSince(Date lastModifiedSince);
 }

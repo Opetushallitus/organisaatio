@@ -38,6 +38,18 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
     OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro);
 
     /**
+     * If child has a "current" parent, this actually "moves" child under another parent.
+     *
+     * @param parentId
+     * @param childId
+     * @param startingFrom null == now
+     * @param opetuspisteenJarjNro
+     * @param organisaatioSuhdeTyyppi
+     * @return
+     */
+    OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi);
+
+    /**
      * @param parentId
      * @param atTime   null == now
      * @return list of child relations at given time
