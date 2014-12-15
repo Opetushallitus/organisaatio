@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.vm.sade.rajapinnat.ytj.service;
-
 
 import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
@@ -21,11 +16,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Tuomas Katva
- *
- */
 public class YTJServiceImpl implements YTJService {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJServiceImpl.class);

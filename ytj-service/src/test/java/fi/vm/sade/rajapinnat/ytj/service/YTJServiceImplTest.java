@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.vm.sade.rajapinnat.ytj.service;
 
 import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
@@ -15,10 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YTJServiceImplTest {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -78,8 +70,8 @@ public class YTJServiceImplTest {
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("oPHallitusOPH");
-        instance.setSalainenavain("39769FB6-465D-43B7-AB26-4D891428BB42");
+        instance.setAsiakastunnus("FILLHERE");
+        instance.setSalainenavain("FILLHERE");
         try {
             List<YTJDTO> results = instance.findByYNimi(nimi,naytaPassiiviset,kieli);
             log.info("Got {} results", results.size());

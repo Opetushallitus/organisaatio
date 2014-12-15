@@ -1,6 +1,3 @@
-/*
- *  License?
- */
 package fi.vm.sade.rajapinnat.ytj.api;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,10 +5,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author mlyly
- */
 @XmlRootElement(name = "YTJ")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class YTJDTO {

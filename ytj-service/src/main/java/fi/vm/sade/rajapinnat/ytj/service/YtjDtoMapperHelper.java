@@ -9,10 +9,6 @@ import fi.ytj.YritysTiedotV2DTO;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YtjDtoMapperHelper {
 
     public static final String KIELI_SV = "Svenska";

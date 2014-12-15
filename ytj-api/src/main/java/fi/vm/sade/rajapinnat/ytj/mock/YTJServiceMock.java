@@ -1,6 +1,3 @@
-/*
- *  License?
- */
 package fi.vm.sade.rajapinnat.ytj.mock;
 
 import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
@@ -16,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Mock for YTJService.
- *
- * @author mlyly
  */
 public class YTJServiceMock implements YTJService {
 
