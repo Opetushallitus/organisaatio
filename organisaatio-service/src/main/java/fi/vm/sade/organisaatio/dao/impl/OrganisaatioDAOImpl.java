@@ -31,6 +31,9 @@ import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
+import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +55,13 @@ import java.util.*;
 @Repository
 public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> implements OrganisaatioDAO {
 
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Value("${root.organisaatio.oid}")
     private String ophOid;
-    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
-    OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
@@ -92,13 +97,15 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      *
      * @param parentOid
      * @param myosPoistetut if true return also "removed" orgs
+     * @param myosLakkautetut
      * @return
      */
+    @Override
     public List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut) {
         LOG.debug("findChildren({})", parentOid);
 
         Organisaatio parent = this.findByOid(parentOid);
-        List<Organisaatio> result = new ArrayList<Organisaatio>();
+        List<Organisaatio> result = new ArrayList<>();
         if (parent == null) {
             return result;
         }
@@ -198,7 +205,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
-        organisaatiot = retrieveParentsAndChildren(organisaatiot, new TreeSet<String>(oids), suunnitellut, lakkautetut);
+        organisaatiot = retrieveParentsAndChildren(organisaatiot, new TreeSet<>(oids), suunnitellut, lakkautetut);
 
         return organisaatiot;
     }
@@ -245,11 +252,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     private List<OrgPerustieto> retrieveParentsAndChildren(List<OrgPerustieto> baseResult, Set<String> oids, boolean suunnitellut, boolean lakkautetut) {
-        Set<String> procOids = new TreeSet<String>();
+        Set<String> procOids = new TreeSet<>();
         procOids.add(ophOid);
-        List<OrgPerustieto> ret = new ArrayList<OrgPerustieto>();
+        List<OrgPerustieto> ret = new ArrayList<>();
 
-        Set<String> ppoids = new TreeSet<String>();
+        Set<String> ppoids = new TreeSet<>();
 
         for (OrgPerustieto opt : baseResult) {
             if (procOids.add(opt.getOid())) {
@@ -277,6 +284,19 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return ret;
     }
 
+    /**
+     *
+     * @param orgTyyppi
+     * @param oppilaitosTyyppi
+     * @param kunta
+     * @param searchStr
+     * @param suunnitellut
+     * @param lakkautetut
+     * @param maxResults
+     * @param oids
+     * @return
+     */
+    @Override
     public List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi,
                                                          String oppilaitosTyyppi,
                                                          String kunta,
@@ -285,7 +305,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                                                          boolean lakkautetut,
                                                          int maxResults,
                                                          List<String> oids) {
-        LOG.debug("findBySearchCriteria()");
+        LOG.debug("findBySearchCriteriaExact()");
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         //QOrganisaatio qOrganisaatio1 = new QOrganisaatio("b");
@@ -396,11 +416,18 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return null;
     }
 
+    /**
+     *
+     * @param oidList
+     * @param maxResults
+     * @return
+     */
+    @Override
     public List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults) {
         LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
-        List<String> oidListFiltered = new ArrayList<String>();
+        List<String> oidListFiltered = new ArrayList<>();
         for (String oid : oidList) {
             if (oid != null) {
                 oidListFiltered.add(oid);
@@ -408,7 +435,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        List<Organisaatio> result = new ArrayList<Organisaatio>();
+        List<Organisaatio> result = new ArrayList<>();
 
         for (String curOid : oidListFiltered) {
             result.addAll(new JPAQuery(getEntityManager()).from(qOrganisaatio)
@@ -427,7 +454,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
-        List<String> oidListFiltered = new ArrayList<String>();
+        List<String> oidListFiltered = new ArrayList<>();
         for (String oid : oidList) {
             if (oid != null) {
                 oidListFiltered.add(oid);
@@ -435,7 +462,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        List<OrgPerustieto> result = new ArrayList<OrgPerustieto>();
+        List<OrgPerustieto> result = new ArrayList<>();
 
         for (String curOid : oidListFiltered) {
             result.addAll(new JPAQuery(getEntityManager()).from(qOrganisaatio)
@@ -452,6 +479,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     }
 
+    /**
+     * Palautateen organisaatiot, joiden oid on annetussa listassa, tai
+     * joiden parenteissa esiintyy listan oid.
+     *
+     * @param oids
+     * @return
+     */
+    @Override
     public List<OrgStructure> getOrganizationStructure(List<String> oids) {
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QMonikielinenTeksti nimi = QMonikielinenTeksti.monikielinenTeksti;
@@ -478,7 +513,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
-        List<String> oidListFiltered = new ArrayList<String>();
+        List<String> oidListFiltered = new ArrayList<>();
         for (String oid : oidList) {
             if (oid != null) {
                 oidListFiltered.add(oid);
@@ -503,6 +538,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param myosPoistetut
      * @return
      */
+    @Override
     public Collection<String> findAllOids(boolean myosPoistetut) {
         String q = "SELECT p.oid FROM Organisaatio p";
 
@@ -520,10 +556,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param myosPoistetut
      * @return
      */
+    @Override
     public Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut) {
         parentOid = parentOid != null ? parentOid.trim() : null;
         if (parentOid == null) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         String parentOidStr = "%|" + parentOid + "|%";
@@ -547,7 +584,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public List<Organisaatio> listDescendants(String parentOid, boolean vainPoistetut) {
         parentOid = parentOid != null ? parentOid.trim() : null;
         if (parentOid == null) {
-            return new ArrayList<Organisaatio>();
+            return new ArrayList<>();
         }
 
         String parentOidStr = "%|" + parentOid + "|%";
@@ -636,6 +673,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     /**
      * Return parent org oids to org, optimized for the auth use.
      *
+     * @param oid
      * @return
      */
     public List<String> findParentOidsTo(String oid) {
@@ -696,9 +734,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param startIndex
      * @param lastModifiedBefore
      * @param lastModifiedSince
-     * @parem type Organisation type
+     * @param type Organisation type
      * @return
      */
+    @Override
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type) {
 
         LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
@@ -742,24 +781,52 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return q.list(org.oid);
     }
 
+    /**
+     * Haetaan organisaatiota Y-Tunnuksen perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByYTunnus(String oid) {
         LOG.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota virastotunnuksen perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByVirastoTunnus(String oid) {
         LOG.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota oppilaitoskoodin perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByOppilaitoskoodi(String oid) {
         LOG.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
     }
 
+    /**
+     * Haetaan organisaatiota toimipistekoodin perusteella.
+     *
+     * @param oid
+     * @return
+     */
+    @Override
     public Organisaatio findByToimipistekoodi(String oid) {
         LOG.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;

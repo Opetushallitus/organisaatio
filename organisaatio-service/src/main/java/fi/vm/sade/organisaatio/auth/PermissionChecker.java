@@ -29,13 +29,11 @@ import com.google.common.collect.Lists;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.auth.OrganisaatioContext;
-import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
@@ -55,13 +53,10 @@ public class PermissionChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
-
-    @Autowired
-    private OrganisaatioDAOImpl organisaatioDao;
 
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
@@ -109,7 +104,7 @@ public class PermissionChecker {
         }
 
         if (update) {
-            final Organisaatio current = organisaatioDao.findByOid(organisaatio.getOid());
+            final Organisaatio current = organisaatioDAO.findByOid(organisaatio.getOid());
 
             if (!Objects.equal(current.getNimi(), convertMapToMonikielinenTeksti(organisaatio.getNimi()))) {
                 LOG.info("Nimi muuttunut");
@@ -149,7 +144,7 @@ public class PermissionChecker {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
 
         if (update) {
-            final Organisaatio current = organisaatioDao.findByOid(organisaatio.getOid());
+            final Organisaatio current = organisaatioDAO.findByOid(organisaatio.getOid());
 
             if (!Objects.equal(current.getNimi(), mkt2entity.apply(organisaatio.getNimi()))) {
                 LOG.info("Nimi muuttunut");

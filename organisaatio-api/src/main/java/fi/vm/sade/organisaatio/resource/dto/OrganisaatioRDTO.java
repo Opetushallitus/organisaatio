@@ -466,10 +466,12 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Yhteishaun koulukoodi", required = true)
+    @Deprecated
     public String getYhteishaunKoulukoodi() {
         return yhteishaunKoulukoodi;
     }
 
+    @Deprecated
     public void setYhteishaunKoulukoodi(String yhteishaunKoulukoodi) {
         this.yhteishaunKoulukoodi = yhteishaunKoulukoodi;
     }

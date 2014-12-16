@@ -25,12 +25,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
 import fi.vm.sade.tarjonta.shared.types.TarjontaTila;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -40,6 +38,7 @@ import java.util.*;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -53,8 +52,8 @@ public class OrganisaatioKoulutukset {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
-    private static final CachingRestClient cachingRestClient = new CachingRestClient();
+    @Autowired
+    private OrganisaatioRestToStream restToStream;
 
     @Value("${organisaatio-service.tarjonta-service.rest.url}")
     private String tarjontaServiceWebappUrl;
@@ -121,13 +120,14 @@ public class OrganisaatioKoulutukset {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         InputStream jsonStream;
 
+         String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
+
         try {
-            long t0 = System.currentTimeMillis();
-            jsonStream = cachingRestClient.get(tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid));
-            LOG.debug("tarjonta rest get done, uri: {}, took: {} ms, cacheStatus: {}",
-                    new Object[] {buildSearchKoulutusUri(oid), (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            jsonStream = restToStream.getInputStreamFromUri(url);
+        }
+        catch (RuntimeException e) {
+            LOG.warn("Search failed for koulutus with organization oid: " + oid);
+            throw new OrganisaatioTarjontaException();
         }
 
         Reader reader = new InputStreamReader(jsonStream);
@@ -203,11 +203,15 @@ public class OrganisaatioKoulutukset {
             Date koulutuksenAlkamisPvmMax = koulutus.getKoulutuksenAlkamisPvmMax();
 
             if (koulutuksenAlkamisPvmMax == null) {
-                LOG.debug("alkaviaKoulutuksia() koulutuksenAlkamisPvmMax == null");
+                LOG.info("Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: " + koulutus.getOid());
                 Integer vuosi = koulutus.getVuosi();
-                if(vuosi == null) { // Ei koskaan vanhene?
-                    LOG.debug("alkaviaKoulutuksia() Ei vuotta, käytetään maksimiarvoa");
-                    koulutuksenAlkamisPvmMax = new Date(Long.MAX_VALUE);
+
+                if(vuosi == null) {
+                    // Koulutukselta puuttuu kausi ja vuosi --> "valmistava koulutus"
+                    // eli se on sidottu johonkin toiseen koulutukseen. Ei estä esim.
+                    // organisaation lakkauttamista.
+                    LOG.info("Missing 'kausi' and 'vuosi' for koulutus: " + koulutus.getOid());
+                    continue;
                 } else {
                     Calendar cal = Calendar.getInstance();
                     cal.set(Calendar.YEAR, vuosi + 1);

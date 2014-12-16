@@ -17,7 +17,6 @@
 
 package fi.vm.sade.organisaatio.service.converter;
 
-//import fi.vm.sade.generic.common.BaseDTO;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +44,11 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -75,22 +74,22 @@ public class ConverterFactory {
     private DozerBeanMapper mapper;
     @PersistenceContext
     private EntityManager entityManager;
-    private List<Converter> converters = new ArrayList<Converter>();
+    private List<Converter> converters = new ArrayList<>();
 
     @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
-    private YhteystietoArvoDAOImpl yhteystietoArvoDAO;
+    private YhteystietoArvoDAO yhteystietoArvoDAO;
 
     @Autowired
-    private YhteystietoDAOImpl yhteystietoDAO;
+    private YhteystietoDAO yhteystietoDAO;
 
     @Autowired
-    private YhteystietoElementtiDAOImpl yhteystietoElementtiDAO;
+    private YhteystietoElementtiDAO yhteystietoElementtiDAO;
 
     @Autowired
-    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
 
 
     @PostConstruct
@@ -107,7 +106,7 @@ public class ConverterFactory {
     }
 
     public <DTO> List<DTO> convertToDTO(List<? extends OrganisaatioBaseEntity> entities, Class<? extends DTO> resultClass) {
-        List<DTO> dtos = new ArrayList<DTO>();
+        List<DTO> dtos = new ArrayList<>();
         for (OrganisaatioBaseEntity entity : entities) {
 
             dtos.add(convertToDTO(entity, resultClass));
@@ -205,7 +204,9 @@ public class ConverterFactory {
 
     /**
      * converts dto to jpa entity
+     * @param dto
      * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
+     * @return
      */
 //    public <JPACLASS extends OrganisaatioBaseEntity> JPACLASS convertToJPA(Object dto, Class <? extends JPACLASS> resultClass, boolean merge) {
 //        JPACLASS entity = null;
@@ -289,8 +290,11 @@ public class ConverterFactory {
     }
 
     /**
-     * converts dto to jpa entity
+     * Converts dto to jpa entity
+     *
+     * @param dto
      * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
+     * @return
      */
     public Organisaatio convertOrganisaatioToJPA(OrganisaatioDTO dto, boolean merge) {
         Organisaatio entity = null;
@@ -328,7 +332,7 @@ public class ConverterFactory {
     }
 
     private List<String> getTyypitStr(List<OrganisaatioTyyppi> tyypit) {
-        List<String> tyypitStr = new ArrayList<String>();
+        List<String> tyypitStr = new ArrayList<>();
         for (OrganisaatioTyyppi curT : tyypit) {
             tyypitStr.add(curT.value());
         }
@@ -337,7 +341,9 @@ public class ConverterFactory {
 
     /**
      * converts dto to jpa entity
+     * @param dto
      * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
+     * @return
      */
     public YhteystietoArvo convertYhteystietoArvoToJPA(YhteystietoArvoDTO dto, boolean merge) {
         YhteystietoArvo entity = null;
@@ -373,8 +379,11 @@ public class ConverterFactory {
     }
 
     /**
-     * converts dto to jpa entity
+     * Converts dto to jpa entity
+     *
+     * @param dto
      * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
+     * @return
      */
     public YhteystietoElementti convertYhteystietoElementtiToJPA(YhteystietoElementtiDTO dto, boolean merge) {
         YhteystietoElementti entity = null;
@@ -422,9 +431,11 @@ public class ConverterFactory {
 
     /**
      * converts dto to jpa entity
+     * @param <JPACLASS>
+     * @param dto
      * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
+     * @return
      */
-
     public <JPACLASS extends Yhteystieto> JPACLASS convertYhteystietoToJPA(YhteystietoDTO dto, boolean merge) {
         JPACLASS entity = null;
         Class jpaClass = getJPAClass(dto);
@@ -501,7 +512,7 @@ public class ConverterFactory {
 
 
     public List<String> convertOrganisaatiotyypinYhteystiedotToJPA(List<fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi> dtos, boolean merge ) {
-        List<String> orgTypes = new ArrayList<String>();
+        List<String> orgTypes = new ArrayList<>();
         //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);//OrganisaatiotyypinYhteystiedot
         if (dtos != null) {
             for (fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi dto : dtos) {

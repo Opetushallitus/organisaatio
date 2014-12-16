@@ -1199,6 +1199,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.mdyhteystiedot = {};
             model.organisaationTulevaNimi = {};
             model.organisaationTulevaNimi.nimi = {};
+            model.muutettaviaAliorganisaatioita = 0;
 
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";

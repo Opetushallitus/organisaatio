@@ -17,15 +17,6 @@
     <!-- TULEE: cxf-rt-transports-http-2.4.6 jarrista? -->
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-    <!-- kela-opti -->
-    <jaxws:client id="koodiPublicService"
-                  serviceClass="fi.vm.sade.koodisto.service.KoodiService"
-                  address="${koodi.public.webservice.url.backend}"/>
-
-    <jaxws:client id="koodistoPublicService"
-                  serviceClass="fi.vm.sade.koodisto.service.KoodistoService"
-                  address="${koodisto.public.webservice.url.backend}"/>
-
     <!--
         REST Services
     -->
@@ -61,18 +52,6 @@
     <bean id="organisaatioJacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider">
         <property name="mapper" ref="organisaatioObjectMapper"/>
     </bean>
-
-    <!--<jaxrs:server id="organisaatioREST" address="/rest">-->
-    <!--<jaxrs:serviceBeans>-->
-    <!--<ref bean="organisaatioResourceImpl" />-->
-    <!--<ref bean="indexerResource"/>-->
-    <!--<ref bean="kelaResource"/>-->
-    <!--</jaxrs:serviceBeans>-->
-    <!--<jaxrs:providers>-->
-    <!--<ref bean="cors-filter" />-->
-    <!--<ref bean="organisaatioJacksonJsonProvider" />-->
-    <!--</jaxrs:providers>-->
-    <!--</jaxrs:server>-->
 
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi"/>
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi"/>

@@ -22,7 +22,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
@@ -35,6 +34,7 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
@@ -85,7 +85,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
 
     @Autowired
-    private OrganisaatioDAOImpl organisaatioDAO;
+    private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
     PermissionChecker permissionChecker;
@@ -219,10 +219,13 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
+
+        // Lukumäärä tuloksiin
+        tulos.setNumHits(organisaatiot.size());
 
         OrganisaatioHakutulosSuppeaDTOV2 ohts = new OrganisaatioHakutulosSuppeaDTOV2();
 

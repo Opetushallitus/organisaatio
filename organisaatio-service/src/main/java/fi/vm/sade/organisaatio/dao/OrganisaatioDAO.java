@@ -15,7 +15,12 @@
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
+import fi.vm.sade.organisaatio.model.dto.OrgStructure;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -107,4 +112,59 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return Poistettavan organisaation parent
      */
     public Organisaatio markRemoved(String oid);
+
+    /**
+     * Finds list of oids with given query params.
+     *
+     * @param searchTerms
+     * @param count
+     * @param startIndex
+     * @param lastModifiedBefore
+     * @param lastModifiedSince
+     * @parem type Organisation type
+     * @return
+     */
+    List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type);
+
+    Organisaatio findByVirastoTunnus(String oid);
+
+    Organisaatio findByYTunnus(String oid);
+
+    Organisaatio findByOppilaitoskoodi(String oid);
+
+    Organisaatio findByToimipistekoodi(String oid);
+
+    List<OrgStructure> getOrganizationStructure(List<String> oids);
+
+    /**
+     * Find childers for given Organisation with OID.
+     *
+     * @param parentOid
+     * @param myosPoistetut if true return also "removed" orgs
+     * @param myosLakkautetut
+     * @return
+     */
+    List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
+
+    List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi, String oppilaitosTyyppi, String kunta, String searchStr, boolean suunnitellut, boolean lakkautetut, int maxResults, List<String> oids);
+
+    List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults);
+
+    /**
+     * Return OID list of all organizations.
+     *
+     * @param myosPoistetut
+     * @return
+     */
+    Collection<String> findAllOids(boolean myosPoistetut);
+
+    /**
+     * List OIDs of descendants for a given parent OID.
+     *
+     * @param parentOid
+     * @param myosPoistetut
+     * @return
+     */
+    Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
+
 }

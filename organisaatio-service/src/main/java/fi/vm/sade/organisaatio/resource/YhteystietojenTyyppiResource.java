@@ -23,15 +23,14 @@ import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.GenericFault;
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Api(value = "/yhteystietojentyyppi", description = "Yhteytietojen tyyppeihin liittyvät operaatiot")
 public class YhteystietojenTyyppiResource {
     @Autowired
-    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
 
     @Autowired
     private ConverterFactory converterFactory;
@@ -69,7 +68,7 @@ public class YhteystietojenTyyppiResource {
     PermissionChecker permissionChecker;
 
     @Autowired
-    protected YhteystietoArvoDAOImpl yhteystietoArvoDAO;
+    protected YhteystietoArvoDAO yhteystietoArvoDAO;
 
     @Autowired
     private OIDService oidService;
@@ -137,7 +136,7 @@ public class YhteystietojenTyyppiResource {
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
-        
+
         // Validate
         for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
             YhteystietojenTyyppiDTO dtd = (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t);
@@ -145,7 +144,7 @@ public class YhteystietojenTyyppiResource {
                 throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
             }
         }
-        
+
         try {
             generateOids(yhteystietojenTyyppi);
         } catch (ExceptionMessage em) {

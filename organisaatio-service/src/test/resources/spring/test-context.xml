@@ -29,12 +29,4 @@
 
     <bean id="auditLogger" class="fi.vm.sade.log.client.LoggerMock"/>
 
-            <jaxws:client id="koodiPublicService"
-                  serviceClass="fi.vm.sade.koodisto.service.KoodiService"
-                  address="${koodi.public.webservice.url.backend}"/>
-
-        <jaxws:client id="koodistoPublicService"
-                  serviceClass="fi.vm.sade.koodisto.service.KoodistoService"
-                  address="${koodisto.public.webservice.url.backend}"/>
-
 </beans>

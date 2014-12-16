@@ -73,7 +73,7 @@ public interface OrganisaatioBusinessService {
     public void deleteOrganisaatioNimi(String oid, Date date);
 
     /**
-     *
+     * Päivitetään organisaatioiden nimet niiltä organisaatioilta, joilla ajastettu nimenmuutos.
      */
     public void updateCurrentOrganisaatioNimet();
 

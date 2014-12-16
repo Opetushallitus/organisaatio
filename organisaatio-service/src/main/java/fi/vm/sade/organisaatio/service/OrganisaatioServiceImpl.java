@@ -18,10 +18,6 @@ package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.business.exception.LearningInstitutionExistsException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietojenTyyppiDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoArvoDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.YhteystietoElementtiDAOImpl;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -32,6 +28,10 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.converter.EntityToOrganisaatioKuvailevatTiedotTyyppiFunction;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioBasicConverter;
@@ -49,30 +49,34 @@ import java.util.*;
  * @author Antti Salonen
  */
 @Transactional(rollbackFor = Throwable.class, readOnly = true)
-public class OrganisaatioServiceImpl
-        implements fi.vm.sade.organisaatio.api.model.OrganisaatioService {
+public class OrganisaatioServiceImpl implements fi.vm.sade.organisaatio.api.model.OrganisaatioService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioServiceImpl.class);
+
     @Autowired
     PermissionChecker permissionChecker;
+
     @Autowired
     private ConverterFactory converterFactory;
+
     @Autowired
-    protected YhteystietoElementtiDAOImpl yhteystietoElementtiDAO;
+    protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
+
     @Autowired
-    protected YhteystietoArvoDAOImpl yhteystietoArvoDAO;
-    private OrganisaatioDAOImpl organisaatioDAO;
+    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+
+    private OrganisaatioDAO organisaatioDAO;
+
     @Autowired
-    private YhteystietojenTyyppiDAOImpl yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+
     @Value("${root.organisaatio.oid}")
     private String ophOid;
+
     private static final String parentSplitter = "\\|";
 
-
-
-
     @Autowired
-    public void setDao(OrganisaatioDAOImpl dao) {
+    public void setDao(OrganisaatioDAO dao) {
         this.organisaatioDAO = dao;
     }
 
