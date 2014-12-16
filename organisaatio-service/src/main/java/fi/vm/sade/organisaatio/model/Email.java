@@ -35,7 +35,7 @@ public class Email extends Yhteystieto {
     private static final long serialVersionUID = 1L;
 
     private static final String  EMAIL_PATTERN =
-        "^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        "^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     @NotNull
     @Pattern(regexp = EMAIL_PATTERN, message = "{validation.invalid.email}")
