@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+
+This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+soon as they will be approved by the European Commission - subsequent versions
+of the EUPL (the "Licence");
+
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-->
+
 <!-- Organisaation voimassaolon muokkaus -->
 <script type="text/ng-template" id="aliorganisaatio_node.html">
     <div class="row">
@@ -59,25 +75,25 @@
             <div>&nbsp;</div>
             <div ng-show="model.muokkauksenTila === model.Tila.MUOKKAAMATON">{{'Organisaationmuokkaus.voimassaolo.muokkaamaton'| i18n}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_POISTETTU">
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.asetettu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.asetettuAliorganisaatioille'| i18n : [model.formatDate(model.alkuPvm)]}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.suunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.suunniteltuAliorganisaatioille'| i18n: [model.formatDate(model.alkuPvm)]}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusTyhjennetty'| i18n : [model.organisaationNimi]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatioidenLakkauttaminenPerutaan'| i18n}}:</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
-            
+
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">{{'Organisaationmuokkaus.voimassaolo.jatkettu'| i18n : [model.organisaationNimi]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiotAktiivisiksi'| i18n}}:</div>
         </div>

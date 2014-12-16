@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+
+This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+soon as they will be approved by the European Commission - subsequent versions
+of the EUPL (the "Licence");
+
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-->
+
 <!-- YritysValinta -->
 <div class="modal-header">
     <h3>{{'YritysValinta.otsikko' | i18n}}</h3>
@@ -10,13 +26,13 @@
     </form>
     <div ng-hide="model.yritykset.length" class="form-row">
         {{'YritysValinta.ohjeteksti' | i18n}}
-    </div> 
+    </div>
     <table class="table table-hover">
         <tr style="cursor: pointer;" ng-repeat="yritys in model.yritykset | orderBy:'nimi'" ng-click="select(yritys)">
             <td>{{yritys.nimi}}</td>
             <td>{{yritys.ytunnus}}</td>
         </tr>
-    </table> 
+    </table>
     <div>
         <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="alert.type" close="alert.close()">{{ alert.msg }}</alert>
     </div>
@@ -26,7 +42,7 @@
     <div class="form-fluid">
         <button class="btn" ng-click="cancel()">{{'YritysValinta.peruuta' | i18n}}</button>
         <button ng-if="withoutselect" class="btn" ng-click="continueWithouSelect()">{{'YritysValinta.jatkaValitsematta' | i18n}}</button>
-    </div>    
+    </div>
 </div>
 
 
