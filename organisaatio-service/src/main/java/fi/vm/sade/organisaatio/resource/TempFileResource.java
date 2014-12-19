@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -45,18 +42,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * "Tilapäistiedostojen käsittely (IE9:lle)"
  */
 @Path("/tempfile")
 @Component("tempfileResource")
-@Api(value = "/tempfile", description = "Tilapäistiedostojen käsittely (IE9:lle)")
 public class TempFileResource {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private Map<String, FileItem> data = null;
 
     public TempFileResource() {
-        data = new HashMap<String, FileItem>();
+        data = new HashMap<>();
     }
 
     @POST
@@ -64,7 +60,6 @@ public class TempFileResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @ApiOperation(value = "Lisää kuvan", notes = "Lisää kuvan", response = List.class)
     public String addImage(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         LOG.info("Adding attachment "+request.getMethod());
         Map<String, String> result = null;
