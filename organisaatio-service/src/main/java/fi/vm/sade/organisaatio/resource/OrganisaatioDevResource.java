@@ -15,8 +15,6 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,22 +26,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
+ * Development operaatiot
  *
  * @author simok
  */
 @Path("/dev")
 @Component
-@Api(value = "/dev", description = "Development operaatiot")
 public class OrganisaatioDevResource {
 
+    /**
+     * Hakee autentikoituneen käyttäjän roolit
+     * @return Operaatio palauttaa samat kuin /cas/myroles. HUOM! Testikäyttöön tarkoitettu.
+     */
     @GET
     @Path("/myroles")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @ApiOperation(
-            value = "Hakee autentikoituneen käyttäjän roolit",
-            notes = "Operaatio palauttaa samat kuin /cas/myroles. HUOM! Testikäyttöön tarkoitettu.",
-            response = String.class)
     public String getRoles() {
         StringBuilder ret = new StringBuilder("[");
 
