@@ -18,7 +18,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
-import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -138,18 +137,6 @@ public interface OrganisaatioResource {
             notes = "Operaatio vastaa tervehdykseen ja palauttaa palvelun aikaleiman.",
             response = String.class)
     public String hello();
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(
-            value = "Hakee organisaatioiden oid:t annetuilla hakuehdoilla",
-            notes = "Operaatio palauttaa listan organisaatioiden oid:tä annetuilla hakuehdoilla.",
-            response = String.class)
-    public List<String> search(@ApiParam(value = "Hakutermit", required = true) @QueryParam("searchTerms") String searchTerms,
-            @ApiParam(value = "Tulosjoukon koko", required = true) @QueryParam("count") int count,
-            @ApiParam(value = "Ensimmäisen hakutuloksen indeksi", required = true) @QueryParam("startIndex") int startIndex,
-            @ApiParam(value = "Muokattu ennen", required = true) @QueryParam("lastModifiedBefore") Date lastModifiedBefore,
-            @ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") Date lastModifiedSince);
 
     @GET
     @Path("/{id}")
