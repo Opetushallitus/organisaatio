@@ -17,13 +17,12 @@
                     <input type="checkbox" ng-disabled="highestOrganization" ng-change="updateSearch()" ng-model="options.merge">
                     {{'organisaatio.move.merge.to.parent.organization' | i18n}}
                 </label>
-                <!--span class="help-block">TT_Ohjeistusteksti täällä</span-->
 
                 </br>
 
                 <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
 
-                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled">
+                <ui-select ng-model="options.newParentOrganization" theme="selectize" on-select="select($item)" ng-disabled="disabled">
                     <ui-select-match placeholder="{{'organisaatio.move.new.parent.organization' | i18n}}">
                         {{$select.selected.name}}
                     </ui-select-match>
@@ -64,7 +63,7 @@
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="$close(options)">
+        <button class="btn btn-primary" ng-disabled="!valid" ng-click="$close(options)">
             {{'Organisaationpoisto.ok' | i18n}}
         </button>
     </div>

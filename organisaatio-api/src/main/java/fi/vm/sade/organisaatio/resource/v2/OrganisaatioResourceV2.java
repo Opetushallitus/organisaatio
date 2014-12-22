@@ -212,6 +212,14 @@ public interface OrganisaatioResourceV2 {
             response = OrganisaatioRDTO.class)
     public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
 
+    @GET
+    @Path("/{oid}/historia")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaation organisaatiohierrarkia historian.",
+            notes = "Operaatio palauttaa oid:n määrittelemän organisaation organisaatiohierrarkia historian.",
+            response = OrganisaatioHistoriaRDTOV2.class)
+    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     @POST
     @Path("/{oid}/organisaatiosuhde")

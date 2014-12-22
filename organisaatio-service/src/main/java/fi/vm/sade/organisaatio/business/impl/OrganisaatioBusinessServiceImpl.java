@@ -1105,4 +1105,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             String info = updateKoodisto(organisaatio, true);
         }
     }
+
+    @Override
+    public List<OrganisaatioSuhde> getOrganisaatioHistoria(String oid) {
+        try {
+            Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+            return organisaatioSuhdeDAO.findParents(organisaatio.getId());
+        } catch (IllegalArgumentException ex) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+    }
 }

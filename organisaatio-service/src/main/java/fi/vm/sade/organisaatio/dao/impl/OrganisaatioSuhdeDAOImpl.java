@@ -299,5 +299,22 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
 
+    @Override
+    public List<OrganisaatioSuhde> findParents(Long childId) {
+        if (childId == null) {
+            throw new IllegalArgumentException("childId == null");
+        }
+
+        LOG.info("findParents({})", childId);
+
+        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+
+        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
+                .where(qSuhde.child.id.eq(childId))
+                .orderBy(qSuhde.alkuPvm.desc())
+                .list(qSuhde);
+
+        return suhteet;
+    }
 
 }

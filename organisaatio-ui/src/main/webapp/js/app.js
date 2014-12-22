@@ -556,3 +556,10 @@ app.factory('KoodistoArrayByUri', function($resource) {
         get: {method: "GET", isArray: true}
     });
 });
+
+// Organisaation historiatietojen haku
+app.factory('Historia', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
+        get: {method: 'GET', isArray: true}
+    });
+});

@@ -113,4 +113,12 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
      * @return list of {@link fi.vm.sade.organisaatio.model.OrganisaatioSuhde} enties
      */
     List<OrganisaatioSuhde> findForDay(Date day);
+
+    /**
+     * Returns all parent relationships (future, current, past) for given child organisations
+     * @param childId id of organization
+     * @return list of {@link fi.vm.sade.organisaatio.model.OrganisaatioSuhde} enties
+     */
+    List<OrganisaatioSuhde> findParents(Long childId);
+
 }

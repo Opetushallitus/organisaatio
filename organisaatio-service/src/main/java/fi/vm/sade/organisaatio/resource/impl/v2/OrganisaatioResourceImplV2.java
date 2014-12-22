@@ -27,19 +27,16 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioMoveException;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.*;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
@@ -80,6 +77,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
     @Autowired
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+
+    @Autowired
+    private HistoriaModelMapper historiaModelMapper;
 
     @Autowired
     private ConversionService conversionService;
@@ -450,6 +450,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
 
         Preconditions.checkNotNull(oid);
@@ -482,5 +483,17 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         //oppilaitoksen siirto
         checker.checkOrganisaatioHierarchy(organisaatio, newParentOid);
         organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+
+        List<OrganisaatioSuhde> historia = organisaatioBusinessService.getOrganisaatioHistoria(oid);
+
+        Type historiaType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
+
+        return historiaModelMapper.map(historia, historiaType);
     }
 }

@@ -22,11 +22,17 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
     $scope.nimi = nimi;
     $scope.suggests = [];
     $scope.highestOrganization = false;
+    $scope.valid = false;
+
 
     $scope.options = {
         newParentOrganization: null,
         merge: false,
         date: new Date()
+    };
+
+    $scope.select = function(item){
+        $scope.valid = true;
     };
 
     function updateSearch() {
@@ -69,5 +75,4 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
             Alert.add("error", error, false);
         }
     );
-
 }

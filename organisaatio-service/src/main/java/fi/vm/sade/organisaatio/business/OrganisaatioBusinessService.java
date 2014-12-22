@@ -101,4 +101,12 @@ public interface OrganisaatioBusinessService {
      * @param date Siirto pvm
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+
+    /**
+     * Hakee organisaation menneet, olevat ja tulevat suhteet puussa ylöspäin.
+     * @param oid haettavan organisaation oid
+     * @return Lista suhteista
+     */
+    public List<OrganisaatioSuhde> getOrganisaatioHistoria(String oid);
+
 }
