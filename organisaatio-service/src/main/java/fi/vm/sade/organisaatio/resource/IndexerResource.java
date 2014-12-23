@@ -17,9 +17,6 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -44,9 +41,12 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+/**
+ * Organisaatioiden indeksoiti solriin
+ */
+
 @Path("/indexer")
 @Component
-@Api(value = "/indexer", description = "Indeksoijan operaatiot")
 public class IndexerResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(IndexerResource.class);
@@ -67,11 +67,16 @@ public class IndexerResource {
         this.solr = factory.getSolrServer();
     }
 
+    /**
+     * Indeksoi organiasaatiot tietokannasta uudelleen Solriin.
+     *
+     * @param clean Tyhjennetäänkö indeksi ensin
+     * @return
+     */
     @GET
     @Path("/start")
     @Produces("text/plain")
-    @ApiOperation(value = "Rakentaa indeksin uudelleen", notes = "Operaatio rakentaa indeksin uudelleen.", response = String.class)
-    public String reBuildIndex(@ApiParam(value = "Tyhjennetäänkö indeksi ensin", required = true) @QueryParam("clean") final boolean clean) {
+    public String reBuildIndex(@QueryParam("clean") final boolean clean) {
         Preconditions.checkNotNull(organisaatioDAO, "need dao!");
         Preconditions.checkNotNull(transactionManager, "need TM!");
 
