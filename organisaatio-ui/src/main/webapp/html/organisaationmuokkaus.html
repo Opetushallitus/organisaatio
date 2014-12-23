@@ -458,12 +458,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                           ng-disabled="disabled" ng-change="model.copyAddress(false, false)" class="span6"></textarea>
             </div>
         </div>
-        <div class="control-group">
+        <div class="control-group" ng-if="model.ytlang">
             <label class="control-label">
                 {{'Organisaationtarkastelu.postiosoite'| i18n}}
             </label>
             <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
-                <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter
+                <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required="yt"
                        ng-model="model.yhteystiedot[model.ytlang].posti.osoite"
                        ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                        ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'"
