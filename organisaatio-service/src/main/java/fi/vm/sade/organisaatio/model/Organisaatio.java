@@ -221,7 +221,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         OrganisaatioSuhde latestSuhde = null;
         Date curDate = new Date();
         for (OrganisaatioSuhde curSuhde : parentSuhteet) {
-            if (latestSuhde == null && !curSuhde.getAlkuPvm().after(curDate)) {
+            if (latestSuhde == null || !curSuhde.getAlkuPvm().after(curDate)) {
                 latestSuhde = curSuhde;
             } else if (!curSuhde.getAlkuPvm().after(curDate) && latestSuhde.getAlkuPvm().before(curSuhde.getAlkuPvm())) {
                 latestSuhde = curSuhde;
