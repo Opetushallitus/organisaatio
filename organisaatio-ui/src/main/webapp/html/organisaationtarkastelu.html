@@ -739,10 +739,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn btn-primary" ng-click="edit()" tooltip="{{'Organisaatiot.ohje.muokkaa' | i18n}}"
-                    auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}">
-                {{'Organisaationtarkastelu.muokkaa'| i18n}}
-            </button>
+            <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" 
+                    auth-org="{{model.organisaatio.oid}}">{{'Organisaationtarkastelu.muokkaa'| i18n}}</button>
         </div>
         <span>&nbsp;</span>
     </div>
