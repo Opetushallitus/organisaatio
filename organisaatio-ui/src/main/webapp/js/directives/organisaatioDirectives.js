@@ -313,6 +313,28 @@ app.directive('ophValidatePostcode', function($log) {
     };
 });
 
+// Asettaa kieleen sidotun virheen jos kenttää ei ole täytetty
+app.directive('ophRequired', function($log) {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            var validator = function(viewValue) {
+                var lang = (attrs.ophRequired === "yt" ? scope.model.ytlang : scope.model.hplang);
+                if (lang && lang.search('_fi')>-1) {
+                    if (viewValue) {
+                        ctrl.$setValidity('ophrequiredfi', true);
+                    } else {
+                        ctrl.$setValidity('ophrequiredfi', false);
+                    }
+                }
+                return viewValue;
+            };
+            ctrl.$parsers.unshift(validator);
+            ctrl.$formatters.unshift(validator);
+        }
+    };
+});
+
 app.directive("dynamicName", function($compile, $log) {
     return {
         restrict: "A",

@@ -1201,6 +1201,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaationTulevaNimi.nimi = {};
             model.muutettaviaAliorganisaatioita = 0;
 
+            // tyhjennetään nimihistoriamalli
+            var nimiHistoriaModel = NimiHistoriaModel;
+            nimiHistoriaModel.clear();
+
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";
 
