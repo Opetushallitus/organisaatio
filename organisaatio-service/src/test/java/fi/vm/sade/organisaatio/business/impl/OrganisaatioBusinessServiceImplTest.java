@@ -108,6 +108,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParentOidPath(modified, "1.2.2005.4");
         checkParentOidPath(org, "1.2.2005.5");
 
+        checkParent(modified, "1.2.2004.4");
+        checkParent(modified, "1.2.2005.4");
+        checkParent(org, "1.2.2005.5");
+
+
         assertChildCountFromIndex(oldParentOid, 1);
         assertChildCountFromIndex(newParentOid, 1);
     }
@@ -117,4 +122,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
         return org;
     }
+
+    private Organisaatio checkParent(Organisaatio parent, String oid) {
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), org.getParent().getOid());
+        return org;
+    }
+
 }

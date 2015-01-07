@@ -97,7 +97,11 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
 
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        BooleanExpression expression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime)).and(qSuhde.child.id.eq(childId));
+
+        BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
+        BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
+        BooleanExpression expression = qSuhde.child.id.eq(childId).and(alkuExpression).and(loppuExpression);
+
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.parent, qOrganisaatio).fetch()
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
@@ -129,8 +133,9 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
-        BooleanExpression expression = (qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime))).and(qSuhde.parent.id.eq(parentId));
-
+        BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
+        BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
+        BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(alkuExpression).and(loppuExpression);
 
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.child, qOrganisaatio).fetch()

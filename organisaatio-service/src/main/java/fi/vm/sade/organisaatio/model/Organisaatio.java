@@ -221,9 +221,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         OrganisaatioSuhde latestSuhde = null;
         Date curDate = new Date();
         for (OrganisaatioSuhde curSuhde : parentSuhteet) {
-            if (latestSuhde == null && !curSuhde.getAlkuPvm().after(curDate)) {
+            // Ei oteta huomioon suhteita, jotka tulevaisuudessa tai jotka ovat lakanneet
+            if (curSuhde.getAlkuPvm().after(curDate) ||
+                    (curSuhde.getLoppuPvm() != null && curSuhde.getLoppuPvm().before(curDate)))
+            {
+                continue;
+            }
+            if (latestSuhde == null) {
+                // Ensimmäinen löytynyt validi suhde
                 latestSuhde = curSuhde;
-            } else if (!curSuhde.getAlkuPvm().after(curDate) && latestSuhde.getAlkuPvm().before(curSuhde.getAlkuPvm())) {
+            } else if (latestSuhde.getAlkuPvm().before(curSuhde.getAlkuPvm())) {
+                // Aikaisemmin löydettyä suhdetta uudempi suhde
                 latestSuhde = curSuhde;
             }
         }
