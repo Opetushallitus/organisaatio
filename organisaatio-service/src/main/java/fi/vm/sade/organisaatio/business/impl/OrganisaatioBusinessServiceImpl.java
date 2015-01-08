@@ -1032,7 +1032,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
-            changeOrganizationParent(child, newParent, date, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+            // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
+            if (OrganisaatioUtil.isPassive(child) == false) {
+                changeOrganizationParent(child, newParent, date,
+                        OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+            }
         }
     }
 
