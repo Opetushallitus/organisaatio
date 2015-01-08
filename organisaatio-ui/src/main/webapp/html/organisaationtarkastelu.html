@@ -688,12 +688,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div> <!-- nhexpanded -->
 
-    <div ng-if="nhexpanded">
-        <div class="row">
-            <div class="span8" data-ng-include data-src="'historialista.html'"></div>
-        </div>
-    </div> <!-- nhexpanded -->
-
     <div class="row" ng-show='model.parent.oid!=="1.2.246.562.10.00000000001"'>
         <div class="span4">
             <div class="view-row-label">
@@ -742,10 +736,31 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <hr>
     </div> <!-- aoexpanded -->
 
+    <!-- Historioinnin esittäminen
+    <div class="row">
+        <div class="span4">
+            <div class="view-row-label">
+                <a href="" ng-model="histexpanded" ng-click="histexpanded = !histexpanded">
+                    <label>
+                        <span ng-class="{'icon-chevron-down'histexpanded, 'icon-chevron-right':!histexpanded}"></span>
+                        {{'Organisaationtarkastelu.historia'| i18n}}
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="histexpanded">
+        <div class="row">
+            <div class="span8" data-ng-include data-src="'historialista.html'"></div>
+        </div>
+    </div> <!-- histexpanded -->
+
+
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" 
+            <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
                     auth-org="{{model.organisaatio.oid}}">{{'Organisaationtarkastelu.muokkaa'| i18n}}</button>
         </div>
         <span>&nbsp;</span>
