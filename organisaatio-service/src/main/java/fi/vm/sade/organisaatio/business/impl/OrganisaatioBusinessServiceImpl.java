@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.time.DateUtils;
 
 /**
  *
@@ -1042,8 +1043,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioSuhdeDAO.addChild(newParent.getId(), organisaatio.getId(), date, generateOpetuspisteenJarjNro(newParent, newParent.getTyypit()), tyyppi);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        //update relationships and names if given date is today
-        if (sdf.format(date).equals(sdf.format(new Date()))) {
+
+        //update relationships and names if given date is today or before
+        Date today = new Date();
+        if (date.before(today) || DateUtils.isSameDay(date, today)) {
             createParentPath(organisaatio, newParent.getOid());
             organisaatioDAO.update(organisaatio);
             solrIndexer.index(organisaatio);
