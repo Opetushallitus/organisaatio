@@ -82,7 +82,6 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                         return parent;
                     }
                 }
-                return;
             };
 
             // Etsitään noodin parenttia, jotta voidaan poistaa se parentista

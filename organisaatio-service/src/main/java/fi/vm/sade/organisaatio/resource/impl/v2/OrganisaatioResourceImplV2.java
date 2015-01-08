@@ -15,45 +15,45 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioMoveException;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.*;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.validation.ValidationException;
 import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  *
@@ -79,7 +79,16 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired
+    private HistoriaModelMapper historiaModelMapper;
+
+    @Autowired
+    private ConversionService conversionService;
+
+    @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
+
+    @Autowired
+    private OrganisaatioBusinessChecker checker;
 
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
@@ -400,5 +409,91 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
+    }
+
+
+
+    @Override
+    public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince) {
+
+        Preconditions.checkNotNull(lastModifiedSince);
+        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+
+        if (organisaatiot == null || organisaatiot.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<OrganisaatioRDTO> results = new ArrayList<>();
+
+        for (Organisaatio org : organisaatiot) {
+            OrganisaatioRDTO result = conversionService.convert(org, OrganisaatioRDTO.class);
+            results.add(result);
+        }
+        return results;
+    }
+
+    @Override
+    public String haeMuutettujenOid(DateParam lastModifiedSince) {
+
+        Preconditions.checkNotNull(lastModifiedSince);
+        LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
+
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+
+        List<String> oids = new ArrayList<>();
+        for (Organisaatio org : organisaatiot) {
+            oids.add(org.getOid());
+        }
+
+        return "{ \"oids\": [" + Joiner.on(",").join(oids) + "]}";
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
+
+        Preconditions.checkNotNull(oid);
+        Preconditions.checkNotNull(newParentOid);
+        Preconditions.checkNotNull(merge);
+
+        Date date;
+        if(dateParam != null && dateParam.getValue() != null) {
+            date = dateParam.getValue();
+        } else {
+            date = new Date();
+        }
+
+        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+        Organisaatio newParent = organisaatioDAO.findByOid(newParentOid);
+
+        if (organisaatio == null || newParent == null) {
+            return;
+        }
+
+        //kun kaksi koulutustoimijaa yhdistyy
+        if (merge) {
+            if (!organisaatio.getTyypit().containsAll(newParent.getTyypit())) {
+                throw new OrganisaatioMoveException("organisation.move.merge.level");
+            }
+            organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+            return;
+        }
+
+        //oppilaitoksen siirto
+        checker.checkOrganisaatioHierarchy(organisaatio, newParentOid);
+        organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(String oid) throws Exception {
+        Preconditions.checkNotNull(oid);
+
+        List<OrganisaatioSuhde> historia = organisaatioBusinessService.getOrganisaatioHistoria(oid);
+
+        Type historiaType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
+
+        return historiaModelMapper.map(historia, historiaType);
     }
 }

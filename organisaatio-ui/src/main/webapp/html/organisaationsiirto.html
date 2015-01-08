@@ -1,0 +1,73 @@
+<!-- Organisaation Poisto -->
+<div class="modal-header">
+    <h3>{{'organisaatio.move.topic' | i18n}}</h3>
+</div>
+
+<div class="modal-body" style='height: 600px; overflow-y: visible;'>
+
+    <div class="form-fluid">
+        {{'organisaatio.move.to.be.moved' | i18n}}: {{nimi}}
+        <br/>
+        <br/>
+
+        <form name="form">
+            <fieldset>
+
+                <label class="checkbox">
+                    <input type="checkbox" ng-disabled="highestOrganization" ng-change="updateSearch()" ng-model="options.merge">
+                    {{'organisaatio.move.merge.to.parent.organization' | i18n}}
+                </label>
+
+                </br>
+
+                <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
+
+                <ui-select ng-model="options.newParentOrganization" theme="selectize" on-select="select($item)" ng-disabled="disabled">
+                    <ui-select-match placeholder="{{'organisaatio.move.new.parent.organization' | i18n}}">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search }">
+                        <span>{{suggest.name}}</span>
+                    </ui-select-choices>
+                </ui-select>
+
+
+                <br/>
+
+
+                <label>{{'organisaatio.move.comes.into.effect' | i18n}}</label>
+
+                <input oph-enter type="text"
+                       name="luontipvm"
+                       formatteddate
+                       datepicker-popup="dd.MM.yyyy"
+                       min="'1990-01-01'"
+                       max="'2030-12-31'"
+                       ng-model="options.date"
+                       close-on-date-selection="true"
+                       ie-placeholder
+                       placeholder="{{'organisaatio.move.date' | i18n}}"
+                       close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
+                       current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
+                       clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
+                       toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"
+                       required/>
+            </fieldset>
+
+
+        </form>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
+        <button class="btn btn-primary" ng-disabled="!valid" ng-click="$close(options)">
+            {{'Organisaationpoisto.ok' | i18n}}
+        </button>
+    </div>
+</div>
+
+
+

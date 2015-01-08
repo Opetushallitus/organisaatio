@@ -200,7 +200,6 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>fi.vm.sade.organisaatio</groupId>
             <artifactId>organisaatio-api</artifactId>
@@ -245,6 +244,13 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.182</version>
             <scope>test</scope>
         </dependency>
 

@@ -15,15 +15,13 @@
 
 package fi.vm.sade.organisaatio.dao;
 
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-
 import fi.vm.sade.generic.dao.JpaDAO;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @author simok
  */
 public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
@@ -38,6 +36,18 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
      * @return created relation
      */
     OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro);
+
+    /**
+     * If child has a "current" parent, this actually "moves" child under another parent.
+     *
+     * @param parentId
+     * @param childId
+     * @param startingFrom null == now
+     * @param opetuspisteenJarjNro
+     * @param organisaatioSuhdeTyyppi
+     * @return
+     */
+    OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi);
 
     /**
      * @param parentId
@@ -76,6 +86,7 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
     // D E 3 4
     // C B 5 - *
     //
+
     /**
      * @param childId
      * @param atTime  null == now
@@ -92,5 +103,22 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
      * @param removalDate
      */
     void removeChild(Long parentId, Long childId, Date removalDate);
-    
+
+    /**
+     * Finds all organisation relation changes that matches given day.
+     * Ordering is ascending by starting date.
+     * Time part of the given date is ignored.
+     *
+     * @param day Given date.
+     * @return list of {@link fi.vm.sade.organisaatio.model.OrganisaatioSuhde} enties
+     */
+    List<OrganisaatioSuhde> findForDay(Date day);
+
+    /**
+     * Returns all parent relationships (future, current, past) for given child organisations
+     * @param childId id of organization
+     * @return list of {@link fi.vm.sade.organisaatio.model.OrganisaatioSuhde} enties
+     */
+    List<OrganisaatioSuhde> findParents(Long childId);
+
 }

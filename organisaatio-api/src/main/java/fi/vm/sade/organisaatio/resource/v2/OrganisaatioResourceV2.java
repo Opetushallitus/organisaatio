@@ -23,18 +23,11 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 
 /**
@@ -276,4 +269,43 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
             response = OrganisaatioNimiDTOV2.class)
     public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+
+    @GET
+    @Path("/muutetut/oid")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden OID:t, joita muutettu annetun päivämäärän jälkeen",
+            response = String.class)
+    public String haeMuutettujenOid(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+
+    @GET
+    @Path("/muutetut")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
+            response = OrganisaatioRDTO.class)
+    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+
+    @GET
+    @Path("/{oid}/historia")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaation organisaatiohierrarkia historian.",
+            notes = "Operaatio palauttaa oid:n määrittelemän organisaation organisaatiohierrarkia historian.",
+            response = OrganisaatioHistoriaRDTOV2.class)
+    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+
+    @POST
+    @Path("/{oid}/organisaatiosuhde")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Siirtää organisaatiota puussa toisen ylemmän organisaation alle tai yhdistää kaksi samanarvoista organisaatiota")
+    public void changeOrganisationRelationship(
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+            @ApiParam(value = "Sulautus", required = true) @QueryParam("merge") boolean merge,
+            @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = false) @QueryParam("moveDate") DateParam date,
+            @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid
+    );
+
 }

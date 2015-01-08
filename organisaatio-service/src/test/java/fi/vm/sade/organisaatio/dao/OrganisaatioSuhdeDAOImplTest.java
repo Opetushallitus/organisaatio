@@ -1,29 +1,35 @@
 package fi.vm.sade.organisaatio.dao;
 
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.log.client.LoggerHelper;
 import fi.vm.sade.log.client.LoggerMock;
 import fi.vm.sade.log.model.Tapahtuma;
-import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.model.HistoryMetadata;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.Osoite;
+import fi.vm.sade.organisaatio.model.Yhteystieto;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * @author mlyly
@@ -32,8 +38,7 @@ import org.junit.Before;
         "classpath:spring/test-context.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
-public class OrganisaatioSuhdeDAOImplTest {
+public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioSuhdeDAOImplTest.class);
 
@@ -225,6 +230,40 @@ public class OrganisaatioSuhdeDAOImplTest {
         Assert.assertEquals("AA 1.12.2011", hmd.getArvo());
 
         LOG.info("doTest()... done.");
+    }
+
+    @Test
+    public void findForDay() throws Exception {
+        executeSqlScript("data/organisaatiosuhde_data.sql", false);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date date = dateFormat.parse("2000-01-01 23:00:00");
+        LOG.info("Quering with date {}", date);
+        List<OrganisaatioSuhde> list = organisaatioSuhdeDAO.findForDay(date);
+        Assert.assertEquals("Organisaatio suhde count does not match!", 4, list.size());
+
+        List<Long> expectedIds = Arrays.asList(1L, 3L, 4L, 2L);
+        List<Long> results = new ArrayList<>();
+        for (OrganisaatioSuhde os : list) {
+            results.add(os.getId());
+        }
+
+        Assert.assertArrayEquals("Results does not match!", expectedIds.toArray(), results.toArray());
+    }
+
+    @Test
+    public void findForDayWithNull() throws Exception {
+        executeSqlScript("data/organisaatiosuhde_data.sql", false);
+        List<OrganisaatioSuhde> list = organisaatioSuhdeDAO.findForDay(null);
+        Assert.assertTrue("Organisaatiosuhde list should be empty!", list.isEmpty());
+    }
+
+    @Test
+    public void findForDayWithZeroDate() throws Exception {
+        executeSqlScript("data/organisaatiosuhde_data.sql", false);
+        List<OrganisaatioSuhde> list = organisaatioSuhdeDAO.findForDay(new Date(0));
+        Assert.assertTrue("Organisaatiosuhde list should be empty!", list.isEmpty());
     }
 
     private void printOrganisaatioSuhdeTable() {
