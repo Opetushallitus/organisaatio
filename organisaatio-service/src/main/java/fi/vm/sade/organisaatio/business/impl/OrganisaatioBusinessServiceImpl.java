@@ -1023,6 +1023,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         previousDay.add(Calendar.DAY_OF_MONTH, -1);
         organisaatio.setLakkautusPvm(previousDay.getTime());
         organisaatioDAO.update(organisaatio);
+        solrIndexer.index(organisaatio);
 
         if (suhteet == null || suhteet.isEmpty()) {
             return;
