@@ -14,7 +14,7 @@
             <fieldset>
 
                 <label class="checkbox">
-                    <input type="checkbox" ng-disabled="highestOrganization" ng-change="updateSearch()" ng-model="options.merge">
+                    <input type="checkbox" ng-disabled="highestOrganization || oppilaitos" ng-change="updateSearch()" ng-model="options.merge">
                     {{'organisaatio.move.merge.to.parent.organization' | i18n}}
                 </label>
 
