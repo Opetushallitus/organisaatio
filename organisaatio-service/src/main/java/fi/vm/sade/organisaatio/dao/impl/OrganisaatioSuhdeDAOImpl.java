@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.lang.time.DateUtils;
 
 /**
  * @author mlyly
@@ -86,11 +87,14 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      */
     @Override
     public OrganisaatioSuhde findParentTo(Long childId, Date atTime) {
-        if (atTime == null) {
-            atTime = new Date();
-        }
         if (childId == null) {
             throw new IllegalArgumentException("childId cannot be null");
+        }
+
+        // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
+        Date currentTimeStamp = new Date();
+        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+            atTime = currentTimeStamp;
         }
 
         LOG.info("findParentTo({}, {})", childId, atTime);
@@ -98,6 +102,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
+        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(alkuExpression).and(loppuExpression);
@@ -124,8 +129,11 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         if (parentId == null) {
             throw new IllegalArgumentException("parentId == null");
         }
-        if (atTime == null) {
-            atTime = new Date();
+
+        // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
+        Date currentTimeStamp = new Date();
+        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+            atTime = currentTimeStamp;
         }
 
         LOG.info("findChildrenTo({}, {})", parentId, atTime);
@@ -133,6 +141,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
+        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(alkuExpression).and(loppuExpression);
