@@ -22,6 +22,7 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
     $scope.nimi = nimi;
     $scope.suggests = [];
     $scope.highestOrganization = false;
+    $scope.oppilaitos = false;
     $scope.valid = false;
 
 
@@ -39,6 +40,7 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
         var organizationType = "Oppilaitos";
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
         var koulutustoimija = currentOrganizationTypes.indexOf("Koulutustoimija") > -1;
+        $scope.oppilaitos = currentOrganizationTypes.indexOf("Oppilaitos") > -1;
 
         if (koulutustoimija) {
             organizationType = 'Koulutustoimija';
