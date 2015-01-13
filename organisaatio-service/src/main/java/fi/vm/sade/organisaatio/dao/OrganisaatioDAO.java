@@ -113,19 +113,6 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      */
     public Organisaatio markRemoved(String oid);
 
-    /**
-     * Finds list of oids with given query params.
-     *
-     * @param searchTerms
-     * @param count
-     * @param startIndex
-     * @param lastModifiedBefore
-     * @param lastModifiedSince
-     * @parem type Organisation type
-     * @return
-     */
-    List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type);
-
     Organisaatio findByVirastoTunnus(String oid);
 
     Organisaatio findByYTunnus(String oid);
@@ -166,5 +153,11 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
-
+    /***
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
+     *
+     * @param lastModifiedSince päivämäärä
+     * @return
+     */
+    List<Organisaatio> findModifiedSince(Date lastModifiedSince);
 }

@@ -530,6 +530,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
+            model.organisaatio.historia = result.historia;
 
             // Otetaan talteen organisaation nimihistoria ennen muutoksia.
             model.originalNimet = model.organisaatio.nimet;
@@ -1200,6 +1201,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaationTulevaNimi = {};
             model.organisaationTulevaNimi.nimi = {};
             model.muutettaviaAliorganisaatioita = 0;
+
+            // tyhjennetään nimihistoriamalli
+            var nimiHistoriaModel = NimiHistoriaModel;
+            nimiHistoriaModel.clear();
 
             // oletusarvoisesti luodaan organisaatio Suomeen
             model.organisaatio.maaUri = "maatjavaltiot1_fin";

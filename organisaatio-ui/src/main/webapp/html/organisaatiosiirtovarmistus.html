@@ -1,0 +1,22 @@
+<!-- Organisaation Poisto -->
+<div class="modal-header">
+    <h3>{{'organisaatio.move.topic' | i18n}}</h3>
+</div>
+
+<div class="modal-body">
+    <div class="form-fluid">
+        {{'organisaatio.move.confirm' | i18n}}
+    </div>
+    <div>
+        <strong>{{current}} -> {{newParent}}</strong>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
+        <button class="btn primary" ng-click="$close()">{{'Organisaationpoisto.ok' | i18n}}</button>
+    </div>
+</div>
+
+

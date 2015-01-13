@@ -16,23 +16,18 @@
 package fi.vm.sade.organisaatio.resource.v2;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 
 /**
@@ -41,7 +36,7 @@ import javax.ws.rs.core.MediaType;
  * @author simok
  */
 @Path("/organisaatio/v2")
-@Api(value = "/organisaatio/v2", description = "Organisaation operaatiot")
+@Api(value = "/organisaatio/v2", description = "Organisaation operaatiot (rajapintaversio 2)")
 public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -55,6 +50,18 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Path("/hierarkia/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
@@ -63,12 +70,24 @@ public interface OrganisaatioResourceV2 {
                     + "Hakuehtojen osuessa hierarkiassa alemman tason organisaatioon, "
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä).",
             response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchOrganisaatioHierarkia(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulos searchOrganisaatioHierarkia(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
     @Path("/hierarkia/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee organisaatioiden nimi- ja oid tiedot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
@@ -78,12 +97,24 @@ public interface OrganisaatioResourceV2 {
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä). "
                     + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
-    
+
     @GET
     @Path("/hierarkia/hae/tyyppi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee organisaatioiden nimi-, oid-, ja tyyppitiedot puurakenteena annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
@@ -93,39 +124,75 @@ public interface OrganisaatioResourceV2 {
                     + "palautetaan puurakenne juureen asti (ellei hakuehdot sitä estä). "
                     + "Soveltuu käytettäväksi haun \"hierarkia/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi, oid, organisaatiotyypit ja mahdollinen oppilaitostyyppi.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
     @Path("/hae")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee organisaatiot, jotka osuvat annetuihin hakuehtoihin",
             notes = "Operaatio palauttaa vain hakuehtoja vastaavat organisaatiot.",
             response = OrganisaatioHakutulos.class)
-    public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulos searchOrganisaatiot(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GET
     @Path("/hae/nimi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden nimi- ja oid tiedot",
             notes = "Operaatio palauttaa vain hakuehtoja vastaavien organisaatioiden suppeat tiedot."
                     + "Soveltuu käytettäväksi haun \"/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi ja oid.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
-    
+
     @GET
     @Path("/hae/tyyppi")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiImplicitParams({
+        @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
+        @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
             value = "Hakee annetuihin hakuehtoihin osuvien organisaatioiden nimi-, oid-, ja tyyppitiedot",
             notes = "Operaatio palauttaa vain hakuehtoja vastaavien organisaatioiden suppeat tiedot."
                     + "Soveltuu käytettäväksi haun \"/hae\" sijaan silloin kuin paluuarvossa riittää organisaation nimi, oid, organisaatiotyypit ja mahdollinen oppilaitostyyppi.",
             response = OrganisaatioHakutulosSuppeaDTOV2.class)
-    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(@QueryParam("") @ApiParam(value = "hakuehdot", required = true)
+    public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(@QueryParam("") @ApiParam(access = "hidden")
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @POST
@@ -202,4 +269,43 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
             response = OrganisaatioNimiDTOV2.class)
     public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+
+    @GET
+    @Path("/muutetut/oid")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden OID:t, joita muutettu annetun päivämäärän jälkeen",
+            response = String.class)
+    public String haeMuutettujenOid(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+
+    @GET
+    @Path("/muutetut")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
+            response = OrganisaatioRDTO.class)
+    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+
+    @GET
+    @Path("/{oid}/historia")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaation organisaatiohierrarkia historian.",
+            notes = "Operaatio palauttaa oid:n määrittelemän organisaation organisaatiohierrarkia historian.",
+            response = OrganisaatioHistoriaRDTOV2.class)
+    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+
+    @POST
+    @Path("/{oid}/organisaatiosuhde")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Siirtää organisaatiota puussa toisen ylemmän organisaation alle tai yhdistää kaksi samanarvoista organisaatiota")
+    public void changeOrganisationRelationship(
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+            @ApiParam(value = "Sulautus", required = true) @QueryParam("merge") boolean merge,
+            @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = false) @QueryParam("moveDate") DateParam date,
+            @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid
+    );
+
 }

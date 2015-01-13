@@ -37,19 +37,18 @@ public class OrganisaatioTaskScheduler {
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
 
-    @Value("${organisaatio-service.scheduled.name.update.cron.expression}")
+    @Value("${organisaatio-service.scheduled.update.cron.expression}")
     private String nameUpdateCronExpression;
 
     /**
-     * Laukaisee ajastetusti organisaatioiden nimenpäivityksen / nimenpäivityksen
-     * tarkistuksen.
+     * Laukaisee organisaatioiden ajastetut päivitys operaatiot
      */
-    @Scheduled(cron = "${organisaatio-service.scheduled.name.update.cron.expression}")
-    public void scheduledNameUpdate()
+    @Scheduled(cron = "${organisaatio-service.scheduled.update.cron.expression}")
+    public void scheduledUpdate()
     {
-        LOG.debug("scheduledNameUpdate(): Cron Expression: {}, Current time: " + new Date(), nameUpdateCronExpression);
+        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: " + new Date(), nameUpdateCronExpression);
 
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
-
+        organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
     }
  }

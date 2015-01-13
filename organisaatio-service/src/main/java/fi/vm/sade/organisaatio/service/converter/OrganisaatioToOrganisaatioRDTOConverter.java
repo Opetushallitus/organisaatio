@@ -14,36 +14,24 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
+import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietoElementti;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.model.BinaryData;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHistoriaRDTOV2;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  *
@@ -80,6 +68,13 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         // Map domain type to DTO
         t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+
+        HistoriaModelMapper historiaModelMapper = new HistoriaModelMapper();
+        // Define the target list type for mapping
+        Type organisaatioHistoyListType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
+
+        // Map domain type to DTO
+        t.setHistoria((List<OrganisaatioHistoriaRDTOV2>) organisaatioNimiModelMapper.map(s.getParentSuhteet(), organisaatioHistoyListType));
 
         // t.set(s.getNimiLyhenne());
         // t.set(s.getOpetuspisteenJarjNro());

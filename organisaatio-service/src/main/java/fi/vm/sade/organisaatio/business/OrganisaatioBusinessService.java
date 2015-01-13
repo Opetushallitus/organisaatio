@@ -18,38 +18,36 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+
+import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.List;
-import javax.validation.ValidationException;
 
 /**
- *
  * @author simok
  */
 public interface OrganisaatioBusinessService {
 
     /**
-     *
      * @param model
      * @param updating
      * @param skipParentDateValidation
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
-
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) throws ValidationException;
     /**
-     *
      * @param oid
      * @return
      */
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid);
 
     /**
-     *
      * @param oid
      * @param nimidto
      * @return
@@ -57,7 +55,6 @@ public interface OrganisaatioBusinessService {
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto);
 
     /**
-     *
      * @param oid
      * @param date
      * @param nimidto
@@ -66,7 +63,6 @@ public interface OrganisaatioBusinessService {
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto);
 
     /**
-     *
      * @param oid
      * @param date
      */
@@ -78,9 +74,39 @@ public interface OrganisaatioBusinessService {
     public void updateCurrentOrganisaatioNimet();
 
     /**
-     *
      * @param tiedot
      * @return
      */
     public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+
+    /**
+     * Checks all new organisation relations and updates necessarry changes to tree hierarchy.
+     *
+     * @return List of changed organisations.
+     */
+    public List<Organisaatio> processNewOrganisaatioSuhdeChanges();
+
+    /**
+     * Siirtää organisaatiota puussa toisen parentin alle
+     * @param organisaatio Siirrettävä organisaatio
+     * @param newParent Kohde organisaatio
+     * @param date Siirto pvm
+     */
+    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date);
+
+    /**
+     * Yhdistää kaksi organisaatiota
+     * @param self Siirrettävän organisaatio
+     * @param newParent Kohde organisaatio
+     * @param date Siirto pvm
+     */
+    public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+
+    /**
+     * Hakee organisaation menneet, olevat ja tulevat suhteet puussa ylöspäin.
+     * @param oid haettavan organisaation oid
+     * @return Lista suhteista
+     */
+    public List<OrganisaatioSuhde> getOrganisaatioHistoria(String oid);
+
 }

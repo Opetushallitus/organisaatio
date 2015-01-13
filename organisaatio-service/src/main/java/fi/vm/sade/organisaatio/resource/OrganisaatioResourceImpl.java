@@ -15,58 +15,61 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
-import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
-
-
-import fi.vm.sade.generic.common.I18N;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import fi.vm.sade.generic.common.I18N;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.koodisto.service.KoodiService;
+import fi.vm.sade.koodisto.service.KoodistoService;
+import fi.vm.sade.koodisto.service.types.SearchKoodisByKoodistoCriteriaType;
+import fi.vm.sade.koodisto.service.types.SearchKoodistosCriteriaType;
+import fi.vm.sade.koodisto.service.types.common.KoodiType;
+import fi.vm.sade.koodisto.service.types.common.KoodiUriAndVersioType;
+import fi.vm.sade.koodisto.service.types.common.KoodistoType;
+import fi.vm.sade.koodisto.service.types.common.SuhteenTyyppiType;
+import fi.vm.sade.koodisto.util.KoodiServiceSearchCriteriaBuilder;
+import fi.vm.sade.koodisto.util.KoodistoServiceSearchCriteriaBuilder;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
+import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
+import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
-import fi.vm.sade.organisaatio.model.OrganisaatioResult;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
-
-import org.apache.cxf.jaxrs.cors.CrossOriginResourceSharing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Antti Salonen
@@ -192,27 +195,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return "Well Hello! " + new Date();
     }
 
-    // GET /organisaatio?searchTerms=x&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
-    @Override
-    public List<String> search(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince) {
-        LOG.debug("search({}, {}, {}, {}, {})", new Object[]{searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince});
-
-        // Check the type spesified search
-        OrganisaatioTyyppi type = null;
-        if (searchTerms != null) {
-            for (OrganisaatioTyyppi organisaatioTyyppi : OrganisaatioTyyppi.values()) {
-                if (searchTerms.contains("type=" + organisaatioTyyppi.name())) {
-                    type = organisaatioTyyppi;
-                    break;
-                }
-            }
-        }
-
-        List<String> result = organisaatioDAO.findOidsBy(searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type);
-        LOG.debug("  result.size = {}", result.size());
-        return result;
-    }
-
     // GET /organisaatio/{oid}
     @Override
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid) {
@@ -238,7 +220,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
@@ -289,7 +271,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
