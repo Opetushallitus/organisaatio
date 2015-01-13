@@ -194,7 +194,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
         // Jätetään kuva pois, jos sitä ei haluta
-        if (o.getMetadata() != null) {
+        if (o!= null && o.getMetadata() != null) {
             o.getMetadata().setIncludeImage(includeImage);
         }
 
