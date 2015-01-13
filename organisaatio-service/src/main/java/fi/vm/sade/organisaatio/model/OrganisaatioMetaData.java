@@ -67,6 +67,8 @@ public class OrganisaatioMetaData extends BaseEntity {
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private BinaryData kuva;
 
+    @Transient private boolean includeImage = true;
+
     // Hakutoimisto
     @ManyToOne(cascade = CascadeType.ALL)
     private MonikielinenTeksti hakutoimistoNimi;
@@ -187,7 +189,7 @@ public class OrganisaatioMetaData extends BaseEntity {
         return getNimi() == null ? null : getNimi().getString(languageCode);
     }
 
-    
+
     //
     // Getters setters
     //
@@ -290,5 +292,19 @@ public class OrganisaatioMetaData extends BaseEntity {
 
     public void setMuokkausPvm(Date muokkausPvm) {
         this.muokkausPvm = muokkausPvm;
+    }
+
+    /**
+     * @return the includeImage
+     */
+    public boolean isIncludeImage() {
+        return includeImage;
+    }
+
+    /**
+     * @param includeImage the includeImage to set
+     */
+    public void setIncludeImage(boolean includeImage) {
+        this.includeImage = includeImage;
     }
 }

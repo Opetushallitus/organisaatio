@@ -444,9 +444,9 @@ var parentResult = {
 
         $httpBackend.expectGET(/v1\/localisation\/authorize\?noCache=.*/).respond(200, {});
 
-        $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.99999999999\?noCache=.*/).respond(organisaatioResult);
+        $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.99999999999\?includeImage=true&noCache=.*/).respond(organisaatioResult);
 
-        $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.11111111111\?noCache=.*/).respond(parentResult);
+        $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.11111111111\?includeImage=true&noCache=.*/).respond(parentResult);
 
         $httpBackend.expectGET(/organisaatio\/v2\/hierarkia\/hae\?noCache=.*&aktiiviset=true&lakkautetut=true&oidRestrictionList=1.2.246.562.10.99999999999&suunnitellut=true/).respond("{}");
 

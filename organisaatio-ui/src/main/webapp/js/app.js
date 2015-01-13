@@ -307,7 +307,7 @@ app.factory('NoCacheInterceptor', function() {
 // Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/:oid", {oid: "@oid"}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/:oid?includeImage=true", {oid: "@oid"}, {
         get: {method:   "GET"},
         post:{method:   "POST"},
         delete:{method: "DELETE"}

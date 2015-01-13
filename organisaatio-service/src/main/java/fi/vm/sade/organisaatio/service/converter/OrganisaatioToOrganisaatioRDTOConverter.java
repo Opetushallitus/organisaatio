@@ -234,7 +234,11 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setHakutoimistoEctsTehtavanimike(convertMKTToMap(s.getHakutoimistoEctsTehtavanimike()));
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
-        t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
+
+        // Otetaan kuva mukaan vain "pyydettäessä"
+        if (s.isIncludeImage()) {
+            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
+        }
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));

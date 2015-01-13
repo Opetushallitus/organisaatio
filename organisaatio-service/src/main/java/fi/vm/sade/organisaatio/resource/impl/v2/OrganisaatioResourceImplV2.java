@@ -414,7 +414,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
 
     @Override
-    public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince) {
+    public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
 
         Preconditions.checkNotNull(lastModifiedSince);
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
@@ -427,6 +427,11 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         List<OrganisaatioRDTO> results = new ArrayList<>();
 
         for (Organisaatio org : organisaatiot) {
+            // Jätetään kuva pois, jos sitä ei haluta
+            if (org.getMetadata() != null) {
+                org.getMetadata().setIncludeImage(includeImage);
+            }
+
             OrganisaatioRDTO result = conversionService.convert(org, OrganisaatioRDTO.class);
             results.add(result);
         }

@@ -81,13 +81,13 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         assertChildCountFromIndex(parentOid, 0);
 
         // Change parent from root -> root2
-        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3");
+        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
         node2foo.setParentOid(parentOid);
         ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
         Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
         LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
 
-        List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid());
+        List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
         Assert.assertEquals("Children count should match!", 2, children.size());
         for (OrganisaatioRDTO child : children) {
             LOG.info("Child oid path: {}, id path: {}", child.getParentOidPath());

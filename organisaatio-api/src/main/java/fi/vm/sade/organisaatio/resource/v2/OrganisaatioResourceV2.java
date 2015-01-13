@@ -284,7 +284,9 @@ public interface OrganisaatioResourceV2 {
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioRDTO.class)
-    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
+            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
 
     @GET
     @Path("/{oid}/historia")
