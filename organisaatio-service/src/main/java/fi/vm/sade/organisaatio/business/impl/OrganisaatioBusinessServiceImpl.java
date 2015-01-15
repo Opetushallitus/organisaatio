@@ -411,9 +411,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitä tiedot koodistoon.
-        String info = updateKoodisto(entity, true);
+        organisaatioKoodisto.updateKoodistoAsync(entity.getOid(), true);
 
-        return new OrganisaatioResult(entity, info);
+        return new OrganisaatioResult(entity, null);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
@@ -618,10 +618,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private String updateKoodisto(Organisaatio entity, boolean reauthorize) {
-        return organisaatioKoodisto.paivitaKoodisto(entity, reauthorize);
-    }
-
     private void createParentPath(Organisaatio entity, String parentOid) {
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
@@ -741,7 +737,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                 }
                 if (childChanged == true) {
-                    updateKoodisto(child, false);
+                    organisaatioKoodisto.updateKoodistoAsync(child.getOid(), false);
                 }
             }
             if (childrenChanged == true) {
@@ -954,7 +950,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
-                    updateKoodisto(org, false);
+                    organisaatioKoodisto.updateKoodistoAsync(org.getOid(), false);
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);
@@ -1110,7 +1106,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             // Päivitetään tiedot koodistoon.
-            String info = updateKoodisto(organisaatio, true);
+            organisaatioKoodisto.updateKoodistoAsync(organisaatio.getOid(), true);
         }
     }
 
