@@ -53,14 +53,14 @@ public class OrganisaatioSuhde extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Organisaatio child;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date alkuPvm;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date loppuPvm;
-    
+
     private String opetuspisteenJarjNro;
-    
+
 
     public String getOpetuspisteenJarjNro() {
         return opetuspisteenJarjNro;

@@ -276,21 +276,10 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
             return new ArrayList<>();
         }
 
-        Calendar from = Calendar.getInstance();
-        from.setTime(day);
-        Calendar to = Calendar.getInstance();
-        to.setTime(day);
-
-        zeroTime(from);
-        zeroTime(to);
-
-        to.add(Calendar.DAY_OF_MONTH, 1);
-        to.add(Calendar.SECOND, -1);
-
         QOrganisaatioSuhde organisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         JPAQuery query = new JPAQuery(getEntityManager())
                 .from(organisaatioSuhde)
-                .where(organisaatioSuhde.alkuPvm.between(from.getTime(), to.getTime()))
+                .where(organisaatioSuhde.alkuPvm.eq(day))
                 .orderBy(organisaatioSuhde.alkuPvm.asc());
         return query.list(organisaatioSuhde);
     }
