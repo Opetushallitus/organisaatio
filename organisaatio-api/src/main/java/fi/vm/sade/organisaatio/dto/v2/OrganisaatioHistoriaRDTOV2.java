@@ -20,7 +20,10 @@ import java.util.Date;
 
 public class OrganisaatioHistoriaRDTOV2 {
     private String childOid;
+    private String parentOid;
     private Date alkuPvm;
+    private Date loppuPvm;
+    private String suhdeTyyppi;
 
     public Date getAlkuPvm() {
         return alkuPvm;
@@ -36,5 +39,47 @@ public class OrganisaatioHistoriaRDTOV2 {
 
     public void setChildOid(String childOid) {
         this.childOid = childOid;
+    }
+
+    /**
+     * @return the parentOid
+     */
+    public String getParentOid() {
+        return parentOid;
+    }
+
+    /**
+     * @param parentOid the parentOid to set
+     */
+    public void setParentOid(String parentOid) {
+        this.parentOid = parentOid;
+    }
+
+    /**
+     * @return the loppuPvm
+     */
+    public Date getLoppuPvm() {
+        return loppuPvm;
+    }
+
+    /**
+     * @param loppuPvm the loppuPvm to set
+     */
+    public void setLoppuPvm(Date loppuPvm) {
+        this.loppuPvm = loppuPvm;
+    }
+
+    /**
+     * @return the suhdeTyyppi
+     */
+    public String getSuhdeTyyppi() {
+        return suhdeTyyppi;
+    }
+
+    /**
+     * @param suhdeTyyppi the suhdeTyyppi to set
+     */
+    public void setSuhdeTyyppi(String suhdeTyyppi) {
+        this.suhdeTyyppi = suhdeTyyppi;
     }
 }
