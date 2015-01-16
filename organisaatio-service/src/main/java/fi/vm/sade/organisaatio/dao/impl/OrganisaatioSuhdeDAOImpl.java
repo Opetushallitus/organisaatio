@@ -93,7 +93,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
 
         // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
         Date currentTimeStamp = new Date();
-        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+        if (atTime == null) {
             atTime = currentTimeStamp;
         }
 
@@ -102,7 +102,6 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
-        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(alkuExpression).and(loppuExpression);
@@ -132,7 +131,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
 
         // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
         Date currentTimeStamp = new Date();
-        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+        if (atTime == null) {
             atTime = currentTimeStamp;
         }
 
@@ -141,7 +140,6 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
-        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(alkuExpression).and(loppuExpression);
