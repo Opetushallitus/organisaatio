@@ -26,6 +26,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioMoveException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
@@ -472,22 +473,22 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
         Organisaatio newParent = organisaatioDAO.findByOid(newParentOid);
 
-        if (organisaatio == null || newParent == null) {
-            return;
+        if (organisaatio == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+        if (newParent == null) {
+            throw new OrganisaatioNotFoundException(newParentOid);
         }
 
-        //kun kaksi koulutustoimijaa yhdistyy
+        // Liitetäänkö organisaatio vai siirretäänkö organisaatio
         if (merge) {
-            if (!organisaatio.getTyypit().containsAll(newParent.getTyypit())) {
-                throw new OrganisaatioMoveException("organisation.move.merge.level");
-            }
+            // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
             organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
-            return;
         }
-
-        //oppilaitoksen siirto
-        checker.checkOrganisaatioHierarchy(organisaatio, newParentOid);
-        organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+        else {
+            // Oppilaitos siirtyy toisen organisaation alle
+            organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+        }
     }
 
     @Override

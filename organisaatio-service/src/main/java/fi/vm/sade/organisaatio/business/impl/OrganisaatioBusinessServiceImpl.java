@@ -1013,8 +1013,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date) {
+        // Organisaatiota ei saa liittää itseensä
+        if (organisaatio.getOid().equals(newParent.getOid())) {
+            throw new OrganisaatioMoveException("organisation.move.merge.self");
+        }
+
+        // Organisaatiota ei saa yhdistää eri organisaatiotasolla olevaan organisaatioon
+        if (!organisaatio.getTyypit().containsAll(newParent.getTyypit())) {
+            throw new OrganisaatioMoveException("organisation.move.merge.level");
+        }
+
+        // Organisaatiota ei saa yhdistää lakkautettuun tai poistettuun organisaatioon
+        if (newParent.isOrganisaatioPoistettu() != false || OrganisaatioUtil.isPassive(newParent)) {
+            throw new OrganisaatioMoveException("organisation.move.merge.parent.invalid");
+        }
+
         final List<OrganisaatioSuhde> suhteet = organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
 
+        // Lakkautetaan yhdistyvä organisaatio
         Calendar previousDay = Calendar.getInstance();
         previousDay.setTime(date);
         previousDay.add(Calendar.DAY_OF_MONTH, -1);
@@ -1026,9 +1042,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             return;
         }
 
+        // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
-            // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
             if (OrganisaatioUtil.isPassive(child) == false) {
                 changeOrganizationParent(child, newParent, date,
                         OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
@@ -1037,6 +1053,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void changeOrganizationParent(Organisaatio organisaatio, Organisaatio newParent, Date date, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+        // Organisaatiota ei saa siirtää nykyisen parentin alle
+        if (organisaatio.getParent().getOid().equals(newParent.getOid())) {
+            throw new OrganisaatioMoveException("organisation.move.parent.invalid");
+        }
+
+        // Organisaatiota ei saa siirtää väärällä hierarkiatasolla olevaan organisaatioon
+        checker.checkParentChildHierarchy(organisaatio, newParent);
+
+        // Organisaatiota ei saa siirtää lakkautettuun tai poistettuun organisaatioon
+        if (newParent.isOrganisaatioPoistettu() != false || OrganisaatioUtil.isPassive(newParent)) {
+            throw new OrganisaatioMoveException("organisation.move.parent.invalid");
+        }
+
+
         OrganisaatioSuhde currentParentRelationship = organisaatioSuhdeDAO.findParentTo(organisaatio.getId(), null);
         currentParentRelationship.setLoppuPvm(date);
         organisaatioSuhdeDAO.update(currentParentRelationship);

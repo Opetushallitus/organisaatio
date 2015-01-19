@@ -203,6 +203,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             }
         }
 
+        // lastModifiedBefore ja lastModifiedSince jätetään pois --> muutetut organisaatiot rajapinta palauttaa nuo
         List<String> result = organisaatioFindBusinessService.findOidsBy(searchTerms, count, startIndex, type);
         LOG.debug("  result.size = {}", result.size());
         return result;
