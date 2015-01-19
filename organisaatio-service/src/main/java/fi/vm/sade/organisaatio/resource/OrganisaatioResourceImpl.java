@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.generic.common.I18N;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
@@ -202,7 +203,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             }
         }
 
-        List<String> result = organisaatioDAO.findOidsBy(searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type);
+        List<String> result = organisaatioFindBusinessService.findOidsBy(searchTerms, count, startIndex, type);
         LOG.debug("  result.size = {}", result.size());
         return result;
     }

@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -75,5 +76,11 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             o = organisaatioDAO.findByToimipistekoodi(id);
         }
         return o;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
+        return organisaatioDAO.findOidsBy(searchTerms, count, startIndex, type);
     }
 }

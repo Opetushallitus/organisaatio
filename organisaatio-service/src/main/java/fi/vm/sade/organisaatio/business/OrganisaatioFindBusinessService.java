@@ -15,7 +15,9 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,4 +67,13 @@ public interface OrganisaatioFindBusinessService {
      */
     public List<Organisaatio> findGroups();
 
+    /**
+     * Haetaan kannasta organiasaatioiden oidit listana.
+     * @param searchTerms
+     * @param count Lukumäärä
+     * @param startIndex Aloitusindeksi
+     * @param type Haettava organisaatiotyyppi
+     * @return Organisaatioiden oid:t
+     */
+    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type);
 }

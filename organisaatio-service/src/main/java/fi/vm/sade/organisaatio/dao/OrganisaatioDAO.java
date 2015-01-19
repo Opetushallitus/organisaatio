@@ -119,12 +119,10 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param searchTerms
      * @param count
      * @param startIndex
-     * @param lastModifiedBefore
-     * @param lastModifiedSince
-     * @parem type Organisation type
+     * @param type
      * @return
      */
-    List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type);
+    List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type);
 
     Organisaatio findByVirastoTunnus(String oid);
 
