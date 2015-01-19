@@ -186,6 +186,27 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return "Well Hello! " + new Date();
     }
 
+    // GET /organisaatio?searchTerms=x&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
+    @Override
+    public List<String> search(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince) {
+        LOG.debug("search({}, {}, {}, {}, {})", new Object[]{searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince});
+
+        // Check the type spesified search
+        OrganisaatioTyyppi type = null;
+        if (searchTerms != null) {
+            for (OrganisaatioTyyppi organisaatioTyyppi : OrganisaatioTyyppi.values()) {
+                if (searchTerms.contains("type=" + organisaatioTyyppi.name())) {
+                    type = organisaatioTyyppi;
+                    break;
+                }
+            }
+        }
+
+        List<String> result = organisaatioDAO.findOidsBy(searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type);
+        LOG.debug("  result.size = {}", result.size());
+        return result;
+    }
+
     // GET /organisaatio/{oid}
     @Override
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid, boolean includeImage) {
