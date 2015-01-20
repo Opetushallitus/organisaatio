@@ -269,6 +269,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return getDecodedLocalizedValue(res, prefix, suffix, create, language);
         };
 
+        this.getLocalizedValueWithProperty = function (property) {
+            return function(entry) {
+                return getLocalizedValue(entry[property]);
+            };
+        };
+
         this.getLocalizedValue = function (entry) {
             if (LocalisationService.getLocale() in entry &&
                     entry[LocalisationService.getLocale()]) {
@@ -286,7 +292,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 return entry.en;
             }
             return "--";
-        },
+        };
 
 
         this.setNimet = function() {

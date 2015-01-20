@@ -44,7 +44,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.organisaatio.historia.childSuhteet | orderBy:['model.getLocalizedValue(childNimi)', 'alkuPvm']">
+    <tr ng-repeat="entry in model.organisaatio.historia.childSuhteet | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
         <td>{{entry.alkuPvm}}</td>
         <td>{{entry.loppuPvm}}</td>
         <td>
