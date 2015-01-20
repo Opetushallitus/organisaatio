@@ -16,11 +16,16 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
 import java.util.Date;
+import java.util.Map;
 
 
 public class OrganisaatioHistoriaRDTOV2 {
     private String childOid;
     private String parentOid;
+
+    private Map<String, String> childNimi;
+    private Map<String, String> parentNimi;
+
     private Date alkuPvm;
     private Date loppuPvm;
     private String suhdeTyyppi;
@@ -81,5 +86,33 @@ public class OrganisaatioHistoriaRDTOV2 {
      */
     public void setSuhdeTyyppi(String suhdeTyyppi) {
         this.suhdeTyyppi = suhdeTyyppi;
+    }
+
+    /**
+     * @return the childNimi
+     */
+    public Map<String, String> getChildNimi() {
+        return childNimi;
+    }
+
+    /**
+     * @param childNimi the childNimi to set
+     */
+    public void setChildNimi(Map<String, String> childNimi) {
+        this.childNimi = childNimi;
+    }
+
+    /**
+     * @return the parentNimi
+     */
+    public Map<String, String> getParentNimi() {
+        return parentNimi;
+    }
+
+    /**
+     * @param parentNimi the parentNimi to set
+     */
+    public void setParentNimi(Map<String, String> parentNimi) {
+        this.parentNimi = parentNimi;
     }
 }

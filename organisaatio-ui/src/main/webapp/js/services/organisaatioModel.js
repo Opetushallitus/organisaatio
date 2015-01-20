@@ -28,7 +28,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           KoodistoPaikkakunta, HenkiloVirkailijat,
                                           Henkilo, HenkiloKayttooikeus,
                                           KoodistoKieli, Yhteystietojentyyppi,
-                                          Paivittaja, NimiHistoriaModel) {
+                                          Paivittaja, NimiHistoriaModel,
+                                          LocalisationService) {
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
@@ -267,6 +268,26 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         this.getDecodedLocalizedValue= function(res, prefix, suffix, create, language) {
             return getDecodedLocalizedValue(res, prefix, suffix, create, language);
         };
+
+        this.getLocalizedValue = function (entry) {
+            if (LocalisationService.getLocale() in entry &&
+                    entry[LocalisationService.getLocale()]) {
+                return entry[LocalisationService.getLocale()];
+            }
+
+            // Ei löytynyt nimeä käyttäjän kielellä, kokeillaan muut vaihtoehdot
+            if ('fi' in entry && entry.fi) {
+                return entry.fi;
+            }
+            if ('sv' in entry && entry.sv) {
+                return entry.sv;
+            }
+            if ('en' in entry && entry.en) {
+                return entry.en;
+            }
+            return "--";
+        },
+
 
         this.setNimet = function() {
             $log.log('setNimet()');

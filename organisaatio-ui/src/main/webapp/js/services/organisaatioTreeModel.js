@@ -15,7 +15,7 @@
  */
 
 app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
-                                              Alert, Organisaatiot) {
+                                              Alert, Organisaatiot, LocalisationService) {
 // organisaatiot[]
 //     {
 //        "oid" : "1.2.246.562.10.71103955986",
@@ -182,7 +182,12 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
         },
 
         getNimi: function (node) {
-            // TODO: Jos käyttäjän kieli muu kuin suomi --> valitaan oikea kieliversio
+            if (LocalisationService.getLocale() in node.nimi &&
+                    node.nimi[LocalisationService.getLocale()]) {
+                return node.nimi[LocalisationService.getLocale()];
+            }
+
+            // Ei löytynyt nimeä käyttäjän kielellä, kokeillaan muut vaihtoehdot
             if ('fi' in node.nimi && node.nimi.fi) {
                 return node.nimi.fi;
             }

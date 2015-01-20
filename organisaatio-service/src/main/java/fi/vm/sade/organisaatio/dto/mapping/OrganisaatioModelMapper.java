@@ -83,7 +83,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 List<Www> wwwOsoitteet = YhteystietoUtil.getWwwOsoitteet(mc.getSource());
 
                 // Tehdään map, jossa avaimena kieli ja arvone www osoite
-                Map<String, String> wwwOsoiteMap = new HashMap<String, String>();
+                Map<String, String> wwwOsoiteMap = new HashMap<>();
 
                 for (Www www : wwwOsoitteet) {
                     wwwOsoiteMap.put(www.getKieli(), www.getWwwOsoite());
@@ -100,7 +100,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 List<Email> emailOsoitteet = YhteystietoUtil.getEmailOsoitteet(mc.getSource());
 
                 // Tehdään map, jossa avaimena kieli ja arvona email osoite
-                Map<String, String> emailOsoiteMap = new HashMap<String, String>();
+                Map<String, String> emailOsoiteMap = new HashMap<>();
 
                 for (Email email : emailOsoitteet) {
                     emailOsoiteMap.put(email.getKieli(), email.getEmail());
@@ -117,7 +117,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 List<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
 
                 // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
-                Map<String, String> puhelinnumeroMap = new HashMap<String, String>();
+                Map<String, String> puhelinnumeroMap = new HashMap<>();
 
                 for (Puhelinnumero numero : puhelinnumerot) {
                     puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
@@ -134,7 +134,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 List<Puhelinnumero> faksinumerot = YhteystietoUtil.getFaksinumerot(mc.getSource());
 
                 // Tehdään map, jossa avaimena kieli ja arvone faksinumero
-                Map<String, String> faksinumeroMap = new HashMap<String, String>();
+                Map<String, String> faksinumeroMap = new HashMap<>();
 
                 for (Puhelinnumero numero : faksinumerot) {
                     faksinumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());

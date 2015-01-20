@@ -74,7 +74,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         Type organisaatioHistoyListType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
 
         // Map domain type to DTO
-        t.setHistoria((List<OrganisaatioHistoriaRDTOV2>) organisaatioNimiModelMapper.map(s.getParentSuhteet(), organisaatioHistoyListType));
+        t.setHistoria((List<OrganisaatioHistoriaRDTOV2>) historiaModelMapper.map(s.getParentSuhteet(), organisaatioHistoyListType));
 
         // t.set(s.getNimiLyhenne());
         // t.set(s.getOpetuspisteenJarjNro());

@@ -14,13 +14,20 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 <table class="table table-striped">
-    <thead><tr><th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th></tr></thead>
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.histori.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th>
+        </tr>
+    </thead>
     <tbody>
     <tr ng-repeat="entry in model.organisaatio.historia | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm}}</td>
+        <td>{{entry.loppuPvm}}</td>
         <td>
             <span>
-                    {{entry.childOid}}
+                <a href='#/organisaatiot/{{entry.parentOid}}'>{{model.getLocalizedValue(entry.parentNimi)}}</a>
             </span>
         </td>
     </tr>
