@@ -13,6 +13,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -22,12 +23,33 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.organisaatio.historia | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.organisaatio.historia.parentSuhteet | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm}}</td>
         <td>{{entry.loppuPvm}}</td>
         <td>
             <span>
                 <a href='#/organisaatiot/{{entry.parentOid}}'>{{model.getLocalizedValue(entry.parentNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.histori.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.lapset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.organisaatio.historia.childSuhteet | orderBy:['model.getLocalizedValue(childNimi)', 'alkuPvm']">
+        <td>{{entry.alkuPvm}}</td>
+        <td>{{entry.loppuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.childOid}}'>{{model.getLocalizedValue(entry.childNimi)}}</a>
             </span>
         </td>
     </tr>

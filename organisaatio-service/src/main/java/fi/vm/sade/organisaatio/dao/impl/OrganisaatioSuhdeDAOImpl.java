@@ -212,7 +212,8 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      * @return created relation
      */
     @Override
-    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
+    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom,
+            String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
         LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
 
         if (parentId == null || childId == null) {

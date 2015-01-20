@@ -67,7 +67,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     private List<OrganisaatioNimiRDTO> _nimet;
 
-    private List<OrganisaatioHistoriaRDTOV2> _historia;
+    private OrganisaatioHistoriaRDTOV2 _historia;
 
     private String _maaUri;
 
@@ -224,14 +224,11 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Organisaation historia", required = true)
-    public List<OrganisaatioHistoriaRDTOV2> getHistoria() {
-         if (_historia == null) {
-             _historia = new ArrayList<OrganisaatioHistoriaRDTOV2>();
-        }
+    public OrganisaatioHistoriaRDTOV2 getHistoria() {
         return _historia;
     }
 
-    public void setHistoria(List<OrganisaatioHistoriaRDTOV2> _historia) {
+    public void setHistoria(OrganisaatioHistoriaRDTOV2 _historia) {
         this._historia = _historia;
     }
 

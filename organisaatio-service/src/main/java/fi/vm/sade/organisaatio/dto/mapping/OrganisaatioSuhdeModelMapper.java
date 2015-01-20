@@ -15,16 +15,16 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHistoriaRDTOV2;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSuhdeDTOV2;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
-public class HistoriaModelMapper extends ModelMapper {
+public class OrganisaatioSuhdeModelMapper extends ModelMapper {
 
-    public HistoriaModelMapper() {
+    public OrganisaatioSuhdeModelMapper() {
         super();
-        this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioHistoriaRDTOV2>() {
+        this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioSuhdeDTOV2>() {
             @Override
             protected void configure() {
                 // Monikielinen nimi

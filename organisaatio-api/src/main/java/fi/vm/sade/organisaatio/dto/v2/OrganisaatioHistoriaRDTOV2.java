@@ -15,104 +15,40 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OrganisaatioHistoriaRDTOV2 {
-    private String childOid;
-    private String parentOid;
+    private List<OrganisaatioSuhdeDTOV2> childSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
+    private List<OrganisaatioSuhdeDTOV2> parentSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
 
-    private Map<String, String> childNimi;
-    private Map<String, String> parentNimi;
-
-    private Date alkuPvm;
-    private Date loppuPvm;
-    private String suhdeTyyppi;
-
-    public Date getAlkuPvm() {
-        return alkuPvm;
-    }
-
-    public void setAlkuPvm(Date alkuPvm) {
-        this.alkuPvm = alkuPvm;
-    }
-
-    public String getChildOid() {
-        return childOid;
-    }
-
-    public void setChildOid(String childOid) {
-        this.childOid = childOid;
+    /**
+     * @return the childSuhteet
+     */
+    public List<OrganisaatioSuhdeDTOV2> getChildSuhteet() {
+        return childSuhteet;
     }
 
     /**
-     * @return the parentOid
+     * @param childSuhteet the childSuhteet to set
      */
-    public String getParentOid() {
-        return parentOid;
+    public void setChildSuhteet(List<OrganisaatioSuhdeDTOV2> childSuhteet) {
+        this.childSuhteet = childSuhteet;
     }
 
     /**
-     * @param parentOid the parentOid to set
+     * @return the parentSuhteet
      */
-    public void setParentOid(String parentOid) {
-        this.parentOid = parentOid;
+    public List<OrganisaatioSuhdeDTOV2> getParentSuhteet() {
+        return parentSuhteet;
     }
 
     /**
-     * @return the loppuPvm
+     * @param parentSuhteet the parentSuhteet to set
      */
-    public Date getLoppuPvm() {
-        return loppuPvm;
+    public void setParentSuhteet(List<OrganisaatioSuhdeDTOV2> parentSuhteet) {
+        this.parentSuhteet = parentSuhteet;
     }
 
-    /**
-     * @param loppuPvm the loppuPvm to set
-     */
-    public void setLoppuPvm(Date loppuPvm) {
-        this.loppuPvm = loppuPvm;
-    }
-
-    /**
-     * @return the suhdeTyyppi
-     */
-    public String getSuhdeTyyppi() {
-        return suhdeTyyppi;
-    }
-
-    /**
-     * @param suhdeTyyppi the suhdeTyyppi to set
-     */
-    public void setSuhdeTyyppi(String suhdeTyyppi) {
-        this.suhdeTyyppi = suhdeTyyppi;
-    }
-
-    /**
-     * @return the childNimi
-     */
-    public Map<String, String> getChildNimi() {
-        return childNimi;
-    }
-
-    /**
-     * @param childNimi the childNimi to set
-     */
-    public void setChildNimi(Map<String, String> childNimi) {
-        this.childNimi = childNimi;
-    }
-
-    /**
-     * @return the parentNimi
-     */
-    public Map<String, String> getParentNimi() {
-        return parentNimi;
-    }
-
-    /**
-     * @param parentNimi the parentNimi to set
-     */
-    public void setParentNimi(Map<String, String> parentNimi) {
-        this.parentNimi = parentNimi;
-    }
 }

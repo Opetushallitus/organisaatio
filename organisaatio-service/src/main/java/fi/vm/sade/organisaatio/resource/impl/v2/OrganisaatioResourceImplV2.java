@@ -25,11 +25,10 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioMoveException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
@@ -80,7 +79,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired
-    private HistoriaModelMapper historiaModelMapper;
+    private OrganisaatioSuhdeModelMapper organisaatioSuhdeModelMapper;
 
     @Autowired
     private ConversionService conversionService;
@@ -493,13 +492,24 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(String oid) throws Exception {
+    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
 
-        List<OrganisaatioSuhde> historia = organisaatioBusinessService.getOrganisaatioHistoria(oid);
+        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
 
-        Type historiaType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
+        if (organisaatio == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
 
-        return historiaModelMapper.map(historia, historiaType);
+        OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
+
+        List<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet();
+        List<OrganisaatioSuhde> parentSuhteet = organisaatio.getParentSuhteet();
+        Type organisaatioSuhdeType = new TypeToken<List<OrganisaatioSuhdeDTOV2>>() {}.getType();
+
+        historia.setChildSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeType));
+        historia.setParentSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeType));
+
+        return historia;
     }
 }
