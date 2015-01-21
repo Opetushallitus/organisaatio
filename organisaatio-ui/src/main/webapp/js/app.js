@@ -314,6 +314,14 @@ app.factory('Organisaatio', function($resource) {
     });
 });
 
+// Organisaation historian haku
+// Esim: https://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.68986346941/historia
+app.factory('OrganisaatioHistoria', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
+        get: {method:   "GET"}
+    });
+});
+
 
 // Organisaation siiro puussa
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932/organisaatiosuhde

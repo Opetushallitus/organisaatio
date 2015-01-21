@@ -17,6 +17,7 @@
 app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           $q, $cookieStore, $injector,
                                           Organisaatio, Organisaatiot,
+                                          OrganisaatioHistoria,
                                           KoodistoSearchKoodis, KoodistoKoodi,
                                           KoodistoOrganisaatiotyypit,
                                           KoodistoOppilaitostyypit,
@@ -744,6 +745,16 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             function(response) {
                 // Päivittäjän haku ei onnistunut
                 showAndLogError("Organisaationtarkastelu.paivittajahakuvirhe", response);
+            });
+
+            model.historia = {};
+            OrganisaatioHistoria.get({oid: result.oid}, function(historia) {
+                model.historia = historia;
+            },
+            // Error case
+            function(response) {
+                // Historian haku ei onnistunut
+                showAndLogError("Organisaationtarkastelu.historiahakuvirhe", response);
             });
         };
 

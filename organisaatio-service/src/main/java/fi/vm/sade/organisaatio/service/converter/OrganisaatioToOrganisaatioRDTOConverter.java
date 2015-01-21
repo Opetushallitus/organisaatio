@@ -15,9 +15,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
-import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHistoriaRDTOV2;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
@@ -68,16 +66,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         // Map domain type to DTO
         t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
-
-        OrganisaatioSuhdeModelMapper organisaatioSuhdeModelMapper = new OrganisaatioSuhdeModelMapper();
-        // Define the target list type for mapping
-        Type organisaatioSuhdeType = new TypeToken<List<OrganisaatioSuhdeDTOV2>>() {}.getType();
-
-        // Map domain type to DTO
-        OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
-        historia.setChildSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(s.getChildSuhteet(), organisaatioSuhdeType));
-        historia.setParentSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(s.getParentSuhteet(), organisaatioSuhdeType));
-        t.setHistoria(historia);
 
         t.setOppilaitosKoodi(s.getOppilaitosKoodi());
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
