@@ -14,11 +14,49 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 
+<table ng-if="model.historia.liitokset.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.liitokset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.historia.liitokset | orderBy:'alkuPvm'">
+        <td>{{entry.alkuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.organisaatioOid}}'>{{model.getLocalizedValue(entry.organisaatioNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<table ng-if="model.historia.liittymiset.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.liittymiset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.historia.liittymiset | orderBy:'alkuPvm'">
+        <td>{{entry.alkuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.kohdeOid}}'>{{model.getLocalizedValue(entry.kohdeNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 <table ng-if="model.isOPHParent() === false" class="table table-striped" >
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.histori.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
             <th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th>
         </tr>
     </thead>
@@ -38,8 +76,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <table ng-if="model.historia.childSuhteet.length > 0" class="table table-striped">
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.histori.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
             <th>{{'Organisaationtarkastelu.historia.lapset.nimi' | i18n}}</th>
         </tr>
     </thead>

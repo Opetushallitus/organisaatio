@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSuhdeDTOV2;
 
 /**
  *
