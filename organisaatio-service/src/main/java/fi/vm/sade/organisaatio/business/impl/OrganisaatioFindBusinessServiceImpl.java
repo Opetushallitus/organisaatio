@@ -17,7 +17,9 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.OrganisaatioLiitosDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioLiitos;
 
 import java.util.*;
 import org.slf4j.Logger;
@@ -38,6 +40,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
+
+    @Autowired
+    private OrganisaatioLiitosDAO organisaatioLiitosDAO;
 
     @Override
     @Transactional(readOnly = true)
@@ -82,5 +87,17 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
         return organisaatioDAO.findOidsBy(searchTerms, count, startIndex, type);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioLiitos> findLiitokset(Long kohdeId) {
+        return organisaatioLiitosDAO.findLiitokset(kohdeId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioLiitos> findLiittynyt(Long organisaatioId) {
+        return organisaatioLiitosDAO.findLiittynyt(organisaatioId);
     }
 }

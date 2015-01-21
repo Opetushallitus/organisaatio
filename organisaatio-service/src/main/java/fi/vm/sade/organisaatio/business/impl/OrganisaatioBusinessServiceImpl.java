@@ -71,6 +71,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
     @Autowired
+    private OrganisaatioLiitosDAO organisaatioLiitosDAO;
+
+    @Autowired
     protected YhteystietoArvoDAO yhteystietoArvoDAO;
 
     @Autowired
@@ -1037,6 +1040,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatio.setLakkautusPvm(previousDay.getTime());
         organisaatioDAO.update(organisaatio);
         solrIndexer.index(organisaatio);
+
+        organisaatioLiitosDAO.addLiitos(organisaatio.getId(), newParent.getId(), date);
 
         if (suhteet == null || suhteet.isEmpty()) {
             return;

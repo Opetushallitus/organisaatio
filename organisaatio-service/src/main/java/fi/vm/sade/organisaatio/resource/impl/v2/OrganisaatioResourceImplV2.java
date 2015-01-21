@@ -28,6 +28,7 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -80,6 +81,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
     @Autowired
     private OrganisaatioSuhdeModelMapper organisaatioSuhdeModelMapper;
+
+    @Autowired
+    private OrganisaatioLiitosModelMapper organisaatioLiitosModelMapper;
 
     @Autowired
     private ConversionService conversionService;
@@ -503,12 +507,21 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
 
+        // Haetaan organisaatiosuhteet
         List<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet();
         List<OrganisaatioSuhde> parentSuhteet = organisaatio.getParentSuhteet();
         Type organisaatioSuhdeType = new TypeToken<List<OrganisaatioSuhdeDTOV2>>() {}.getType();
 
         historia.setChildSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeType));
         historia.setParentSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeType));
+
+        // Haetaan organisaation liitokset
+        List<OrganisaatioLiitos> liitokset = organisaatioFindBusinessService.findLiitokset(organisaatio.getId());
+        List<OrganisaatioLiitos> liittynyt = organisaatioFindBusinessService.findLiittynyt(organisaatio.getId());
+        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+
+        historia.setLiitokset((List<OrganisaatioLiitosDTOV2>) organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType));
+        historia.setLiittymiset((List<OrganisaatioLiitosDTOV2>) organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosType));
 
         return historia;
     }

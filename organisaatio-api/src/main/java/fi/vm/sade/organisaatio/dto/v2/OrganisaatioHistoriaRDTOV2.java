@@ -22,6 +22,8 @@ import java.util.List;
 public class OrganisaatioHistoriaRDTOV2 {
     private List<OrganisaatioSuhdeDTOV2> childSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
     private List<OrganisaatioSuhdeDTOV2> parentSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
+    private List<OrganisaatioLiitosDTOV2> liitokset = new ArrayList<OrganisaatioLiitosDTOV2>();
+    private List<OrganisaatioLiitosDTOV2> liittymiset = new ArrayList<OrganisaatioLiitosDTOV2>();
 
     /**
      * @return the childSuhteet
@@ -49,6 +51,34 @@ public class OrganisaatioHistoriaRDTOV2 {
      */
     public void setParentSuhteet(List<OrganisaatioSuhdeDTOV2> parentSuhteet) {
         this.parentSuhteet = parentSuhteet;
+    }
+
+    /**
+     * @return the liitokset
+     */
+    public List<OrganisaatioLiitosDTOV2> getLiitokset() {
+        return liitokset;
+    }
+
+    /**
+     * @param liitokset the liitokset to set
+     */
+    public void setLiitokset(List<OrganisaatioLiitosDTOV2> liitokset) {
+        this.liitokset = liitokset;
+    }
+
+    /**
+     * @return the liittymiset
+     */
+    public List<OrganisaatioLiitosDTOV2> getLiittymiset() {
+        return liittymiset;
+    }
+
+    /**
+     * @param liittymiset the liittymiset to set
+     */
+    public void setLiittymiset(List<OrganisaatioLiitosDTOV2> liittymiset) {
+        this.liittymiset = liittymiset;
     }
 
 }
