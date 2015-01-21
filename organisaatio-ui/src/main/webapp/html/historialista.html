@@ -14,7 +14,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 
-<table class="table table-striped">
+<table ng-if="model.isOPHParent() === false" class="table table-striped" >
     <thead>
         <tr>
             <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>
@@ -35,7 +35,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </tbody>
 </table>
 
-<table class="table table-striped">
+<table ng-if="model.organisaatio.historia.childSuhteet.length > 0" class="table table-striped">
     <thead>
         <tr>
             <th>{{'Organisaationtarkastelu.histori.alkupvm' | i18n }}</th>

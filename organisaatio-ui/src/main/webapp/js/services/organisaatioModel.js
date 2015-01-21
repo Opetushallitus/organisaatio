@@ -1734,6 +1734,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return false;
         };
 
+        this.isOPHParent = function() {
+            if (model.organisaatio.parentOid === ROOT_ORGANISAATIO_OID) {
+                return true;
+            }
+            return false;
+        };
+
         this.isOppilaitos = function() {
             if (model.organisaatio.tyypit) {
                 return model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1;
