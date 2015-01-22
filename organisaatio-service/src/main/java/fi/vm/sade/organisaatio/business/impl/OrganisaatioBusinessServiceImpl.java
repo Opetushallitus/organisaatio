@@ -49,7 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
@@ -1071,13 +1070,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioMoveException("organisation.move.parent.invalid");
         }
 
-
         OrganisaatioSuhde currentParentRelationship = organisaatioSuhdeDAO.findParentTo(organisaatio.getId(), null);
         currentParentRelationship.setLoppuPvm(date);
         organisaatioSuhdeDAO.update(currentParentRelationship);
-        organisaatioSuhdeDAO.addChild(newParent.getId(), organisaatio.getId(), date, generateOpetuspisteenJarjNro(newParent, newParent.getTyypit()), tyyppi);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        // Luodaan uusi suhde
+        // HUOM! Tässä pitää laittaa organisaatiosuhde "organisaation kautta --> näin parent laskenta pysyy mukana"
+        OrganisaatioSuhde parentRelation = new OrganisaatioSuhde();
+        parentRelation.setSuhdeTyyppi(tyyppi);
+        parentRelation.setAlkuPvm(date);
+        parentRelation.setLoppuPvm(null);
+        parentRelation.setChild(organisaatio);
+        parentRelation.setParent(newParent);
+        parentRelation.setOpetuspisteenJarjNro(generateOpetuspisteenJarjNro(newParent, newParent.getTyypit()));
+
+        organisaatio.getParentSuhteet().add(parentRelation);
 
         //update relationships and names if given date is today or before
         Date today = new Date();
