@@ -15,7 +15,10 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioLiitos;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,4 +68,30 @@ public interface OrganisaatioFindBusinessService {
      */
     public List<Organisaatio> findGroups();
 
+    /**
+     * Haetaan kannasta organiasaatioiden oidit listana.
+     * @param searchTerms
+     * @param count Lukumäärä
+     * @param startIndex Aloitusindeksi
+     * @param type Haettava organisaatiotyyppi
+     * @return Organisaatioiden oid:t
+     */
+    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type);
+
+    /**
+     * Etsitään annettuun organisaation liittyneet organisaatiot (liitoksina).
+     *
+     * @param kohdeId Organisaatio, johon yhdistyneitä organisaatioita haetaan.
+     * @return Annettuun kohteeseen tehdyt liitokset.
+     */
+    public List<OrganisaatioLiitos> findLiitokset(Long kohdeId);
+
+    /**
+     * Etsitään mihin organisaatioihin (todellisuudessa luultavasti 0 / 1),
+     * annettu organisaatio on liittynyt.
+     *
+     * @param organisaatioId Organisaatio, jonka liittymisiä toiseen / toisiin haetaan.
+     * @return Liitokset, joissa annettu organisaatio ollut liittyvänä.
+     */
+    List<OrganisaatioLiitos> findLiittynyt(Long organisaatioId);
 }

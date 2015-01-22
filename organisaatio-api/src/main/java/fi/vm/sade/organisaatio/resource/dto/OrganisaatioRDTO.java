@@ -16,7 +16,6 @@ package fi.vm.sade.organisaatio.resource.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHistoriaRDTOV2;
 
 import java.io.Serializable;
 import java.util.*;
@@ -67,7 +66,6 @@ public class OrganisaatioRDTO implements Serializable {
 
     private List<OrganisaatioNimiRDTO> _nimet;
 
-    private List<OrganisaatioHistoriaRDTOV2> _historia;
 
     private String _maaUri;
 
@@ -221,18 +219,6 @@ public class OrganisaatioRDTO implements Serializable {
 
     public void setNimet(List<OrganisaatioNimiRDTO> _nimet) {
         this._nimet = _nimet;
-    }
-
-    @ApiModelProperty(value = "Organisaation historia", required = true)
-    public List<OrganisaatioHistoriaRDTOV2> getHistoria() {
-         if (_historia == null) {
-             _historia = new ArrayList<OrganisaatioHistoriaRDTOV2>();
-        }
-        return _historia;
-    }
-
-    public void setHistoria(List<OrganisaatioHistoriaRDTOV2> _historia) {
-        this._historia = _historia;
     }
 
     @ApiModelProperty(value = "Oppilaitoksen koodi", required = true)

@@ -747,15 +747,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * @param searchTerms
      * @param count
      * @param startIndex
-     * @param lastModifiedBefore
-     * @param lastModifiedSince
-     * @param type Organisation type
+     * @param type
      * @return
      */
     @Override
-    public List<String> findOidsBy(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince, OrganisaatioTyyppi type) {
+    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
 
-        LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type});
+        LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, type});
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
         BooleanExpression whereExpr = org.organisaatioPoistettu.isFalse();
@@ -765,16 +763,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             // whereExpr = org.tyypit.contains(type.value());
             whereExpr.and(org.organisaatiotyypitStr.like("%" + type.value() + "%"));
         }
-
-// TODO org + lastmodified?
-//        if (lastModifiedBefore != null) {
-//            whereExpr = and(whereExpr, org.updated.before(lastModifiedBefore));
-//        }
-//
-//        if (lastModifiedSince != null) {
-//            whereExpr = and(whereExpr, org.updated.after(lastModifiedSince));
-//        }
-
 
         JPAQuery q = new JPAQuery(getEntityManager());
         q = q.from(org);

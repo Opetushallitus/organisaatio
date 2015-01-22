@@ -23,17 +23,12 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
     $scope.suggests = [];
     $scope.highestOrganization = false;
     $scope.oppilaitos = false;
-    $scope.valid = false;
 
 
     $scope.options = {
         newParentOrganization: null,
         merge: false,
         date: new Date()
-    };
-
-    $scope.select = function(item){
-        $scope.valid = true;
     };
 
     function updateSearch() {
@@ -52,13 +47,18 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
             organizationType = 'Koulutustoimija';
         }
 
-        var parametrit = {"searchstr": "", "aktiiviset": true, "suunnitellut": true, "organisaatiotyyppi": organizationType, "lakkautetut": false};
+        var parametrit = {"searchstr": "", "organisaatiotyyppi": organizationType,
+                          "aktiiviset": true, "suunnitellut": true, "lakkautetut": false};
         OrganisaatiotFlat.get(parametrit, function (result) {
             var values = result.organisaatiot.map(function (org) {
-                return {
-                    "name": org.nimi.fi,
-                    "oid": org.oid
-                };
+                // Tarkistetaan, ettei organisaatiota yritetä sulauttaa itseensä
+                // eikä siirtää jo olemassa olevan parentin alle.
+                if (org.oid !== node.oid && org.oid !== node.parentOid) {
+                    return {
+                        "name": org.nimi.fi,
+                        "oid": org.oid
+                    };
+                }
             });
             $scope.suggests = $scope.suggests.concat(values);
         }, function (error) {

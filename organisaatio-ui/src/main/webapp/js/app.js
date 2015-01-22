@@ -307,10 +307,18 @@ app.factory('NoCacheInterceptor', function() {
 // Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/:oid", {oid: "@oid"}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/:oid?includeImage=true", {oid: "@oid"}, {
         get: {method:   "GET"},
         post:{method:   "POST"},
         delete:{method: "DELETE"}
+    });
+});
+
+// Organisaation historian haku
+// Esim: https://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.68986346941/historia
+app.factory('OrganisaatioHistoria', function($resource) {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
+        get: {method:   "GET"}
     });
 });
 

@@ -129,13 +129,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     // @NotNull
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kielet = new ArrayList<String>();//Arrays.asList(new String[]{ModelConstants.ORGANISAATIO_DEFAULT_LANGUAGE});
+    private List<String> kielet = new ArrayList<String>();
 
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("id")
-    //@Cascade(value = org.hibernate.annotations.CascadeType.DELETE_ORPHAN) // TODO: kun JPA2: @OneToMany(..., orphanRemoval=true)
     private List<YhteystietoArvo> yhteystietoArvos = new ArrayList<YhteystietoArvo>();
 
     @Column(unique = true)
