@@ -37,6 +37,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PUT;
 
 /**
@@ -116,7 +117,9 @@ public interface OrganisaatioResource {
             response = OrganisaatioRDTO.class,
             responseContainer = "List")
     public List<OrganisaatioRDTO> children(
-            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage) throws Exception;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
@@ -128,7 +131,9 @@ public interface OrganisaatioResource {
             responseContainer = "List")
     public List<OrganisaatioRDTO> groups(
             @ApiParam(value = "Organisaation oid", required = true,
-                    defaultValue = "1.2.246.562.24.00000000001") @PathParam("oid") String oid) throws Exception;
+                    defaultValue = "1.2.246.562.24.00000000001") @PathParam("oid") String oid,
+            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage) throws Exception;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -160,7 +165,9 @@ public interface OrganisaatioResource {
             response = OrganisaatioRDTO.class)
     public OrganisaatioRDTO getOrganisaatioByOID(
             @ApiParam(value = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.",
-                    required = true) @PathParam("id") String oid);
+                    required = true) @PathParam("id") String oid,
+            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
 
     @POST
     @Path("/{oid}")

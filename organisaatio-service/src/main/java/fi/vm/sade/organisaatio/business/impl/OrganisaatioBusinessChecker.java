@@ -152,6 +152,16 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
+    public void checkParentChildHierarchy(Organisaatio organisaatio, Organisaatio parentOrg) {
+        LOG.debug("checkParentChildHierarchy()");
+
+        final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
+
+        if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio)) == false) {
+            throw new OrganisaatioHierarchyException();
+        }
+    }
+
     public void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
         if (organisaatioKoulutukset.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
             throw new OrganisaatioLakkautusKoulutuksiaException();

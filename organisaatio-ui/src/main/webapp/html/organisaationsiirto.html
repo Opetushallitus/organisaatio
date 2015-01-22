@@ -1,4 +1,20 @@
-<!-- Organisaation Poisto -->
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+
+This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+soon as they will be approved by the European Commission - subsequent versions
+of the EUPL (the "Licence");
+
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-->
+
+<!-- Organisaation Siirto -->
 <div class="modal-header">
     <h3>{{'organisaatio.move.topic' | i18n}}</h3>
 </div>
@@ -22,7 +38,7 @@
 
                 <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
 
-                <ui-select ng-model="options.newParentOrganization" theme="selectize" on-select="select($item)" ng-disabled="disabled">
+                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled">
                     <ui-select-match placeholder="{{'organisaatio.move.new.parent.organization' | i18n}}">
                         {{$select.selected.name}}
                     </ui-select-match>
@@ -63,7 +79,7 @@
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn btn-primary" ng-disabled="!valid" ng-click="$close(options)">
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid"  ng-click="$close(options)">
             {{'Organisaationpoisto.ok' | i18n}}
         </button>
     </div>

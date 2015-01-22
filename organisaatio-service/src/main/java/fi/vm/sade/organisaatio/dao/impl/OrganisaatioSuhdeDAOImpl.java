@@ -36,7 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.lang.time.DateUtils;
 
 /**
  * @author mlyly
@@ -93,7 +92,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
 
         // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
         Date currentTimeStamp = new Date();
-        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+        if (atTime == null) {
             atTime = currentTimeStamp;
         }
 
@@ -102,7 +101,6 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
-        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(alkuExpression).and(loppuExpression);
@@ -132,7 +130,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
 
         // Laitetaan tälle päivälle oikea kellonaika, löytyy tänä päivänä luodut organisaatiot
         Date currentTimeStamp = new Date();
-        if (atTime == null || DateUtils.isSameDay(atTime, currentTimeStamp)) {
+        if (atTime == null) {
             atTime = currentTimeStamp;
         }
 
@@ -141,7 +139,6 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
-        /// @TODO Päivämäärän tunnit, minuutit ja sekunnit pitäisi jättää huomiotta
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(alkuExpression).and(loppuExpression);
@@ -215,7 +212,8 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
      * @return created relation
      */
     @Override
-    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
+    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom,
+            String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
         LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
 
         if (parentId == null || childId == null) {
@@ -276,21 +274,10 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
             return new ArrayList<>();
         }
 
-        Calendar from = Calendar.getInstance();
-        from.setTime(day);
-        Calendar to = Calendar.getInstance();
-        to.setTime(day);
-
-        zeroTime(from);
-        zeroTime(to);
-
-        to.add(Calendar.DAY_OF_MONTH, 1);
-        to.add(Calendar.SECOND, -1);
-
         QOrganisaatioSuhde organisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         JPAQuery query = new JPAQuery(getEntityManager())
                 .from(organisaatioSuhde)
-                .where(organisaatioSuhde.alkuPvm.between(from.getTime(), to.getTime()))
+                .where(organisaatioSuhde.alkuPvm.eq(day))
                 .orderBy(organisaatioSuhde.alkuPvm.asc());
         return query.list(organisaatioSuhde);
     }

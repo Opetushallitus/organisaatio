@@ -13,14 +13,81 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
-<table class="table table-striped">
-    <thead><tr><th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th></tr></thead>
+
+<table ng-if="model.historia.liitokset.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.liitokset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
     <tbody>
-    <tr ng-repeat="entry in model.organisaatio.historia | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.historia.liitokset | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm}}</td>
         <td>
             <span>
-                    {{entry.childOid}}
+                <a href='#/organisaatiot/{{entry.organisaatioOid}}'>{{model.getLocalizedValue(entry.organisaatioNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<table ng-if="model.historia.liittymiset.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.liittymiset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.historia.liittymiset | orderBy:'alkuPvm'">
+        <td>{{entry.alkuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.kohdeOid}}'>{{model.getLocalizedValue(entry.kohdeNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<table ng-if="model.isOPHParent() === false" class="table table-striped" >
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.historia.parentSuhteet | orderBy:'alkuPvm'">
+        <td>{{entry.alkuPvm}}</td>
+        <td>{{entry.loppuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.parentOid}}'>{{model.getLocalizedValue(entry.parentNimi)}}</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<table ng-if="model.historia.childSuhteet.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
+            <th>{{'Organisaationtarkastelu.historia.lapset.nimi' | i18n}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="entry in model.historia.childSuhteet | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
+        <td>{{entry.alkuPvm}}</td>
+        <td>{{entry.loppuPvm}}</td>
+        <td>
+            <span>
+                <a href='#/organisaatiot/{{entry.childOid}}'>{{model.getLocalizedValue(entry.childNimi)}}</a>
             </span>
         </td>
     </tr>

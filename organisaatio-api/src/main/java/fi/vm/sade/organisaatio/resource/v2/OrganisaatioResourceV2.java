@@ -284,16 +284,18 @@ public interface OrganisaatioResourceV2 {
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioRDTO.class)
-    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date);
+    public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
+            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
 
     @GET
     @Path("/{oid}/historia")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
-            value = "Hakee organisaation organisaatiohierrarkia historian.",
-            notes = "Operaatio palauttaa oid:n määrittelemän organisaation organisaatiohierrarkia historian.",
+            value = "Hakee organisaation rakennehistorian.",
+            notes = "Operaatio palauttaa oid:n määrittelemän organisaation rakennehistorian.",
             response = OrganisaatioHistoriaRDTOV2.class)
-    public List<OrganisaatioHistoriaRDTOV2> getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
 
     @POST
     @Path("/{oid}/organisaatiosuhde")

@@ -21,16 +21,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.generic.common.I18N;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
-import fi.vm.sade.koodisto.service.KoodiService;
-import fi.vm.sade.koodisto.service.KoodistoService;
-import fi.vm.sade.koodisto.service.types.SearchKoodisByKoodistoCriteriaType;
-import fi.vm.sade.koodisto.service.types.SearchKoodistosCriteriaType;
-import fi.vm.sade.koodisto.service.types.common.KoodiType;
-import fi.vm.sade.koodisto.service.types.common.KoodiUriAndVersioType;
-import fi.vm.sade.koodisto.service.types.common.KoodistoType;
-import fi.vm.sade.koodisto.service.types.common.SuhteenTyyppiType;
-import fi.vm.sade.koodisto.util.KoodiServiceSearchCriteriaBuilder;
-import fi.vm.sade.koodisto.util.KoodistoServiceSearchCriteriaBuilder;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -61,7 +51,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,8 +79,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
-    @Autowired
-    private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
     @Autowired
@@ -144,13 +131,18 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // GET /organisaatio/{oid}/children
     @Override
-    public List<OrganisaatioRDTO> children(String oid) throws Exception {
+    public List<OrganisaatioRDTO> children(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<OrganisaatioRDTO> childList = new LinkedList<>();
         if (parentOrg != null) {
             List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
             for (OrganisaatioSuhde suhde : suhteet) {
+                // Jätetään kuva pois, jos sitä ei haluta
+                if (suhde.getChild().getMetadata() != null) {
+                    suhde.getChild().getMetadata().setIncludeImage(includeImage);
+                }
+
                 childList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
             }
         }
@@ -211,17 +203,23 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             }
         }
 
-        List<String> result = organisaatioDAO.findOidsBy(searchTerms, count, startIndex, lastModifiedBefore, lastModifiedSince, type);
+        // lastModifiedBefore ja lastModifiedSince jätetään pois --> muutetut organisaatiot rajapinta palauttaa nuo
+        List<String> result = organisaatioFindBusinessService.findOidsBy(searchTerms, count, startIndex, type);
         LOG.debug("  result.size = {}", result.size());
         return result;
     }
 
     // GET /organisaatio/{oid}
     @Override
-    public OrganisaatioRDTO getOrganisaatioByOID(final String oid) {
+    public OrganisaatioRDTO getOrganisaatioByOID(final String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
+
+        // Jätetään kuva pois, jos sitä ei haluta
+        if (o!= null && o.getMetadata() != null) {
+            o.getMetadata().setIncludeImage(includeImage);
+        }
 
         OrganisaatioRDTO result = conversionService.convert(o, OrganisaatioRDTO.class);
 
@@ -333,7 +331,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     }
 
     @Override
-    public List<OrganisaatioRDTO> groups(String oid) throws Exception {
+    public List<OrganisaatioRDTO> groups(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
@@ -343,6 +341,11 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         List<OrganisaatioRDTO> groupList = new ArrayList<>();
         for (Organisaatio entity : entitys) {
+            // Jätetään kuva pois, jos sitä ei haluta
+            if (entity.getMetadata() != null) {
+                entity.getMetadata().setIncludeImage(includeImage);
+            }
+
             groupList.add(conversionService.convert(entity, OrganisaatioRDTO.class));
         }
         return groupList;

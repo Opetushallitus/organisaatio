@@ -45,8 +45,8 @@
     <bean id="organisaatioModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
     <bean id="organisaatioNimiModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper"/>
     <bean id="searchCriteriaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper"/>
-    <bean id="historiaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper"/>
-
+    <bean id="organisaatioSuhdeModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper"/>
+    <bean id="organisaatioLiitosModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper"/>
 
     <!--
         Enable @Scheduled annotations

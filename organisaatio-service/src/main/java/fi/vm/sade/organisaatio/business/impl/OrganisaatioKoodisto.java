@@ -17,6 +17,7 @@ package fi.vm.sade.organisaatio.business.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -28,6 +29,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,6 +44,9 @@ public class OrganisaatioKoodisto {
 
     @Autowired
     private OrganisaatioKoodistoClient client;
+
+    @Autowired
+    private OrganisaatioDAO organisaatioDAO;
 
     private final Gson gson;
 
@@ -75,7 +80,7 @@ public class OrganisaatioKoodisto {
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
         tunniste = tunniste.replace("-", "");
         String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1");
-        LOG.debug("Haettiin koodi: " + (json == null ? null : json.toString()));
+        LOG.debug("Haettiin koodi: " + (json == null ? null : json));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
     }
 
@@ -154,14 +159,14 @@ public class OrganisaatioKoodisto {
         boolean muuttunut = false;
 
         // Tehdään prefix-lista korvattavien relaatioiden vertailua varten
-        Map<String, Object> entityRelaatiotPrefixlist = new HashMap<String, Object>();
+        Map<String, Object> entityRelaatiotPrefixlist = new HashMap<>();
         for (String rel : entityRelaatiot) {
             entityRelaatiotPrefixlist.put(rel.split("_")[0], null);
         }
 
 
         // Listaa kaikki koodiston nykyiset relaatiot
-        Map<String, OrganisaatioKoodistoKoodiCodeElements> koodistoRelaatiot = new HashMap<String, OrganisaatioKoodistoKoodiCodeElements>();
+        Map<String, OrganisaatioKoodistoKoodiCodeElements> koodistoRelaatiot = new HashMap<>();
         for (OrganisaatioKoodistoKoodiCodeElements ie : elements) {
             koodistoRelaatiot.put(ie.getCodeElementUri() + "#" + ie.getCodeElementVersion(), ie);
         }
@@ -200,7 +205,7 @@ public class OrganisaatioKoodisto {
 
     // Päivittää Oppilaitoksen sisältyy-relaatiot
     private boolean paivitaIncludesCodeElements(Organisaatio entity, OrganisaatioKoodistoKoodi koodi) {
-        List<String> entityRelaatiot = new ArrayList<String>();
+        List<String> entityRelaatiot = new ArrayList<>();
         if (koodi.getKoodiUri().startsWith("oppilaitosnumero_")) {
             if (entity.getPostiosoite() != null && entity.getPostiosoite().getPostinumero() != null &&
                     !entity.getPostiosoite().getPostinumero().startsWith("posti_00000")) {
@@ -229,7 +234,7 @@ public class OrganisaatioKoodisto {
     // Päivittää opetuspisteen sisältyy-relaatiot
     private boolean paivitaWithinCodeElements(Organisaatio entity, OrganisaatioKoodistoKoodi koodi) {
         // Listaa kaikki organisaation relaatiot
-        List<String> entityRelaatiot = new ArrayList<String>();
+        List<String> entityRelaatiot = new ArrayList<>();
         if (koodi.getKoodiUri().startsWith("opetuspisteet_")) {
             // parentin oppilaitosnumero
             Organisaatio parent = entity.getParent();
@@ -335,7 +340,7 @@ public class OrganisaatioKoodisto {
                     }
 
                     // Koodin nimet tällä hetkellä koodistossa
-                    Map<String, OrganisaatioKoodistoKoodiMetadata> koodiNyt = new HashMap<String, OrganisaatioKoodistoKoodiMetadata>();
+                    Map<String, OrganisaatioKoodistoKoodiMetadata> koodiNyt = new HashMap<>();
                     for (OrganisaatioKoodistoKoodiMetadata km : koodi.getMetadata()) {
                         koodiNyt.put(km.getKieli(), km);
                     }
@@ -392,5 +397,20 @@ public class OrganisaatioKoodisto {
             }
         }
         return null;
+    }
+
+    /**
+     * Päivittää koodiston vastaamaan muokattua organisaatiota.
+     *
+     * @param oid Päivitettävän organisaation oid
+     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     */
+    @Async
+    public void updateKoodistoAsync(String oid, boolean reauthorize) {
+        LOG.info("Koodiston päivitys oidille: " + oid);
+
+        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+
+        paivitaKoodisto(organisaatio, reauthorize);
     }
 }

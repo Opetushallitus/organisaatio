@@ -15,9 +15,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
-import fi.vm.sade.organisaatio.dto.mapping.HistoriaModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioHistoriaRDTOV2;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
@@ -35,7 +33,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  *
- * @author mlyly
+ * @author mlyly, simok
  */
 public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTO> {
 
@@ -49,7 +47,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setVersion(s.getVersion() != null ? s.getVersion().intValue() : 0);
 
         t.setAlkuPvm(s.getAlkuPvm());
-        // t.setChildCount(s.getChildCount());
         t.setDomainNimi(s.getDomainNimi());
 
         t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
@@ -69,49 +66,27 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         // Map domain type to DTO
         t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
-        HistoriaModelMapper historiaModelMapper = new HistoriaModelMapper();
-        // Define the target list type for mapping
-        Type organisaatioHistoyListType = new TypeToken<List<OrganisaatioHistoriaRDTOV2>>() {}.getType();
-
-        // Map domain type to DTO
-        t.setHistoria((List<OrganisaatioHistoriaRDTOV2>) organisaatioNimiModelMapper.map(s.getParentSuhteet(), organisaatioHistoyListType));
-
-        // t.set(s.getNimiLyhenne());
-        // t.set(s.getOpetuspisteenJarjNro());
         t.setOppilaitosKoodi(s.getOppilaitosKoodi());
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
-        // t.set(s.getOrganisaatiotyypitStr());
         t.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
-        // t.set(s.getParentIdPath());
-        // t.setParentMetadata(s.getParentMetadata());
         t.setParentOidPath(s.getParentOidPath());
-        // t.set(s.getParentSuhteet());
 
 
         t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
-        // t.set(s.getPuhelin());
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
-        // t.set(s.getTyypitAsString());
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertListToList(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
-        // t.set(s.getYhteystiedot());
-        // t.set(s.getYhteystietoArvos());
         t.setYritysmuoto(s.getYritysmuoto());
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
 
-        //t.setPuhelinnumero(convertYhteystietoToPuhelinnumero(s.getYhteystiedot()));
-        //t.setFaksinumero(convertYhteystietoToFaksinumero(s.getYhteystiedot()));
-        //t.setEmailOsoite(convertYhteystietoToEmailOsoite(s.getYhteystiedot()));
-        //t.setWwwOsoite(convertYhteystietoToWwwOsoite(s.getYhteystiedot()));
-
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
-        List<Map<String, String>> yhteystietoArvos = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
         for (Yhteystieto y : s.getYhteystiedot()) {
@@ -119,10 +94,10 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         }
 
         for (YhteystietoArvo yhteystietoArvo : s.getYhteystietoArvos()) {
-            YhteystietoElementti yElementti = null;
-            YhteystietojenTyyppi yTyyppi = null;
+            YhteystietoElementti yElementti;
+            YhteystietojenTyyppi yTyyppi;
 
-            Map<String, String> val = new HashMap<String, String>();
+            Map<String, String> val = new HashMap<>();
             yhteystietoArvos.add(val);
 
             val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
@@ -147,9 +122,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
                     }
 
                     val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());
-
-                    // yTyyppi.getSovellettavatOppilaitostyyppis();
-                    // yTyyppi.getSovellettavatOrganisaatioTyyppis();
                 }
             }
         }
@@ -160,7 +132,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         if (nimi != null) {
             // Lisätään vastauksiin kaikki nimen kielet, joissa tekstiä
@@ -175,7 +147,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     }
 
     private List<String> convertListToList(List<String> s) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String v : s) {
             result.add(v);
         }
@@ -192,7 +164,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     }
 
     private Map<String, String> convertOsoiteToMap(Osoite s) {
-        Map<String, String> t = new HashMap<String, String>();
+        Map<String, String> t = new HashMap<>();
 
         if (s == null) {
             return null;
@@ -234,7 +206,11 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setHakutoimistoEctsTehtavanimike(convertMKTToMap(s.getHakutoimistoEctsTehtavanimike()));
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
-        t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
+
+        // Otetaan kuva mukaan vain "pyydettäessä"
+        if (s.isIncludeImage()) {
+            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
+        }
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
@@ -261,7 +237,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
      * @return
      */
     private Map<String, String> convertYhteystietoGeneric(Yhteystieto s) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         if (s != null) {
             result.put("id", "" + s.getId());

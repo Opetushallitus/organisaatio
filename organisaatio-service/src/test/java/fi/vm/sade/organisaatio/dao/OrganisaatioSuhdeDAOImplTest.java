@@ -236,20 +236,12 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
     public void findForDay() throws Exception {
         executeSqlScript("data/organisaatiosuhde_data.sql", false);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date date = dateFormat.parse("2000-01-01 23:00:00");
+        Date date = dateFormat.parse("2000-01-01");
         LOG.info("Quering with date {}", date);
         List<OrganisaatioSuhde> list = organisaatioSuhdeDAO.findForDay(date);
         Assert.assertEquals("Organisaatio suhde count does not match!", 4, list.size());
-
-        List<Long> expectedIds = Arrays.asList(1L, 3L, 4L, 2L);
-        List<Long> results = new ArrayList<>();
-        for (OrganisaatioSuhde os : list) {
-            results.add(os.getId());
-        }
-
-        Assert.assertArrayEquals("Results does not match!", expectedIds.toArray(), results.toArray());
     }
 
     @Test
