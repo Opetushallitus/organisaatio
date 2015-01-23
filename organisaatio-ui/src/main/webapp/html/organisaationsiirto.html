@@ -38,7 +38,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
                 <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
 
-                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled">
+                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled" ng-required="true">
                     <ui-select-match placeholder="{{'organisaatio.move.new.parent.organization' | i18n}}">
                         {{$select.selected.name}}
                     </ui-select-match>
