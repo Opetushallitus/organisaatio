@@ -25,8 +25,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <tr ng-repeat="entry in model.historia.liitokset | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm}}</td>
         <td>
-            <span>
-                <a href='#/organisaatiot/{{entry.organisaatioOid}}'>{{model.getLocalizedValue(entry.organisaatioNimi)}}</a>
+            <span ng-if="entry.organisaatio.status === 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.organisaatio.oid}}'>{{model.getLocalizedValue(entry.organisaatio.nimi)}}</a>
+            </span>
+            <span ng-if="entry.organisaatio.status !== 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.organisaatio.oid}}'>{{model.getLocalizedValue(entry.organisaatio.nimi)}} ({{model.getOrganisaationTila(entry.organisaatio.status)}})</a>
             </span>
         </td>
     </tr>
@@ -44,8 +47,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <tr ng-repeat="entry in model.historia.liittymiset | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm}}</td>
         <td>
-            <span>
-                <a href='#/organisaatiot/{{entry.kohdeOid}}'>{{model.getLocalizedValue(entry.kohdeNimi)}}</a>
+            <span ng-if="entry.kohde.status === 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.kohde.oid}}'>{{model.getLocalizedValue(entry.kohde.nimi)}}</a>
+            </span>
+            <span ng-if="entry.kohde.status !== 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.kohde.oid}}'>{{model.getLocalizedValue(entry.kohde.nimi)}} ({{model.getOrganisaationTila(entry.kohde.status)}})</a>
             </span>
         </td>
     </tr>
@@ -65,8 +71,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <td>{{entry.alkuPvm}}</td>
         <td>{{entry.loppuPvm}}</td>
         <td>
-            <span>
+            <span ng-if="entry.parent.status === 'AKTIIVINEN'">
                 <a href='#/organisaatiot/{{entry.parent.oid}}'>{{model.getLocalizedValue(entry.parent.nimi)}}</a>
+            </span>
+            <span ng-if="entry.parent.status !== 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.parent.oid}}'>{{model.getLocalizedValue(entry.parent.nimi)}} ({{model.getOrganisaationTila(entry.parent.status)}})</a>
             </span>
         </td>
     </tr>
@@ -86,8 +95,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <td>{{entry.alkuPvm}}</td>
         <td>{{entry.loppuPvm}}</td>
         <td>
-            <span>
+            <span ng-if="entry.child.status === 'AKTIIVINEN'">
                 <a href='#/organisaatiot/{{entry.child.oid}}'>{{model.getLocalizedValue(entry.child.nimi)}}</a>
+            </span>
+            <span ng-if="entry.child.status !== 'AKTIIVINEN'">
+                <a href='#/organisaatiot/{{entry.child.oid}}'>{{model.getLocalizedValue(entry.child.nimi)}} ({{model.getOrganisaationTila(entry.child.status)}})</a>
             </span>
         </td>
     </tr>
