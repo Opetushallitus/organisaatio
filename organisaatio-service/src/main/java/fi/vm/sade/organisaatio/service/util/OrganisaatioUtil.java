@@ -87,4 +87,13 @@ public abstract class OrganisaatioUtil {
         return o.getLakkautusPvm()==null ? false : o.getLakkautusPvm().before(new Date());
     }
 
+    /**
+     * Tarkistaa onko organisaatio passivoitu eli lakkautettu
+     * @param o Organisaatio
+     * @return true jos organisaatio on passiivinen, false muuten
+     */
+    public static boolean isSuunniteltu(Organisaatio o) {
+        return o.getAlkuPvm().after(new Date());
+    }
+
 }

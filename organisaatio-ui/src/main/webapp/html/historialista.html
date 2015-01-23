@@ -66,7 +66,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <td>{{entry.loppuPvm}}</td>
         <td>
             <span>
-                <a href='#/organisaatiot/{{entry.parentOid}}'>{{model.getLocalizedValue(entry.parentNimi)}}</a>
+                <a href='#/organisaatiot/{{entry.parent.oid}}'>{{model.getLocalizedValue(entry.parent.nimi)}}</a>
             </span>
         </td>
     </tr>
@@ -87,7 +87,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <td>{{entry.loppuPvm}}</td>
         <td>
             <span>
-                <a href='#/organisaatiot/{{entry.childOid}}'>{{model.getLocalizedValue(entry.childNimi)}}</a>
+                <a href='#/organisaatiot/{{entry.child.oid}}'>{{model.getLocalizedValue(entry.child.nimi)}}</a>
             </span>
         </td>
     </tr>

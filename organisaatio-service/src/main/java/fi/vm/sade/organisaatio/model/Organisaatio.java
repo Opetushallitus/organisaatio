@@ -39,6 +39,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import org.apache.commons.lang.time.DateUtils;
 
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.slf4j.Logger;
@@ -57,9 +58,18 @@ import org.slf4j.LoggerFactory;
 @EntityListeners(XssFilterListener.class)
 public class Organisaatio extends OrganisaatioBaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	//@OrderBy("id")
+    /**
+     * Organisaation status.
+     */
+    public enum OrganisaatioStatus {
+        AKTIIVINEN,
+        SUUNNITELTU,
+        PASSIIVINEN,
+        POISTETTU
+    };
+
     @ElementCollection(fetch= FetchType.EAGER)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private List<String> tyypit = new ArrayList<String>();
@@ -185,6 +195,48 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
     private List<HistoryMetadata> historiaData = new ArrayList<HistoryMetadata>();
 
+    /**
+     * Utility method to retrieve the current parent of the organisaatio.
+     * @return the parent organisaatio
+     */
+    public Organisaatio getParent() {
+        OrganisaatioSuhde latestSuhde = null;
+        Date curDate = new Date();
+        for (OrganisaatioSuhde curSuhde : parentSuhteet) {
+            // Ei oteta huomioon suhteita, jotka tulevaisuudessa tai jotka ovat lakanneet
+            if (curSuhde.getAlkuPvm().after(curDate) ||
+                    (curSuhde.getLoppuPvm() != null && curSuhde.getLoppuPvm().before(curDate)))
+            {
+                continue;
+            }
+            if (latestSuhde == null) {
+                // Ensimmäinen löytynyt validi suhde
+                latestSuhde = curSuhde;
+            } else if (latestSuhde.getAlkuPvm().before(curSuhde.getAlkuPvm())) {
+                // Aikaisemmin löydettyä suhdetta uudempi suhde
+                latestSuhde = curSuhde;
+            }
+        }
+        return (latestSuhde != null) ? latestSuhde.getParent() : null;
+    }
+
+    /**
+     * Utility method to get current status of the organisaatio.
+     * @return the status
+     */
+    public OrganisaatioStatus getStatus() {
+        if (OrganisaatioUtil.isPassive(this)) {
+            return OrganisaatioStatus.PASSIIVINEN;
+        }
+        if (this.isOrganisaatioPoistettu()) {
+            return OrganisaatioStatus.POISTETTU;
+        }
+        if (OrganisaatioUtil.isSuunniteltu(this)) {
+            return OrganisaatioStatus.SUUNNITELTU;
+        }
+        return OrganisaatioStatus.AKTIIVINEN;
+    }
+
     public OrganisaatioMetaData getMetadata() {
         return metadata;
     }
@@ -209,32 +261,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setYtunnus(String ytunnus) {
         this.ytunnus = ytunnus;
-    }
-
-    /**
-     * Utility method to retrieve the current parent of the
-     * organisaatio.
-     * @return the parent organisaatio
-     */
-    public Organisaatio getParent() {
-        OrganisaatioSuhde latestSuhde = null;
-        Date curDate = new Date();
-        for (OrganisaatioSuhde curSuhde : parentSuhteet) {
-            // Ei oteta huomioon suhteita, jotka tulevaisuudessa tai jotka ovat lakanneet
-            if (curSuhde.getAlkuPvm().after(curDate) ||
-                    (curSuhde.getLoppuPvm() != null && curSuhde.getLoppuPvm().before(curDate)))
-            {
-                continue;
-            }
-            if (latestSuhde == null) {
-                // Ensimmäinen löytynyt validi suhde
-                latestSuhde = curSuhde;
-            } else if (latestSuhde.getAlkuPvm().before(curSuhde.getAlkuPvm())) {
-                // Aikaisemmin löydettyä suhdetta uudempi suhde
-                latestSuhde = curSuhde;
-            }
-        }
-        return (latestSuhde != null) ? latestSuhde.getParent() : null;
     }
 
     public Osoite getPostiosoite() {
@@ -485,29 +511,29 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.kuvaus2 = kuvaus2;
     }
 
-	public String getNimihaku() {
-		return nimihaku;
-	}
+    public String getNimihaku() {
+        return nimihaku;
+    }
 
 
-	public void setNimihaku(String nimihaku) {
-		this.nimihaku = nimihaku;
-	}
+    public void setNimihaku(String nimihaku) {
+        this.nimihaku = nimihaku;
+    }
 
-	/**
-	 * Returns the metadata of the parent of the organisation.
-	 * @return
-	 */
-	public OrganisaatioMetaData getParentMetadata() {
-	    Organisaatio parent = this.getParent();
-	    if (parent != null
-	            && parent.getMetadata() != null) {
-	        return parent.getMetadata();
-	    } else if (parent != null) {
-	        return parent.getParentMetadata();
-	    }
-	    return null;
-	}
+    /**
+     * Returns the metadata of the parent of the organisation.
+     * @return
+     */
+    public OrganisaatioMetaData getParentMetadata() {
+        Organisaatio parent = this.getParent();
+        if (parent != null
+                && parent.getMetadata() != null) {
+            return parent.getMetadata();
+        } else if (parent != null) {
+            return parent.getParentMetadata();
+        }
+        return null;
+    }
 
     public List<HistoryMetadata> getHistoriaData() {
         return historiaData;
@@ -529,16 +555,16 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return Aliorganisaatioiden lukumäärä.
      */
     public int getChildCount(OrganisaatioSuhdeTyyppi byType, Date now) {
-    	int ret = 0;
-    	for (OrganisaatioSuhde os : childSuhteet) {
-    		if ((byType==null || os.getSuhdeTyyppi()==byType)
-    				&& (now==null || os.getLoppuPvm()==null || os.getLoppuPvm().after(now) )
-    				&& !os.getChild().isOrganisaatioPoistettu()
-    				&& (now==null || os.getChild().getLakkautusPvm()==null || os.getChild().getLakkautusPvm().after(now)) ) {
-    			ret++;
-    		}
-    	}
-    	return ret;
+        int ret = 0;
+        for (OrganisaatioSuhde os : childSuhteet) {
+            if ((byType==null || os.getSuhdeTyyppi()==byType)
+                    && (now==null || os.getLoppuPvm()==null || os.getLoppuPvm().after(now) )
+                    && !os.getChild().isOrganisaatioPoistettu()
+                    && (now==null || os.getChild().getLakkautusPvm()==null || os.getChild().getLakkautusPvm().after(now)) ) {
+                ret++;
+            }
+        }
+        return ret;
     }
 
     public void setParentSuhteet(List<OrganisaatioSuhde> parentSuhteet) {
