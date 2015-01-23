@@ -495,7 +495,6 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
 
