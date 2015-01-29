@@ -28,8 +28,8 @@ public class OrganisaatioSuhdeModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 // Monikielinen nimi
-                map().setParentNimi(source.getParent().getNimi().getValues());
-                map().setChildNimi(source.getChild().getNimi().getValues());
+                map().getChild().setNimi(source.getChild().getNimi().getValues());
+                map().getParent().setNimi(source.getParent().getNimi().getValues());
             }
         });
     }

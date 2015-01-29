@@ -28,8 +28,8 @@ public class OrganisaatioLiitosModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 // Monikielinen nimi
-                map().setOrganisaatioNimi(source.getOrganisaatio().getNimi().getValues());
-                map().setKohdeNimi(source.getKohde().getNimi().getValues());
+                map().getOrganisaatio().setNimi(source.getOrganisaatio().getNimi().getValues());
+                map().getKohde().setNimi(source.getKohde().getNimi().getValues());
             }
         });
     }

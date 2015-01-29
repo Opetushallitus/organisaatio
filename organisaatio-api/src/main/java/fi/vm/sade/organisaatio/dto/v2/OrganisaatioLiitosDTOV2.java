@@ -16,15 +16,11 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
 import java.util.Date;
-import java.util.Map;
 
 
 public class OrganisaatioLiitosDTOV2 {
-    private String organisaatioOid;
-    private String kohdeOid;
-
-    private Map<String, String> organisaatioNimi;
-    private Map<String, String> kohdeNimi;
+    private OrganisaatioCoreInfoDTOV2 organisaatio;
+    private OrganisaatioCoreInfoDTOV2 kohde;
 
     private Date alkuPvm;
 
@@ -37,59 +33,31 @@ public class OrganisaatioLiitosDTOV2 {
     }
 
     /**
-     * @return the organisaatioOid
+     * @return the organisaatio
      */
-    public String getOrganisaatioOid() {
-        return organisaatioOid;
+    public OrganisaatioCoreInfoDTOV2 getOrganisaatio() {
+        return organisaatio;
     }
 
     /**
-     * @param organisaatioOid the organisaatioOid to set
+     * @param organisaatio the organisaatio to set
      */
-    public void setOrganisaatioOid(String organisaatioOid) {
-        this.organisaatioOid = organisaatioOid;
+    public void setOrganisaatio(OrganisaatioCoreInfoDTOV2 organisaatio) {
+        this.organisaatio = organisaatio;
     }
 
     /**
-     * @return the kohdeOid
+     * @return the kohde
      */
-    public String getKohdeOid() {
-        return kohdeOid;
+    public OrganisaatioCoreInfoDTOV2 getKohde() {
+        return kohde;
     }
 
     /**
-     * @param kohdeOid the kohdeOid to set
+     * @param kohde the kohde to set
      */
-    public void setKohdeOid(String kohdeOid) {
-        this.kohdeOid = kohdeOid;
-    }
-
-    /**
-     * @return the organisaatioNimi
-     */
-    public Map<String, String> getOrganisaatioNimi() {
-        return organisaatioNimi;
-    }
-
-    /**
-     * @param organisaatioNimi the organisaatioNimi to set
-     */
-    public void setOrganisaatioNimi(Map<String, String> organisaatioNimi) {
-        this.organisaatioNimi = organisaatioNimi;
-    }
-
-    /**
-     * @return the kohdeNimi
-     */
-    public Map<String, String> getKohdeNimi() {
-        return kohdeNimi;
-    }
-
-    /**
-     * @param kohdeNimi the kohdeNimi to set
-     */
-    public void setKohdeNimi(Map<String, String> kohdeNimi) {
-        this.kohdeNimi = kohdeNimi;
+    public void setKohde(OrganisaatioCoreInfoDTOV2 kohde) {
+        this.kohde = kohde;
     }
 
 }

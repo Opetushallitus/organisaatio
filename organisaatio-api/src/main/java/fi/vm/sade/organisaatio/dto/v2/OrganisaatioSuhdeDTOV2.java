@@ -20,11 +20,8 @@ import java.util.Map;
 
 
 public class OrganisaatioSuhdeDTOV2 {
-    private String childOid;
-    private String parentOid;
-
-    private Map<String, String> childNimi;
-    private Map<String, String> parentNimi;
+    private OrganisaatioCoreInfoDTOV2 child;
+    private OrganisaatioCoreInfoDTOV2 parent;
 
     private Date alkuPvm;
     private Date loppuPvm;
@@ -36,28 +33,6 @@ public class OrganisaatioSuhdeDTOV2 {
 
     public void setAlkuPvm(Date alkuPvm) {
         this.alkuPvm = alkuPvm;
-    }
-
-    public String getChildOid() {
-        return childOid;
-    }
-
-    public void setChildOid(String childOid) {
-        this.childOid = childOid;
-    }
-
-    /**
-     * @return the parentOid
-     */
-    public String getParentOid() {
-        return parentOid;
-    }
-
-    /**
-     * @param parentOid the parentOid to set
-     */
-    public void setParentOid(String parentOid) {
-        this.parentOid = parentOid;
     }
 
     /**
@@ -89,30 +64,30 @@ public class OrganisaatioSuhdeDTOV2 {
     }
 
     /**
-     * @return the childNimi
+     * @return the child
      */
-    public Map<String, String> getChildNimi() {
-        return childNimi;
+    public OrganisaatioCoreInfoDTOV2 getChild() {
+        return child;
     }
 
     /**
-     * @param childNimi the childNimi to set
+     * @param child the child to set
      */
-    public void setChildNimi(Map<String, String> childNimi) {
-        this.childNimi = childNimi;
+    public void setChild(OrganisaatioCoreInfoDTOV2 child) {
+        this.child = child;
     }
 
     /**
-     * @return the parentNimi
+     * @return the parent
      */
-    public Map<String, String> getParentNimi() {
-        return parentNimi;
+    public OrganisaatioCoreInfoDTOV2 getParent() {
+        return parent;
     }
 
     /**
-     * @param parentNimi the parentNimi to set
+     * @param parent the parent to set
      */
-    public void setParentNimi(Map<String, String> parentNimi) {
-        this.parentNimi = parentNimi;
+    public void setParent(OrganisaatioCoreInfoDTOV2 parent) {
+        this.parent = parent;
     }
 }
