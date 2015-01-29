@@ -66,6 +66,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     private List<OrganisaatioNimiRDTO> _nimet;
 
+    private String _status;
 
     private String _maaUri;
 
@@ -511,5 +512,19 @@ public class OrganisaatioRDTO implements Serializable {
 
     public void addYhteystieto(Map<String, String> yhtMap) {
         getYhteystiedot().add(yhtMap);
+    }
+
+    /**
+     * @return the _status
+     */
+    public String getStatus() {
+        return _status;
+    }
+
+    /**
+     * @param _status the _status to set
+     */
+    public void setStatus(String _status) {
+        this._status = _status;
     }
 }
