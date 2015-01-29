@@ -916,7 +916,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                         'Oppisopimustoimipiste': []};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
-                            var localizedOrgType = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
+                            var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             } else if (model.organisaatio.parentOid === model.OPHOid &&
