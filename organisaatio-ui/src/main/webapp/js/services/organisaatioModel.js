@@ -2046,6 +2046,21 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         };
 
+        this.getOrganisaationTila = function(status) {
+            switch(status) {
+                case 'PASSIIVINEN':
+                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
+                    break;
+                case 'SUUNNITELTU':
+                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+                    break;
+                case 'AKTIIVINEN':
+                    return ($filter('i18n')("Organisaatiot.aktiivinen",""));
+                    break;
+                default:
+                    return ($filter('i18n')("Organisaatiot.poistettu",""));
+            }
+        };
     };
 
     return model;
