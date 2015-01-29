@@ -88,12 +88,12 @@ public abstract class OrganisaatioUtil {
     }
 
     /**
-     * Tarkistaa onko organisaatio passivoitu eli lakkautettu
+     * Tarkistaa onko organisaatio suunniteltu, eli alkupvm tulevaisuudessa
      * @param o Organisaatio
-     * @return true jos organisaatio on passiivinen, false muuten
+     * @return true jos organisaatio on suunniteltu, false muuten
      */
     public static boolean isSuunniteltu(Organisaatio o) {
-        return o.getAlkuPvm().after(new Date());
+        return o.getAlkuPvm()==null ? false : o.getAlkuPvm().after(new Date());
     }
 
 }

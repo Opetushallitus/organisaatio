@@ -66,6 +66,8 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         // Map domain type to DTO
         t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
+        t.setStatus(s.getStatus().name());
+
         t.setOppilaitosKoodi(s.getOppilaitosKoodi());
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
         t.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
