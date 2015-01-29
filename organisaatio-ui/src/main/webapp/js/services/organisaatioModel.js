@@ -538,7 +538,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.parentPattern["fi"] = (parentResult.nimi.fi ? "^" + parentResult.nimi.fi + ".*" : ".*");
             model.parentPattern["sv"] = (parentResult.nimi.sv ? "^" + parentResult.nimi.sv + ".*" : ".*");
             model.parentPattern["en"] = (parentResult.nimi.en ? "^" + parentResult.nimi.en + ".*" : ".*");
-            model.organisaationtila = model.getOrganisaationTila();
             model.nameFormat = {};
             model.nameFormat['fi'] = (model.organisaatio.nimi.fi ? model.organisaatio.nimi.fi.match(model.parentPattern["fi"]) : null);
             model.nameFormat['sv'] = (model.organisaatio.nimi.sv ? model.organisaatio.nimi.sv.match(model.parentPattern["sv"]) : null);
@@ -558,6 +557,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.uriLangNames["FI"] = {};
             model.uriLangNames["SV"] = {};
             model.organisaationtila = "";
+            model.organisaationtila = model.getOrganisaationTila(model.organisaatio.status);
             model.organisaatio.historia = result.historia;
 
             // Otetaan talteen organisaation nimihistoria ennen muutoksia.
@@ -2021,29 +2021,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.getUserLang = function() {
             return KoodistoKoodi.getLanguage().toLowerCase();
-        };
-
-        this.getOrganisaationTila = function() {
-            var today = +new Date();
-            today = this.formatDate(today);
-
-            var alkuPvm = model.organisaatio.alkuPvm;
-
-            if (alkuPvm) {
-
-                if (alkuPvm > today) {
-                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
-                }
-            }
-
-            var lakkautusPvm = model.organisaatio.lakkautusPvm;
-            if (lakkautusPvm) {
-
-                if (lakkautusPvm < today) {
-                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
-                }
-            }
-            return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         };
 
         this.getOrganisaationTila = function(status) {
