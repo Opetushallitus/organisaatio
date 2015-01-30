@@ -921,7 +921,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         String virheViesti = "";
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o: roots) {
-            virheViesti = o.isPvmConstraintsOk(null, null, givenData);
+            virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
             if (!virheViesti.equals("")) {
                 LOG.error(String.format("bulkUpdatePvm() error: %s", virheViesti));
                 throw new OrganisaatioDateException();

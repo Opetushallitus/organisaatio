@@ -24,9 +24,11 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
@@ -236,4 +238,64 @@ public class OrganisaatioBusinessChecker {
             }
         }
     }
+
+    public String checkPvmConstraints(Organisaatio organisaatio,
+            Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+        LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
+
+        final Date MIN_DATE = new Date(Long.MIN_VALUE);
+        final Date MAX_DATE = new Date(Long.MAX_VALUE);
+        Date actualStart = organisaatio.getAlkuPvm();
+        Date actualEnd = organisaatio.getLakkautusPvm();
+        OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
+        if (ownData != null) {
+            LOG.debug("isPvmConstraintsOk(): omat tiedot löytyy listasta");
+            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm() : MIN_DATE;
+            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm() : MAX_DATE;
+            LOG.debug("uusi alku:" + actualStart + ", uusi loppu:" + actualEnd);
+        } else {
+            LOG.debug("isPvmConstraintsOk(): omia tietoja ei löydy");
+        }
+        if (actualStart == null) {
+            actualStart = MIN_DATE;
+        }
+        if (minPvm == null) {
+            minPvm = MIN_DATE;
+        }
+        if (actualEnd == null) {
+            actualEnd = MAX_DATE;
+        }
+        if (maxPvm == null) {
+            maxPvm = MAX_DATE;
+        }
+        LOG.debug(String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s", actualStart, minPvm, actualEnd, maxPvm));
+        if (actualStart.compareTo(actualEnd) > 0) {
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
+            LOG.error(virhe);
+            return virhe;
+        }
+        if (actualStart.compareTo(minPvm) < 0) {
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", organisaatio.getOid(), actualStart, minPvm);
+            LOG.error(virhe);
+            return virhe;
+        }
+        if (actualEnd.compareTo(maxPvm) > 0) {
+            String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
+            LOG.error(virhe);
+            return virhe;
+        }
+        for (OrganisaatioSuhde suhde : organisaatio.getChildSuhteet()) {
+            LOG.debug("kysytään lapselta " + suhde.getChild().getOid());
+            String lapsenVirhe = checkPvmConstraints(suhde.getChild(), actualStart, actualEnd, muokkausTiedot);
+            if (!lapsenVirhe.equals("")) {
+                String virhe = String.format("lapsen %s virhe: %s", suhde.getChild().getOid(), lapsenVirhe);
+                LOG.error("lapsella ajat NOK: " + lapsenVirhe);
+                return virhe;
+            }
+        }
+        LOG.debug("ajat OK");
+        return "";
+    }
+
+
 }
