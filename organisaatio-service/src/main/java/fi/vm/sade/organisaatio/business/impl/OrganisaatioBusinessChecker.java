@@ -33,6 +33,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
 import java.util.*;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,10 @@ public class OrganisaatioBusinessChecker {
     public boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
+
+    // Organisaation järkevä max päivämäärä
+    private final DateTime max_date = new DateTime(2030, 12, 31, 0, 0, 0, 0);
+
 
     /**
      * Tarkastetaan, että nimihistorian alkupäivämäärät ovat valideja.
@@ -245,7 +250,8 @@ public class OrganisaatioBusinessChecker {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
         final Date MIN_DATE = new Date(0);
-        final Date MAX_DATE = new Date(Long.MAX_VALUE);
+        final Date MAX_DATE = max_date.toDate();
+
         Date actualStart = organisaatio.getAlkuPvm();
         Date actualEnd = organisaatio.getLakkautusPvm();
         OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
