@@ -33,6 +33,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
 import java.util.*;
+import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -269,17 +270,17 @@ public class OrganisaatioBusinessChecker {
             maxPvm = MAX_DATE;
         }
         LOG.debug(String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s", actualStart, minPvm, actualEnd, maxPvm));
-        if (actualStart.compareTo(actualEnd) > 0) {
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, actualEnd) > 0) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
             LOG.error(virhe);
             return virhe;
         }
-        if (actualStart.compareTo(minPvm) < 0) {
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, minPvm) < 0) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", organisaatio.getOid(), actualStart, minPvm);
             LOG.error(virhe);
             return virhe;
         }
-        if (actualEnd.compareTo(maxPvm) > 0) {
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualEnd, maxPvm) > 0) {
             String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
             LOG.error(virhe);
             return virhe;
