@@ -291,11 +291,11 @@ public class OrganisaatioBusinessChecker {
             LOG.error(virhe);
             return virhe;
         }
-        for (OrganisaatioSuhde suhde : organisaatio.getChildSuhteet()) {
-            LOG.debug("kysytään lapselta " + suhde.getChild().getOid());
-            String lapsenVirhe = checkPvmConstraints(suhde.getChild(), actualStart, actualEnd, muokkausTiedot);
+        for (Organisaatio child : organisaatio.getChildren(true)) {
+            LOG.debug("kysytään lapselta " + child.getOid());
+            String lapsenVirhe = checkPvmConstraints(child, actualStart, actualEnd, muokkausTiedot);
             if (!lapsenVirhe.equals("")) {
-                String virhe = String.format("lapsen %s virhe: %s", suhde.getChild().getOid(), lapsenVirhe);
+                String virhe = String.format("lapsen %s virhe: %s", child.getOid(), lapsenVirhe);
                 LOG.error("lapsella ajat NOK: " + lapsenVirhe);
                 return virhe;
             }

@@ -544,6 +544,30 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return childSuhteet;
     }
 
+    public List<Organisaatio> getChildren(boolean includeLakkautetut) {
+        List<Organisaatio> result = new ArrayList<>();
+
+        Date now = new Date();
+        for (OrganisaatioSuhde os : childSuhteet) {
+            // Organisaatiosuhde ei ole lakannut, eikä lasta ole poistettu
+            if ((os.getLoppuPvm()==null || os.getLoppuPvm().after(now))
+                    && !os.getChild().isOrganisaatioPoistettu()) {
+
+                // Aliorganisaatio on lakkautettu, katsotaan otetaanko se mukaan
+                if (OrganisaatioUtil.isPassive(os.getChild())) {
+                    if (includeLakkautetut) {
+                        result.add(os.getChild());
+                    }
+                }
+                else {
+                    result.add(os.getChild());
+                }
+            }
+        }
+        return result;
+    }
+
+
     /**
      * Laskee organisaatiosuhteet.
      *
