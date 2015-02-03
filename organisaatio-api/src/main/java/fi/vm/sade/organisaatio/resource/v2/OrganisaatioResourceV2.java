@@ -310,4 +310,13 @@ public interface OrganisaatioResourceV2 {
             @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid
     );
 
+    @GET
+    @Path("/liitokset")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
+            response = OrganisaatioRDTO.class)
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(
+            @ApiParam(value = "Liitokset jälkeen", required = false) @QueryParam("liitoksetAlkaen") DateParam date);
+
 }

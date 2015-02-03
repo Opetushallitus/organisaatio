@@ -32,7 +32,6 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -271,11 +270,22 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         return query.list(organisaatioSuhde);
     }
 
-    private void zeroTime(Calendar from) {
-        from.set(Calendar.HOUR_OF_DAY, 0);
-        from.set(Calendar.MINUTE, 0);
-        from.set(Calendar.SECOND, 0);
-        from.set(Calendar.MILLISECOND, 0);
+    @Override
+    public List<OrganisaatioSuhde> findLiitokset(Date date) {
+        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+
+        BooleanExpression expression = qSuhde.suhdeTyyppi.eq(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+
+        if (date != null) {
+            expression = expression.and(qSuhde.alkuPvm.eq(date).or(qSuhde.alkuPvm.after(date)));
+        }
+
+        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
+                .where(expression)
+                .orderBy(qSuhde.alkuPvm.desc())
+                .list(qSuhde);
+
+        return suhteet;
     }
 
     private void logRelation(String message, OrganisaatioSuhde relation) {
@@ -287,5 +297,4 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
                             relation.getAlkuPvm(), relation.getLoppuPvm()});
         }
     }
-
 }

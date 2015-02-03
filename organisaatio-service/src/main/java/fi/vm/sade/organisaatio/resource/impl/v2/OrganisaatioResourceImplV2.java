@@ -525,4 +525,18 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         return historia;
     }
+
+    @Override
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
+        Date date = null;
+        if(dateParam != null && dateParam.getValue() != null) {
+            date = dateParam.getValue();
+        }
+
+        List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);
+
+        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+
+        return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+    }
 }

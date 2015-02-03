@@ -113,4 +113,6 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
      */
     List<OrganisaatioSuhde> findForDay(Date day);
 
+    public List<OrganisaatioSuhde> findLiitokset(Date date);
+
 }
