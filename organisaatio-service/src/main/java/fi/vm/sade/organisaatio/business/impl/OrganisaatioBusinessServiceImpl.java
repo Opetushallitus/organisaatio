@@ -984,7 +984,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             Organisaatio child = os.getChild();
             // Find previous parent organisation.
-            List<OrganisaatioSuhde> parentRelations = child.getParentSuhteet();
+            List<OrganisaatioSuhde> parentRelations = child.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
             Collections.reverse(parentRelations);
             if (parentRelations.size() > 1) {
                 Organisaatio oldParent = parentRelations.get(1).getParent();
