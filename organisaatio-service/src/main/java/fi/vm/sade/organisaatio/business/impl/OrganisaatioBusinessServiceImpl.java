@@ -164,7 +164,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) throws ValidationException {
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
         // Tarkistetaan OID
         if (model.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
@@ -383,9 +383,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (parentOrg == null) {
             // Koulutustoimija in root level is stored under OPH
             Organisaatio uberParent = organisaatioDAO.findByOid(rootOrganisaatioOid);
-            entity = saveParentSuhde(entity, uberParent, opJarjNro, tyyppi);
+            entity = saveParentSuhde(entity, uberParent, opJarjNro);
         } else {
-            entity = saveParentSuhde(entity, parentOrg, opJarjNro, tyyppi);
+            entity = saveParentSuhde(entity, parentOrg, opJarjNro);
             if (!updating && entity.getParent() != null) {
                 solrIndexer.index(Arrays.asList(parentOrg));
             }
@@ -418,7 +418,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return new OrganisaatioResult(entity, null);
     }
 
-    private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+    private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
         OrganisaatioSuhde curSuhde = organisaatioSuhdeDAO.findParentTo(child.getId(), null);
         if (parent != null && (curSuhde == null || curSuhde.getParent().getId().equals(parent.getId()) == false)) {
             if (curSuhde != null) {
@@ -426,7 +426,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 curSuhde.setLoppuPvm(new Date());
                 organisaatioSuhdeDAO.update(curSuhde);
             }
-            organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro, tyyppi);
+            organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
         }
         child.setParentSuhteet(organisaatioSuhdeDAO.findBy("child", child));
         return this.organisaatioDAO.findByOid(child.getOid());
@@ -1009,11 +1009,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
-        changeOrganizationParent(organisaatio, newParent, date, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-    }
-
-    @Override
     public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa liittää itseensä
         if (organisaatio.getOid().equals(newParent.getOid())) {
@@ -1040,7 +1035,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioDAO.update(organisaatio);
         solrIndexer.index(organisaatio);
 
-        organisaatioLiitosDAO.addLiitos(organisaatio.getId(), newParent.getId(), date);
+        organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
 
         if (suhteet == null || suhteet.isEmpty()) {
             return;
@@ -1050,13 +1045,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (OrganisaatioUtil.isPassive(child) == false) {
-                changeOrganizationParent(child, newParent, date,
-                        OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+                changeOrganisaatioParent(child, newParent, date);
             }
         }
     }
 
-    private void changeOrganizationParent(Organisaatio organisaatio, Organisaatio newParent, Date date, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+    @Override
+    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa siirtää nykyisen parentin alle
         if (organisaatio.getParent().getOid().equals(newParent.getOid())) {
             throw new OrganisaatioMoveException("organisation.move.parent.invalid");
@@ -1077,7 +1072,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Luodaan uusi suhde
         // HUOM! Tässä pitää laittaa organisaatiosuhde "organisaation kautta --> näin parent laskenta pysyy mukana"
         OrganisaatioSuhde parentRelation = new OrganisaatioSuhde();
-        parentRelation.setSuhdeTyyppi(tyyppi);
+        parentRelation.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
         parentRelation.setAlkuPvm(date);
         parentRelation.setLoppuPvm(null);
         parentRelation.setChild(organisaatio);

@@ -37,10 +37,10 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.time.DateUtils;
 
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde.OrganisaatioSuhdeTyyppi;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import org.modelmapper.internal.cglib.core.CollectionUtils;
 
 
 /**
@@ -200,6 +200,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         OrganisaatioSuhde latestSuhde = null;
         Date curDate = new Date();
         for (OrganisaatioSuhde curSuhde : parentSuhteet) {
+            // Ei huomioida liitoksia
+            if (curSuhde.getSuhdeTyyppi() == OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS) {
+                continue;
+            }
+
             // Ei oteta huomioon suhteita, jotka tulevaisuudessa tai jotka ovat lakanneet
             if (curSuhde.getAlkuPvm().after(curDate) ||
                     (curSuhde.getLoppuPvm() != null && curSuhde.getLoppuPvm().before(curDate)))
@@ -540,8 +545,32 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return parentSuhteet;
     }
 
+    public List<OrganisaatioSuhde> getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+        List<OrganisaatioSuhde> result = new ArrayList<>();
+
+        Date now = new Date();
+        for (OrganisaatioSuhde os : parentSuhteet) {
+            if (os.getSuhdeTyyppi() == tyyppi) {
+                result.add(os);
+            }
+        }
+        return result;
+    }
+
     public List<OrganisaatioSuhde> getChildSuhteet() {
         return childSuhteet;
+    }
+
+    public List<OrganisaatioSuhde> getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+        List<OrganisaatioSuhde> result = new ArrayList<>();
+
+        Date now = new Date();
+        for (OrganisaatioSuhde os : childSuhteet) {
+            if (os.getSuhdeTyyppi() == tyyppi) {
+                result.add(os);
+            }
+        }
+        return result;
     }
 
     public List<Organisaatio> getChildren(boolean includeLakkautetut) {
@@ -549,6 +578,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
         Date now = new Date();
         for (OrganisaatioSuhde os : childSuhteet) {
+            // Ei huomioida liitoksia
+            if (os.getSuhdeTyyppi() == OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS) {
+                continue;
+            }
+
             // Organisaatiosuhde ei ole lakannut, eikä lasta ole poistettu
             if ((os.getLoppuPvm()==null || os.getLoppuPvm().after(now))
                     && !os.getChild().isOrganisaatioPoistettu()) {
@@ -572,14 +606,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * Laskee organisaatiosuhteet.
      *
      * @param now Aikarajaus; jos ei null, lasketaan vain ne organisaatiot joita ei ole lakkautettu tähän päivään mennessä.
-     * @param byType Rajaa {@link OrganisaatioSuhdeTyyppi}:n mukaan; jos null, ei rajausta.
      * @return Aliorganisaatioiden lukumäärä.
      */
-    public int getChildCount(OrganisaatioSuhdeTyyppi byType, Date now) {
+    public int getChildCount(Date now) {
         int ret = 0;
         for (OrganisaatioSuhde os : childSuhteet) {
-            if ((byType==null || os.getSuhdeTyyppi()==byType)
-                    && (now==null || os.getLoppuPvm()==null || os.getLoppuPvm().after(now) )
+            // Ei huomioida liitoksia
+            if (os.getSuhdeTyyppi() == OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS) {
+                continue;
+            }
+
+            if ((now==null || os.getLoppuPvm()==null || os.getLoppuPvm().after(now) )
                     && !os.getChild().isOrganisaatioPoistettu()
                     && (now==null || os.getChild().getLakkautusPvm()==null || os.getChild().getLakkautusPvm().after(now)) ) {
                 ret++;

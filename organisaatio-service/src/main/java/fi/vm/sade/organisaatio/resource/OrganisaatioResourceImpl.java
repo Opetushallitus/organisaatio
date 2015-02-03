@@ -237,7 +237,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
@@ -288,7 +288,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
