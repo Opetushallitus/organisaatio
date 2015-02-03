@@ -59,9 +59,9 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
         }
 
         // Poistettavalla organisaatiolla ei saa olla lapsia
-        if (org.getChildCount(null,new Date()) != 0) {
+        if (org.getChildCount(new Date()) != 0) {
             LOG.warn("Organisaatio to be deleted: " + oid + " contains child organisations: " +
-                    org.getChildCount(null,new Date()));
+                    org.getChildCount(new Date()));
             throw new OrganisaatioDeleteParentException();
         }
 

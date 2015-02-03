@@ -38,7 +38,7 @@ public class OrganisaatioBasicConverter {
 
     public static OrganisaatioPerustietoType convertOrganisaatioToBasicType(Organisaatio org) {
         OrganisaatioPerustietoType basic = new OrganisaatioPerustietoType();
-        
+
         if (org.getParent() != null && org.getParent().getOid() != null) {
             basic.setParentOid(org.getParent().getOid());
         }
@@ -56,22 +56,22 @@ public class OrganisaatioBasicConverter {
                 basic.getTyypit().add(OrganisaatioTyyppi.fromValue(tyyppi));
             }
         }
-        basic.setAliOrganisaatioMaara(org.getChildCount(null, new Date()));
+        basic.setAliOrganisaatioMaara(org.getChildCount(new Date()));
         basic.setParentOidPath(org.getParentOidPath());
         return basic;
     }
-    
+
     public static OrganisaatioPerustietoType convertOrganisaatioToBasicType(OrgPerustieto org) {
         OrganisaatioPerustietoType basic = new OrganisaatioPerustietoType();
-        
+
         if (org.getParentOidPath() != null && !org.getParentOidPath().isEmpty()) {
         	String[] ancestors = org.getParentOidPath().split("\\|");
         	if (ancestors.length > 0) {
         		String parentOid = ancestors[ancestors.length - 1];
         		basic.setParentOid(parentOid);
         	}
-        } 
-        
+        }
+
         basic.setOid(org.getOid());
         basic.setAlkuPvm(org.getAlkuPvm());
         basic.setLakkautusPvm(org.getLakkautusPvm());
@@ -90,16 +90,16 @@ public class OrganisaatioBasicConverter {
         basic.setParentOidPath(org.getParentOidPath());
         return basic;
     }
-    
-    
-    
+
+
+
     public static OrganisaatioDTO convertOrganisaatioToDTO(OrgPerustieto org) {
         OrganisaatioDTO dto = new OrganisaatioDTO();
-        
+
         if (org.getParentOidPath() != null && !org.getParentOidPath().isEmpty()) {
             dto.setParentOid(org.getParentOidPath().split("\\|")[0]);
         }
-        
+
         dto.setOid(org.getOid());
         dto.setAlkuPvm(org.getAlkuPvm());
         dto.setLakkautusPvm(org.getLakkautusPvm());
@@ -116,7 +116,7 @@ public class OrganisaatioBasicConverter {
         dto.setParentOidPath(org.getParentOidPath());
         return dto;
     }
-    
+
 
     private static String convertNimiFromEntity(Organisaatio org, String lang) {
     	if (org.getNimi() == null) {
@@ -129,7 +129,7 @@ public class OrganisaatioBasicConverter {
     	}
     	return null;
     }
-    
+
     private static MonikielinenTekstiTyyppi convertMonikielinenFromEntity(MonikielinenTeksti nimi) {
     	if (nimi == null) {
     		return null;
@@ -140,15 +140,15 @@ public class OrganisaatioBasicConverter {
     		newTeksti.setKieliKoodi(e.getKey());
     		newTeksti.setValue(e.getValue());
     		dto.getTeksti().add(newTeksti);
-    		
+
     	}
     	return dto;
     }
-    
+
     private static String convertNimiFromMonikieli(MonikielinenTeksti nimi, String lang) {
     	if (nimi == null) {
     		return null;
-    	}	
+    	}
     	for (Entry<String, String> e : nimi.getValues().entrySet()) {
     		if (e.getKey().equals(lang)) {
     			return e.getValue();
@@ -156,7 +156,7 @@ public class OrganisaatioBasicConverter {
     	}
     	return null;
     }
-    
+
     public static List<OrganisaatioPerustietoType> convertToPerustietos(List<Organisaatio> orgs) {
         List<OrganisaatioPerustietoType> op = new ArrayList<OrganisaatioPerustietoType>();
         for (Organisaatio org : orgs) {
@@ -164,7 +164,7 @@ public class OrganisaatioBasicConverter {
         }
         return op;
     }
-    
+
     public static List<OrganisaatioPerustietoType> convertSmallToPerustietos(List<OrgPerustieto> orgs) {
         List<OrganisaatioPerustietoType> op = new ArrayList<OrganisaatioPerustietoType>();
         for (OrgPerustieto org : orgs) {
@@ -172,7 +172,7 @@ public class OrganisaatioBasicConverter {
         }
         return op;
     }
-    
+
     public static List<OrganisaatioDTO> convertSmallToDTOs(List<OrgPerustieto> orgs) {
         List<OrganisaatioDTO> op = new ArrayList<OrganisaatioDTO>();
         for (OrgPerustieto org : orgs) {
@@ -180,5 +180,5 @@ public class OrganisaatioBasicConverter {
         }
         return op;
     }
-    
+
 }

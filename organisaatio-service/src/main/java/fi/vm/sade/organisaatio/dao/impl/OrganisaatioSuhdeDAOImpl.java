@@ -32,7 +32,6 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -101,9 +100,10 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
+        BooleanExpression historiaExpression = qSuhde.suhdeTyyppi.eq(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
-        BooleanExpression expression = qSuhde.child.id.eq(childId).and(alkuExpression).and(loppuExpression);
+        BooleanExpression expression = qSuhde.child.id.eq(childId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.parent, qOrganisaatio).fetch()
@@ -139,9 +139,10 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
+        BooleanExpression historiaExpression = qSuhde.suhdeTyyppi.eq(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
         BooleanExpression alkuExpression = qSuhde.alkuPvm.eq(atTime).or(qSuhde.alkuPvm.before(atTime));
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
-        BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(alkuExpression).and(loppuExpression);
+        BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
         List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
                 .join(qSuhde.child, qOrganisaatio).fetch()
@@ -203,48 +204,6 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
     /**
-     * If child has a "current" parent, this actually "moves" child under another parent.
-     *
-     * @param parentId
-     * @param childId
-     * @param startingFrom null == now
-     * @param organisaatioSuhdeTyyppi
-     * @return created relation
-     */
-    @Override
-    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom,
-            String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi) {
-        LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
-
-        if (parentId == null || childId == null) {
-            throw new IllegalArgumentException();
-        }
-        if (startingFrom == null) {
-            startingFrom = new Date();
-        }
-
-        //
-        // Create the new relation
-        //
-        Organisaatio parent = organisaatioDAO.read(parentId);
-        Organisaatio child = organisaatioDAO.read(childId);
-
-        OrganisaatioSuhde childRelation = new OrganisaatioSuhde();
-        childRelation.setSuhdeTyyppi(organisaatioSuhdeTyyppi);
-        childRelation.setAlkuPvm(startingFrom);
-        childRelation.setLoppuPvm(null);
-        childRelation.setChild(child);
-        childRelation.setParent(parent);
-        childRelation.setOpetuspisteenJarjNro(opetuspisteenJarjNro);
-
-        childRelation = insert(childRelation);
-
-        logRelation("  Created new child relation: ", childRelation);
-
-        return childRelation;
-    }
-
-    /**
      * Updates existing parent-child relation for give parent-child.
      * If parent is null ANY valid relation for child will be dated to be ended.
      *
@@ -269,6 +228,35 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
     @Override
+    public OrganisaatioSuhde addLiitos(Organisaatio organisaatio, Organisaatio kohde, Date startingFrom) {
+        LOG.info("addLiitos({}, {}, {})", new Object[]{organisaatio, kohde, startingFrom});
+
+        if (organisaatio == null || kohde == null) {
+            throw new IllegalArgumentException();
+        }
+        if (startingFrom == null) {
+            startingFrom = new Date();
+        }
+
+        //
+        // Create the new relation
+        //
+        OrganisaatioSuhde liitosRelation = new OrganisaatioSuhde();
+        liitosRelation.setAlkuPvm(startingFrom);
+        liitosRelation.setLoppuPvm(null);
+        liitosRelation.setChild(organisaatio);
+        liitosRelation.setParent(kohde);
+        liitosRelation.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+
+        liitosRelation = insert(liitosRelation);
+
+        logRelation("  Created new liitos relation: ", liitosRelation);
+
+        return liitosRelation;
+    }
+
+
+    @Override
     public List<OrganisaatioSuhde> findForDay(Date day) {
         if (day == null) {
             return new ArrayList<>();
@@ -282,11 +270,22 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         return query.list(organisaatioSuhde);
     }
 
-    private void zeroTime(Calendar from) {
-        from.set(Calendar.HOUR_OF_DAY, 0);
-        from.set(Calendar.MINUTE, 0);
-        from.set(Calendar.SECOND, 0);
-        from.set(Calendar.MILLISECOND, 0);
+    @Override
+    public List<OrganisaatioSuhde> findLiitokset(Date date) {
+        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+
+        BooleanExpression expression = qSuhde.suhdeTyyppi.eq(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+
+        if (date != null) {
+            expression = expression.and(qSuhde.alkuPvm.eq(date).or(qSuhde.alkuPvm.after(date)));
+        }
+
+        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
+                .where(expression)
+                .orderBy(qSuhde.alkuPvm.desc())
+                .list(qSuhde);
+
+        return suhteet;
     }
 
     private void logRelation(String message, OrganisaatioSuhde relation) {
@@ -298,24 +297,4 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
                             relation.getAlkuPvm(), relation.getLoppuPvm()});
         }
     }
-
-
-    @Override
-    public List<OrganisaatioSuhde> findParents(Long childId) {
-        if (childId == null) {
-            throw new IllegalArgumentException("childId == null");
-        }
-
-        LOG.info("findParents({})", childId);
-
-        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
-
-        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
-                .where(qSuhde.child.id.eq(childId))
-                .orderBy(qSuhde.alkuPvm.desc())
-                .list(qSuhde);
-
-        return suhteet;
-    }
-
 }

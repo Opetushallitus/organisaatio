@@ -57,7 +57,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
 
         add(doc, OID, org.getOid());
         add(doc, OPPILAITOSKOODI, org.getOppilaitosKoodi());
-        add(doc, ALIORGANISAATIOIDEN_LKM, org.getChildCount(null,new Date()));
+        add(doc, ALIORGANISAATIOIDEN_LKM, org.getChildCount(new Date()));
         for (String tyyppi : org.getTyypit()) {
             add(doc, ORGANISAATIOTYYPPI, tyyppi);
         }

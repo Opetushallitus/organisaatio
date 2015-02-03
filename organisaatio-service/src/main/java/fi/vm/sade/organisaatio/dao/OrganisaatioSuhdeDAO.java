@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 
 import java.util.Date;
@@ -38,16 +39,14 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
     OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro);
 
     /**
-     * If child has a "current" parent, this actually "moves" child under another parent.
+     * Lisätään organisaatioliitos.
      *
-     * @param parentId
-     * @param childId
+     * @param organisaatio Yhdistyvä organisaatio
+     * @param kohde Organisaatio, johon yhdistytään
      * @param startingFrom null == now
-     * @param opetuspisteenJarjNro
-     * @param organisaatioSuhdeTyyppi
-     * @return
+     * @return Luotu liitos
      */
-    OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi organisaatioSuhdeTyyppi);
+    OrganisaatioSuhde addLiitos(Organisaatio organisaatio, Organisaatio kohde, Date startingFrom);
 
     /**
      * @param parentId
@@ -114,11 +113,6 @@ public interface OrganisaatioSuhdeDAO extends JpaDAO<OrganisaatioSuhde, Long>  {
      */
     List<OrganisaatioSuhde> findForDay(Date day);
 
-    /**
-     * Returns all parent relationships (future, current, past) for given child organisations
-     * @param childId id of organization
-     * @return list of {@link fi.vm.sade.organisaatio.model.OrganisaatioSuhde} enties
-     */
-    List<OrganisaatioSuhde> findParents(Long childId);
+    public List<OrganisaatioSuhde> findLiitokset(Date date);
 
 }
