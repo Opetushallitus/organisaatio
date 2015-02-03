@@ -70,9 +70,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
     @Autowired
-    private OrganisaatioLiitosDAO organisaatioLiitosDAO;
-
-    @Autowired
     protected YhteystietoArvoDAO yhteystietoArvoDAO;
 
     @Autowired
