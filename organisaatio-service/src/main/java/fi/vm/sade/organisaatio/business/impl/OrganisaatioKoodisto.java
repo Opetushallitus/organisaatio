@@ -215,12 +215,10 @@ public class OrganisaatioKoodisto {
             entityRelaatiot.add(entity.getOppilaitosTyyppi());
             // childien opetuspisteet
             if (entity.getOppilaitosKoodi()!=null) {
-                for (OrganisaatioSuhde s :entity.getChildSuhteet()) {
-                    if (s.getOpetuspisteenJarjNro()!=null) {
-                        Organisaatio child = s.getChild();
-                        if (child!=null && !OrganisaatioUtil.isPassive(child) && !child.isOrganisaatioPoistettu()) {
-                            entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + s.getOpetuspisteenJarjNro());
-                        }
+                // Käydään läpi aliorganisaatiot, jotka eivät ole passiivisia
+                for (Organisaatio child : entity.getChildren(false)) {
+                    if (child.getOpetuspisteenJarjNro()!=null) {
+                        entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + child.getOpetuspisteenJarjNro());
                     }
                 }
             }

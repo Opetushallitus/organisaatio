@@ -30,6 +30,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import fi.vm.sade.generic.model.BaseEntity;
+//import javax.persistence.DiscriminatorColumn;
+//import javax.persistence.DiscriminatorType;
+//import javax.persistence.DiscriminatorValue;
+//import javax.persistence.Inheritance;
+//import javax.persistence.InheritanceType;
 
 /**
  * This entity is used to manage relationships between Organisaatio's.
@@ -39,6 +44,9 @@ import fi.vm.sade.generic.model.BaseEntity;
  */
 @Entity
 @Table(name = "organisaatiosuhde")
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name="suhdetyyppi", discriminatorType=DiscriminatorType.STRING)
+//@DiscriminatorValue("HISTORIA")
 @org.hibernate.annotations.Table(appliesTo = "organisaatiosuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
 public class OrganisaatioSuhde extends BaseEntity {
 

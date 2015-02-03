@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
@@ -40,7 +39,7 @@ public interface OrganisaatioBusinessService {
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) throws ValidationException;
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
     /**
      * @param oid
      * @return

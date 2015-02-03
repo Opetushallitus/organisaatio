@@ -136,14 +136,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<OrganisaatioRDTO> childList = new LinkedList<>();
         if (parentOrg != null) {
-            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
-            for (OrganisaatioSuhde suhde : suhteet) {
+            for (Organisaatio child : parentOrg.getChildren(true)) {
                 // Jätetään kuva pois, jos sitä ei haluta
-                if (suhde.getChild().getMetadata() != null) {
-                    suhde.getChild().getMetadata().setIncludeImage(includeImage);
+                if (child.getMetadata() != null) {
+                    child.getMetadata().setIncludeImage(includeImage);
                 }
 
-                childList.add(conversionService.convert(suhde.getChild(), OrganisaatioRDTO.class));
+                childList.add(conversionService.convert(child, OrganisaatioRDTO.class));
             }
         }
         return childList;
@@ -156,9 +155,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<String> childOidList = new LinkedList<>();
         if (parentOrg != null) {
-            List<OrganisaatioSuhde> suhteet = parentOrg.getChildSuhteet();
-            for (OrganisaatioSuhde suhde : suhteet) {
-                childOidList.add("\"" + suhde.getChild().getOid() + "\"");
+            for (Organisaatio child : parentOrg.getChildren(true)) {
+                childOidList.add("\"" + child.getOid() + "\"");
             }
         }
         return "{ \"oids\": [" + Joiner.on(",").join(childOidList) + "]}";
@@ -239,7 +237,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, true);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
@@ -290,7 +288,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, false);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {

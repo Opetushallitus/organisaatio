@@ -24,13 +24,17 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
 import java.util.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +73,10 @@ public class OrganisaatioBusinessChecker {
     public boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
+
+    // Organisaation järkevä max päivämäärä
+    private final DateTime max_date = new DateTime(2030, 12, 31, 0, 0, 0, 0);
+
 
     /**
      * Tarkastetaan, että nimihistorian alkupäivämäärät ovat valideja.
@@ -236,4 +244,65 @@ public class OrganisaatioBusinessChecker {
             }
         }
     }
+
+    public String checkPvmConstraints(Organisaatio organisaatio,
+            Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+        LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
+
+        final Date MIN_DATE = new Date(0);
+        final Date MAX_DATE = max_date.toDate();
+
+        Date actualStart = organisaatio.getAlkuPvm();
+        Date actualEnd = organisaatio.getLakkautusPvm();
+        OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
+        if (ownData != null) {
+            LOG.debug("isPvmConstraintsOk(): omat tiedot löytyy listasta");
+            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm() : MIN_DATE;
+            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm() : MAX_DATE;
+            LOG.debug("uusi alku:" + actualStart + ", uusi loppu:" + actualEnd);
+        } else {
+            LOG.debug("isPvmConstraintsOk(): omia tietoja ei löydy");
+        }
+        if (actualStart == null) {
+            actualStart = MIN_DATE;
+        }
+        if (minPvm == null) {
+            minPvm = MIN_DATE;
+        }
+        if (actualEnd == null) {
+            actualEnd = MAX_DATE;
+        }
+        if (maxPvm == null) {
+            maxPvm = MAX_DATE;
+        }
+        LOG.debug(String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s", actualStart, minPvm, actualEnd, maxPvm));
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, actualEnd) > 0) {
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
+            LOG.error(virhe);
+            return virhe;
+        }
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, minPvm) < 0) {
+            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", organisaatio.getOid(), actualStart, minPvm);
+            LOG.error(virhe);
+            return virhe;
+        }
+        if (DateTimeComparator.getDateOnlyInstance().compare(actualEnd, maxPvm) > 0) {
+            String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
+            LOG.error(virhe);
+            return virhe;
+        }
+        for (Organisaatio child : organisaatio.getChildren(true)) {
+            LOG.debug("kysytään lapselta " + child.getOid());
+            String lapsenVirhe = checkPvmConstraints(child, actualStart, actualEnd, muokkausTiedot);
+            if (!lapsenVirhe.equals("")) {
+                String virhe = String.format("lapsen %s virhe: %s", child.getOid(), lapsenVirhe);
+                LOG.error("lapsella ajat NOK: " + lapsenVirhe);
+                return virhe;
+            }
+        }
+        LOG.debug("ajat OK");
+        return "";
+    }
+
+
 }

@@ -16,7 +16,7 @@
 package fi.vm.sade.organisaatio.dto.mapping;
 
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLiitosDTOV2;
-import fi.vm.sade.organisaatio.model.OrganisaatioLiitos;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
@@ -24,12 +24,23 @@ public class OrganisaatioLiitosModelMapper extends ModelMapper {
 
     public OrganisaatioLiitosModelMapper() {
         super();
-        this.addMappings(new PropertyMap<OrganisaatioLiitos, OrganisaatioLiitosDTOV2>() {
+        this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioLiitosDTOV2>() {
             @Override
             protected void configure() {
                 // Monikielinen nimi
-                map().getOrganisaatio().setNimi(source.getOrganisaatio().getNimi().getValues());
-                map().getKohde().setNimi(source.getKohde().getNimi().getValues());
+                map().getOrganisaatio().setNimi(source.getChild().getNimi().getValues());
+                map().getKohde().setNimi(source.getParent().getNimi().getValues());
+
+                map().getOrganisaatio().setOid((source.getChild().getOid()));
+                // Katso tuolta miksi enum status --> string status
+                // https://github.com/jhalterman/modelmapper/issues/99
+                map(source.getChild().getStatus()).getOrganisaatio().setStatus(null);
+                map().getOrganisaatio().setTyypit(source.getChild().getTyypit());
+
+                map().getKohde().setOid((source.getParent().getOid()));
+                map(source.getParent().getStatus()).getKohde().setStatus(null);
+                map().getKohde().setTyypit(source.getParent().getTyypit());
+
             }
         });
     }
