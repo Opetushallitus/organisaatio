@@ -17,9 +17,7 @@ package fi.vm.sade.organisaatio.business.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,9 +41,6 @@ public class OrganisaatioKoodisto {
 
     @Autowired
     private OrganisaatioKoodistoClient client;
-
-    @Autowired
-    private OrganisaatioDAO organisaatioDAO;
 
     private final Gson gson;
 
@@ -265,6 +259,7 @@ public class OrganisaatioKoodisto {
      */
     public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         if (entity==null || entity.isOrganisaatioPoistettu() || OrganisaatioUtil.isPassive(entity)) {
+            LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu / passivoitu");
             return null;
         }
         /*
@@ -395,20 +390,5 @@ public class OrganisaatioKoodisto {
             }
         }
         return null;
-    }
-
-    /**
-     * Päivittää koodiston vastaamaan muokattua organisaatiota.
-     *
-     * @param oid Päivitettävän organisaation oid
-     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
-     */
-    @Async
-    public void updateKoodistoAsync(String oid, boolean reauthorize) {
-        LOG.info("Koodiston päivitys oidille: " + oid);
-
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
-
-        paivitaKoodisto(organisaatio, reauthorize);
     }
 }
