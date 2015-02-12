@@ -331,11 +331,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> groups(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
+        long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
         if (entitys == null) {
             return null;
         }
+
+        LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
+        long qstarted2 = System.currentTimeMillis();
 
         List<OrganisaatioRDTO> groupList = new ArrayList<>();
         for (Organisaatio entity : entitys) {
@@ -346,6 +350,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
             groupList.add(conversionService.convert(entity, OrganisaatioRDTO.class));
         }
+
+        LOG.debug("Ryhmien convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
+
         return groupList;
     }
 }

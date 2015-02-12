@@ -410,9 +410,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitä tiedot koodistoon.
-        organisaatioKoodisto.updateKoodistoAsync(entity.getOid(), true);
+        String info = organisaatioKoodisto.paivitaKoodisto(entity, true);
 
-        return new OrganisaatioResult(entity, null);
+        return new OrganisaatioResult(entity, info);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
@@ -736,7 +736,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                 }
                 if (childChanged == true) {
-                    organisaatioKoodisto.updateKoodistoAsync(child.getOid(), false);
+                    organisaatioKoodisto.paivitaKoodisto(child, false);
                 }
             }
             if (childrenChanged == true) {
@@ -949,7 +949,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
-                    organisaatioKoodisto.updateKoodistoAsync(org.getOid(), false);
+                    organisaatioKoodisto.paivitaKoodisto(org, false);
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);
@@ -1140,7 +1140,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             // Päivitetään tiedot koodistoon.
-            organisaatioKoodisto.updateKoodistoAsync(organisaatio.getOid(), true);
+            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
         }
     }
 }

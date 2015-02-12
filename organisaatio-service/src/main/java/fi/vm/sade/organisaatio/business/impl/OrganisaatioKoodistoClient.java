@@ -88,7 +88,7 @@ public class OrganisaatioKoodistoClient {
             LOG.error(err);
             throw new OrganisaatioKoodistoException(err);
         } else {
-            ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+            ArrayList<NameValuePair> postParameters = new ArrayList<>();
             HttpPost post = new HttpPost(serviceAccessUrl + "/accessTicket");
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
             postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
