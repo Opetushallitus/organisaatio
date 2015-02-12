@@ -14,16 +14,19 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotFlat, Organisaatio, nimi, node) {
+function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
+                                    OrganisaatiotFlat, Organisaatio,
+                                    nimi, node) {
 
 
     $log = $log.getInstance("OrganisaatioMoveController");
 
     $scope.nimi = nimi;
     $scope.suggests = [];
-    $scope.highestOrganization = false;
+    $scope.koulutustoimija = false;
     $scope.oppilaitos = false;
 
+    $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.organization");
 
     $scope.options = {
         newParentOrganization: null,
@@ -31,24 +34,50 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
         date: new Date()
     };
 
-    function updateSearch() {
-        var organizationType = "Oppilaitos";
+    function isKoulutustoimija() {
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
-        var koulutustoimija = currentOrganizationTypes.indexOf("Koulutustoimija") > -1;
-        $scope.oppilaitos = currentOrganizationTypes.indexOf("Oppilaitos") > -1;
+        return currentOrganizationTypes.indexOf("Koulutustoimija") > -1;
+    }
 
-        if (koulutustoimija) {
+    function isOppilaitos() {
+        var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
+        return currentOrganizationTypes.indexOf("Oppilaitos") > -1;
+    }
+
+    function updateSearch() {
+        var organizationType = "";
+        $scope.koulutustoimija = isKoulutustoimija();
+        $scope.oppilaitos = isOppilaitos();
+
+        if ($scope.koulutustoimija) {
+            // Koulutustoimijan tapauksessa voidaan tehdä vain liitos toiseen
+            // koulutustoimijaan
             organizationType = 'Koulutustoimija';
-            $scope.highestOrganization = true;
+            $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.koulutustoimija");
             $scope.options.merge = true;
-        } else if( $scope.options.merge ) {
-            organizationType = 'Oppilaitos';
-        }  else {
-            organizationType = 'Koulutustoimija';
+        } else if ($scope.oppilaitos) {
+            // Jos liitetään oppilaitos, niin liitos voi tapahtua vain toiseen
+            // oppilaitokseen. Jos taas siirretään oppilaitos, se voidaan siirtää
+            // vain koulutustoimijan alle.
+            if ($scope.options.merge) {
+                organizationType = 'Oppilaitos';
+                $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.oppilaitos");
+            }
+            else {
+                organizationType = 'Koulutustoimija';
+                $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.koulutustoimija");
+            }
+        }
+        else {
+            $log.warn("Virheellinen organisaatiotyyppi organisaationsiirrossa: ",
+                $scope.options.organisaatio.tyypit);
         }
 
-        var parametrit = {"searchstr": "", "organisaatiotyyppi": organizationType,
-                          "aktiiviset": true, "suunnitellut": true, "lakkautetut": false};
+        var parametrit = {"searchstr": "",
+                          "organisaatiotyyppi": organizationType,
+                          "aktiiviset": true,
+                          "suunnitellut": true,
+                          "lakkautetut": false};
         OrganisaatiotFlat.get(parametrit, function (result) {
             var values = result.organisaatiot.map(function (org) {
                 // Tarkistetaan, ettei organisaatiota yritetä sulauttaa itseensä
@@ -60,6 +89,8 @@ function OrganisaatioMoveController($scope, $modalInstance, $log, OrganisaatiotF
                     };
                 }
             });
+            // Tyhjennetään mahdolliset vanhat tulokset
+            $scope.suggests = [];
             $scope.suggests = $scope.suggests.concat(values);
         }, function (error) {
             $log.error("Organisaatioiden lataus epäonnistui ", error);
