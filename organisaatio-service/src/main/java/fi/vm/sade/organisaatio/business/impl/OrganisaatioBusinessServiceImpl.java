@@ -1032,7 +1032,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioDAO.update(organisaatio);
         solrIndexer.index(organisaatio);
 
+        // Lisätään uusi organisaatioiden liitos
         organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
+
+        // Päivitetään tiedot koodistoon.
+        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
 
         if (suhteet == null || suhteet.isEmpty()) {
             return;

@@ -258,8 +258,8 @@ public class OrganisaatioKoodisto {
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
-        if (entity==null || entity.isOrganisaatioPoistettu() || OrganisaatioUtil.isPassive(entity)) {
-            LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu / passivoitu");
+        if (entity==null || entity.isOrganisaatioPoistettu()) {
+            LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return null;
         }
         /*
