@@ -482,10 +482,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     /**
-     * Simple recursive operuspiste / toimipiste koodi calculation.
-     *
-     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then
-     * append OPETUSPISTE order number(org).
+     * Lasketaan opetuspisteen / toimipisteen koodi.
+     * Lisätään parent oppilaitoksen oppilaitoskoodiin opetuspisteen järjestysnumero.
      *
      * @param org
      * @return
@@ -494,7 +492,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("calculateToimipisteKoodi(org={})", org);
 
         if (org == null) {
-            LOG.debug("  org  == null, return ''");
+            LOG.warn("  org  == null, return ''");
             return "";
         }
 
@@ -512,8 +510,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 return null;
             }
 
-            String onum = isEmpty(org.getOpetuspisteenJarjNro()) ? "01" : org.getOpetuspisteenJarjNro();
-            return parentOppilaitos.getOppilaitosKoodi() + onum;
+            String opJarjNro = org.getOpetuspisteenJarjNro();
+            if (isEmpty(opJarjNro)) {
+                LOG.warn("Organisaatiolta {} puuttuu opetuspisteen järjestysnumero, return ''", org.getOid());
+                return "";
+            }
+
+            return parentOppilaitos.getOppilaitosKoodi() + opJarjNro;
         }
 
         LOG.debug("calculateToimipisteKoodi == TYPE unknown?: types='{}'", org.getTyypit());
