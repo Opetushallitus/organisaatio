@@ -238,19 +238,21 @@ public class OrganisaatioKoodisto {
     }
 
     /**
-     * Päivittää koodiston vastaamaan muokattua organisaatiota. Jos
-     * organisaation nimeä tai lakkautuspäivämäärää on muutettu, koodistoon
-     * päivitetään muuttuneet tiedot. Jos organisaatio on uusi ja koodia ei
-     * löydy, luodaan uusi koodi. Päivitettävä koodi riippuu parametrina annetun
-     * organisaation tyypistä seuraavasti: - Toimipiste (organisaatiolla on
-     * toimipistekoodi muttei oppilaitoskoodia) => Päivitetään koodi
-     * opetuspisteet_<toimipistekoodi>
-     * - Oppilaitos (organisaatiolla on oppilaitoskoodi) => Päivitetään koodi
-     * oppilaitosnumero_<oppilaitoskoodi>
-     * - Koulutustoimija (organisaatiolla on y-tunnus) => Päivitetään koodi
-     * koulutustoimija_<y-tunnus>
-     * - Jos organisaatiolla on yhteishaunkoulukoodi => Päivitetään koodi
-     * yhteishaunkoulukoodi_<yhteishaunkoulukoodi>
+     * Päivittää koodiston vastaamaan muokattua organisaatiota.
+     * 1. Jos organisaatio on uusi ja koodia ei löydy
+     *    => Luodaan uusi koodi
+     * 2. Jos organisaation nimeä tai voimassaoloaikaa on muutettu
+     *    => Koodistoon päivitetään muuttuneet tiedot.
+     *
+     * Päivitettävä koodi riippuu parametrina annetun organisaation tyypistä:
+     * - Toimipiste (organisaatiolla on toimipistekoodi muttei oppilaitoskoodia)
+     *   => Päivitetään koodi: opetuspisteet_[toimipistekoodi]
+     * - Oppilaitos (organisaatiolla on oppilaitoskoodi)
+     *   => Päivitetään koodi: oppilaitosnumero_[oppilaitoskoodi]
+     * - Koulutustoimija (organisaatiolla on y-tunnus)
+     *   => Päivitetään koodi: koulutustoimija_[y-tunnus]
+     * - Jos organisaatiolla on yhteishaunkoulukoodi
+     *   => Päivitetään koodi: yhteishaunkoulukoodi_[yhteishaunkoulukoodi]
      *
      * @param entity Organisaatio
      * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole

@@ -16,6 +16,7 @@
 
 function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                                     OrganisaatiotFlat, Organisaatio,
+                                    LocalisationService,
                                     nimi, node) {
 
 
@@ -42,6 +43,25 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
     function isOppilaitos() {
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
         return currentOrganizationTypes.indexOf("Oppilaitos") > -1;
+    }
+
+    function getNimi(organisaatio) {
+        if (LocalisationService.getLocale() in organisaatio.nimi &&
+                organisaatio.nimi[LocalisationService.getLocale()]) {
+            return organisaatio.nimi[LocalisationService.getLocale()];
+        }
+
+        // Ei löytynyt nimeä käyttäjän kielellä, kokeillaan muut vaihtoehdot
+        if ('fi' in organisaatio.nimi && organisaatio.nimi.fi) {
+            return organisaatio.nimi.fi;
+        }
+        if ('sv' in organisaatio.nimi && organisaatio.nimi.sv) {
+            return node.nimi.sv;
+        }
+        if ('en' in organisaatio.nimi && organisaatio.nimi.en) {
+            return organisaatio.nimi.en;
+        }
+        return "--";
     }
 
     function updateSearch() {
@@ -84,14 +104,13 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                 // eikä siirtää jo olemassa olevan parentin alle.
                 if (org.oid !== node.oid && org.oid !== node.parentOid) {
                     return {
-                        "name": org.nimi.fi,
+                        "name": getNimi(org),
                         "oid": org.oid
                     };
                 }
             });
-            // Tyhjennetään mahdolliset vanhat tulokset
-            $scope.suggests = [];
-            $scope.suggests = $scope.suggests.concat(values);
+
+            $scope.suggests = $filter('orderBy')(values, 'name');
         }, function (error) {
             $log.error("Organisaatioiden lataus epäonnistui ", error);
             Alert.add("error", error, false);

@@ -42,7 +42,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     <ui-select-match placeholder="{{siirtoKohdeTitle}}">
                         {{$select.selected.name}}
                     </ui-select-match>
-                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search } | orderBy : 'name'">
+                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search }">
                         <span>{{suggest.name}}</span>
                     </ui-select-choices>
                 </ui-select>
