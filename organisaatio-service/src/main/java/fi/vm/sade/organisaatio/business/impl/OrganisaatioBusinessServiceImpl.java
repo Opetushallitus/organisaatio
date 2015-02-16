@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -1009,7 +1010,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Organisaatiota ei saa yhdistää eri organisaatiotasolla olevaan organisaatioon
-        if (!organisaatio.getTyypit().containsAll(newParent.getTyypit())) {
+        // Organisaatioista on löydyttävä ainakin 1 yhteinen tyyppi
+        if (!CollectionUtils.containsAny(organisaatio.getTyypit(), newParent.getTyypit())) {
             throw new OrganisaatioMoveException("organisation.move.merge.level");
         }
 

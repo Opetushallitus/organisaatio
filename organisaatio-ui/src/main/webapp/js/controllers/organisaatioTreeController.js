@@ -125,6 +125,12 @@ function OrganisaatioTreeController($scope, $location, $filter,
                         $scope.model.refresh($scope.hakuehdot);
                     }
                 }
+                function error(response) {
+                    loadingService.onErrorHandled();
+                    $log.error("Organisaatio siirto response: " + response.status);
+                    Alert.add("error", $filter('i18n')("organisaatio.move.error", "") + ' '
+                                + $filter('i18n')(response.data.errorKey), true);
+                }
 
                 var params = {
                     oid: options.organisaatio.oid,
@@ -132,7 +138,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
                     merge: options.merge
                 };
 
-                OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply);
+                OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply, error);
             });
 
 
