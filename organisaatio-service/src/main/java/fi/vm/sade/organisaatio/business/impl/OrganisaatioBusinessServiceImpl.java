@@ -288,7 +288,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
         if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
-            opJarjNro = generateOpetuspisteenJarjNro(entity, model.getTyypit());
+            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
             opJarjNro = entity.getOpetuspisteenJarjNro();
@@ -362,7 +362,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
         // "Jos toimipiste, palautetaan oppilaitosnro+toimipisteenjärjestysnumero(konkatenoituna)sekä yhkoulukoodi."
-        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity));
+        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
@@ -481,6 +481,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return ret;
     }
 
+    private String calculateToimipisteKoodi(Organisaatio org) {
+        return calculateToimipisteKoodi(org, org.getParent());
+    }
+
     /**
      * Lasketaan opetuspisteen / toimipisteen koodi.
      * Lisätään parent oppilaitoksen oppilaitoskoodiin opetuspisteen järjestysnumero.
@@ -488,7 +492,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * @param org
      * @return
      */
-    private String calculateToimipisteKoodi(Organisaatio org) {
+    private String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
         LOG.debug("calculateToimipisteKoodi(org={})", org);
 
         if (org == null) {
@@ -504,7 +508,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (organisaatioIsOfType(org, OrganisaatioTyyppi.TOIMIPISTE)) {
             LOG.debug("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", org.getOpetuspisteenJarjNro());
 
-            Organisaatio parentOppilaitos = findParentOppilaitos(org);
+            Organisaatio parentOppilaitos = findParentOppilaitos(org, parent);
             if (parentOppilaitos == null) {
                 LOG.warn("Oppilaitos not found in parents");
                 return null;
@@ -567,11 +571,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+    private String generateOpetuspisteenJarjNro(Organisaatio entity) {
+        return generateOpetuspisteenJarjNro(entity, entity.getParent(), entity.getTyypit());
+    }
+
     /*
      * Generoidaan opetuspisteen järjestysnumero toimipisteelle.
      * Opetuspisteen järjestysnumero on seuraava vapaa numero oppilaitoksen alla.
      */
-    private String generateOpetuspisteenJarjNro(Organisaatio entity, List<String> tyypit) {
+    private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, List<String> tyypit) {
         // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
         if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.value())
@@ -582,7 +590,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Haetaan parent oppilaitos
-        Organisaatio parentOppilaitos = findParentOppilaitos(entity);
+        Organisaatio parentOppilaitos = findParentOppilaitos(entity, parent);
         if (parentOppilaitos == null) {
             LOG.warn("Oppilaitos not found in parents");
             return null;
@@ -623,8 +631,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setParentIdPath(parentIdPath);
     }
 
-    private Organisaatio findParentOppilaitos(Organisaatio orgE) {
-        Organisaatio currentParent = orgE.getParent();
+    private Organisaatio findParentOppilaitos(Organisaatio organisaatio, Organisaatio parent) {
+        Organisaatio currentParent = organisaatio.getParent();
+
+        // Uuden organisaation luonnin yhteydessä ei parent-suhdetta ole välttämättä vielä
+        // asetettu.
+        if (currentParent == null) {
+            currentParent = parent;
+        }
 
         while (currentParent != null) {
             if (OrganisaatioUtil.isOppilaitos(currentParent)) {
@@ -1066,7 +1080,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Organisaatiolla on mahdollisesti uusi parent
         // Lasketaan toimipisteelle uusi opetuspisteen järjestysnumero ja asetetaan toimipistekoodi
-        String opJarjNro = generateOpetuspisteenJarjNro(organisaatio, organisaatio.getTyypit());
+        String opJarjNro = generateOpetuspisteenJarjNro(organisaatio);
         organisaatio.setOpetuspisteenJarjNro(opJarjNro);
         organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
         parentRelation.setOpetuspisteenJarjNro(opJarjNro);
