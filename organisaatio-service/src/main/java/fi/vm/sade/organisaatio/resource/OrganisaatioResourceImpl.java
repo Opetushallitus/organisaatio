@@ -214,8 +214,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
+        if (o == null) {
+            LOG.info("Failed to find organisaatio by: " + oid);
+            throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
+        }
+
         // Jätetään kuva pois, jos sitä ei haluta
-        if (o!= null && o.getMetadata() != null) {
+        if (o.getMetadata() != null) {
             o.getMetadata().setIncludeImage(includeImage);
         }
 
