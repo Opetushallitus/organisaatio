@@ -36,12 +36,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
                 <br/>
                 <label>{{siirtoKohdeTitle}}</label>
-                <input id="newParent" name="newParentOrg" type="text" ng-model="options.newParentOrganization"
-                       class="input-xxlarge"
+                <input type="text" class="input-xxlarge"
+                       ng-model="options.newParentOrganization"
                        ng-disabled="disabled" ng-required="true"
                        ie-placeholder placeholder="{{siirtoKohdeTitle}}"
-                       typeahead="suggest.name for suggest in suggests | filter:$viewValue | limitTo:10"
-                       typeahead-on-select="model.setEctsNimi($item)" typeahead-editable="false" oph-enter>
+                       typeahead="suggest as suggest.name for suggest in suggests | filter:$viewValue | limitTo:10"
+                       typeahead-editable="false" oph-enter>
 
                 <br/>
 

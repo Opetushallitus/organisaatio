@@ -99,8 +99,6 @@ function OrganisaatioTreeController($scope, $location, $filter,
         });
 
         modalInstance.result.then(function (options) {
-
-
             var confirm = $modal.open({
                 templateUrl: 'organisaatiosiirtovarmistus.html',
                 controller: function ($scope, current, newParent) {
@@ -118,7 +116,6 @@ function OrganisaatioTreeController($scope, $location, $filter,
             });
 
             confirm.result.then(function () {
-
                 function reply() {
                     $log.info('Organisaatio siirretty osaksi: ' + node.oid);
 
@@ -141,8 +138,6 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
                 OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply, error);
             });
-
-
         });
     };
 
