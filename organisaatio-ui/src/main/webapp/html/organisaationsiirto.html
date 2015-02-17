@@ -19,7 +19,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <h3>{{'organisaatio.move.topic' | i18n}}</h3>
 </div>
 
-<div class="modal-body" style='height: 600px; overflow-y: visible;'>
+<div class="modal-body" style='overflow-y: visible;'>
 
     <div class="form-fluid">
         {{'organisaatio.move.to.be.moved' | i18n}}: {{nimi}}
@@ -35,17 +35,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 </label>
 
                 <br/>
-
                 <label>{{siirtoKohdeTitle}}</label>
-
-                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled" ng-required="true">
-                    <ui-select-match placeholder="{{siirtoKohdeTitle}}">
-                        {{$select.selected.name}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search }">
-                        <span>{{suggest.name}}</span>
-                    </ui-select-choices>
-                </ui-select>
+                <input id="newParent" name="newParentOrg" type="text" ng-model="options.newParentOrganization"
+                       class="input-xxlarge"
+                       ng-disabled="disabled" ng-required="true"
+                       ie-placeholder placeholder="{{siirtoKohdeTitle}}"
+                       typeahead="suggest.name for suggest in suggests | filter:$viewValue | limitTo:10"
+                       typeahead-on-select="model.setEctsNimi($item)" typeahead-editable="false" oph-enter>
 
                 <br/>
 

@@ -87,6 +87,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
         var modalInstance = $modal.open({
             templateUrl: 'organisaationsiirto.html',
             controller: OrganisaatioMoveController,
+            windowClass:'modal-wide',
             resolve: {
                 nimi: function () {
                     return $scope.model.getNimi(node);
