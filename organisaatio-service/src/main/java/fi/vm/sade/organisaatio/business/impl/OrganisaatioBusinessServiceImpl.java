@@ -1020,8 +1020,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioMoveException("organisation.move.merge.parent.invalid");
         }
 
-        final List<OrganisaatioSuhde> suhteet = organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
-
         // Lakkautetaan yhdistyvä organisaatio
         Calendar previousDay = Calendar.getInstance();
         previousDay.setTime(date);
@@ -1036,17 +1034,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään tiedot koodistoon.
         organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
 
-        if (suhteet == null || suhteet.isEmpty()) {
-            return;
-        }
-
         // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
+        final List<OrganisaatioSuhde> suhteet =
+                organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (OrganisaatioUtil.isPassive(child) == false) {
                 changeOrganisaatioParent(child, newParent, date);
             }
         }
+
+        // Päivitetään tiedot koodistoon.
+        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
     }
 
     @Override
@@ -1080,12 +1079,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Asetetaan uusi parentsuhde
         organisaatio.getParentSuhteet().add(parentRelation);
 
-        // Organisaatiolla on mahdollisesti uusi parent
-        // Lasketaan toimipisteelle uusi opetuspisteen järjestysnumero ja asetetaan toimipistekoodi
-        String opJarjNro = generateOpetuspisteenJarjNro(organisaatio);
-        organisaatio.setOpetuspisteenJarjNro(opJarjNro);
-        organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
-        parentRelation.setOpetuspisteenJarjNro(opJarjNro);
+        // Organisaatiolla on uusi parent, toimipisteen tapauksessa ollaan uuden oppilaitoksen alla.
+        // Lasketaan toimipisteelle uusi opetuspisteen järjestysnumero ja asetetaan toimipistekoodi.
+        // Mahdollinen vanha toimipistekoodi pitää lakkauttaa ja luoda uusi koodiston koodi.
+        if (OrganisaatioUtil.isToimipiste(organisaatio)) {
+            // Vanha toimipistekoodi tarvitaan pitää lakkauttaa
+            String oldToimipistekoodi = organisaatio.getToimipisteKoodi();
+
+            String opJarjNro = generateOpetuspisteenJarjNro(organisaatio);
+            organisaatio.setOpetuspisteenJarjNro(opJarjNro);
+            organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
+            parentRelation.setOpetuspisteenJarjNro(opJarjNro);
+
+            // Lakkautetaan vanha opetuspistekoodi
+            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, date, true);
+
+            // Päivitetään uusi opetuspistekoodi koodistoon.
+            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+        }
 
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
         Date today = new Date();

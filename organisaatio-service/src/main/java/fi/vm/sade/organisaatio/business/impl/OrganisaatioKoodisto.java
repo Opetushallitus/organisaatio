@@ -18,9 +18,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OrganisaatioKoodisto {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -47,6 +46,22 @@ public class OrganisaatioKoodisto {
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
     private boolean reauthorize;
+
+    public enum KoodistoUri {
+        TOIMIPISTE("opetuspisteet"),
+        OPPILAITOS("oppilaitosnumero"),
+        KOULUTUSTOIMIJA("koulutustoimija"),
+        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi");
+        private final String uri;
+
+        KoodistoUri(String koodistoUri) {
+            uri = koodistoUri;
+        }
+
+        public String uri() {
+            return uri;
+        }
+    }
 
     /**
      * Luo instanssin ja alustaa gson:in
@@ -390,6 +405,73 @@ public class OrganisaatioKoodisto {
                 }
 
             }
+        }
+        return null;
+    }
+
+    /**
+     * Asettaa annetulle koodille lakkautuspäivämäärän.
+     *
+     * @param uri KoodiUri
+     * @param tunniste Koodin tunniste, esim. opetuspiste koodille toimipistekoodi
+     * @param lakkautusPvm Lakkautuspäivämäärä
+     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     *
+     * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
+     */
+    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
+        this.reauthorize = reauthorize;
+
+        if (uri == null || uri.isEmpty()) {
+            LOG.warn("Koodia ei voi lakkauttaa: uri == null / empty");
+            return INFO_CODE_SAVE_FAILED;
+        }
+
+        if (tunniste == null || tunniste.isEmpty()) {
+            LOG.warn("Koodia ei voi lakkauttaa: tunniste == null / empty");
+            return INFO_CODE_SAVE_FAILED;
+        }
+
+        if (lakkautusPvm == null) {
+            LOG.warn("Koodia ei voi lakkauttaa: lakkautusPvm == null / empty");
+            return INFO_CODE_SAVE_FAILED;
+        }
+
+        OrganisaatioKoodistoKoodi koodi;
+        LOG.debug("KOODI uri: " + uri + ", tunniste: '" + tunniste + "'");
+        // Tunniste on olemassa, haetaan koodistosta
+        try {
+            koodi = haeKoodi(uri, tunniste);
+        } catch (OrganisaatioKoodistoException e) {
+            LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
+            return INFO_CODE_SAVE_FAILED;
+        }
+
+        // Koodia ei löytynyt --> ei voida lakkauttaa
+        if (koodi == null) {
+            LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui, koodia ei löytynyt!");
+            return INFO_CODE_SAVE_FAILED;
+        }
+
+        boolean muuttunut = false;
+
+        // Tarkistetaan onko lakkautuspäivämäärä muuttunut
+        String loppupvm = new SimpleDateFormat("yyyy-MM-dd").format(lakkautusPvm);
+        if (!loppupvm.equals(koodi.getVoimassaLoppuPvm())) {
+            LOG.debug("Lakkautuspvm muuttunut");
+            koodi.setVoimassaLoppuPvm(loppupvm);
+            muuttunut = true;
+        }
+
+        if (muuttunut == true) {
+            if (paivitaKoodi(koodi) == true) {
+                LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
+            } else {
+                LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
+                return INFO_CODE_SAVE_FAILED;
+            }
+        } else {
+            LOG.debug("Ei muutoksia");
         }
         return null;
     }
