@@ -319,4 +319,14 @@ public interface OrganisaatioResourceV2 {
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(
             @ApiParam(value = "Liitokset jälkeen", required = false) @QueryParam("liitoksetAlkaen") DateParam date);
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Path("ryhmat")
+    @ApiOperation(
+            value = "Hakee organisaation alla olevat ryhmät",
+            notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
+            response = OrganisaatioGroupDTOV2.class,
+            responseContainer = "List")
+    public List<OrganisaatioGroupDTOV2> groups() throws Exception;
+
 }
