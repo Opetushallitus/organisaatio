@@ -60,9 +60,12 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
     };
 
     $scope.localizeNimi = function(ryhma) {
-        return ryhma.nimi[language] ||
-                ryhma.nimi[vaihtoehtoisetKielikoodit[language][0]] ||
-                ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
+        if (ryhma && ryhma !== undefined && 'nimi' in ryhma) {
+            return ryhma.nimi[language] ||
+                    ryhma.nimi[vaihtoehtoisetKielikoodit[language][0]] ||
+                    ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
+        }
+        return '';
     };
 
     $scope.luoUusi = function() {
