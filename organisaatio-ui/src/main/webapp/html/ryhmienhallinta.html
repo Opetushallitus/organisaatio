@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <ui-select class="span10" style="left: -20px;" ng-model="currentGroupSelection.selected" theme="selectize" ng-disabled="disabled"
                        on-select="valitseRyhma($item)">
                 <ui-select-match placeholder="{{'RyhmienHallinta.valitseRyhma'| i18n}}">{{localizeNimi($select.selected)}}</ui-select-match>
-                <ui-select-choices repeat="group in model.groups | filter: $select.search">
+                <ui-select-choices repeat="group in model.groups | filter: $select.search | orderBy : localizeNimi">
                     <span ng-bind-html-unsafe="group.nimi.fi | highlight: $select">{{localizeNimi(group)}}</span>
                 </ui-select-choices>
             </ui-select>
