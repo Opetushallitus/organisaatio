@@ -35,7 +35,8 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
                         ryhma.kuvaus2 = {};
                     }
                     else {
-                        ryhma.kuvaus2 = ryhma.kuvaus;
+                        ryhma.kuvaus2 = angular.copy(ryhma.kuvaus);
+                        delete ryhma.kuvaus;
                     }
                     ryhma.tyypit = ['Ryhma'];
                     if (ryhma.ryhmatyypit.length===0) {
