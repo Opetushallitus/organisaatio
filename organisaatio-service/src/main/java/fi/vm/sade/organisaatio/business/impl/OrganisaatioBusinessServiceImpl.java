@@ -226,7 +226,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
 
         // Asetetaan parent path
-        createParentPath(entity, model.getParentOid());
+        setParentPath(entity, model.getParentOid());
 
         // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
         if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE)
@@ -613,7 +613,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     }
 
-    private void createParentPath(Organisaatio entity, String parentOid) {
+    private void setParentPath(Organisaatio entity, String parentOid) {
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
         }
@@ -676,7 +676,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         for (Organisaatio child : children) {
             // Create new parent id / oid paths for child.
-            createParentPath(child, parent.getOid());
+            setParentPath(child, parent.getOid());
             organisaatioDAO.update(child);
             updateChildrenRecursive(child);
         }
@@ -987,7 +987,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Organisaatio oldParent = parentRelations.get(1).getParent();
                 affectedParents.add(oldParent);
             }
-            createParentPath(child, os.getParent().getOid());
+            setParentPath(child, os.getParent().getOid());
             organisaatioDAO.update(child);
             solrIndexer.index(child);
 
@@ -1030,9 +1030,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Lisätään uusi organisaatioiden liitos
         organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
-
-        // Päivitetään tiedot koodistoon.
-        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
 
         // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
         final List<OrganisaatioSuhde> suhteet =
@@ -1091,8 +1088,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
             parentRelation.setOpetuspisteenJarjNro(opJarjNro);
 
-            // Lakkautetaan vanha opetuspistekoodi
-            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, date, true);
+            Calendar previousDay = Calendar.getInstance();
+            previousDay.setTime(date);
+            previousDay.add(Calendar.DAY_OF_MONTH, -1);
+
+            // Lakkautetaan vanha opetuspistekoodi (opetuspiste pistetään lakkaamaan päivää ennen)
+            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime(), true);
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
             organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
@@ -1101,11 +1102,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
         Date today = new Date();
         if (date.before(today) || DateUtils.isSameDay(date, today)) {
-            createParentPath(organisaatio, newParent.getOid());
+            setParentPath(organisaatio, newParent.getOid());
             organisaatioDAO.update(organisaatio);
             solrIndexer.index(organisaatio);
+
             updateChildrenRecursive(organisaatio);
-            updateCurrentOrganisaatioNimet();
         }
     }
 
