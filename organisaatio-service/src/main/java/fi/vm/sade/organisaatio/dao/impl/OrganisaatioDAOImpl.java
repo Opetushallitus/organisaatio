@@ -84,12 +84,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .list(qOrganisaatio);
     }
 
-    public int countChildren(String parentOid) {
-        return (Integer) getEntityManager().createQuery("FROM " + Organisaatio.class.getName() + " WHERE parentOid=? AND organisaatioPoistettu IS NOT NULL")
-                .setParameter(1, parentOid)
-                .getSingleResult();
-    }
-
     /**
      * Find childers for given Organisation with OID.
      *
@@ -636,51 +630,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         getEntityManager().persist(org);
 
         return org.getParent();
-    }
-
-    public HistoryMetadata findCurrentHistoryMetadata(Long organisaatioId, String key, String kieli) {
-        return findPreviousValidHistoryMetadata(organisaatioId, key, kieli, new Date());
-    }
-
-    public HistoryMetadata findPreviousValidHistoryMetadata(Long organisaatioId, String avain, String kieli, Date atTime) {
-
-        if (organisaatioId == null || avain == null || kieli == null || atTime == null) {
-            throw new IllegalArgumentException("orgId, avain, kieli, aika has to be specified.");
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("SELECT a FROM HistoryMetadata a ");
-        sb.append("WHERE ");
-        sb.append("a.organisaatio.id = :organisaatioId AND ");
-        sb.append("a.avain = :avain AND ");
-        sb.append("a.kieli = :kieli AND ");
-        sb.append("a.aika <= :aika ");
-        sb.append("ORDER BY a.aika DESC");
-
-        Query q = getEntityManager().createQuery(sb.toString());
-        q.setParameter("organisaatioId", organisaatioId);
-        q.setParameter("avain", avain);
-        q.setParameter("kieli", kieli);
-        q.setParameter("aika", atTime);
-        q.setMaxResults(1);
-
-        HistoryMetadata result = (HistoryMetadata) q.getSingleResult();
-        return result;
-    }
-
-    public void addHistoriaMetadata(Long organisaatioId, String avain, String kieli, Date atTime, String arvo) {
-
-        Organisaatio organisaatio = read(organisaatioId);
-
-        HistoryMetadata hmd = new HistoryMetadata();
-        hmd.setOrganisaatio(organisaatio);
-        hmd.setAvain(avain);
-        hmd.setKieli(kieli);
-        hmd.setAika(atTime);
-        hmd.setArvo(arvo);
-
-        getEntityManager().persist(hmd);
     }
 
     /**

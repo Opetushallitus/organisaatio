@@ -526,7 +526,7 @@ app.factory('HenkiloKayttooikeus', function($resource) {
 // Ryhmien haku organisaatioplavelulta
 // Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/1.2.246.562.10.00000000001/ryhmat
 app.factory('Ryhmat', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/:oid/ryhmat", {oid: "@oid"}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/ryhmat", {}, {
         get: {method: 'GET', isArray: true}
     });
 });

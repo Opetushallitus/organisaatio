@@ -26,13 +26,8 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
-import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
-import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
-import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.*;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -86,13 +81,13 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     private OrganisaatioLiitosModelMapper organisaatioLiitosModelMapper;
 
     @Autowired
+    private GroupModelMapper groupModelMapper;
+
+    @Autowired
     private ConversionService conversionService;
 
     @Autowired
     private OrganisaatioSearchService organisaatioSearchService;
-
-    @Autowired
-    private OrganisaatioBusinessChecker checker;
 
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
@@ -484,13 +479,19 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         }
 
         // Liitetäänkö organisaatio vai siirretäänkö organisaatio
-        if (merge) {
-            // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
-            organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+        try {
+            if (merge) {
+                // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
+                organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+            }
+            else {
+                // Oppilaitos siirtyy toisen organisaation alle
+                organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+            }
         }
-        else {
-            // Oppilaitos siirtyy toisen organisaation alle
-            organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+        catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
         }
     }
 
@@ -538,5 +539,23 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
 
         return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+    }
+
+    @Override
+    public List<OrganisaatioGroupDTOV2> groups() throws Exception {
+        long qstarted = System.currentTimeMillis();
+
+        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
+
+        LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
+        long qstarted2 = System.currentTimeMillis();
+
+        Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV2>>() {}.getType();
+
+        List<OrganisaatioGroupDTOV2> groupList = groupModelMapper.map(entitys, groupListType);
+
+        LOG.debug("Ryhmien convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
+
+        return groupList;
     }
 }

@@ -14,8 +14,8 @@
  European Union Public Licence for more details.
  */
 
-function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
-                                   $log, $injector,
+function RyhmienHallintaController($scope, $location, $filter, $routeParams,
+                                   $modal, $log, $injector, $q,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
     "use strict";
@@ -60,9 +60,12 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
     };
 
     $scope.localizeNimi = function(ryhma) {
-        return ryhma.nimi[language] ||
-                ryhma.nimi[vaihtoehtoisetKielikoodit[language][0]] ||
-                ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
+        if (ryhma && ryhma !== undefined && 'nimi' in ryhma) {
+            return ryhma.nimi[language] ||
+                    ryhma.nimi[vaihtoehtoisetKielikoodit[language][0]] ||
+                    ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
+        }
+        return '';
     };
 
     $scope.luoUusi = function() {
@@ -102,6 +105,10 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
     };
 
     $scope.tallenna = function() {
+        $log.info("tallenna(): ", $scope.currentGroup);
+
+        var deferred = $q.defer();
+
         if ($scope.currentGroup !== null) {
             $scope.model.save($scope.currentGroup, function(savedGroup) {
                 $scope.currentGroup = savedGroup;
@@ -109,12 +116,15 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
                 $scope.currentGroupSelection = {};
                 $scope.currentGroupSelection.selected = savedGroup;
                 $scope.form.$setPristine();
+                deferred.resolve();
             }, function(error) {
                 loadingService.onErrorHandled();
                 $log.warn("Failed to save group: ", $scope.currentGroup);
                 Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
+                deferred.reject();
             });
         }
+        return deferred.promise;
     };
 
     $scope.peruuta = function() {
@@ -134,5 +144,58 @@ function RyhmienHallintaController($scope, $filter, $routeParams, $modal,
     }, function(error) {
         loadingService.onErrorHandled();
         Alert.add("error", error, false);
+    });
+
+    // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
+    $scope.cancel = function() {
+        $location.path("/");
+    };
+
+    // Käsitellään muokkausnäkymästä poistuminen
+    $scope.$on("$locationChangeStart", function(event, next, current) {
+        // Tallennetaan next url ja kysytään käyttäjältä haluaako siirtyä vai jatkaa.
+        // Jos käyttäjä haluaa siirtyä seuraavalle sivulle --> location change
+        var next = next;
+        $log.log("Location change: " + current +" -> " + next);
+
+        var changeLocation = function() {
+            $log.debug('Poistutaan ryhmienhallinnasta');
+            $scope.modalOpen = false;
+            $scope.form.$setPristine();
+            $location.path(next);
+        };
+
+        if ($scope.form.$dirty) {
+            event.preventDefault();
+            $scope.modalOpen = true;
+            var modalInstance = $modal.open({
+                templateUrl: 'organisaationmuokkauksenperuutus.html',
+                controller: OrganisaatioCancelController,
+                resolve: {
+                    invalid: function () {
+                        return $scope.form.$invalid;
+                    }
+                }
+            });
+
+            // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun
+            // organisaation, niin odotetaan tallennusvaihe loppuun ja
+            // siirrytää vasta sitten uuteen osoitteeseen.
+            modalInstance.result.then(function (save) {
+                if (save) {
+                    $scope.tallenna().then(function() {
+                        changeLocation();
+                    }, function(reason) {
+                        changeLocation();
+                    });
+                }
+                else {
+                   changeLocation();
+                }
+            }, function() {
+                $scope.modalOpen = false;
+                $log.debug('Jatketaan ryhmienhallintaa');
+            });
+        }
     });
 }

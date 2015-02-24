@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -225,7 +226,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
 
         // Asetetaan parent path
-        createParentPath(entity, model.getParentOid());
+        setParentPath(entity, model.getParentOid());
 
         // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
         if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE)
@@ -288,7 +289,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
         if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
-            opJarjNro = generateOpetuspisteenJarjNro(entity, model.getTyypit());
+            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
+            entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
             opJarjNro = entity.getOpetuspisteenJarjNro();
         }
@@ -361,7 +363,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
         // "Jos toimipiste, palautetaan oppilaitosnro+toimipisteenjärjestysnumero(konkatenoituna)sekä yhkoulukoodi."
-        entity.setToimipisteKoodi(calculateAndUpdateToimipisteKoodi2(entity));
+        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
@@ -480,42 +482,49 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return ret;
     }
 
+    private String calculateToimipisteKoodi(Organisaatio org) {
+        return calculateToimipisteKoodi(org, org.getParent());
+    }
+
     /**
-     * Simple recursive operuspiste / toimipiste koodi calculation.
+     * Lasketaan opetuspisteen / toimipisteen koodi.
+     * Lisätään parent oppilaitoksen oppilaitoskoodiin opetuspisteen järjestysnumero.
      *
-     * Search "up" for OPPILAITOS and return it's OppilaitosKoodi and then
-     * append OPETUSPISTE order number(s).
-     *
-     * @param s
+     * @param org
      * @return
      */
-    private String calculateAndUpdateToimipisteKoodi2(Organisaatio s) {
-        LOG.debug("calculateAndUpdateToimipisteKoodi2(org={})", s);
+    private String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
+        LOG.debug("calculateToimipisteKoodi(org={})", org);
 
-        if (s == null) {
-            LOG.debug("  org  == null, return ''");
+        if (org == null) {
+            LOG.warn("  org  == null, return ''");
             return "";
         }
 
-        if (organisaatioIsOfType(s, OrganisaatioTyyppi.OPPILAITOS)) {
-            LOG.debug("  org  == OPPILAITOS, return oppilaitoskoodi: '{}'", s.getOppilaitosKoodi());
-            return s.getOppilaitosKoodi();
+        if (organisaatioIsOfType(org, OrganisaatioTyyppi.OPPILAITOS)) {
+            LOG.debug("  org  == OPPILAITOS, return oppilaitoskoodi: '{}'", org.getOppilaitosKoodi());
+            return org.getOppilaitosKoodi();
         }
 
-        if (organisaatioIsOfType(s, OrganisaatioTyyppi.TOIMIPISTE)) {
-            LOG.debug("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", s.getOpetuspisteenJarjNro());
-            String onum = isEmpty(s.getOpetuspisteenJarjNro()) ? "01" : s.getOpetuspisteenJarjNro();
-            Organisaatio parent = null;
-            if (s.getId() != null) {
-                parent = (s.getParent() != null) ? s.getParent() : this.organisaatioSuhdeDAO.findParentTo(s.getId(), new Date()).getParent();
-            } else {
-                String[] parentOids = s.getParentOidPath().split("\\|");
-                parent = (s.getParent() != null) ? s.getParent() : organisaatioDAO.findByOid(parentOids[parentOids.length - 1]);
+        if (organisaatioIsOfType(org, OrganisaatioTyyppi.TOIMIPISTE)) {
+            LOG.debug("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", org.getOpetuspisteenJarjNro());
+
+            Organisaatio parentOppilaitos = findParentOppilaitos(org, parent);
+            if (parentOppilaitos == null) {
+                LOG.warn("Oppilaitos not found in parents");
+                return null;
             }
-            return calculateAndUpdateToimipisteKoodi2(parent) + onum;
+
+            String opJarjNro = org.getOpetuspisteenJarjNro();
+            if (isEmpty(opJarjNro)) {
+                LOG.warn("Organisaatiolta {} puuttuu opetuspisteen järjestysnumero, return ''", org.getOid());
+                return "";
+            }
+
+            return parentOppilaitos.getOppilaitosKoodi() + opJarjNro;
         }
 
-        LOG.debug("calculateAndUpdateToimipisteKoodi2 == TYPE unknown?: types='{}'", s.getTyypit());
+        LOG.debug("calculateToimipisteKoodi == TYPE unknown?: types='{}'", org.getTyypit());
 
         return "";
     }
@@ -563,61 +572,48 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+    private String generateOpetuspisteenJarjNro(Organisaatio entity) {
+        return generateOpetuspisteenJarjNro(entity, entity.getParent(), entity.getTyypit());
+    }
+
     /*
-     * Generating the opetuspiteenJarjNro for an opetuspiste.
-     * The opetuspiteenJarjNro is the count of the cescendants of the parent oppilaitos + 1.
+     * Generoidaan opetuspisteen järjestysnumero toimipisteelle.
+     * Opetuspisteen järjestysnumero on seuraava vapaa numero oppilaitoksen alla.
      */
-    private String generateOpetuspisteenJarjNro(Organisaatio entity, List<String> tyypit) {
-        //Opetuspisteen jarjestysnumero is only generated to opetuspiste which is not also an oppilaitos
-        if (tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.value())
-                && !tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
+    private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, List<String> tyypit) {
+        // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
+        // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
+        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.value())
+                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.value())) {
+            LOG.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
+                    entity.getOid(), tyypit);
             return null;
         }
 
-        Organisaatio oppilaitosE = findClosestOppilaitos(entity);
-        if (oppilaitosE == null) {
+        // Haetaan parent oppilaitos
+        Organisaatio parentOppilaitos = findParentOppilaitos(entity, parent);
+        if (parentOppilaitos == null) {
             LOG.warn("Oppilaitos not found in parents");
             return null;
         }
 
-        List<OrganisaatioSuhde> children = new ArrayList<>();
-        getDescendantSuhteet(oppilaitosE, children);
-        int nextVal = children.size() + 1;
-
-        String jarjNro = "99";
-        int i;
-        // kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
-        for (i = nextVal; i < 100; i++) {
+        // Kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
+        String jarjNro;
+        int nextVal = parentOppilaitos.getChildCount(new Date()) + 1;
+        for (int i = nextVal; i < 100; i++) {
             jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
-            if (checker.checkToimipistekoodiIsUniqueAndNotUsed(oppilaitosE.getOppilaitosKoodi() + jarjNro)) {
-                entity.setOpetuspisteenJarjNro(jarjNro);
+            if (checker.checkToimipistekoodiIsUniqueAndNotUsed(parentOppilaitos.getOppilaitosKoodi() + jarjNro)) {
+                LOG.debug("Generoitu opetuspisteen järjestysnumero: {} / {}", parentOppilaitos.getOppilaitosKoodi(), jarjNro);
                 return jarjNro;
             }
         }
-        LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + oppilaitosE.getOppilaitosKoodi() + ")");
-        return jarjNro;
+
+        LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + parentOppilaitos.getOppilaitosKoodi() + ")");
+        return null;
 
     }
 
-    private void getDescendantSuhteet(Organisaatio parentE, List<OrganisaatioSuhde> children) {
-        if (parentE == null) {
-            return;
-        }
-
-        List<OrganisaatioSuhde> curChildren = this.organisaatioSuhdeDAO.findBy("parent", parentE);
-        if (curChildren == null) {
-            return;
-        }
-
-        for (OrganisaatioSuhde curChildSuhde : curChildren) {
-            if (curChildSuhde.getSuhdeTyyppi() == OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA) {
-                getDescendantSuhteet(curChildSuhde.getChild(), children);
-                children.add(curChildSuhde);
-            }
-        }
-    }
-
-    private void createParentPath(Organisaatio entity, String parentOid) {
+    private void setParentPath(Organisaatio entity, String parentOid) {
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
         }
@@ -636,21 +632,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setParentIdPath(parentIdPath);
     }
 
-    private Organisaatio findClosestOppilaitos(Organisaatio orgE) {
-        if (orgE.getParentOidPath() == null) {
-            return null;
+    private Organisaatio findParentOppilaitos(Organisaatio organisaatio, Organisaatio parent) {
+        Organisaatio currentParent = organisaatio.getParent();
+
+        // Uuden organisaation luonnin yhteydessä ei parent-suhdetta ole välttämättä vielä
+        // asetettu.
+        if (currentParent == null) {
+            currentParent = parent;
         }
 
-        String[] ancestorOids = orgE.getParentOidPath().split(parentSplitter);
-        for (int i = ancestorOids.length - 1; i >= 0; --i) {
-            Organisaatio curOrgE = this.organisaatioDAO.findByOid(ancestorOids[i]);
-            if (curOrgE != null
-                    && curOrgE.getTyypit() != null
-                    && curOrgE.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())) {
-                return curOrgE;
+        while (currentParent != null) {
+            if (OrganisaatioUtil.isOppilaitos(currentParent)) {
+                return currentParent;
             }
-        }
 
+            currentParent = currentParent.getParent();
+        }
         return null;
     }
 
@@ -679,7 +676,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         for (Organisaatio child : children) {
             // Create new parent id / oid paths for child.
-            createParentPath(child, parent.getOid());
+            setParentPath(child, parent.getOid());
             organisaatioDAO.update(child);
             updateChildrenRecursive(child);
         }
@@ -990,7 +987,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Organisaatio oldParent = parentRelations.get(1).getParent();
                 affectedParents.add(oldParent);
             }
-            createParentPath(child, os.getParent().getOid());
+            setParentPath(child, os.getParent().getOid());
             organisaatioDAO.update(child);
             solrIndexer.index(child);
 
@@ -1013,7 +1010,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Organisaatiota ei saa yhdistää eri organisaatiotasolla olevaan organisaatioon
-        if (!organisaatio.getTyypit().containsAll(newParent.getTyypit())) {
+        // Organisaatioista on löydyttävä ainakin 1 yhteinen tyyppi
+        if (!CollectionUtils.containsAny(organisaatio.getTyypit(), newParent.getTyypit())) {
             throw new OrganisaatioMoveException("organisation.move.merge.level");
         }
 
@@ -1021,8 +1019,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (newParent.isOrganisaatioPoistettu() != false || OrganisaatioUtil.isPassive(newParent)) {
             throw new OrganisaatioMoveException("organisation.move.merge.parent.invalid");
         }
-
-        final List<OrganisaatioSuhde> suhteet = organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
 
         // Lakkautetaan yhdistyvä organisaatio
         Calendar previousDay = Calendar.getInstance();
@@ -1032,19 +1028,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioDAO.update(organisaatio);
         solrIndexer.index(organisaatio);
 
+        // Lisätään uusi organisaatioiden liitos
         organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
 
-        if (suhteet == null || suhteet.isEmpty()) {
-            return;
-        }
-
         // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
+        final List<OrganisaatioSuhde> suhteet =
+                organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (OrganisaatioUtil.isPassive(child) == false) {
                 changeOrganisaatioParent(child, newParent, date);
             }
         }
+
+        // Päivitetään tiedot koodistoon.
+        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
     }
 
     @Override
@@ -1074,18 +1072,41 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         parentRelation.setLoppuPvm(null);
         parentRelation.setChild(organisaatio);
         parentRelation.setParent(newParent);
-        parentRelation.setOpetuspisteenJarjNro(generateOpetuspisteenJarjNro(newParent, newParent.getTyypit()));
 
+        // Asetetaan uusi parentsuhde
         organisaatio.getParentSuhteet().add(parentRelation);
 
-        //update relationships and names if given date is today or before
+        // Organisaatiolla on uusi parent, toimipisteen tapauksessa ollaan uuden oppilaitoksen alla.
+        // Lasketaan toimipisteelle uusi opetuspisteen järjestysnumero ja asetetaan toimipistekoodi.
+        // Mahdollinen vanha toimipistekoodi pitää lakkauttaa ja luoda uusi koodiston koodi.
+        if (OrganisaatioUtil.isToimipiste(organisaatio)) {
+            // Vanha toimipistekoodi tarvitaan pitää lakkauttaa
+            String oldToimipistekoodi = organisaatio.getToimipisteKoodi();
+
+            String opJarjNro = generateOpetuspisteenJarjNro(organisaatio);
+            organisaatio.setOpetuspisteenJarjNro(opJarjNro);
+            organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
+            parentRelation.setOpetuspisteenJarjNro(opJarjNro);
+
+            Calendar previousDay = Calendar.getInstance();
+            previousDay.setTime(date);
+            previousDay.add(Calendar.DAY_OF_MONTH, -1);
+
+            // Lakkautetaan vanha opetuspistekoodi (opetuspiste pistetään lakkaamaan päivää ennen)
+            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime(), true);
+
+            // Päivitetään uusi opetuspistekoodi koodistoon.
+            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+        }
+
+        // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
         Date today = new Date();
         if (date.before(today) || DateUtils.isSameDay(date, today)) {
-            createParentPath(organisaatio, newParent.getOid());
+            setParentPath(organisaatio, newParent.getOid());
             organisaatioDAO.update(organisaatio);
             solrIndexer.index(organisaatio);
+
             updateChildrenRecursive(organisaatio);
-            updateCurrentOrganisaatioNimet();
         }
     }
 

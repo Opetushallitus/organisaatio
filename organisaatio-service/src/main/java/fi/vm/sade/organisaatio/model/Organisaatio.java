@@ -40,7 +40,6 @@ import org.apache.commons.lang.time.DateUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
-import org.modelmapper.internal.cglib.core.CollectionUtils;
 
 
 /**
@@ -149,8 +148,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String oppilaitosTyyppi;
 
-    //private String parentOid;
-
     private String oid;
 
     @Temporal(TemporalType.DATE)
@@ -188,9 +185,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String parentOidPath;
     private String parentIdPath;
     private String organisaatiotyypitStr;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
-    private List<HistoryMetadata> historiaData = new ArrayList<HistoryMetadata>();
 
     /**
      * Utility method to retrieve the current parent of the organisaatio.
@@ -535,10 +529,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             return parent.getParentMetadata();
         }
         return null;
-    }
-
-    public List<HistoryMetadata> getHistoriaData() {
-        return historiaData;
     }
 
     public List<OrganisaatioSuhde> getParentSuhteet() {

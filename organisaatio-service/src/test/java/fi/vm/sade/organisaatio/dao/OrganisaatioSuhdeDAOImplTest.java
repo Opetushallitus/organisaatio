@@ -5,7 +5,6 @@ import fi.vm.sade.log.client.LoggerMock;
 import fi.vm.sade.log.model.Tapahtuma;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.model.HistoryMetadata;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
@@ -26,7 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -202,32 +200,6 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
         //
         // Test organisation name history
         //
-
-        // Save test data
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.1.2011"), "a 1.1.2011");
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.3.2011"), "aa 1.3.2011");
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.6.2011"), "aaa 1.6.2011");
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.9.2011"), "A 1.9.2011");
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.12.2011"), "AA 1.12.2011");
-        organisaatioDAO.addHistoriaMetadata(a.getId(), "nimi", "FI", createDate("1.3.2012"), "AAA 1.3.2012");
-
-        HistoryMetadata hmd = null;
-
-        // Future == AAA 1.3.2012
-        hmd = organisaatioDAO.findPreviousValidHistoryMetadata(a.getId(), "nimi", "FI", createDate("1.3.2013"));
-        Assert.assertEquals("AAA 1.3.2012", hmd.getArvo());
-
-        // 2.1.2011 == a 1.1.2011
-        hmd = organisaatioDAO.findPreviousValidHistoryMetadata(a.getId(), "nimi", "FI", createDate("2.3.2011"));
-        Assert.assertEquals("aa 1.3.2011", hmd.getArvo());
-
-        // 2.6.2011 == aaa 1.6.2011
-        hmd = organisaatioDAO.findPreviousValidHistoryMetadata(a.getId(), "nimi", "FI", createDate("2.6.2011"));
-        Assert.assertEquals("aaa 1.6.2011", hmd.getArvo());
-
-        // 2.12.2011 == AA 1.12.2011
-        hmd = organisaatioDAO.findPreviousValidHistoryMetadata(a.getId(), "nimi", "FI", createDate("2.12.2011"));
-        Assert.assertEquals("AA 1.12.2011", hmd.getArvo());
 
         LOG.info("doTest()... done.");
     }

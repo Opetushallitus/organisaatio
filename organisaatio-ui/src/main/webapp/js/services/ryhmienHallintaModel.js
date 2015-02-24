@@ -31,8 +31,12 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
             model.ryhmat.length = 0;
             Ryhmat.get({oid: parentOid}, function(result) {
                 result.forEach(function(ryhma) {
-                    if (!ryhma.kuvaus2) {
+                    if (!ryhma.kuvaus) {
                         ryhma.kuvaus2 = {};
+                    }
+                    else {
+                        ryhma.kuvaus2 = angular.copy(ryhma.kuvaus);
+                        delete ryhma.kuvaus;
                     }
                     ryhma.tyypit = ['Ryhma'];
                     if (ryhma.ryhmatyypit.length===0) {

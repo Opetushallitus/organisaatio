@@ -19,7 +19,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <h3>{{'organisaatio.move.topic' | i18n}}</h3>
 </div>
 
-<div class="modal-body" style='height: 600px; overflow-y: visible;'>
+<div class="modal-body" style='overflow-y: visible;'>
 
     <div class="form-fluid">
         {{'organisaatio.move.to.be.moved' | i18n}}: {{nimi}}
@@ -30,26 +30,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <fieldset>
 
                 <label class="checkbox">
-                    <input type="checkbox" ng-disabled="highestOrganization || oppilaitos" ng-change="updateSearch()" ng-model="options.merge">
+                    <input type="checkbox" ng-disabled="koulutustoimija" ng-change="updateSearch()" ng-model="options.merge">
                     {{'organisaatio.move.merge.to.parent.organization' | i18n}}
                 </label>
 
-                </br>
-
-                <label>{{'organisaatio.move.new.parent.organization' | i18n}}</label>
-
-                <ui-select ng-model="options.newParentOrganization" theme="selectize" ng-disabled="disabled" ng-required="true">
-                    <ui-select-match placeholder="{{'organisaatio.move.new.parent.organization' | i18n}}">
-                        {{$select.selected.name}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="suggest in suggests | filter: { name: $select.search }">
-                        <span>{{suggest.name}}</span>
-                    </ui-select-choices>
-                </ui-select>
-
+                <br/>
+                <label>{{siirtoKohdeTitle}}</label>
+                <input type="text" class="input-xxlarge"
+                       ng-model="options.newParentOrganization"
+                       ng-disabled="disabled" ng-required="true"
+                       ie-placeholder placeholder="{{siirtoKohdeTitle}}"
+                       typeahead="suggest as suggest.name for suggest in suggests | filter:$viewValue | limitTo:10"
+                       typeahead-editable="false" oph-enter>
 
                 <br/>
-
 
                 <label>{{'organisaatio.move.comes.into.effect' | i18n}}</label>
 
@@ -69,8 +63,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"
                        required/>
             </fieldset>
-
-
         </form>
     </div>
 
