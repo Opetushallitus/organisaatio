@@ -84,12 +84,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .list(qOrganisaatio);
     }
 
-    public int countChildren(String parentOid) {
-        return (Integer) getEntityManager().createQuery("FROM " + Organisaatio.class.getName() + " WHERE parentOid=? AND organisaatioPoistettu IS NOT NULL")
-                .setParameter(1, parentOid)
-                .getSingleResult();
-    }
-
     /**
      * Find childers for given Organisation with OID.
      *

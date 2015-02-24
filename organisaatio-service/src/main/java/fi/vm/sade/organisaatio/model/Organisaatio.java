@@ -144,8 +144,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String oppilaitosTyyppi;
 
-    //private String parentOid;
-
     private String oid;
 
     @Temporal(TemporalType.DATE)
