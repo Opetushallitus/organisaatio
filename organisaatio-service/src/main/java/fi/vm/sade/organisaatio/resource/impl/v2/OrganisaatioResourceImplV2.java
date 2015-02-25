@@ -416,8 +416,14 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
 
         Preconditions.checkNotNull(lastModifiedSince);
+
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        long qstarted = System.currentTimeMillis();
+
         List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+
+        LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
+        long qstarted2 = System.currentTimeMillis();
 
         if (organisaatiot == null || organisaatiot.isEmpty()) {
             return Collections.emptyList();
@@ -434,6 +440,9 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             OrganisaatioRDTO result = conversionService.convert(org, OrganisaatioRDTO.class);
             results.add(result);
         }
+
+        LOG.debug("Muutettujen convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
+
         return results;
     }
 
