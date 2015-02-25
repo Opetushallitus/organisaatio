@@ -11,7 +11,7 @@
             <property name="hibernate.jdbc.batch_size" value="20"/>
             <!-- Default size for Hibernate batch fetching of associations (== 1).
                  Tried to use 8 for performance tuning. -->
-            <!-- <property name="hibernate.default_batch_fetch_size" value="8"/> -->
+            <property name="hibernate.default_batch_fetch_size" value="4"/>
         </properties>
     </persistence-unit>
 </persistence>
