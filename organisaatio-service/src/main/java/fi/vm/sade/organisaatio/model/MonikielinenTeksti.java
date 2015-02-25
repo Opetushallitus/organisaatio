@@ -29,6 +29,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import fi.vm.sade.security.xssfilter.XssFilter;
 import com.google.common.base.Objects;
+import fi.vm.sade.generic.model.BaseEntity;
 
 /**
  * Generic translatable text.
@@ -37,17 +38,17 @@ import com.google.common.base.Objects;
  * @author mlyly
  */
 @Entity
-public class MonikielinenTeksti extends OrganisaatioBaseEntity {
+public class MonikielinenTeksti extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ElementCollection(fetch= FetchType.EAGER)
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
     @CollectionTable(joinColumns=@JoinColumn(name="id"))
     private Map<String, String> values = new HashMap<String, String>();
 
-    
+
     @PrePersist
     @PreUpdate
     public void filterXss() {
@@ -55,7 +56,7 @@ public class MonikielinenTeksti extends OrganisaatioBaseEntity {
     		e.setValue(XssFilter.filter(e.getValue()));
     	}
     }
-    
+
     public Map<String, String> getValues() {
         return values;
     }
@@ -79,7 +80,7 @@ public class MonikielinenTeksti extends OrganisaatioBaseEntity {
         }
         return false;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(this.values);

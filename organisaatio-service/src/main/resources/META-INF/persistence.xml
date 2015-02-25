@@ -8,7 +8,8 @@
         <non-jta-data-source>java:comp/env/jdbc/organisaatio</non-jta-data-source>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
-            <property name="hibernate.jdbc.batch_size" value="20" />
+            <property name="hibernate.jdbc.batch_size" value="20"/>
+            <property name="hibernate.default_batch_fetch_size" value="8"/>
         </properties>
     </persistence-unit>
 </persistence>
