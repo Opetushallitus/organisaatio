@@ -26,16 +26,6 @@
 
     <!-- object to json -->
     <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="organisaatioObjectMapper"/>
-        <property name="targetMethod" value="configure"/>
-        <property name="arguments">
-            <util:list>
-                <util:constant static-field="org.codehaus.jackson.map.SerializationConfig.Feature.INDENT_OUTPUT"/>
-                <util:constant static-field="java.lang.Boolean.TRUE"/>
-            </util:list>
-        </property>
-    </bean>
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="organisaatioObjectMapper"/>
