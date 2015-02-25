@@ -39,8 +39,19 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOConverter.class);
 
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+    private final Type organisaatioNimiRDTOListType;
+
+    public OrganisaatioToOrganisaatioRDTOConverter() {
+        this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
+        this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+    }
+
+
     @Override
     public OrganisaatioRDTO convert(Organisaatio s) {
+        long qstarted = System.currentTimeMillis();
+
         OrganisaatioRDTO t = new OrganisaatioRDTO();
 
         t.setOid(s.getOid());
@@ -59,11 +70,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
-        // Define the target list type for mapping
-        Type organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
-
-        // Map domain type to DTO
         t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
@@ -128,7 +134,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
             }
         }
 
-        LOG.debug("convert: {} --> {}", s, t);
+        LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 
         return t;
     }
