@@ -9,7 +9,9 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
             <property name="hibernate.jdbc.batch_size" value="20"/>
-            <property name="hibernate.default_batch_fetch_size" value="4"/>
+            <!-- Default size for Hibernate batch fetching of associations (== 1).
+                 Tried to use 8 for performance tuning. -->
+            <!-- <property name="hibernate.default_batch_fetch_size" value="8"/> -->
         </properties>
     </persistence-unit>
 </persistence>
