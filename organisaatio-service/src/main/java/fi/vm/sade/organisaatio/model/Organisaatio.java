@@ -105,15 +105,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @OrderBy("id")
     private List<OrganisaatioSuhde> parentSuhteet = new ArrayList<OrganisaatioSuhde>();
 
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
-    @OrderBy("id")
     private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
@@ -140,7 +137,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    @OrderBy("id")
     private List<YhteystietoArvo> yhteystietoArvos = new ArrayList<YhteystietoArvo>();
 
     @Column(unique = true)
