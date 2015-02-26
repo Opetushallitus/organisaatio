@@ -283,7 +283,8 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
-            response = OrganisaatioRDTO.class)
+            response = OrganisaatioRDTO.class,
+            responseContainer = "List")
     public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
@@ -315,18 +316,17 @@ public interface OrganisaatioResourceV2 {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
-            response = OrganisaatioRDTO.class)
+            response = OrganisaatioLiitosDTOV2.class)
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(
             @ApiParam(value = "Liitokset jälkeen", required = false) @QueryParam("liitoksetAlkaen") DateParam date);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @Path("ryhmat")
+    @Path("/ryhmat")
     @ApiOperation(
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
-            response = OrganisaatioGroupDTOV2.class,
-            responseContainer = "List")
+            response = OrganisaatioGroupDTOV2.class)
     public List<OrganisaatioGroupDTOV2> groups() throws Exception;
 
 }
