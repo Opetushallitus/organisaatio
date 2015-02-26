@@ -26,7 +26,6 @@ import fi.vm.sade.log.client.LoggerHelper;
 import fi.vm.sade.log.model.SimpleBeanSerializer;
 import fi.vm.sade.log.model.Tapahtuma;
 import java.util.Map;
-import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -70,19 +69,19 @@ public class OrganisaatioBaseEntity extends BaseEntity {
     }
     private transient Map<String, String> _onLoadValues;
 
-    @PostLoad
-    public void onPostLoad() {
-        try {
-            LOG.debug("@PostLoad - onPostLoad(): {}", this);
-
-            if (LoggerHelper.isRecording()) {
-                // Don't need the tapahtuma, but lets initialize internal state here
-                createUpdateTapahtuma();
-            }
-        } catch (Throwable ex) {
-            LOG.error("onPostLoad() - logging failed.", ex);
-        }
-    }
+//    @PostLoad
+//    public void onPostLoad() {
+//        try {
+//            LOG.debug("@PostLoad - onPostLoad(): {}", this);
+//
+//            if (LoggerHelper.isRecording()) {
+//                // Don't need the tapahtuma, but lets initialize internal state here
+//                createUpdateTapahtuma();
+//            }
+//        } catch (Throwable ex) {
+//            LOG.error("onPostLoad() - logging failed.", ex);
+//        }
+//    }
 
     @PostUpdate
     public void onPostUpdate() {
