@@ -30,7 +30,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 
 import fi.vm.sade.security.xssfilter.XssFilterListener;
@@ -60,7 +59,6 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
     private List<String> sovellettavatOppilaitostyyppis = new ArrayList<String>();
 
     @OneToMany(mappedBy = "yhteystietojenTyyppi", cascade = CascadeType.ALL, orphanRemoval=true)
-    @OrderBy("id")
     // TODO remove @Cascade(value = org.hibernate.annotations.CascadeType.DELETE_ORPHAN) // TODO: kun JPA2: @OneToMany(..., orphanRemoval=true)
     private List<YhteystietoElementti> lisatietos = new ArrayList<YhteystietoElementti>();
 

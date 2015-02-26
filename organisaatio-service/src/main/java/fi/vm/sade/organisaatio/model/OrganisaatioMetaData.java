@@ -74,7 +74,6 @@ public class OrganisaatioMetaData extends BaseEntity {
     private MonikielinenTeksti hakutoimistoNimi;
 
     @OneToMany(orphanRemoval=true, cascade = CascadeType.ALL)
-    @OrderBy("id")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     /**
