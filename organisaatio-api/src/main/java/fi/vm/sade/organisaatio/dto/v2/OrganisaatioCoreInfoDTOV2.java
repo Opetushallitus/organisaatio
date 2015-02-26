@@ -15,6 +15,8 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ import java.util.Map;
  *
  * @author simok
  */
+@ApiModel(value = "Organisaation ydintiedot",
+          subTypes={OrganisaatioGroupDTOV2.class})
 public class OrganisaatioCoreInfoDTOV2 {
     private String oid;
     private Map<String, String> nimi;
@@ -31,6 +35,7 @@ public class OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the oid
      */
+    @ApiModelProperty(value = "Organisaation oid", required = true)
     public String getOid() {
         return oid;
     }
@@ -45,6 +50,7 @@ public class OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the status
      */
+    @ApiModelProperty(value = "Organisaation tila", required = true)
     public String getStatus() {
         return status;
     }
@@ -59,6 +65,7 @@ public class OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the _tyypit
      */
+    @ApiModelProperty(value = "Organisaation tyypit", required = true)
     public List<String> getTyypit() {
         return _tyypit;
     }
@@ -73,6 +80,7 @@ public class OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the nimi
      */
+    @ApiModelProperty(value = "Organisaation nimi", required = true)
     public Map<String, String> getNimi() {
         return nimi;
     }

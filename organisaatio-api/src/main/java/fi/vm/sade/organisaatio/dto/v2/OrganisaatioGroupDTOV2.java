@@ -15,6 +15,8 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import java.util.Map;
  *
  * @author simok
  */
+@ApiModel(value = "Ryhmän tiedot", parent=OrganisaatioCoreInfoDTOV2.class)
 public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     private int version;
     private String parentOid;
@@ -36,6 +39,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the version
      */
+    @ApiModelProperty(value = "Versio", required = true)
     public int getVersion() {
         return version;
     }
@@ -50,6 +54,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the alkuPvm
      */
+    @ApiModelProperty(value = "Ryhmän voimassaolon alkupäivämäärä", required = true)
     public Date getAlkuPvm() {
         return alkuPvm;
     }
@@ -64,6 +69,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the lakkautusPvm
      */
+    @ApiModelProperty(value = "Ryhmän lakkautuspäivämäärä", required = true)
     public Date getLakkautusPvm() {
         return lakkautusPvm;
     }
@@ -78,6 +84,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the kuvaus
      */
+    @ApiModelProperty(value = "Ryhmän kuvaus", required = true)
     public Map<String, String> getKuvaus() {
         return kuvaus;
     }
@@ -92,6 +99,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the ryhmatyypit
      */
+    @ApiModelProperty(value = "Ryhmätyypit", required = true)
     public List<String> getRyhmatyypit() {
         return ryhmatyypit;
     }
@@ -106,6 +114,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the kayttoryhmat
      */
+    @ApiModelProperty(value = "Ryhmän käyttöryhmät", required = true)
     public List<String> getKayttoryhmat() {
         return kayttoryhmat;
     }
@@ -120,6 +129,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the parentOid
      */
+    @ApiModelProperty(value = "Parent oid", required = true)
     public String getParentOid() {
         return parentOid;
     }
@@ -134,6 +144,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the parentOidPath
      */
+    @ApiModelProperty(value = "Parent oid polkuna", required = true)
     public String getParentOidPath() {
         return parentOidPath;
     }
