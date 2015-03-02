@@ -416,6 +416,19 @@ app.directive('ophFileupload', function($log, $http) {
     };
 });
 
+app.directive('fileDirty', function(){
+    return {
+        require : '^form',
+        transclude : true,
+        link : function($scope, elm, attrs, formCtrl){
+            elm.on('change', function(){
+                formCtrl.$setDirty();
+                $scope.$apply();
+            });
+        }
+    }
+  });
+
 // Estä enterin painalluksen default-toiminto
 app.directive('ophEnter', function() {
     return  {

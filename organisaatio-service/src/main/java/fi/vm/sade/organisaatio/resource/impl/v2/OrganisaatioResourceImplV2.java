@@ -488,13 +488,19 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         }
 
         // Liitetäänkö organisaatio vai siirretäänkö organisaatio
-        if (merge) {
-            // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
-            organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+        try {
+            if (merge) {
+                // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
+                organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+            }
+            else {
+                // Oppilaitos siirtyy toisen organisaation alle
+                organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+            }
         }
-        else {
-            // Oppilaitos siirtyy toisen organisaation alle
-            organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+        catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
         }
     }
 

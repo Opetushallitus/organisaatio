@@ -87,6 +87,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
         var modalInstance = $modal.open({
             templateUrl: 'organisaationsiirto.html',
             controller: OrganisaatioMoveController,
+            windowClass:'modal-wide',
             resolve: {
                 nimi: function () {
                     return $scope.model.getNimi(node);
@@ -98,8 +99,6 @@ function OrganisaatioTreeController($scope, $location, $filter,
         });
 
         modalInstance.result.then(function (options) {
-
-
             var confirm = $modal.open({
                 templateUrl: 'organisaatiosiirtovarmistus.html',
                 controller: function ($scope, current, newParent) {
@@ -117,13 +116,18 @@ function OrganisaatioTreeController($scope, $location, $filter,
             });
 
             confirm.result.then(function () {
-
                 function reply() {
                     $log.info('Organisaatio siirretty osaksi: ' + node.oid);
 
                     if (!$scope.hakuehdot.isEmpty()) {
                         $scope.model.refresh($scope.hakuehdot);
                     }
+                }
+                function error(response) {
+                    loadingService.onErrorHandled();
+                    $log.error("Organisaatio siirto response: " + response.status);
+                    Alert.add("error", $filter('i18n')("organisaatio.move.error", "") + ' '
+                                + $filter('i18n')(response.data.errorKey), true);
                 }
 
                 var params = {
@@ -132,10 +136,8 @@ function OrganisaatioTreeController($scope, $location, $filter,
                     merge: options.merge
                 };
 
-                OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply);
+                OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply, error);
             });
-
-
         });
     };
 

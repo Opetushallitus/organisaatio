@@ -36,6 +36,16 @@ public abstract class OrganisaatioUtil {
         return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
     }
 
+    public static boolean isOppilaitos(Organisaatio organisaatio) {
+        return organisaatio.getTyypit() != null
+                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value());
+    }
+
+    public static boolean isToimipiste(Organisaatio organisaatio) {
+        return organisaatio.getTyypit() != null
+                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value());
+    }
+
     /**
      * Organisaation lakkautuspvm -logiikka. Huom. kaikki parametrit voivat olla null.
      *
