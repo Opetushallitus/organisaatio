@@ -69,7 +69,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
 
         var koodistoArrays = [
             {
-                uri: 'ryhmatyyppi',
+                uri: 'ryhmatyypit',
                 resultArray: this.ryhmatyypit,
                 defaultArray: [
                     // Default-arvoja käytetään kunnes koodistoon lisätään 'ryhmatyyppi'-koodisto
@@ -81,7 +81,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
                 ]
             },
             {
-                uri: 'kayttoryhma',
+                uri: 'kayttoryhmat',
                 resultArray: this.kayttoryhmat,
                 // Default-arvoja käytetään kunnes koodistoon lisätään 'kayttoryhma'-koodisto
                 // Default-arvojen lähde: Confluence / Ryhmien määrittely
