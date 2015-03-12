@@ -541,21 +541,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.FACEBOOK" ng-if="index === model.smlang">
-                        Facebook: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
-                    </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.GOOGLE_PLUS" ng-if="index === model.smlang">
-                        Google+: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
-                    </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.LINKED_IN" ng-if="index === model.smlang">
-                        LinkedIn: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
-                    </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.TWITTER" ng-if="index === model.smlang">
-                        Twitter: <a ng-href="{{value| fixHttpLink}}">{{value}}</a><br>
-                    </span>
-                    <span ng-repeat="(index,value) in model.organisaatio.metadata.data.MUU" ng-if="index === model.smlang">
-                        Muu: <a ng-href="{{value| fixHttpLink}}">{{value}}</a>
-                    </span>
+                    <span ng-repeat="field in model.sometypes"
+                          ng-if="model.organisaatio.metadata.data[field].hasOwnProperty(model.smlang)">
+                    {{model.someurls[field].nimi}}:
+                    <a ng-href="{{model.organisaatio.metadata.data[field][model.smlang]| fixHttpLink}}">
+                        {{model.organisaatio.metadata.data[field][model.smlang]}}</a>
+                    <span/>
+                    <br/>
                 </label>
             </div>
         </div>

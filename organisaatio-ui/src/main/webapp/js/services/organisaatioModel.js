@@ -30,7 +30,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           Henkilo, HenkiloKayttooikeus,
                                           KoodistoKieli, Yhteystietojentyyppi,
                                           Paivittaja, NimiHistoriaModel,
-                                          LocalisationService) {
+                                          LocalisationService, SomeKoodisto) {
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
@@ -131,39 +131,20 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         // Sosiaalinen media
-        this.some = [];
-        this.sometypes = ['FACEBOOK', 'GOOGLE_PLUS', 'LINKED_IN', 'TWITTER', 'MUU'];
-        this.someurls = {
-            FACEBOOK: {
-                autofill: 'https://www.facebook.com/',
-                validator: '^https{0,1}://(?:www\.){0,1}facebook.com/.+'
-            },
-            GOOGLE_PLUS: {
-                autofill: 'https://plus.google.com/',
-                validator: '^https{0,1}://plus.google.com/.+'
-            },
-            LINKED_IN: {
-                autofill: 'https://linkedin.com/',
-                validator: '^https{0,1}://(?:www\.){0,1}linkedin.com/.+'
-            },
-            TWITTER: {
-                autofill: 'https://twitter.com/',
-                validator: '^https{0,1}://(?:www\.){0,1}twitter.com/.+'
-            },
-            MUU: {
-                autofill: 'https://',
-                validator: '^https{0,1}://.+'
-            }
-        };
-        this.kttypes = ['YLEISKUVAUS', 'ESTEETOMYYS', 'OPPIMISYMPARISTO', 'VUOSIKELLO', 'VASTUUHENKILOT',
-            'VALINTAMENETTELY', 'AIEMMIN_HANKITTU_OSAAMINEN', 'KIELIOPINNOT', 'TYOHARJOITTELU', 'OPISKELIJALIIKKUVUUS',
-            'KANSAINVALISET_KOULUTUSOHJELMAT'];
-        this.oetypes = ['KUSTANNUKSET', 'TIETOA_ASUMISESTA', 'RAHOITUS', 'OPISKELIJARUOKAILU', 'TERVEYDENHUOLTOPALVELUT',
-            'VAKUUTUKSET', 'OPISKELIJALIIKUNTA', 'VAPAA_AIKA', 'OPISKELIJA_JARJESTOT'];
+        this.sometypes = SomeKoodisto.sometyypit;
+        this.some      = SomeKoodisto.some;
+        this.someurls  = SomeKoodisto.someurls;
+
+        this.kttypes = ['YLEISKUVAUS', 'ESTEETOMYYS', 'OPPIMISYMPARISTO',
+                        'VUOSIKELLO', 'VASTUUHENKILOT', 'VALINTAMENETTELY',
+                        'AIEMMIN_HANKITTU_OSAAMINEN', 'KIELIOPINNOT',
+                        'TYOHARJOITTELU', 'OPISKELIJALIIKKUVUUS',
+                        'KANSAINVALISET_KOULUTUSOHJELMAT'];
+        this.oetypes = ['KUSTANNUKSET', 'TIETOA_ASUMISESTA', 'RAHOITUS',
+                        'OPISKELIJARUOKAILU', 'TERVEYDENHUOLTOPALVELUT',
+                        'VAKUUTUKSET', 'OPISKELIJALIIKUNTA', 'VAPAA_AIKA',
+                        'OPISKELIJA_JARJESTOT'];
         this.ectstypes = ['NIMI', 'TEHTAVANIMIKE', 'PUHELINNUMERO', 'SAHKOPOSTIOSOITE'];
-        for (var st in this.sometypes) {
-            this.some.push({'type': this.sometypes[st], 'nimi': $filter('i18n')('Organisaationtarkastelu.' + this.sometypes[st])});
-        }
 
         // Monikielisen tekstin valinta
         // kt: koulutustarjoajatiedot

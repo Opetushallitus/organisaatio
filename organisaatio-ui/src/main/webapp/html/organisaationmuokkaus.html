@@ -1020,7 +1020,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
                         <div class="control-group" ng-repeat="field in model.sometypes" ng-form="someForm"
                              ng-if="model.organisaatio.metadata.data[field].hasOwnProperty(model.smlang)">
-                            <br />{{'Organisaationtarkastelu.' + field| i18n }}:<br />
+                            <br/>{{model.someurls[field].nimi}}:<br/>
                             <div class="input-append">
                                 <input id="somein" type="text" name="somein" class="span6" oph-enter
                                        oph-pattern="{{model.someurls[field].validator}}"
