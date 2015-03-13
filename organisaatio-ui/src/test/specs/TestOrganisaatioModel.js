@@ -16,13 +16,13 @@ describe("Testing OrganisaatioModel", function() {
       "VAPAA_AIKA" : {
         "kielivalikoima_fi" : "<p><strong>Kuvaus vapaa-ajan</strong> viettoon liittyvistä palveluista</p>"
       },
-      "LINKED_IN" : {
+      "sosiaalinenmedia_3#1" : {
         "2" : "http://linkedin.com/testiorg-li"
       },
-      "TWITTER" : {
+      "sosiaalinenmedia_4#1" : {
         "1" : "twitter.com/testiorg-tw"
       },
-      "FACEBOOK" : {
+      "sosiaalinenmedia_1#1" : {
         "0" : "facebook.com/testiorg-fb"
       },
       "RAHOITUS" : {
@@ -34,7 +34,7 @@ describe("Testing OrganisaatioModel", function() {
       "AIEMMIN_HANKITTU_OSAAMINEN" : {
         "kielivalikoima_fi" : "<p><strong>AHOT</strong></p><p><em>Osaamisesta</em></p><p>Toisesta</p><p>Kolmannesta</p><p>Neljännestä</p>"
       },
-      "MUU" : {
+      "sosiaalinenmedia_5#1" : {
         "4" : "muu.com/testiorg-mu"
       },
       "OPISKELIJALIIKKUVUUS" : {
@@ -49,7 +49,7 @@ describe("Testing OrganisaatioModel", function() {
       "OPISKELIJARUOKAILU" : {
         "kielivalikoima_fi" : "<p><strong>Kuvaus olennaisista tiedoista</strong> siitä, miten ruokailu oppilaitoksessa tai toimipisteessä toimii.</p>"
       },
-      "GOOGLE_PLUS" : {
+      "sosiaalinenmedia_2#1" : {
         "3" : "google.com/testiorg-gl"
       },
       "TIETOA_ASUMISESTA" : {
@@ -208,7 +208,7 @@ var parentResult = {
   },
 };
 
-    var koodistoResult =
+var koodistoResult =
         [ {
   "koodiUri" : "maatjavaltiot1_fin",
   "resourceUri" : "http://koodistopalvelu.opintopolku.fi/maatjavaltiot1/koodi/maatjavaltiot1_fin",
@@ -416,7 +416,344 @@ var parentResult = {
     "sisaltaaKoodiston" : null,
     "kieli" : "SV"
   } ]
-} ]
+} ];
+
+var koodistoSosiaalinenmediaResult = [
+{
+"koodiUri": "sosiaalinenmedia_6",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_6",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "6",
+"paivitysPvm": 1424768499676,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Instagram",
+"kuvaus": null,
+"lyhytNimi": "Instagram",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+},
+{
+"nimi": "Instagram",
+"kuvaus": null,
+"lyhytNimi": "Instagram",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+},
+{
+"nimi": "Instagram",
+"kuvaus": null,
+"lyhytNimi": "Instagram",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "EN"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_2",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_2",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "2",
+"paivitysPvm": 1422430335072,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Google+",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+},
+{
+"nimi": "Google+",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_5",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_5",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "5",
+"paivitysPvm": 1422430335085,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Muu",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+},
+{
+"nimi": "Muu",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_1",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_1",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "1",
+"paivitysPvm": 1422430335068,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Facebook",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+},
+{
+"nimi": "Facebook",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_7",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_7",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "7",
+"paivitysPvm": 1424768562621,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Youtub",
+"kuvaus": null,
+"lyhytNimi": "Youtub",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+},
+{
+"nimi": "Youtub",
+"kuvaus": null,
+"lyhytNimi": "Youtub",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "EN"
+},
+{
+"nimi": "Youtub",
+"kuvaus": null,
+"lyhytNimi": "Youtub",
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_4",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_4",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "4",
+"paivitysPvm": 1422430335081,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Twitter",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+},
+{
+"nimi": "Twitter",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+}
+]
+},
+{
+"koodiUri": "sosiaalinenmedia_3",
+"resourceUri": "https://itest-virkailija.oph.ware.fi/koodisto-service/rest/codeelement/sosiaalinenmedia_3",
+"version": 0,
+"versio": 1,
+"koodisto": {
+"koodistoUri": "sosiaalinenmedia",
+"organisaatioOid": "1.2.246.562.10.00000000001",
+"koodistoVersios": [
+1
+]
+},
+"koodiArvo": "3",
+"paivitysPvm": 1422430335076,
+"voimassaAlkuPvm": "2015-01-01",
+"voimassaLoppuPvm": null,
+"tila": "LUONNOS",
+"metadata": [
+{
+"nimi": "Linkedin",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "FI"
+},
+{
+"nimi": "Linkedin",
+"kuvaus": null,
+"lyhytNimi": null,
+"kayttoohje": null,
+"kasite": null,
+"sisaltaaMerkityksen": null,
+"eiSisallaMerkitysta": null,
+"huomioitavaKoodi": null,
+"sisaltaaKoodiston": null,
+"kieli": "SV"
+}
+]
+}
+]
+};
+
 
     beforeEach(function() { module('organisaatio'); });
 
@@ -443,6 +780,8 @@ var parentResult = {
         //$httpBackend.expectGET(/cas\/myroles\?noCache=.*/).respond("");
 
         $httpBackend.expectGET(/v1\/localisation\/authorize\?noCache=.*/).respond(200, {});
+
+        $httpBackend.expectGET(/json\/sosiaalinenmedia\/koodi?.*/).respond(koodistoSosiaalinenmediaResult);
 
         $httpBackend.expectGET(/organisaatio\/1.2.246.562.10.99999999999\?includeImage=true&noCache=.*/).respond(organisaatioResult);
 
