@@ -93,10 +93,11 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
                     $scope.currentGroup = null;
                     $scope.updateUpdateInfo();
                     $scope.currentGroupSelection = {};
-                }, function(error) {
+                }, function(response) {
                     loadingService.onErrorHandled();
                     $log.warn("Failed to delete group: ", $scope.currentGroup);
-                    Alert.add("error", error, false);
+                    Alert.add("error", $filter('i18n')("Ryhmienhallinta.poistoVirhe", "") + ' '
+                        + $filter('i18n')(response.data.errorKey), true);
                 });
             }, function () {
                 $log.debug('Ryhmän poisto peruttu');
