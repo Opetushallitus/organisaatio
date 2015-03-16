@@ -26,6 +26,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
+import fi.vm.sade.tarjonta.service.resources.v1.dto.HakukohdeHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
 import fi.vm.sade.tarjonta.shared.types.TarjontaTila;
@@ -43,12 +44,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Käyttää tarjonta palvelua selvittääkseen organisaation tulevia koulutuksia.
+ * Käyttää tarjonta palvelua selvittääkseen organisaation tulevia koulutuksia
+ * ja hakukohteita.
  *
  * @author simok
  */
 @Component
-public class OrganisaatioKoulutukset {
+public class OrganisaatioTarjonta {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -60,7 +62,7 @@ public class OrganisaatioKoulutukset {
 
     private Gson gson;
 
-    public OrganisaatioKoulutukset() {
+    public OrganisaatioTarjonta() {
         initGson();
     }
 
@@ -120,7 +122,7 @@ public class OrganisaatioKoulutukset {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         InputStream jsonStream;
 
-         String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
+        String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
 
         try {
             jsonStream = restToStream.getInputStreamFromUri(url);
@@ -207,7 +209,7 @@ public class OrganisaatioKoulutukset {
                 Integer vuosi = koulutus.getVuosi();
 
                 if(vuosi == null) {
-                    // Koulutukselta puuttuu kausi ja vuosi --> "valmistava koulutus"
+                    // Koulutukselta puuttuu kausi ja vuosi --> "valmistava hakukohde"
                     // eli se on sidottu johonkin toiseen koulutukseen. Ei estä esim.
                     // organisaation lakkauttamista.
                     LOG.info("Missing 'kausi' and 'vuosi' for koulutus: " + koulutus.getOid());
@@ -237,9 +239,104 @@ public class OrganisaatioKoulutukset {
                     koulutus.getTila() == TarjontaTila.LUONNOS)) {
                 return true;
             }
-	}
+        }
 
         // Ei alkavia koulutuksia annetun päivämäärän jälkeen
         return false;
     }
- }
+
+    /**
+     * Tarkistaa onko annettuun rymään liitetty hakukohteita.
+     *
+     * @param ryhmaOid
+     * @return Boolean, joka kertoo onko rygmälle hakukohteita vai ei.
+     */
+    public boolean hakukohteita(String ryhmaOid) {
+        List<HakukohdeHakutulosV1RDTO> hakukohteet  = haeHakukohteet(ryhmaOid);
+
+        // Ei hakukohteita
+        if (hakukohteet.isEmpty()) {
+            return false;
+        }
+
+        // Ryhmään on liitetty hakukohteita
+        return true;
+    }
+
+    private String buildSearchHakukohteetUri(String ryhmaOid) {
+        return "/hakukohde/search?" + "organisaatioRyhmaOid=" + ryhmaOid;
+    }
+
+    private List<HakukohdeHakutulosV1RDTO> haeHakukohteet(String ryhmaOid) {
+        List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
+        InputStream jsonStream;
+
+        String url = tarjontaServiceWebappUrl + "/v1" + buildSearchHakukohteetUri(ryhmaOid);
+
+        try {
+            jsonStream = restToStream.getInputStreamFromUri(url);
+        }
+        catch (RuntimeException e) {
+            LOG.warn("Search failed for hakukohteet with group oid: " + ryhmaOid);
+            throw new OrganisaatioTarjontaException();
+        }
+
+        Reader reader = new InputStreamReader(jsonStream);
+        JsonElement json = new JsonParser().parse(reader);
+
+        // Tarkistetaan hakutulokset
+        if (json.getAsJsonObject().get("status").isJsonNull()) {
+            LOG.warn("Search failed for hakukohteet with organization oid: " + ryhmaOid);
+            throw new OrganisaatioTarjontaException();
+        }
+        ResultStatus status = gson.fromJson(json.getAsJsonObject().get("status"), new TypeToken<ResultStatus>(){}.getType());
+        if (status != ResultStatus.OK) {
+            LOG.warn("Search failed for hakukohteet with organization oid: " + ryhmaOid + " status: " + status);
+            throw new OrganisaatioTarjontaException();
+        }
+
+        // Otetaan ensimmäinen taso "result"
+        JsonElement result = json.getAsJsonObject().get("result");
+        if (result.isJsonNull()) {
+            LOG.warn("Search failed for hakukohteet with organization oid: " + ryhmaOid + " --> result == NULL");
+            return Collections.EMPTY_LIST;
+        }
+
+        // Otetaan organisaatiolista (sisältää listan organisaatioiden hakukohteista)
+        JsonElement organisaatioTulokset = result.getAsJsonObject().get("tulokset");
+        if (organisaatioTulokset.isJsonNull()) {
+            LOG.warn("Search failed for hakukohteet with organization oid: " + ryhmaOid + " --> tulokset == NULL");
+            return Collections.EMPTY_LIST;
+        }
+
+        // Käydään läpi organisaatioiden hakukohteet ja lisätään listalle
+        JsonArray organisaatioTuloksetArray = organisaatioTulokset.getAsJsonArray();
+        for (JsonElement organisaatioTulos : organisaatioTuloksetArray){
+            hakukohteet.addAll(getOrganisaatioHakukohteet(organisaatioTulos));
+        }
+
+        return hakukohteet;
+    }
+
+    private List<HakukohdeHakutulosV1RDTO> getOrganisaatioHakukohteet(JsonElement organisaatioTulos) {
+        List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
+
+        JsonElement hakukohdeTulokset = organisaatioTulos.getAsJsonObject().get("tulokset");
+
+        // Tarkistetaan, että tuloksia löytyy!
+        if (hakukohdeTulokset.isJsonNull()) {
+            LOG.warn("Search failed for hakukohde! --> hakukohde tulokset == NULL");
+            return Collections.EMPTY_LIST;
+        }
+
+        // Käydään läpi hakukohteet ja deserialisoidaan
+        JsonArray hakukohdeTuloksetArray = hakukohdeTulokset.getAsJsonArray();
+        for (JsonElement hakukohdeTulos : hakukohdeTuloksetArray){
+            HakukohdeHakutulosV1RDTO hakuTulos = gson.fromJson(hakukohdeTulos, HakukohdeHakutulosV1RDTO.class);
+
+            hakukohteet.add(hakuTulos);
+        }
+
+        return hakukohteet;
+    }
+}

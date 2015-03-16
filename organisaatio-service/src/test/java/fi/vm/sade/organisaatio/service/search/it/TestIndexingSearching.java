@@ -20,7 +20,7 @@ import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
-import fi.vm.sade.organisaatio.business.impl.OrganisaatioKoulutukset;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAOImplTest;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
@@ -95,7 +95,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
 
     @ReplaceWithMock
     @Autowired
-    private OrganisaatioKoulutukset koulutukset;
+    private OrganisaatioTarjonta tarjonta;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -358,7 +358,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
 
     private void deleteOrg(String oid) {
         // Mock toteutukset alkavien koulutusten pyynnöille
-        when(koulutukset.alkaviaKoulutuksia(oid)).thenReturn(false);
+        when(tarjonta.alkaviaKoulutuksia(oid)).thenReturn(false);
 
         res.deleteOrganisaatio(oid);
     }

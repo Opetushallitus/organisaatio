@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.business.impl.OrganisaatioKoulutukset;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import static junit.framework.Assert.fail;
@@ -48,7 +48,7 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
 
     @ReplaceWithMock
     @Autowired
-    private OrganisaatioKoulutukset koulutukset;
+    private OrganisaatioTarjonta tarjonta;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
 
@@ -72,9 +72,9 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
         MockitoAnnotations.initMocks(this);
 
         // Mock toteutukset alkavien koulutusten pyynnöille
-        when(koulutukset.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
-        when(koulutukset.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
-        when(koulutukset.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
+        when(tarjonta.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
+        when(tarjonta.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
+        when(tarjonta.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
     }
 
     @Test

@@ -15,12 +15,14 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteHakukohteitaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.*;
 import org.slf4j.Logger;
@@ -46,10 +48,11 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
     private IndexerResource solrIndexer;
 
     @Autowired
-    private OrganisaatioKoulutukset organisaatioKoulutukset;
+    private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Override
     public Organisaatio deleteOrganisaatio(String oid) {
+        Organisaatio parent;
 
         // Haetaan poistettava organisaatio
         Organisaatio org = organisaatioDAO.findByOid(oid);
@@ -65,20 +68,33 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
             throw new OrganisaatioDeleteParentException();
         }
 
-        // Poistettavalla organisaatiolla ei saa olla alkavia koulutuksia
-        if (organisaatioKoulutukset.alkaviaKoulutuksia(org.getOid())) {
-            LOG.warn("Cannot to be deleted: " + oid + " contains 'koulutuksia'");
-            throw new OrganisaatioDeleteKoulutuksiaException();
+        // Ryhmä ja organisaatio käsitellään eri tavalla
+        if (OrganisaatioUtil.isRyhma(org)) {
+            // Poistettavalla ryhmällä ei saa olla hakukohteita
+            if (organisaatioTarjonta.hakukohteita(org.getOid())) {
+                LOG.warn("Cannot delete group: " + oid + " contains 'hakukohteita'");
+                throw new OrganisaatioDeleteHakukohteitaException();
+            }
+
+            // Merkitään ryhmä poistetuksi
+            parent = organisaatioDAO.markRemoved(oid);
         }
+        else {
+            // Poistettavalla organisaatiolla ei saa olla alkavia koulutuksia
+            if (organisaatioTarjonta.alkaviaKoulutuksia(org.getOid())) {
+                LOG.warn("Cannot delete organisaatio: " + oid + " contains 'koulutuksia'");
+                throw new OrganisaatioDeleteKoulutuksiaException();
+            }
 
-        // Merkitään organisaatio poistetuksi
-        Organisaatio parent = organisaatioDAO.markRemoved(oid);
+            // Merkitään organisaatio poistetuksi
+            parent = organisaatioDAO.markRemoved(oid);
 
-        // Poistetaan deletoitu organisaatio solr:sta
-        solrIndexer.delete(oid);
+            // Poistetaan deletoitu organisaatio solr:sta
+            solrIndexer.delete(oid);
 
-        // Päivitetään poistetun organisaation parentin childCount solriin
-        solrIndexer.index(parent);
+            // Päivitetään poistetun organisaation parentin childCount solriin
+            solrIndexer.index(parent);
+        }
 
         return parent;
     }

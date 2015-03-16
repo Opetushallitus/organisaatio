@@ -98,7 +98,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private ConversionService conversionService;
 
     @Autowired
-    private OrganisaatioKoulutukset organisaatioKoulutukset;
+    private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
@@ -107,7 +107,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String rootOrganisaatioOid;
 
     private static final String parentSeparator = "|";
-    private static final String parentSplitter = "\\|";
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
@@ -927,7 +926,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             if (tieto != null) {
                 LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
-                if ((tieto.getLoppuPvm() != null) && (organisaatioKoulutukset.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
+                if ((tieto.getLoppuPvm() != null) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
                     String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
                     LOG.error(String.format(virhe));
                     throw new AliorganisaatioLakkautusKoulutuksiaException();

@@ -63,7 +63,7 @@ public class OrganisaatioBusinessChecker {
     protected OrganisaatioNimiDAO organisaatioNimiDAO;
 
     @Autowired
-    private OrganisaatioKoulutukset organisaatioKoulutukset;
+    private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -171,7 +171,7 @@ public class OrganisaatioBusinessChecker {
     }
 
     public void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
-        if (organisaatioKoulutukset.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
+        if (organisaatioTarjonta.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
             throw new OrganisaatioLakkautusKoulutuksiaException();
         }
     }
