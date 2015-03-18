@@ -1780,10 +1780,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 };
             }
             if (sama === true) {
-                if (yt.postinumerot[lang].kaynti) {
-                    yt.postinumerot[lang].posti = yt.postinumerot[lang].kaynti;
-                    yt[lang].posti.postinumeroUri = koodistoPostiKoodi.uri;
-                    yt[lang].posti.postitoimipaikka = koodistoPostiKoodi.paikka;
+                if (yt.postinumerot[lang].posti) {
+                    yt.postinumerot[lang].kaynti = yt.postinumerot[lang].posti;
+                    yt[lang].kaynti.postinumeroUri = koodistoPostiKoodi.uri;
+                    yt[lang].kaynti.postitoimipaikka = koodistoPostiKoodi.paikka;
                 }
             }
             if (addressmodel) {
@@ -1808,24 +1808,24 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (sama === true) {
                 if (suomalainen === true) {
                     // kopioi suomalainen osoitemuoto
-                    if (!('posti' in ytp[lang])) {
-                        ytp[lang].posti = {};
+                    if (!('kaynti' in ytp[lang])) {
+                        ytp[lang].kaynti = {};
                     }
-                    for (var kentta in ytp[lang].kaynti) {
+                    for (var kentta in ytp[lang].posti) {
                         if ((kentta !== 'osoiteTyyppi') && (kentta !== 'id') && (kentta !== 'yhteystietoOid')) {
-                            ytp[lang].posti[kentta] = ytp[lang].kaynti[kentta];
+                            ytp[lang].kaynti[kentta] = ytp[lang].posti[kentta];
                         }
                     }
-                    if (ytp.postinumerot[lang].kaynti) {
-                        ytp.postinumerot[lang].posti = ytp.postinumerot[lang].kaynti;
+                    if (ytp.postinumerot[lang].posti) {
+                        ytp.postinumerot[lang].kaynti = ytp.postinumerot[lang].posti;
                     }
                 } else {                     // kopioi kansainvälinen osoitemuoto
-                    if (!('ulkomainen_posti' in ytp[lang])) {
-                        ytp[lang].ulkomainen_posti = {};
+                    if (!('ulkomainen_kaynti' in ytp[lang])) {
+                        ytp[lang].ulkomainen_kaynti = {};
                     }
-                    for (var ukaynti in ytp[lang].ulkomainen_kaynti) {
-                        if ((ukaynti !== 'osoiteTyyppi') && (ukaynti !== 'id') && (ukaynti !== 'yhteystietoOid')) {
-                            ytp[lang].ulkomainen_posti[ukaynti] = ytp[lang].ulkomainen_kaynti[ukaynti];
+                    for (var ukentta in ytp[lang].ulkomainen_posti) {
+                        if ((ukentta !== 'osoiteTyyppi') && (ukentta !== 'id') && (ukentta !== 'yhteystietoOid')) {
+                            ytp[lang].ulkomainen_kaynti[ukentta] = ytp[lang].ulkomainen_posti[ukentta];
                         }
                     }
                 }
