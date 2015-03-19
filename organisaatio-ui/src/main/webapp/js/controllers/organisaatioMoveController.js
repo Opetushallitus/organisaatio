@@ -16,7 +16,7 @@
 
 function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                                     OrganisaatiotFlat, Organisaatio,
-                                    LocalisationService,
+                                    Alert, LocalisationService,
                                     nimi, node) {
 
 
@@ -64,6 +64,16 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
         return "--";
     }
 
+    function getTunnus(organisaatio) {
+        if ('oppilaitosKoodi' in organisaatio) {
+            return organisaatio.oppilaitosKoodi;
+        }
+        if ('ytunnus' in organisaatio) {
+            return organisaatio.ytunnus;
+        }
+        return null;
+    };
+
     function updateSearch() {
         var organizationType = "";
         $scope.koulutustoimija = isKoulutustoimija();
@@ -105,7 +115,9 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                 if (org.oid !== node.oid && org.oid !== node.parentOid) {
                     return {
                         "name": getNimi(org),
-                        "oid": org.oid
+                        "oid": org.oid,
+                        "tunnus": getTunnus(org),
+                        "nameTunnus": getNimi(org)+ " " + getTunnus(org)
                     };
                 }
             });

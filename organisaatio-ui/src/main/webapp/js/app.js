@@ -357,7 +357,7 @@ app.factory('Organisaatiot', function($resource) {
 
 // Organisaatioiden haku ilman hierrarkiaa
 app.factory('OrganisaatiotFlat', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae/tyyppi", {}, {
+    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
         get: {method: 'GET'}
     });
 });
