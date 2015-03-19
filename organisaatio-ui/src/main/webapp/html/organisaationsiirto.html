@@ -19,6 +19,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <h3>{{'organisaatio.move.topic' | i18n}}</h3>
 </div>
 
+<script type="text/ng-template" id="siirtoKohdeTemplate.html">
+  <a>
+    <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    <i>({{match.model.tunnus}})</i>
+  </a>
+</script>
+
 <div class="modal-body" style='overflow-y: visible;'>
 
     <div class="form-fluid">
@@ -40,7 +47,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        ng-model="options.newParentOrganization"
                        ng-disabled="disabled" ng-required="true"
                        ie-placeholder placeholder="{{siirtoKohdeTitle}}"
-                       typeahead="suggest as suggest.name for suggest in suggests | filter:$viewValue | limitTo:10"
+                       typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
+                       typeahead-template-url="siirtoKohdeTemplate.html"
                        typeahead-editable="false" oph-enter>
 
                 <br/>
