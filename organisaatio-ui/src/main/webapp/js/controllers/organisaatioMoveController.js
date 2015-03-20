@@ -56,7 +56,7 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
             return organisaatio.nimi.fi;
         }
         if ('sv' in organisaatio.nimi && organisaatio.nimi.sv) {
-            return node.nimi.sv;
+            return organisaatio.nimi.sv;
         }
         if ('en' in organisaatio.nimi && organisaatio.nimi.en) {
             return organisaatio.nimi.en;
@@ -117,7 +117,8 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                         "name": getNimi(org),
                         "oid": org.oid,
                         "tunnus": getTunnus(org),
-                        "nameTunnus": getNimi(org)+ " " + getTunnus(org)
+                        "nameTunnus": getNimi(org)+ " " + getTunnus(org),
+                        "nameTunnusBrackets": getNimi(org)+ " (" + getTunnus(org) + ")"
                     };
                 }
             });

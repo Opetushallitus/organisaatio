@@ -20,9 +20,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 </div>
 
 <script type="text/ng-template" id="siirtoKohdeTemplate.html">
-  <a>
-    <span ng-bind-html="match.model.name | typeaheadHighlight:query"></span>
-    <i>({{match.model.tunnus}})</i>
+  <a tabindex="-1" ng-bind-html="match.model.nameTunnusBrackets | typeaheadHighlight:query">
   </a>
 </script>
 
