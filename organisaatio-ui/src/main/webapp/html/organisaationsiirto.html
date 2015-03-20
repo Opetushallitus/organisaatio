@@ -21,7 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <script type="text/ng-template" id="siirtoKohdeTemplate.html">
   <a>
-    <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    <span ng-bind-html="match.model.name | typeaheadHighlight:query"></span>
     <i>({{match.model.tunnus}})</i>
   </a>
 </script>
@@ -46,7 +46,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input type="text" class="input-xxlarge"
                        ng-model="options.newParentOrganization"
                        ng-disabled="disabled" ng-required="true"
-                       ie-placeholder placeholder="{{siirtoKohdeTitle}}"
+                       ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}"
                        typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
                        typeahead-template-url="siirtoKohdeTemplate.html"
                        typeahead-editable="false" oph-enter>
