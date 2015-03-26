@@ -459,7 +459,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             oids.add(org.getOid());
         }
 
-        return "{ \"oids\": [" + Joiner.on(",").join(oids) + "]}";
+        return "{ \"oids\": [\"" + Joiner.on("\", \"").join(oids) + "\"]}";
     }
 
     @Override
