@@ -38,7 +38,6 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         $log.info("getKoodistoArray(): " + uri);
 
         var deferred = $q.defer();
-        /* Käytetään default arvoja ---> kunnes migraario tehty OVT-9317
         KoodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
@@ -57,18 +56,6 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
             }
             deferred.resolve();
         });
-        */
-        // /*
-        // Käytetään default arvoja ---> kunnes migraario tehty OVT-9317
-        if (defaultArray instanceof Array) {
-            defaultArray.forEach(function(rTyyppiKoodi) {
-                resultArray.push(rTyyppiKoodi);
-            });
-            deferred.resolve();
-        } else {
-            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe");
-        }
-        // */
         return deferred.promise;
     };
 
