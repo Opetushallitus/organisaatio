@@ -97,8 +97,9 @@ app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
             }, virheCallback);
         };
 
-        this.delete = function(ytt, callback, virheCallback) {
-            YhteystietojentyypinPoisto.delete({oid: ytt.oid}, callback, virheCallback);
+        this.delete = function(ytt, force, callback, virheCallback) {
+            $log.debug("DELETE: " + force);
+            YhteystietojentyypinPoisto.delete({oid: ytt.oid, force: force}, callback, virheCallback);
         };
 
         function clearOppilaitostyypitMap() {

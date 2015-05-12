@@ -19,6 +19,7 @@ var YhteystietoDeleteController = function ($scope, $modalInstance, $log, nimi) 
     $log = $log.getInstance("YhteystietoDeleteController");
 
     $scope.nimi = nimi;
+    $scope.force = false;
 
     if (nimi) {
         $log.debug("Yhteystiedon poisto (vaatii vahvistuksen): " + nimi);

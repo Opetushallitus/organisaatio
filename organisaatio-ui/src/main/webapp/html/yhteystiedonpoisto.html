@@ -23,12 +23,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="form-fluid">
         {{'Yhteystiedonpoisto.vahvistus' | i18n}}
         <strong>{{nimi}}</strong>?
+        <p>
+        <input type="checkbox" ng-model="force">
+        {{'Yhteystiedonpoisto.pakotus' | i18n}}
+        <div class="label label-warning" ng-show="force">{{'Yhteystiedonpoisto.varoitus' | i18n}}</div>
     </div>
 </div>
 <div class="modal-footer">
     <div class="form-fluid">
         <button class="btn" ng-click="$dismiss()">{{'Yhteystiedonpoisto.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="$close()">{{'Yhteystiedonpoisto.ok' | i18n}}</button>
+        <button class="btn" ng-click="$close(force)">{{'Yhteystiedonpoisto.ok' | i18n}}</button>
     </div>
 </div>
 

@@ -494,7 +494,7 @@ app.factory('Yhteystietojentyyppi', function($resource) {
 
 // Yhteystietotyypin poisto organisaatiopalvelulta
 app.factory('YhteystietojentyypinPoisto', function($resource) {
-    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid", { oid: "@oid" }, {
+    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid?force=:force", { oid: "@oid", force: "@force" }, {
         delete: {method: 'DELETE'}
     });
 });

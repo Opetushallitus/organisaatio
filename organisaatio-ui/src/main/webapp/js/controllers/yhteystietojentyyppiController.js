@@ -285,6 +285,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
     };
 
     $scope.poistaYhteystietotyyppi = function() {
+        Alert.clear();
         if ($scope.valittuYhteystietotyyppi !== null) {
             var modalInstance = $modal.open({
                 templateUrl: 'yhteystiedonpoisto.html',
@@ -296,13 +297,13 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
                 }
             });
 
-            modalInstance.result.then(function() {
-                $log.debug('Yhteystietotyypin poisto vahvistettu');
+            modalInstance.result.then(function(force) {
+                $log.debug('Yhteystietotyypin poisto vahvistettu (force=' + force + ')');
 
                 var ind = $scope.model.yhteystietotyypit.indexOf($scope.valittuYhteystietotyyppi);
                 if (ind !== -1) {
                     if ($scope.valittuYhteystietotyyppi.oid !== null) {
-                        $scope.model.delete($scope.valittuYhteystietotyyppi, function(res) {
+                        $scope.model.delete($scope.valittuYhteystietotyyppi, force, function(res) {
 
                             $scope.model.yhteystietotyypit.splice(ind, 1);
                             $scope.valittuYhteystietotyyppi = null;
