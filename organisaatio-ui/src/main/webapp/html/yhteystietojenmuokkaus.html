@@ -24,12 +24,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="control-group" ng-if="model.ytlang">
     <label class="control-label">
-        {{'Organisaationtarkastelu.postiosoite'| i18n}}
+        {{'Organisaationtarkastelu.postiosoite'| i18n}}<span ng-if="model.isPostiOsoiteRequired(model.ytlang)">*</span>
     </label>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
         <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required="yt"
                ng-model="model.yhteystiedot[model.ytlang].posti.osoite" ng-change="model.copyAddress(false, true)"
-               ng-required="model.ytlang === 'kieli_fi#1' || model.yhteystiedot.postinumerot[model.ytlang].posti"
+               ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang) || model.yhteystiedot.postinumerot[model.ytlang].posti"
                ng-minlength="3" ng-maxlength="100" oph-decode-name
                ie-placeholder placeholder="{{'Organisaationmuokkaus.osoite'| i18n}}"/>
         &nbsp;&nbsp;&nbsp;
@@ -61,11 +61,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </span>
         </div>
     </div>
-    <div class="controls" ng-if="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-        <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length
+    <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
+        <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length oph-required="yt"
                   ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite" oph-decode-name
-                  ng-disabled="disabled"
-                  ng-change="model.copyAddress(false, false)" class="span6"></textarea>
+                  ng-required="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang)"
+                  ng-disabled="disabled" ng-minlength="3" ng-maxlength="200"
+                  ng-change="model.copyAddress(false, false)" class="span6">
+        </textarea>
+        <div>
+            <span class="text-error" ng-show="yhteystiedot.kvpostiosoitefi.$error.minlength || yhteystiedot.kvpostiosoitefi.$error.maxlength">
+                {{'Organisaationmuokkaus.validointi.osoitevirheellinen'| i18n}}
+            </span>
+        </div>
+        <div>
+            <span class="text-error" ng-show="yhteystiedot.kvpostiosoitefi.$error.required">
+                {{'Organisaationmuokkaus.postiosoite' | i18n}} {{'Organisaationmuokkaus.validointi.pakollinen' | i18n}}
+            </span>
+        </div>
     </div>
 </div>
 

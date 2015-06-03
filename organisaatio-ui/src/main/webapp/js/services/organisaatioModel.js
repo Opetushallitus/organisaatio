@@ -2019,6 +2019,28 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     return ($filter('i18n')("Organisaatiot.poistettu",""));
             }
         };
+
+        this.isPostiOsoiteRequired = function(lang) {
+            //$log.info("lang:" + model.ytlang + ", uris:" + model.organisaatio.kieletUris);
+            //switch (model.ytlang) {
+            switch (lang) {
+                case 'kieli_fi#1':
+                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_1#1') >= 0) ||
+                           (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_3#1') >= 0) ||
+                           (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_5#1') >= 0);
+                    break;
+                case 'kieli_sv#1':
+                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_2#1') >= 0) ||
+                            (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_3#1') >= 0);
+                    break;
+                case 'kieli_en#1':
+                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_4#1') >= 0) ||
+                            (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_9#1') >= 0);
+                    break;
+            }
+
+            return false;
+        };
     };
 
     return model;
