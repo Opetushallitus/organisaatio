@@ -207,6 +207,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.nameFormat = false;
 
+        // Invalidit yhteystiedot kielen mukaan
+        this.ytinvalid = [];
+
         // TODO: Add also parent needed possibly for moving organisaatio
 
         // Palauta lokalisoitu arvo.
@@ -1414,6 +1417,30 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
         };
 
+        var getYhteystietoKielet = function(kieletUris) {
+            var ret = {};
+            for (var i = 0; i < kieletUris.length; i++) {
+                switch(kieletUris[i]) {
+                    case 'oppilaitoksenopetuskieli_1#1':
+                    case 'oppilaitoksenopetuskieli_5#1':
+                        ret['kieli_fi#1'] = true;
+                        break;
+                    case 'oppilaitoksenopetuskieli_2#1':
+                        ret['kieli_sv#1'] = true;
+                        break;
+                    case 'oppilaitoksenopetuskieli_3#1':
+                        ret['kieli_fi#1'] = true;
+                        ret['kieli_sv#1'] = true;
+                        break;
+                    case 'oppilaitoksenopetuskieli_4#1':
+                    case 'oppilaitoksenopetuskieli_9#1':
+                        ret['kieli_en#1'] = true;
+                        break;
+                };
+            }
+            return ret;
+        };
+
         this.setNimi = function(nimi) {
             model.organisaatio.nimi = nimi;
         };
@@ -1492,10 +1519,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
         };
 
-        this.addLang = function() {
+        this.addLang = function(ytform) {
             if (model.organisaatio.kieletUris.indexOf(model.koodisto.kieliplaceholder) === -1) {
                 if (model.koodisto.kieliplaceholder && (model.koodisto.kieliplaceholder !== $filter('i18n')("lisaakieli"))) {
                     model.organisaatio.kieletUris.push(model.koodisto.kieliplaceholder);
+
+                    model.updateYhteystiedotValidity(ytform);
                 }
             }
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
@@ -1550,11 +1579,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         };
 
-        this.removeLang = function(lang) {
+        this.removeLang = function(lang, ytform) {
             var index = model.organisaatio.kieletUris.indexOf(lang);
             if (index !== -1) {
                 model.organisaatio.kieletUris.splice(index, 1);
             }
+            model.updateYhteystiedotValidity(ytform);
         };
 
         this.addMkLang = function(section) {
@@ -2041,6 +2071,20 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             return false;
         };
+
+        this.updateYhteystiedotValidity = function(ytform) {
+            model.ytinvalid = [];
+            var kielet = getYhteystietoKielet(model.organisaatio.kieletUris);
+            for (var kieli in kielet) {
+                if (kielet.hasOwnProperty(kieli)) {
+                    if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
+                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
+                        model.ytinvalid.push(kieli);
+                    }
+                }
+            }
+        };
+
     };
 
     return model;

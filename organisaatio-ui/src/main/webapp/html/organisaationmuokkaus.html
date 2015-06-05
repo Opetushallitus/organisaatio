@@ -348,12 +348,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
         <div class="controls">
             <span ng-repeat="kieli in model.organisaatio.kieletUris">
-                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli);
+                <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli, ytform);
                             form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
                     ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"
-                    ng-click="model.addLang()">
+                    ng-click="model.addLang(form.yhteystiedot)">
                 <option value="">{{'Organisaationmuokkaus.lisaakieli'| i18n}}</option>
             </select>
             <div ng-if="model.organisaatio.kieletUris.length === 0">
@@ -399,7 +399,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </label>
                 </a>
             </div>
-            <span class="text-error span4" ng-show="form.yhteystiedot.$invalid && model.yhteystiedot.postinumerot">
+            <span class="text-error span4" ng-show="(form.yhteystiedot.$invalid || model.ytinvalid.length>0) && model.yhteystiedot.postinumerot">
                 {{'Organisaationmuokkaus.validation.osio'| i18n}}<br>
             </span>
         </div>
@@ -850,20 +850,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-show="model.mode === 'edit'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="saveAndRefresh()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="saveAndRefresh()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
-        <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
-        <span ng-if="!form.$invalid" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
-        <span ng-if="form.$invalid" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
+        <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
+        <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
     </div>
     <p>
 </div>

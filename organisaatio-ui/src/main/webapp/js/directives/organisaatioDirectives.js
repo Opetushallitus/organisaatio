@@ -319,16 +319,7 @@ app.directive('ophRequired', function($log) {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var validator = function(viewValue) {
-                var lang = (attrs.ophRequired === "yt" ? scope.model.ytlang : scope.model.hplang);
-                if (lang && scope.model.isPostiOsoiteRequired()) {
-                    if (viewValue) {
-                        $log.log('setreq' + lang + ' =true');
-                        ctrl.$setValidity('ophrequired' + lang, true);
-                    } else {
-                        $log.log('setreq' + lang + ' =false');
-                        ctrl.$setValidity('ophrequired' + lang, false);
-                    }
-                }
+                scope.model.updateYhteystiedotValidity(ctrl);
                 return viewValue;
             };
             ctrl.$parsers.unshift(validator);
