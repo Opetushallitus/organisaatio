@@ -227,3 +227,10 @@ div#ajax-loader.min span.spinner-msg {
 	display:inline;
 	position:relative;
 }
+
+span#paivittaja {
+    font-size:12px;
+    font-weight:normal;
+    display:inline-block;
+    float:right;
+}

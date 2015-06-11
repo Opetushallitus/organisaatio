@@ -17,14 +17,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <!-- Organisaation muokkaus -->
 <form name="form" class="form-horizontal" novalidate>
     <div class="control-group" >
-        <div class="controls">
-            <div class="span10">
+            <div class="offset2">
                 <h3>
                     <span ng-show="model.mode === 'edit'">{{'Organisaationmuokkaus.muokkaus'| i18n}} {{model.uriLocalizedNames["nimi"]}}</span>
                     <span ng-show="model.mode === 'new'">{{'Organisaationmuokkaus.uudenluonti'| i18n}} {{model.uriLocalizedNames["parentnimi"]}}</span>
+                    <span ng-show="model.paivitys.pvm" id="paivittaja">
+                    ({{'Organisaationtarkastelu.tallennettu'| i18n}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</span>
                 </h3>
-            </div>
+                <div>
+            <em class="muted">{{'Organisaationmuokkaus.ohje.pakollisuus'| i18n}}</em>
         </div>
+            </div>
     </div>
 
     <div class="control-group">
@@ -206,11 +209,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <button ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                     auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     class="btn" ng-click="openNimenMuokkaus()">
-                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
+                <i class="icon-pencil"></i> {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
             <button ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false"
                     class="btn" ng-click="openNimenMuokkaus()">
-                {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
+                <i class="icon-pencil"></i> {{'Organisaationmuokkaus.muokkaaNimea'| i18n}}
             </button>
             <div ng-if="!(model.organisaatio.nimi.fi || model.organisaatio.nimi.sv || model.organisaatio.nimi.en)">
                 <input type="hidden" name="nimi" ng-model="nimi" required>
@@ -377,10 +380,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
             <div ng-controller="UploadController">
                 <label ng-show="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.vaihdakuva' | i18n}}</label>
-                <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center">{{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
+                <label ng-hide="model.organisaatio.metadata.kuvaEncoded" for="upload" class="btn" style="text-align: center"><i class="icon-plus"></i> {{ 'Organisaationmuokkaus.lisaakuva' | i18n}}</label>
                 <input style="display: none;" ng-if="canUseFileReader" type="file" name="upload" id="upload" file-dirty ng-model="model.imagefile" ng-file-select="onFileSelect($files)">
                 <input style="display: none;" ng-if="!canUseFileReader" id="upload" type="file" name="upload" data-url="" oph-fileupload>
-                <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="form.$setDirty(); model.removeImage(form)">{{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
+                <button ng-show="model.organisaatio.metadata.kuvaEncoded" type="button" class="btn" ng-click="form.$setDirty(); model.removeImage(form)"><i class="icon-remove"></i> {{ 'Organisaationmuokkaus.poistakuva' | i18n}}</button>
             </div>
         </div>
     </div>
@@ -850,8 +853,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-show="model.mode === 'edit'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="saveAndRefresh()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()" tooltip="{{'Organisaatiot.tarkastele'| i18n}}"><i class="icon-eye-open"></i> {{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}" class="btn btn-primary" ng-click="saveAndRefresh()" tooltip="{{'Organisaationmuokkaus.tallenna'| i18n}}">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
         <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>
@@ -859,8 +862,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()">{{'Organisaatiot.tarkastele'| i18n}}</button>
-            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
+            <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()" tooltip="{{'Organisaatiot.tarkastele'| i18n}}"><i class="icon-eye-open"></i> {{'Organisaatiot.tarkastele'| i18n}}</button>
+            <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}" class="btn btn-primary" ng-click="save()" tooltip="{{'Organisaationmuokkaus.tallenna'| i18n}}">{{'Organisaationmuokkaus.tallenna'| i18n}}</button>
         </div>
         <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
         <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00"><em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}'>{{'Organisaationmuokkaus.validation.lomake'| i18n }}</em></span>

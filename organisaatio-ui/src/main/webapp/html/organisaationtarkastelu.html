@@ -18,13 +18,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <form name="form" class="form-horizontal" novalidate>
 
     <div class="control-group">
-        <div class="offset2 span6" ng-show="model.organisaatio.nimi">
-            <h2>{{model.uriLocalizedNames["nimi"]}}</h2>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="offset2" ng-show="model.paivitys.pvm">
-            ({{'Organisaationtarkastelu.tallennettu'| i18n}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})
+        <div class="offset2" ng-show="model.organisaatio.nimi">
+            <h2>{{model.uriLocalizedNames["nimi"]}}<span ng-show="model.paivitys.pvm" id="paivittaja">
+                    ({{'Organisaationtarkastelu.tallennettu'| i18n}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</span></h2>
         </div>
     </div>
     <div ng-show="model.organisaatio.metadata.kuvaEncoded">
@@ -69,7 +65,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
-                {{model.organisaatio.alkuPvm| date:'dd.MM.yyyy'}} - {{model.organisaatio.lakkautusPvm| date:'dd.MM.yyyy'}}
+                {{model.organisaatio.alkuPvm| date:'d.M.yyyy'}} - {{model.organisaatio.lakkautusPvm| date:'d.M.yyyy'}}
             </label>
         </div>
     </div>
@@ -759,12 +755,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
-                    auth-org="{{model.organisaatio.oid}}">{{'Organisaationtarkastelu.muokkaa'| i18n}}</button>
+                    auth-org="{{model.organisaatio.oid}}"><i class="icon-pencil"></i> {{'Organisaationtarkastelu.muokkaa'| i18n}}</button>
         </div>
         <span>&nbsp;</span>
     </div>

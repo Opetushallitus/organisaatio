@@ -85,8 +85,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <form name="perusHakuForm" class="form-search" novalidate ng-submit="search(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">
     <input class="input-xlarge" type="text" ng-model="hakuehdot.nimiTaiTunnus" ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}">
-    <button class="btn btn-primary" type="submit">{{'Organisaatiot.hae' | i18n}}</button>
     <button class="btn" type="reset" ng-click="resetHakuehdot(); tarkemmatHakuehdotForm.$setPristine(); perusHakuForm.$setPristine()">{{'Organisaatiot.tyhjenna' | i18n}}</button>
+    <button class="btn btn-primary" type="submit"><i class="icon-search"></i> {{'Organisaatiot.hae' | i18n}}</button>
     <span ng-if="tarkemmatHakuehdotForm.$dirty || perusHakuForm.$dirty" class="muted" style="background-color: #fff"><em>{{'Organisaatiot.hakuehtojaMuutettu' | i18n}}</em></span>
 </form>
 
@@ -145,7 +145,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="row-fluid">
     <h3 class="" >{{'Organisaatiot.organisaatiot' | i18n}} ({{model.count}})</h3>
     <span auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
-        <button class="btn" ng-click="luoYlinTaso()">{{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}</button>
+        <button class="btn" ng-click="luoYlinTaso()"><i class="icon-plus"></i> {{'Organisaatiot.luoYlimmanTasonOrganisaatio' | i18n}}</button>
     </span>
     <span auth="crudRyhma" auth-service="APP_ORGANISAATIOHALLINTA">
         <button class="btn" ng-click="ryhmienHallinta()">{{'Organisaatiot.hallinnoiRyhmia' | i18n}}</button>
