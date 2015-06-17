@@ -52,13 +52,12 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- *
  * @author simok
  */
 @Component
 @Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
-public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
+public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
 
@@ -261,7 +260,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
 
         Organisaatio org = organisaatioDAO.findByOid(oid);
 
-        if(org != null){
+        if (org != null) {
             final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
             tulos.setPaivittaja(org.getPaivittaja());
             tulos.setPaivitysPvm(org.getPaivitysPvm());
@@ -320,7 +319,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             o = organisaatioDAO.findByToimipistekoodi(oid);
         }
 
-        if(o != null){
+        if (o != null) {
             final OrganisaatioLOPTietoDTOV2 tulos = new OrganisaatioLOPTietoDTOV2();
             tulos.setOid(o.getOid());
             tulos.setNimi(convertMKTToMap(o.getNimi()));
@@ -393,7 +392,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         try {
             OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
             return tulos;
-        }  catch (ValidationException ex) {
+        } catch (ValidationException ex) {
             LOG.warn("Error saving multiple organizations", ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
@@ -409,7 +408,6 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
                     t.getMessage(), "generic.error");
         }
     }
-
 
 
     @Override
@@ -471,7 +469,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
         Preconditions.checkNotNull(merge);
 
         Date date;
-        if(dateParam != null && dateParam.getValue() != null) {
+        if (dateParam != null && dateParam.getValue() != null) {
             date = dateParam.getValue();
         } else {
             date = new Date();
@@ -492,13 +490,11 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
             if (merge) {
                 // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
                 organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
-            }
-            else {
+            } else {
                 // Oppilaitos siirtyy toisen organisaation alle
                 organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
             }
-        }
-        catch (SadeBusinessException sbe) {
+        } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving multiple organizations", sbe);
             throw new OrganisaatioResourceException(sbe);
         }
@@ -539,7 +535,7 @@ public class OrganisaatioResourceImplV2  implements OrganisaatioResourceV2 {
     @Override
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
         Date date = null;
-        if(dateParam != null && dateParam.getValue() != null) {
+        if (dateParam != null && dateParam.getValue() != null) {
             date = dateParam.getValue();
         }
 
