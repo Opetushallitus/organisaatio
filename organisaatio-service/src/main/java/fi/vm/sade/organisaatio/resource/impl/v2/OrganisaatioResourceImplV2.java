@@ -563,4 +563,27 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         return groupList;
     }
+
+    @Override
+    public String hakutoimisto(String organisaatioOid) {
+        Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOid);
+        OrganisaatioMetaData metadata = organisaatio.getMetadata();
+        if(metadata == null) {
+            return hakutoimistoFromParent(organisaatio);
+        } else {
+            for (Yhteystieto yhteystieto : metadata.getYhteystiedot()) {
+                if (yhteystieto instanceof Osoite) {
+                    Osoite osoite = (Osoite) yhteystieto;
+                    if ("kaynti".equals(osoite.getOsoiteTyyppi())) {
+                        return osoite.getOsoite();
+                    }
+                }
+            }
+            return hakutoimistoFromParent(organisaatio);
+        }
+    }
+
+    private String hakutoimistoFromParent(Organisaatio organisaatio) {
+        return organisaatio.getParent() != null ? hakutoimisto(organisaatio.getParent().getOid()) : null;
+    }
 }

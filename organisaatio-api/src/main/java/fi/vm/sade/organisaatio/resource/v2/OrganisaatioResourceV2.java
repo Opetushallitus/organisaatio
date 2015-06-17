@@ -329,4 +329,8 @@ public interface OrganisaatioResourceV2 {
             response = OrganisaatioGroupDTOV2.class)
     public List<OrganisaatioGroupDTOV2> groups() throws Exception;
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF8")
+    @Path("/{oid}/hakutoimisto")
+    String hakutoimisto(@PathParam("oid") String organisaatioOid);
 }

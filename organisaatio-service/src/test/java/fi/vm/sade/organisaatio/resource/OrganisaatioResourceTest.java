@@ -8,11 +8,14 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
+import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +45,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Autowired
     private OrganisaatioResource res;
+
+    @Autowired
+    private OrganisaatioResourceV2 res2;
+
     @Autowired
     private IndexerResource solrIndexer;
 
@@ -126,6 +133,12 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits());
+    }
+
+    @Test
+    public void testFetchingHakutoimisto() throws Exception {
+        String hakutoimisto = res2.hakutoimisto("1.2.2004.4");
+        assertNotNull(hakutoimisto);
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
