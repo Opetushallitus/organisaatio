@@ -23,6 +23,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
+import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.ws.rs.*;
@@ -332,5 +333,5 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF8")
     @Path("/{oid}/hakutoimisto")
-    String hakutoimisto(@PathParam("oid") String organisaatioOid);
+    HakutoimistoDTO hakutoimisto(@PathParam("oid") String organisaatioOid);
 }

@@ -6,13 +6,15 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
+
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -137,8 +139,13 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Test
     public void testFetchingHakutoimisto() throws Exception {
-        String hakutoimisto = res2.hakutoimisto("1.2.2004.4");
-        assertNotNull(hakutoimisto);
+        HakutoimistoDTO hakutoimisto = res2.hakutoimisto("1.2.2004.4");
+        assertEquals(new HakutoimistoDTO("1.2.2004.4", "Hassuttimenkatu 2", "10000", "Äyhtävä"), hakutoimisto);
+    }
+
+    @Test(expected = fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException.class)
+    public void testFetchingMissingHakutoimisto() throws Exception {
+        res2.hakutoimisto("non.existing.oid");
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,

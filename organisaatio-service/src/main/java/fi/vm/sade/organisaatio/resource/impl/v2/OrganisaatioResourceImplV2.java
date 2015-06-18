@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.dto.mapping.*;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
@@ -565,17 +566,21 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public String hakutoimisto(String organisaatioOid) {
+    public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOid);
+        if (organisaatio == null) {
+            throw new OrganisaatioNotFoundException(organisaatioOid);
+        }
+
         OrganisaatioMetaData metadata = organisaatio.getMetadata();
-        if(metadata == null) {
+        if (metadata == null) {
             return hakutoimistoFromParent(organisaatio);
         } else {
             for (Yhteystieto yhteystieto : metadata.getYhteystiedot()) {
                 if (yhteystieto instanceof Osoite) {
                     Osoite osoite = (Osoite) yhteystieto;
                     if ("kaynti".equals(osoite.getOsoiteTyyppi())) {
-                        return osoite.getOsoite();
+                        return new HakutoimistoDTO(osoite.getYhteystietoOid(), osoite.getOsoite(), osoite.getPostinumero(), osoite.getPostitoimipaikka());
                     }
                 }
             }
@@ -583,7 +588,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
     }
 
-    private String hakutoimistoFromParent(Organisaatio organisaatio) {
+    private HakutoimistoDTO hakutoimistoFromParent(Organisaatio organisaatio) {
         return organisaatio.getParent() != null ? hakutoimisto(organisaatio.getParent().getOid()) : null;
     }
 }
