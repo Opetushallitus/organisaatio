@@ -333,5 +333,9 @@ public interface OrganisaatioResourceV2 {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF8")
     @Path("/{oid}/hakutoimisto")
+    @ApiOperation(
+            value = "Hakee organisaation hakutoimiston ",
+            notes = "Hakutoimisto haetaan tarvittaessa rekursiivisesti",
+            response = HakutoimistoDTO.class)
     HakutoimistoDTO hakutoimisto(@PathParam("oid") String organisaatioOid);
 }
