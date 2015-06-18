@@ -16,7 +16,10 @@
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
@@ -566,6 +569,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     @Override
+    // TODO add language as query parameter
     public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOid);
         if (organisaatio == null) {
@@ -576,17 +580,38 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         if (metadata == null) {
             return hakutoimistoFromParent(organisaatio);
         } else {
-            for (Yhteystieto yhteystieto : metadata.getYhteystiedot()) {
-                if (yhteystieto instanceof Osoite) {
-                    Osoite osoite = (Osoite) yhteystieto;
-                    if ("kaynti".equals(osoite.getOsoiteTyyppi())) {
-                        return new HakutoimistoDTO(osoite.getYhteystietoOid(), osoite.getOsoite(), osoite.getPostinumero(), osoite.getPostitoimipaikka());
-                    }
-                }
-            }
+            return hakutoimistoFromOrganisaatio(organisaatio);
+        }
+    }
+
+    private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
+        Optional<Yhteystieto> kayntiosoite = kayntiosoite(organisaatio);
+        if(kayntiosoite.isPresent()) {
+            Osoite osoite = (Osoite) kayntiosoite.get();
+            // TODO find www & email
+            return new HakutoimistoDTO(osoite.getYhteystietoOid(), osoite.getOsoite(), osoite.getPostinumero(), osoite.getPostitoimipaikka());
+        } else {
             return hakutoimistoFromParent(organisaatio);
         }
     }
+
+    private Optional<Yhteystieto> kayntiosoite(Organisaatio organisaatio) {
+        return findYhteystieto(organisaatio, new Predicate<Yhteystieto>() {
+            @Override
+            public boolean apply(Yhteystieto input) {
+                if (input instanceof Osoite) {
+                    Osoite osoite = (Osoite) input;
+                    return "kaynti".equals(osoite.getOsoiteTyyppi());
+                }
+                return false;
+            }
+        });
+    }
+
+    private Optional<Yhteystieto> findYhteystieto(Organisaatio organisaatio, Predicate<Yhteystieto> predicate) {
+        return Iterables.tryFind(organisaatio.getMetadata().getYhteystiedot(), predicate);
+    }
+
 
     private HakutoimistoDTO hakutoimistoFromParent(Organisaatio organisaatio) {
         return organisaatio.getParent() != null ? hakutoimisto(organisaatio.getParent().getOid()) : null;
