@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -570,14 +571,17 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOid);
         if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException(organisaatioOid);
+            throw new WebApplicationException(404);
         }
         OrganisaatioMetaData metadata = organisaatio.getMetadata();
         return metadata == null ? hakutoimistoFromParent(organisaatio) : hakutoimistoFromOrganisaatio(organisaatio);
     }
 
     private HakutoimistoDTO hakutoimistoFromParent(Organisaatio organisaatio) {
-        return organisaatio.getParent() != null ? hakutoimisto(organisaatio.getParent().getOid()) : null;
+        if (organisaatio.getParent() != null) {
+            return hakutoimisto(organisaatio.getParent().getOid());
+        }
+        throw new WebApplicationException(404);
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {

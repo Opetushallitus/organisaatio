@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.WebApplicationException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -152,7 +153,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "10000" , "Äyhtävä");
     }
 
-    @Test(expected = fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException.class)
+    @Test(expected = javax.ws.rs.WebApplicationException.class)
     public void testFetchingMissingHakutoimisto() throws Exception {
         res2.hakutoimisto("non.existing.oid");
     }
