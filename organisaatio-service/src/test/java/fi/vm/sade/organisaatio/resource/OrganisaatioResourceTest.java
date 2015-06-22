@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
@@ -13,11 +14,6 @@ import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
-
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +27,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -140,7 +134,22 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Test
     public void testFetchingHakutoimisto() throws Exception {
         HakutoimistoDTO hakutoimisto = res2.hakutoimisto("1.2.2004.4");
-        assertEquals(new HakutoimistoDTO("1.2.2004.4", "Hassuttimenkatu 2", "10000", "Äyhtävä"), hakutoimisto);
+        Assert.assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
+        HakutoimistoDTO expected = new HakutoimistoDTO(
+                ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
+                ImmutableMap.of(
+                        "kieli_fi#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.4", "fi"), hakutoimistonOsoite("1.2.2004.5", "fi"), "http://www.foo.fi", "foo@bar.com", "123456789"),
+                        "kieli_sv#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.6", "sv"), null, null, null, null),
+                        "kieli_en#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.7", "en"), hakutoimistonOsoite("1.2.2004.8", "en"), "http://www.foo.fi/en", null, null)));
+
+        assertEquals(expected, hakutoimisto);
+    }
+
+    private HakutoimistoDTO.OsoiteDTO hakutoimistonOsoite(String yhteystietoOid, String lang) {
+        if("en".equals(lang)) {
+            return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "Hassuttimenkatu 2, 10000 Äyhtävä, Finland", null, null);
+        }
+        return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "10000" , "Äyhtävä");
     }
 
     @Test(expected = fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException.class)
