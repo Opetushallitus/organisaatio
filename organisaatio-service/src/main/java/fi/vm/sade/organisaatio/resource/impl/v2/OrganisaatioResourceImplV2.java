@@ -577,16 +577,12 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
 
         OrganisaatioMetaData metadata = organisaatio.getMetadata();
-        if (metadata == null) {
-            return hakutoimistoFromParent(organisaatio);
-        } else {
-            return hakutoimistoFromOrganisaatio(organisaatio);
-        }
+        return metadata == null ? hakutoimistoFromParent(organisaatio) : hakutoimistoFromOrganisaatio(organisaatio);
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
         Optional<Yhteystieto> kayntiosoite = kayntiosoite(organisaatio);
-        if(kayntiosoite.isPresent()) {
+        if (kayntiosoite.isPresent()) {
             Osoite osoite = (Osoite) kayntiosoite.get();
             // TODO find www & email
             return new HakutoimistoDTO(osoite.getYhteystietoOid(), osoite.getOsoite(), osoite.getPostinumero(), osoite.getPostitoimipaikka());
