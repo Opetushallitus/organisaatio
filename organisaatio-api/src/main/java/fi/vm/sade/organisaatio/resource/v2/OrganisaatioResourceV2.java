@@ -28,6 +28,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 
@@ -337,5 +338,5 @@ public interface OrganisaatioResourceV2 {
             value = "Hakee organisaation hakutoimiston ",
             notes = "Hakutoimisto haetaan tarvittaessa rekursiivisesti",
             response = HakutoimistoDTO.class)
-    HakutoimistoDTO hakutoimisto(@PathParam("oid") String organisaatioOid);
+    Response hakutoimisto(@PathParam("oid") String organisaatioOid);
 }

@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -134,7 +135,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Test
     public void testFetchingHakutoimisto() throws Exception {
-        HakutoimistoDTO hakutoimisto = res2.hakutoimisto("1.2.2004.4");
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4").getEntity();
         Assert.assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
@@ -153,9 +154,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "10000" , "Äyhtävä");
     }
 
-    @Test(expected = javax.ws.rs.WebApplicationException.class)
-    public void testFetchingMissingHakutoimisto() throws Exception {
-        res2.hakutoimisto("non.existing.oid");
+    @Test
+    public void testFetchingMissingHakutoimisto() {
+        Response hakutoimisto = res2.hakutoimisto("non.existing.oid");
+        assertEquals(404, hakutoimisto.getStatus());
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,

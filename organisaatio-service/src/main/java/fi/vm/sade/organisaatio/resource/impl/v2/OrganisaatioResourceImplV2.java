@@ -49,7 +49,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -568,10 +567,20 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     @Override
-    public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
-        Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOid);
+    public Response hakutoimisto(String organisaatioOid) {
+        try {
+            HakutoimistoDTO hakutoimistoDTO = hakutoimistoRec(organisaatioOid);
+            return Response.ok(hakutoimistoDTO).build();
+        } catch (OrganisaatioNotFoundException e) {
+            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.", e);
+            return Response.status(404).build();
+        }
+    }
+
+    public HakutoimistoDTO hakutoimistoRec(String organisaatioOId) {
+        Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOId);
         if (organisaatio == null) {
-            throw new WebApplicationException(404);
+            throw new OrganisaatioNotFoundException("Organisaatiota ei löydy: " + organisaatioOId);
         }
         OrganisaatioMetaData metadata = organisaatio.getMetadata();
         return metadata == null ? hakutoimistoFromParent(organisaatio) : hakutoimistoFromOrganisaatio(organisaatio);
@@ -579,9 +588,9 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private HakutoimistoDTO hakutoimistoFromParent(Organisaatio organisaatio) {
         if (organisaatio.getParent() != null) {
-            return hakutoimisto(organisaatio.getParent().getOid());
+            return hakutoimistoRec(organisaatio.getParent().getOid());
         }
-        throw new WebApplicationException(404);
+        throw new OrganisaatioNotFoundException("Organisaatiopuu on käyty kokonaan läpi, ylin: " + organisaatio.getOid());
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
