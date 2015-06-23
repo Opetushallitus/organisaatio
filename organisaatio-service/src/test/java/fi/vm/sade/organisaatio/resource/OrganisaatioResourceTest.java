@@ -155,8 +155,14 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void testFetchingMissingHakutoimisto() {
+    public void testFetchingHakutoimistoForMissingOrganisation() {
         Response hakutoimisto = res2.hakutoimisto("non.existing.oid");
+        assertEquals(404, hakutoimisto.getStatus());
+    }
+
+    @Test
+    public void testFetchingMissingHakutoimisto() {
+        Response hakutoimisto = res2.hakutoimisto("1.2.2004.6");
         assertEquals(404, hakutoimisto.getStatus());
     }
 

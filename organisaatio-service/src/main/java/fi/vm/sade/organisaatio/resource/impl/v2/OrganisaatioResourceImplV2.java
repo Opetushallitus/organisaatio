@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.Hakutoimisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
@@ -571,7 +572,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             HakutoimistoDTO hakutoimistoDTO = hakutoimistoRec(organisaatioOid);
             return Response.ok(hakutoimistoDTO).build();
-        } catch (OrganisaatioNotFoundException e) {
+        } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
             LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.", e);
             return Response.status(404).build();
         }
@@ -590,7 +591,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         if (organisaatio.getParent() != null) {
             return hakutoimistoRec(organisaatio.getParent().getOid());
         }
-        throw new OrganisaatioNotFoundException("Organisaatiopuu on käyty kokonaan läpi, ylin: " + organisaatio.getOid());
+        throw new HakutoimistoNotFoundException("Hakutoimistoa ei löydy, ylin organisaatio " + organisaatio.getOid());
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
