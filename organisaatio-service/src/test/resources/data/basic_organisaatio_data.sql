@@ -21,14 +21,18 @@ INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
 (1000, 'Hakutoimiston nimi FI', 'kieli_fi#1'),
 (1000, 'Hakutoimiston nimi EN', 'kieli_en#1');
 
-INSERT INTO ORGANISAATIOMETADATA(ID, VERSION, LUONTIPVM, MUOKKAUSPVM, HAKUTOIMISTONIMI_ID) VALUES (1, 1, DATE '1970-01-01', DATE '1970-01-01', 1000);
+INSERT INTO ORGANISAATIOMETADATA(ID, VERSION, LUONTIPVM, MUOKKAUSPVM, HAKUTOIMISTONIMI_ID) VALUES
+(1, 1, DATE '1970-01-01', DATE '1970-01-01', 1000),
+(2, 1, DATE '1970-01-01', DATE '1970-01-01', 1000);
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, KIELI) VALUES
 ('Osoite', 1000, 1, '1.2.2004.4', 'Hassuttimenkatu 2', 'kaynti', '10000', 'Äyhtävä', 'kieli_fi#1'),
 ('Osoite', 1001, 1, '1.2.2004.5', 'Hassuttimenkatu 2', 'posti', '10000', 'Äyhtävä', 'kieli_fi#1'),
 ('Osoite', 1002, 1, '1.2.2004.6', 'Hassutingatan 2', 'kaynti', '10000', 'Äyhtävä', 'kieli_sv#1'),
 ('Osoite', 1003, 1, '1.2.2004.7', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'ulkomainen_kaynti', null, null, 'kieli_en#1'),
-('Osoite', 1004, 1, '1.2.2004.8', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'ulkomainen_posti', null, null, 'kieli_en#1');
+('Osoite', 1004, 1, '1.2.2004.8', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'ulkomainen_posti', null, null, 'kieli_en#1'),
+('Osoite', 1005, 1, '1.2.2004.9', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'kaynti', null, null, 'kieli_en#1'),
+('Osoite', 1006, 1, '1.2.2004.10', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'posti', null, null, 'kieli_en#1');
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, WWWOSOITE, KIELI) VALUES
 ('Www', 1101, 1, '1.2.2004.100', 'http://www.foo.fi', 'kieli_fi#1'),
@@ -46,6 +50,8 @@ INSERT INTO ORGANISAATIOMETADATA_YHTEYSTIETO(ORGANISAATIOMETADATA_ID, YHTEYSTIED
 (1, 1002),
 (1, 1003),
 (1, 1004),
+(2, 1005),
+(2, 1006),
 (1, 1101),
 (1, 1102),
 (1, 1201),
@@ -60,7 +66,8 @@ INSERT INTO ORGANISAATIO(ID, VERSION, ALKUPVM, DOMAINNIMI, KOTIPAIKKA, LAKKAUTUS
 (6, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node23 foo bar', '1.2.2005.4', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234568-4', NULL, NULL, 6),
 (7, 2, DATE '2013-06-29', NULL, 'Helsinki', NULL, NULL, 'root2 test2 koulutustoimija2', '1.2.2004.5', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, '|1|', '|1.2.246.562.24.00000000001|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-5', NULL, NULL, 7),
 (8, 1, NULL, NULL, 'Helsinki', DATE '2011-06-29', NULL, 'nodex bar', '1.2.2004.6', NULL, NULL, 'oppilaitostyyppi_41#1', FALSE, NULL, NULL, NULL, '|1|7|', '|1.2.246.562.24.00000000001|1.2.2004.5|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-6', NULL, NULL, 8),
-(9, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node231 foo bar', '1.2.2005.5', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|1.2.2004.4|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-4', NULL, NULL, 6);
+(9, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node231 foo bar', '1.2.2005.5', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|1.2.2004.4|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-4', NULL, NULL, 6),
+(10, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'mixed osoitetyyppi organisaatio', 'tyyppitesti', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-5', NULL, 2, 6);
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, KIELI, YHTEYSTIETOOID, COORDINATETYPE, EXTRARIVI, LAT, LNG, MAA, OSAVALTIO, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, YTJPAIVITYSPVM, PUHELINNUMERO, TYYPPI, EMAIL, WWWOSOITE, ORGANISAATIO_ID) VALUES
 ('Osoite', 1, 0, 'kieli_fi#1', '14175174062990.39764983115354857', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 1),

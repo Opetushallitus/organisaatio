@@ -578,7 +578,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
     }
 
-    public HakutoimistoDTO hakutoimistoRec(String organisaatioOId) {
+    private HakutoimistoDTO hakutoimistoRec(String organisaatioOId) {
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOId);
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException("Organisaatiota ei löydy: " + organisaatioOId);

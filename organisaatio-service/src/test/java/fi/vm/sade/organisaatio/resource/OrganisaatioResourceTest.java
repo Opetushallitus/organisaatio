@@ -120,7 +120,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(7, result.getNumHits());
+        assertEquals(8, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
@@ -143,6 +143,18 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
                         "kieli_fi#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.4", "fi"), hakutoimistonOsoite("1.2.2004.5", "fi"), "http://www.foo.fi", "foo@bar.com", "123456789"),
                         "kieli_sv#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.6", "sv"), null, null, null, null),
                         "kieli_en#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.7", "en"), hakutoimistonOsoite("1.2.2004.8", "en"), "http://www.foo.fi/en", null, null)));
+
+        assertEquals(expected, hakutoimisto);
+    }
+
+    @Test
+    public void testMixedOsoitetyyppi() throws Exception {
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("tyyppitesti").getEntity();
+        Assert.assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
+        HakutoimistoDTO expected = new HakutoimistoDTO(
+                ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
+                ImmutableMap.of(
+                        "kieli_en#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.9", "en"), hakutoimistonOsoite("1.2.2004.10", "en"), null, null, null)));
 
         assertEquals(expected, hakutoimisto);
     }

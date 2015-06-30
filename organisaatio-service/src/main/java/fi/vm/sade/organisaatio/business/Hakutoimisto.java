@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.business;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
@@ -11,7 +12,12 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
+import static com.google.common.base.Predicates.and;
+import static fi.vm.sade.organisaatio.model.Osoite.*;
+
 public class Hakutoimisto {
+    private static final Predicate<Yhteystieto> anyKayntiosoite = Predicates.or(osoitetyyppiPredicate(TYYPPI_KAYNTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_KAYNTIOSOITE));
+    private static final Predicate<Yhteystieto> anyPostiosoite = Predicates.or(osoitetyyppiPredicate(TYYPPI_POSTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_POSTIOSOITE));
 
     public static Map<String, String> hakutoimistonNimet(Organisaatio organisaatio) {
         MonikielinenTeksti hakutoimistoNimi = organisaatio.getMetadata().getHakutoimistoNimi();
@@ -30,7 +36,7 @@ public class Hakutoimisto {
     }
 
     public static boolean hasKayntiosoite(Organisaatio organisaatio) {
-        return organisaatio.getMetadata() != null && kayntiosoite(organisaatio.getMetadata().getYhteystiedot()).isPresent();
+        return organisaatio.getMetadata() != null && findYhteystieto(organisaatio.getMetadata().getYhteystiedot(), anyKayntiosoite).isPresent();
     }
 
     private static ImmutableListMultimap<String, Yhteystieto> groupYhteystiedot(Organisaatio organisaatio) {
@@ -44,8 +50,8 @@ public class Hakutoimisto {
     }
 
     private static HakutoimistoDTO.HakutoimistonYhteystiedotDTO hakutoimistonYhteystiedot(Iterable<Yhteystieto> yhteystiedot, String lang) {
-        Optional<HakutoimistoDTO.OsoiteDTO> kayntiosoite = isEnglish(lang) ? ulkomainenKayntiosoite(yhteystiedot) : kayntiosoite(yhteystiedot);
-        Optional<HakutoimistoDTO.OsoiteDTO> postiosoite = isEnglish(lang) ? ulkomainenPostiosoite(yhteystiedot) : postiosoite(yhteystiedot);
+        Optional<HakutoimistoDTO.OsoiteDTO> kayntiosoite = yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, and(osoitekieliPredicate(lang), anyKayntiosoite)));
+        Optional<HakutoimistoDTO.OsoiteDTO> postiosoite = yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, and(osoitekieliPredicate(lang), anyPostiosoite)));
 
         return new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(
                 kayntiosoite.orNull(),
@@ -53,26 +59,6 @@ public class Hakutoimisto {
                 www(yhteystiedot).orNull(),
                 email(yhteystiedot).orNull(),
                 puhelin(yhteystiedot).orNull());
-    }
-
-    private static boolean isEnglish(String lang) {
-        return lang != null && lang.contains("kieli_en");
-    }
-
-    private static Optional<HakutoimistoDTO.OsoiteDTO> kayntiosoite(Iterable<Yhteystieto> yhteystiedot) {
-        return yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, osoitePredicate(Osoite.TYYPPI_KAYNTIOSOITE)));
-    }
-
-    private static Optional<HakutoimistoDTO.OsoiteDTO> postiosoite(Iterable<Yhteystieto> yhteystiedot) {
-        return yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, osoitePredicate(Osoite.TYYPPI_POSTIOSOITE)));
-    }
-
-    private static Optional<HakutoimistoDTO.OsoiteDTO> ulkomainenPostiosoite(Iterable<Yhteystieto> yhteystiedot) {
-        return yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, osoitePredicate(Osoite.TYYPPI_ULKOMAINEN_POSTIOSOITE)));
-    }
-
-    private static Optional<HakutoimistoDTO.OsoiteDTO> ulkomainenKayntiosoite(Iterable<Yhteystieto> yhteystiedot) {
-        return yhteystietoToOsoiteDTO(findYhteystieto(yhteystiedot, osoitePredicate(Osoite.TYYPPI_ULKOMAINEN_KAYNTIOSOITE)));
     }
 
     private static Optional<String> email(Iterable<Yhteystieto> yhteystiedot) {
@@ -131,7 +117,20 @@ public class Hakutoimisto {
         });
     }
 
-    private static Predicate<Yhteystieto> osoitePredicate(final String osoitetyyppi) {
+    private static Predicate<Yhteystieto> osoitekieliPredicate(final String kieli) {
+        return new Predicate<Yhteystieto>() {
+            @Override
+            public boolean apply(Yhteystieto input) {
+                if (input instanceof Osoite) {
+                    final Osoite osoite = (Osoite) input;
+                    return kieli.equals(osoite.getKieli());
+                }
+                return false;
+            }
+        };
+    }
+
+    private static Predicate<Yhteystieto> osoitetyyppiPredicate(final String osoitetyyppi) {
         return new Predicate<Yhteystieto>() {
             @Override
             public boolean apply(Yhteystieto input) {
