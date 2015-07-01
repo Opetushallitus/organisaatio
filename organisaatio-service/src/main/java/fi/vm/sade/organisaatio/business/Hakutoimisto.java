@@ -13,11 +13,12 @@ import java.util.Collection;
 import java.util.Map;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.or;
 import static fi.vm.sade.organisaatio.model.Osoite.*;
 
 public class Hakutoimisto {
-    private static final Predicate<Yhteystieto> anyKayntiosoite = Predicates.or(osoitetyyppiPredicate(TYYPPI_KAYNTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_KAYNTIOSOITE));
-    private static final Predicate<Yhteystieto> anyPostiosoite = Predicates.or(osoitetyyppiPredicate(TYYPPI_POSTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_POSTIOSOITE));
+    private static final Predicate<Yhteystieto> anyKayntiosoite = or(osoitetyyppiPredicate(TYYPPI_KAYNTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_KAYNTIOSOITE));
+    private static final Predicate<Yhteystieto> anyPostiosoite = or(osoitetyyppiPredicate(TYYPPI_POSTIOSOITE), osoitetyyppiPredicate(TYYPPI_ULKOMAINEN_POSTIOSOITE));
 
     public static Map<String, String> hakutoimistonNimet(Organisaatio organisaatio) {
         MonikielinenTeksti hakutoimistoNimi = organisaatio.getMetadata().getHakutoimistoNimi();
@@ -35,8 +36,8 @@ public class Hakutoimisto {
         });
     }
 
-    public static boolean hasKayntiosoite(Organisaatio organisaatio) {
-        return organisaatio.getMetadata() != null && findYhteystieto(organisaatio.getMetadata().getYhteystiedot(), anyKayntiosoite).isPresent();
+    public static boolean hasOsoite(Organisaatio organisaatio) {
+        return organisaatio.getMetadata() != null && findYhteystieto(organisaatio.getMetadata().getYhteystiedot(), or(anyPostiosoite, anyKayntiosoite)).isPresent();
     }
 
     private static ImmutableListMultimap<String, Yhteystieto> groupYhteystiedot(Organisaatio organisaatio) {

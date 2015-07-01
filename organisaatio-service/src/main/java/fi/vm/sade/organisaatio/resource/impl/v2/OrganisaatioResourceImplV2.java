@@ -595,7 +595,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
-        if (Hakutoimisto.hasKayntiosoite(organisaatio)) {
+        if (Hakutoimisto.hasOsoite(organisaatio)) {
             return new HakutoimistoDTO(Hakutoimisto.hakutoimistonNimet(organisaatio), Hakutoimisto.hakutoimistonOsoitteet(organisaatio));
         } else {
             return hakutoimistoFromParent(organisaatio);
