@@ -25,14 +25,14 @@ INSERT INTO ORGANISAATIOMETADATA(ID, VERSION, LUONTIPVM, MUOKKAUSPVM, HAKUTOIMIS
 (1, 1, DATE '1970-01-01', DATE '1970-01-01', 1000),
 (2, 1, DATE '1970-01-01', DATE '1970-01-01', 1000);
 
-INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, KIELI) VALUES
-('Osoite', 1000, 1, '1.2.2004.4', 'Hassuttimenkatu 2', 'kaynti', '10000', 'Äyhtävä', 'kieli_fi#1'),
-('Osoite', 1001, 1, '1.2.2004.5', 'Hassuttimenkatu 2', 'posti', '10000', 'Äyhtävä', 'kieli_fi#1'),
-('Osoite', 1002, 1, '1.2.2004.6', 'Hassutingatan 2', 'kaynti', '10000', 'Äyhtävä', 'kieli_sv#1'),
-('Osoite', 1003, 1, '1.2.2004.7', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'ulkomainen_kaynti', null, null, 'kieli_en#1'),
-('Osoite', 1004, 1, '1.2.2004.8', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'ulkomainen_posti', null, null, 'kieli_en#1'),
-('Osoite', 1005, 1, '1.2.2004.9', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'kaynti', null, null, 'kieli_en#1'),
-('Osoite', 1006, 1, '1.2.2004.10', 'Hassuttimenkatu 2, 10000 Äyhtävä, Finland', 'posti', null, null, 'kieli_en#1');
+INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, KIELI) VALUES 
+('Osoite', 1000, 1, '1.2.2004.4', 'Hassuttimenkatu 2', 'kaynti', '10000', 'Juupajoki', 'kieli_fi#1'),
+('Osoite', 1001, 1, '1.2.2004.5', 'Hassuttimenkatu 2', 'posti', '10000', 'Juupajoki', 'kieli_fi#1'),
+('Osoite', 1002, 1, '1.2.2004.6', 'Hassutingatan 2', 'kaynti', '10000', 'Juupajoki', 'kieli_sv#1'),
+('Osoite', 1003, 1, '1.2.2004.7', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'ulkomainen_kaynti', null, null, 'kieli_en#1'),
+('Osoite', 1004, 1, '1.2.2004.8', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'ulkomainen_posti', null, null, 'kieli_en#1'),
+('Osoite', 1005, 1, '1.2.2004.9', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'kaynti', null, null, 'kieli_en#1'),
+('Osoite', 1006, 1, '1.2.2004.10', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'posti', null, null, 'kieli_en#1');
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, WWWOSOITE, KIELI) VALUES
 ('Www', 1101, 1, '1.2.2004.100', 'http://www.foo.fi', 'kieli_fi#1'),
