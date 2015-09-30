@@ -91,7 +91,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.historia.childSuhteet | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
+    <tr ng-repeat="entry in model.historia.childSuhteet | filter : {$:'!POISTETTU'} : true | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
         <td>{{entry.alkuPvm}}</td>
         <td>{{entry.loppuPvm}}</td>
         <td>
