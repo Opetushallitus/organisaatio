@@ -50,7 +50,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 </div>
                 <div ng-if="model.organisaationTulevaNimi.alkuPvm">
                     <br>
-                    {{model.organisaationTulevaNimi.alkuPvm}} <i class="icon-arrow-right"></i>
+                    {{model.organisaationTulevaNimi.alkuPvm | date:'d.M.yyyy'}} <i class="icon-arrow-right"></i>
                     <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
                         {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                     </div>
