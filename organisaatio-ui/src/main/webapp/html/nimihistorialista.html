@@ -19,7 +19,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <thead><tr><th>{{'Organisaationtarkastelu.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.nimi' | i18n}}</th></tr></thead>
     <tbody>
     <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
-        <td>{{entry.alkuPvm}}</td>
+        <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
             <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
                     {{entry.nimi[avain] | decodeAmp}} [{{avain}}]<br>
