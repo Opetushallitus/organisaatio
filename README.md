@@ -1,4 +1,5 @@
 # Organisaatioiden hallintapalvelu
-#
 
-Markdown syntaksi - [esimerkkejä ja ohjeita täällä](http://daringfireball.net/projects/markdown/).
+## Swagger-dokumentaatio
+
+https://testi.virkailija.opintopolku.fi/organisaatio-service/swagger/index.html
