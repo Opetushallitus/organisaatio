@@ -68,7 +68,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </thead>
     <tbody>
     <tr ng-repeat="entry in model.historia.parentSuhteet | orderBy:'alkuPvm'">
-        <td>{{model.parent.alkuPvm | date : 'dd.MM.yyyy'}}</td>
+        <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>{{entry.loppuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
             <span ng-if="entry.parent.status === 'AKTIIVINEN'">
@@ -92,7 +92,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </thead>
     <tbody>
     <tr ng-repeat="entry in model.historia.childSuhteet | filter : {$:'!POISTETTU'} : true | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
-        <td>{{(model.aliorganisaatioHaunTulos[0].children | filter : {oid : entry.child.oid} : true)[0].alkuPvm | date}}</td>
+        <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>{{entry.loppuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
             <span ng-if="entry.child.status === 'AKTIIVINEN'">
