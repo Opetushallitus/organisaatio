@@ -893,11 +893,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03", "04"],
+                        'Muu organisaatio': ["05", "03", "04", "06"],
                         'Koulutustoimija': ["02", "04"],
                         'Oppilaitos': ["03", "04"],
                         'Toimipiste': ["03", "04"],
-                        'Oppisopimustoimipiste': []};
+                        'Oppisopimustoimipiste': [],
+                        'Tyoelamajarjesto': []};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
