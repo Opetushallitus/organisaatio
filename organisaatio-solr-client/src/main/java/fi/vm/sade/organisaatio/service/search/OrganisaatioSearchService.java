@@ -52,6 +52,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
+        // XXX lisää työelämäjärjestö
         this.solr = factory.getSolrServer();
         orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
                 OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
@@ -62,6 +63,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
                 Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
+        orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
     }
 
     public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
