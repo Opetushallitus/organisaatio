@@ -891,6 +891,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste, 05:Muu organisaatio
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
+                     Jos organisaatio on TYÖELÄMÄJÄRJESTÖ, sen yläorganisaatio on joko MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
                      */
                     var sallitutAlaOrganisaatiot = {
                         'Muu organisaatio': ["05", "03", "04", "06"],
