@@ -108,7 +108,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
      * @param context
      * @return
      */
-    // XXX työelämäjärjestö??
+    // XXX työelämäjärjestö
     public boolean userCanEditName(OrganisaatioContext context) {
         if(context.getOrgTypes().contains(OrganisaatioTyyppi.OPPILAITOS) || context.getOrgTypes().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA) || context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)
                 || context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
