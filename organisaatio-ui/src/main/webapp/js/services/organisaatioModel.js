@@ -888,7 +888,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
                      TOIMIPISTE, OPPILAITOS tai KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
-                     Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste, 05:Muu organisaatio
+                     Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
+                     05:Muu organisaatio, 06:Työelämäjärjestö
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ, sen yläorganisaatio on joko MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
@@ -899,7 +900,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                         'Oppilaitos': ["03", "04"],
                         'Toimipiste': ["03", "04"],
                         'Oppisopimustoimipiste': [],
-                        'Tyoelamajarjesto': ["06"]};
+                        'Tyoelamajarjesto': ["06", "05", "03", "04"]};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
