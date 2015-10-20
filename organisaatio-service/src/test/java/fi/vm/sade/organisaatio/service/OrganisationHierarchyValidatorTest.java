@@ -184,7 +184,7 @@ public class OrganisationHierarchyValidatorTest {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
                 getOrg(OrganisaatioTyyppi.TOIMIPISTE),
-                false,
+                true,
                 validator,
                 validator.toimipisteRule
         );
@@ -325,7 +325,7 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testKoulutustoimijaUnderOPT() {
+    public void testKoulutustoimijaUnderOPH() {
         assertResult(
                 root,
                 getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
