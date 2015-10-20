@@ -882,17 +882,24 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 KoodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
                     model.koodisto.ophOrganisaatiot.length = 0;
-                    /* Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
-                     Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on määritelty yläorganisaatio,
+                    /* Organisaatiohierarkiasäännöt:
+                     (oltava samanlainen logiikka kuin luokassa OrganisationHierarchyValidator)
+                     Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
+                     Jos organisaatio on MUU ORGANISAATIO ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
+                     Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
+                     on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
+                     Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
+                     on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
-                     TOIMIPISTE, OPPILAITOS tai KOULUTUSTOIMIJA.
+                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
+                     Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava yläorganisaatio
+                     joka on tyypiltään KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
                      05:Muu organisaatio, 06:Työelämäjärjestö
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
-                     Jos organisaatio on TYÖELÄMÄJÄRJESTÖ, sen yläorganisaatio on joko MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
                      */
                     var sallitutAlaOrganisaatiot = {
                         'Muu organisaatio': ["05", "03"],
