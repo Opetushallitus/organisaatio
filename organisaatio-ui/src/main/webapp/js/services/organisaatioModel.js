@@ -895,12 +895,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ, sen yläorganisaatio on joko MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03", "04", "06"],
+                        'Muu organisaatio': ["05", "03", "04"],
                         'Koulutustoimija': ["02", "04"],
                         'Oppilaitos': ["03", "04"],
                         'Toimipiste': ["03", "04"],
                         'Oppisopimustoimipiste': [],
-                        'Tyoelamajarjesto': ["06", "05", "03", "04"]};
+                        'Tyoelamajarjesto': ["06","03"]};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
