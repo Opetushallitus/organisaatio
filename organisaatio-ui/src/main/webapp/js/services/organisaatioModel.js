@@ -895,19 +895,22 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ, sen yläorganisaatio on joko MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03", "04"],
+                        'Muu organisaatio': ["05", "03"],
                         'Koulutustoimija': ["02", "04"],
-                        'Oppilaitos': ["03", "04"],
-                        'Toimipiste': ["03", "04"],
+                        'Oppilaitos': ["03"],
+                        'Toimipiste': ["03"],
                         'Oppisopimustoimipiste': [],
                         'Tyoelamajarjesto': ["06","03"]};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
-                            if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
+                            // Parentin sallitut aliorganisaatiot
+                            if (model.organisaatio.parentOid !== model.OPHOid && sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
-                            } else if (model.organisaatio.parentOid === model.OPHOid &&
-                                    orgTyyppiKoodi.koodiArvo === "01") {
+                            } // Sallitut ylimmän tason organisaatiot
+                            else if (model.organisaatio.parentOid === model.OPHOid &&
+                                (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
+                                || orgTyyppiKoodi.koodiArvo === "05")) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             }
 
