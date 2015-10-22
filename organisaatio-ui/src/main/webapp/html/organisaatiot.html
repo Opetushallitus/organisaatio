@@ -121,7 +121,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
             <!-- Oppilaitostyyppi -->
             <select class="input-xxlarge" ng-model="hakuehdot.oppilaitostyyppi" ng-show="isOppilaitosSelected()"
-                    ng-options="oplTyyppi.uri as (oplTyyppi.nimi | i18n) for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
+                    ng-options="oplTyyppi.uri as oplTyyppi.nimi for oplTyyppi in hakuehdot.oppilaitostyypit | orderBy:'nimi'">
                 <option value="">{{'Organisaatiot.oppilaitostyyppi' | i18n}}</option>
             </select>
         </div>
