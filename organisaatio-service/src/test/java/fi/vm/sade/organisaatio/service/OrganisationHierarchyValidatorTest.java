@@ -91,9 +91,9 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testOppisopimustoimipisteUnderTyoelamajarjesto() {
+    public void testOppisopimustoimipisteUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
                 false,
                 validator,
@@ -180,9 +180,9 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testToimipisteUnderTyoelamajarjesto() {
+    public void testToimipisteUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 getOrg(OrganisaatioTyyppi.TOIMIPISTE),
                 true,
                 validator,
@@ -258,9 +258,9 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testOppilaitosUnderTyoelamajarjesto() {
+    public void testOppilaitosUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
                 false,
                 validator,
@@ -358,9 +358,9 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testKoulutustoimijaUnderTyoelamajarjesto() {
+    public void testKoulutustoimijaUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
                 false,
                 validator,
@@ -447,9 +447,9 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testMuuOrganisaatioUnderTyoelamajarjesto() {
+    public void testMuuOrganisaatioUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
                 false,
                 validator,
@@ -492,90 +492,90 @@ public class OrganisationHierarchyValidatorTest {
 
     /* child == työelämäjärjestö */
     @Test
-    public void testToplevelTyoelamajarjesto() {
+    public void testToplevelTyöelämäjärjestö() {
         assertResult(
                 null,
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 true,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderOPH() {
+    public void testTyöelämäjärjestöUnderOPH() {
         assertResult(
                 root,
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 true,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderKoulutustoimija() {
+    public void testTyöelämäjärjestöUnderKoulutustoimija() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 false,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderMuuOrganisaatio() {
+    public void testTyöelämäjärjestöUnderMuuOrganisaatio() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 false,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderTyoelamajarjesto() {
+    public void testTyöelämäjärjestöUnderTyöelämäjärjestö() {
         assertResult(
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 true,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderOppilaitos() {
+    public void testTyöelämäjärjestöUnderOppilaitos() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 false,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderToimipiste() {
+    public void testTyöelämäjärjestöUnderToimipiste() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TOIMIPISTE),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 false,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
     @Test
-    public void testTyoelamajarjestoUnderOppisopimustoimipiste() {
+    public void testTyöelämäjärjestöUnderOppisopimustoimipiste() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
-                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ),
                 false,
                 validator,
-                validator.tyoelamajarjestoRule
+                validator.työelämäjärjestöRule
         );
     }
 
