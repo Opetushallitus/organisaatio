@@ -16,9 +16,6 @@
 package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -31,6 +28,8 @@ import org.junit.Test;
 import com.google.common.collect.Maps;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
+
+import static org.junit.Assert.*;
 
 public class OrganisationDateValidatorTest {
 
@@ -79,13 +78,20 @@ public class OrganisationDateValidatorTest {
         assertFalse(validator.apply(parentChild));
 
         //validator that skips start state validation
-        final OrganisationDateValidator validatorSkiStart = new OrganisationDateValidator(true);
-        assertTrue(validatorSkiStart.apply(parentChild));
-        
+        final OrganisationDateValidator validatorSkipStartDate = new OrganisationDateValidator(true);
+        assertTrue(validatorSkipStartDate.apply(parentChild));
+
+        // alku > parent.alku
+        child.setAlkuPvm(date(11));
+        // THIS IS ALWAYS PERMITTED
+        assertTrue(validator.apply(parentChild));
+        assertTrue(validatorSkipStartDate.apply(parentChild));
+
         // loppu > parent.loppu
         child.setAlkuPvm(date(10));
         child.setLakkautusPvm(date(101));
         assertFalse(validator.apply(parentChild));
+        assertFalse(validatorSkipStartDate.apply(parentChild));
 
         // parent has no end date, child has
         parent.setLakkautusPvm(null);
@@ -101,6 +107,14 @@ public class OrganisationDateValidatorTest {
 
         try {
             validator.apply(parentChild);
+            Assert.fail("No exception thrown");
+        } catch (OrganisaatioDateException ve) {
+            // expected
+        }
+
+        // not ok in update either
+        try {
+            validatorSkipStartDate.apply(parentChild);
             Assert.fail("No exception thrown");
         } catch (OrganisaatioDateException ve) {
             // expected
