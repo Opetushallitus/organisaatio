@@ -241,14 +241,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}">
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"  ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
@@ -266,14 +266,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                         ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}" >
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
                        clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
                        toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1990-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
                        close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
                        current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
