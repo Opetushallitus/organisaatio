@@ -28,7 +28,7 @@
  *
  * @author mlyly
  */
-var app = angular.module('Localisation', ['ngResource', 'Logging']);
+var app = angular.module('Localisation', ['ngResource', 'Logging', 'ngLocale']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
@@ -482,7 +482,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
  * LocalisationCtrl - a localisation controller.
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
-app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval) {
+app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval, SetLocale) {
     $log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
@@ -514,5 +514,7 @@ app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $
         }
         LocalisationService.updateAccessInformation();
     });
+
+    SetAngularLocale(LocalisationService.getLocale());
 
 });
