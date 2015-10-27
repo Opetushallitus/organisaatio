@@ -96,7 +96,7 @@ public class TestDataCreator {
                     organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
                     organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
                 } else if (organisaatio.getOid().equals("1.2.2004.7")) {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ.value()}));
+                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TYOELAMAJARJESTO.value()}));
                 } else {
                     organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
                 }

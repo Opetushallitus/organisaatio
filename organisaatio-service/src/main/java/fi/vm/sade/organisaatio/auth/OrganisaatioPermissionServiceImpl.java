@@ -59,7 +59,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
          */
 
         if (checkAccess(context.getOrgOid(), ROLE_CRUD, ROLE_RU)) {
-            if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO) && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ)) {
+            if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO) && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
                 return true;
             }
         }
@@ -71,7 +71,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
         //oph ru can edit everything else but muu organisaatio (OVT-4755)
         if (checkAccess(ophOid, ROLE_RU)){
-            if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO) && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ)) {
+            if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO) && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
                 return true;
             }
         }
@@ -111,7 +111,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     // XXX työelämäjärjestö
     public boolean userCanEditName(OrganisaatioContext context) {
         if(context.getOrgTypes().contains(OrganisaatioTyyppi.OPPILAITOS) || context.getOrgTypes().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA) || context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)
-                || context.getOrgTypes().contains(OrganisaatioTyyppi.TYÖELÄMÄJÄRJESTÖ)) {
+                || context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
             return checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
         }
         return true;
@@ -129,7 +129,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         case MUU_ORGANISAATIO:
             //only oph
             return checkAccess(ophOid, ROLE_CRUD);
-        case TYÖELÄMÄJÄRJESTÖ:
+        case TYOELAMAJARJESTO:
             //only oph
             return checkAccess(ophOid, ROLE_CRUD);
         case OPPISOPIMUSTOIMIPISTE:

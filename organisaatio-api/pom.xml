@@ -64,9 +64,6 @@ Union Public Licence for more details. -->
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
                 <version>2.6.2</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>

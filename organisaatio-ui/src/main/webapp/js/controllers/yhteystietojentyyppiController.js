@@ -233,12 +233,12 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
         }
     });
 
-    Object.defineProperty(obj, 'työelämäjärjestö', {
+    Object.defineProperty(obj, 'tyoelamajarjesto', {
         get: function() {
-            return _orgTypeContains('TYÖELÄMÄJÄRJESTÖ');
+            return _orgTypeContains('TYOELAMAJARJESTO');
         },
         set: function(t) {
-            _orgTypeMod(t, 'TYÖELÄMÄJÄRJESTÖ');
+            _orgTypeMod(t, 'TYOELAMAJARJESTO');
         }
     });
 
