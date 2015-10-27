@@ -482,7 +482,7 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
  * LocalisationCtrl - a localisation controller.
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
-app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval, SetLocale) {
+app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval, AngularLocaleManager) {
     $log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
@@ -515,6 +515,6 @@ app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $
         LocalisationService.updateAccessInformation();
     });
 
-    SetAngularLocale(LocalisationService.getLocale());
+    AngularLocaleManager.setAngularLocale(LocalisationService.getLocale());
 
 });
