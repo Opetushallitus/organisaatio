@@ -309,10 +309,10 @@ angular.module("ngLocale", [])
     })
 
 .config(['$provide', 'locales', function($provide, locales) {
-        // Default fi-fi locale
-        var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
-        $provide.value("$locale", locales.fi);
-    }])
+    // Default fi-fi locale
+    var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
+    $provide.value("$locale", locales.fi);
+}])
 
 .service('AngularLocaleManager', ['locales', '$filter', function(locales, $filter, $locale) {
     var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
@@ -323,7 +323,7 @@ angular.module("ngLocale", [])
             angular.copy(locales[lang], $locale);
         }
         else {
-            angular.copy(locales['sv'], $locale);
+            angular.copy(locales['fi'], $locale);
         }
     }
 }]);
