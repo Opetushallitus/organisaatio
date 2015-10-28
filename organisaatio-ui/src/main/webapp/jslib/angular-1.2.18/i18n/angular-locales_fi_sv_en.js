@@ -314,16 +314,16 @@ angular.module("ngLocale", [])
     $provide.value("$locale", locales.fi);
 }])
 
-.service('AngularLocaleManager', ['locales', '$filter', function(locales, $filter, $locale) {
+.service('AngularLocaleManager', ['locales', '$filter', '$locale', function(locales, $filter, $locale) {
     var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
 
     // Set locale from locales list
     this.setAngularLocale = function(lang) {
-        if($filter('filter')(lang, locales, true).lenght) {
+        if(locales[lang] !== undefined && locales[lang] !== $locale) {
             angular.copy(locales[lang], $locale);
         }
-        else {
-            angular.copy(locales['fi'], $locale);
+        else if(locales[lang] === undefined){
+            angular.copy(locales.sv, $locale);
         }
     }
 }]);
