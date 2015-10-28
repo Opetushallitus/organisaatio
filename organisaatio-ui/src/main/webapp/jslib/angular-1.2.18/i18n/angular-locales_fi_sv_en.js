@@ -323,7 +323,7 @@ angular.module("ngLocale", [])
             angular.copy(locales[lang], $locale);
         }
         else if(locales[lang] === undefined){
-            angular.copy(locales.sv, $locale);
+            angular.copy(locales.fi, $locale);
         }
     }
 }]);
