@@ -308,21 +308,24 @@ angular.module("ngLocale", [])
         }
     })
 
-.config(['$provide', 'locales', function($provide, locales) {
+.config(['$provide', 'locales',
+        function($provide, locales) {
     // Default fi-fi locale
     var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
     $provide.value("$locale", locales.fi);
 }])
 
-.service('AngularLocaleManager', ['locales', '$filter', '$locale', function(locales, $filter, $locale) {
+.service('AngularLocaleManager', ['locales', '$filter', '$locale',
+        function(locales, $filter, $locale) {
     var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
 
     // Set locale from locales list
     this.setAngularLocale = function(lang) {
-        if(locales[lang] !== undefined && locales[lang] !== $locale) {
+        var language = lang.toLowerCase();
+        if(locales[language] !== undefined && locales[language] !== $locale) {
             angular.copy(locales[lang], $locale);
         }
-        else if(locales[lang] === undefined){
+        else if(locales[language] === undefined){
             angular.copy(locales.fi, $locale);
         }
     }

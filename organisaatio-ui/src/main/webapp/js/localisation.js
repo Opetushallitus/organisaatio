@@ -150,18 +150,18 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  * LocalisationService.tl("this.is.the.key2", "fi", ["array", "of", "values"])  == localized value in given locale
  * </pre>
  */
-app.service('LocalisationService', function($log, $window, Localisations, UserInfo, $injector) {
+app.service('LocalisationService', function(KoodistoKoodi, $log, $window, Localisations, $injector) {
 
     $log = $log.getInstance("LocalisationService");
 
     // $log.debug("LocalisationService()");
 
     // Singleton state, default current locale for the user
-    this.locale = UserInfo.lang;
+    this.locale = KoodistoKoodi.getLanguage();
+    $log.warn('locale ' + this.locale + '  ');
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
-
 
     this.callLocalisationAuthorizeIfNecessary = function() {
         var self = this;
