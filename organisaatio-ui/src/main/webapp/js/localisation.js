@@ -150,15 +150,15 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  * LocalisationService.tl("this.is.the.key2", "fi", ["array", "of", "values"])  == localized value in given locale
  * </pre>
  */
-app.service('LocalisationService', function(KoodistoKoodi, $log, $window, Localisations, $injector) {
+app.service('LocalisationService', function(UserInfo, $log, $window, Localisations, $injector, AngularLocaleManager) {
 
     $log = $log.getInstance("LocalisationService");
 
     // $log.debug("LocalisationService()");
 
     // Singleton state, default current locale for the user
-    this.locale = KoodistoKoodi.getLanguage();
-    $log.warn('locale ' + this.locale + '  ');
+    this.locale = UserInfo.lang;
+    $log.warn('locale ' + this.locale + '  '); //TODO debug
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
@@ -193,6 +193,9 @@ app.service('LocalisationService', function(KoodistoKoodi, $log, $window, Locali
     this.setLocale = function(value) {
         $log.info("setLocale: " + value);
         this.locale = value;
+
+        $log.info('getLocale() ' + this.getLocale() + ' getLocale().lowercase() ' + this.getLocale().toLowerCase());
+        AngularLocaleManager.setAngularLocale(this.getLocale());
     };
 
     /**
@@ -482,7 +485,7 @@ app.service('LocalisationService', function(KoodistoKoodi, $log, $window, Locali
  * LocalisationCtrl - a localisation controller.
  * An easy way to bind "t" function to global scope. (now attached in "body")
  */
-app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval, AngularLocaleManager) {
+app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $interval) {
     $log = $log.getInstance("LocalisationCtrl");
 
     $log.info("LocalisationCtrl()");
@@ -514,7 +517,4 @@ app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $
         }
         LocalisationService.updateAccessInformation();
     });
-    $log.info('getLocale() ' + LocalisationService.getLocale() + ' getLocale().lowercase() ' + LocalisationService.getLocale().toLowerCase());
-    AngularLocaleManager.setAngularLocale(LocalisationService.getLocale());
-
 });
