@@ -514,7 +514,7 @@ app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $
         }
         LocalisationService.updateAccessInformation();
     });
-
+    $log.info('getLocale() ' + LocalisationService.getLocale() + ' getLocale().lowercase() ' + LocalisationService.getLocale().toLowerCase());
     AngularLocaleManager.setAngularLocale(LocalisationService.getLocale());
 
 });
