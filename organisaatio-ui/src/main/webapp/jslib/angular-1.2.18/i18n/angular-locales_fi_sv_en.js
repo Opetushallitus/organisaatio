@@ -310,8 +310,8 @@ angular.module("ngLocale", [])
 
 .config(['$provide', 'locales',
         function($provide, locales) {
-    // Default fi-fi locale
     var PLURAL_CATEGORY = {ZERO: "zero", ONE: "one", TWO: "two", FEW: "few", MANY: "many", OTHER: "other"};
+    // Default fi-fi locale
     $provide.value("$locale", locales.fi);
 }])
 
@@ -321,12 +321,11 @@ angular.module("ngLocale", [])
 
     // Set locale from locales list
     this.setAngularLocale = function(lang) {
-        var language = lang.toLowerCase();
-        if(locales[language] !== undefined && locales[language] !== $locale) {
-            angular.copy(locales[lang], $locale);
+        if(angular.isDefined(lang)) {
+            var language = lang.toLowerCase();
+            if(angular.isDefined(locales[language]) && locales[language] !== $locale) {
+                angular.copy(locales[lang], $locale);
+            }
         }
-        else if(locales[language] === undefined){
-            angular.copy(locales.fi, $locale);
-        }
-    } //TODO what if given locale is undefined?
+    }
 }]);
