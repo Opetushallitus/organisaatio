@@ -451,7 +451,8 @@ public class OrganisationHierarchyValidatorTest {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
-                false,
+//                false,
+                true, // TODO temp remove after transfer
                 validator,
                 validator.muuOrgRule
         );
@@ -529,7 +530,8 @@ public class OrganisationHierarchyValidatorTest {
         assertResult(
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
-                false,
+//                false,
+                true, // TODO temp remove after transfer
                 validator,
                 validator.tyoelamajarjestoRule
         );
