@@ -1,7 +1,7 @@
 describe("Testing OrganisaatioController", function() {
     var $scope = null;
 
-    var AngularLocalManager = {};
+    var AngularLocaleManager = {};
 
 
      var mockModel = {
@@ -14,9 +14,9 @@ describe("Testing OrganisaatioController", function() {
       };
 
     beforeEach(function () {
-        AngularLocalManager.setLocale = function(lang) {};
+        AngularLocaleManager.setLocale = function(lang) {};
         module(function($provide) {
-            $provide.value('AngularLocalManager', AngularLocalManager);
+            $provide.value('AngularLocaleManager', AngularLocaleManager);
         });
         module('organisaatio');
     });
@@ -50,12 +50,9 @@ describe("Testing OrganisaatioController", function() {
                 expect(mockModel.persistOrganisaatio).not.toHaveBeenCalled();
             });
 
-//    it('controller should have a set model', inject(['OrganisaatioModel',
-//        function(OrganisaatioModel) {
-//
-//            expect($scope.model).toBeDefined;
-//
-//
-//        }])
-//    );
+    it('controller should have a set model', inject(['OrganisaatioModel',
+        function(OrganisaatioModel) {
+            expect($scope.model).toBeDefined;
+        }])
+    );
 });

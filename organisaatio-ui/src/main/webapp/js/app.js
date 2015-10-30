@@ -123,16 +123,19 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
 // Services
 //
 ////////////
-app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
-    var language = 'FI';
+app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
+    $log = $log.getInstance('KoodistoKoodi');
+    //$log.debug('KoodistoKoodi()');
+    this.language = 'FI';
     UserInfo.then(function(s) {
-        language = s.lang;
+        //$log.debug('Userinfo.then ready');
+        this.language = s.lang;
     });
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
         koodi.metadata.forEach(function(metadata){
-            if(metadata.kieli === language) {
+            if(metadata.kieli === this.language) {
                 nimi = metadata.nimi;
             }
         });
@@ -151,8 +154,8 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo) {
     };
 
     this.getLanguage = function() {
-        return language;
-    };
+        return this.language;
+     };
 
     this.isValid = function(koodi) {
         if (koodi.voimassaAlkuPvm) {
@@ -220,6 +223,7 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
 app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
     function($q, $http, $log, $injector) {
         $log = $log.getInstance("UserInfo");
+        //$log.debug('UserInfo()');
         var loadingService = $injector.get('LoadingService');
 
         var deferred = $q.defer();

@@ -328,5 +328,5 @@ angular.module("ngLocale", [])
         else if(locales[language] === undefined){
             angular.copy(locales.fi, $locale);
         }
-    }
+    } //TODO what if given locale is undefined?
 }]);
