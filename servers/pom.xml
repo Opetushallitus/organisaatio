@@ -33,6 +33,7 @@
                 <version>9.2.1.v20140609</version>
 
                 <configuration>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
                     <systemProperties>
                         <systemProperty>
                             <name>log4j.configuration</name>
