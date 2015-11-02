@@ -351,7 +351,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
             return;
         };
 
-        // Konvertoi päivämäärän rajapinnan hyväksymään muotoon yyyy-mm-dd
+        // Konvertoi päivämäärän käyttöliittymässä käytettävään muotoon dd.mm.yyyy
         var pvmKatseltavaanMuotoon = function(dateToFormat) {
             if (dateToFormat) {
                 var d = new Date(dateToFormat);
