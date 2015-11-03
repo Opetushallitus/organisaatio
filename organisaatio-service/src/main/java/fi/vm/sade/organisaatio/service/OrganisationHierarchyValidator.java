@@ -14,12 +14,20 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
  *
  * <li>Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio
  * tyypiltään KOULUTUSTOIMIJA.
- * <li>Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on
+ * <li>Jos organisaatio on MUU ORGANISAATIO ja sille on
  * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai MUU
  * ORGANISAATIO.
+ * <li>Jos organisaatio on KOULUTUSTOIMIJA ja sille on
+ * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
+ * KOULUTUSTOIMIJA
+ * <li>Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on
+ * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
+ * TYÖELÄMÄJÄRJESTÖ.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
- * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS tai
- * KOULUTUSTOIMIJA.
+ * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS,
+ * MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
+ * <li>Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava
+ * yläorganisaatio joka on tyypiltään KOULUTUSTOIMIJA.
  *
  */
 public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaatio, Organisaatio>> {
@@ -38,10 +46,23 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> muuOrgRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+            return (parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()) // TODO temp remove after transfer
+            ||parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()))
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())); // TODO temp remove after transfer
+        }
+    };
+    Predicate<Entry<Organisaatio, Organisaatio>> tyoelamajarjestoRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
+        @Override
+        public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
+            return (parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
+                    || parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())) // TODO temp remove after transfer
+                    && (parentChild.getKey() == null
+                    || ophOid.equals(parentChild.getKey().getOid())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())); // TODO temp remove after transfer
         }
     };
 
@@ -61,7 +82,8 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     && parentChild.getKey() != null
                     && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
         }
     };
 
@@ -83,7 +105,8 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
         }
     };
 
@@ -97,7 +120,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     @Override
     public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
         Preconditions.checkNotNull(parentChild);
-        return Predicates.or(oppilaitosRule, muuOrgRule, toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
+        return Predicates.or(oppilaitosRule, muuOrgRule, tyoelamajarjestoRule, toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
     }
 
 }

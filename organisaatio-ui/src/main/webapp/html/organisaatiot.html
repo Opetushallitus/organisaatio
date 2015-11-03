@@ -114,7 +114,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
             <!-- Organisaatiotyyppi -->
             <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi"
-                    ng-options="orgTyyppi.nimifi as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'"
+                    ng-options="orgTyyppi.nimifi as (orgTyyppi.nimi | i18n) for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'"
                     ng-change="organisaatiotyyppiChanged()">
                 <option value="">{{'Organisaatiot.organisaatiotyyppi' | i18n}}</option>
             </select>

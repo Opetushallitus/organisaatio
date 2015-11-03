@@ -28,7 +28,7 @@
  *
  * @author mlyly
  */
-var app = angular.module('Localisation', ['ngResource', 'Logging']);
+var app = angular.module('Localisation', ['ngResource', 'Logging', 'ngLocale']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
@@ -150,18 +150,18 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  * LocalisationService.tl("this.is.the.key2", "fi", ["array", "of", "values"])  == localized value in given locale
  * </pre>
  */
-app.service('LocalisationService', function($log, $window, Localisations, UserInfo, $injector) {
+app.service('LocalisationService', function(UserInfo, $log, $window, Localisations, $injector, AngularLocaleManager) {
 
     $log = $log.getInstance("LocalisationService");
 
-    // $log.debug("LocalisationService()");
-
+    //$log.debug("LocalisationService()");
     // Singleton state, default current locale for the user
-    this.locale = UserInfo.lang;
+    UserInfo.then(function (s) {
+        this.locale = s.lang;
+    });
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
     this.localisationAuthorizeCalled = false;
-
 
     this.callLocalisationAuthorizeIfNecessary = function() {
         var self = this;
@@ -184,8 +184,8 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     this.getLocale = function() {
         // Default fallback
         if (!angular.isDefined(this.locale)) {
-            $log.warn("aha! undefined locale - using fi!");
-            this.locale = "fi";
+            $log.warn('getLocale was called before locale was defined. Defaulting fi');
+            this.locale = 'fi';
         }
         return this.locale;
     };
@@ -193,6 +193,10 @@ app.service('LocalisationService', function($log, $window, Localisations, UserIn
     this.setLocale = function(value) {
         $log.info("setLocale: " + value);
         this.locale = value;
+
+        //$log.info('getLocale() ' + value + ' getLocale().lowercase() ' + value.toLowerCase());
+        if(angular.isDefined(value))
+            AngularLocaleManager.setAngularLocale(value);
     };
 
     /**
@@ -514,5 +518,4 @@ app.controller('LocalisationCtrl', function($scope, LocalisationService, $log, $
         }
         LocalisationService.updateAccessInformation();
     });
-
 });

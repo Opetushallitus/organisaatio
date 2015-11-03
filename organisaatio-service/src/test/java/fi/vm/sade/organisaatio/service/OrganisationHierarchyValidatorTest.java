@@ -91,6 +91,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testOppisopimustoimipisteUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
     public void testOppisopimustoimipisteUnderToimipiste() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TOIMIPISTE),
@@ -169,6 +180,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testToimipisteUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TOIMIPISTE),
+                true,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
     public void testToimipisteUnderToimipiste() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TOIMIPISTE),
@@ -236,6 +258,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testOppilaitosUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
     public void testOppilaitosUnderOppilaitos() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
@@ -292,7 +325,7 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
-    public void testKoulutustoimijaUnderOPT() {
+    public void testKoulutustoimijaUnderOPH() {
         assertResult(
                 root,
                 getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
@@ -317,6 +350,17 @@ public class OrganisationHierarchyValidatorTest {
     public void testKoulutustoimijaUnderMuuOrganisaatio() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testKoulutustoimijaUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
                 getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
                 false,
                 validator,
@@ -403,6 +447,18 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testMuuOrganisaatioUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+//                false,
+                true, // TODO temp remove after transfer
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
     public void testMuuOrganisaatioUnderOppilaitos() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
@@ -432,6 +488,96 @@ public class OrganisationHierarchyValidatorTest {
                 false,
                 validator,
                 validator.muuOrgRule
+        );
+    }
+
+    /* child == työelämäjärjestö */
+    @Test
+    public void testToplevelTyoelamajarjesto() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                true,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderOPH() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                true,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderKoulutustoimija() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                false,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+//                false,
+                true, // TODO temp remove after transfer
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                true,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                false,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                false,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                false,
+                validator,
+                validator.tyoelamajarjestoRule
         );
     }
 

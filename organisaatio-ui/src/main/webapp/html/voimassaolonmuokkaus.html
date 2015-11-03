@@ -56,13 +56,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <label ng-hide="model.muokataanAlkupvm" class="control-label">
         {{'Organisaationmuokkaus.lakkautuspvm'| i18n}}*
     </label>
-    <input  ng-show="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.alkuPvm"
+    <input  ng-show="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="luontipvm"
+            formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.alkuPvm"
             close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
             close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
             current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
             clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
             toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
-    <input  ng-hide="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.lakkautusPvm"
+    <input  ng-hide="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="lakkautuspvm"
+            formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.lakkautusPvm"
             close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
             close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
             current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
