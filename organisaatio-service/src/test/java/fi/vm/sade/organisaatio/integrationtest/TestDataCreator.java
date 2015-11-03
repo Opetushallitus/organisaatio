@@ -71,6 +71,7 @@ public class TestDataCreator {
         Organisaatio node23 = initCreateOrLoad("node23 foo bar", "1234568-4", node2, null, null, "oppilaitostyyppi_42#1", "1.2.2005.4");
         Organisaatio root2 = initCreateOrLoad("root2 test2 koulutustoimija2", "1234567-5", rootOfAllEvil, futureStart.getTime(), null, null, "1.2.2004.5");
         Organisaatio nodex = initCreateOrLoad("nodex bar", "1234567-6", root2, null, pastStop.getTime(), "oppilaitostyyppi_41#1", "1.2.2004.6");
+        Organisaatio nodey = initCreateOrLoad("nodey bar", "1234567-7", rootOfAllEvil, null, pastStop.getTime(), null, "1.2.2004.7");
     }
 
     private Organisaatio initCreateOrLoad(String nimi, String ytunnus, Organisaatio parent, Date startDate, Date endDate, String oppilaitostyyppi, String oid) {
@@ -94,6 +95,8 @@ public class TestDataCreator {
                 if (!parent.getOid().equals("1.2.246.562.24.00000000001")) {
                     organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
                     organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
+                } else if (organisaatio.getOid().equals("1.2.2004.7")) {
+                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TYOELAMAJARJESTO.value()}));
                 } else {
                     organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
                 }

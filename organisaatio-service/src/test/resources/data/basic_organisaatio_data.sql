@@ -147,7 +147,8 @@ INSERT INTO ORGANISAATIO_TYYPIT(ORGANISAATIO_ID, TYYPIT) VALUES
 (7, 'Koulutustoimija'),
 (8, 'Toimipiste'),
 (8, 'Oppilaitos'),
-(8, 'Oppisopimustoimipiste');             
+(8, 'Oppisopimustoimipiste'),
+(9, 'Tyoelamajarjesto');
 
 INSERT INTO ORGANISAATIOSUHDE(ID, VERSION, ALKUPVM, LOPPUPVM, OPETUSPISTEENJARJNRO, SUHDETYYPPI, CHILD_ID, PARENT_ID) VALUES
 (1, 0, TIMESTAMP '2014-12-02 12:50:06.46', NULL, NULL, 'HISTORIA', 2, 1),

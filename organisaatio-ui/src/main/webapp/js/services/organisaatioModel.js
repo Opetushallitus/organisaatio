@@ -882,29 +882,42 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 KoodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
                     model.koodisto.ophOrganisaatiot.length = 0;
-                    /* Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
-                     Jos organisaatio on MUU ORGANISAATIO tai KOULUTUSTOMIJA ja sille on määritelty yläorganisaatio,
+                    /* Organisaatiohierarkiasäännöt:
+                     (oltava samanlainen logiikka kuin luokassa OrganisationHierarchyValidator)
+                     Jos organisaatio on OPPILAITOS, sillä on oltava yläorganisaatio tyypiltään KOULUTUSTOIMIJA.
+                     Jos organisaatio on MUU ORGANISAATIO ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
+                     Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
+                     on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
+                     Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
+                     on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
-                     TOIMIPISTE, OPPILAITOS tai KOULUTUSTOIMIJA.
+                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
+                     Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava yläorganisaatio
+                     joka on tyypiltään KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
-                     Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste, 05:Muu organisaatio
+                     Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
+                     05:Muu organisaatio, 06:Työelämäjärjestö
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03", "04"],
+                        'Muu organisaatio': ["05", "03"],
                         'Koulutustoimija': ["02", "04"],
-                        'Oppilaitos': ["03", "04"],
-                        'Toimipiste': ["03", "04"],
-                        'Oppisopimustoimipiste': []};
+                        'Oppilaitos': ["03"],
+                        'Toimipiste': ["03"],
+                        'Oppisopimustoimipiste': [],
+                        'Tyoelamajarjesto': ["06","03", "05"]}; // TODO "05" is temp
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
-                            if (sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
+                            // Parentin sallitut aliorganisaatiot
+                            if (model.organisaatio.parentOid !== model.OPHOid && sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
-                            } else if (model.organisaatio.parentOid === model.OPHOid &&
-                                    orgTyyppiKoodi.koodiArvo === "01") {
+                            } // Sallitut ylimmän tason organisaatiot
+                            else if (model.organisaatio.parentOid === model.OPHOid &&
+                                (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
+                                || orgTyyppiKoodi.koodiArvo === "05")) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             }
 
