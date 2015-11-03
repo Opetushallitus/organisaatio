@@ -125,10 +125,8 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
 ////////////
 app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     $log = $log.getInstance('KoodistoKoodi');
-    //$log.debug('KoodistoKoodi()');
     this.language = 'FI';
     UserInfo.then(function(s) {
-        //$log.debug('Userinfo.then ready');
         this.language = s.lang;
     });
 
@@ -223,7 +221,6 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
 app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
     function($q, $http, $log, $injector) {
         $log = $log.getInstance("UserInfo");
-        //$log.debug('UserInfo()');
         var loadingService = $injector.get('LoadingService');
 
         var deferred = $q.defer();
