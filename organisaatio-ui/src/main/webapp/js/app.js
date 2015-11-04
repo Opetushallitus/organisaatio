@@ -243,33 +243,9 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
             }).catch(function(err) {
                 $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
                 loadingService.onErrorHandled();
-                return $q.reject(lang);
+                return $q.when(lang);
             });
         }
-
-        //var deferred = $q.defer();
-        //
-        //(function() {
-        //    var instance = {};
-        //    instance.lang = 'FI';
-        //    $http.get(CAS_ME_URL).success(function(result) {
-        //        $log.debug("Success on " + CAS_ME_URL, result);
-        //        var lang = angular.fromJson(result).lang;
-        //        if (lang) {
-        //            // Toistaiseksi vain SV on tuettu FI:n lisäksi
-        //            instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
-        //            deferred.resolve(instance);
-        //        } else {
-        //            $log.debug('failed parsing result, defaulting to FI');
-        //            deferred.resolve(instance);
-        //        }
-        //    }).error(function(data, status, headers, config) {
-        //        $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + instance.lang);
-        //        loadingService.onErrorHandled();
-        //        deferred.resolve(instance);
-        //    });
-        //})();
-        //return deferred.promise;
     }
 ]);
 
