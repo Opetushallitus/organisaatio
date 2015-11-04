@@ -10,7 +10,6 @@ describe('Module: Localisation', function() {
 
     beforeEach(function() {
         UserInfo = { language: 'se',
-//          getLanguage : function() {return UserInfo.language},
             then : function() {}};
         $window = {APP_LOCALISATION_DATA: mockLocalisations};
         AngularLocaleManager.setAngularLocale = function(lang) {};

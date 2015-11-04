@@ -127,7 +127,7 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     $log = $log.getInstance('KoodistoKoodi');
     this.language = 'FI';
     UserInfo.then(function(s) {
-        this.language = s.lang;
+        this.language = s;
     });
 
     this.getLocalizedName = function(koodi) {
@@ -223,29 +223,53 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
         $log = $log.getInstance("UserInfo");
         var loadingService = $injector.get('LoadingService');
 
-        var deferred = $q.defer();
-
-        (function() {
-            var instance = {};
-            instance.lang = 'FI';
-            $http.get(CAS_ME_URL).success(function(result) {
+        var lang;
+        if(angular.isDefined(lang)) {
+            $log.warn('lang already defined');
+            return $q.when(lang);
+        }
+        else {
+            lang = 'FI';
+            return $http.get(CAS_ME_URL).then(function(result) {
                 $log.debug("Success on " + CAS_ME_URL, result);
-                var lang = angular.fromJson(result).lang;
+                lang = result.data.lang;
                 if (lang) {
                     // Toistaiseksi vain SV on tuettu FI:n lisäksi
-                    instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
-                    deferred.resolve(instance);
+                    lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
                 } else {
                     $log.debug('failed parsing result, defaulting to FI');
-                    deferred.resolve(instance);
                 }
-            }).error(function(data, status, headers, config) {
-                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + instance.lang);
+                return $q.when(lang);
+            }).catch(function(err) {
+                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
                 loadingService.onErrorHandled();
-                deferred.resolve(instance);
+                return $q.reject(lang);
             });
-        })();
-        return deferred.promise;
+        }
+
+        //var deferred = $q.defer();
+        //
+        //(function() {
+        //    var instance = {};
+        //    instance.lang = 'FI';
+        //    $http.get(CAS_ME_URL).success(function(result) {
+        //        $log.debug("Success on " + CAS_ME_URL, result);
+        //        var lang = angular.fromJson(result).lang;
+        //        if (lang) {
+        //            // Toistaiseksi vain SV on tuettu FI:n lisäksi
+        //            instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
+        //            deferred.resolve(instance);
+        //        } else {
+        //            $log.debug('failed parsing result, defaulting to FI');
+        //            deferred.resolve(instance);
+        //        }
+        //    }).error(function(data, status, headers, config) {
+        //        $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + instance.lang);
+        //        loadingService.onErrorHandled();
+        //        deferred.resolve(instance);
+        //    });
+        //})();
+        //return deferred.promise;
     }
 ]);
 

@@ -75,7 +75,7 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
     var initialized = false;
 
     UserInfo.then(function(s) {
-        LocalisationService.setLocale(s.lang.toLowerCase());
+        LocalisationService.setLocale(s.toLowerCase());
         initialized = true;
 
         if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
@@ -157,7 +157,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
     //$log.debug("LocalisationService()");
     // Singleton state, default current locale for the user
     UserInfo.then(function (s) {
-        this.locale = s.lang;
+        this.locale = s;
     });
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
