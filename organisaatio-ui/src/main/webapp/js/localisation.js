@@ -154,9 +154,8 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
 
     $log = $log.getInstance("LocalisationService");
 
-    //$log.debug("LocalisationService()");
     // Singleton state, default current locale for the user
-    UserInfo.then(function (s) {
+    var promise = UserInfo.then(function (s) {
         this.locale = s;
     });
 
@@ -177,15 +176,19 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
     };
 
     /**
-     * Get users locale OR default locale "fi".
+     * Get users locale OR default locale to "fi" in case of an error.
      *
      * @returns {String}
      */
     this.getLocale = function() {
         // Default fallback
-        if (!angular.isDefined(this.locale)) {
-            $log.warn('getLocale was called before locale was defined. Defaulting fi');
-            this.locale = 'fi';
+        if (angular.isUndefined(this.locale)) {
+            return promise.then(function(s) {
+                return this.locale;
+            }).catch(function (err) {
+                $log.warn('Failed getting locale. Defaulting to fi');
+                this.locale = 'fi';
+            });
         }
         return this.locale;
     };
