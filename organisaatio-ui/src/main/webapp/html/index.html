@@ -60,6 +60,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <!--conf -->
     <script type="text/javascript"  src="../configuration/configuration.js"></script>
+    <script type="text/javascript">if(AUTH_MODE === 'dev')$.getScript('/servers/cas/myroles');</script>
 
     <!-- app js-->
     <script type="text/javascript" src="../js/logging.js"></script>
