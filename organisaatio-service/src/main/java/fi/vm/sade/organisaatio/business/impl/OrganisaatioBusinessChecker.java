@@ -73,9 +73,9 @@ public class OrganisaatioBusinessChecker {
         return val == null || val.isEmpty();
     }
 
-    // Organisaation järkevä max päivämäärä
+    // Organisaation järkevä min ja max päivämäärä
     private final DateTime MAX_DATE = new DateTime(2030, 12, 31, 0, 0, 0, 0);
-
+    private final DateTime MIN_DATE = new DateTime(1900, 1, 1, 0, 0, 0, 0);
 
     /**
      * Tarkastetaan, että nimihistorian alkupäivämäärät ovat valideja.
@@ -248,7 +248,8 @@ public class OrganisaatioBusinessChecker {
             Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
-        final Date MIN_DATE = new Date(0);
+        //final Date MIN_DATE = new Date(0);
+        final Date MIN_DATE = this.MIN_DATE.toDate();
         final Date MAX_DATE = this.MAX_DATE.toDate();
 
         Date actualStart = organisaatio.getAlkuPvm();
