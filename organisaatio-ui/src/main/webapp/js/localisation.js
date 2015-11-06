@@ -153,10 +153,11 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
 app.service('LocalisationService', function(UserInfo, $log, $window, Localisations, $injector, AngularLocaleManager) {
 
     $log = $log.getInstance("LocalisationService");
+    var locale;
 
     // Singleton state, default current locale for the user
-    var promise = UserInfo.then(function (s) {
-        this.locale = s;
+   UserInfo.then(function (s) {
+        locale = s;
     });
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
@@ -181,23 +182,18 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
      * @returns {String}
      */
     this.getLocale = function() {
-        // Default fallback
-        if (angular.isUndefined(this.locale)) {
-            return promise.then(function(s) {
-                return this.locale;
-            }).catch(function (err) {
-                $log.warn('Failed getting locale. Defaulting to fi');
-                this.locale = 'fi';
-            });
+        if(angular.isUndefined(locale)) {
+            $log.warn('Locale undefined. Defaulting to "fi"');
+            locale = 'fi';
+            return locale;
         }
-        return this.locale;
+        // Default fallback
+        return locale;
     };
 
     this.setLocale = function(value) {
         $log.info("setLocale: " + value);
-        this.locale = value;
-
-        //$log.info('getLocale() ' + value + ' getLocale().lowercase() ' + value.toLowerCase());
+        locale = value;
         if(angular.isDefined(value))
             AngularLocaleManager.setAngularLocale(value);
     };

@@ -125,15 +125,18 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
 ////////////
 app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     $log = $log.getInstance('KoodistoKoodi');
-    this.language = 'FI';
+    var language;
     UserInfo.then(function(s) {
-        this.language = s;
+        language = s;
+        $log.warn(language, s);
     });
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
         koodi.metadata.forEach(function(metadata){
-            if(metadata.kieli === this.language) {
+            if(angular.isUndefined(language))
+                $log.warn('this.language called before defined.');
+            if(metadata.kieli === language) {
                 nimi = metadata.nimi;
             }
         });
@@ -152,7 +155,9 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     };
 
     this.getLanguage = function() {
-        return this.language;
+        if(angular.isUndefined(language))
+            $log.warn('this.language is undefined');
+        return language;
      };
 
     this.isValid = function(koodi) {
@@ -222,15 +227,12 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
     function($q, $http, $log, $injector) {
         $log = $log.getInstance("UserInfo");
         var loadingService = $injector.get('LoadingService');
-
+        var promise = undefined;
         var lang;
-        if(angular.isDefined(lang)) {
-            $log.warn('lang already defined');
-            return $q.when(lang);
-        }
-        else {
+
+        if(angular.isUndefined(promise)) {
             lang = 'FI';
-            return $http.get(CAS_ME_URL).then(function(result) {
+            promise = $http.get(CAS_ME_URL).then(function(result) {
                 $log.debug("Success on " + CAS_ME_URL, result);
                 lang = result.data.lang;
                 if (lang) {
@@ -240,12 +242,13 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
                     $log.debug('failed parsing result, defaulting to FI');
                 }
                 return $q.when(lang);
-            }).catch(function(err) {
+            }, function(err) {
                 $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
                 loadingService.onErrorHandled();
                 return $q.when(lang);
             });
         }
+        return promise;
     }
 ]);
 
