@@ -97,7 +97,7 @@ app.factory('NimiHistoriaModel', function($log) {
                 nimi = historia[0];
             }
             for(var i=0; i < historia.length; i++) {
-                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm))) {
+                if (moment(historia[i].alkuPvm, 'YYYY-MM-DD').isAfter(moment(nimi.alkuPvm, 'YYYY-MM-DD'))) {
                     nimi = historia[i];
                 }
             }
@@ -122,8 +122,8 @@ app.factory('NimiHistoriaModel', function($log) {
                 nimi = historia[0];
             }
             for(var i=0; i < historia.length; i++) {
-                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
-                        moment(historia[i].alkuPvm).isBefore(moment())) {
+                if (moment(historia[i].alkuPvm, 'YYYY-MM-DD').isAfter(moment(nimi.alkuPvm, 'YYYY-MM-DD')) &&
+                        moment(historia[i].alkuPvm, 'YYYY-MM-DD').isBefore(moment())) {
                     nimi = historia[i];
                 }
             }
@@ -142,8 +142,8 @@ app.factory('NimiHistoriaModel', function($log) {
             var ajastettuMuutos = false;
             if (nimi !== null) {
                 if('alkuPvm' in nimi &&
-                        moment(nimi.alkuPvm).isValid() &&
-                        moment(nimi.alkuPvm).isAfter(moment())) {
+                        moment(nimi.alkuPvm, 'YYYY-MM-DD').isValid() &&
+                        moment(nimi.alkuPvm, 'YYYY-MM-DD').isAfter(moment())) {
                     ajastettuMuutos = true;
                 }
             }

@@ -128,7 +128,6 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     var language;
     UserInfo.then(function(s) {
         language = s;
-        $log.warn(language, s);
     });
 
     this.getLocalizedName = function(koodi) {

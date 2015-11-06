@@ -5,8 +5,8 @@ app.directive('formatteddate', function($log) {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-            var maxDate = moment(attrs.max);
-            var minDate = moment(attrs.min);
+            var maxDate = moment(attrs.max, 'YYYY-MM-DD');
+            var minDate = moment(attrs.min, 'YYYY-MM-DD');
 
             function isRangeValid(date) {
                 if (date < minDate || date > maxDate) {
@@ -39,7 +39,7 @@ app.directive('formatteddate', function($log) {
                 if (typeof viewValue === "object" && moment(viewValue).isValid()) {
                     $log.log("Valid object ViewValue= " + viewValue);
 
-                    date = moment(viewValue);
+                    date = moment(viewValue); // viewValue.type == Date object
                     if (!isRangeValid(date.toDate())) {
                         ctrl.$setValidity('dateYear', false);
                         return viewValue;
