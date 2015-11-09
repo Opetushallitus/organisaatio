@@ -1,7 +1,8 @@
 describe('Module: Localisation', function() {
 
-    var $window, LocalisationService, UserInfo, $compile,
-        AngularLocaleManager = {},
+    var $window, LocalisationService, $compile, $q, $scope,
+        mockUserInfo = {},
+        mockAngularLocaleManager = {setAngularLocale : function() {}},
         key = 'Test.avain',
         value = 'Testataan lokalisaatioiden toimivuus',
         locale = 'se',
@@ -9,36 +10,49 @@ describe('Module: Localisation', function() {
         mockLocalisations = [{key: key, value: value, locale: locale, id: id}];
 
     beforeEach(function() {
-        UserInfo = { language: 'se',
-            then : function() {}};
+        mockUserInfo = { language: 'se',
+            //getLanguage : function() {return UserInfo.language},
+            then : function() {}
+        };
+
         $window = {APP_LOCALISATION_DATA: mockLocalisations};
-        AngularLocaleManager.setAngularLocale = function(lang) {};
 
         module(function($provide) {
-            $provide.value('UserInfo', UserInfo);
+            $provide.value('UserInfo', mockUserInfo);
             $provide.value('$window', $window);
-            $provide.value('AngularLocaleManager', AngularLocaleManager)
+            $provide.value('AngularLocaleManager', mockAngularLocaleManager);
         });
 
         module('Localisation');
 
-        inject(function($injector) {
-            LocalisationService = $injector.get('LocalisationService');
-            $compile = $injector.get('$compile');
+        inject(function(_$q_, _LocalisationService_, _$compile_, _$rootScope_) {
+            $q = _$q_;
+            $scope = _$rootScope_.$new();
+            //mockUserInfo = jasmine.createSpy().andCallFAke(function() {
+            //    var deferred = $q.defer();
+            //    deferred.resolve('se');
+            //    return deferred.promise;
+            //    //$q.when('se');
+            //});
+            LocalisationService = _LocalisationService_;
+            $compile = _$compile_;
         });
     });
 
     /*
-    * Please note: Only the aspects of LocalisationService that are currently used are tested
-    */
+     * Please note: Only the aspects of LocalisationService that are currently used are tested
+     */
     describe('Service: LocalisationService', function() {
 
         beforeEach(function() {
-            LocalisationService.locale = UserInfo.language;
+            // Simulate initiating this value from mockUserInfo
+            LocalisationService.setLocale('se');
         });
 
         it('initializes properly', function() {
-            expect(LocalisationService.locale).toEqual(locale);
+            //$scope.$apply();
+            // Cant call private variable
+            expect(LocalisationService.getLocale()).toEqual(locale);
 
             // updateLookupMap is called on initialization and works like it should
             expect(angular.isObject( LocalisationService.localisationMapByLocaleAndKey) ).toBeTruthy();
@@ -59,7 +73,6 @@ describe('Module: Localisation', function() {
         it('getLocale() returns and sets the current locale to \'fi\' when locale is undefined', function() {
             LocalisationService.setLocale(undefined);
             expect(LocalisationService.getLocale()).toEqual('fi');
-            expect(LocalisationService.locale).toEqual('fi');
         });
 
         it('getRawTranslation() returns the translation if it exists and flags its id to have been accessed', function() {
@@ -102,10 +115,10 @@ describe('Module: Localisation', function() {
 
         it('getTranslation() returns an error message if the translation is not found', function() {
             expect( LocalisationService.getTranslation(key, 'en') )
-            .toEqual('Missing translation ' + key + ' for locale en');
+                .toEqual('Missing translation ' + key + ' for locale en');
 
             expect( LocalisationService.getTranslation('Does.not.exist', locale) )
-            .toEqual('Missing translation Does.not.exist for locale ' + locale);
+                .toEqual('Missing translation Does.not.exist for locale ' + locale);
         });
 
         it('getTranslation() injects parameters into the translation if they are provided', function() {
@@ -113,11 +126,10 @@ describe('Module: Localisation', function() {
             LocalisationService.localisationMapByLocaleAndKey['se']['Has.parameters'] = { value: translationWithParameters };
 
             var param1 = '**first param**',
-              param2 = '**second param**',
-              translation = LocalisationService.getTranslation('Has.parameters', 'se', [param1, param2]);
+                param2 = '**second param**',
+                translation = LocalisationService.getTranslation('Has.parameters', 'se', [param1, param2]);
 
-            expect(translation)
-            .toEqual('This translations has not one ('+ param1 +') but two ('+ param2 +') parameters.');
+            expect(translation).toEqual('This translations has not one ('+ param1 +') but two ('+ param2 +') parameters.');
         });
 
         it('getTranslation() a lone parameter can be inserted without array', function() {
@@ -127,8 +139,7 @@ describe('Module: Localisation', function() {
             var param1 = '**first param**',
                 translation = LocalisationService.getTranslation('Has.parameter', 'se', param1);
 
-            expect(translation)
-            .toEqual('This translations has just one ('+ param1 +') parameter.');
+            expect(translation).toEqual('This translations has just one ('+ param1 +') parameter.');
         });
 
         it('hasTranslation() returns true if translation exist and false if not', function() {
@@ -146,7 +157,8 @@ describe('Module: Localisation', function() {
             compileTemplate = function(template) {
                 elem = $compile(template)(scope);
             };
-            LocalisationService.locale = UserInfo.language;
+            // Simulate initiating this value from mockUserInfo
+            LocalisationService.setLocale('se');
         });
 
         afterEach(function() {
