@@ -28,7 +28,6 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
@@ -74,9 +73,10 @@ public class OrganisaatioBusinessChecker {
         return val == null || val.isEmpty();
     }
 
-    // Organisaation järkevä max päivämäärä
-    private final DateTime max_date = new DateTime(2030, 12, 31, 0, 0, 0, 0);
-
+    // Organisaation järkevä min ja max päivämäärä
+    private final DateTime MAX_DATE = new DateTime(2030, 12, 31, 0, 0, 0, 0);
+    // ei voi käyttää JodaTimea koska se generoi vertailuja sotkevia extraminuutteja java.util.Date-konversiossa
+    private final Calendar MIN_DATE = new GregorianCalendar(1900, 0, 1);
 
     /**
      * Tarkastetaan, että nimihistorian alkupäivämäärät ovat valideja.
@@ -249,8 +249,9 @@ public class OrganisaatioBusinessChecker {
             Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
-        final Date MIN_DATE = new Date(0);
-        final Date MAX_DATE = max_date.toDate();
+        //final Date MIN_DATE = new Date(0);
+        final Date MIN_DATE = this.MIN_DATE.getTime();
+        final Date MAX_DATE = this.MAX_DATE.toDate();
 
         Date actualStart = organisaatio.getAlkuPvm();
         Date actualEnd = organisaatio.getLakkautusPvm();
@@ -304,5 +305,11 @@ public class OrganisaatioBusinessChecker {
         return "";
     }
 
+    public DateTime getMAX_DATE() {
+        return MAX_DATE;
+    }
 
+    public Calendar getMIN_DATE() {
+        return MIN_DATE;
+    }
 }
