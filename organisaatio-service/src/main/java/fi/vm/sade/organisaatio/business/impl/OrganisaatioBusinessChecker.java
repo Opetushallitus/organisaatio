@@ -305,12 +305,10 @@ public class OrganisaatioBusinessChecker {
         return "";
     }
 
-    // for testing purposes
     public DateTime getMAX_DATE() {
         return MAX_DATE;
     }
 
-    // for testing purposes
     public Calendar getMIN_DATE() {
         return MIN_DATE;
     }
