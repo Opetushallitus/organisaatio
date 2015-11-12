@@ -125,15 +125,17 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
 ////////////
 app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     $log = $log.getInstance('KoodistoKoodi');
-    this.language = 'FI';
+    var language;
     UserInfo.then(function(s) {
-        this.language = s.lang;
+        language = s;
     });
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
         koodi.metadata.forEach(function(metadata){
-            if(metadata.kieli === this.language) {
+            if(angular.isUndefined(language))
+                $log.warn('this.language called before defined.');
+            if(metadata.kieli === language) {
                 nimi = metadata.nimi;
             }
         });
@@ -152,7 +154,9 @@ app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
     };
 
     this.getLanguage = function() {
-        return this.language;
+        if(angular.isUndefined(language))
+            $log.warn('this.language is undefined');
+        return language;
      };
 
     this.isValid = function(koodi) {
@@ -222,30 +226,28 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
     function($q, $http, $log, $injector) {
         $log = $log.getInstance("UserInfo");
         var loadingService = $injector.get('LoadingService');
+        var promise = undefined;
+        var lang;
 
-        var deferred = $q.defer();
-
-        (function() {
-            var instance = {};
-            instance.lang = 'FI';
-            $http.get(CAS_ME_URL).success(function(result) {
+        if(angular.isUndefined(promise)) {
+            lang = 'FI';
+            promise = $http.get(CAS_ME_URL).then(function(result) {
                 $log.debug("Success on " + CAS_ME_URL, result);
-                var lang = angular.fromJson(result).lang;
+                lang = result.data.lang;
                 if (lang) {
                     // Toistaiseksi vain SV on tuettu FI:n lisäksi
-                    instance.lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
-                    deferred.resolve(instance);
+                    lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
                 } else {
                     $log.debug('failed parsing result, defaulting to FI');
-                    deferred.resolve(instance);
                 }
-            }).error(function(data, status, headers, config) {
-                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + instance.lang);
+                return $q.when(lang);
+            }, function(err) {
+                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
                 loadingService.onErrorHandled();
-                deferred.resolve(instance);
+                return $q.when(lang);
             });
-        })();
-        return deferred.promise;
+        }
+        return promise;
     }
 ]);
 

@@ -65,9 +65,6 @@ public class ConfigController {
 
         if (!authMode.isEmpty()) {
             append(b, "AUTH_MODE", authMode);
-            if (authMode.trim().equalsIgnoreCase("dev")) {
-                b.append("$('head').append('<script type=\"text/javascript\" src=\"/servers/cas/myroles\"></script>')");
-            }
         }
 
         return b.toString();

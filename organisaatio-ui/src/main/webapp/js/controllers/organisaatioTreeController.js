@@ -133,10 +133,9 @@ function OrganisaatioTreeController($scope, $location, $filter,
 
                 var params = {
                     oid: options.organisaatio.oid,
-                    moveDate: moment(options.date).format('YYYY-MM-DD'),
+                    moveDate: moment(options.date).format('YYYY-MM-DD'), // date.type == Date object
                     merge: options.merge
                 };
-
                 OrganisaatioSiirto.post(params, options.newParentOrganization.oid, reply, error);
             });
         });

@@ -32,7 +32,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
     };
 
     UserInfo.then(function(s) {
-        language = s.lang.toLowerCase();
+        language = s.toLowerCase();
     });
 
     $scope.model = YhteystietojentyyppiModel;

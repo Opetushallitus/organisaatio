@@ -75,7 +75,7 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
     var initialized = false;
 
     UserInfo.then(function(s) {
-        LocalisationService.setLocale(s.lang.toLowerCase());
+        LocalisationService.setLocale(s.toLowerCase());
         initialized = true;
 
         if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
@@ -153,11 +153,11 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
 app.service('LocalisationService', function(UserInfo, $log, $window, Localisations, $injector, AngularLocaleManager) {
 
     $log = $log.getInstance("LocalisationService");
+    var locale;
 
-    //$log.debug("LocalisationService()");
     // Singleton state, default current locale for the user
-    UserInfo.then(function (s) {
-        this.locale = s.lang;
+   UserInfo.then(function(s) {
+        locale = s;
     });
 
     // We should call "/localisation/authorize" once so that the session gets established to localisation service
@@ -177,24 +177,23 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
     };
 
     /**
-     * Get users locale OR default locale "fi".
+     * Get users locale OR default locale to "fi" in case of an error.
      *
      * @returns {String}
      */
     this.getLocale = function() {
-        // Default fallback
-        if (!angular.isDefined(this.locale)) {
-            $log.warn('getLocale was called before locale was defined. Defaulting fi');
-            this.locale = 'fi';
+        if(angular.isUndefined(locale)) {
+            $log.warn('Locale undefined. Defaulting to "fi"');
+            locale = 'fi';
+            return locale;
         }
-        return this.locale;
+        // Default fallback
+        return locale;
     };
 
     this.setLocale = function(value) {
         $log.info("setLocale: " + value);
-        this.locale = value;
-
-        //$log.info('getLocale() ' + value + ' getLocale().lowercase() ' + value.toLowerCase());
+        locale = value;
         if(angular.isDefined(value))
             AngularLocaleManager.setAngularLocale(value);
     };
