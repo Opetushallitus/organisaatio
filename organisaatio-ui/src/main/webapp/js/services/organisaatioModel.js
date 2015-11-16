@@ -1612,11 +1612,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 if (index !== -1) {
                     model.organisaatio.kieletUris.splice(index, 1);
                 }
+                model.updateYhteystiedotValidity(ytform);
             }
             else {
                 $log.warn('removeLang :: model.organisaatio.kieletUris not defined.');
             }
-            model.updateYhteystiedotValidity(ytform);
         };
 
         this.addMkLang = function(section) {
@@ -2113,6 +2113,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             var kielet = getYhteystietoKielet(model.organisaatio.kieletUris);
             for (var kieli in kielet) {
                 $log.debug(kieli);
+                $log.debug(model.yhteystiedot);
+                $log.debug(model.yhteystiedot[kieli]);
                 if (kielet.hasOwnProperty(kieli)) {
                     if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
                             (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
