@@ -1,53 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.ytj.fi/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.ytj.fi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.ytj.fi/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.ytj.fi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://www.ytj.fi/">
-      <s:element name="wmTestiMetodi">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="asiakastunnus" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="aikaleima" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="tarkiste" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="tiketti" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="wmTestiMetodiResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="wmTestiMetodiResult" type="tns:YritysMuotoDTO" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="YritysMuotoDTO">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="Koodi" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Selite" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="TunnistusTiedot">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="AsiakasNimi" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Tiketti" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="PyyntojenMaara" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="PyyntoPvm" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="TunnistusStatus" type="tns:LoginStatus" />
-        </s:sequence>
-      </s:complexType>
-      <s:simpleType name="LoginStatus">
-        <s:restriction base="s:string">
-          <s:enumeration value="SUCCESS" />
-          <s:enumeration value="INVALID_VOUCHER" />
-          <s:enumeration value="INVALID_HASHVALUE" />
-          <s:enumeration value="INVALID_TIMESTAMP" />
-          <s:enumeration value="INVALID_INPUT_DATA" />
-          <s:enumeration value="OTHER_ERROR" />
-          <s:enumeration value="ACCOUNT_INACTIVE" />
-          <s:enumeration value="TEST_ACCOUNT_MAX_EXCEEDED" />
-          <s:enumeration value="CUSTOMER_NOT_FOUND" />
-        </s:restriction>
-      </s:simpleType>
       <s:element name="wmYritysMuodot">
         <s:complexType>
           <s:sequence>
@@ -85,6 +39,35 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="YritysMuotoDTO" nillable="true" type="tns:YritysMuotoDTO" />
         </s:sequence>
       </s:complexType>
+      <s:complexType name="YritysMuotoDTO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Koodi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Selite" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TunnistusTiedot" type="tns:TunnistusTiedot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TunnistusTiedot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AsiakasNimi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tiketti" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PyyntojenMaara" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PyyntoPvm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TunnistusStatus" type="tns:LoginStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="LoginStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="SUCCESS" />
+          <s:enumeration value="INVALID_VOUCHER" />
+          <s:enumeration value="INVALID_HASHVALUE" />
+          <s:enumeration value="INVALID_TIMESTAMP" />
+          <s:enumeration value="INVALID_INPUT_DATA" />
+          <s:enumeration value="OTHER_ERROR" />
+          <s:enumeration value="ACCOUNT_INACTIVE" />
+          <s:enumeration value="TEST_ACCOUNT_MAX_EXCEEDED" />
+          <s:enumeration value="CUSTOMER_NOT_FOUND" />
+        </s:restriction>
+      </s:simpleType>
       <s:complexType name="VirheTiedot">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string" />
@@ -939,7 +922,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="YritysMuotoDTO" nillable="true" type="tns:YritysMuotoDTO" />
       <s:element name="YritysMuodotDTO" nillable="true" type="tns:YritysMuodotDTO" />
       <s:element name="YritysHakutulos" nillable="true" type="tns:YritysHakutulos" />
       <s:element name="YritysTiedotDTO" nillable="true" type="tns:YritysTiedotDTO" />
@@ -948,12 +930,6 @@
       <s:element name="Tiedot" nillable="true" type="tns:Tiedot" />
     </s:schema>
   </wsdl:types>
-  <wsdl:message name="wmTestiMetodiSoapIn">
-    <wsdl:part name="parameters" element="tns:wmTestiMetodi" />
-  </wsdl:message>
-  <wsdl:message name="wmTestiMetodiSoapOut">
-    <wsdl:part name="parameters" element="tns:wmTestiMetodiResponse" />
-  </wsdl:message>
   <wsdl:message name="wmYritysMuodotSoapIn">
     <wsdl:part name="parameters" element="tns:wmYritysMuodot" />
   </wsdl:message>
@@ -1133,15 +1109,6 @@
   </wsdl:message>
   <wsdl:message name="wmPostiosoitteenMaakoodiSoapOut">
     <wsdl:part name="parameters" element="tns:wmPostiosoitteenMaakoodiResponse" />
-  </wsdl:message>
-  <wsdl:message name="wmTestiMetodiHttpGetIn">
-    <wsdl:part name="asiakastunnus" type="s:string" />
-    <wsdl:part name="aikaleima" type="s:string" />
-    <wsdl:part name="tarkiste" type="s:string" />
-    <wsdl:part name="tiketti" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="wmTestiMetodiHttpGetOut">
-    <wsdl:part name="Body" element="tns:YritysMuotoDTO" />
   </wsdl:message>
   <wsdl:message name="wmYritysMuodotHttpGetIn">
     <wsdl:part name="kieli" type="s:string" />
@@ -1475,15 +1442,6 @@
   </wsdl:message>
   <wsdl:message name="wmPostiosoitteenMaakoodiHttpGetOut">
     <wsdl:part name="Body" element="tns:Tiedot" />
-  </wsdl:message>
-  <wsdl:message name="wmTestiMetodiHttpPostIn">
-    <wsdl:part name="asiakastunnus" type="s:string" />
-    <wsdl:part name="aikaleima" type="s:string" />
-    <wsdl:part name="tarkiste" type="s:string" />
-    <wsdl:part name="tiketti" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="wmTestiMetodiHttpPostOut">
-    <wsdl:part name="Body" element="tns:YritysMuotoDTO" />
   </wsdl:message>
   <wsdl:message name="wmYritysMuodotHttpPostIn">
     <wsdl:part name="kieli" type="s:string" />
@@ -1819,10 +1777,6 @@
     <wsdl:part name="Body" element="tns:Tiedot" />
   </wsdl:message>
   <wsdl:portType name="YritysTiedotSoap">
-    <wsdl:operation name="wmTestiMetodi">
-      <wsdl:input message="tns:wmTestiMetodiSoapIn" />
-      <wsdl:output message="tns:wmTestiMetodiSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
       <wsdl:input message="tns:wmYritysMuodotSoapIn" />
       <wsdl:output message="tns:wmYritysMuodotSoapOut" />
@@ -1945,10 +1899,6 @@
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="YritysTiedotHttpGet">
-    <wsdl:operation name="wmTestiMetodi">
-      <wsdl:input message="tns:wmTestiMetodiHttpGetIn" />
-      <wsdl:output message="tns:wmTestiMetodiHttpGetOut" />
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
       <wsdl:input message="tns:wmYritysMuodotHttpGetIn" />
       <wsdl:output message="tns:wmYritysMuodotHttpGetOut" />
@@ -2071,10 +2021,6 @@
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="YritysTiedotHttpPost">
-    <wsdl:operation name="wmTestiMetodi">
-      <wsdl:input message="tns:wmTestiMetodiHttpPostIn" />
-      <wsdl:output message="tns:wmTestiMetodiHttpPostOut" />
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
       <wsdl:input message="tns:wmYritysMuodotHttpPostIn" />
       <wsdl:output message="tns:wmYritysMuodotHttpPostOut" />
@@ -2198,17 +2144,8 @@
   </wsdl:portType>
   <wsdl:binding name="YritysTiedotSoap" type="tns:YritysTiedotSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="wmTestiMetodi">
-      <soap:operation soapAction="http://www.ytj.fi/wmTestiMetodi" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysMuodot" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysMuodot" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2217,7 +2154,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysHaku">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysHaku" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysHaku" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2226,7 +2163,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedot">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedot" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedot" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2235,7 +2172,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedotV2">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedotV2" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedotV2" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2244,7 +2181,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedotMassahaku">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysTiedotMassahaku" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedotMassahaku" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2253,7 +2190,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToiminimi">
-      <soap:operation soapAction="http://www.ytj.fi/wmToiminimi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmToiminimi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2262,7 +2199,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKonkurssitieto">
-      <soap:operation soapAction="http://www.ytj.fi/wmKonkurssitieto" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKonkurssitieto" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2271,7 +2208,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSaneeraustieto">
-      <soap:operation soapAction="http://www.ytj.fi/wmSaneeraustieto" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmSaneeraustieto" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2280,7 +2217,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSelvitystila">
-      <soap:operation soapAction="http://www.ytj.fi/wmSelvitystila" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmSelvitystila" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2289,7 +2226,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmRinnakkaistoiminimi">
-      <soap:operation soapAction="http://www.ytj.fi/wmRinnakkaistoiminimi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmRinnakkaistoiminimi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2298,7 +2235,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmAputoiminimi">
-      <soap:operation soapAction="http://www.ytj.fi/wmAputoiminimi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmAputoiminimi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2307,7 +2244,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmAputoiminimenkaannos">
-      <soap:operation soapAction="http://www.ytj.fi/wmAputoiminimenkaannos" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmAputoiminimenkaannos" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2316,7 +2253,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysmuoto">
-      <soap:operation soapAction="http://www.ytj.fi/wmYritysmuoto" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysmuoto" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2325,7 +2262,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKotipaikka">
-      <soap:operation soapAction="http://www.ytj.fi/wmKotipaikka" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKotipaikka" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2334,7 +2271,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimiala">
-      <soap:operation soapAction="http://www.ytj.fi/wmToimiala" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmToimiala" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2343,7 +2280,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimialaKoodi">
-      <soap:operation soapAction="http://www.ytj.fi/wmToimialaKoodi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmToimialaKoodi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2352,7 +2289,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKieli">
-      <soap:operation soapAction="http://www.ytj.fi/wmKieli" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKieli" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2361,7 +2298,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKeskeytystieto">
-      <soap:operation soapAction="http://www.ytj.fi/wmKeskeytystieto" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKeskeytystieto" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2370,7 +2307,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmElinkeinotoiminta">
-      <soap:operation soapAction="http://www.ytj.fi/wmElinkeinotoiminta" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmElinkeinotoiminta" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2379,7 +2316,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKayntiosoite">
-      <soap:operation soapAction="http://www.ytj.fi/wmKayntiosoite" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKayntiosoite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2388,7 +2325,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPostiosoite">
-      <soap:operation soapAction="http://www.ytj.fi/wmPostiosoite" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmPostiosoite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2397,7 +2334,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPuhelinnumero">
-      <soap:operation soapAction="http://www.ytj.fi/wmPuhelinnumero" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmPuhelinnumero" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2406,7 +2343,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmFaksinumero">
-      <soap:operation soapAction="http://www.ytj.fi/wmFaksinumero" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmFaksinumero" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2415,7 +2352,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSahkopostiosoite">
-      <soap:operation soapAction="http://www.ytj.fi/wmSahkopostiosoite" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmSahkopostiosoite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2424,7 +2361,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmWWWOsoite">
-      <soap:operation soapAction="http://www.ytj.fi/wmWWWOsoite" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmWWWOsoite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2433,7 +2370,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmMatkapuhelinnumero">
-      <soap:operation soapAction="http://www.ytj.fi/wmMatkapuhelinnumero" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmMatkapuhelinnumero" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2442,7 +2379,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmTunnusMitatoity">
-      <soap:operation soapAction="http://www.ytj.fi/wmTunnusMitatoity" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmTunnusMitatoity" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2451,7 +2388,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimintaLakannut">
-      <soap:operation soapAction="http://www.ytj.fi/wmToimintaLakannut" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmToimintaLakannut" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2460,7 +2397,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKayntiosoitteenMaakoodi">
-      <soap:operation soapAction="http://www.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2469,7 +2406,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPostiosoitteenMaakoodi">
-      <soap:operation soapAction="http://www.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
+      <soap:operation soapAction="https://tietopalvelu.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2480,17 +2417,8 @@
   </wsdl:binding>
   <wsdl:binding name="YritysTiedotSoap12" type="tns:YritysTiedotSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="wmTestiMetodi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmTestiMetodi" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysMuodot" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysMuodot" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2499,7 +2427,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysHaku">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysHaku" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysHaku" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2508,7 +2436,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedot">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedot" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedot" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2517,7 +2445,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedotV2">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedotV2" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedotV2" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2526,7 +2454,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysTiedotMassahaku">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysTiedotMassahaku" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysTiedotMassahaku" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2535,7 +2463,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToiminimi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmToiminimi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmToiminimi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2544,7 +2472,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKonkurssitieto">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKonkurssitieto" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKonkurssitieto" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2553,7 +2481,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSaneeraustieto">
-      <soap12:operation soapAction="http://www.ytj.fi/wmSaneeraustieto" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmSaneeraustieto" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2562,7 +2490,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSelvitystila">
-      <soap12:operation soapAction="http://www.ytj.fi/wmSelvitystila" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmSelvitystila" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2571,7 +2499,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmRinnakkaistoiminimi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmRinnakkaistoiminimi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmRinnakkaistoiminimi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2580,7 +2508,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmAputoiminimi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmAputoiminimi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmAputoiminimi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2589,7 +2517,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmAputoiminimenkaannos">
-      <soap12:operation soapAction="http://www.ytj.fi/wmAputoiminimenkaannos" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmAputoiminimenkaannos" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2598,7 +2526,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmYritysmuoto">
-      <soap12:operation soapAction="http://www.ytj.fi/wmYritysmuoto" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmYritysmuoto" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2607,7 +2535,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKotipaikka">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKotipaikka" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKotipaikka" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2616,7 +2544,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimiala">
-      <soap12:operation soapAction="http://www.ytj.fi/wmToimiala" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmToimiala" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2625,7 +2553,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimialaKoodi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmToimialaKoodi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmToimialaKoodi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2634,7 +2562,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKieli">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKieli" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKieli" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2643,7 +2571,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKeskeytystieto">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKeskeytystieto" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKeskeytystieto" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2652,7 +2580,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmElinkeinotoiminta">
-      <soap12:operation soapAction="http://www.ytj.fi/wmElinkeinotoiminta" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmElinkeinotoiminta" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2661,7 +2589,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKayntiosoite">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKayntiosoite" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKayntiosoite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2670,7 +2598,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPostiosoite">
-      <soap12:operation soapAction="http://www.ytj.fi/wmPostiosoite" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmPostiosoite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2679,7 +2607,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPuhelinnumero">
-      <soap12:operation soapAction="http://www.ytj.fi/wmPuhelinnumero" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmPuhelinnumero" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2688,7 +2616,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmFaksinumero">
-      <soap12:operation soapAction="http://www.ytj.fi/wmFaksinumero" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmFaksinumero" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2697,7 +2625,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmSahkopostiosoite">
-      <soap12:operation soapAction="http://www.ytj.fi/wmSahkopostiosoite" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmSahkopostiosoite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2706,7 +2634,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmWWWOsoite">
-      <soap12:operation soapAction="http://www.ytj.fi/wmWWWOsoite" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmWWWOsoite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2715,7 +2643,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmMatkapuhelinnumero">
-      <soap12:operation soapAction="http://www.ytj.fi/wmMatkapuhelinnumero" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmMatkapuhelinnumero" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2724,7 +2652,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmTunnusMitatoity">
-      <soap12:operation soapAction="http://www.ytj.fi/wmTunnusMitatoity" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmTunnusMitatoity" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2733,7 +2661,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmToimintaLakannut">
-      <soap12:operation soapAction="http://www.ytj.fi/wmToimintaLakannut" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmToimintaLakannut" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2742,7 +2670,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmKayntiosoitteenMaakoodi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmKayntiosoitteenMaakoodi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2751,7 +2679,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="wmPostiosoitteenMaakoodi">
-      <soap12:operation soapAction="http://www.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
+      <soap12:operation soapAction="https://tietopalvelu.ytj.fi/wmPostiosoitteenMaakoodi" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -2762,15 +2690,6 @@
   </wsdl:binding>
   <wsdl:binding name="YritysTiedotHttpGet" type="tns:YritysTiedotHttpGet">
     <http:binding verb="GET" />
-    <wsdl:operation name="wmTestiMetodi">
-      <http:operation location="/wmTestiMetodi" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
       <http:operation location="/wmYritysMuodot" />
       <wsdl:input>
@@ -3044,15 +2963,6 @@
   </wsdl:binding>
   <wsdl:binding name="YritysTiedotHttpPost" type="tns:YritysTiedotHttpPost">
     <http:binding verb="POST" />
-    <wsdl:operation name="wmTestiMetodi">
-      <http:operation location="/wmTestiMetodi" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="wmYritysMuodot">
       <http:operation location="/wmYritysMuodot" />
       <wsdl:input>
@@ -3326,16 +3236,16 @@
   </wsdl:binding>
   <wsdl:service name="YritysTiedot">
     <wsdl:port name="YritysTiedotSoap" binding="tns:YritysTiedotSoap">
-      <soap:address location="https://www.ytj.fi/yritystiedot.asmx" />
+      <soap:address location="https://tietopalvelu.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotSoap12" binding="tns:YritysTiedotSoap12">
-      <soap12:address location="https://www.ytj.fi/yritystiedot.asmx" />
+      <soap12:address location="https://tietopalvelu.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotHttpGet" binding="tns:YritysTiedotHttpGet">
-      <http:address location="https://www.ytj.fi/yritystiedot.asmx" />
+      <http:address location="https://tietopalvelu.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
     <wsdl:port name="YritysTiedotHttpPost" binding="tns:YritysTiedotHttpPost">
-      <http:address location="https://www.ytj.fi/yritystiedot.asmx" />
+      <http:address location="https://tietopalvelu.ytj.fi/yritystiedot.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
