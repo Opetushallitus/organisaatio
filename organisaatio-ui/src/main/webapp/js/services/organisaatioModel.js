@@ -2112,15 +2112,18 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.ytinvalid = [];
             var kielet = getYhteystietoKielet(model.organisaatio.kieletUris);
             for (var kieli in kielet) {
-                $log.debug(kieli);
-                $log.debug('yhteystiedot', model.yhteystiedot);
-                $log.debug('yhteystiedot.kieli', model.yhteystiedot[kieli]);
-                if (kielet.hasOwnProperty(kieli)) {
-                    if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
+                if(angular.isDefined(model.yhteystiedot[kieli])) {
+                    if (kielet.hasOwnProperty(kieli)) {
+                        if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
                             (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
                             || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
-                        model.ytinvalid.push(kieli);
+                            model.ytinvalid.push(kieli);
+                        }
                     }
+                }
+                else {
+                    // Most likely something asynchronously resets model.yhteystiedot
+                    $log.warn('updateYhteystiedotValidity :: model.yhteystiedot[kieli] is not defined');
                 }
             }
         };
