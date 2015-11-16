@@ -2113,8 +2113,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             var kielet = getYhteystietoKielet(model.organisaatio.kieletUris);
             for (var kieli in kielet) {
                 $log.debug(kieli);
-                $log.debug(model.yhteystiedot);
-                $log.debug(model.yhteystiedot[kieli]);
+                $log.debug('yhteystiedot', model.yhteystiedot);
+                $log.debug('yhteystiedot.kieli', model.yhteystiedot[kieli]);
                 if (kielet.hasOwnProperty(kieli)) {
                     if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
                             (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
