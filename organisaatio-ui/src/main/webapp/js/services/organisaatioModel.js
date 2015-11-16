@@ -1432,24 +1432,29 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         var getYhteystietoKielet = function(kieletUris) {
             var ret = {};
-            for (var i = 0; i < kieletUris.length; i++) {
-                switch(kieletUris[i]) {
-                    case 'oppilaitoksenopetuskieli_1#1':
-                    case 'oppilaitoksenopetuskieli_5#1':
-                        ret['kieli_fi#1'] = true;
-                        break;
-                    case 'oppilaitoksenopetuskieli_2#1':
-                        ret['kieli_sv#1'] = true;
-                        break;
-                    case 'oppilaitoksenopetuskieli_3#1':
-                        ret['kieli_fi#1'] = true;
-                        ret['kieli_sv#1'] = true;
-                        break;
-                    case 'oppilaitoksenopetuskieli_4#1':
-                    case 'oppilaitoksenopetuskieli_9#1':
-                        ret['kieli_en#1'] = true;
-                        break;
-                };
+            if(angular.isDefined(kieletUris)) {
+                for (var i = 0; i < kieletUris.length; i++) {
+                    switch(kieletUris[i]) {
+                        case 'oppilaitoksenopetuskieli_1#1':
+                        case 'oppilaitoksenopetuskieli_5#1':
+                            ret['kieli_fi#1'] = true;
+                            break;
+                        case 'oppilaitoksenopetuskieli_2#1':
+                            ret['kieli_sv#1'] = true;
+                            break;
+                        case 'oppilaitoksenopetuskieli_3#1':
+                            ret['kieli_fi#1'] = true;
+                            ret['kieli_sv#1'] = true;
+                            break;
+                        case 'oppilaitoksenopetuskieli_4#1':
+                        case 'oppilaitoksenopetuskieli_9#1':
+                            ret['kieli_en#1'] = true;
+                            break;
+                    };
+                }
+            }
+            else {
+                $log.warn('getYhteystietoKielet :: kieletUris not defined.');
             }
             return ret;
         };
@@ -1533,12 +1538,17 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.addLang = function(ytform) {
-            if (model.organisaatio.kieletUris.indexOf(model.koodisto.kieliplaceholder) === -1) {
-                if (model.koodisto.kieliplaceholder && (model.koodisto.kieliplaceholder !== $filter('i18n')("lisaakieli"))) {
-                    model.organisaatio.kieletUris.push(model.koodisto.kieliplaceholder);
+            if(angular.isDefined(model.organisaatio.kieletUris)) {
+                if (model.organisaatio.kieletUris.indexOf(model.koodisto.kieliplaceholder) === -1) {
+                    if (model.koodisto.kieliplaceholder && (model.koodisto.kieliplaceholder !== $filter('i18n')("lisaakieli"))) {
+                        model.organisaatio.kieletUris.push(model.koodisto.kieliplaceholder);
 
-                    model.updateYhteystiedotValidity(ytform);
+                        model.updateYhteystiedotValidity(ytform);
+                    }
                 }
+            }
+            else {
+                $log.warn('addLang :: kieletUris not defined');
             }
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
         };
@@ -1580,22 +1590,31 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 else {
                     $log.warn("Failed to found uri for kieli: " + kieli + " arvo: " + kieliArvo);
                 }
-                return;
             };
             var kieliUri = getKieliUri(model.ytjTiedot.yrityksenKieli);
             if (kieliUri) {
-                // lisätään kieli, jos organisaatiolla ei vielä ole YTJ:stä tullutta kieltä
-                if (model.organisaatio.kieletUris.indexOf(kieliUri) === -1) {
-                    model.organisaatio.kieletUris.push(kieliUri);
+                if(angular.isDefined(model.organisaatio.kieletUris)) {
+                    // lisätään kieli, jos organisaatiolla ei vielä ole YTJ:stä tullutta kieltä
+                    if (model.organisaatio.kieletUris.indexOf(kieliUri) === -1) {
+                        model.organisaatio.kieletUris.push(kieliUri);
+                    }
+                }
+                else{
+                    $log.warn('addYtjLang :: model.organisaatio.kieletUris undefined.');
                 }
             }
 
         };
 
         this.removeLang = function(lang, ytform) {
-            var index = model.organisaatio.kieletUris.indexOf(lang);
-            if (index !== -1) {
-                model.organisaatio.kieletUris.splice(index, 1);
+            if(angular.isDefined(model.organisaatio.kieletUris)) {
+                var index = model.organisaatio.kieletUris.indexOf(lang);
+                if (index !== -1) {
+                    model.organisaatio.kieletUris.splice(index, 1);
+                }
+            }
+            else {
+                $log.warn('removeLang :: model.organisaatio.kieletUris not defined.');
             }
             model.updateYhteystiedotValidity(ytform);
         };
@@ -2066,22 +2085,26 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         this.isPostiOsoiteRequired = function(lang) {
             //$log.info("lang:" + model.ytlang + ", uris:" + model.organisaatio.kieletUris);
             //switch (model.ytlang) {
-            switch (lang) {
-                case 'kieli_fi#1':
-                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_1#1') >= 0) ||
-                           (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_3#1') >= 0) ||
-                           (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_5#1') >= 0);
-                    break;
-                case 'kieli_sv#1':
-                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_2#1') >= 0) ||
+            if(angular.isDefined(model.organisaatio.kieletUris)) {
+                switch (lang) {
+                    case 'kieli_fi#1':
+                        return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_1#1') >= 0) ||
+                            (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_3#1') >= 0) ||
+                            (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_5#1') >= 0);
+                        break;
+                    case 'kieli_sv#1':
+                        return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_2#1') >= 0) ||
                             (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_3#1') >= 0);
-                    break;
-                case 'kieli_en#1':
-                    return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_4#1') >= 0) ||
+                        break;
+                    case 'kieli_en#1':
+                        return (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_4#1') >= 0) ||
                             (model.organisaatio.kieletUris.indexOf('oppilaitoksenopetuskieli_9#1') >= 0);
-                    break;
+                        break;
+                }
             }
-
+            else {
+                $log.warn('isPostiOsoiteRequired :: model.organisaatio.kieletUris is not defined.');
+            }
             return false;
         };
 
@@ -2089,9 +2112,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.ytinvalid = [];
             var kielet = getYhteystietoKielet(model.organisaatio.kieletUris);
             for (var kieli in kielet) {
+                $log.debug(kieli);
                 if (kielet.hasOwnProperty(kieli)) {
                     if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
-                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
+                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
+                            || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
                         model.ytinvalid.push(kieli);
                     }
                 }
