@@ -24,7 +24,7 @@
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
         <log.client.version>8.0-SNAPSHOT</log.client.version>
         <oid.api.version>8.0-SNAPSHOT</oid.api.version>
-        <rajapinnat.ytj.version>9.0-SNAPSHOT</rajapinnat.ytj.version>
+        <rajapinnat.ytj.version>10.0-SNAPSHOT</rajapinnat.ytj.version>
         <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
 
         <!-- Versions -->
