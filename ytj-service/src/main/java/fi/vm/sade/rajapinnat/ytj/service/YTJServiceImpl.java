@@ -66,7 +66,7 @@ public class YTJServiceImpl implements YTJService {
         Kieli kiali = getKieli(kieli);
 
         YritysTiedot yt = new YritysTiedot();
-        YritysTiedotSoap ytj = yt.getYritysTiedotSoap();
+        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
         tarkiste = this.createHashHex(this.createHashString());
         YritysHakutulos vastaus = null;
         try {
@@ -84,11 +84,11 @@ public class YTJServiceImpl implements YTJService {
 
 
         } catch (SOAPFaultException exp) {
-            LOG.error("SOAPException connecting to YTJ-service : " + exp.getFault().getFaultCode() + " " + exp.getFault().getFaultString());
+            LOG.error("SOAPException connecting to YTJ-service : " + exp.getFault().getFaultCode() + " " + exp.getFault().getFaultString(), exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
         } catch (Exception commonExp) {
-            LOG.error("Exception occured in YTJ-service : " + commonExp.toString());
+            LOG.error("Exception occured in YTJ-service : " + commonExp.toString(), commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
@@ -143,7 +143,7 @@ public class YTJServiceImpl implements YTJService {
 
         Kieli kiali = getKieli(kieli);
         YritysTiedot yt = new YritysTiedot();
-        YritysTiedotSoap ytj = yt.getYritysTiedotSoap();
+        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
         tarkiste = this.createHashHex(this.createHashString());
         YritysTiedotV2DTO vastaus;
         try {
@@ -155,11 +155,11 @@ public class YTJServiceImpl implements YTJService {
                 tiketti);
 
         } catch (SOAPFaultException exp) {
-            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString());
+            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString(), exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
         } catch (Exception commonExp) {
-            LOG.error("Unknown exception in YTJ-service : " + commonExp);
+            LOG.error("Unknown exception in YTJ-service : " + commonExp, commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
