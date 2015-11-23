@@ -114,12 +114,12 @@ angular.module('Loading', ['Localisation'])
 })
 
 .factory('onCompleteInterceptor', function(LoadingService, $q) {
-    return function(promise) {
-        function decrementRequestCountSuccess(response) {
+    return {
+        response: function decrementRequestCountSuccess(response) {
                     LoadingService.afterRequest(true, response);
             return response;
-        };
-        function decrementRequestCountError(response) {
+        },
+        responseError: function decrementRequestCountError(response) {
             var ret = $q.reject(response);
             return {then: function(callback, errback) {
                     ret.then(callback, function(reason){
@@ -130,13 +130,12 @@ angular.module('Loading', ['Localisation'])
                     });
                 }
             };
-        };
-    return promise.then(decrementRequestCountSuccess, decrementRequestCountError);
+        }
   };
 })
 
 .config(function($httpProvider) {
-    $httpProvider.responseInterceptors.push('onCompleteInterceptor');
+    $httpProvider.interceptors.push('onCompleteInterceptor');
 })
 
 .run(function($http, onStartInterceptor) {
