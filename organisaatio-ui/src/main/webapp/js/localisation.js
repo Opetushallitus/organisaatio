@@ -171,7 +171,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
                 $log.info("callLocalisationAuthorizeIfNecessary - success!");
             }, function(err) {
                 $log.info("callLocalisationAuthorizeIfNecessary FAILED", err);
-                self.disableSystemErrorDialog();
+                self.disableSystemErrorDialog(err);
             });
         }
     };
@@ -211,9 +211,9 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
         if (angular.isDefined(ids)) {
             Localisations.updateAccessed({ id: "access" }, ids, function () {
                 $log.info("  updateAccessInformation success!");
-            }, function () {
+            }, function (err) {
                 $log.info("  updateAccessInformation FAILED");
-                this.disableSystemErrorDialog();
+                this.disableSystemErrorDialog(err);
             });
         }
     };
@@ -376,7 +376,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
                         },
                         function(data, status, headers, config) {
                             $log.warn("  FAILED to created new translation to server side! ", data, status, headers, config);
-                            self.disableSystemErrorDialog();
+                            self.disableSystemErrorDialog(data);
                         });
 
                 // Create temporary placeholder for next requests
@@ -392,11 +392,12 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
      *
      * @returns {undefined}
      */
-    this.disableSystemErrorDialog = function() {
+    this.disableSystemErrorDialog = function(response) {
         var loadingService = $injector.get('LoadingService');
         if (loadingService) {
             $log.debug("disable system error dialog.");
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(response);
+
         } else {
             $log.warn("FAILED TO disable system error dialog. Sorry about that.");
         }

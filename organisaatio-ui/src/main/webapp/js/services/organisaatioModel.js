@@ -498,7 +498,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         var showAndLogError = function(msg, response) {
             loadingService.onErrorHandled();
             $log.error(msg + " (status: " + response.status + ")");
-            model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
+            model.alert = Alert.add("error", $filter('i18n')(response.data ? response.data.errorKey : msg), false);
         };
 
         var refreshLisayhteystietoArvos = function() {
