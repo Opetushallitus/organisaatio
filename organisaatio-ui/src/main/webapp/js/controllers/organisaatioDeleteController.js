@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioDeleteController($scope, $modalInstance, $log, nimi, tyypit) {
+app.controller('OrganisaatioDeleteController', function OrganisaatioDeleteController($scope, $modalInstance, $log, nimi, tyypit) {
 
     $log = $log.getInstance("OrganisaatioDeleteController");
 
@@ -24,4 +24,4 @@ function OrganisaatioDeleteController($scope, $modalInstance, $log, nimi, tyypit
     if (nimi && tyypit) {
         $log.debug("Organisaation poisto (vaatii vahvistuksen): " + tyypit + " " + nimi);
     }
-}
+});

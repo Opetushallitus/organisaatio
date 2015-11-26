@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function YhteystietojentyyppiController($scope, $filter, $modal,
+app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $modal,
                                         $log, $injector,
                                         YhteystietojentyyppiModel,
                                         Alert, UserInfo) {
@@ -419,4 +419,4 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
         }
     };
 
-}
+});

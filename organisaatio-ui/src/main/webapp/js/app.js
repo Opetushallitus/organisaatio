@@ -71,22 +71,22 @@ app.config(function($routeProvider, $httpProvider) {
         $routeProvider.
 
         // front page
-        when('/organisaatiot', {controller:OrganisaatioTreeController, templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
+        when('/organisaatiot', {controller: 'OrganisaatioTreeController', templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
 
         // read one
-        when('/organisaatiot/:oid', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
+        when('/organisaatiot/:oid', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
 
         // edit one
-        when('/organisaatiot/:oid/edit', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
+        when('/organisaatiot/:oid/edit', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
         // create new
-        when('/organisaatiot/:parentoid/new', {controller:OrganisaatioController, templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
+        when('/organisaatiot/:parentoid/new', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
         // yhteystietojen tyypit
-        when('/yhteystietotyypit', {controller:YhteystietojentyyppiController, templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
+        when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
 
         // manage groups
-        when('/organisaatiot/:parentoid/groups', {controller:RyhmienHallintaController, templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+        when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
 
             //else
         otherwise({redirectTo:'/organisaatiot'});
@@ -272,7 +272,7 @@ app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
                         },
                         // Error case, toinen yritys
                         function(response) {
-                            loadingService.onErrorHandled();
+                            loadingService.onErrorHandled(response);
                             Alert.add("error", $filter('i18n')("Organisaatiot.yleinenVirhe", ""), true);
                             $log.error("Organisaatio Auth Init failed, response: " + response.status);
                         });

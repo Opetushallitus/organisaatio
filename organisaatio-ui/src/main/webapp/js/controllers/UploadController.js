@@ -14,18 +14,18 @@
  European Union Public Licence for more details.
  */
 
-function UploadController($scope, uploadService) {
+app.controller('UploadController', function UploadController($scope, uploadService) {
     $scope.getFile = function (filename) {
         $scope.progress = 0;
         uploadService.readAsDataUrl(filename, $scope)
-                      .then(function(result) {
-                          var organisaatio = $scope.$parent.model.organisaatio;
-                          if (!organisaatio.metadata) {
-                              organisaatio.metadata = {};
-                          }
-                          organisaatio.metadata.kuvaEncoded = result.split(',')[1];
-                      });
+        .then(function(result) {
+            var organisaatio = $scope.$parent.model.organisaatio;
+            if (!organisaatio.metadata) {
+                organisaatio.metadata = {};
+            }
+            organisaatio.metadata.kuvaEncoded = result.split(',')[1];
+        });
     };
-}
+});
 
 

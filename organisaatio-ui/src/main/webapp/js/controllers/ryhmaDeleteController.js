@@ -15,7 +15,7 @@
  */
 
 
-var RyhmaDeleteController = function ($scope, $log, nimi) {
+app.controller('RyhmaDeleteController', function RyhmaDeleteController($scope, $log, nimi) {
     $log = $log.getInstance("RyhmaDeleteController");
 
     $scope.nimi = nimi;
@@ -23,4 +23,5 @@ var RyhmaDeleteController = function ($scope, $log, nimi) {
     if (nimi) {
         $log.debug("Ryhmän poisto (vaatii vahvistuksen): " + nimi);
     }
-};
+});
+

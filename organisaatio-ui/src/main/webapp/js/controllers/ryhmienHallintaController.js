@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function RyhmienHallintaController($scope, $location, $filter, $routeParams,
+app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
                                    $modal, $log, $injector, $q,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
@@ -48,7 +48,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
         else {
             $scope.model.loadUpdateInfo($scope.currentGroup.oid, function(result) {
             }, function(error) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(error);
                 Alert.add("error", error, false);
             });
         }
@@ -199,4 +199,4 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
             });
         }
     });
-}
+});

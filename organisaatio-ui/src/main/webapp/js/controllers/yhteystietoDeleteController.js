@@ -15,7 +15,7 @@
  */
 
 
-var YhteystietoDeleteController = function ($scope, $modalInstance, $log, nimi) {
+app.controller('YhteystietoDeleteController', function YhteystietoDeleteController($scope, $modalInstance, $log, nimi) {
     $log = $log.getInstance("YhteystietoDeleteController");
 
     $scope.nimi = nimi;
@@ -24,4 +24,4 @@ var YhteystietoDeleteController = function ($scope, $modalInstance, $log, nimi) 
     if (nimi) {
         $log.debug("Yhteystiedon poisto (vaatii vahvistuksen): " + nimi);
     }
-};
+});

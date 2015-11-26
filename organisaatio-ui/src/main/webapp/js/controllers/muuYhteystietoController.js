@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function MuuYhteystietoController($scope, $modalInstance, data) {
+app.controller('MuuYhteystietoController', function MuuYhteystietoController($scope, $modalInstance, data) {
     if (data) {
         $scope.data = data;
     } else {
@@ -31,5 +31,5 @@ function MuuYhteystietoController($scope, $modalInstance, data) {
     $scope.save = function() {
         $modalInstance.close($scope.data);
     };
-}
+});
 

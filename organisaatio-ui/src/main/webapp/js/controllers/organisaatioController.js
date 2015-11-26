@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioController($scope, $location,
+app.controller('OrganisaatioController', function OrganisaatioController($scope, $location,
                                 $routeParams, $modal,
                                 $log, $injector, $q,
                                 OrganisaatioModel) {
@@ -421,4 +421,4 @@ function OrganisaatioController($scope, $location,
         }
         return false;
     };
-}
+});

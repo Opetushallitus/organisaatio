@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioTreeController($scope, $location, $filter,
+app.controller('OrganisaatioTreeController', function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, $injector,
                                     Alert, Organisaatio, OrganisaatioSiirto,
                                     HakuehdotModel, OrganisaatioTreeModel) {
@@ -242,4 +242,4 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.isOppilaitosSelected = function() {
         return $scope.hakuehdot.organisaatiotyyppi === 'Oppilaitos';
     };
-}
+});

@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioCancelController($scope, $modalInstance, $log, invalid) {
+app.controller('OrganisaatioCancelController', function OrganisaatioCancelController($scope, $modalInstance, $log, invalid) {
 
     $log = $log.getInstance("OrganisaatioCancelController");
 
@@ -36,4 +36,4 @@ function OrganisaatioCancelController($scope, $modalInstance, $log, invalid) {
         $log.debug("continueSave() --> Tallenna ja jatka");
         $modalInstance.close('save');
     };
-}
+});
