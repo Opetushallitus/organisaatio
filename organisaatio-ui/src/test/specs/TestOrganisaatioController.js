@@ -39,7 +39,7 @@ describe("Testing OrganisaatioController", function() {
     }));
 
     it('should have a OrganisaatioController controller', function() {
-        expect(OrganisaatioController).toBeDefined();
+        expect(ctrl).toBeDefined();
     });
 
     it('controller should have a called refreshIfNeeded', function() {
