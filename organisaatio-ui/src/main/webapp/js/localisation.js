@@ -67,10 +67,10 @@ app.factory('Localisations', function($log, $resource, $window) {
 
 });
 
-app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
-    function (UserInfo, LocalisationService, $log, $injector) {
+app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
 
     $log = $log.getInstance("localization");
+    $log.debug('i18n');
 
     var initialized = false;
 
@@ -88,10 +88,10 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
 
 
     return function (localisationKey, parameters) {
-        $log.debug('i18n called');
+        $log.debug('i18n returns');
         return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
     };
-}]);
+});
 
 /**
  * UI-directive for using translations.
