@@ -78,16 +78,17 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
         LocalisationService.setLocale(s.toLowerCase());
         initialized = true;
 
-        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
-                (window.APP_LOCALISATION_DATA.length === 0)) {
-            Alert = $injector.get("Alert");
-            $log.error("Failed to load localisations.");
-            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
-        }
-
     });
+    if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+            (window.APP_LOCALISATION_DATA.length === 0)) {
+        Alert = $injector.get("Alert");
+        $log.error("Failed to load localisations.");
+        Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+    }
+
 
     return function (localisationKey, parameters) {
+        $log.debug('i18n called');
         return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
     };
 }]);
