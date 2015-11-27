@@ -78,7 +78,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         if ($scope.currentGroup !== null) {
             var modalInstance = $modal.open({
                 templateUrl: 'ryhmanpoisto.html',
-                controller: RyhmaDeleteController,
+                controller: 'RyhmaDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.localizeNimi($scope.currentGroup);
@@ -171,7 +171,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
             $scope.modalOpen = true;
             var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
-                controller: OrganisaatioCancelController,
+                controller: 'OrganisaatioCancelController',
                 resolve: {
                     invalid: function () {
                         return $scope.form.$invalid;

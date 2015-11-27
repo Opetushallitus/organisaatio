@@ -87,7 +87,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     $scope.moveOrganisaatio = function (node) {
         var modalInstance = $modal.open({
             templateUrl: 'organisaationsiirto.html',
-            controller: OrganisaatioMoveController,
+            controller: 'OrganisaatioMoveController',
             windowClass:'modal-wide',
             resolve: {
                 nimi: function () {
@@ -144,7 +144,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     $scope.deleteOrganisaatio = function (node) {
         var modalInstance = $modal.open({
             templateUrl: 'organisaationpoisto.html',
-            controller: OrganisaatioDeleteController,
+            controller: 'OrganisaatioDeleteController',
             resolve: {
                 nimi: function () {
                     return $scope.model.getNimi(node);
@@ -205,7 +205,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     $scope.luoYlinTaso = function () {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
-            controller: YritysValintaController,
+            controller: 'YritysValintaController',
             windowClass:'modal-wide',
             resolve: {
                 // return undefined --> ei ytunnuksen esivalintaa

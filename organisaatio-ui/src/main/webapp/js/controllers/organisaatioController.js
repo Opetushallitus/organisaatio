@@ -56,7 +56,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             $scope.modalOpen = true;
             var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
-                controller: OrganisaatioCancelController,
+                controller: 'OrganisaatioCancelController',
                 resolve: {
                     invalid: function () {
                         return $scope.form.$invalid;
@@ -190,7 +190,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         $scope.modalOpen = true;
         var modalInstance = $modal.open({
             templateUrl: 'nimenmuokkaus.html',
-            controller: NimenMuokkausController,
+            controller: 'NimenMuokkausController',
             windowClass:'modal-wide',
             resolve: {
                 oid: function () {
@@ -241,7 +241,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         $scope.modalOpen = true;
         var modalInstance = $modal.open({
             templateUrl: 'voimassaolonmuokkaus.html',
-            controller: VoimassaolonMuokkausController,
+            controller: 'VoimassaolonMuokkausController',
             windowClass:'modal-large',
             resolve: {
                 muokataanAlkupvm: function() {
@@ -292,7 +292,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
-            controller: YritysValintaController,
+            controller: 'YritysValintaController',
             windowClass: 'modal-wide',
             resolve: {
                 ytunnus: function() {
@@ -335,7 +335,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     $scope.vahvistakopiointi = function(section) {
         var modalInstance = $modal.open({
             templateUrl: 'kopioinninvahvistus.html',
-            controller: KuvailevatTiedotKopiointiController,
+            controller: 'KuvailevatTiedotKopiointiController',
             resolve: {
                 nimi: function() {
                     return $scope.model.uriLocalizedNames['parentnimi'];
@@ -376,7 +376,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         $scope.modalOpen = true;
         var modalInstance = $modal.open({
             templateUrl: 'kuvailevientietojenmuokkaus.html',
-            controller: KuvailevatTiedotMuokkausController,
+            controller: 'KuvailevatTiedotMuokkausController',
             windowClass: 'modal-large',
             resolve: {
                 nimi: function() {

@@ -298,7 +298,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
         if ($scope.valittuYhteystietotyyppi !== null) {
             var modalInstance = $modal.open({
                 templateUrl: 'yhteystiedonpoisto.html',
-                controller: YhteystietoDeleteController,
+                controller: 'YhteystietoDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.yttNimiLang(language).value;
@@ -369,7 +369,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
     function _muokkaaMuuYhteystieto(callback, data) {
         var modalInstance = $modal.open({
             templateUrl: 'muuyhteystieto.html',
-            controller: MuuYhteystietoController,
+            controller: 'MuuYhteystietoController',
             resolve: {
                 data: function() {
                     return data;
