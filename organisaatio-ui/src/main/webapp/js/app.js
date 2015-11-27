@@ -243,7 +243,7 @@ app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
                 return $q.when(lang);
             }, function(err) {
                 $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(err);
                 return $q.when(lang);
             });
         }
@@ -265,7 +265,7 @@ app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
                 },
                 // Error case, ensimmäinen yritys
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $timeout(function() {
                         OrganisaatioAuthGET.get({}, function(result) {
                             $log.log("Organisaatio Auth Init, second try.");

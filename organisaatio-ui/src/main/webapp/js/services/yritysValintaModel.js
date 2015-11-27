@@ -61,7 +61,7 @@ app.factory('YritysValintaModel', function($filter, $log, $injector,
                 },
                 // Error case
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("YTJYritysTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });
@@ -79,7 +79,7 @@ app.factory('YritysValintaModel', function($filter, $log, $injector,
                 },
                 // Error case
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("YTJYritystenTiedot response: " + response.status);
                     Alert.add("error", $filter('i18n')("YritysValinta.virheViesti", ""), true, true);
                 });

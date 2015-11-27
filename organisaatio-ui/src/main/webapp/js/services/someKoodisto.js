@@ -21,7 +21,7 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
     var loadingService = $injector.get('LoadingService');
 
     var showAndLogError = function(msg, response) {
-        loadingService.onErrorHandled();
+        loadingService.onErrorHandled(response);
         model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
         $log.error(msg + " (status: " + response.status + ")");
     };

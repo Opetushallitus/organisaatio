@@ -496,7 +496,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
         var showAndLogError = function(msg, response) {
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(response);
             $log.error(msg + " (status: " + response.status + ")");
             model.alert = Alert.add("error", $filter('i18n')(response.data ? response.data.errorKey : msg), false);
         };
@@ -720,7 +720,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     function(response) {
                         $log.warn("Failed to get Henkilo!", response);
                         $log.debug("disable system error dialog.");
-                        loadingService.onErrorHandled();
+                        loadingService.onErrorHandled(response);
                         model.paivitys.paivittaja = paivitys.paivittaja;
                     });
                 }

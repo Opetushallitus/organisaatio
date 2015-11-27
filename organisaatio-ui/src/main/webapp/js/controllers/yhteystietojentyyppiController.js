@@ -319,7 +319,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
                         },
                         // Error case
                         function(virhe) {
-                            loadingService.onErrorHandled();
+                            loadingService.onErrorHandled(virhe);
                             Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
                         });
                     } else {
@@ -340,7 +340,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
             },
             // Error case
             function(virhe) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(virhe);
                 Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
             });
         }

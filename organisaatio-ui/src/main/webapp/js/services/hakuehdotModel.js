@@ -96,7 +96,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                 },
                 // Error case
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
@@ -115,7 +115,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                 },
                 // Error case
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;
@@ -133,7 +133,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                 },
                 // Error case
                 function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("KoodistoPaikkakunnat response: " + response.status);
                     Alert.add("error", $filter('i18n')("Organisaatiot.koodistoVirhe", ""), true);
                     model.refreshed = false;

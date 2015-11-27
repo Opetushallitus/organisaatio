@@ -53,7 +53,7 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
 
         // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
         var showAndLogError = function(msg, response) {
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(response);
             $log.error(msg + " (status: " + response.status + ")");
             model.alert = Alert.add("error", $filter('i18n')(response.data.errorKey || msg), false);
         };

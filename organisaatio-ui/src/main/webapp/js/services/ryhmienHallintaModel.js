@@ -71,7 +71,7 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
                     function(response) {
                         $log.warn("Failed to get Henkilo!", response);
                         $log.debug("disable system error dialog.");
-                        loadingService.onErrorHandled();
+                        loadingService.onErrorHandled(response);
                         model.paivitys.paivittaja = paivitys.paivittaja;
                     });
                 }

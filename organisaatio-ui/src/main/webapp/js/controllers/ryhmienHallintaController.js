@@ -94,7 +94,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
                     $scope.updateUpdateInfo();
                     $scope.currentGroupSelection = {};
                 }, function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.warn("Failed to delete group: ", $scope.currentGroup);
                     Alert.add("error", $filter('i18n')("Ryhmienhallinta.poistoVirhe", "") + ' '
                         + $filter('i18n')(response.data.errorKey), true);
@@ -119,7 +119,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
                 $scope.form.$setPristine();
                 deferred.resolve();
             }, function(error) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(error);
                 $log.warn("Failed to save group: ", $scope.currentGroup);
                 Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
                 deferred.reject();
@@ -135,7 +135,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         $scope.model.reload($routeParams.parentoid, function(result) {
             $scope.form.$setPristine();
         }, function(error) {
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(error);
             $log.warn("Failed to reloud groups: ", $routeParams.parentoid);
             Alert.add("error", error, false);
         });
@@ -143,7 +143,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
 
     $scope.model.reload($routeParams.parentoid, function(result) {
     }, function(error) {
-        loadingService.onErrorHandled();
+        loadingService.onErrorHandled(error);
         Alert.add("error", error, false);
     });
 

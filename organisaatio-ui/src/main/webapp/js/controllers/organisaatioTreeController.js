@@ -125,7 +125,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                     }
                 }
                 function error(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("Organisaatio siirto response: " + response.status);
                     Alert.add("error", $filter('i18n')("organisaatio.move.error", "") + ' '
                                 + $filter('i18n')(response.data.errorKey), true);
@@ -166,7 +166,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
             },
             // Error case
             function(response) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(response);
                 $log.error("Organisaatio delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", "") + ' '
                                 + $filter('i18n')(response.data.errorKey), true);
