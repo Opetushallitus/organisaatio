@@ -9,9 +9,9 @@ describe('Module: Localisation', function() {
         id = 1,
         mockLocalisations = [{key: key, value: value, locale: locale, id: id}];
 
+    beforeEach(module('Localisation'));
     beforeEach(function() {
         mockUserInfo = { language: 'se',
-            //getLanguage : function() {return UserInfo.language},
             then : function() {}
         };
 
@@ -23,19 +23,9 @@ describe('Module: Localisation', function() {
             $provide.value('AngularLocaleManager', mockAngularLocaleManager);
         });
 
-        module('Localisation');
-
-        inject(function(_$q_, _LocalisationService_, _$compile_, _$rootScope_) {
-            $q = _$q_;
-            $scope = _$rootScope_.$new();
-            //mockUserInfo = jasmine.createSpy().andCallFAke(function() {
-            //    var deferred = $q.defer();
-            //    deferred.resolve('se');
-            //    return deferred.promise;
-            //    //$q.when('se');
-            //});
-            LocalisationService = _LocalisationService_;
-            $compile = _$compile_;
+        inject(function($injector) {
+            LocalisationService = $injector.get('LocalisationService');
+            $compile = $injector.get('$compile');
         });
     });
 
@@ -50,7 +40,6 @@ describe('Module: Localisation', function() {
         });
 
         it('initializes properly', function() {
-            //$scope.$apply();
             // Cant call private variable
             expect(LocalisationService.getLocale()).toEqual(locale);
 

@@ -128,35 +128,11 @@ angular.module('Loading', ['Localisation'])
         },
         // "decrementRequestCountError"
         responseError: function(response) {
-            //$log.debug('response', response);
             var ret = $q.reject(response);
             LoadingService.errorHandlingRequested = true;
-            // call original errback in a hacky way
-            //var ret = errback(reason);
-            //LoadingService.afterRequest(!LoadingService.errorHandlingRequested, response);
-            //LoadingService.errorHandlingRequested = null;
             return ret;
         }
     };
-    //return function(promise) {
-    //    function decrementRequestCountSuccess(response) {
-    //        LoadingService.afterRequest(true, response);
-    //        return response;
-    //    };
-    //    function decrementRequestCountError(response) {
-    //        var ret = $q.reject(response);
-    //        return {then: function(callback, errback) {
-    //            ret.then(callback, function(reason){
-    //                LoadingService.errorHandlingRequested = true;
-    //                var ret = errback(reason);
-    //                LoadingService.afterRequest(!LoadingService.errorHandlingRequested, response);
-    //                LoadingService.errorHandlingRequested = null;
-    //            });
-    //        }
-    //        };
-    //    };
-    //    return promise.then(decrementRequestCountSuccess, decrementRequestCountError);
-    //};
 })
 
 .config(function($httpProvider) {
