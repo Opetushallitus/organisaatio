@@ -70,7 +70,6 @@ app.factory('Localisations', function($log, $resource, $window) {
 app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
 
     $log = $log.getInstance("localization");
-    $log.debug('i18n');
 
     var initialized = false;
 
@@ -86,12 +85,42 @@ app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
         Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
     }
 
-
-    return function (localisationKey, parameters) {
-        $log.debug('i18n returns');
+    function i18nfilter(localisationKey, parameters) {
         return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
-    };
+    }
+    i18nfilter.$stateful = true;
+    return i18nfilter;
 });
+
+// TODO: fix this into working directive to replace i18n filter
+//app.directive('kaanna', function (UserInfo, LocalisationService, $log, $injector) {
+//
+//    $log = $log.getInstance("localization");
+//    $log.debug('kaanna');
+//    return {
+//        compile: function() {
+//            var initialized = false;
+//
+//            UserInfo.then(function(s) {
+//                LocalisationService.setLocale(s.toLowerCase());
+//                initialized = true;
+//
+//            });
+//            if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+//                (window.APP_LOCALISATION_DATA.length === 0)) {
+//                Alert = $injector.get("Alert");
+//                $log.error("Failed to load localisations.");
+//                Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+//            }
+//
+//
+//            return function (localisationKey, parameters) {
+//                $log.debug('kaanna returns');
+//                return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
+//            };
+//        }
+//    }
+//});
 
 /**
  * UI-directive for using translations.
@@ -110,32 +139,33 @@ app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
  */
 app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationService) {
 
-        $log = $log.getInstance("<tt>");
+    $log = $log.getInstance("<tt>");
 
-        return {
-            restrict: 'A',
-            replace: true,
-            scope: false,
-            compile: function(tElement, tAttrs, transclude) {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: false,
+        compile: function(tElement, tAttrs, transclude) {
 
-                var key = tAttrs["tt"];
-                var locale = angular.isDefined(tAttrs["locale"]) ? tAttrs["locale"] : LocalisationService.getLocale();
-                var translation = LocalisationService.tl(key, locale);
-                var localName = tElement[0].localName;
+            var key = tAttrs["tt"];
+            var locale = angular.isDefined(tAttrs["locale"]) ? tAttrs["locale"] : LocalisationService.getLocale();
+            var translation = LocalisationService.tl(key, locale);
+            var localName = tElement[0].localName;
 
-                if (localName === "input") {
-                    tElement.attr("value", translation);
-                } else {
-                    tElement.html(translation);
-                }
-
-                // must return the link function
-                return function link(scope, iElement, iAttrs, controller) {
-                    // $timeout(scope.$destroy.bind(scope), 0);
-                };
+            if (localName === "input") {
+                tElement.attr("value", translation);
+            } else {
+                tElement.html(translation);
             }
-        };
-    }]);
+
+            // must return the link function
+            return function link(scope, iElement, iAttrs, controller) {
+                // $timeout(scope.$destroy.bind(scope), 0);
+            };
+        }
+    };
+}]);
+
 
 
 
