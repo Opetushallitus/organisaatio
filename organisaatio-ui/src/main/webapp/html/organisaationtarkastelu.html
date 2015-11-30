@@ -42,7 +42,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 
     <div class="control-group" ng-show="model.organisaatio.nimi">
-        <!--<label class="control-label"><span kaanna='Organisaatiotarkastelu.nimi'></span></label>-->
+        <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
