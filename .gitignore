@@ -20,3 +20,4 @@ phantomjsdriver.log
 **/pom.xml.versionsBackup
 **/*.orig
 solr-data/
+organisaatio-service/INFOSTREAM.txt
