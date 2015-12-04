@@ -37,7 +37,7 @@ app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
             },
             // Error case
             function(response) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(response);
                 $log.error("Yhteystietojentyyppi response: " + response.status);
                 Alert.add("error", $filter('i18n')("Yhteystietotyypit.hakuvirhe", ""), true);
             });
@@ -53,7 +53,7 @@ app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
             },
             // Error case
             function(response) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(response);
                 $log.error("KoodistoOppilaitostyypit response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.koodistovirhe", ""), true);
             });

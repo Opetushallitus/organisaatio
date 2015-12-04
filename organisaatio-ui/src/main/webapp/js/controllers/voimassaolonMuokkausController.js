@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function VoimassaolonMuokkausController($scope, $modalInstance, $log,
+app.controller('VoimassaolonMuokkausController', function VoimassaolonMuokkausController($scope, $modalInstance, $log,
                                         VoimassaolonMuokkausModel,
                                         muokataanAlkupvm, oid, nimi,
                                         alkuPvm, lakkautusPvm,
@@ -38,4 +38,4 @@ function VoimassaolonMuokkausController($scope, $modalInstance, $log,
         $scope.model.accept();
         $modalInstance.close($scope.model);
     };
-}
+});

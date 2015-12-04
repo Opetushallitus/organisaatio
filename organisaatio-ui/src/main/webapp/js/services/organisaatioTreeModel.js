@@ -323,7 +323,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             },
             // Error case
             function(response) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(response);
                 $log.error("Organisaatiot response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
 

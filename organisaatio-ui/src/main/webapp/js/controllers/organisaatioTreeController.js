@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioTreeController($scope, $location, $filter,
+app.controller('OrganisaatioTreeController', function OrganisaatioTreeController($scope, $location, $filter,
                                     $modal, $log, $injector,
                                     Alert, Organisaatio, OrganisaatioSiirto,
                                     HakuehdotModel, OrganisaatioTreeModel) {
@@ -87,7 +87,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.moveOrganisaatio = function (node) {
         var modalInstance = $modal.open({
             templateUrl: 'organisaationsiirto.html',
-            controller: OrganisaatioMoveController,
+            controller: 'OrganisaatioMoveController',
             windowClass:'modal-wide',
             resolve: {
                 nimi: function () {
@@ -125,7 +125,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
                     }
                 }
                 function error(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.error("Organisaatio siirto response: " + response.status);
                     Alert.add("error", $filter('i18n')("organisaatio.move.error", "") + ' '
                                 + $filter('i18n')(response.data.errorKey), true);
@@ -144,7 +144,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.deleteOrganisaatio = function (node) {
         var modalInstance = $modal.open({
             templateUrl: 'organisaationpoisto.html',
-            controller: OrganisaatioDeleteController,
+            controller: 'OrganisaatioDeleteController',
             resolve: {
                 nimi: function () {
                     return $scope.model.getNimi(node);
@@ -166,7 +166,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
             },
             // Error case
             function(response) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(response);
                 $log.error("Organisaatio delete response: " + response.status);
                 Alert.add("error", $filter('i18n')("Organisaationpoisto.poistoVirhe", "") + ' '
                                 + $filter('i18n')(response.data.errorKey), true);
@@ -205,7 +205,7 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.luoYlinTaso = function () {
         var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
-            controller: YritysValintaController,
+            controller: 'YritysValintaController',
             windowClass:'modal-wide',
             resolve: {
                 // return undefined --> ei ytunnuksen esivalintaa
@@ -242,4 +242,4 @@ function OrganisaatioTreeController($scope, $location, $filter,
     $scope.isOppilaitosSelected = function() {
         return $scope.hakuehdot.organisaatiotyyppi === 'Oppilaitos';
     };
-}
+});

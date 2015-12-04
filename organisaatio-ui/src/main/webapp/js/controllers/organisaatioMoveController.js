@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
+app.controller('OrganisaatioMoveController', function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                                     OrganisaatiotFlat, Organisaatio,
                                     Alert, LocalisationService,
                                     nimi, node) {
@@ -140,4 +140,4 @@ function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
             Alert.add("error", error, false);
         }
     );
-}
+});

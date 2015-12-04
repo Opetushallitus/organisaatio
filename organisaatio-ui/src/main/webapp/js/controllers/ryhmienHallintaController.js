@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function RyhmienHallintaController($scope, $location, $filter, $routeParams,
+app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
                                    $modal, $log, $injector, $q,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
@@ -48,7 +48,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
         else {
             $scope.model.loadUpdateInfo($scope.currentGroup.oid, function(result) {
             }, function(error) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(error);
                 Alert.add("error", error, false);
             });
         }
@@ -78,7 +78,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
         if ($scope.currentGroup !== null) {
             var modalInstance = $modal.open({
                 templateUrl: 'ryhmanpoisto.html',
-                controller: RyhmaDeleteController,
+                controller: 'RyhmaDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.localizeNimi($scope.currentGroup);
@@ -94,7 +94,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
                     $scope.updateUpdateInfo();
                     $scope.currentGroupSelection = {};
                 }, function(response) {
-                    loadingService.onErrorHandled();
+                    loadingService.onErrorHandled(response);
                     $log.warn("Failed to delete group: ", $scope.currentGroup);
                     Alert.add("error", $filter('i18n')("Ryhmienhallinta.poistoVirhe", "") + ' '
                         + $filter('i18n')(response.data.errorKey), true);
@@ -119,7 +119,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
                 $scope.form.$setPristine();
                 deferred.resolve();
             }, function(error) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(error);
                 $log.warn("Failed to save group: ", $scope.currentGroup);
                 Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
                 deferred.reject();
@@ -135,7 +135,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
         $scope.model.reload($routeParams.parentoid, function(result) {
             $scope.form.$setPristine();
         }, function(error) {
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(error);
             $log.warn("Failed to reloud groups: ", $routeParams.parentoid);
             Alert.add("error", error, false);
         });
@@ -143,7 +143,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
 
     $scope.model.reload($routeParams.parentoid, function(result) {
     }, function(error) {
-        loadingService.onErrorHandled();
+        loadingService.onErrorHandled(error);
         Alert.add("error", error, false);
     });
 
@@ -171,7 +171,7 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
             $scope.modalOpen = true;
             var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
-                controller: OrganisaatioCancelController,
+                controller: 'OrganisaatioCancelController',
                 resolve: {
                     invalid: function () {
                         return $scope.form.$invalid;
@@ -199,4 +199,4 @@ function RyhmienHallintaController($scope, $location, $filter, $routeParams,
             });
         }
     });
-}
+});

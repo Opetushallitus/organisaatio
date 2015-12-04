@@ -67,8 +67,7 @@ app.factory('Localisations', function($log, $resource, $window) {
 
 });
 
-app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
-    function (UserInfo, LocalisationService, $log, $injector) {
+app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
 
     $log = $log.getInstance("localization");
 
@@ -78,19 +77,50 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
         LocalisationService.setLocale(s.toLowerCase());
         initialized = true;
 
-        if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
-                (window.APP_LOCALISATION_DATA.length === 0)) {
-            Alert = $injector.get("Alert");
-            $log.error("Failed to load localisations.");
-            Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
-        }
-
     });
+    if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+            (window.APP_LOCALISATION_DATA.length === 0)) {
+        Alert = $injector.get("Alert");
+        $log.error("Failed to load localisations.");
+        Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+    }
 
-    return function (localisationKey, parameters) {
+    function i18nfilter(localisationKey, parameters) {
         return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
-    };
-}]);
+    }
+    i18nfilter.$stateful = true;
+    return i18nfilter;
+});
+
+// TODO: fix this into working directive to replace i18n filter
+//app.directive('kaanna', function (UserInfo, LocalisationService, $log, $injector) {
+//
+//    $log = $log.getInstance("localization");
+//    $log.debug('kaanna');
+//    return {
+//        compile: function() {
+//            var initialized = false;
+//
+//            UserInfo.then(function(s) {
+//                LocalisationService.setLocale(s.toLowerCase());
+//                initialized = true;
+//
+//            });
+//            if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
+//                (window.APP_LOCALISATION_DATA.length === 0)) {
+//                Alert = $injector.get("Alert");
+//                $log.error("Failed to load localisations.");
+//                Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
+//            }
+//
+//
+//            return function (localisationKey, parameters) {
+//                $log.debug('kaanna returns');
+//                return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
+//            };
+//        }
+//    }
+//});
 
 /**
  * UI-directive for using translations.
@@ -109,32 +139,33 @@ app.filter('i18n', ['UserInfo', 'LocalisationService', '$log', '$injector',
  */
 app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationService) {
 
-        $log = $log.getInstance("<tt>");
+    $log = $log.getInstance("<tt>");
 
-        return {
-            restrict: 'A',
-            replace: true,
-            scope: false,
-            compile: function(tElement, tAttrs, transclude) {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: false,
+        compile: function(tElement, tAttrs, transclude) {
 
-                var key = tAttrs["tt"];
-                var locale = angular.isDefined(tAttrs["locale"]) ? tAttrs["locale"] : LocalisationService.getLocale();
-                var translation = LocalisationService.tl(key, locale);
-                var localName = tElement[0].localName;
+            var key = tAttrs["tt"];
+            var locale = angular.isDefined(tAttrs["locale"]) ? tAttrs["locale"] : LocalisationService.getLocale();
+            var translation = LocalisationService.tl(key, locale);
+            var localName = tElement[0].localName;
 
-                if (localName === "input") {
-                    tElement.attr("value", translation);
-                } else {
-                    tElement.html(translation);
-                }
-
-                // must return the link function
-                return function link(scope, iElement, iAttrs, controller) {
-                    // $timeout(scope.$destroy.bind(scope), 0);
-                };
+            if (localName === "input") {
+                tElement.attr("value", translation);
+            } else {
+                tElement.html(translation);
             }
-        };
-    }]);
+
+            // must return the link function
+            return function link(scope, iElement, iAttrs, controller) {
+                // $timeout(scope.$destroy.bind(scope), 0);
+            };
+        }
+    };
+}]);
+
 
 
 
@@ -171,7 +202,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
                 $log.info("callLocalisationAuthorizeIfNecessary - success!");
             }, function(err) {
                 $log.info("callLocalisationAuthorizeIfNecessary FAILED", err);
-                self.disableSystemErrorDialog();
+                self.disableSystemErrorDialog(err);
             });
         }
     };
@@ -211,9 +242,9 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
         if (angular.isDefined(ids)) {
             Localisations.updateAccessed({ id: "access" }, ids, function () {
                 $log.info("  updateAccessInformation success!");
-            }, function () {
+            }, function (err) {
                 $log.info("  updateAccessInformation FAILED");
-                this.disableSystemErrorDialog();
+                this.disableSystemErrorDialog(err);
             });
         }
     };
@@ -376,7 +407,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
                         },
                         function(data, status, headers, config) {
                             $log.warn("  FAILED to created new translation to server side! ", data, status, headers, config);
-                            self.disableSystemErrorDialog();
+                            self.disableSystemErrorDialog(data);
                         });
 
                 // Create temporary placeholder for next requests
@@ -392,11 +423,12 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
      *
      * @returns {undefined}
      */
-    this.disableSystemErrorDialog = function() {
+    this.disableSystemErrorDialog = function(response) {
         var loadingService = $injector.get('LoadingService');
         if (loadingService) {
             $log.debug("disable system error dialog.");
-            loadingService.onErrorHandled();
+            loadingService.onErrorHandled(response);
+
         } else {
             $log.warn("FAILED TO disable system error dialog. Sorry about that.");
         }

@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function YritysValintaController($scope, $modalInstance, $location, $log,
+app.controller('YritysValintaController', function YritysValintaController($scope, $modalInstance, $location, $log,
                                  YritysValintaModel, ytunnus) {
 
     $log = $log.getInstance("YritysValintaController");
@@ -47,4 +47,4 @@ function YritysValintaController($scope, $modalInstance, $location, $log,
         $modalInstance.close();
         $scope.model.hakuString = "";
     };
-}
+});

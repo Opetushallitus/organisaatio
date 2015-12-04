@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function NimenMuokkausController($scope, $modalInstance, $log, $location,
+app.controller('NimenMuokkausController', function NimenMuokkausController($scope, $modalInstance, $log, $location,
                                  NimenMuokkausModel, NimiHistoriaModel,
                                  oid, nimihistoria, originalNimihistoria,
                                  organisaatioAlkuPvm,
@@ -92,4 +92,4 @@ function NimenMuokkausController($scope, $modalInstance, $log, $location,
     } else {
         $scope.newNimiMode();
     }
-}
+});

@@ -51,6 +51,7 @@ angular.module('Loading', ['Localisation'])
     		service.errors++;
             }
             service.clearTimeout();
+            service.errorHandlingRequested = null;
         },
         commit: function() {
             //$log.log("LOADING commit", service);
@@ -61,10 +62,10 @@ angular.module('Loading', ['Localisation'])
         clearTimeout: function() {
             //$log.log("LOADING clearTimeout", service);
             if (service.requestCount===0 && service.timeout!==null) {
-    		window.clearTimeout(service.timeout);
-    		service.timeout = null;
-    		service.timeoutMinor = false;
-    		service.timeoutMajor = false;
+                window.clearTimeout(service.timeout);
+                service.timeout = null;
+                service.timeoutMinor = false;
+                service.timeoutMajor = false;
             }
         },
         startTimeout: function() {
@@ -87,11 +88,13 @@ angular.module('Loading', ['Localisation'])
         /**
          * Kutsutaan error-callbackissa; estää teknisen virheen dialogin näytön.
          */
-        onErrorHandled: function() {
+        onErrorHandled: function(response) {
             if (service.errorHandlingRequested) {
-    		service.errorHandlingRequested=false;
+    		    service.errorHandlingRequested=false;
+                service.afterRequest(!service.errorHandlingRequested, response);
+
             } else if (service.errorHandlingRequested===null) {
-    		throw "LoadingService.onErrorHandled called from outside of error callback";
+    		    throw "LoadingService.onErrorHandled called from outside of error callback";
             }
         },
 
@@ -113,30 +116,27 @@ angular.module('Loading', ['Localisation'])
     };
 })
 
-.factory('onCompleteInterceptor', function(LoadingService, $q) {
-    return function(promise) {
-        function decrementRequestCountSuccess(response) {
-                    LoadingService.afterRequest(true, response);
+// Intercept http responses.
+.factory('onCompleteInterceptor', function(LoadingService, $q, $log) {
+    $log = $log.getInstance('onCompleteInterceptor');
+    return {
+        // Just call afterRequest() to clear timeout and pass the response to the orginal caller.
+        // "decrementRequestCountSuccess"
+        response: function(response) {
+            LoadingService.afterRequest(true, response);
             return response;
-        };
-        function decrementRequestCountError(response) {
+        },
+        // "decrementRequestCountError"
+        responseError: function(response) {
             var ret = $q.reject(response);
-            return {then: function(callback, errback) {
-                    ret.then(callback, function(reason){
-                        LoadingService.errorHandlingRequested = true;
-                        var ret = errback(reason);
-                        LoadingService.afterRequest(!LoadingService.errorHandlingRequested, response);
-                        LoadingService.errorHandlingRequested = null;
-                    });
-                }
-            };
-        };
-    return promise.then(decrementRequestCountSuccess, decrementRequestCountError);
-  };
+            LoadingService.errorHandlingRequested = true;
+            return ret;
+        }
+    };
 })
 
 .config(function($httpProvider) {
-    $httpProvider.responseInterceptors.push('onCompleteInterceptor');
+    $httpProvider.interceptors.push('onCompleteInterceptor');
 })
 
 .run(function($http, onStartInterceptor) {

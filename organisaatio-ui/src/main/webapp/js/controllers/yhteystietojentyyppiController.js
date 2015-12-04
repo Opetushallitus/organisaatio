@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-function YhteystietojentyyppiController($scope, $filter, $modal,
+app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $modal,
                                         $log, $injector,
                                         YhteystietojentyyppiModel,
                                         Alert, UserInfo) {
@@ -298,7 +298,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
         if ($scope.valittuYhteystietotyyppi !== null) {
             var modalInstance = $modal.open({
                 templateUrl: 'yhteystiedonpoisto.html',
-                controller: YhteystietoDeleteController,
+                controller: 'YhteystietoDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.yttNimiLang(language).value;
@@ -319,7 +319,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
                         },
                         // Error case
                         function(virhe) {
-                            loadingService.onErrorHandled();
+                            loadingService.onErrorHandled(virhe);
                             Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
                         });
                     } else {
@@ -340,7 +340,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
             },
             // Error case
             function(virhe) {
-                loadingService.onErrorHandled();
+                loadingService.onErrorHandled(virhe);
                 Alert.add("error", $filter('i18n')(virhe.data.errorKey || 'generic.error'), false);
             });
         }
@@ -369,7 +369,7 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
     function _muokkaaMuuYhteystieto(callback, data) {
         var modalInstance = $modal.open({
             templateUrl: 'muuyhteystieto.html',
-            controller: MuuYhteystietoController,
+            controller: 'MuuYhteystietoController',
             resolve: {
                 data: function() {
                     return data;
@@ -419,4 +419,4 @@ function YhteystietojentyyppiController($scope, $filter, $modal,
         }
     };
 
-}
+});

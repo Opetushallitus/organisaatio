@@ -78,10 +78,11 @@ app.directive('auth', function($animate, $timeout, $log, AuthService) {
     };
 });
 
-app.directive("ngFileSelect", function() {
+app.directive("ngFileSelect", function($log) {
+    $log = $log.getInstance('ngFileSelect');
+    $log.debug('ngFileSelect()');
     return {
         link: function($scope, el) {
-
             el.bind("change", function(e) {
                 if ((e.srcElement || e.target).files) {
                     $scope.getFile((e.srcElement || e.target).files[0]);
