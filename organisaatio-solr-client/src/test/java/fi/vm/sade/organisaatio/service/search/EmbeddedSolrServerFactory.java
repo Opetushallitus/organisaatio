@@ -31,7 +31,9 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    EmbeddedSolrServer server = null;
+    // Set to static in order to prevet multiple sorlserver declarations that can break indexing.
+    static EmbeddedSolrServer server = null;
+
 
     @Value("${organisaatio.embedded-solr.home:#{null}}")
     private String solrHome;
@@ -50,6 +52,7 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
         }
 
         if (server == null) {
+            log.info("NEW SOLR SERVER AND CONTAINER CREATED");
             System.setProperty("solr.solr.home", solrHome);
             System.setProperty("solr.data.dir", solrData);
             CoreContainer.Initializer initializer = new CoreContainer.Initializer();

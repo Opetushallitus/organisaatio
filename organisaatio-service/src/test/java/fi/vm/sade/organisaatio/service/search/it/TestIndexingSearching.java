@@ -421,8 +421,8 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     }
 
     private Yhteystieto createOsoite() {
-        Osoite o = new Osoite(Osoite.TYYPPI_KAYNTIOSOITE, "katu", "0000", "Helsinki", UUID.randomUUID().toString());
-        return o;
+        Osoite osoite = new Osoite(Osoite.TYYPPI_KAYNTIOSOITE, "katu", "0000", "Helsinki", UUID.randomUUID().toString());
+        return osoite;
     }
 
     private static final String parentSeparator = "|";
