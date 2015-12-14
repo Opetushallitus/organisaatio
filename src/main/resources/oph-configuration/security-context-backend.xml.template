@@ -37,12 +37,14 @@
     </global-method-security>
 
     <!-- /buildversion.txt?auth forced to require authentication (needed for auth health checking purposes) -->
-    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex"
+    pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <custom-filter position="CAS_FILTER" ref="casFilter" />
     </http>
 
-    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt|/healthcheck">
+    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex"
+    pattern="/buildversion.txt|/healthcheck|/swagger/.*|/api-docs.*">
         <intercept-url pattern="/**" access="permitAll"/>
     </http>
 
