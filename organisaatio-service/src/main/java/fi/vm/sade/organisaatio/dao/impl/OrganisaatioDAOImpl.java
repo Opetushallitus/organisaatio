@@ -128,7 +128,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Override
     public boolean isYtunnusAvailable(String ytunnus) {
         return ((Number) getEntityManager()
-                .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=? AND organisaatiopoistettu IS NOT NULL")
+                .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=? AND organisaatiopoistettu = FALSE")
                 .setParameter(1, ytunnus.trim())
                 .getSingleResult()).intValue() == 0;
     }
@@ -599,7 +599,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
         return new JPAQuery(getEntityManager()).from(qOrganisaatio)
-                .where(qOrganisaatio.parentOidPath.like(parentOidStr).and(qOrganisaatio.organisaatioPoistettu.eq(vainPoistetut ? null : false)))
+                .where(qOrganisaatio.parentOidPath.like(parentOidStr).and(qOrganisaatio.organisaatioPoistettu.eq(vainPoistetut)))
                 .distinct()
                 .list(qOrganisaatio);
 

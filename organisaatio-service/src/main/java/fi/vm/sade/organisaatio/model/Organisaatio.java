@@ -441,14 +441,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return the organisaatioPoistettu
      */
     public boolean isOrganisaatioPoistettu() {
-        return organisaatioPoistettu==null;
+        return organisaatioPoistettu;
     }
 
     /**
      * @param organisaatioPoistettu the organisaatioPoistettu to set
      */
     public void setOrganisaatioPoistettu(boolean organisaatioPoistettu) {
-        this.organisaatioPoistettu = organisaatioPoistettu ? null : false;
+        this.organisaatioPoistettu = organisaatioPoistettu;
     }
 
     /**

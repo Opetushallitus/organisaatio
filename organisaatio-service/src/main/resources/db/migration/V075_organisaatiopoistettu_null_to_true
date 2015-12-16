@@ -1,0 +1,7 @@
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
+update organisaatio set organisaatiopoistettu = TRUE where oid = '';
