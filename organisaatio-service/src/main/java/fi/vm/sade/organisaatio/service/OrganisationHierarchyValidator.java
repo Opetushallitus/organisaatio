@@ -46,23 +46,19 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> muuOrgRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return (parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()) // TODO temp remove after transfer
-            ||parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()))
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())); // TODO temp remove after transfer
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
         }
     };
     Predicate<Entry<Organisaatio, Organisaatio>> tyoelamajarjestoRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return (parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
-                    || parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())) // TODO temp remove after transfer
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())); // TODO temp remove after transfer
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
         }
     };
 

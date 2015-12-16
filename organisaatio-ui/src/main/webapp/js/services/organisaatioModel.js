@@ -907,7 +907,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                         'Oppilaitos': ["03"],
                         'Toimipiste': ["03"],
                         'Oppisopimustoimipiste': [],
-                        'Tyoelamajarjesto': ["06","03", "05"]}; // TODO "05" is temp
+                        'Tyoelamajarjesto': ["06","03"]};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');

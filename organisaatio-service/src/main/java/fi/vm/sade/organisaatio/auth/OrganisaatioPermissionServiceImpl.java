@@ -47,7 +47,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         super(ORGANISAATIOHALLINTA);
         this.ophOid = ophOid;
     }
-    // XXX case työelämäjärjestö
+
     public boolean userCanUpdateOrganisation(OrganisaatioContext context) {
         Preconditions.checkNotNull(context.getOrgOid());
         /*

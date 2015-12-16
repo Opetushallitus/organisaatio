@@ -52,7 +52,6 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
-        // XXX lisää työelämäjärjestö
         this.solr = factory.getSolrServer();
         orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
                 OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
