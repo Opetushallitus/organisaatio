@@ -105,10 +105,10 @@
 
     <dependencies>
 
-	<dependency>
-                <groupId>org.jasig.cas.client</groupId>
-                <artifactId>cas-client-support-distributed-ehcache</artifactId>
-    </dependency>
+	<!--<dependency>-->
+                <!--<groupId>org.jasig.cas.client</groupId>-->
+                <!--<artifactId>cas-client-support-distributed-ehcache</artifactId>-->
+    <!--</dependency>-->
 
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
@@ -121,11 +121,123 @@
             <groupId>org.aspectj</groupId>
             <version>${aspectj.version}</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<artifactId>aspectjweaver</artifactId>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<version>${aspectj.version}</version>-->
+        <!--</dependency>-->
         <dependency>
-            <artifactId>aspectjweaver</artifactId>
-            <groupId>org.aspectj</groupId>
-            <version>${aspectj.version}</version>
+            <groupId>com.googlecode.flyway</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>2.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.wordnik</groupId>
+            <artifactId>swagger-annotations_2.10</artifactId>
+            <version>${swagger.annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wordnik</groupId>
+            <artifactId>swagger-core_2.10</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.wordnik</groupId>-->
+            <!--<artifactId>swagger-jersey-jaxrs_2.10</artifactId>-->
+            <!--<version>${swagger.version}</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-annotation_1.0_spec</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.1.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-api</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
 
         <!-- Tapahtumalogi -->
         <dependency>
@@ -146,17 +258,17 @@
             <artifactId>solr-solrj</artifactId>
             <version>${solr.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-core</artifactId>
-            <version>${solr.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-jdk14</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.solr</groupId>-->
+            <!--<artifactId>solr-core</artifactId>-->
+            <!--<version>${solr.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                    <!--<artifactId>slf4j-jdk14</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -173,11 +285,11 @@
         </dependency>
 
         <!-- CachingRestClient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient-cache</artifactId>
-            <version>${httpcomponents.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpclient-cache</artifactId>-->
+            <!--<version>${httpcomponents.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -189,16 +301,51 @@
             <artifactId>jsr305</artifactId>
             <version>1.3.9</version>
         </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <artifactId>generic-events</artifactId>
-            <version>${generic.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>fi.vm.sade.generic</groupId>-->
+            <!--<artifactId>generic-events</artifactId>-->
+            <!--<version>${generic.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.organisaatio</groupId>
@@ -232,12 +379,6 @@
                     <artifactId>ehcache-core</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-jersey-jaxrs_2.10</artifactId>
-            <version>${swagger.version}</version>
         </dependency>
 
         <dependency>
@@ -326,11 +467,11 @@
             <version>${springockito.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <version>${querydsl.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.mysema.querydsl</groupId>-->
+            <!--<artifactId>querydsl-apt</artifactId>-->
+            <!--<version>${querydsl.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
@@ -351,11 +492,11 @@
             <artifactId>ytj-api</artifactId>
             <version>${rajapinnat.ytj.version}</version>
         </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.rajapinnat</groupId>
-            <artifactId>ytj-service</artifactId>
-            <version>${rajapinnat.ytj.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>fi.vm.sade.rajapinnat</groupId>-->
+            <!--<artifactId>ytj-service</artifactId>-->
+            <!--<version>${rajapinnat.ytj.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>fi.vm.sade.rajapinnat</groupId>
@@ -364,11 +505,11 @@
         </dependency>
 
         <!-- Koodisto -->
-        <dependency>
-            <groupId>fi.vm.sade.koodisto</groupId>
-            <artifactId>koodisto-api</artifactId>
-            <version>${koodisto.api.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>fi.vm.sade.koodisto</groupId>-->
+            <!--<artifactId>koodisto-api</artifactId>-->
+            <!--<version>${koodisto.api.version}</version>-->
+        <!--</dependency>-->
 
         <!-- OID :: API -->
         <dependency>
@@ -385,18 +526,18 @@
         </dependency>
 
         <!-- CAS ticket cache replication -->
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-jgroupsreplication</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.sf.ehcache</groupId>-->
+            <!--<artifactId>ehcache-core</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>net.sf.ehcache</groupId>-->
+            <!--<artifactId>ehcache-jgroupsreplication</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.jgroups</groupId>-->
+            <!--<artifactId>jgroups</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

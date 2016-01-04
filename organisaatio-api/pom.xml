@@ -39,7 +39,7 @@ Union Public Licence for more details. -->
         <dependency>
             <groupId>com.wordnik</groupId>
             <artifactId>swagger-annotations_2.10</artifactId>
-            <version>${swagger.version}</version>
+            <version>${swagger.annotations.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
