@@ -43,9 +43,9 @@
         <springockito.version>1.0.9</springockito.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
-        <spring.version>3.1.3.RELEASE</spring.version>
+        <spring.version>3.2.16.RELEASE</spring.version>
         <!--<spring.version>4.2.4.RELEASE</spring.version>-->
-        <spring.security.version>3.1.3.RELEASE</spring.security.version>
+        <spring.security.version>3.1.7.RELEASE</spring.security.version>
         <!--<hibernate.version>4.1.0.Final</hibernate.version>-->
         <hibernate.version>4.2.21.Final</hibernate.version>
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
