@@ -89,9 +89,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Date time = new Date();
         simpleJdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
                 childId, parentId, time);
+//        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
+//                new Object[] {childId, parentId, time});
         // End old organisaatiosuhde
-        simpleJdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?",
-                time, 3);
+//        jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
+        simpleJdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", time, 3);
 
         Assert.assertEquals("Row count should match!", 9, countRowsInTable("organisaatiosuhde"));
 
@@ -116,7 +118,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertChildCountFromIndex(oldParentOid, 1);
         assertChildCountFromIndex(newParentOid, 1);
     }
-
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioDAO.findByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());

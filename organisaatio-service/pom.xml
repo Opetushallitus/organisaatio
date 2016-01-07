@@ -72,7 +72,7 @@
             <plugin>
                 <groupId>de.smartics.maven.plugin</groupId>
                 <artifactId>hibernate4-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <version>0.2.0</version>
                 <executions>
                     <execution>
                         <id>export</id>
@@ -340,7 +340,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.version}</version>
+            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
