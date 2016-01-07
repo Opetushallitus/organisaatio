@@ -30,7 +30,7 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.kubek2k.springockito.annotations.ReplaceWithMock;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;

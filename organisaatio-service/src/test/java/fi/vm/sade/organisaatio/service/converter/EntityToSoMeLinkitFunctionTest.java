@@ -17,7 +17,7 @@ package fi.vm.sade.organisaatio.service.converter;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
