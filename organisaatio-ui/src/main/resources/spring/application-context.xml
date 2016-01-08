@@ -26,7 +26,10 @@
     </bean>
 
     <mvc:annotation-driven content-negotiation-manager="contenNegotiationManager"/>
+    <!-- Fix mvc on spring 3.2 update. -->
     <bean id="contenNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <!-- Turn off working out content type based on URL file extension,
+        should fall back to looking at the Accept headers -->
         <property name="favorPathExtension" value="false" />
     </bean>
     <context:annotation-config />
