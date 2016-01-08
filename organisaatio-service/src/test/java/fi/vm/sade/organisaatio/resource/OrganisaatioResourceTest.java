@@ -11,7 +11,7 @@ import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;

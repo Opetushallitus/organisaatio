@@ -2,7 +2,7 @@ package fi.vm.sade.organisaatio.helper;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

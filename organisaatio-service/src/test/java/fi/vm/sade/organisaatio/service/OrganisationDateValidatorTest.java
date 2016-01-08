@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map.Entry;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
