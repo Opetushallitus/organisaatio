@@ -11,6 +11,6 @@
     {"name": "organisaatio-ui",
       "uses": "cas ldap authentication-rest organisaatio-rest koodisto-rest lokalisointi-rest"},
     {"name": "koulutustarjoajaPublicService",
-    "uses": ""}
+    "uses": "organisaatio-postgres"}
   ]
 }
