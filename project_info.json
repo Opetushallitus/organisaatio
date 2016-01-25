@@ -4,9 +4,13 @@
   "Makefile": "no",
 
   "projects": [
-    {"name": "organisaatio-soap", "uses": "organisaatio-postgres"},
-    {"name": "organisaatio-rest", "uses": "organisaatio-solr organisaatio-postgres rajapinnat log oid authentication-rest koodisto-rest tarjonta-rest"},
-    {"name": "organisaatio-solr",   "uses": "organisaatio-postgres"},
-    {"name": "organisaatio-ui", "uses": "cas ldap authentication-rest organisaatio-rest koodisto-rest lokalisointi-rest"}
+    {"name": "organisaatio-soap",
+      "uses": "organisaatio-postgres oid-soap"},
+    {"name": "organisaatio-rest",
+      "uses": "organisaatio-solr organisaatio-postgres authentication-rest koodisto-rest tarjonta-rest"},
+    {"name": "organisaatio-ui",
+      "uses": "cas ldap authentication-rest organisaatio-rest koodisto-rest lokalisointi-rest"},
+    {"name": "koulutustarjoajaPublicService",
+    "uses": ""}
   ]
 }
