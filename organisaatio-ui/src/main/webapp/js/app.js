@@ -27,13 +27,6 @@ var app = angular.module('organisaatio',
     'ngCookies',
     'ngIdle']);
 
-app.run(function($http, $cookies) {
-    $http.defaults.headers.common['Caller-Id'] = "organisaatio.organisaatio-ui.frontend";
-    if($cookies['CSRF']) {
-        $http.defaults.headers.common['X-CSRF'] = $cookies['CSRF'];
-    }
-});
-
 app.filter('fixHttpLink',function () {
     return function (text) {
         var proto = text.split("://");
@@ -118,10 +111,15 @@ app.config(function(datepickerConfig) {
     datepickerConfig.startingDay = 1;
 });
 
-app.run(function(OrganisaatioInitAuth, UserInfo) {
+app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
+
+    $http.defaults.headers.common['Caller-Id'] = "organisaatio.organisaatio-ui.frontend";
+    if($cookies['CSRF']) {
+        $http.defaults.headers.common['X-CSRF'] = $cookies['CSRF'];
+    }
 });
 
 app.run(function($http, $cookies) {
@@ -382,7 +380,7 @@ app.factory('OrganisaatiotFlat', function($resource) {
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/auth
 app.factory('OrganisaatioAuthGET', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
-        get: {method:   "GET"}
+        get: {method: "GET"}
     });
 });
 
@@ -390,7 +388,7 @@ app.factory('OrganisaatioAuthGET', function($resource) {
 // Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
 app.factory('KoodistoPaikkakunnat', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/kunta/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -398,7 +396,7 @@ return $resource(KOODISTO_URL_BASE + "json/kunta/koodi?onlyValidKoodis=true", {}
 // Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
 app.factory('KoodistoPaikkakunta', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/kunta/koodi/:uri", {uri: "@uri"}, {
-    get: {method: "GET"}
+    get: {method: "GET", withCredentials : true}
   });
 });
 
@@ -406,7 +404,7 @@ return $resource(KOODISTO_URL_BASE + "json/kunta/koodi/:uri", {uri: "@uri"}, {
 // Esim: https://localhost:8503/koodisto-service/rest/json/organisaatiotyyppi/koodi
 app.factory('KoodistoOrganisaatiotyypit', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/organisaatiotyyppi/koodi", {}, {
-        get: {method: "GET", isArray: true}
+        get: {method: "GET", withCredentials : true, isArray: true}
     });
 });
 
@@ -414,7 +412,7 @@ app.factory('KoodistoOrganisaatiotyypit', function($resource) {
 // Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitostyyppi/koodi
 app.factory('KoodistoOppilaitostyypit', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/oppilaitostyyppi/koodi", {}, {
-        get: {method: "GET", isArray: true}
+        get: {method: "GET", withCredentials : true, isArray: true}
     });
 });
 
@@ -422,7 +420,7 @@ app.factory('KoodistoOppilaitostyypit', function($resource) {
 // Esim. http://localhost:8081/koodisto-service/rest/json/searchKoodis?koodiUris=posti_52200&koodiUris=maatjavaltiot1_fin
 app.factory('KoodistoSearchKoodis', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/searchKoodis?:uris", {params: "@uris"}, {
-        get: {method: "GET", isArray: true}
+        get: {method: "GET", withCredentials : true, isArray: true}
     });
 });
 
@@ -430,7 +428,7 @@ app.factory('KoodistoSearchKoodis', function($resource) {
 // Esim: https://localhost:8503/koodisto-service/rest/json/maatjavaltiot1/koodi
 app.factory('KoodistoMaat', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -438,7 +436,7 @@ return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=
 // Esim: https://localhost:8503/koodisto-service/rest/json/kieli/koodi
 app.factory('KoodistoKieli', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/kieli/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -446,7 +444,7 @@ return $resource(KOODISTO_URL_BASE + "json/kieli/koodi?onlyValidKoodis=true", {}
 // Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitoksenopetuskieli/koodi
 app.factory('KoodistoOpetuskielet', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -454,7 +452,7 @@ return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyVa
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
 app.factory('YTJYritysTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/:ytunnus", {ytunnus: "@ytunnus"}, {}, {
-        get: {method: 'GET'}
+        get: {method: 'GET', withCredentials : true}
     });
 });
 
@@ -462,7 +460,7 @@ app.factory('YTJYritysTiedot', function($resource) {
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/hae?nimi=yliopiston
 app.factory('YTJYritystenTiedot', function($resource) {
     return $resource(SERVICE_URL_BASE + "ytj/hae", {}, {
-        get: {method: 'GET', isArray: true}
+        get: {method: 'GET', withCredentials : true, isArray: true}
     });
 });
 
@@ -470,7 +468,7 @@ app.factory('YTJYritystenTiedot', function($resource) {
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti
 app.factory('KoodistoPostiVersio', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti", {}, {
-    get: {method: "GET"}
+    get: {method: "GET", withCredentials : true}
   });
 });
 
@@ -478,7 +476,7 @@ return $resource(KOODISTO_URL_BASE + "json/posti", {}, {
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
 app.factory('KoodistoPosti', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -486,7 +484,7 @@ return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
 // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
 app.factory('KoodistoPostiCached', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -494,7 +492,7 @@ return $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
 // Esim: https://localhost:8503/koodisto-service/rest/json/vuosiluokat/koodi
 app.factory('KoodistoVuosiluokat', function($resource) {
 return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
-    get: {method: "GET", isArray: true}
+    get: {method: "GET", withCredentials : true, isArray: true}
   });
 });
 
@@ -502,7 +500,7 @@ return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
 // Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
 app.factory('Yhteystietojentyyppi', function($resource) {
     return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
-        get: {method: 'GET', isArray: true},
+        get: {method: 'GET',isArray: true},
         post: {method: 'POST'},
         put: {method: 'PUT'}
     });
@@ -519,7 +517,7 @@ app.factory('YhteystietojentyypinPoisto', function($resource) {
 // Esim. https://localhost:8508/authentication-service/resources/henkilo?count=200&ht=VIRKAILIJA&index=0&org=1.2.246.562.10.67019405611
 app.factory('HenkiloVirkailijat', function($resource) {
     return $resource(AUTHENTICATION_URL_BASE + "henkilo?count=200&ht=VIRKAILIJA&index=0&org=:oid", { oid: "@oid"}, {
-        get: {method: 'GET'}
+        get: {method: 'GET', withCredentials : true}
     });
 });
 
@@ -527,7 +525,7 @@ app.factory('HenkiloVirkailijat', function($resource) {
 // Esim. https://localhost:8508/authentication-service/resources/henkilo/1.2.246.562.24.91121139885
 app.factory('Henkilo', function($resource) {
     return $resource(AUTHENTICATION_URL_BASE + "henkilo/:hlooid", { hlooid: "@hlooid"}, {
-        get: {method: 'GET'}
+        get: {method: 'GET', withCredentials : true}
     });
 });
 
@@ -535,7 +533,7 @@ app.factory('Henkilo', function($resource) {
 // Esim. https://localhost:8508/authentication-service/resources/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
 app.factory('HenkiloKayttooikeus', function($resource) {
     return $resource(AUTHENTICATION_URL_BASE + "kayttooikeusryhma/henkilo/:hlooid?ooid=:orgoid", { hlooid: "@hlooid", orgoid: "@orgoid"}, {
-        get: {method: 'GET', isArray: true}
+        get: {method: 'GET', withCredentials : true, isArray: true}
     });
 });
 
@@ -577,7 +575,7 @@ app.factory('Muokkaamonta', function($resource) {
 // Koodiston haku koodistopalvelulta koodistoUrin perusteella
 app.factory('KoodistoArrayByUri', function($resource) {
     return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
-        get: {method: "GET", isArray: true}
+        get: {method: "GET", withCredentials : true, isArray: true}
     });
 });
 
