@@ -27,6 +27,12 @@ var app = angular.module('organisaatio',
     'ngCookies',
     'ngIdle']);
 
+app.run(function($http, $cookies) {
+    $http.defaults.headers.common['Caller-Id'] = "organisaatio.organisaatio-ui.frontend";
+    if($cookies['CSRF']) {
+        $http.defaults.headers.common['X-CSRF'] = $cookies['CSRF'];
+    }
+});
 
 app.filter('fixHttpLink',function () {
     return function (text) {
