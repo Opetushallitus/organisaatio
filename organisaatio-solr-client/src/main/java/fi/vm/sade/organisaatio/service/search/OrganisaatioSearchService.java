@@ -149,22 +149,20 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             if (organisaatioTyyppi != null && organisaatioTyyppi.length() > 0) {
                 final Set<String> limitToTypes = orgTypeLimit
                         .get(organisaatioTyyppi);
-                q.addFilterQuery(String.format("%s:(%s)", ORGANISAATIOTYYPPI,
-                        Joiner.on(" ").join(limitToTypes)));
+                addFilterQuery(q, "%s:(%s)", ORGANISAATIOTYYPPI, limitToTypes);
             }
 
             // restrictions
             if (restrictionList.size() > 0) {
                 // filter based on restriction list
-                q.addFilterQuery(String.format("%s:(%s)", PATH, Joiner.on(" ")
-                        .join(restrictionList)));
+                addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
             }
 
-            String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(oids));
+            String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(escapeAll(oids)));
             if (paths.size() > 0) {
                 query = query
                         + String.format(" %s:(%s)", PATH,
-                                Joiner.on(" ").join(paths));
+                                Joiner.on(" ").join(escapeAll(paths)));
             }
             q.setQuery(query);
             q.setRows(10000);
@@ -232,8 +230,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         if (kieli != null 
                 && kieli.size() > 0) {
             // filter based on kieli list
-            q.addFilterQuery(String.format("%s:(%s)", KIELI, Joiner.on(" ")
-                    .join(escapeAll(kieli))));
+            addFilterQuery(q, "%s:(%s)", KIELI, kieli);
         }
 
         if (restrictionList.size() > 0) {
@@ -246,6 +243,11 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     }
 
     private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams) {
+        query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
+                .join(escapeAll(queryParams))));
+    }
+
+    private void addFilterQuery(SolrQuery query, String template, String paramName, Set<String> queryParams) {
         query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
                 .join(escapeAll(queryParams))));
     }
@@ -269,7 +271,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     }
 
     private String escape(String searchStr) {
-        searchStr = ClientUtils.escapeQueryChars(searchStr);
+        searchStr = null == searchStr ? searchStr : ClientUtils.escapeQueryChars(searchStr);
         return searchStr;
     }
 
