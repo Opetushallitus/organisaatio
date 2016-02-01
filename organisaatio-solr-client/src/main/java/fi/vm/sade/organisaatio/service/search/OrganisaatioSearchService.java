@@ -207,14 +207,16 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         addDateFilters(searchCriteria, q);
 
+        removeEmptyEntries(searchCriteria.getOppilaitosTyyppi());
         if (searchCriteria.getOppilaitosTyyppi() != null 
                 && searchCriteria.getOppilaitosTyyppi().size() > 0) {
             // filter based on oppilaitosTyyppi list
             addFilterQuery(q, "%s:(%s)", OPPILAITOSTYYPPI, searchCriteria.getOppilaitosTyyppi());
         }
 
+        removeEmptyEntries(kunta);
         // kunta
-        if (kunta != null 
+        if (kunta != null
                 && kunta.size() > 0) {
             // filter based on kunta list
             addFilterQuery(q, "+%s:(%s)", KUNTA, kunta);
@@ -226,13 +228,16 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         if (queryParts.size() > 0) {
             q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
+
+        removeEmptyEntries(kieli);
         // kieli
-        if (kieli != null 
+        if (kieli != null
                 && kieli.size() > 0) {
             // filter based on kieli list
             addFilterQuery(q, "%s:(%s)", KIELI, kieli);
         }
 
+        removeEmptyEntries(restrictionList);
         if (restrictionList.size() > 0) {
             // filter based on restriction list
             addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
@@ -240,6 +245,12 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         // also filter out oph (TODO do not index oph)
         q.addFilterQuery(String.format("-%s:%s", OID, escape(rootOrganisaatioOid)));
         return q;
+    }
+
+    private void removeEmptyEntries(List<String> queryParams) {
+        if(null != queryParams) {
+            queryParams.removeAll(Arrays.asList(null, ""));
+        }
     }
 
     private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams) {
