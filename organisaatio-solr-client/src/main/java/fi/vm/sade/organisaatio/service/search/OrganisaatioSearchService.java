@@ -15,10 +15,7 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
@@ -152,22 +149,20 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             if (organisaatioTyyppi != null && organisaatioTyyppi.length() > 0) {
                 final Set<String> limitToTypes = orgTypeLimit
                         .get(organisaatioTyyppi);
-                q.addFilterQuery(String.format("%s:(%s)", ORGANISAATIOTYYPPI,
-                        Joiner.on(" ").join(limitToTypes)));
+                addFilterQuery(q, "%s:(%s)", ORGANISAATIOTYYPPI, limitToTypes);
             }
 
             // restrictions
             if (restrictionList.size() > 0) {
                 // filter based on restriction list
-                q.addFilterQuery(String.format("%s:(%s)", PATH, Joiner.on(" ")
-                        .join(restrictionList)));
+                addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
             }
 
-            String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(oids));
+            String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(escapeAll(oids)));
             if (paths.size() > 0) {
                 query = query
                         + String.format(" %s:(%s)", PATH,
-                                Joiner.on(" ").join(paths));
+                                Joiner.on(" ").join(escapeAll(paths)));
             }
             q.setQuery(query);
             q.setRows(10000);
@@ -199,7 +194,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final List<String> queryParts = Lists.newArrayList();
 
         if (oid != null && !oid.isEmpty()) {
-            q.addFilterQuery(String.format("%s:%s", OID, oid));
+            q.addFilterQuery(String.format("%s:%s", OID, escape(oid)));
         } else if (searchStr != null && searchStr.length() > 0) {
             // nimi
             searchStr = escape(searchStr);
@@ -212,47 +207,82 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         addDateFilters(searchCriteria, q);
 
+        removeEmptyEntries(searchCriteria.getOppilaitosTyyppi());
         if (searchCriteria.getOppilaitosTyyppi() != null 
                 && searchCriteria.getOppilaitosTyyppi().size() > 0) {
             // filter based on oppilaitosTyyppi list
-            q.addFilterQuery(String.format("%s:(%s)", OPPILAITOSTYYPPI, Joiner.on(" ")
-                    .join(searchCriteria.getOppilaitosTyyppi())));
+            addFilterQuery(q, "%s:(%s)", OPPILAITOSTYYPPI, searchCriteria.getOppilaitosTyyppi());
         }
 
+        removeEmptyEntries(kunta);
         // kunta
-        if (kunta != null 
+        if (kunta != null
                 && kunta.size() > 0) {
             // filter based on kunta list
-            q.addFilterQuery(String.format("+%s:(%s)", KUNTA, Joiner.on(" ")
-                    .join(kunta)));
+            addFilterQuery(q, "+%s:(%s)", KUNTA, kunta);
         }
         // organisaatiotyyppi
         queryParts.clear();
         addQuery(organisaatioTyyppi, queryParts, "{!term f=%s}%s", ORGANISAATIOTYYPPI,
-                organisaatioTyyppi);
+                escape(organisaatioTyyppi));
         if (queryParts.size() > 0) {
             q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
+
+        removeEmptyEntries(kieli);
         // kieli
-        if (kieli != null 
+        if (kieli != null
                 && kieli.size() > 0) {
             // filter based on kieli list
-            q.addFilterQuery(String.format("%s:(%s)", KIELI, Joiner.on(" ")
-                    .join(kieli)));
+            addFilterQuery(q, "%s:(%s)", KIELI, kieli);
         }
 
+        removeEmptyEntries(restrictionList);
         if (restrictionList.size() > 0) {
             // filter based on restriction list
-            q.addFilterQuery(String.format("%s:(%s)", PATH, Joiner.on(" ")
-                    .join(restrictionList)));
+            addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
         }
         // also filter out oph (TODO do not index oph)
-        q.addFilterQuery(String.format("-%s:%s", OID, rootOrganisaatioOid));
+        q.addFilterQuery(String.format("-%s:%s", OID, escape(rootOrganisaatioOid)));
         return q;
     }
 
+    private void removeEmptyEntries(List<String> queryParams) {
+        if(null != queryParams) {
+            queryParams.removeAll(Arrays.asList(null, ""));
+        }
+    }
+
+    private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams) {
+        query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
+                .join(escapeAll(queryParams))));
+    }
+
+    private void addFilterQuery(SolrQuery query, String template, String paramName, Set<String> queryParams) {
+        query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
+                .join(escapeAll(queryParams))));
+    }
+
+    private List<String> escapeAll(List<String> queryParams) {
+        List<String> escaped = new ArrayList<>(queryParams.size());
+        for (String param : queryParams) {
+            escaped.add(escape(param));
+            LOG.debug("Escaped {} = {}", param, escape(param));
+        }
+        return escaped;
+    }
+
+    private Set<String> escapeAll(Set<String> queryParams) {
+        Set<String> escaped = new HashSet<>(queryParams.size());
+        for (String param : queryParams) {
+            escaped.add(escape(param));
+            LOG.debug("Escaped {} = {}", param, escape(param));
+        }
+        return escaped;
+    }
+
     private String escape(String searchStr) {
-        searchStr = ClientUtils.escapeQueryChars(searchStr);
+        searchStr = null == searchStr ? searchStr : ClientUtils.escapeQueryChars(searchStr);
         return searchStr;
     }
 
@@ -326,7 +356,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             return Collections.EMPTY_LIST;
         }
 
-        SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":(%s)", Joiner.on(" ").join(organisationOids)));
+        SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":(%s)", Joiner.on(" ").join(escapeAll(organisationOids))));
         q.setRows(organisationOids.size());
 
         final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
@@ -342,7 +372,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     }
 
     public List<String> findParentOids(String organisationOid) {
-        final SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":%s", organisationOid));
+        final SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":%s", escape(organisationOid)));
         q.setFields(SolrOrgFields.PATH);
         final List<String> oids = Lists.newArrayList();
 
