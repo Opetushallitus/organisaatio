@@ -120,13 +120,9 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
 
 app.run(function($http, $cookies) {
     $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
-    $http.defaults.headers.common['testCookie'] = "apo";
-    $http.defaults.headers.common['TESTTEST'] = "apo2";
-    console.log("before csrf", $http.defaults.headers.common, $cookies['CSRF'])
-    if($cookies['CSRF']) {
+    if($cookies.get('CSRF')) {
         $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF');
     }
-    console.log("after csrf", $http.defaults.headers.common)
 });
 
 ////////////
