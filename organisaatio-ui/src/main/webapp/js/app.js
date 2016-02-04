@@ -118,6 +118,13 @@ app.run(function(OrganisaatioInitAuth, UserInfo) {
     OrganisaatioInitAuth.init();
 });
 
+app.run(function($http, $cookies) {
+    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
+    if($cookies['CSRF']) {
+        $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
+    }
+});
+
 ////////////
 //
 // Services
