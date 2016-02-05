@@ -105,10 +105,10 @@
 
     <dependencies>
 
-	<dependency>
-                <groupId>org.jasig.cas.client</groupId>
-                <artifactId>cas-client-support-distributed-ehcache</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-support-distributed-ehcache</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
@@ -216,6 +216,12 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
             <version>2.5.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-web</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -238,18 +244,21 @@
             <version>2.5.1</version>
         </dependency>
 
-
         <!-- Tapahtumalogi -->
+        <!--<dependency>-->
+            <!--<groupId>fi.vm.sade.log</groupId>-->
+            <!--<artifactId>log-client</artifactId>-->
+            <!--<version>${log.client.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>slf4j-log4j12</artifactId>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>fi.vm.sade.log</groupId>
-            <artifactId>log-client</artifactId>
-            <version>${log.client.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>fi.vm.sade</groupId>
+            <artifactId>auditlogger</artifactId>
         </dependency>
 
         <!-- Solr indeksointia ja testejä varten -->
@@ -305,6 +314,16 @@
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-events</artifactId>
             <version>${generic.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-aspects</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-jms</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -340,6 +359,16 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -382,6 +411,18 @@
                 <exclusion>
                     <groupId>net.sf.ehcache</groupId>
                     <artifactId>ehcache-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-orm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.ldap</groupId>
+                    <artifactId>spring-ldap-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -507,6 +548,12 @@
             <groupId>fi.vm.sade.rajapinnat</groupId>
             <artifactId>kela-opti</artifactId>
             <version>${rajapinnat.ytj.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aspects</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Koodisto -->

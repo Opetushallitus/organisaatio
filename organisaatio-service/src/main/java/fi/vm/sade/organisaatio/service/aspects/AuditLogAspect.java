@@ -16,8 +16,8 @@ package fi.vm.sade.organisaatio.service.aspects;/*
  */
 
 
-import fi.vm.sade.log.client.LoggerHelper;
-import fi.vm.sade.log.model.Tapahtuma;
+//import fi.vm.sade.log.client.LoggerHelper;
+//import fi.vm.sade.log.model.Tapahtuma;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import java.util.Date;
 import org.aspectj.lang.JoinPoint;
@@ -43,11 +43,11 @@ public class AuditLogAspect {
     public static final int OPERATION_TYPE_UPDATE = 2;
     public static final int OPERATION_TYPE_DELETE = 3;
 
-    @Autowired(required = true)
-    private fi.vm.sade.log.client.Logger auditLogger;
+//    @Autowired(required = true)
+//    private fi.vm.sade.log.client.Logger auditLogger;
 
     private void init() {
-        LoggerHelper.init(auditLogger);
+//        LoggerHelper.init(auditLogger);
     }
 
     @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.updateOrganisaatio(..))")
@@ -77,43 +77,43 @@ public class AuditLogAspect {
         return result;
     }
 
-    private void logAuditTapahtuma(Tapahtuma tapahtuma) {
-        LoggerHelper.log();
-    }
+//    private void logAuditTapahtuma(Tapahtuma tapahtuma) {
+//        LoggerHelper.log();
+//    }
 
-    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO organisaatio, int tapahtumaTyyppi) {
-        // TODO organisation changes are not tracked
-        return constructOrganisaatioTapahtuma(organisaatio != null ? organisaatio.getOid() : null, tapahtumaTyyppi);
-    }
+//    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO organisaatio, int tapahtumaTyyppi) {
+//        // TODO organisation changes are not tracked
+//        return constructOrganisaatioTapahtuma(organisaatio != null ? organisaatio.getOid() : null, tapahtumaTyyppi);
+//    }
 
-    private Tapahtuma constructOrganisaatioTapahtuma(String orgOid, int tapahtumaTyyppi) {
-        String user = getTekija();
-
-        String target = orgOid;
-
-        Tapahtuma t = LoggerHelper.getAuditRootTapahtuma();
-
-//        t.setHost(user);
-        t.setSystem(SYSTEM);
-        t.setTarget(target);
-        t.setTargetType(TARGET_TYPE);
-        t.setTimestamp(new Date());
-        t.setType("???");
-        t.setUser(user);
-        t.setUserActsForUser(null);
-
-        if (tapahtumaTyyppi == OPERATION_TYPE_DELETE) {
-            t.setType("DELETE");
-        }
-        if (tapahtumaTyyppi == OPERATION_TYPE_INSERT) {
-            t.setType("INSERT");
-        }
-        if (tapahtumaTyyppi == OPERATION_TYPE_UPDATE) {
-            t.setType("UPDATE");
-        }
-
-        return t;
-    }
+//    private Tapahtuma constructOrganisaatioTapahtuma(String orgOid, int tapahtumaTyyppi) {
+//        String user = getTekija();
+//
+//        String target = orgOid;
+//
+//        Tapahtuma t = LoggerHelper.getAuditRootTapahtuma();
+//
+////        t.setHost(user);
+//        t.setSystem(SYSTEM);
+//        t.setTarget(target);
+//        t.setTargetType(TARGET_TYPE);
+//        t.setTimestamp(new Date());
+//        t.setType("???");
+//        t.setUser(user);
+//        t.setUserActsForUser(null);
+//
+//        if (tapahtumaTyyppi == OPERATION_TYPE_DELETE) {
+//            t.setType("DELETE");
+//        }
+//        if (tapahtumaTyyppi == OPERATION_TYPE_INSERT) {
+//            t.setType("INSERT");
+//        }
+//        if (tapahtumaTyyppi == OPERATION_TYPE_UPDATE) {
+//            t.setType("UPDATE");
+//        }
+//
+//        return t;
+//    }
 
     private String getTekija() {
         if (SecurityContextHolder.getContext() != null
@@ -125,16 +125,16 @@ public class AuditLogAspect {
         }
     }
 
-    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO org, int tapahtumaTyyppi, OrganisaatioDTO vanhaOrg) {
-        Tapahtuma t = constructOrganisaatioTapahtuma(org, tapahtumaTyyppi);
-
-        if (vanhaOrg != null) {
-            // TODO log field changes
-            // t.addValueChange("foo", "oldValue", "newValue");
-        }
-
-        return t;
-    }
+//    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO org, int tapahtumaTyyppi, OrganisaatioDTO vanhaOrg) {
+//        Tapahtuma t = constructOrganisaatioTapahtuma(org, tapahtumaTyyppi);
+//
+//        if (vanhaOrg != null) {
+//            // TODO log field changes
+//            // t.addValueChange("foo", "oldValue", "newValue");
+//        }
+//
+//        return t;
+//    }
 
     private void logAuditAdvice(JoinPoint pjp, Object result, int operationType) throws Throwable {
 
@@ -145,15 +145,15 @@ public class AuditLogAspect {
         switch (operationType) {
             case OPERATION_TYPE_INSERT:
                 if (org != null) {
-                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_INSERT));
+//                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_INSERT));
                 }
                 break;
             case OPERATION_TYPE_UPDATE:
                 if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof OrganisaatioDTO && org != null) {
-                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE, (OrganisaatioDTO) pjp.getArgs()[0]));
+//                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE, (OrganisaatioDTO) pjp.getArgs()[0]));
                 } else {
                     if (org != null) {
-                        logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE));
+//                        logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE));
                     }
                 }
                 break;
