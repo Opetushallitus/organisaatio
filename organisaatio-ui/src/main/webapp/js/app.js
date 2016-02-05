@@ -117,8 +117,8 @@ app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
     OrganisaatioInitAuth.init();
 
     $http.defaults.headers.common['Caller-Id'] = "organisaatio.organisaatio-ui.frontend";
-    if($cookies['CSRF']) {
-        $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
+    if($cookies.get('CSRF')) {
+        $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF');
     }
 });
 
