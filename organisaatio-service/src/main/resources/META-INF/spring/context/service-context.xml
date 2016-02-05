@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:cxf="http://cxf.apache.org/core"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
-        http://cxf.apache.org/core  http://cxf.apache.org/schemas/core.xsd
     ">
 
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
     <context:component-scan base-package="fi.vm.sade.security" />
-
-    <bean id="callerIdInterceptor" class="fi.vm.sade.generic.rest.CallerIdCxfInterceptor">
-        <property name="headerValue" value="organisaatio.organisaatio-service.backend"/>
-    </bean>
-
-    <cxf:bus>
-        <cxf:outInterceptors>
-            <ref bean="callerIdInterceptor"/>
-        </cxf:outInterceptors>
-    </cxf:bus>
 
     <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
 
