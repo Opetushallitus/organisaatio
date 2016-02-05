@@ -9,7 +9,7 @@
 
   "projects": [
     {"name": "organisaatio-soap",
-      "uses": "organisaatio-postgres oid-soap"},
+      "uses": "organisaatio-postgres"},
     {"name": "organisaatio-rest",
       "uses": "organisaatio-solr organisaatio-postgres authentication-rest koodisto-rest tarjonta-rest"},
     {"name": "organisaatio-ui",
