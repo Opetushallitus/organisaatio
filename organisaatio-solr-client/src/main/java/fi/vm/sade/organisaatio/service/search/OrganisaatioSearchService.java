@@ -115,6 +115,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             LOG.debug("Sending query: " + q.getQuery() + ", filters: " + Joiner.on(" ").join(q.getFilterQueries()));
             LOG.debug("Search matched {} results, fetching docs...", response
                     .getResults().getNumFound());
+
             if (response.getResults().getNumFound() == 0) {
                 // short circuit no results here
                 return Lists.newArrayList();
@@ -149,13 +150,14 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             if (organisaatioTyyppi != null && organisaatioTyyppi.length() > 0) {
                 final Set<String> limitToTypes = orgTypeLimit
                         .get(organisaatioTyyppi);
-                addFilterQuery(q, "%s:(%s)", ORGANISAATIOTYYPPI, limitToTypes);
+                q.addFilterQuery(String.format("%s:(%s)", ORGANISAATIOTYYPPI, Joiner.on(" ")
+                        .join(limitToTypes)));
             }
 
             // restrictions
             if (restrictionList.size() > 0) {
                 // filter based on restriction list
-                addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
+                addFilterQuery(q, "%s:(%s)", PATH, restrictionList, true);
             }
 
             String query = String.format("%s:(%s)", OID, Joiner.on(" ").join(escapeAll(oids)));
@@ -211,7 +213,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         if (searchCriteria.getOppilaitosTyyppi() != null 
                 && searchCriteria.getOppilaitosTyyppi().size() > 0) {
             // filter based on oppilaitosTyyppi list
-            addFilterQuery(q, "%s:(%s)", OPPILAITOSTYYPPI, searchCriteria.getOppilaitosTyyppi());
+            addFilterQuery(q, "%s:(%s)", OPPILAITOSTYYPPI, searchCriteria.getOppilaitosTyyppi(), true);
         }
 
         removeEmptyEntries(kunta);
@@ -223,8 +225,8 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         }
         // organisaatiotyyppi
         queryParts.clear();
-        addQuery(organisaatioTyyppi, queryParts, "{!term f=%s}%s", ORGANISAATIOTYYPPI,
-                escape(organisaatioTyyppi));
+        //No escaping is needed with term query parser - handling of search terms with white spaces will break, if escaping is added
+        addQuery(organisaatioTyyppi, queryParts, "{!term f=%s}%s", ORGANISAATIOTYYPPI, organisaatioTyyppi);
         if (queryParts.size() > 0) {
             q.addFilterQuery(Joiner.on(" ").join(queryParts));
         }
@@ -240,7 +242,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         removeEmptyEntries(restrictionList);
         if (restrictionList.size() > 0) {
             // filter based on restriction list
-            addFilterQuery(q, "%s:(%s)", PATH, restrictionList);
+            addFilterQuery(q, "%s:(%s)", PATH, restrictionList, true);
         }
         // also filter out oph (TODO do not index oph)
         q.addFilterQuery(String.format("-%s:%s", OID, escape(rootOrganisaatioOid)));
@@ -254,31 +256,30 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     }
 
     private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams) {
+        addFilterQuery(query, template, paramName, queryParams, false);
+    }
+
+    private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams, boolean allowWildcards) {
         query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
-                .join(escapeAll(queryParams))));
+                .join(escapeAll(queryParams, allowWildcards))));
     }
 
-    private void addFilterQuery(SolrQuery query, String template, String paramName, Set<String> queryParams) {
-        query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
-                .join(escapeAll(queryParams))));
+    private Set<String> escapeAll(Collection<String> queryParams) {
+        return escapeAll(queryParams, false);
     }
 
-    private List<String> escapeAll(List<String> queryParams) {
-        List<String> escaped = new ArrayList<>(queryParams.size());
-        for (String param : queryParams) {
-            escaped.add(escape(param));
-            LOG.debug("Escaped {} = {}", param, escape(param));
-        }
-        return escaped;
-    }
-
-    private Set<String> escapeAll(Set<String> queryParams) {
+    private Set<String> escapeAll(Collection<String> queryParams, boolean allowWildcards) {
         Set<String> escaped = new HashSet<>(queryParams.size());
         for (String param : queryParams) {
-            escaped.add(escape(param));
-            LOG.debug("Escaped {} = {}", param, escape(param));
+            String escapedParam = allowWildcards ? escapeButAllowWildcard(param) : escape(param);
+            escaped.add(escapedParam);
         }
         return escaped;
+    }
+
+    private String escapeButAllowWildcard(String searchStr) {
+        searchStr = escape(searchStr);
+        return searchStr.replace("\\*", "*");
     }
 
     private String escape(String searchStr) {
