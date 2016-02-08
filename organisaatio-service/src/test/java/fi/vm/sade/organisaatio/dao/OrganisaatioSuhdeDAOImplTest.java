@@ -1,8 +1,5 @@
 package fi.vm.sade.organisaatio.dao;
 
-//import fi.vm.sade.log.client.LoggerHelper;
-//import fi.vm.sade.log.client.LoggerMock;
-//import fi.vm.sade.log.model.Tapahtuma;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
@@ -45,25 +42,6 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
 
     @Autowired
     OrganisaatioDAOImpl organisaatioDAO;
-
-//    @Before
-//    public void onBefore() {
-//        LoggerHelper.init(new LoggerMock());
-//    }
-
-//    @After
-//    public void onAfter() {
-//        Tapahtuma t = LoggerHelper.getAuditRootTapahtuma();
-//        t.setHost("NA");
-//        t.setSystem("NA");
-//        t.setTarget("NA");
-//        t.setTargetType("NA");
-//        t.setType("NA");
-//        t.setUser("NA");
-//        t.setUserActsForUser("NA");
-//
-//        LoggerHelper.log();
-//    }
 
     @Test
     public void doTest() {

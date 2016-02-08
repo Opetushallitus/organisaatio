@@ -52,5 +52,4 @@
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
     <import resource="classpath:META-INF/spring/context/ws-context.xml" />
-    <!--<import resource="classpath:/META-INF/spring/logger-context.xml"/>-->
 </beans>

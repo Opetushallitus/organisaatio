@@ -154,8 +154,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     /**
      * false == ei poistettu
-     * null == poistettu
-     *  - huom. true ei sallittu
+     * true == poistettu
      */
     @Column(nullable=true)
     private Boolean organisaatioPoistettu = false;

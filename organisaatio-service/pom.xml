@@ -244,18 +244,7 @@
             <version>2.5.1</version>
         </dependency>
 
-        <!-- Tapahtumalogi -->
-        <!--<dependency>-->
-            <!--<groupId>fi.vm.sade.log</groupId>-->
-            <!--<artifactId>log-client</artifactId>-->
-            <!--<version>${log.client.version}</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<artifactId>slf4j-log4j12</artifactId>-->
-                    <!--<groupId>org.slf4j</groupId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
+        <!-- Auditlogi -->
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>auditlogger</artifactId>

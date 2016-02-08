@@ -20,7 +20,4 @@
 
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
-    <!--<import resource="classpath:/META-INF/spring/logger-mock-context.xml"/>-->
-
-    <!--<bean id="auditLogger" class="fi.vm.sade.log.client.LoggerMock"/>-->
 </beans>
