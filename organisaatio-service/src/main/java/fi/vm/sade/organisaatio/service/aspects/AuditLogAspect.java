@@ -22,10 +22,12 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import java.util.Date;
 
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.restlet.resource.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -91,9 +93,9 @@ public class AuditLogAspect {
     private void logAuditAdvice(JoinPoint pjp, Object result, OrganisaatioOperation operationType) throws Throwable {
         LogMessage logMessage;
 
-        OrganisaatioRDTO org = null;
-        if (result instanceof OrganisaatioRDTO) {
-            org = (OrganisaatioRDTO) result;
+        ResultRDTO org = null;
+        if (result != null && result instanceof ResultRDTO) {
+            org = (ResultRDTO) result;
         }
         switch (operationType) {
             case ORG_UPDATE:
