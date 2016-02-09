@@ -45,12 +45,36 @@ public class AuditLogAspect {
 
     public static final String serviceName = "Organisaatio-Service";
     public Audit audit = new Audit(serviceName, ApplicationType.VIRKAILIJA);
+// TODO: delete when done.
+//            case OPERATION_TYPE_UPDATE:
+//                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof OrganisaatioDTO && org != null) {
+////                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE, (OrganisaatioDTO) pjp.getArgs()[0]));
+//                } else {
+//                    if (org != null) {
+////                        logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE));
+//                    }
+//                }
+//                break;
+//            case OPERATION_TYPE_DELETE:
+////                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof RemoveByOidType) {
+////                    String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
+////                    logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
+////                } else {
+////                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+////                }
+//                break;
 
     // POST /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
     private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_UPDATE);
+        if (result instanceof ResultRDTO) {
+            LogMessage logMessage;
+            ResultRDTO org = (ResultRDTO) result;
+            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).
+                    oidList(org.getOrganisaatio().getOid()).build();
+            audit.log(logMessage);
+        }
         return result;
     }
 
@@ -58,10 +82,17 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
+        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
+            LogMessage logMessage;
+            String oid = ((String) pjp.getArgs()[0]);
+            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).oidList(oid).build();
+            audit.log(logMessage);
+        } else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+        }
         logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_DELETE);
         return result;
     }
-
     // PUT /organisaatio/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
@@ -155,41 +186,6 @@ public class AuditLogAspect {
             return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         } else {
             return null;
-        }
-    }
-
-    private void logAuditAdvice(JoinPoint pjp, Object result, OrganisaatioOperation operationType) throws Throwable {
-        LogMessage logMessage;
-
-        ResultRDTO org = null;
-        if (result instanceof ResultRDTO) {
-            org = (ResultRDTO) result;
-        }
-        switch (operationType) {
-            case ORG_UPDATE:
-                if (org != null) {
-
-                    logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).build();
-                    audit.log(logMessage);
-                }
-                break;
-//            case OPERATION_TYPE_UPDATE:
-//                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof OrganisaatioDTO && org != null) {
-////                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE, (OrganisaatioDTO) pjp.getArgs()[0]));
-//                } else {
-//                    if (org != null) {
-////                        logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE));
-//                    }
-//                }
-//                break;
-//            case OPERATION_TYPE_DELETE:
-////                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof RemoveByOidType) {
-////                    String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
-////                    logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
-////                } else {
-////                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
-////                }
-//                break;
         }
     }
 }
