@@ -54,11 +54,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
     private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-        if (result instanceof ResultRDTO) {
-            ResultRDTO org = (ResultRDTO) result;
-            LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).
-                    oidList(org.getOrganisaatio().getOid()).build();
+        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
+            String oid = ((String) pjp.getArgs()[0]);
+            LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).oidList(oid).build();
             audit.log(logMessage);
+        }
+        else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgAdvice");
         }
         return result;
     }
@@ -73,7 +75,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteOrgAdvice");
         }
         return result;
     }
@@ -87,6 +89,9 @@ public class AuditLogAspect {
                     .oidList(organisaatioRDTO.getOid()).build();
             audit.log(logMessage);
         }
+        else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect newOrgAdvice");
+        }
         return result;
     }
     // POST /yhteystietojentyyppi/
@@ -99,6 +104,9 @@ public class AuditLogAspect {
                     .oidList(yhteystietojenTyyppiDTO.getOid()).build();
             audit.log(logMessage);
         }
+        else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateYhtAdvice");
+        }
         return result;
     }
     // PUT /yhteystietojentyyppi/
@@ -110,6 +118,9 @@ public class AuditLogAspect {
             LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_CREATE)
                     .oidList(yhteystietojenTyyppiDTO.getOid()).build();
             audit.log(logMessage);
+        }
+        else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect newYhtAdvice");
         }
         return result;
     }
@@ -124,7 +135,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteYhtAdvice");
         }
         return result;
     }
@@ -139,7 +150,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect put");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect createOrgNimiAdvice");
         }
         return result;
     }
@@ -154,6 +165,9 @@ public class AuditLogAspect {
                     oidList(organisaatioMuokkausTulosListaDTO.toString()).build();
             audit.log(logMessage);
         }
+        else {
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgManyAdvice");
+        }
         return result;
     }
 
@@ -167,7 +181,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect post");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgSuhdeAdvice");
         }
         return result;
     }
@@ -182,7 +196,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect post");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgNimiAdvice");
         }
         return result;
     }
@@ -197,7 +211,7 @@ public class AuditLogAspect {
             audit.log(logMessage);
         }
         else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect post");
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteOrgNimiAdvice");
         }
         return result;
     }
