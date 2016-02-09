@@ -83,8 +83,8 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof OrganisaatioRDTO) {
-            OrganisaatioRDTO organisaatioRDTO = ((OrganisaatioRDTO) pjp.getArgs()[0]);
+        if (result instanceof OrganisaatioRDTO) {
+            OrganisaatioRDTO organisaatioRDTO = (OrganisaatioRDTO) result;
             LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_CREATE)
                     .oidList(organisaatioRDTO.getOid()).build();
             audit.log(logMessage);
@@ -161,8 +161,8 @@ public class AuditLogAspect {
         Object result = pjp.proceed();
         if (result instanceof OrganisaatioMuokkausTulosListaDTO) {
             OrganisaatioMuokkausTulosListaDTO organisaatioMuokkausTulosListaDTO = (OrganisaatioMuokkausTulosListaDTO) result;
-            LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE_MANY).
-                    oidList(organisaatioMuokkausTulosListaDTO.toString()).build();
+            LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE_MANY)
+                    .oidList(organisaatioMuokkausTulosListaDTO.toString()).build();
             audit.log(logMessage);
         }
         else {
