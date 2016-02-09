@@ -83,10 +83,10 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-        if (result instanceof OrganisaatioRDTO) {
-            OrganisaatioRDTO organisaatioRDTO = (OrganisaatioRDTO) result;
+        if (result instanceof ResultRDTO) {
+            ResultRDTO resultRDTO = (ResultRDTO) result;
             LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_CREATE)
-                    .oidList(organisaatioRDTO.getOid()).build();
+                    .oidList(resultRDTO.getOrganisaatio().getOid()).build();
             audit.log(logMessage);
         }
         else {
