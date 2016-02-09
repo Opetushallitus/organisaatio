@@ -29,6 +29,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -45,6 +48,7 @@ import org.springframework.stereotype.Component;
  * "Tilapäistiedostojen käsittely (IE9:lle)"
  */
 @Path("/tempfile")
+@Api(value = "/tempfile", description = "Tilapäistiedostojen käsittely (IE9:lle)")
 @Component("tempfileResource")
 public class TempFileResource {
 
@@ -60,6 +64,8 @@ public class TempFileResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @ApiOperation(value = "Lisää uuden kuvan palvelimelle.", notes = "Lisää uuden kuvan palvelimelle.",
+            response = String.class)
     public String addImage(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         LOG.info("Adding attachment "+request.getMethod());
         Map<String, String> result = null;
@@ -91,6 +97,7 @@ public class TempFileResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{img}")
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @ApiOperation(value = "Hakee id:tä vastaavan kuvan.", notes = "Hakee id:tä vastaavan kuvan.", response = String.class)
     public String getImage(@PathParam("img") String img) {
         LOG.info("getting " + getUser() + img);
         FileItem imgFile = data.get(getUser() + img);
@@ -102,6 +109,7 @@ public class TempFileResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{img}")
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
+    @ApiOperation(value = "Poistaa id:tä vastaavan kuvan.", notes = "Poistaa id:tä vastaavan kuvan.", response = String.class)
     public String deleteImage(@PathParam("img") String img) {
         String path = getUser() + img;
         FileItem imgFile = data.get(path);

@@ -16,8 +16,6 @@ package fi.vm.sade.organisaatio.service.aspects;/*
  */
 
 
-import fi.vm.sade.auditlog.ApplicationType;
-import fi.vm.sade.auditlog.organisaatio.OrganisaatioOperation;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import java.util.Date;
 
@@ -32,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import static fi.vm.sade.auditlog.organisaatio.LogMessage.builder;
+import fi.vm.sade.auditlog.ApplicationType;
+import fi.vm.sade.auditlog.organisaatio.OrganisaatioOperation;
 import fi.vm.sade.auditlog.organisaatio.LogMessage;
 import fi.vm.sade.auditlog.Audit;
 
@@ -44,41 +44,109 @@ public class AuditLogAspect {
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
     public static final String serviceName = "Organisaatio-Service";
-//    public static final String TARGET_TYPE = "Organisaatio";
-//    public static final int OPERATION_TYPE_INSERT = 1;
-//    public static final int OPERATION_TYPE_UPDATE = 2;
-//    public static final int OPERATION_TYPE_DELETE = 3;
-
     public Audit audit = new Audit(serviceName, ApplicationType.VIRKAILIJA);
 
-    private void init() {
-    }
-
+    // POST /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
-    private Object updateAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-
         logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_UPDATE);
         return result;
     }
 
-//    @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.createOrganisaatio(..))")
-//    private Object insertAdvice(ProceedingJoinPoint pjp) throws Throwable {
-//        init();
-//
-//        Object result = pjp.proceed();
-//        logAuditAdvice(pjp, result, OPERATION_TYPE_INSERT);
-//        return result;
-//    }
-//
-//    @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.removeOrganisaatioByOid(..))")
-//    private Object deleteAdvice(ProceedingJoinPoint pjp) throws Throwable {
-//        init();
-//
-//        Object result = pjp.proceed();
-//        logAuditAdvice(pjp, result, OPERATION_TYPE_DELETE);
-//        return result;
-//    }
+    // DELETE /organisaatio/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
+    private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_DELETE);
+        return result;
+    }
+
+    // PUT /organisaatio/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
+    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_CREATE);
+        return result;
+    }
+    // POST /yhteystietojentyyppi/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
+    private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.YHTEYSTIETO_UPDATE);
+        return result;
+    }
+    // PUT /yhteystietojentyyppi/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
+    private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.YHTEYSTIETO_CREATE);
+        return result;
+    }
+
+    // DELETE /yhteystietojentyyppi/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
+    private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.YHTEYSTIETO_DELETE);
+        return result;
+    }
+
+    // PUT /organisaatio/v2/{oid}/nimet
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.newOrganisaatioNimi(..))")
+    private Object createOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_NIMI_CREATE);
+        return result;
+    }
+
+    // PUT /organisaatio/v2/muokkaamonta
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.muokkaaMontaOrganisaatiota(..))")
+    private Object updateOrgManyAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_UPDATE_MANY);
+        return result;
+    }
+
+    // POST /organisaatio/v2/{oid}/organisaatiosuhde
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.changeOrganisationRelationship(..))")
+    private Object updateOrgSuhdeAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_SUHDE_UPDATE);
+        return result;
+    }
+
+    // POST /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.updateOrganisaatioNimi(..))")
+    private Object updateOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_NIMI_UPDATE);
+        return result;
+    }
+
+    // DELETE /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.deleteOrganisaatioNimi(..))")
+    private Object deleteOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.ORG_NIMI_DELETE);
+        return result;
+    }
+
+    // POST /tempfile/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.addImage(..))")
+    private Object newImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.IMG_CREATE);
+        return result;
+    }
+
+    // DELETE /tempfile/{img}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.deleteImage(..))")
+    private Object deleteImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result = pjp.proceed();
+        logAuditAdvice(pjp, result, OrganisaatioOperation.IMG_DELETE);
+        return result;
+    }
 
     private String getTekija() {
         if (SecurityContextHolder.getContext() != null
@@ -94,12 +162,13 @@ public class AuditLogAspect {
         LogMessage logMessage;
 
         ResultRDTO org = null;
-        if (result != null && result instanceof ResultRDTO) {
+        if (result instanceof ResultRDTO) {
             org = (ResultRDTO) result;
         }
         switch (operationType) {
             case ORG_UPDATE:
                 if (org != null) {
+
                     logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).build();
                     audit.log(logMessage);
                 }

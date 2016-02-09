@@ -92,6 +92,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
 
+    // GET /organisaatio/hae
     @Override
     public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -116,7 +117,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                 return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
 
             }
-        ;
         });
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
@@ -179,6 +179,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return Joiner.on(OID_SEPARATOR).join(parentOidList);
     }
 
+    // GET /organisaatio/hello
     @Override
     public String hello() {
         return "Well Hello! " + new Date();
@@ -229,6 +230,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return result;
     }
 
+    // POST /organisaatio/{oid}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
@@ -261,6 +263,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
+    // DELETE /organisaatio/{oid}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatio(String oid) {
@@ -282,6 +285,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return "{\"message\": \"deleted\"}";
     }
 
+    // PUT /organisaatio/
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
@@ -309,6 +313,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
     }
 
+    // GET /organisaatio/yhteystietometadata
     @Override
     @Transactional(readOnly = true)
     public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
@@ -326,12 +331,14 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return result;
     }
 
+    // GET /organisaatio/auth
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String authHello() {
         return "{\"message\": \"Well Hello! " + new Date() + "\"}";
     }
 
+    // GET /organisaatio/{oid}/ryhmat
     @Override
     public List<OrganisaatioRDTO> groups(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);

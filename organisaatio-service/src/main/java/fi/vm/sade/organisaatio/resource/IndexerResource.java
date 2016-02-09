@@ -17,6 +17,8 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -46,6 +48,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 
 @Path("/indexer")
+@Api(value = "/indexer", description = "Organisaatioiden indeksoiti solriin")
 @Component
 public class IndexerResource {
 
@@ -75,6 +78,9 @@ public class IndexerResource {
      */
     @GET
     @Path("/start")
+    @ApiOperation(value = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
+            notes = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
+            response = String.class)
     @Produces("text/plain")
     public String reBuildIndex(@QueryParam("clean") final boolean clean) {
         Preconditions.checkNotNull(organisaatioDAO, "need dao!");
