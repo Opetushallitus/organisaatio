@@ -50,6 +50,7 @@
         <!--<hibernate.version>4.1.0.Final</hibernate.version>-->
         <hibernate.version>4.2.21.Final</hibernate.version>
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
+        <jmeter.version>1.10.1</jmeter.version>
     </properties>
 
     <modules>
@@ -144,4 +145,34 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>jmeter</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.lazerycode.jmeter</groupId>
+                        <artifactId>jmeter-maven-plugin</artifactId>
+                        <version>${jmeter.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jmeter-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jmeter</goal>
+                                </goals>
+                                <configuration>
+                                    <resultsDirectory>${project.basedir}/target/jmeter/results</resultsDirectory>
+                                    <jMeterProcessJVMSettings>
+                                        <xms>1024</xms>
+                                        <xmx>1024</xmx>
+                                    </jMeterProcessJVMSettings>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
