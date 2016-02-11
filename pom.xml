@@ -148,11 +148,6 @@
     <profiles>
         <profile>
             <id>jmeter</id>
-            <activation>
-                <file>
-                    <exists>${project.basedir}/src/test/jmeter</exists>
-                </file>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
