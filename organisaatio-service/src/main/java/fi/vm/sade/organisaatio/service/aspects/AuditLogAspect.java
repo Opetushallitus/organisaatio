@@ -68,7 +68,13 @@ public class AuditLogAspect {
     // DELETE /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result = pjp.proceed();
+        try {
+            Object result = pjp.proceed();
+        } catch(Exception e) {
+            LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_DELETE).build();
+            audit.log(logMessage);
+            throw e;
+        }
         if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
             String oid = ((String) pjp.getArgs()[0]);
             LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_DELETE).oidList(oid).build();
