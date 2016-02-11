@@ -16,10 +16,6 @@ package fi.vm.sade.organisaatio.service.aspects;/*
  */
 
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import java.util.Date;
-import java.util.List;
-
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
@@ -68,8 +64,9 @@ public class AuditLogAspect {
     // DELETE /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
         try {
-            Object result = pjp.proceed();
+            result = pjp.proceed();
         } catch(Exception e) {
             LogMessage logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_DELETE).build();
             audit.log(logMessage);
