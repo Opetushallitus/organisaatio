@@ -44,11 +44,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Organisaatioiden indeksoiti solriin
+ * Organisaatioiden indeksointi solriin
  */
 
 @Path("/indexer")
-@Api(value = "/indexer", description = "Organisaatioiden indeksoiti solriin")
+@Api(value = "/indexer", description = "Organisaatioiden indeksointi solriin")
 @Component
 public class IndexerResource {
 
@@ -71,14 +71,14 @@ public class IndexerResource {
     }
 
     /**
-     * Indeksoi organiasaatiot tietokannasta uudelleen Solriin.
+     * Indeksoi organisaatiot tietokannasta uudelleen Solriin.
      *
      * @param clean Tyhjennetäänkö indeksi ensin
      * @return
      */
     @GET
     @Path("/start")
-    @ApiOperation(value = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
+    @ApiOperation(value = "Indeksoi organisaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
             notes = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
             response = String.class)
     @Produces("text/plain")
