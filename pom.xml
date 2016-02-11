@@ -162,7 +162,7 @@
                                     <goal>jmeter</goal>
                                 </goals>
                                 <configuration>
-                                    <resultsDirectory>${project.basedir}/target/jmeter/results</resultsDirectory>
+                                    <resultsDirectory>/data00/bamboo/home/www/clover/fi.vm.sade.organisaatio/</resultsDirectory>
                                     <jMeterProcessJVMSettings>
                                         <xms>1024</xms>
                                         <xmx>1024</xmx>
