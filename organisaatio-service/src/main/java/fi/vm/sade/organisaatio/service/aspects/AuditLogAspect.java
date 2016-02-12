@@ -50,119 +50,66 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
     private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid="";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_UPDATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_UPDATE);
         return result;
     }
 
     // DELETE /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        LogMessage logMessage;
         Object result;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_DELETE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_DELETE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteOrgAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_DELETE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_DELETE);
         return result;
     }
     // PUT /organisaatio/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        ResultRDTO resultRDTO = null;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_CREATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_CREATE);
             throw e;
         }
-        if (result instanceof ResultRDTO) {
-            resultRDTO = (ResultRDTO) result;
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect newOrgAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_CREATE)
-                .oidList(resultRDTO.getOrganisaatio().getOid()).build();
-        audit.log(logMessage);
+        logEvent(result, OrganisaatioOperation.ORG_CREATE);
         return result;
     }
     // POST /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
     private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        YhteystietojenTyyppiDTO yhteystietojenTyyppiDTO = null;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_UPDATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_UPDATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof YhteystietojenTyyppiDTO) {
-            yhteystietojenTyyppiDTO = ((YhteystietojenTyyppiDTO) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateYhtAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_UPDATE)
-                .oidList(yhteystietojenTyyppiDTO.getOid()).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_UPDATE);
         return result;
     }
     // PUT /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
     private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        YhteystietojenTyyppiDTO yhteystietojenTyyppiDTO = null;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_CREATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_CREATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof YhteystietojenTyyppiDTO) {
-            yhteystietojenTyyppiDTO = ((YhteystietojenTyyppiDTO) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect newYhtAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_CREATE)
-                .oidList(yhteystietojenTyyppiDTO.getOid()).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_CREATE);
         return result;
     }
 
@@ -170,23 +117,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
     private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_DELETE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_DELETE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteYhtAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.YHTEYSTIETO_DELETE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_DELETE);
         return result;
     }
 
@@ -194,23 +131,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.newOrganisaatioNimi(..))")
     private Object createOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_CREATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_CREATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect createOrgNimiAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_CREATE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_CREATE);
         return result;
     }
 
@@ -218,24 +145,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.muokkaaMontaOrganisaatiota(..))")
     private Object updateOrgManyAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        OrganisaatioMuokkausTulosListaDTO organisaatioMuokkausTulosListaDTO = null;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE_MANY).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_UPDATE_MANY);
             throw e;
         }
-        if (result instanceof OrganisaatioMuokkausTulosListaDTO) {
-            organisaatioMuokkausTulosListaDTO = (OrganisaatioMuokkausTulosListaDTO) result;
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgManyAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_UPDATE_MANY)
-                .oidList(organisaatioMuokkausTulosListaDTO.toString()).build();
-        audit.log(logMessage);
+        logEvent(result, OrganisaatioOperation.ORG_UPDATE_MANY);
         return result;
     }
 
@@ -243,23 +159,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.changeOrganisationRelationship(..))")
     private Object updateOrgSuhdeAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_SUHDE_UPDATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_SUHDE_UPDATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgSuhdeAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_SUHDE_UPDATE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_SUHDE_UPDATE);
         return result;
     }
 
@@ -267,23 +173,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.updateOrganisaatioNimi(..))")
     private Object updateOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_UPDATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_UPDATE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect updateOrgNimiAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_UPDATE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_UPDATE);
         return result;
     }
 
@@ -291,23 +187,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.deleteOrganisaatioNimi(..))")
     private Object deleteOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
-        String oid = "";
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_DELETE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_DELETE);
             throw e;
         }
-        if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof String) {
-            oid = ((String) pjp.getArgs()[0]);
-        }
-        else {
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect deleteOrgNimiAdvice");
-        }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.ORG_NIMI_DELETE).oidList(oid).build();
-        audit.log(logMessage);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_DELETE);
         return result;
     }
 
@@ -315,16 +201,13 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.addImage(..))")
     private Object newImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.IMG_CREATE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.IMG_CREATE);
             throw e;
         }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.IMG_CREATE).build();
-        audit.log(logMessage);
+        logEvent(null, OrganisaatioOperation.IMG_CREATE);
         return result;
     }
 
@@ -332,17 +215,41 @@ public class AuditLogAspect {
     @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.deleteImage(..))")
     private Object deleteImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
-        LogMessage logMessage;
         try {
             result = pjp.proceed();
         } catch(Exception e) {
-            logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.IMG_DELETE).build();
-            audit.log(logMessage);
+            logEvent(null, OrganisaatioOperation.IMG_DELETE);
             throw e;
         }
-        logMessage = builder().id(getTekija()).setOperaatio(OrganisaatioOperation.IMG_DELETE).build();
-        audit.log(logMessage);
+        logEvent(null, OrganisaatioOperation.IMG_DELETE);
         return result;
+    }
+
+    // Helper function to handle the logging.
+    private void logEvent(Object result, OrganisaatioOperation type) {
+        String oid = "";
+        if(result == null) {
+            oid = null;
+        }
+        else if (result instanceof String) {
+            oid = (String) result;
+        }
+        else if(result instanceof OrganisaatioMuokkausTulosListaDTO) {
+            oid = result.toString();
+        }
+        else if(result instanceof YhteystietojenTyyppiDTO) {
+            oid = ((YhteystietojenTyyppiDTO) result).getOid();
+        }
+        else if(result instanceof ResultRDTO) {
+            oid = ((ResultRDTO) result).getOrganisaatio().getOid();
+        }
+        else {
+            oid = null;
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect {}", type.toString());
+        }
+
+        LogMessage logMessage = builder().id(getTekija()).oidList(oid).setOperaatio(type).build();
+        audit.log(logMessage);
     }
 
     private String getTekija() {
