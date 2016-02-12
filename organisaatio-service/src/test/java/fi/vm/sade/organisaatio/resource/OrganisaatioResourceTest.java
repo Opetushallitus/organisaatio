@@ -133,7 +133,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
-    //@Ignore
     public void testSearchHierarchyReturnsToimipistekoodi() throws Exception {
         // Get the hierarchy
         OrganisaatioSearchCriteriaDTOV2 searchCriteria = createOrgSearchCriteriaDTOV2();
