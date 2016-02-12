@@ -66,6 +66,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         }
         add(doc, DOMAINNIMI, org.getDomainNimi());
         add(doc, OPPILAITOSTYYPPI, org.getOppilaitosTyyppi());
+        add(doc, TOIMIPISTEKOODI, org.getToimipisteKoodi());
 
         final Organisaatio parent = org.getParent();
         add(doc, PARENTOID, parent != null ? parent.getOid() : null);

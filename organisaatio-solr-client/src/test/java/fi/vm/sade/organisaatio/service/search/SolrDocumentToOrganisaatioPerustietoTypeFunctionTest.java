@@ -46,6 +46,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
         doc.addField(NIMISV, "Espoo Sv");
         doc.addField(OID, "1.2.3.4.5.6.7");
         doc.addField(OPPILAITOSKOODI, "123456");
+        doc.addField(TOIMIPISTEKOODI, "1234567");
         doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.KOULUTUSTOIMIJA.value());
         doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.OPPILAITOS.value());
         doc.addField(PARENTOID, "1.1.1.1.1.1.1");
@@ -60,6 +61,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
         assertEquals(doc.getFieldValue(NIMISV), result.getNimi("sv"));
         assertEquals(doc.getFieldValue(OID), result.getOid());
         assertEquals(doc.getFieldValue(OPPILAITOSKOODI), result.getOppilaitosKoodi());
+        assertEquals(doc.getFieldValue(TOIMIPISTEKOODI), result.getToimipisteKoodi());
         assertEquals(doc.getFieldValue(PARENTOID), result.getParentOid());
         assertEquals(doc.getFieldValues(ORGANISAATIOTYYPPI).size(), result.getOrganisaatiotyypit().size());
         assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));

@@ -7,15 +7,13 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import org.junit.Assert;
+import org.junit.*;
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +30,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -134,6 +133,32 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    //@Ignore
+    public void testSearchHierarchyReturnsToimipistekoodi() throws Exception {
+        // Get the hierarchy
+        OrganisaatioSearchCriteriaDTOV2 searchCriteria = createOrgSearchCriteriaDTOV2();
+        OrganisaatioHakutulos result = res2.searchOrganisaatioHierarkia(searchCriteria);
+        assertEquals(8, result.getNumHits());
+        for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
+            if(org.getOid().equals("1.2.2004.1")) {
+                assertNotNull(org.getOppilaitosKoodi());
+                // see test data
+                for(OrganisaatioPerustieto child : org.getChildren()) {
+                    if(child.getOid().equals("1.2.2004.1")) {
+                        assertNotNull(child.getToimipisteKoodi());
+                        assertEquals("123451", child.getToimipisteKoodi());
+                    } else if (child.getOid().equals("1.2.2004.3")) {
+                        assertNotNull(child.getToimipisteKoodi());
+                        assertEquals("123452", child.getToimipisteKoodi());
+                    }
+                }
+            }
+            LOG.debug("ORG: {}", org.getOid());
+        }
+    }
+
+
+    @Test
     public void testFetchingHakutoimisto() throws Exception {
         HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4").getEntity();
         Assert.assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
@@ -194,5 +219,13 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         }
         return sc;
 
+    }
+
+    private OrganisaatioSearchCriteriaDTOV2 createOrgSearchCriteriaDTOV2() {
+        OrganisaatioSearchCriteriaDTOV2 sc = new OrganisaatioSearchCriteriaDTOV2();
+        sc.setLakkautetut(false);
+        sc.setAktiiviset(true);
+        sc.setSuunnitellut(true);
+        return sc;
     }
 }

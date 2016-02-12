@@ -48,6 +48,9 @@ public class OrganisaatioPerustieto implements Serializable {
     @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
     private String oppilaitostyyppi;
 
+    @ApiModelProperty(value = "Toimipisteen koodi", required = true)
+    private String toimipisteKoodi;
+
     @ApiModelProperty(value = "Osuiko hakutuloksiin", required = true)
     private boolean match = false;
 
@@ -299,6 +302,23 @@ public class OrganisaatioPerustieto implements Serializable {
     public void setOppilaitostyyppi(String value) {
         this.oppilaitostyyppi = value;
     }
+    /**
+     * Gets the value of the toimipisteKoodi property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getToimipisteKoodi() {
+        return toimipisteKoodi;
+    }
+    /**
+     * Sets the value of the oppilaitosKoodi property.
+     *
+     * @param value
+     *            allowed object is {@link String }
+     *
+     */
+    public void setToimipisteKoodi(String value) { this.toimipisteKoodi = value; }
 
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
     public List<OrganisaatioTyyppi> getOrganisaatiotyypit() {
