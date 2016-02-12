@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.service.aspects;/*
 
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
@@ -235,7 +236,10 @@ public class AuditLogAspect {
             oid = (String) result;
         }
         else if(result instanceof OrganisaatioMuokkausTulosListaDTO) {
-            oid = result.toString();
+            for(OrganisaatioMuokkausTulosDTO organisaatioMuokkausTulosDTO
+                    : ((OrganisaatioMuokkausTulosListaDTO)result).getTulokset()) {
+                oid+= organisaatioMuokkausTulosDTO.getOid();
+            }
         }
         else if(result instanceof YhteystietojenTyyppiDTO) {
             oid = ((YhteystietojenTyyppiDTO) result).getOid();
