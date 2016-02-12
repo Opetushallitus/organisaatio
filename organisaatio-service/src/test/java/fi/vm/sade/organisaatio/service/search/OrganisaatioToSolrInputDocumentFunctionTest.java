@@ -21,22 +21,13 @@ import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.ALKUPVM;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.LAKKAUTUSPVM;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.NIMIEN;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.NIMIFI;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.NIMISV;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.OID;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.OPPILAITOSKOODI;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.ORGANISAATIOTYYPPI;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.PARENTOID;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.PATH;
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.YTUNNUS;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.solr.common.SolrInputDocument;
+
+import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -58,6 +49,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         org.setNimi(nimi);
         org.setOid("1.2.3.4.5.6.7");
         org.setOppilaitosKoodi("123456");
+        org.setToimipisteKoodi("1234561");
         final OrganisaatioSuhde suhde = new OrganisaatioSuhde();
         final Organisaatio parent = new Organisaatio();
         suhde.setParent(parent);
@@ -85,6 +77,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         assertEquals(org.getNimi().getString("sv"), doc.getFieldValue(NIMISV));
         assertEquals(org.getOid(), doc.getFieldValue(OID));
         assertEquals(org.getOppilaitosKoodi(), doc.getFieldValue(OPPILAITOSKOODI));
+        assertEquals(org.getToimipisteKoodi(), doc.getFieldValue(TOIMIPISTEKOODI));
         assertEquals(org.getParentSuhteet().get(0).getParent().getOid(), doc.getFieldValue(PARENTOID));
         assertEquals(org.getTyypit().size(), doc.getFieldValues(ORGANISAATIOTYYPPI).size());
         assertEquals(2, doc.getFieldValues(PATH).size());
