@@ -26,6 +26,7 @@
         <oid.api.version>8.0</oid.api.version>
         <rajapinnat.ytj.version>10.0-SNAPSHOT</rajapinnat.ytj.version>
         <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
+        <auditlogger.version>5.0.0-SNAPSHOT</auditlogger.version>
 
         <!-- Versions -->
         <java.version>1.7</java.version>
@@ -106,7 +107,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-support-distributed-ehcache</artifactId>
@@ -136,7 +136,11 @@
                 <artifactId>jgroups</artifactId>
                 <version>${jgroups.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>fi.vm.sade</groupId>
+                <artifactId>auditlogger</artifactId>
+                <version>${auditlogger.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -16,18 +16,25 @@ package fi.vm.sade.organisaatio.service.aspects;/*
  */
 
 
-import fi.vm.sade.log.client.LoggerHelper;
-import fi.vm.sade.log.model.Tapahtuma;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import java.util.Date;
+import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.restlet.resource.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import static fi.vm.sade.auditlog.organisaatio.LogMessage.builder;
+import fi.vm.sade.auditlog.ApplicationType;
+import fi.vm.sade.auditlog.organisaatio.OrganisaatioOperation;
+import fi.vm.sade.auditlog.organisaatio.LogMessage;
+import fi.vm.sade.auditlog.Audit;
 
 /**
  * @author: Tuomas Katva Date: 9.8.2013
@@ -37,82 +44,216 @@ public class AuditLogAspect {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
-    public static final String SYSTEM = "organisaatio-service";
-    public static final String TARGET_TYPE = "Organisaatio";
-    public static final int OPERATION_TYPE_INSERT = 1;
-    public static final int OPERATION_TYPE_UPDATE = 2;
-    public static final int OPERATION_TYPE_DELETE = 3;
+    public static final String serviceName = "Organisaatio-Service";
+    public Audit audit = new Audit(serviceName, ApplicationType.VIRKAILIJA);
 
-    @Autowired(required = true)
-    private fi.vm.sade.log.client.Logger auditLogger;
-
-    private void init() {
-        LoggerHelper.init(auditLogger);
-    }
-
-    @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.updateOrganisaatio(..))")
-    private Object updateAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        init();
-
-        Object result = pjp.proceed();
-        logAuditAdvice(pjp, result, OPERATION_TYPE_UPDATE);
+    // POST /organisaatio/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
+    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_UPDATE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_UPDATE);
         return result;
     }
 
-    @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.createOrganisaatio(..))")
-    private Object insertAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        init();
-
-        Object result = pjp.proceed();
-        logAuditAdvice(pjp, result, OPERATION_TYPE_INSERT);
+    // DELETE /organisaatio/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
+    private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_DELETE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_DELETE);
+        return result;
+    }
+    // PUT /organisaatio/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
+    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_CREATE);
+            throw e;
+        }
+        logEvent(result, OrganisaatioOperation.ORG_CREATE);
+        return result;
+    }
+    // POST /yhteystietojentyyppi/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
+    private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_UPDATE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_UPDATE);
+        return result;
+    }
+    // PUT /yhteystietojentyyppi/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
+    private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_CREATE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_CREATE);
         return result;
     }
 
-    @Around("execution(public * fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl.removeOrganisaatioByOid(..))")
-    private Object deleteAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        init();
-
-        Object result = pjp.proceed();
-        logAuditAdvice(pjp, result, OPERATION_TYPE_DELETE);
+    // DELETE /yhteystietojentyyppi/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
+    private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_DELETE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_DELETE);
         return result;
     }
 
-    private void logAuditTapahtuma(Tapahtuma tapahtuma) {
-        LoggerHelper.log();
+    // PUT /organisaatio/v2/{oid}/nimet
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.newOrganisaatioNimi(..))")
+    private Object createOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_CREATE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_CREATE);
+        return result;
     }
 
-    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO organisaatio, int tapahtumaTyyppi) {
-        // TODO organisation changes are not tracked
-        return constructOrganisaatioTapahtuma(organisaatio != null ? organisaatio.getOid() : null, tapahtumaTyyppi);
+    // PUT /organisaatio/v2/muokkaamonta
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.muokkaaMontaOrganisaatiota(..))")
+    private Object updateOrgManyAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_UPDATE_MANY);
+            throw e;
+        }
+        logEvent(result, OrganisaatioOperation.ORG_UPDATE_MANY);
+        return result;
     }
 
-    private Tapahtuma constructOrganisaatioTapahtuma(String orgOid, int tapahtumaTyyppi) {
-        String user = getTekija();
-
-        String target = orgOid;
-
-        Tapahtuma t = LoggerHelper.getAuditRootTapahtuma();
-
-//        t.setHost(user);
-        t.setSystem(SYSTEM);
-        t.setTarget(target);
-        t.setTargetType(TARGET_TYPE);
-        t.setTimestamp(new Date());
-        t.setType("???");
-        t.setUser(user);
-        t.setUserActsForUser(null);
-
-        if (tapahtumaTyyppi == OPERATION_TYPE_DELETE) {
-            t.setType("DELETE");
+    // POST /organisaatio/v2/{oid}/organisaatiosuhde
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.changeOrganisationRelationship(..))")
+    private Object updateOrgSuhdeAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_SUHDE_UPDATE);
+            throw e;
         }
-        if (tapahtumaTyyppi == OPERATION_TYPE_INSERT) {
-            t.setType("INSERT");
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_SUHDE_UPDATE);
+        return result;
+    }
+
+    // POST /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.updateOrganisaatioNimi(..))")
+    private Object updateOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_UPDATE);
+            throw e;
         }
-        if (tapahtumaTyyppi == OPERATION_TYPE_UPDATE) {
-            t.setType("UPDATE");
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_UPDATE);
+        return result;
+    }
+
+    // DELETE /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.deleteOrganisaatioNimi(..))")
+    private Object deleteOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_NIMI_DELETE);
+            throw e;
+        }
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_DELETE);
+        return result;
+    }
+
+    // POST /tempfile/
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.addImage(..))")
+    private Object newImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.IMG_CREATE);
+            throw e;
+        }
+        logEvent(null, OrganisaatioOperation.IMG_CREATE);
+        return result;
+    }
+
+    // DELETE /tempfile/{img}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.deleteImage(..))")
+    private Object deleteImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch(Exception e) {
+            logEvent(null, OrganisaatioOperation.IMG_DELETE);
+            throw e;
+        }
+        logEvent(null, OrganisaatioOperation.IMG_DELETE);
+        return result;
+    }
+
+    // Helper function to handle the logging.
+    private void logEvent(Object result, OrganisaatioOperation type) {
+        String oid = "";
+        if(result == null) {
+            oid = null;
+        }
+        else if (result instanceof String) {
+            oid = (String) result;
+        }
+        else if(result instanceof OrganisaatioMuokkausTulosListaDTO) {
+            for(OrganisaatioMuokkausTulosDTO organisaatioMuokkausTulosDTO
+                    : ((OrganisaatioMuokkausTulosListaDTO)result).getTulokset()) {
+                oid+= organisaatioMuokkausTulosDTO.getOid();
+            }
+        }
+        else if(result instanceof YhteystietojenTyyppiDTO) {
+            oid = ((YhteystietojenTyyppiDTO) result).getOid();
+        }
+        else if(result instanceof ResultRDTO) {
+            oid = ((ResultRDTO) result).getOrganisaatio().getOid();
+        }
+        else {
+            oid = null;
+            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect {}", type.toString());
         }
 
-        return t;
+        LogMessage logMessage = builder().id(getTekija()).oidList(oid).setOperaatio(type).build();
+        audit.log(logMessage);
     }
 
     private String getTekija() {
@@ -122,49 +263,6 @@ public class AuditLogAspect {
             return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         } else {
             return null;
-        }
-    }
-
-    private Tapahtuma constructOrganisaatioTapahtuma(OrganisaatioDTO org, int tapahtumaTyyppi, OrganisaatioDTO vanhaOrg) {
-        Tapahtuma t = constructOrganisaatioTapahtuma(org, tapahtumaTyyppi);
-
-        if (vanhaOrg != null) {
-            // TODO log field changes
-            // t.addValueChange("foo", "oldValue", "newValue");
-        }
-
-        return t;
-    }
-
-    private void logAuditAdvice(JoinPoint pjp, Object result, int operationType) throws Throwable {
-
-        OrganisaatioDTO org = null;
-        if (result instanceof OrganisaatioDTO) {
-            org = (OrganisaatioDTO) result;
-        }
-        switch (operationType) {
-            case OPERATION_TYPE_INSERT:
-                if (org != null) {
-                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_INSERT));
-                }
-                break;
-            case OPERATION_TYPE_UPDATE:
-                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof OrganisaatioDTO && org != null) {
-                    logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE, (OrganisaatioDTO) pjp.getArgs()[0]));
-                } else {
-                    if (org != null) {
-                        logAuditTapahtuma(constructOrganisaatioTapahtuma(org, OPERATION_TYPE_UPDATE));
-                    }
-                }
-                break;
-            case OPERATION_TYPE_DELETE:
-//                if (pjp.getArgs() != null && pjp.getArgs()[0] instanceof RemoveByOidType) {
-//                    String oid = ((RemoveByOidType) pjp.getArgs()[0]).getOid();
-//                    logAuditTapahtuma(constructOrganisaatioTapahtuma(oid, OPERATION_TYPE_UPDATE));
-//                } else {
-//                    LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect delete");
-//                }
-                break;
         }
     }
 }

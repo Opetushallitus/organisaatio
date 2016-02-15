@@ -19,6 +19,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Component;
  * @author simok
  */
 @Path("/dev")
+@Api(value = "/dev", description = "Development operaatiot")
 @Component
 public class OrganisaatioDevResource {
 
@@ -41,6 +45,9 @@ public class OrganisaatioDevResource {
     @GET
     @Path("/myroles")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
+            notes = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
+            response = String.class)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String getRoles() {
         StringBuilder ret = new StringBuilder("[");

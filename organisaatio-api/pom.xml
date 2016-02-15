@@ -86,19 +86,21 @@ Union Public Licence for more details. -->
                                 <bindingFiles>
                                     <bindingFile>${basedir}/src/main/resources/wsdl/binding.xjb</bindingFile>
                                 </bindingFiles>
-
-                                <extraargs>
-                                    <extraarg>-frontend</extraarg>
-                                    <extraarg>jaxws21</extraarg>
-                                    <extraarg>-xjc-Xvalue-constructor</extraarg>
-                                </extraargs>
+                                <!--<extraargs>-->
+                                    <!--<extraarg>-frontend</extraarg>-->
+                                    <!--<extraarg>jaxws21</extraarg>-->
+                                    <!--<extraarg>-xjc-Xvalue-constructor</extraarg>-->
+                                <!--</extraargs>-->
                             </defaultOptions>
-                            <wsdlOption>
-                                <wsdl>${basedir}/src/main/resources/wsdl/organisaatioService.wsdl</wsdl>
-                            </wsdlOption>
-                            <wsdlOption>
-                                <wsdl>${basedir}/src/main/resources/wsdl/koulutustarjoajaPublicService.wsdl</wsdl>
-                            </wsdlOption>
+                            <!--Duplicated options?-->
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/organisaatioService.wsdl</wsdl>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/koulutustarjoajaPublicService.wsdl</wsdl>
+                                </wsdlOption>
+                            </wsdlOptions>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
@@ -108,5 +110,4 @@ Union Public Licence for more details. -->
             </plugin>
         </plugins>
     </build>
-
 </project>

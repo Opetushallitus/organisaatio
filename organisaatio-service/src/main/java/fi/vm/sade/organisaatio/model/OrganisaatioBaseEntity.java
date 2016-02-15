@@ -22,9 +22,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.vm.sade.generic.model.BaseEntity;
-import fi.vm.sade.log.client.LoggerHelper;
-import fi.vm.sade.log.model.SimpleBeanSerializer;
-import fi.vm.sade.log.model.Tapahtuma;
 import java.util.Map;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
@@ -73,11 +70,6 @@ public class OrganisaatioBaseEntity extends BaseEntity {
 //    public void onPostLoad() {
 //        try {
 //            LOG.debug("@PostLoad - onPostLoad(): {}", this);
-//
-//            if (LoggerHelper.isRecording()) {
-//                // Don't need the tapahtuma, but lets initialize internal state here
-//                createUpdateTapahtuma();
-//            }
 //        } catch (Throwable ex) {
 //            LOG.error("onPostLoad() - logging failed.", ex);
 //        }
@@ -87,11 +79,6 @@ public class OrganisaatioBaseEntity extends BaseEntity {
     public void onPostUpdate() {
         try {
             LOG.debug("@PostUpdate - onPostUpdate(): {}", this);
-
-            if (LoggerHelper.isRecording()) {
-                Tapahtuma t = createUpdateTapahtuma();
-                LoggerHelper.record(t);
-            }
         } catch (Throwable ex) {
             LOG.error("onPostUpdate() - logging failed.", ex);
         }
@@ -101,12 +88,6 @@ public class OrganisaatioBaseEntity extends BaseEntity {
     public void onPostPersist() {
         try {
             LOG.debug("@PostPersist - onPostPersist(): {}", this);
-
-            if (LoggerHelper.isRecording()) {
-                Tapahtuma t = createUpdateTapahtuma();
-                t.setType("CREATE");
-                LoggerHelper.record(t);
-            }
         } catch (Throwable ex) {
             LOG.error("onPostPersist() - logging failed.", ex);
         }
@@ -116,29 +97,9 @@ public class OrganisaatioBaseEntity extends BaseEntity {
     public void onPostRemove() {
         try {
             LOG.debug("@PostRemove - onPostRemove(): {}", this);
-            if (LoggerHelper.isRecording()) {
-                Tapahtuma t = createUpdateTapahtuma();
-                t.setType("DELETE");
-                t.addValue("DELETED", "true");
-                LoggerHelper.record(t);
-            }
         } catch (Throwable ex) {
             LOG.error("onPostRemove() - logging failed.", ex);
         }
     }
 
-    /**
-     * Helper to create Tapahtuma entry AND update the internal state of the object for next call so that diff can be acquired.
-     *
-     * @return
-     */
-    private Tapahtuma createUpdateTapahtuma() {
-        Map<String, String> values = SimpleBeanSerializer.getBeanAsMap(this);
-        Tapahtuma t = Tapahtuma.createUPDATEMaps("tarjonta-service", getTekija(), this.getClass().getSimpleName(), "" + getId(), _onLoadValues, values);
-
-        // Update current state (for possible future loggings)
-        _onLoadValues = values;
-
-        return t;
-    }
 }

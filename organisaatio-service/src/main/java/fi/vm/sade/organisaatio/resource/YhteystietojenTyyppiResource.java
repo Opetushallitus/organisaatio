@@ -89,7 +89,8 @@ public class YhteystietojenTyyppiResource {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Palauttaa yhteystietotyypit", notes = "Palauttaa yhteystietotyypit", response = List.class)
+    @ApiOperation(value = "Palauttaa yhteystietotyypit", notes = "Palauttaa yhteystietotyypit",
+            response = YhteystietojenTyyppiDTO.class, responseContainer = "List")
     public List<YhteystietojenTyyppiDTO> getYhteystietoTyypit() {
         List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<YhteystietojenTyyppiDTO>();
         for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
@@ -102,7 +103,8 @@ public class YhteystietojenTyyppiResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Muokkaa yhteystietotyyppiä", notes = "Muokkaa yhteystietotyyppiä", response = List.class)
+    @ApiOperation(value = "Muokkaa yhteystietotyyppiä", notes = "Muokkaa yhteystietotyyppiä",
+            response = YhteystietojenTyyppiDTO.class)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(readOnly = false)
     public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(YhteystietojenTyyppiDTO dto) {
@@ -129,7 +131,7 @@ public class YhteystietojenTyyppiResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Luo yhteystietotyyppi", notes = "Luo uusi yhteystietotyyppi")
+    @ApiOperation(value = "Luo yhteystietotyyppi", notes = "Luo uusi yhteystietotyyppi", response = YhteystietojenTyyppiDTO.class)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(rollbackFor = Throwable.class, readOnly = false)
     public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) throws GenericFault {
@@ -165,6 +167,7 @@ public class YhteystietojenTyyppiResource {
     @DELETE
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Poista oidin yhteystietotyyppi", notes = "Poista oidin yhteystietotyyppi")
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(readOnly = false)
     public String deleteYhteystietottyypi(@PathParam("oid") String oid, @DefaultValue("false") @QueryParam("force") boolean force) {
@@ -201,5 +204,4 @@ public class YhteystietojenTyyppiResource {
         }
         return "";
     }
-
 }

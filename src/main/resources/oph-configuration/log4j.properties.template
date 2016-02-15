@@ -25,3 +25,13 @@ log4j.logger.org.apache.activemq=INFO
 log4j.logger.org.apache.activemq.spring={{env_loglevel}}
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO
+# auditlogger
+log4j.additivity.fi.vm.sade.auditlog.Audit=false
+log4j.logger.fi.vm.sade.auditlog.Audit=INFO, AUDIT
+log4j.appender.AUDIT=org.apache.log4j.FileAppender
+log4j.appender.AUDIT.immediateFlush=true
+log4j.appender.AUDIT.File=${user.home}/tomcat/logs/auditlog_organisaatio.log
+log4j.appender.AUDIT.Append=true
+log4j.appender.AUDIT.layout=org.apache.log4j.PatternLayout
+log4j.appender.AUDIT.layout.ConversionPattern=%m%n
+log4j.appender.AUDIT.encoding=UTF-8

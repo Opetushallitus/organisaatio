@@ -100,6 +100,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     @Autowired
     PermissionChecker permissionChecker;
 
+    // POST /organisaatio/v2/yhteystiedot/hae
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
@@ -129,11 +130,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return organisaatioModelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
     }
 
+    // GET /organisaatio/v2/hello
     @Override
     public String hello() {
         return "Hello V2! " + new Date();
     }
 
+    // GET /organisaatio/v2/hierarkia/hae
     @Override
     public OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -193,16 +196,19 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return ohts;
     }
 
+    // GET /organisaatio/v2/hierarkia/hae/nimi
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatioHierarkiaSuppea(hakuEhdot, false);
     }
 
+    // GET /organisaatio/v2/hierarkia/hae/tyyppi
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatioHierarkiaSuppea(hakuEhdot, true);
     }
 
+    // GET /organisaatio/v2/hae
     @Override
     public OrganisaatioHakutulos searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
@@ -245,16 +251,19 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return ohts;
     }
 
+    // GET /organisaatio/v2/hae/nimi
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatiotSuppea(hakuEhdot, false);
     }
 
+    // GET /organisaatio/v2/hae/tyyppi
     @Override
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         return searchOrganisaatiotSuppea(hakuEhdot, true);
     }
 
+    // GET /organisaatio/v2/{oid}/paivittaja
     @Override
     public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
@@ -273,6 +282,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return null;
     }
 
+    // GET /organisaatio/v2/{oid}/nimet
     @Override
     public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
@@ -296,6 +306,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return result;
     }
 
+    // GET /organisaatio/v2/{id}/LOP
     @Override
     public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(String oid) {
         Preconditions.checkNotNull(oid);
@@ -337,6 +348,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return null;
     }
 
+    // PUT /organisaatio/v2/{oid}/nimet
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioNimiDTOV2 newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception {
@@ -353,6 +365,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTOV2.class);
     }
 
+    // POST /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(String oid, DateParam date, OrganisaatioNimiDTOV2 nimidto) {
@@ -371,6 +384,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTOV2.class);
     }
 
+    // DELETE /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatioNimi(String oid, DateParam date) {
@@ -388,6 +402,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return "";
     }
 
+    // PUT /organisaatio/v2/muokkaamonta
     @Override
     public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
         LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
@@ -412,7 +427,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
     }
 
-
+    // GET /organisaatio/v2/muutetut
     @Override
     public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
 
@@ -447,6 +462,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return results;
     }
 
+    // GET /organisaatio/v2/muutetut/oid
     @Override
     public String haeMuutettujenOid(DateParam lastModifiedSince) {
 
@@ -463,6 +479,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return "{ \"oids\": [\"" + Joiner.on("\", \"").join(oids) + "\"]}";
     }
 
+    // POST /organisaatio/v2/{oid}/organisaatiosuhde
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
@@ -503,6 +520,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
     }
 
+    // GET /organisaatio/v2/{oid}/historia
     @Override
     public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
@@ -535,6 +553,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return historia;
     }
 
+    // GET /organisaatio/v2/liitokset
     @Override
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
         Date date = null;
@@ -549,6 +568,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
     }
 
+    // GET /organisaatio/v2/ryhmat
     @Override
     public List<OrganisaatioGroupDTOV2> groups() throws Exception {
         long qstarted = System.currentTimeMillis();
@@ -567,6 +587,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return groupList;
     }
 
+    // GET /organisaatio/v2/{oid}/hakutoimisto
     @Override
     public Response hakutoimisto(String organisaatioOid) {
         try {
