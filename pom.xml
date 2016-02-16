@@ -167,6 +167,7 @@
                                         <xms>1024</xms>
                                         <xmx>1024</xmx>
                                     </jMeterProcessJVMSettings>
+                                    <testResultsTimestamp>false</testResultsTimestamp>
                                 </configuration>
                             </execution>
                         </executions>
