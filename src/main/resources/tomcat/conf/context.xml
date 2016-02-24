@@ -26,5 +26,5 @@
               maxIdle="{{ host_postgresql_organisaatio_maxIdle | default(30) }}" 
               maxWait="{{ host_postgresql_organisaatio_maxWait | default(10000) }}"
               username="{{ host_postgresql_organisaatio_user }}" password="{{ host_postgresql_organisaatio_password }}" driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio"/>
+              url="jdbc:postgresql://{{host_postgresql_organisaatio}}:{{host_postgresql_organisaatio_port | default(port_postgresql)}}/organisaatio"/>
 </Context>
