@@ -47,18 +47,18 @@ activeMq.targetDestination.learningopportunityprovider.public=fi.vm.sade.learnin
 activeMq.targetDestination.organisaatio=fi.vm.sade.organisaatio.service
 activeMq.targetDestinationAdmin.tarjonta=fi.vm.sade.tarjonta.admin.service
 activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
-cas.callback.organisaatio-app=http://${server.name}:8301/organisaatio-app
-cas.callback.organisaatio-service=http://${server.name}:8301/organisaatio-service
-cas.callback.organisaatio-ui=http://${server.name}:8301/organisaatio-ui
+cas.callback.organisaatio-app=http://{{ server_name | default(${server.name}) }}) }}:{{ organisaatio_port | default(8301) }}/organisaatio-app
+cas.callback.organisaatio-service=http://{{ server_name | default(${server.name}) }}:{{ organisaatio_port | default(8301) }}/organisaatio-service
+cas.callback.organisaatio-ui=http://{{ server_name | default(${server.name}) }}:{{ organisaatio_port | default(8301) }}/organisaatio-ui
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
 cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
-cas.callback.organisaatio-service=http://${server.name}:8301/organisaatio-service
-cas.callback.organisaatio-ui=http://${server.name}:8301/organisaatio-ui
-cas.callback.tarjonta-service=http://${server.name}:8302/tarjonta-service
+cas.callback.organisaatio-service=http://{{ server_name | default(${server.name}) }}:{{ organisaatio_port | default(8301) }}/organisaatio-service
+cas.callback.organisaatio-ui=http://{{ server_name | default(${server.name}) }}:{{ organisaatio_port | default(8301) }}/organisaatio-ui
+cas.callback.tarjonta-service=http://{{ server_name | default(${server.name}) }}:{{ tarjonta_port | default(8302) }}/tarjonta-service
 cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-ui
 cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
