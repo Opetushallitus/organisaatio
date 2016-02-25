@@ -112,14 +112,15 @@ app.config(function(datepickerConfig) {
 });
 
 app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
-    // Tehdään autentikoitu get servicelle
-    // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
-    OrganisaatioInitAuth.init();
-
-    $http.defaults.headers.common['Caller-Id'] = "organisaatio.organisaatio-ui.frontend";
+    // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
+    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
     if($cookies.get('CSRF')) {
         $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF');
     }
+
+    // Tehdään autentikoitu get servicelle
+    // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
+    OrganisaatioInitAuth.init();
 });
 
 app.run(function($http, $cookies) {

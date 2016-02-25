@@ -52,6 +52,8 @@
     <!-- Swagger writers -->
     <bean id="resourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
     <bean id="apiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+    <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
+    <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
 
     <bean class="org.apache.cxf.jaxrs.JAXRSServerFactoryBean" init-method="create">
         <property name="address" value="/rest" />
@@ -74,6 +76,8 @@
                 <ref bean="organisaatioJacksonJsonProvider" />
                 <ref bean="resourceWriter" />
                 <ref bean="apiWriter" />
+                <ref bean="inputFilter" />
+                <ref bean="outputFilter" />
             </list>
         </property>
     </bean>
