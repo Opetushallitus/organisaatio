@@ -45,12 +45,16 @@
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <spring.version>3.2.16.RELEASE</spring.version>
-        <!--<spring.version>4.2.4.RELEASE</spring.version>-->
         <spring.security.version>3.1.7.RELEASE</spring.security.version>
         <!--<hibernate.version>4.1.0.Final</hibernate.version>-->
         <hibernate.version>4.2.21.Final</hibernate.version>
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
         <jmeter.version>1.10.1</jmeter.version>
+
+        <!--Default properties-->
+        <jmeter.username>xxx</jmeter.username>
+        <jmeter.password>xxx</jmeter.password>
+        <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
     </properties>
 
     <modules>
@@ -162,18 +166,36 @@
                                     <goal>jmeter</goal>
                                 </goals>
                                 <configuration>
-                                    <resultsDirectory>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</resultsDirectory>
+                                    <resultsDirectory>${jmeter.resultDir}</resultsDirectory>
                                     <jMeterProcessJVMSettings>
                                         <xms>1024</xms>
                                         <xmx>1024</xmx>
                                     </jMeterProcessJVMSettings>
                                     <testResultsTimestamp>false</testResultsTimestamp>
+                                    <ignoreResultFailures>true</ignoreResultFailures>
                                 </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <propertiesUser>
+                                <username>${jmeter.username}</username>
+                                <password>${jmeter.password}</password>
+                            </propertiesUser>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <jmeter.resultDir>${project.build}</jmeter.resultDir>
+            </properties>
         </profile>
     </profiles>
 </project>
