@@ -77,7 +77,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
         result.setAlkuPvm(dGet(doc, ALKUPVM));
         result.setLakkautusPvm(dGet(doc, LAKKAUTUSPVM));
         result.setOppilaitostyyppi(sGet(doc, OPPILAITOSTYYPPI));
-        result.setToimipisteKoodi(sGet(doc, TOIMIPISTEKOODI));
+        result.setToimipistekoodi(sGet(doc, TOIMIPISTEKOODI));
         result.setAliOrganisaatioMaara(iGet(doc, ALIORGANISAATIOIDEN_LKM));
 
         return result;

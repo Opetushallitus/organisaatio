@@ -61,7 +61,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
         assertEquals(doc.getFieldValue(NIMISV), result.getNimi("sv"));
         assertEquals(doc.getFieldValue(OID), result.getOid());
         assertEquals(doc.getFieldValue(OPPILAITOSKOODI), result.getOppilaitosKoodi());
-        assertEquals(doc.getFieldValue(TOIMIPISTEKOODI), result.getToimipisteKoodi());
+        assertEquals(doc.getFieldValue(TOIMIPISTEKOODI), result.getToimipistekoodi());
         assertEquals(doc.getFieldValue(PARENTOID), result.getParentOid());
         assertEquals(doc.getFieldValues(ORGANISAATIOTYYPPI).size(), result.getOrganisaatiotyypit().size());
         assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));

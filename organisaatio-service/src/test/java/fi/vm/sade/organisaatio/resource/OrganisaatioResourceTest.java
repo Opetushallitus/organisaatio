@@ -25,7 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 
@@ -144,11 +143,11 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
                 // see test data
                 for(OrganisaatioPerustieto child : org.getChildren()) {
                     if(child.getOid().equals("1.2.2004.1")) {
-                        assertNotNull(child.getToimipisteKoodi());
-                        assertEquals("123451", child.getToimipisteKoodi());
+                        assertNotNull(child.getToimipistekoodi());
+                        assertEquals("123451", child.getToimipistekoodi());
                     } else if (child.getOid().equals("1.2.2004.3")) {
-                        assertNotNull(child.getToimipisteKoodi());
-                        assertEquals("123452", child.getToimipisteKoodi());
+                        assertNotNull(child.getToimipistekoodi());
+                        assertEquals("123452", child.getToimipistekoodi());
                     }
                 }
             }

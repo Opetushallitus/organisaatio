@@ -435,7 +435,7 @@
                 </xs:simpleType>
             </xs:element>
             <xs:element minOccurs="0" name="oppilaitostyyppi" type="xs:string"/>
-            <xs:element minOccurs="0" name="toimipisteKoodi" type="xs:string" />
+            <xs:element minOccurs="0" name="toimipistekoodi" type="xs:string" />
             <xs:element maxOccurs="unbounded" minOccurs="0" name="tyypit" nillable="true" type="organisaatioTyyppi"/>
         </xs:sequence>
     </xs:complexType>
