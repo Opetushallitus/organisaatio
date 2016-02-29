@@ -41,18 +41,18 @@ public class OrganisaatioRestToStream {
     // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
     private static final CachingRestClient cachingRestClient = new CachingRestClient();
 
-    public InputStream getInputStreamFromUri(String uri) {
-        InputStream inputStream;
+    public JsonElement getInputStreamFromUri(String uri) {
+        JsonElement json;
 
         try {
             long t0 = System.currentTimeMillis();
             // Set "caller-id" (clientSubSystemCode) and ID chain to be sent on header.
             cachingRestClient.setCallerId(IDContextMessageHelper.getClientSubSystemCode());
             cachingRestClient.setID(IDContextMessageHelper.getIDChain());
-            inputStream = cachingRestClient.get(uri);
+            InputStream inputStream = cachingRestClient.get(uri);
             // Get the ID chain from received message and set it to cxf exchange.
             Reader reader = new InputStreamReader(inputStream);
-            JsonElement json = new JsonParser().parse(reader);
+            json = new JsonParser().parse(reader);
             JsonElement ID = json.getAsJsonObject().get("ID");
             if(ID != null) {
                 IDContextMessageHelper.setReceivedIDChain(ID.getAsString());
@@ -63,6 +63,6 @@ public class OrganisaatioRestToStream {
             throw new RuntimeException(e);
         }
 
-        return inputStream;
+        return json;
     }
  }

@@ -18,7 +18,7 @@ public final class IDContextMessageHelper {
     static public String getIDChain() {
         // Get the ID from cxf message exchange
         if(PhaseInterceptorChain.getCurrentMessage() != null) {
-            return PhaseInterceptorChain.getCurrentMessage().getExchange().get("ID").toString();
+            return (String)PhaseInterceptorChain.getCurrentMessage().getExchange().get("ID");
         }
         // Default ID
         return null;

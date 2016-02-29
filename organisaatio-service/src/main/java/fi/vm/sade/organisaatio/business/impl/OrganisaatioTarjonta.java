@@ -120,20 +120,17 @@ public class OrganisaatioTarjonta {
 
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
-        InputStream jsonStream;
+        JsonElement json;
 
         String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
 
         try {
-            jsonStream = restToStream.getInputStreamFromUri(url);
+            json = restToStream.getInputStreamFromUri(url);
         }
         catch (RuntimeException e) {
             LOG.warn("Search failed for koulutus with organization oid: " + oid);
             throw new OrganisaatioTarjontaException();
         }
-
-        Reader reader = new InputStreamReader(jsonStream);
-        JsonElement json = new JsonParser().parse(reader);
 
         // Tarkistetaan hakutulokset
         if (json.getAsJsonObject().get("status").isJsonNull()) {
@@ -269,20 +266,17 @@ public class OrganisaatioTarjonta {
 
     private List<HakukohdeHakutulosV1RDTO> haeHakukohteet(String ryhmaOid) {
         List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
-        InputStream jsonStream;
+        JsonElement json;
 
         String url = tarjontaServiceWebappUrl + "/v1" + buildSearchHakukohteetUri(ryhmaOid);
 
         try {
-            jsonStream = restToStream.getInputStreamFromUri(url);
+            json = restToStream.getInputStreamFromUri(url);
         }
         catch (RuntimeException e) {
             LOG.warn("Search failed for hakukohteet with group oid: " + ryhmaOid);
             throw new OrganisaatioTarjontaException();
         }
-
-        Reader reader = new InputStreamReader(jsonStream);
-        JsonElement json = new JsonParser().parse(reader);
 
         // Tarkistetaan hakutulokset
         if (json.getAsJsonObject().get("status").isJsonNull()) {
