@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.service.filters;
 
 import org.apache.cxf.jaxrs.ext.ResponseHandler;
+import org.apache.cxf.jaxrs.impl.ResponseImpl;
 import org.apache.cxf.jaxrs.model.OperationResourceInfo;
 import org.apache.cxf.message.Message;
 import org.slf4j.Logger;
@@ -16,9 +17,10 @@ public class OutputFilter implements ResponseHandler {
     public Response handleResponse(Message outMessage, OperationResourceInfo operationResourceInfo, Response response) {
         String IDChain = (String)outMessage.getExchange().get("ID");
         // Add callerid and ID chain headers to the output message.
-        response = Response.fromResponse(response)
-                .header("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode())
-                .header("ID", IDChain).build();
+        if(response != null) {
+            ((ResponseImpl)response).getHeaders().add("ID", IDChain);
+            ((ResponseImpl)response).getHeaders().add("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        }
         return response;
     }
 }

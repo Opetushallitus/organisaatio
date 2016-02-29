@@ -57,7 +57,7 @@
         <jmeter.username>xxx</jmeter.username>
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
-        <cxf.version>2.6.16</cxf.version>
+        <cxf.version>2.7.18</cxf.version>
     </properties>
 
     <modules>

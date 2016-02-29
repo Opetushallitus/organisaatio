@@ -2,8 +2,7 @@ package fi.vm.sade.organisaatio.service.filters;
 
 import org.apache.cxf.phase.PhaseInterceptorChain;
 
-// Static class to provide
-// TODO: no caller ids here!
+// Static class to provide ID chain in current message context or constant "caller-id" (clientsubsystemcode).
 public final class IDContextMessageHelper {
     // Provides the "caller-id" (clientSubSystemCode) to be provided on header when sending messages.
     private static final String localClientSubSystemCode = "organisaatio.organisaatio-service.backend";
