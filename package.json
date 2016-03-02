@@ -24,6 +24,6 @@
     "angular-ui-bootstrap": "0.14.3",
     "angular-idle": "git://github.com/HackedByChinese/ng-idle.git#0.3.2",
     "ui-select": "0.16.1",
-    "moment": "2.7.0"
+    "moment": "2.11.2"
   }
 }
