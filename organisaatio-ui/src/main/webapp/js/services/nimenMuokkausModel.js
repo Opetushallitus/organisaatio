@@ -128,7 +128,7 @@ app.factory('NimenMuokkausModel', function($log, $location,
             }
             if('alkuPvm' in voimassaolevaNimi && moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').isValid()) {
                 // Uuden nimen alkupäivämäärä ei voi olla sama kuin vanhan
-                minAlkuPvm = moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').add('d', 1).toDate();
+                minAlkuPvm = moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').add(1,'d').toDate();
             }
             else {
                 minAlkuPvm = organisaatioAlkuPvm;
