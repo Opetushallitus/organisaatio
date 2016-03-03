@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteriaDTOV2 {
