@@ -85,8 +85,8 @@
         <property name="resourcePackage" value="io.swagger.resource" />
         <property name="version" value="1.0.0" />
         <property name="schemes" value="https" />
-        <property name="host" value="${host.virkailija}" />
-        <property name="basePath" value="/organisaatio-service/rest" />
+        <property name="host" value="" />
+        <property name="basePath" value="/organisaatio-service/rest/swagger.json" />
         <property name="title" value="Organisaatio resources ${host.virkailija}" />
         <property name="description" value="Organisaatio offered resources" />
         <property name="contact" value="" />
