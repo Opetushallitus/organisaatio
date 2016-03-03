@@ -132,19 +132,25 @@
             <version>2.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-annotations_2.10</artifactId>
-            <version>${swagger.annotations.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-core_2.10</artifactId>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
             <version>${swagger.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-jersey-jaxrs_2.10</artifactId>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
             <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey-jaxrs</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -217,6 +223,7 @@
             <artifactId>joda-time</artifactId>
             <version>1.6.2</version>
         </dependency>
+        <!--Provides javax.ws.rs-api:2.0-m10 if this is overwritten with newer version stops working!-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
@@ -234,17 +241,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-api</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-security-cors</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-bundle-jaxrs</artifactId>
             <version>${cxf.version}</version>
         </dependency>
 
@@ -278,11 +275,6 @@
             <version>${servlet.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
 
         <!-- Apache Commons Upload -->
         <dependency>
@@ -303,11 +295,11 @@
             <version>${gson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>1.3.9</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.code.findbugs</groupId>-->
+            <!--<artifactId>jsr305</artifactId>-->
+            <!--<version>1.3.9</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-events</artifactId>
@@ -384,6 +376,7 @@
             <artifactId>spring-security-core</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
@@ -432,9 +425,28 @@
                     <groupId>org.apache.cxf</groupId>
                     <artifactId>cxf-rt-frontend-jaxws</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-jaxrs</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>2.4.5</version>
+        </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
@@ -606,6 +618,14 @@
                 <exclusion>
                     <groupId>org.apache.cxf</groupId>
                     <artifactId>cxf-bundle</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-json-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

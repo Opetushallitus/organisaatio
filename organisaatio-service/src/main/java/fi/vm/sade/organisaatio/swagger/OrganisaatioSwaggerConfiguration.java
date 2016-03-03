@@ -5,8 +5,10 @@
  */
 package fi.vm.sade.organisaatio.swagger;
 
-import com.wordnik.swagger.config.FilterFactory;
+import io.swagger.config.FilterFactory;
 import javax.annotation.PostConstruct;
+
+import io.swagger.core.filter.SwaggerSpecFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,6 @@ public class OrganisaatioSwaggerConfiguration {
 
     @PostConstruct
     public void init() {
-        FilterFactory.filter_$eq(new AccessHiddenSpecFilter());
+        FilterFactory.setFilter(new AccessHiddenSpecFilter());
     }
 }

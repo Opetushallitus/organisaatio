@@ -15,7 +15,7 @@
 
 package fi.vm.sade.organisaatio.resource.dto;
 
-import com.wordnik.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModel;
 import java.util.List;
 import java.util.Map;
 

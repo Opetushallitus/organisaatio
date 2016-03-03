@@ -44,7 +44,7 @@
     </http>
 
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex"
-    pattern="/buildversion.txt|/healthcheck|/swagger/.*|/api-docs.*">
+    pattern="/buildversion.txt|/healthcheck|/swagger/.*|/swagger.json.*">
         <intercept-url pattern="/**" access="permitAll"/>
     </http>
 

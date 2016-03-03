@@ -18,8 +18,8 @@ package fi.vm.sade.organisaatio.dto.v2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  *

@@ -3,8 +3,8 @@ package fi.vm.sade.organisaatio.api.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.HashSet;
 import java.util.Set;
 

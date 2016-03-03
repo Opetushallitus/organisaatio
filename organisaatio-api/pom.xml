@@ -35,11 +35,12 @@ Union Public Licence for more details. -->
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.0.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-annotations_2.10</artifactId>
-            <version>${swagger.annotations.version}</version>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
