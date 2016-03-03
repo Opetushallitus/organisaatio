@@ -52,10 +52,6 @@
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi" />
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi" />
 
-    <!--Swagger API listing resource-->
-    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
-    <bean id="swaggerSerializers" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
-
     <!-- Filters to handle caller-id and ID chain -->
     <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
     <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
@@ -81,8 +77,12 @@
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
-        <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource" />
+    <!--Swagger API listing resource-->
+    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
+    <bean id="swaggerSerializers" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
+
+    <bean id="beanConfig" class="io.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="io.swagger.resource" />
         <property name="version" value="1.0.0" />
         <property name="schemes" value="https" />
         <property name="host" value="${host.virkailija}" />
@@ -92,7 +92,7 @@
         <property name="contact" value="" />
         <property name="license" value="Apache 2.0 License" />
         <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html" />
-        <!--<property name="scan" value="true" />-->
+        <property name="scan" value="true" />
     </bean>
 
 </beans>
