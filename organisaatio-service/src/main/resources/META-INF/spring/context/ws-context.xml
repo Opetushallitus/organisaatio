@@ -69,8 +69,8 @@
             <ref bean="organisaatioDevResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="swaggerSerializers" />
-            <ref bean="swaggerResource" />
+            <ref bean="apiListingResourceJSON" />
+            <ref bean="apiDeclarationProvider" />
             <!--<ref bean="organisaatioJacksonJsonProvider" />-->
             <ref bean="inputFilter" />
             <ref bean="outputFilter" />
@@ -78,15 +78,15 @@
     </jaxrs:server>
 
     <!--Swagger API listing resource-->
-    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
-    <bean id="swaggerSerializers" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
+    <bean id="apiListingResourceJSON" class="io.swagger.jaxrs.listing.ApiListingResource" />
+    <bean id="apiDeclarationProvider" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
 
     <bean id="beanConfig" class="io.swagger.jaxrs.config.BeanConfig">
-        <property name="resourcePackage" value="io.swagger.resource" />
+        <property name="resourcePackage" value="io.swagger.resource,fi.vm.sade.organisaatio" />
         <property name="version" value="1.0.0" />
         <property name="schemes" value="https" />
         <property name="host" value="${host.virkailija}" />
-        <property name="basePath" value="/organisaatio-service/rest/swagger.json" />
+        <property name="basePath" value="/organisaatio-service/rest" />
         <property name="title" value="Organisaatio resources ${host.virkailija}" />
         <property name="description" value="Organisaatio offered resources" />
         <property name="contact" value="" />
