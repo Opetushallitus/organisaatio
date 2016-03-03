@@ -39,7 +39,7 @@ Union Public Licence for more details. -->
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
+            <artifactId>swagger-jaxrs</artifactId>
             <version>${swagger.version}</version>
         </dependency>
         <dependency>
