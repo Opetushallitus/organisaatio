@@ -137,21 +137,6 @@
             <version>${swagger.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.wordnik</groupId>
-                    <artifactId>swagger-core_2.10</artifactId>
-                </exclusion>
-                <!--<exclusion>-->
-                    <!--<groupId>javax.ws.rs</groupId>-->
-                    <!--<artifactId>jsr311-api</artifactId>-->
-                <!--</exclusion>-->
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-core_2.10</artifactId>
-            <version>${swagger.version}</version>
-            <exclusions>
-                <exclusion>
                     <groupId>com.fasterxml.jackson.module</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
@@ -165,7 +150,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--javax.annotation.Nullable-->
+        <!--For javax.annotation.Nullable-->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
