@@ -57,7 +57,7 @@
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
         <cxf.version>2.7.18</cxf.version>
-        <jackson.version>2.4.5</jackson.version>
+        <jackson.version>2.7.2</jackson.version>
     </properties>
 
     <modules>
