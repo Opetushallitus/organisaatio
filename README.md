@@ -32,37 +32,46 @@ Windows: Jetty:ä ajettaessa windows lukitsee oletuksena ajettavat tiedostot. T�
 
 Asennus:
 
-    Kloonaa repository Githubista
-        git clone https://github.com/Opetushallitus/organisaatio.git
-    (optional) OPH:n Maven-repoihin viittaava settings.xml paikoilleen oman kotihakemiston alta löytyvään .m2-hakemistoon (nämä tulevat projektiin automaattisesti build-parent riippuvuuden kautta)
-    Konfiguraatiotiedostot (common.properties, organisaatio-ui.properties) paikoilleen oman kotihakemiston alle luotavaan "oph-configuration"-hakemistoon. 
-        windows: %homepath%
-        linux: ~
-    Jos näitä tiedostoja ei ole annettu, organisaatio-ui.properties löytyy projektista kansion organisaatio-ui/resources alta. Tähän pitää muuttaa "localhost:portti" => "itest-virkailija.oph.ware.fi". Common.properties löytyy luokalta kansiosta "/data00/oph/organisaatio/oph-configuration/" ja sen voi kopioida sellaisenaan.
-    Käännä palvelu organisaatio-repositoryn juurihakemistossa
-        mvn clean install
+Kloonaa repository Githubista
+
+    git clone https://github.com/Opetushallitus/organisaatio.git
+(optional) OPH:n Maven-repoihin viittaava settings.xml paikoilleen oman kotihakemiston alta löytyvään .m2-hakemistoon (nämä tulevat projektiin automaattisesti build-parent riippuvuuden kautta)
+Konfiguraatiotiedostot (common.properties, organisaatio-ui.properties) paikoilleen oman kotihakemiston alle luotavaan "oph-configuration"-hakemistoon.
+ 
+    windows: %homepath%
+    linux: ~
+Jos näitä tiedostoja ei ole annettu, organisaatio-ui.properties löytyy projektista kansion organisaatio-ui/resources alta. Tähän pitää muuttaa "localhost:portti" => <integraatiopalvelimen osoite>. Common.properties löytyy luokalta kansiosta "/data00/oph/organisaatio/oph-configuration/" ja sen voi kopioida sellaisenaan.
+Käännä palvelu organisaatio-repositoryn juurihakemistossa
+
+    mvn clean install
 
 Ajaminen:
 
-    Varmista, että repositoryn konffitiedostossa servers/src/main/webapp/META-INF/jetty-env.xml ei ole localhostin vaan kehityspalvelimen osoite niin saat yhteyden luokka-ympäristön kantaan.
-    Aja palvelua lokaalisti:
-        cd servers
-        mvn jetty:run
-    (vaihtoehtoisesti IDEAn jetty-pluginilla)
+Varmista, että repositoryn konffitiedostossa servers/src/main/webapp/META-INF/jetty-env.xml ei ole localhostin vaan kehityspalvelimen osoite niin saat yhteyden luokka-ympäristön kantaan.
+Aja palvelua lokaalisti:
+
+    cd servers
+    mvn jetty:run
+(vaihtoehtoisesti IDEAn jetty-pluginilla)
     
 Yllä olevat asennus ja ajamis-komennot on hyvä konfiguroida IDEA kehitysympäristöön kehityksen nopeuttamiseksi.
 
 Autentikointi/auktorisointi:
 
-    Konffit on nyt viritetty niin, että sovellus ajetaan lokaalisti, mutta tietokanta on integraatiotestiympäristön kanta, joka sijaitsee OPH:n tietokantapalvelimella. Samoin viittaukset muihin palveluihin, joista organisaatiopalvelu on riippuvainen on konffattu osoittamaan integraatioympäristöön.
-    Lokaali UI testiympäristö Jetty-palvelimen ollessa päällä
-        http://localhost:8180/organisaatio-ui/
+Konffit on nyt viritetty niin, että sovellus ajetaan lokaalisti, mutta tietokanta on integraatiotestiympäristön kanta, joka sijaitsee OPH:n tietokantapalvelimella. Samoin viittaukset muihin palveluihin, joista organisaatiopalvelu on riippuvainen on konffattu osoittamaan integraatioympäristöön.
+Lokaali UI testiympäristö Jetty-palvelimen ollessa päällä
+    `http://localhost:8180/organisaatio-ui/`
 
-        Autentikaatiossa ja auktorisoinnissa käytetään kehitysmoodia, jolloin käyttäjätiedot ja roolit löytyvät oph-configuration-hakemistossa olevasta security-context-backend.xml-tiedostosta. Eli kun avaa lokaalisti käyttöliittymän, avautuvaan basic auth -loginiin kirjoitettavat tunnukset ja salasanat löytyvät tuolta.
-        Jos tätä tiedostoa ei ole annettu, sen voi hakea luokalta kansiosta "/data00/oph/organisaatio/oph-configuration". "authentication-manager" tagien sisään laitetaan laitetaan käyttäjä, jolla on vähintään seuraavat oikeudet:
-            <authentication-provider><user-service>
-             <user name="ophadmin" password="ilonkautta" authorities=ROLE_APP_ORGANISAATIOHALLINTA, ROLE_APP_ORGANISAATIOHALLINTA_CRUD, ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ, ROLE_APP_ORGANISAATIOHALLINTA_READ_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE, ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.10.00000000001" />
-             </user-service></authentication-provider>
+Autentikaatiossa ja auktorisoinnissa käytetään kehitysmoodia, jolloin käyttäjätiedot ja roolit löytyvät oph-configuration-hakemistossa olevasta security-context-backend.xml-tiedostosta. Eli kun avaa lokaalisti käyttöliittymän, avautuvaan basic auth -loginiin kirjoitettavat tunnukset ja salasanat löytyvät tuolta.
+Jos tätä tiedostoa ei ole annettu, sen voi hakea luokalta kansiosta "/data00/oph/organisaatio/oph-configuration". "authentication-manager" tagien sisään laitetaan laitetaan käyttäjä, jolla on vähintään seuraavat oikeudet: (muista asettaa tunnus ja salasana)
+
+    <authentication-provider><user-service>
+     <user name="<tunnus>" password="<salasana>" authorities=
+     ROLE_APP_ORGANISAATIOHALLINTA, ROLE_APP_ORGANISAATIOHALLINTA_CRUD, 
+     ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ, 
+     ROLE_APP_ORGANISAATIOHALLINTA_READ_1.2.246.562.10.00000000001, ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE, 
+     ROLE_APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.10.00000000001" />
+     </user-service></authentication-provider>
 
 Lokaalin backendin tarjoamat REST-rajapinnat ja niiden dokumentaatio:
 
