@@ -218,6 +218,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Map<String, String> oldName = null;
         if (updating) {
             Organisaatio oldOrg = organisaatioDAO.findByOid(model.getOid());
+            if(oldOrg.isOrganisaatioPoistettu()) {
+                throw new ValidationException("validation.Organisaatio.poistettu");
+            }
             oldName = new HashMap<>(oldOrg.getNimi().getValues());
         }
 
