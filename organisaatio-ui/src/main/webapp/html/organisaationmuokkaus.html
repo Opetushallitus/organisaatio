@@ -180,13 +180,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
         <div class="controls">
             <label>
-                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
                     {{model.organisaatio.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                 </div>
                 <div ng-if="model.organisaationTulevaNimi.alkuPvm">
                     <br>
                     {{model.organisaationTulevaNimi.alkuPvm | date:'dd.MM.yyyy'}} <i class="icon-arrow-right"></i>
-                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
+                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
                         <span ng-if="model.organisaationTulevaNimi.nimi[avain]">{{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]</span><br>
                     </div>
                 </div>
@@ -195,10 +195,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <table class="table table-striped">
                 <thead><tr><th>{{'Organisaationtarkastelu.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.nimi' | i18n}}</th></tr></thead>
                 <tbody>
-                    <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
+                    <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
                         <td>{{entry.alkuPvm}}</td>
                         <td>
-                            <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
+                            <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
                                 {{entry.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                             </span>
                         </td>

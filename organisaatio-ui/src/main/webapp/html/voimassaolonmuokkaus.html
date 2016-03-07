@@ -25,7 +25,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <a href="" class="icon" ng-class="{'icon-chevron-right': !data.expanded, 'icon-chevron-down': data.expanded}"
                ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
             <i class="icon icon-chevron-right" style="visibility: hidden" ng-if="model.isLeaf(data)"></i>
-            <input ng-show="model.isModified" ng-change="model.checkboxChanged(data)" type="checkbox" ng-model="data.valittu" ng-disabled="data.readonly"">
+            <input ng-show="model.isModified" ng-change="model.checkboxChanged(data)" type="checkbox" ng-model="data.valittu" ng-disabled="data.readonly">
             <span style="display: inline-block; vertical-align: top;">{{data.nimi | decodeAmp}}</span>
         </div>
         <div class="span2">

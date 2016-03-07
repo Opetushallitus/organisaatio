@@ -45,13 +45,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
         <div class="controls">
             <label class="control-label control-label-left">
-                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
+                <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
                     {{model.organisaatio.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                 </div>
                 <div ng-if="model.organisaationTulevaNimi.alkuPvm">
                     <br>
                     {{model.organisaationTulevaNimi.alkuPvm | date:'d.M.yyyy'}} <i class="icon-arrow-right"></i>
-                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
+                    <div ng-repeat="avain in organisaatioNimiLangs(model.organisaationTulevaNimi.nimi)| orderBy:orderByLang">
                         {{model.organisaationTulevaNimi.nimi[avain] | decodeAmp}} [{{avain}}]<br>
                     </div>
                 </div>

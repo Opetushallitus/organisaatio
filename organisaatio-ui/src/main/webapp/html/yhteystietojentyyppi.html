@@ -16,18 +16,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Muokattavien yhteystietotyyppien näkymä -->
 <form name="form" class="form-horizontal">
-	<h1>{{'YhteystietojenTyyppiForm.otsikko'| i18n}}</h1>
+	<h1>{{'YhteystietojenTyyppiForm.otsikko'| i18n}}</h1>
 
 	<select class="span4" ng-model="valittuYhteystietotyyppi"
 		    ng-options="localizeYhteystietotyypinNimi(yt) for yt in model.yhteystietotyypit | orderBy:localizeYhteystietotyypinNimi">
-		<option value="">{{'YhteystietojenTyyppiForm.valitseTyyppi'| i18n}}</option>
+		<option value="">{{'YhteystietojenTyyppiForm.valitseTyyppi'| i18n}}</option>
 	</select>
 	<hr>
 
 	<div ng-if="valittuYhteystietotyyppi">
-		<h3>{{'YhteystietojenTyyppiForm.yttNimi'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttNimi'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.FI'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.FI'| i18n}}</label>
 		    <div class="controls">
 		        <input class="span4" type="text" name="nimifi" ng-model="yttNimiLang('fi').value" unique-yhteystietojen-tyyppi-field>
 		        <div>
@@ -38,7 +38,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.SE'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.SE'| i18n}}</label>
 		    <div class="controls">
 		        <input class="span4" type="text" name="nimisv" ng-model="yttNimiLang('sv').value" unique-yhteystietojen-tyyppi-field>
 		        <div>
@@ -49,7 +49,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.EN'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.EN'| i18n}}</label>
 		    <div class="controls">
 		        <input class="span4" type="text" name="nimien" ng-model="yttNimiLang('en').value" unique-yhteystietojen-tyyppi-field>
 		        <div>
@@ -60,9 +60,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 
-		<h3>{{'YhteystietojenTyyppiForm.yttNimitiedot'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttNimitiedot'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.nimi'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.nimi'| i18n}}</label>
 		    <div class="controls" ng-repeat="nimi in yttFindTyyppi({tyyppi: 'NIMI'})">
 		        <input type="checkbox" ng-model="nimi.kaytossa" ng-disabled="nimi.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -71,7 +71,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.nimike'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.nimike'| i18n}}</label>
 		    <div class="controls" ng-repeat="nimike in yttFindTyyppi({tyyppi: 'NIMIKE'})">
 		        <input type="checkbox" ng-model="nimike.kaytossa" ng-disabled="nimike.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -81,9 +81,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		</div>
 
 
-		<h3>{{'YhteystietojenTyyppiForm.yttOsoitteet'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttOsoitteet'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.kayntiosoite'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.kayntiosoite'| i18n}}</label>
 		    <div class="controls" ng-repeat="osoite in yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Käyntiosoite'})">
 		        <input type="checkbox" ng-model="osoite.kaytossa" ng-disabled="osoite.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -92,7 +92,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.postiosoite'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.postiosoite'| i18n}}</label>
 		    <div class="controls" ng-repeat="postios in yttFindTyyppi({tyyppi: 'OSOITE', nimi: 'Postiosoite'})">
 		        <input type="checkbox" ng-model="postios.kaytossa" ng-disabled="postios.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -101,7 +101,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.ulkomaanOsoite'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.ulkomaanOsoite'| i18n}}</label>
 		    <div class="controls" ng-repeat="ulkomos in yttFindTyyppi({tyyppi: 'OSOITE_ULKOMAA'})">
 		        <input type="checkbox" ng-model="ulkomos.kaytossa" ng-disabled="ulkomos.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -126,9 +126,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 
-		<h3>{{'YhteystietojenTyyppiForm.yttPuhelinnumerot'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttPuhelinnumerot'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.mobiiliNumero'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.mobiiliNumero'| i18n}}</label>
 		    <div class="controls" ng-repeat="mobnum in yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Matkapuhelinnumero'})">
 		        <input type="checkbox" ng-model="mobnum.kaytossa" ng-disabled="modnum.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -137,7 +137,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.lankaNumero'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.lankaNumero'| i18n}}</label>
 		    <div class="controls" ng-repeat="puh in yttFindTyyppi({tyyppi: 'PUHELIN', nimi: 'Puhelinnumero'})">
 		        <input type="checkbox" ng-model="puh.kaytossa" ng-disabled="puh.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -146,7 +146,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.faksiNumero'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.faksiNumero'| i18n}}</label>
 		    <div class="controls" ng-repeat="faksi in yttFindTyyppi({tyyppi: 'FAKSI'})">
 		        <input type="checkbox" ng-model="faksi.kaytossa" ng-disabled="faksi.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -171,9 +171,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 
-		<h3>{{'YhteystietojenTyyppiForm.yttSahkoiset'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttSahkoiset'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.spOsoite'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.spOsoite'| i18n}}</label>
 		    <div class="controls" ng-repeat="email in yttFindTyyppi({tyyppi: 'EMAIL'})">
 		        <input type="checkbox" ng-model="email.kaytossa" ng-disabled="email.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -182,7 +182,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.wwwOsoite'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.wwwOsoite'| i18n}}</label>
 		    <div class="controls" ng-repeat="www in yttFindTyyppi({tyyppi: 'WWW', nimi: 'Www-osoite'})">
 		        <input type="checkbox" ng-model="www.kaytossa" ng-disabled="www.pakollinen">
 		        {{'YhteystietojenTyyppiForm.kaytossaFull'| i18n}}
@@ -207,9 +207,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 
-		<h3>{{'YhteystietojenTyyppiForm.yttKayttavat'| i18n}}</h3>
+		<h3>{{'YhteystietojenTyyppiForm.yttKayttavat'| i18n}}</h3>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.yttOrg'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.yttOrg'| i18n}}</label>
 		    <div class="controls">
 		        <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.koulutustoimija">
 		        {{'Organisaatiot.KOULUTUSTOIMIJA'| i18n}}
@@ -224,7 +224,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		    </div>
 		</div>
 		<div class="control-group">
-		    <label class="control-label">{{'YhteystietojenTyyppiForm.yttOppilaitos'| i18n}}</label>
+		    <label class="control-label">{{'YhteystietojenTyyppiForm.yttOppilaitos'| i18n}}</label>
 		    <div class="controls">
 		        <input type="checkbox" ng-model="valittuYhteystietotyyppiOrgTyypit.kaikkiOppilaitostyypit">
 		        {{'YhteystietojenTyyppiForm.kaikkiOppilaitokset'| i18n}}
@@ -233,7 +233,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		        <select ng-if="valittuYhteystietotyyppiOrgTyypit.rajatutOppilaitostyypit"
 		                ng-model="valittuYhteystietotyyppiOrgTyypit.valitutOppilaitostyypit"
 		                ng-options="ot.nimi for ot in model.oppilaitostyypit | orderBy:'nimi'">
-		            <option value="">{{'YhteystietojenTyyppiForm.lisaaOppilaitostyyppi'| i18n}}</option>
+		            <option value="">{{'YhteystietojenTyyppiForm.lisaaOppilaitostyyppi'| i18n}}</option>
 		        </select>
 		    </div>
 		</div>
@@ -254,15 +254,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="row">
     <div class="span6">
         <button class="btn" ng-click="poistaYhteystietotyyppi()" ng-if="valittuYhteystietotyyppi">
-            {{'YhteystietojenTyyppiForm.poistaTyyppi'| i18n}}
+            {{'YhteystietojenTyyppiForm.poistaTyyppi'| i18n}}
         </button>
         <button class="btn" ng-click="uusiYhteystietotyyppi()">
-            {{'YhteystietojenTyyppiForm.luoUusi'| i18n}}
+            {{'YhteystietojenTyyppiForm.luoUusi'| i18n}}
         </button>
     </div>
     <div class="offset7">
-        <button class="btn" ng-click="peruuta()">{{'YhteystietojenTyyppiForm.peruuta'| i18n}}</button>
-        <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="tallennaYhteystietotyyppi()">{{'YhteystietojenTyyppiForm.tallenna'| i18n}}</button>
+        <button class="btn" ng-click="peruuta()">{{'YhteystietojenTyyppiForm.peruuta'| i18n}}</button>
+        <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="tallennaYhteystietotyyppi()">{{'YhteystietojenTyyppiForm.tallenna'| i18n}}</button>
     </div>
     <div>&nbsp;</div>
 </div>

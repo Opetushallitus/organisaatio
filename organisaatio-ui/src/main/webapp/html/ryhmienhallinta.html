@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Ryhmienhallinta -->
 <form name="mainform" class="form-horizontal" novalidate>
-    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
+    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
 
     <div class="control-group">
             <ui-select class="span10" style="left: -20px;" ng-model="currentGroupSelection.selected" theme="selectize" ng-disabled="disabled"
                        on-select="valitseRyhma($item)">
-                <ui-select-match placeholder="{{'RyhmienHallinta.valitseRyhma'| i18n}}">{{localizeNimi($select.selected)}}</ui-select-match>
+                <ui-select-match placeholder="{{'RyhmienHallinta.valitseRyhma'| i18n}}">{{localizeNimi($select.selected)}}</ui-select-match>
                 <ui-select-choices repeat="group in model.groups | filter: $select.search | orderBy : localizeNimi">
                     <span ng-bind-html-unsafe="group.nimi.fi | highlight: $select">{{localizeNimi(group)}}</span>
                 </ui-select-choices>
@@ -31,7 +31,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <hr>
 
     <div ng-show="currentGroup" ng-form="form">
-        <h3>{{'RyhmienHallinta.nimi'| i18n}}</h3>
+        <h3>{{'RyhmienHallinta.nimi'| i18n}}</h3>
         <div class="control-group">
             <div class="controls">
                 <input id="nimifi" type="text" name="nimifi" class="span6"
@@ -60,7 +60,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.kuvaus'| i18n}}</h3>
+        <h3>{{'RyhmienHallinta.kuvaus'| i18n}}</h3>
 
         <div class="control-group">
             <div class="controls">
@@ -85,7 +85,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.ryhmatyyppi'| i18n}}</h3>
+        <h3>{{'RyhmienHallinta.ryhmatyyppi'| i18n}}</h3>
 
         <div class="control-group">
             <div class="controls">
@@ -104,7 +104,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.kayttoryhma'| i18n}}</h3>
+        <h3>{{'RyhmienHallinta.kayttoryhma'| i18n}}</h3>
 
         <div class="control-group">
             <div class="controls">
@@ -137,16 +137,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="row">
         <div class="span6">
             <button class="btn" ng-click="luoUusi()">
-                {{'RyhmienHallinta.luoUusi'| i18n}}
+                {{'RyhmienHallinta.luoUusi'| i18n}}
             </button>
             <button class="btn" ng-disabled="!currentGroup" ng-click="poista()">
-                {{'RyhmienHallinta.poista'| i18n}}
+                {{'RyhmienHallinta.poista'| i18n}}
             </button>
         </div>
         <div class="offset7">
             <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
-            <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()">{{'RyhmienHallinta.tallenna'| i18n}}</button>
+            <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
+            <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()">{{'RyhmienHallinta.tallenna'| i18n}}</button>
         </div>
     </div>
 </form>
