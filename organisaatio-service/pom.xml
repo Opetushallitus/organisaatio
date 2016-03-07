@@ -565,6 +565,13 @@
             <version>${oid.api.version}</version>
         </dependency>
 
+        <!-- java-utils -->
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>oid-generator</artifactId>
+            <version>${oidgenerator.version}</version>
+        </dependency>
+
         <!-- Tarjonta :: API -->
         <dependency>
             <groupId>fi.vm.sade.tarjonta</groupId>

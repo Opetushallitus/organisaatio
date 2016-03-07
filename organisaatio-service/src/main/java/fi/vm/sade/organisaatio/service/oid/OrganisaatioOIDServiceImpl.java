@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.service.oid;
 
+import fi.vm.sade.oidgenerator.OIDGenerator;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
@@ -24,12 +25,9 @@ import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
-
 import fi.vm.sade.organisaatio.model.Organisaatio;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -135,9 +133,8 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         boolean generateNew = true;
         String newOid = null;
 
-        while (generateNew) {
-            newOid = root + nodeClassValue + "." + generateRandom();
-
+        while(generateNew) {
+            newOid = OIDGenerator.generateOID(Integer.parseInt(nodeClassValue));
             if (oidAvailable(newOid, nodeClassValue)) {
                 generateNew = false;
             }
@@ -145,40 +142,6 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
 
         LOG.debug("New oid generated: " + newOid);
         return newOid;
-    }
-
-    private String generateRandom() {
-
-        long min = 1000000000L;
-        long max = 10000000000L;
-
-        Random r = new Random();
-        long number = min + ((long) (r.nextDouble() * (max - min)));
-
-        String n = Long.toString(number);
-        n += luhnChecksum(number);
-        return n;
-    }
-
-    private int luhnChecksum(Long oid) {
-        String oidStr = oid.toString();
-
-        int sum = 0;
-        boolean alternate = false;
-
-        for (int i = oidStr.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(oidStr.substring(i, i + 1));
-            if (alternate) {
-                n *= 2;
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-            sum += n;
-            alternate = !alternate;
-        }
-
-        return sum % 10;
     }
 
     private boolean oidAvailable(String oid, String nodeClassValue) {
@@ -189,7 +152,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             Organisaatio org = organisaatioDAO.findByOid(oid);
 
             // Jos organisaatio löytyy annetulla oidilla, niin se ei ole vapaana
-            return (org == null) ? true : false;
+            return (org == null);
         }
         else if (nodeClass == NodeClassCode.TEKN_5) {
             try {
