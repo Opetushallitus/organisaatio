@@ -3,18 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:beans="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+                           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+                           http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-    <!-- TULEE: cxf-rt-core-2.4.6 jarrista? -->
+
+    <!-- embed cxf into spring http://cxf.apache.org/docs/embedding-cxf-inside-spring.html -->
     <import resource="classpath:META-INF/cxf/cxf.xml" />
-
-    <!-- TULEE: cxf-rt-transports-http-2.4.6 jarrista? -->
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <!--
@@ -25,69 +20,56 @@
     <bean id="oidService" class="fi.vm.sade.organisaatio.service.oid.OrganisaatioOIDServiceImpl" />
 
     <!-- object to json -->
-    <bean id="organisaatioObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
-
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="organisaatioObjectMapper"/>
-        <property name="targetMethod" value="configure"/>
-        <property name="arguments">
-            <util:list>
-                <util:constant static-field="org.codehaus.jackson.map.SerializationConfig.Feature.WRITE_NULL_PROPERTIES"/>
-                <util:constant static-field="java.lang.Boolean.FALSE"/>
-            </util:list>
+    <bean id="organisaatioJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" >
+        <property name="mapper">
+            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                <property name="serializationInclusion" value="NON_NULL" />
+            </bean>
         </property>
     </bean>
 
+    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi" />
+    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi" />
 
-    <bean id="organisaatioJacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider">
-        <property name="mapper" ref="organisaatioObjectMapper"/>
+    <!-- Filters to handle caller-id and ID chain -->
+    <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
+    <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
+
+    <!--swagger-->
+    <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.SwaggerFeature">
+        <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource" />
+        <property name="version" value="1.0.0" />
+        <!--<property name="schemes" value="" />-->
+        <!--<property name="host" value="" />-->
+        <property name="basePath" value="/organisaatio-service/rest" />
+        <property name="title" value="Organisaatio resources ${host.virkailija}" />
+        <property name="description" value="Organisaatio offered resources" />
+        <property name="contact" value="" />
+        <property name="license" value="Apache 2.0 License" />
+        <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html" />
+        <property name="scan" value="true" />
     </bean>
 
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi"/>
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi"/>
-
-    <!--Swagger API listing resource-->
-    <bean id="swaggerResourceJSON" class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
-
-    <!-- Swagger writers -->
-    <bean id="resourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
-    <bean id="apiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
-
-    <bean class="org.apache.cxf.jaxrs.JAXRSServerFactoryBean" init-method="create">
-        <property name="address" value="/rest" />
-        <property name="serviceBeans">
-            <list>
-                <ref bean="organisaatioResourceImpl"/>
-                <ref bean="organisaatioResourceImplV2"/>
-                <ref bean="indexerResource"/>
-                <ref bean="kelaResource"/>
-                <ref bean="ytjResource"/>
-                <ref bean="yhteystietojenTyyppiResource"/>
-                <ref bean="swaggerResourceJSON" />
-                <ref bean="tempfileResource"/>
-                <ref bean="sessionResource"/>
-                <ref bean="organisaatioDevResource"/>
-            </list>
-        </property>
-        <property name="providers">
-            <list>
-                <ref bean="organisaatioJacksonJsonProvider" />
-                <ref bean="resourceWriter" />
-                <ref bean="apiWriter" />
-            </list>
-        </property>
-    </bean>
-
-    <bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
-        <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource"/>
-        <property name="version" value="1.0.0"/>
-        <property name="basePath" value="https://${host.virkailija}/organisaatio-service/rest"/>
-        <property name="title" value="Organisaatio resources ${host.virkailija}"/>
-        <property name="description" value="Organisaatio offered resources"/>
-        <property name="contact" value=""/>
-        <property name="license" value="Apache 2.0 License"/>
-        <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html"/>
-        <property name="scan" value="true"/>
-    </bean>
+    <jaxrs:server id="rest" address="/rest">
+        <jaxrs:serviceBeans>
+            <ref bean="organisaatioResourceImpl"/>
+            <ref bean="organisaatioResourceImplV2"/>
+            <ref bean="indexerResource"/>
+            <ref bean="kelaResource"/>
+            <ref bean="ytjResource"/>
+            <ref bean="yhteystietojenTyyppiResource"/>
+            <ref bean="tempfileResource"/>
+            <ref bean="sessionResource"/>
+            <ref bean="organisaatioDevResource"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="organisaatioJsonProvider" />
+            <ref bean="inputFilter" />
+            <ref bean="outputFilter" />
+        </jaxrs:providers>
+        <jaxrs:features>
+            <ref bean="swagger2Feature" />
+        </jaxrs:features>
+    </jaxrs:server>
 
 </beans>

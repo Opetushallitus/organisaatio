@@ -34,8 +34,7 @@
         <java.version>1.7</java.version>
         <aspectj.version>1.7.0</aspectj.version>
         <maven.war.plugin.version>2.4</maven.war.plugin.version>
-        <swagger.version>1.3.0</swagger.version>
-        <swagger.annotations.version>1.3.0</swagger.annotations.version>
+        <swagger.version>1.3.13</swagger.version>
         <solr.version>4.2.0</solr.version>
         <!--<solr.version>4.3.0</solr.version>-->
         <modelmapper.version>0.6.3</modelmapper.version>
@@ -57,6 +56,8 @@
         <jmeter.username>xxx</jmeter.username>
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
+        <cxf.version>2.7.18</cxf.version>
+        <jackson.version>2.7.2</jackson.version>
     </properties>
 
     <modules>

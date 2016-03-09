@@ -19,6 +19,8 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -77,7 +79,7 @@ public class OrganisaatioKoodistoClient {
     }
 
     private void authorize() throws OrganisaatioKoodistoException {
-        if (ticket != null && reauthorize == false) {
+        if (ticket != null && !reauthorize) {
             LOG.debug("Using existing ticket.");
             return;
         }
@@ -90,6 +92,8 @@ public class OrganisaatioKoodistoClient {
         } else {
             ArrayList<NameValuePair> postParameters = new ArrayList<>();
             HttpPost post = new HttpPost(serviceAccessUrl + "/accessTicket");
+            post.addHeader("ID", IDContextMessageHelper.getIDChain());
+            post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
             postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
             postParameters.add(new BasicNameValuePair("service_url", koodistoServiceUrl));
@@ -97,6 +101,7 @@ public class OrganisaatioKoodistoClient {
                 post.setEntity(new UrlEncodedFormEntity(postParameters));
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse resp = client.execute(post);
+                IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
                 ticket = EntityUtils.toString(resp.getEntity()).trim();
                 if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED || ticket.isEmpty()) {
                     LOG.error("Failed to get ticket from :" + serviceAccessUrl + ". Response code:"
@@ -131,8 +136,11 @@ public class OrganisaatioKoodistoClient {
         String json = null;
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(url);
+        get.addHeader("ID", IDContextMessageHelper.getIDChain());
+        get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         try {
             HttpResponse resp = client.execute(get);
+            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
             json = EntityUtils.toString(resp.getEntity(), "UTF-8");
             if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // 500 => Koodia ei löydy
@@ -167,12 +175,15 @@ public class OrganisaatioKoodistoClient {
         authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
+        put.addHeader("ID", IDContextMessageHelper.getIDChain());
+        put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         put.addHeader("CasSecurityTicket", ticket);
         put.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
             LOG.debug("NOW json   =" + json);
             put.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(put, localContext);
+            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + koodistoServiceUrl + uri;
                 LOG.error(err);
@@ -197,18 +208,20 @@ public class OrganisaatioKoodistoClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
-        // TODO
         String path = "/rest/codeelement/" + uri;
         LOG.debug("POST " + koodistoServiceUrl + path);
         LOG.debug("POST data=" + json);
         authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(koodistoServiceUrl + path);
+        post.addHeader("ID", IDContextMessageHelper.getIDChain());
+        post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         post.addHeader("CasSecurityTicket", ticket);
         post.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
             post.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(post);
+            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + koodistoServiceUrl + path;
                 LOG.error(err);

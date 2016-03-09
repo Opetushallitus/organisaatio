@@ -33,13 +33,32 @@ Union Public Licence for more details. -->
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.wordnik</groupId>
-            <artifactId>swagger-annotations_2.10</artifactId>
-            <version>${swagger.annotations.version}</version>
+            <artifactId>swagger-jaxrs_2.10</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -63,7 +82,7 @@ Union Public Licence for more details. -->
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>2.6.2</version>
+                <version>${cxf.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
