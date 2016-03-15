@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -101,7 +102,10 @@ public class OrganisaatioKoodistoClient {
                 post.setEntity(new UrlEncodedFormEntity(postParameters));
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse resp = client.execute(post);
-                IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
+                Header header = resp.getFirstHeader("ID");
+                if(header != null) {
+                    IDContextMessageHelper.setReceivedIDChain(header.getValue());
+                }
                 ticket = EntityUtils.toString(resp.getEntity()).trim();
                 if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED || ticket.isEmpty()) {
                     LOG.error("Failed to get ticket from :" + serviceAccessUrl + ". Response code:"
@@ -140,7 +144,10 @@ public class OrganisaatioKoodistoClient {
         get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         try {
             HttpResponse resp = client.execute(get);
-            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
+            Header header = resp.getFirstHeader("ID");
+            if(header != null) {
+                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            }
             json = EntityUtils.toString(resp.getEntity(), "UTF-8");
             if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // 500 => Koodia ei löydy
@@ -183,7 +190,10 @@ public class OrganisaatioKoodistoClient {
             LOG.debug("NOW json   =" + json);
             put.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(put, localContext);
-            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
+            Header header = resp.getFirstHeader("ID");
+            if(header != null) {
+                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + koodistoServiceUrl + uri;
                 LOG.error(err);
@@ -221,7 +231,10 @@ public class OrganisaatioKoodistoClient {
         try {
             post.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(post);
-            IDContextMessageHelper.setReceivedIDChain(resp.getFirstHeader("ID").toString());
+            Header header = resp.getFirstHeader("ID");
+            if(header != null) {
+                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + koodistoServiceUrl + path;
                 LOG.error(err);
