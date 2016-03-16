@@ -191,8 +191,9 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
         locale = s;
     });
 
-    // We should call "/localisation/authorize" once so that the session gets established to localisation service
-    this.localisationAuthorizeCalled = false;
+    // Call to "/localisation/authorize" once so that the session gets established to localisation service.
+    // Normally this is not necesary so set to true. Requires 'ROLE_APP_LOKALISOINTI_READ' access rights.
+    this.localisationAuthorizeCalled = true;
 
     this.callLocalisationAuthorizeIfNecessary = function() {
         var self = this;
