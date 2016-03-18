@@ -1,11 +1,11 @@
 <!-- Organisaation Poisto -->
 <div class="modal-header">
-    <h3>{{'organisaatio.move.topic' | i18n}}</h3>
+    <h3 tt="organisaatio.move.topic">organisaatio.move.topic</h3>
 </div>
 
 <div class="modal-body">
-    <div class="form-fluid">
-        {{'organisaatio.move.confirm' | i18n}}
+    <div class="form-fluid" tt="organisaatio.move.confirm">
+        organisaatio.move.confirm
     </div>
     <div>
         <strong>{{current}} -> {{newParent}}</strong>
@@ -14,8 +14,8 @@
 
 <div class="modal-footer">
     <div class="form-fluid">
-        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn primary" ng-click="$close()">{{'Organisaationpoisto.ok' | i18n}}</button>
+        <button class="btn" ng-click="$dismiss()" tt="Organisaationpoisto.peruuta">Organisaationpoisto.peruuta</button>
+        <button class="btn primary" ng-click="$close()" tt="Organisaationpoisto.ok">Organisaationpoisto.ok</button>
     </div>
 </div>
 

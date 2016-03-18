@@ -15,25 +15,25 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 
 <div class="modal-header">
-    <h3>{{'YhteystietojenTyyppiForm.uusiTarvittavaYhteystieto' | i18n}}</h3>
+    <h3 tt="YhteystietojenTyyppiForm.uusiTarvittavaYhteystieto">Uusi tarvittava yhteystieto</h3>
 </div>
 
 <div class="modal-body">
     <form class="form-horizontal">
         <div class="control-group">
-            <label class="control-label">{{'YhteystietojenTyyppiForm.FI' | i18n}}</label>
+            <label class="control-label" tt="YhteystietojenTyyppiForm.FI">Yhteystietotyyppi</label>
             <div class="controls">
                 <input type="text" ng-model="data.fi">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">{{'YhteystietojenTyyppiForm.SE' | i18n}}</label>
+            <label class="control-label" tt="YhteystietojenTyyppiForm.SE">Yhteystietotyyppi</label>
             <div class="controls">
                 <input type="text" ng-model="data.sv">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">{{'YhteystietojenTyyppiForm.EN' | i18n}}</label>
+            <label class="control-label" tt="YhteystietojenTyyppiForm.EN">Yhteystietotyyppi</label>
             <div class="controls">
                 <input type="text" ng-model="data.en">
             </div>
@@ -43,8 +43,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-footer">
     <div class="form-fluid">
-        <button class="btn" ng-click="cancel()">{{'YhteystietojenTyyppiForm.peruuta' | i18n}}</button>
-        <button class="btn btn-primary" ng-click="save()">{{'YhteystietojenTyyppiForm.tallenna' | i18n}}</button>
+        <button class="btn" ng-click="cancel()" tt="YhteystietojenTyyppiForm.peruuta">Peruuta</button>
+        <button class="btn btn-primary" ng-click="save()" tt="YhteystietojenTyyppiForm.tallenna">Tallenna</button>
     </div>
 </div>
 

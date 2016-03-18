@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Session ekspiroituminen -->
 <div class="modal-header">
-    <h3>{{'session.expired.header'| i18n}}</h3>
+    <h3 tt="session.expired.header">session.expired.header</h3>
 </div>
 <div class="modal-body">
     <p>{{timeoutMessage()}}</p>
-    <p>{{'session.expired.text2'| i18n}}</p>
+    <p>{{t('session.expired.text2')}}</p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="redirectToLogin()">{{'session.expired.button'| i18n}}</button>
+    <button class="btn btn-primary" ng-click="redirectToLogin()" tt="session.expired.button">session.expired.button</button>
 </div>

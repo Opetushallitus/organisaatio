@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Varoitus session ekspiroitumisesta -->
 <div class="modal-header">
-    <h3>{{'session.warning.header'| i18n}}</h3>
+    <h3 tt="session.warning.header">session.warning.header</h3>
 </div>
 <div class="modal-body">
-    <p>{{'session.warning.text1'| i18n}}</p>
-    <p>{{'session.warning.text2'| i18n}}</p>
+    <p>{{t('session.warning.text1')}}</p>
+    <p>{{t('session.warning.text2')}}</p>
 </div>
 <div id="sessionWarning" class="modal-footer">
-    <button class="btn btn-primary" ng-click="okConfirm()">{{'session.warning.button'| i18n}}</button>
+    <button class="btn btn-primary" ng-click="okConfirm()" tt="session.warning.button">session.warning.button</button>
 </div>

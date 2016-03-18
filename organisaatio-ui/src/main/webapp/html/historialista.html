@@ -17,12 +17,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <table ng-if="model.historia.liitokset.length > 0" class="table table-striped">
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.liitokset.nimi' | i18n}}</th>
+            <th tt="Organisaationtarkastelu.historia.alkupvm">Alkupvm</th>
+            <th tt="Organisaationtarkastelu.historia.liitokset.nimi">Liitoksen nimi</th>
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.historia.liitokset | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.historia.liitokset | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
             <span ng-if="entry.organisaatio.status === 'AKTIIVINEN'">
@@ -39,12 +39,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <table ng-if="model.historia.liittymiset.length > 0" class="table table-striped">
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.liittymiset.nimi' | i18n}}</th>
+            <th tt="Organisaationtarkastelu.historia.alkupvm">Alkupvm</th>
+            <th tt="Organisaationtarkastelu.historia.liittymiset.nimi">Liittymisen nimi</th>
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.historia.liittymiset | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.historia.liittymiset | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
             <span ng-if="entry.kohde.status === 'AKTIIVINEN'">
@@ -61,13 +61,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <table ng-if="model.isOPHParent() === false" class="table table-striped" >
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.parent.nimi' | i18n}}</th>
+            <th tt="Organisaationtarkastelu.historia.alkupvm">Alkupvm</th>
+            <th tt="Organisaationtarkastelu.historia.loppupvm">Loppupvm</th>
+            <th tt="Organisaationtarkastelu.historia.parent.nimi">Parent nimi</th>
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.historia.parentSuhteet | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.historia.parentSuhteet | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>{{entry.loppuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
@@ -85,13 +85,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <table ng-if="model.historia.childSuhteet.length > 0" class="table table-striped">
     <thead>
         <tr>
-            <th>{{'Organisaationtarkastelu.historia.alkupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.loppupvm' | i18n }}</th>
-            <th>{{'Organisaationtarkastelu.historia.lapset.nimi' | i18n}}</th>
+            <th tt="Organisaationtarkastelu.historia.alkupvm">Alkupvm</th>
+            <th tt="Organisaationtarkastelu.historia.loppupvm">Loppupvm</th>
+            <th tt="Organisaationtarkastelu.historia.lapset.nimi">Lapsen nimi</th>
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="entry in model.historia.childSuhteet | filter : {$:'!POISTETTU'} : true | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
+    <tr ng-repeat="entry in model.historia.childSuhteet | filter : {$:'!POISTETTU'} : true | orderBy:[model.getLocalizedValueWithProperty('childNimi'), 'alkuPvm']">
         <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>{{entry.loppuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>

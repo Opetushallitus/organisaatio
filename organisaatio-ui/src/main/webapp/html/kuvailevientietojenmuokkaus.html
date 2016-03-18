@@ -16,25 +16,25 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Kuvailevien tietojen muokkaus -->
 <div class="modal-header">
-    <h3>{{'Organisaationmuokkaus.muokkaus' | i18n}} {{nimi}}</h3>
+    <h3><span tt="Organisaationmuokkaus.muokkaus">Muokataan organisaatiota</span> {{nimi}}</h3>
 </div>
 
 <div class="modal-body" style='max-height: 550px; height:100%;'>
     <div class="form-fluid">
-        <strong>{{'Organisaationtarkastelu.' + field | i18n}}</strong>
+        <strong>{{t('Organisaationtarkastelu.' + field)}}</strong>
     </div>
     <div>
-        <em>{{'Organisaationmuokkaus.ohje.' + field | i18n}}</em>
+        <em>{{t('Organisaationmuokkaus.ohje.' + field)}}</em>
     </div>
-    <div style="height:450; max-height: 450px">
+    <div style="height:450px; max-height: 450px">
         <textarea style="height:100%; max-height: 450px" name="mcearea_oe" ui-tinymce="options" ng-model="data[field][lang]"></textarea>
     </div>
     {{model}}
 </div>
 <div class="modal-footer">
     <div class="form-fluid">
-        <button class="btn" ng-click="$dismiss()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button class="btn" ng-click="$close()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <button class="btn" ng-click="$dismiss()" tt="Organisaationmuokkaus.peruuta">Peruuta</button>
+        <button class="btn" ng-click="$close()" tt="Organisaationmuokkaus.hyvaksy">Hyväksy</button>
     </div>
 </div>
 

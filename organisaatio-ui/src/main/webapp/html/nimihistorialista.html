@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Organisaation nimihistorialistaus -->
 <table class="table table-striped">
-    <thead><tr><th>{{'Organisaationtarkastelu.alkupvm' | i18n }}</th><th>{{'Organisaationtarkastelu.nimi' | i18n}}</th></tr></thead>
+    <thead><tr><th tt="Organisaationtarkastelu.alkupvm">Alkupvm</th><th tt="Organisaationtarkastelu.nimi">Nimi</th></tr></thead>
     <tbody>
-    <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
+    <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
         <td>{{entry.alkuPvm | date : 'dd.MM.yyyy'}}</td>
         <td>
-            <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
+            <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
                     {{entry.nimi[avain] | decodeAmp}} [{{avain}}]<br>
             </span>
         </td>

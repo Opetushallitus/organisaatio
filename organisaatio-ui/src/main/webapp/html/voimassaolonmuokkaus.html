@@ -35,7 +35,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
            {{data.tila}}
         </div>
         <div ng-if="model.muokataanAlkupvm" class="span2">
-           {{'Organisaationmuokkaus.alkupvm'| i18n}} {{data.alkuPvm| date:'d.M.yyyy'}}
+           {{t('Organisaationmuokkaus.alkupvm')}} {{data.alkuPvm| date:'d.M.yyyy'}}
         </div>
     </div>
     <ol class="unstyled" ng-if="data.expanded">
@@ -51,53 +51,62 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-body" style='max-height: 500px; min-height: 500px; height:100%;'>
     <label ng-show="model.muokataanAlkupvm" class="control-label">
-        {{'Organisaationmuokkaus.luontipvm'| i18n}}*
+        {{t('Organisaationmuokkaus.luontipvm')}}*
     </label>
     <label ng-hide="model.muokataanAlkupvm" class="control-label">
-        {{'Organisaationmuokkaus.lakkautuspvm'| i18n}}*
+        {{t('Organisaationmuokkaus.lakkautuspvm')}}*
     </label>
     <input  ng-show="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="luontipvm"
             formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.alkuPvm"
-            close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.luontipvm'| i18n}}"
-            close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-            current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-            clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-            toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" required/>
+            close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
+            close-text="{{t('Organisaationmuokkaus.sulje')}}"
+            current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+            clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+            toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" required/>
     <input  ng-hide="model.muokataanAlkupvm" ng-change="model.voimassaoloChanged()" oph-enter type="text" name="lakkautuspvm"
             formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.lakkautusPvm"
-            close-on-date-selection="true" ie-placeholder placeholder="{{'Organisaationmuokkaus.lakkautuspvm'| i18n}}"
-            close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-            current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-            clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-            toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}" />
+            close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
+            close-text="{{t('Organisaationmuokkaus.sulje')}}"
+            current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+            clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+            toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" />
     <div>
-        <span ng-show="!model.isAcceptable && model.muokataanAlkupvm" class="text-error">{{'Organisaationmuokkaus.luontipvm'| i18n}} {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}. {{'Organisaationmuokkaus.validointi.alkupvm'| i18n}}.</span>
-        <span ng-show="!model.isAcceptable && !model.muokataanAlkupvm" class="text-error">{{'Organisaationmuokkaus.validointi.loppupvm'| i18n}}.</span>
+        <span ng-show="!model.isAcceptable && model.muokataanAlkupvm" class="text-error">
+            {{t('Organisaationmuokkaus.luontipvm')}} {{t('Organisaationmuokkaus.validointi.pakollinen')}}.
+            {{t('Organisaationmuokkaus.validointi.alkupvm')}}.
+        </span>
+        <span ng-show="!model.isAcceptable && !model.muokataanAlkupvm" class="text-error">{{t('Organisaationmuokkaus.validointi.loppupvm')}}.</span>
         <div class="infotext">
             <div>&nbsp;</div>
-            <div ng-show="model.muokkauksenTila === model.Tila.MUOKKAAMATON">{{'Organisaationmuokkaus.voimassaolo.muokkaamaton'| i18n}}
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
+            <div ng-show="model.muokkauksenTila === model.Tila.MUOKKAAMATON">{{t('Organisaationmuokkaus.voimassaolo.muokkaamaton')}}
+            <div>&nbsp;</div>{{t('Organisaationmuokkaus.voimassaolo.aliorganisaatiot')}}</div>
 
             <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_POISTETTU">
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiot'| i18n}}</div>
+            <div>&nbsp;</div>{{t('Organisaationmuokkaus.voimassaolo.aliorganisaatiot')}}</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.asetettu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
+            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU">
+                {{'Organisaationmuokkaus.voimassaolo.asetettu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.asetettuAliorganisaatioille'| i18n : [model.formatDate(model.alkuPvm)]}}</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.suunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
+            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">
+                {{'Organisaationmuokkaus.voimassaolo.suunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.alkuPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.suunniteltuAliorganisaatioille'| i18n: [model.formatDate(model.alkuPvm)]}}</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusTyhjennetty'| i18n : [model.organisaationNimi]}}
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatioidenLakkauttaminenPerutaan'| i18n}}:</div>
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_POISTETTU">
+                {{'Organisaationmuokkaus.voimassaolo.lakkautusTyhjennetty'| i18n : [model.organisaationNimi]}}
+            <div>&nbsp;</div>{{t('Organisaationmuokkaus.voimassaolo.aliorganisaatioidenLakkauttaminenPerutaan')}}:</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_ASETETTU">
+                {{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusAsetettuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU">{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_SUUNNITELTU">
+                {{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltu'| i18n : [model.organisaationNimi, model.formatDate(model.lakkautusPvm)]}}
             <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.lakkautusSuunniteltuAliorganisaatioille'| i18n : [model.formatDate(model.lakkautusPvm)]}}</div>
 
-            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">{{'Organisaationmuokkaus.voimassaolo.jatkettu'| i18n : [model.organisaationNimi]}}
-            <div>&nbsp;</div>{{'Organisaationmuokkaus.voimassaolo.aliorganisaatiotAktiivisiksi'| i18n}}:</div>
+            <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">
+                {{'Organisaationmuokkaus.voimassaolo.jatkettu'| i18n : [model.organisaationNimi]}}
+            <div>&nbsp;</div>{{t('Organisaationmuokkaus.voimassaolo.aliorganisaatiotAktiivisiksi')}}:</div>
         </div>
         <div class="well">
             <ol class="unstyled" ng-show="model.aliorganisaatioTree.length">
@@ -105,7 +114,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     ng-include="'aliorganisaatio_node.html'">
                 </li>
             </ol>
-            <div ng-hide="model.aliorganisaatioTree.length">{{'Organisaatiot.loading' |i18n}}</div>
+            <div ng-hide="model.aliorganisaatioTree.length" tt="Organisaatiot.loading">Organisaatiot.loading</div>
         </div>
     </div>
 </div>
@@ -114,10 +123,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-footer">
     <div class="form-fluid">
-        <!--        <button class="btn" ng-click="$dismiss()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-                <button class="btn" ng-click="$close()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>-->
-        <button class="btn" ng-click="cancel()">{{'Organisaationmuokkaus.peruuta' | i18n}}</button>
-        <button ng-disabled="!model.isDirty || !model.isAcceptable" class="btn" ng-click="accept()">{{'Organisaationmuokkaus.hyvaksy' | i18n}}</button>
+        <!--        <button class="btn" ng-click="$dismiss()">{{t('Organisaationmuokkaus.peruuta')}}</button>
+                <button class="btn" ng-click="$close()">{{t('Organisaationmuokkaus.hyvaksy')}}</button>-->
+        <button class="btn" ng-click="cancel()" tt="Organisaationmuokkaus.peruuta">Organisaationmuokkaus.peruuta</button>
+        <button ng-disabled="!model.isDirty || !model.isAcceptable" class="btn" ng-click="accept()" tt="Organisaationmuokkaus.hyvaksy">
+            Organisaationmuokkaus.hyvaksy
+        </button>
     </div>
 </div>
 
