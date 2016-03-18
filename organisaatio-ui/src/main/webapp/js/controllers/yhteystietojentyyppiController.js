@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $modal,
+app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $uibModal,
                                         $log, $injector,
                                         YhteystietojentyyppiModel,
                                         Alert, UserInfo) {
@@ -296,7 +296,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
     $scope.poistaYhteystietotyyppi = function() {
         Alert.clear();
         if ($scope.valittuYhteystietotyyppi !== null) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'yhteystiedonpoisto.html',
                 controller: 'YhteystietoDeleteController',
                 resolve: {
@@ -368,7 +368,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
     }
 
     function _muokkaaMuuYhteystieto(callback, data) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'muuyhteystieto.html',
             controller: 'MuuYhteystietoController',
             resolve: {

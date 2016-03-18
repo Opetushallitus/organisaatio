@@ -107,8 +107,8 @@ app.config(['$provide', function($provide) {
 }]);
 
 // Konfiguroidaan DatePicker alkamaan viikon maanantaista (defaul = sunnuntai)
-app.config(function(datepickerConfig) {
-    datepickerConfig.startingDay = 1;
+app.config(function(uibDatepickerConfig) {
+    uibDatepickerConfig.startingDay = 1;
 });
 
 app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
