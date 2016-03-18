@@ -14,6 +14,6 @@
  European Union Public Licence for more details.
  */
 
-app.controller('KuvailevatTiedotKopiointiController', function KuvailevatTiedotKopiointiController($scope, $uibModalInstance, $log, nimi) {
+app.controller('KuvailevatTiedotKopiointiController', function KuvailevatTiedotKopiointiController($scope, $modalInstance, $log, nimi) {
     $scope.nimi = nimi;
 });

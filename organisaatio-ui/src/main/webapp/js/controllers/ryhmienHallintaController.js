@@ -15,7 +15,7 @@
  */
 
 app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
-                                   $uibModal, $log, $injector, $q,
+                                   $modal, $log, $injector, $q,
                                    RyhmienHallintaModel, Alert, UserInfo,
                                    RyhmaKoodisto) {
     "use strict";
@@ -76,7 +76,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
 
     $scope.poista = function() {
         if ($scope.currentGroup !== null) {
-            var modalInstance = $uibModal.open({
+            var modalInstance = $modal.open({
                 templateUrl: 'ryhmanpoisto.html',
                 controller: 'RyhmaDeleteController',
                 resolve: {
@@ -170,7 +170,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
-            var modalInstance = $uibModal.open({
+            var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: 'OrganisaatioCancelController',
                 resolve: {

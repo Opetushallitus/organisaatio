@@ -15,7 +15,7 @@
  */
 
 
-app.controller('YhteystietoDeleteController', function YhteystietoDeleteController($scope, $uibModalInstance, $log, nimi) {
+app.controller('YhteystietoDeleteController', function YhteystietoDeleteController($scope, $modalInstance, $log, nimi) {
     $log = $log.getInstance("YhteystietoDeleteController");
 
     $scope.nimi = nimi;

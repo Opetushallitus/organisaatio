@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('NimenMuokkausController', function NimenMuokkausController($scope, $uibModalInstance, $log, $location,
+app.controller('NimenMuokkausController', function NimenMuokkausController($scope, $modalInstance, $log, $location,
                                  NimenMuokkausModel, NimiHistoriaModel,
                                  oid, nimihistoria, originalNimihistoria,
                                  organisaatioAlkuPvm,
@@ -24,7 +24,7 @@ app.controller('NimenMuokkausController', function NimenMuokkausController($scop
     $log = $log.getInstance("NimenMuokkausController");
 
     $scope.cancel = function() {
-        $uibModalInstance.dismiss('cancel');
+        $modalInstance.dismiss('cancel');
         $scope.model.clear();
     };
 
@@ -34,7 +34,7 @@ app.controller('NimenMuokkausController', function NimenMuokkausController($scop
         var nimiHistoriaModel = NimiHistoriaModel;
         nimiHistoriaModel.setNimihistoria(angular.copy($scope.model.getNimihistoria()));
 
-        $uibModalInstance.close($scope.model);
+        $modalInstance.close($scope.model);
         $scope.model.clear();
     };
 

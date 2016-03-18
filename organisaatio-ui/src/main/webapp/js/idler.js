@@ -54,7 +54,7 @@
         };
     }]);
 
-    app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$uibModalInstance', '$window', 'LocalisationService', function( $idle, $scope, $uibModalInstance, $window, LocalisationService) {
+    app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$modalInstance', '$window', 'LocalisationService', function( $idle, $scope, $modalInstance, $window, LocalisationService) {
         $scope.timeoutMessage = function() {
             var duration = Math.floor(MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
             return LocalisationService.t('session.expired.text1.part1') + " " + duration +  " " + LocalisationService.t('session.expired.text1.part2');
@@ -62,16 +62,16 @@
 
         $scope.okConfirm = function() {
             $idle.watch();
-            $uibModalInstance.close();
+            $modalInstance.close();
         };
         $scope.redirectToLogin = function() {
             $window.location.reload();
         };
     }]);
 
-    app.controller('EventsCtrl', ['$scope','$idle', '$uibModal', '$http', function($scope, $idle, $uibModal, $http) {
+    app.controller('EventsCtrl', ['$scope','$idle', '$modal', '$http', function($scope, $idle, $modal, $http) {
         var openModal = function(template) {
-            return $uibModal.open({
+            return $modal.open({
                     templateUrl: TEMPLATE_URL_BASE + template,
                     controller: 'SessionExpiresCtrl',
                     keyboard: false,

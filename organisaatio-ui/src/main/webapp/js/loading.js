@@ -143,7 +143,7 @@ angular.module('Loading', ['Localisation'])
     $http.defaults.transformRequest.push(onStartInterceptor);
 })
 
-.controller('LoadingCtrl', function($scope, $rootElement, $uibModal, LoadingService) {
+.controller('LoadingCtrl', function($scope, $rootElement, $modal, LoadingService) {
 
     var ctrl = $scope;
     LoadingService.scope = ctrl;
@@ -154,11 +154,11 @@ angular.module('Loading', ['Localisation'])
     };
 
     function showErrorDialog() {
-        $uibModal.open({
-            controller: function($scope, $uibModalInstance) {
+        $modal.open({
+            controller: function($scope, $modalInstance) {
                 $scope.commit = function() {
                     LoadingService.commit();
-                    $uibModalInstance.dismiss();
+                    $modalInstance.dismiss();
                 };
                 $scope.restart = function() {
                     ctrl.restart();

@@ -215,12 +215,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ytexpanded">
 
-        <uib-tabset>
-            <uib-tab ng-repeat="yttab in model.yttabs"
+        <tabset>
+            <tab ng-repeat="yttab in model.yttabs"
                  heading="{{model.uriLocalizedNames[yttab]}}"
                  select="model.ytlang=yttab">
-            </uib-tab>
-        </uib-tabset>
+            </tab>
+        </tabset>
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite || model.yhteystiedot[model.ytlang].kaynti.postinumeroUri">
             <div>
@@ -367,12 +367,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div ng-show="ltexpanded[yta.oid]">
-            <uib-tabset>
-                <uib-tab ng-repeat="lttab in model.lttabs"
+            <tabset>
+                <tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
                      select="model.ltlang[yta.oid]=lttab">
-                </uib-tab>
-            </uib-tabset>
+                </tab>
+            </tabset>
 
             <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos"
                  ng-show="yt['YhteystietojenTyyppi.oid'] === yta.oid && yt['YhteystietoArvo.kieli'] === model.ltlang[yta.oid]">
@@ -403,13 +403,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="hpexpanded">
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in model.mkSections.hp.tabs"
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.hp.tabs"
                  active="tab.active"
                  select="model.hplang=tab.lang"
                  heading="{{model.uriLocalizedNames[tab.lang]}}">
-            </uib-tab>
-        </uib-tabset>
+            </tab>
+        </tabset>
 
 
         <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]">
@@ -553,15 +553,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="smexpanded">
 
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in model.mkSections.sm.tabs"
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.sm.tabs"
                  active="tab.active"
                  select="model.smlang=tab.lang">
-                <uib-tab-heading>
+                <tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </uib-tab-heading>
-            </uib-tab>
-        </uib-tabset>
+                </tab-heading>
+            </tab>
+        </tabset>
 
         <div class="control-group" ng-show="model.hasSome()">
             <label class="control-label" tt="Organisaationtarkastelu.sosiaalinenmedia">
@@ -597,15 +597,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ectsexpanded">
 
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in model.mkSections.ects.tabs"
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.ects.tabs"
                  active="tab.active"
                  select="model.ectslang=tab.lang">
-                <uib-tab-heading>
+                <tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </uib-tab-heading>
-            </uib-tab>
-        </uib-tabset>
+                </tab-heading>
+            </tab>
+        </tabset>
 
         <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]">
             <label class="control-label" tt="Organisaationtarkastelu.hakutoimistoectsnimi">
@@ -645,15 +645,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ktexpanded"> <!-- ktexpanded -->
 
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in model.mkSections.kt.tabs"
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.kt.tabs"
                  active="tab.active"
                  select="model.ktlang=tab.lang">
-                <uib-tab-heading>
+                <tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </uib-tab-heading>
-            </uib-tab>
-        </uib-tabset>
+                </tab-heading>
+            </tab>
+        </tabset>
 
 
         <div class="control-group" ng-repeat="field in model.kttypes" ng-show="model.organisaatio.metadata.data[field][model.ktlang]">
@@ -680,15 +680,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="oeexpanded">
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in model.mkSections.oe.tabs"
+        <tabset>
+            <tab ng-repeat="tab in model.mkSections.oe.tabs"
                  active="tab.active"
                  select="model.oelang=tab.lang">
-                <uib-tab-heading>
+                <tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </uib-tab-heading>
-            </uib-tab>
-        </uib-tabset>
+                </tab-heading>
+            </tab>
+        </tabset>
 
         <div class="control-group" ng-repeat="field in model.oetypes" ng-show="model.organisaatio.metadata.data[field][model.oelang]">
             <label class="control-label">
@@ -789,7 +789,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-click="cancel()" tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
                     auth-org="{{model.organisaatio.oid}}"><i class="icon-pencil"></i> {{t('Organisaationtarkastelu.muokkaa')}}</button>
         </div>

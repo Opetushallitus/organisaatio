@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('OrganisaatioMoveController', function OrganisaatioMoveController($scope, $uibModalInstance, $filter, $log,
+app.controller('OrganisaatioMoveController', function OrganisaatioMoveController($scope, $modalInstance, $filter, $log,
                                     OrganisaatiotFlat, Organisaatio,
                                     Alert, LocalisationService,
                                     nimi, node) {

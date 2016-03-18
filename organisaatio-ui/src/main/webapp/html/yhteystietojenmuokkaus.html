@@ -15,12 +15,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 
 <!-- Yhteystietojen muokkaus -->
-<uib-tabset>
-    <uib-tab ng-repeat="yttab in model.yttabs"
+<tabset>
+    <tab ng-repeat="yttab in model.yttabs"
          heading="{{model.uriLocalizedNames[yttab]}}"
          select="model.ytlang=yttab">
-    </uib-tab>
-</uib-tabset>
+    </tab>
+</tabset>
 
 <div class="control-group" ng-if="model.ytlang">
     <label class="control-label">
@@ -36,7 +36,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         &nbsp;&nbsp;&nbsp;
         <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
                ng-model="model.yhteystiedot.postinumerot[model.ytlang].posti" class="span2"
-               uib-typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+               typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.postinumero')}}" typeahead-editable="true"
                ng-required="model.yhteystiedot.postinumerot && model.yhteystiedot[model.ytlang].posti.osoite"
                ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
@@ -99,7 +99,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
                ng-model="model.yhteystiedot.postinumerot[model.ytlang].kaynti" class="span2"
                ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
-               uib-typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+               typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.postinumero')}}" typeahead-editable="true"
                ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
         &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti, model.ytlang)}}

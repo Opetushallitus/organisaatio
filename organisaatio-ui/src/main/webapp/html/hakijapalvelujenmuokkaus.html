@@ -15,20 +15,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -->
 
 <!-- Hakijapalvelujen muokkaus -->
-<uib-tabset>
-    <uib-tab select="model.hplang='+'">
-        <uib-tab-heading>
+<tabset>
+    <tab select="model.hplang='+'">
+        <tab-heading>
             <span class="icon-plus-sign"></span>
-        </uib-tab-heading>
-    </uib-tab>
-    <uib-tab ng-repeat="tab in model.mkSections.hp.tabs"
+        </tab-heading>
+    </tab>
+    <tab ng-repeat="tab in model.mkSections.hp.tabs"
          active="tab.active"
          select="model.hplang=tab.lang">
-        <uib-tab-heading>
+        <tab-heading>
             {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('hp', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-        </uib-tab-heading>
-    </uib-tab>
-</uib-tabset>
+        </tab-heading>
+    </tab>
+</tabset>
 <div ng-if="model.hplang === '+'">
     <div class="control-group">
         <select id="maa" ng-model="model.mkSections.hp.placeholder"
@@ -86,7 +86,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 &nbsp;&nbsp;&nbsp;
                 <input id="mdpostipostifi" name="mdpostipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length oph-enter
                        ng-model="model.mdyhteystiedot.postinumerot[model.hplang].posti" class="span2"
-                       uib-typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.postinumero')}}" typeahead-editable="true"
                        ng-required='model.mdyhteystiedot[model.hplang].posti.osoite'
                        ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].posti, model.mdyhteystiedot.postinumerot[model.hplang].posti)">
@@ -131,7 +131,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input id="mdkayntipostifi" name="mdkayntipostifi" type="text" oph-validate-postcode="hp" oph-null-if-zero-length oph-enter
                        ng-model="model.mdyhteystiedot.postinumerot[model.hplang].kaynti" class="span2"
                        ng-disabled="model.osoitemuoto.hpsamaosoite[model.hplang] === true"
-                       uib-typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
+                       typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.postinumero')}}" typeahead-editable="true"
                        ng-blur="model.setPostinumero(true, model.mdyhteystiedot[model.hplang].kaynti, model.mdyhteystiedot.postinumerot[model.hplang].kaynti)">
                 &nbsp;{{model.getLocalizedPaikka(model.mdyhteystiedot.postinumerot[model.hplang].kaynti, model.hplang)}}

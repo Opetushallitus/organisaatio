@@ -15,7 +15,7 @@
  */
 
 app.controller('OrganisaatioController', function OrganisaatioController($scope, $location,
-                                $routeParams, $uibModal,
+                                $routeParams, $modal,
                                 $log, $injector, $q,
                                 OrganisaatioModel) {
 
@@ -54,7 +54,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
-            var modalInstance = $uibModal.open({
+            var modalInstance = $modal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: 'OrganisaatioCancelController',
                 resolve: {
@@ -189,7 +189,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;
-        var modalInstance = $uibModal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'nimenmuokkaus.html',
             controller: 'NimenMuokkausController',
             windowClass:'modal-wide',
@@ -241,7 +241,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             return;
         }
         $scope.modalOpen = true;
-        var modalInstance = $uibModal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'voimassaolonmuokkaus.html',
             controller: 'VoimassaolonMuokkausController',
             windowClass:'modal-large',
@@ -293,7 +293,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
     // Ytj-tietojen haun modaalin dialogin avaus
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
-        var modalInstance = $uibModal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'yritysvalinta.html',
             controller: 'YritysValintaController',
             windowClass: 'modal-wide',
@@ -337,7 +337,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     };
 
     $scope.vahvistakopiointi = function(section) {
-        var modalInstance = $uibModal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'kopioinninvahvistus.html',
             controller: 'KuvailevatTiedotKopiointiController',
             resolve: {
@@ -379,7 +379,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
         var origText = $scope.model.organisaatio.metadata.data[field][lang];
         $scope.modalOpen = true;
-        var modalInstance = $uibModal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'kuvailevientietojenmuokkaus.html',
             controller: 'KuvailevatTiedotMuokkausController',
             windowClass: 'modal-large',

@@ -45,7 +45,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        ng-model="options.newParentOrganization"
                        ng-disabled="disabled" ng-required="true"
                        ie-placeholder placeholder="{{t('Organisaatiot.haku.placeholder')}}"
-                       uib-typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
+                       typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
                        typeahead-template-url="siirtoKohdeTemplate.html"
                        typeahead-editable="false" oph-enter>
 
@@ -56,7 +56,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input oph-enter type="text"
                        name="luontipvm"
                        formatteddate
-                       uib-datepicker-popup="dd.MM.yyyy"
+                       datepicker-popup="dd.MM.yyyy"
                        min="'1900-01-01'"
                        max="'2030-12-31'"
                        ng-model="options.date"
