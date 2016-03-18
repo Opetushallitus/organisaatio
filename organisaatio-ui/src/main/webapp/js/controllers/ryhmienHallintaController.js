@@ -83,7 +83,8 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
                     nimi: function () {
                         return $scope.localizeNimi($scope.currentGroup);
                     }
-                }
+                },
+                scope: $scope
             });
 
             modalInstance.result.then(function() {
@@ -176,7 +177,8 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
                     invalid: function () {
                         return $scope.form.$invalid;
                     }
-                }
+                },
+                scope: $scope
             });
 
             // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun

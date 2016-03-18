@@ -96,7 +96,8 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                 node: function () {
                     return node;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function (options) {
@@ -113,7 +114,8 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                     newParent: function () {
                         return options.newParentOrganization.name;
                     }
-                }
+                },
+                scope: $scope
             });
 
             confirm.result.then(function () {
@@ -152,7 +154,8 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                 tyypit:  function () {
                     return $scope.model.getTyypit(node);
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function () {
@@ -212,7 +215,8 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                 ytunnus: function () {
                     return;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function (ytunnus) {

@@ -92,35 +92,6 @@ app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
     return i18nfilter;
 });
 
-// TODO: fix this into working directive to replace i18n filter
-//app.directive('kaanna', function (UserInfo, LocalisationService, $log, $injector) {
-//
-//    $log = $log.getInstance("localization");
-//    $log.debug('kaanna');
-//    return {
-//        compile: function() {
-//            var initialized = false;
-//
-//            UserInfo.then(function(s) {
-//                LocalisationService.setLocale(s.toLowerCase());
-//                initialized = true;
-//
-//            });
-//            if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
-//                (window.APP_LOCALISATION_DATA.length === 0)) {
-//                Alert = $injector.get("Alert");
-//                $log.error("Failed to load localisations.");
-//                Alert.add("error", LocalisationService.getLocale() === "fi" ? "K\xe4\xe4nn\xf6sten lataaminen ep\xe4onnistui." : "Nedladdning av \xf6vers\xe4ttningar mislyckades.", false);
-//            }
-//
-//
-//            return function (localisationKey, parameters) {
-//                $log.debug('kaanna returns');
-//                return initialized ? LocalisationService.t(localisationKey, parameters) : '...';
-//            };
-//        }
-//    }
-//});
 
 /**
  * UI-directive for using translations.
@@ -165,8 +136,6 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
         }
     };
 }]);
-
-
 
 
 /**

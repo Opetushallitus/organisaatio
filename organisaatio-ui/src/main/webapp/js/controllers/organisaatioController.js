@@ -61,7 +61,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                     invalid: function () {
                         return $scope.form.$invalid;
                     }
-                }
+                },
+                scope: $scope
             });
 
             // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun
@@ -217,7 +218,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 parentPattern: function () {
                     return $scope.model.parentPattern;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function (nimenmuokkausModel) {
@@ -265,7 +267,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 monikielinenTekstiLocalizer: function () {
                     return $scope.model.getDecodedLocalizedValue;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function(voimassaolonmuokkausModel) {
@@ -298,7 +301,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 ytunnus: function() {
                     return organisaationYtunnus;
                 }
-            }
+            },
+            scope: $scope
         });
         $scope.modalOpen = true;
 
@@ -340,7 +344,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 nimi: function() {
                     return $scope.model.uriLocalizedNames['parentnimi'];
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function() {
@@ -394,7 +399,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 options: function() {
                     return tinymceOptions;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function() {

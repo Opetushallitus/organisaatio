@@ -303,7 +303,8 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
                     nimi: function () {
                         return $scope.yttNimiLang(language).value;
                     }
-                }
+                },
+                scope: $scope
             });
 
             modalInstance.result.then(function(force) {
@@ -374,7 +375,8 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
                 data: function() {
                     return data;
                 }
-            }
+            },
+            scope: $scope
         });
         $scope.modalOpen = true;
 
