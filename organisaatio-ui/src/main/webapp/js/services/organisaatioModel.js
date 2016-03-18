@@ -2115,7 +2115,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 if(angular.isDefined(model.yhteystiedot[kieli])) {
                     if (kielet.hasOwnProperty(kieli)) {
                         if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
-                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
+                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
                             || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
                             model.ytinvalid.push(kieli);
                         }

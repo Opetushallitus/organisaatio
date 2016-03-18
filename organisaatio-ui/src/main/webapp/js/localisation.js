@@ -156,7 +156,7 @@ app.service('LocalisationService', function(UserInfo, $log, $window, Localisatio
     var locale;
 
     // Singleton state, default current locale for the user
-   UserInfo.then(function(s) {
+    UserInfo.then(function(s) {
         locale = s;
     });
 
