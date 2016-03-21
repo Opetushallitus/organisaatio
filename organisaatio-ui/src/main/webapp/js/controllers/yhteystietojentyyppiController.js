@@ -17,7 +17,7 @@
 app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $modal,
                                         $log, $injector,
                                         YhteystietojentyyppiModel,
-                                        Alert, UserInfo) {
+                                        Alert, LocalisationService) {
     "use strict";
 
     $log = $log.getInstance("YhteystietojentyyppiController");
@@ -31,9 +31,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
         en: ['fi', 'sv']
     };
 
-    UserInfo.then(function(s) {
-        language = s.toLowerCase();
-    });
+    language = LocalisationService.getLocale();
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.model.reload();

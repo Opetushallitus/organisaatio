@@ -67,17 +67,16 @@ app.factory('Localisations', function($log, $resource, $window) {
 
 });
 
-app.filter('i18n', function (UserInfo, LocalisationService, $log, $injector) {
+app.filter('i18n', function (LocalisationService, $log, $injector) {
 
     $log = $log.getInstance("localization");
 
     var initialized = false;
 
-    UserInfo.then(function(s) {
-        LocalisationService.setLocale(s.toLowerCase());
+    if(LocalisationService.getLocale()) {
         initialized = true;
+    }
 
-    });
     if ((typeof window.APP_LOCALISATION_DATA !== typeof []) ||
             (window.APP_LOCALISATION_DATA.length === 0)) {
         Alert = $injector.get("Alert");
@@ -150,15 +149,10 @@ app.directive('tt', ['$log', 'LocalisationService', function($log, LocalisationS
  * LocalisationService.tl("this.is.the.key2", "fi", ["array", "of", "values"])  == localized value in given locale
  * </pre>
  */
-app.service('LocalisationService', function(UserInfo, $log, $window, Localisations, $injector, AngularLocaleManager) {
+app.service('LocalisationService', function($log, $window, Localisations, $injector, AngularLocaleManager) {
 
     $log = $log.getInstance("LocalisationService");
-    var locale;
-
-    // Singleton state, default current locale for the user
-    UserInfo.then(function(s) {
-        locale = s;
-    });
+    var locale = $window.APP_CAS_ME.lang;
 
     // Call to "/localisation/authorize" once so that the session gets established to localisation service.
     // Normally this is not necesary so set to true. Requires 'ROLE_APP_LOKALISOINTI_READ' access rights.

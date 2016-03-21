@@ -203,7 +203,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.OPHOid = "1.2.246.562.10.00000000001";
 
-        this.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
+        this.savestatus = LocalisationService.t("Organisaationmuokkaus.tietojaeitallennettu");
 
         this.nameFormat = false;
 

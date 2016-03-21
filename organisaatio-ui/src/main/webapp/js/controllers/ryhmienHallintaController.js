@@ -15,8 +15,8 @@
  */
 
 app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
-                                   $modal, $log, $injector, $q,
-                                   RyhmienHallintaModel, Alert, UserInfo,
+                                   $uibModal, $log, $injector, $q,
+                                   RyhmienHallintaModel, Alert, LocalisationService,
                                    RyhmaKoodisto) {
     "use strict";
 
@@ -31,9 +31,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         en: ['fi', 'sv']
     };
 
-    UserInfo.then(function(s) {
-        language = s.toLowerCase();
-    });
+    language = LocalisationService.getLocale();
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
