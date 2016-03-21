@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('YritysValintaController', function YritysValintaController($scope, $modalInstance, $location, $log,
+app.controller('YritysValintaController', function YritysValintaController($scope, $uibModalInstance, $location, $log,
                                  YritysValintaModel, ytunnus) {
 
     $log = $log.getInstance("YritysValintaController");
@@ -30,7 +30,7 @@ app.controller('YritysValintaController', function YritysValintaController($scop
 
     $scope.select = function (yritys) {
         $log.info(yritys);
-        $modalInstance.close(yritys.ytunnus);
+        $uibModalInstance.close(yritys.ytunnus);
         $scope.model.hakuString = "";
     };
 
@@ -39,12 +39,12 @@ app.controller('YritysValintaController', function YritysValintaController($scop
     };
 
     $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+        $uibModalInstance.dismiss('cancel');
         $scope.model.hakuString = "";
     };
 
     $scope.continueWithouSelect = function () {
-        $modalInstance.close();
+        $uibModalInstance.close();
         $scope.model.hakuString = "";
     };
 });

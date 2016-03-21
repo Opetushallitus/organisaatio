@@ -90,7 +90,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                    ie-placeholder placeholder="{{t('Organisaationtarkastelu.ytunnus')}}" ng-pattern="/^\d{7}-./"/>
                     <button auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()"
                             class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)"
-                            tooltip="{{t('Organisaatiot.ohje.haeytjtiedot')}}" tt="Organisaationmuokkaus.paivitaYtj">
+                            uib-tooltip="{{t('Organisaatiot.ohje.haeytjtiedot')}}" tt="Organisaationmuokkaus.paivitaYtj">
                         Päivitä YTJ
                     </button>
             <div>
@@ -235,18 +235,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="luontipvm2" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
+                       type="text" name="luontipvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                        datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}">
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="luontipvm2" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
+                       type="text" name="luontipvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                        datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}">
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"  ng-hide="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
                        close-text="{{t('Organisaationmuokkaus.sulje')}}"
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
@@ -254,7 +254,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" required/>
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="luontipvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
+                       type="text" name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
                        close-text="{{t('Organisaationmuokkaus.sulje')}}"
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
@@ -263,23 +263,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 &nbsp;-&nbsp;
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                         auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                        type="text" name="lakkautuspvm2" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
+                        type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                        type="text" name="lakkautuspvm2" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
+                        type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
                        close-text="{{t('Organisaationmuokkaus.sulje')}}"
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
                        clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
                        toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" />
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-hide="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
-                       type="text" name="lakkautuspvm" formatteddate datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
+                       type="text" name="lakkautuspvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.lakkautusPvm"
                        close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
                        close-text="{{t('Organisaationmuokkaus.sulje')}}"
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
@@ -443,12 +443,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div ng-show="ltexpanded[ytoid]" ng-init="model.ltlang = {}" ng-form dynamic-name-prefix='lisayhteystiedotForm' dynamic-name="ytoid">
-            <tabset>
-                <tab ng-repeat="lttab in model.lttabs"
+            <uib-tabset>
+                <uib-tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
                      select="model.ltlang[ytoid]=lttab">
-                </tab>
-            </tabset>
+                </uib-tab>
+            </uib-tabset>
             <div class="control-group" ng-repeat="yt in model.lisayhteystiedot[ytoid][model.ltlang[ytoid]]" ng-form="ytForm">
                 <label class="control-label">
                     {{model.uriLocalizedNames[yt['YhteystietoElementti.oid']]}}{{yt["YhteystietoElementti.pakollinen"] && yt["YhteystietoElementti.pakollinen"]!=="false"?"*":""}}
@@ -509,20 +509,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="ectsexpanded" ng-form="hakutoimistoectsnimi">
-        <tabset>
-            <tab select="model.ectslang='+'">
-                <tab-heading>
+        <uib-tabset>
+            <uib-tab select="model.ectslang='+'">
+                <uib-tab-heading>
                     <span class="icon-plus-sign"></span>
-                </tab-heading>
-            </tab>
-            <tab ng-repeat="tab in model.mkSections.ects.tabs"
+                </uib-tab-heading>
+            </uib-tab>
+            <uib-tab ng-repeat="tab in model.mkSections.ects.tabs"
                  active="tab.active"
                  select="model.ectslang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('ects', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
         <div ng-if="model.ectslang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.ects.placeholder"
@@ -540,7 +540,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </label>
                     <div class="controls">
                         <input id="ectsnimi" name="ectsnimi" type="text" ng-model="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]" class="span6"
-                               typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
+                               uib-typeahead="hlo.nimi for hlo in model.henkilot.virkailijat | filter:$viewValue | limitTo:10"
                                typeahead-on-select="model.setEctsNimi($item)" oph-enter>
                     </div>
                 </div>
@@ -617,20 +617,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="someexpanded" ng-form="sosiaalinenmedia">
-        <tabset>
-            <tab select="model.smlang='+'">
-                <tab-heading>
+        <uib-tabset>
+            <uib-tab select="model.smlang='+'">
+                <uib-tab-heading>
                     <span class="icon-plus-sign"></span>
-                </tab-heading>
-            </tab>
-            <tab ng-repeat="tab in model.mkSections.sm.tabs"
+                </uib-tab-heading>
+            </uib-tab>
+            <uib-tab ng-repeat="tab in model.mkSections.sm.tabs"
                  active="tab.active"
                  select="model.smlang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('sm', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
         <div ng-if="model.smlang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.sm.placeholder"
@@ -699,16 +699,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="control-group" ng-if="!model.isKoulutustoimija()">
             <div>
                 <button type="button" class="btn" ng-click="vahvistakopiointi('kt')"
-                        tooltip="{{t('Organisaationmuokkaus.ohje.kopioitiedot')}}
+                        uib-tooltip="{{t('Organisaationmuokkaus.ohje.kopioitiedot')}}
                         {{model.uriLocalizedNames['parentnimi']}}.">
                     <i class="icon-copy"></i>{{t('Organisaationmuokkaus.kopioitiedot')}}
                 </button>
             </div>
         </div>
 
-        <tabset>
-            <tab select="model.ktlang='+'">
-                <tab-heading>
+        <uib-tabset>
+            <uib-tab select="model.ktlang='+'">
+                <uib-tab-heading>
                     <span class="dropdown">
                         <span class="icon-plus-sign dropdown-toggle"></span>
                         <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
@@ -719,16 +719,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                             </li>
                         </ul>
                     </span>
-                </tab-heading>
-            </tab>
-            <tab ng-repeat="tab in model.mkSections.kt.tabs"
+                </uib-tab-heading>
+            </uib-tab>
+            <uib-tab ng-repeat="tab in model.mkSections.kt.tabs"
                  active="tab.active"
                  select="model.ktlang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('kt', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
         <div ng-if="model.ktlang === '+'">
             <div class="control-group">
                 <select id="maa" ng-model="model.mkSections.kt.placeholder"
@@ -749,7 +749,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                         <em class="muted">{{t('Organisaationmuokkaus.ohje.' + field)}}</em>
                     </div>
                     <div class="controls">
-                        <div class="well" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}" style="height:70px; overflow:auto"
+                        <div class="well" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}" style="height:70px; overflow:auto"
                              ng-click="openEditor(field, model.ktlang, model.getUserLang());" name="mcearea_kt"
                              ng-bind-html="model.organisaatio.metadata.data[field][model.ktlang]"></div>
                         <div>
@@ -793,15 +793,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div ng-if="!model.isKoulutustoimija()">
             <button type="button" class="btn" ng-click="vahvistakopiointi('oe')"
-                    tooltip="{{t('Organisaationmuokkaus.ohje.kopioitiedot')}} {{model.uriLocalizedNames['parentnimi']}}.">
+                    uib-tooltip="{{t('Organisaationmuokkaus.ohje.kopioitiedot')}} {{model.uriLocalizedNames['parentnimi']}}.">
                 <i class="icon-copy"></i>{{t('Organisaationmuokkaus.kopioitiedot')}}</button>
         </div>
 
         </div>
 
-        <tabset>
-            <tab select="model.oelang='+'">
-                <tab-heading>
+        <uib-tabset>
+            <uib-tab select="model.oelang='+'">
+                <uib-tab-heading>
                     <span class="dropdown">
                         <span class="icon-plus-sign dropdown-toggle"></span>
                         <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
@@ -812,16 +812,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                             </li>
                         </ul>
                     </span>
-                </tab-heading>
-            </tab>
-            <tab ng-repeat="tab in model.mkSections.oe.tabs"
+                </uib-tab-heading>
+            </uib-tab>
+            <uib-tab ng-repeat="tab in model.mkSections.oe.tabs"
                  active="tab.active"
                  select="model.oelang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}} <a ng-click="model.removeMkLang('oe', $index)" href=''><span class='icon-remove'>&nbsp;</span></a>
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
 
         <div ng-if="model.oelang === '+'">
             <div class="control-group">
@@ -844,7 +844,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                         <em class="muted">{{t('Organisaationmuokkaus.ohje.' + field)}}</em>
                     </div>
                     <div class="controls">
-                        <div class="well" tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}" style="height:70px; overflow:auto"
+                        <div class="well" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}" style="height:70px; overflow:auto"
                              ng-click="openEditor(field, model.oelang, model.getUserLang());" name="mcearea_oe"
                              ng-bind-html="model.organisaatio.metadata.data[field][model.oelang]"></div>
                         <div>
@@ -881,44 +881,44 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="row fixed-footer" ng-if="modalOpen === false" ng-hide="isLoading()">
     <div ng-show="model.mode === 'edit'">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()" tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
+            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
                 <i class="icon-arrow-left"></i>
             </button>
             <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()"
-                    tooltip="{{t('Organisaatiot.tarkastele')}}">
+                    uib-tooltip="{{t('Organisaatiot.tarkastele')}}">
                 <i class="icon-eye-open"></i> {{t('Organisaatiot.tarkastele')}}
             </button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0"
                     auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.oid}}"
-                    class="btn btn-primary" ng-click="saveAndRefresh()" tooltip="{{t('Organisaationmuokkaus.tallenna')}}">
+                    class="btn btn-primary" ng-click="saveAndRefresh()" uib-tooltip="{{t('Organisaationmuokkaus.tallenna')}}">
                 {{t('Organisaationmuokkaus.tallenna')}}
             </button>
         </div>
         <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
         <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00">
-            <em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}' tt="Organisaationmuokkaus.validation.lomake">
+            <em ng-mouseenter="listErrors()" uib-tooltip-html-unsafe='{{model.errorsTooltip}}' tt="Organisaationmuokkaus.validation.lomake">
                 Organisaationmuokkaus.validation.lomake
             </em>
         </span>
     </div>
     <div ng-show="model.mode === 'new'">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()" tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
+            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
                 <i class="icon-arrow-left"></i>
             </button>
             <button type="button" class="btn" ng-disabled="form.$invalid || model.ytinvalid.length>0" ng-click="view()"
-                    tooltip="{{t('Organisaatiot.tarkastele')}}">
+                    uib-tooltip="{{t('Organisaatiot.tarkastele')}}">
                 <i class="icon-eye-open"></i> {{t('Organisaatiot.tarkastele')}}
             </button>
             <button type="button" ng-disabled="!form.$dirty || form.$invalid || model.ytinvalid.length>0" auth="crudOrg"
                     auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{model.organisaatio.parentOid}}"
-                    class="btn btn-primary" ng-click="save()" tooltip="{{t('Organisaationmuokkaus.tallenna')}}">
+                    class="btn btn-primary" ng-click="save()" uib-tooltip="{{t('Organisaationmuokkaus.tallenna')}}">
                 {{t('Organisaationmuokkaus.tallenna')}}
             </button>
         </div>
         <span ng-if="!form.$invalid && model.ytinvalid.length===0" class="muted" style="background-color: #fff"><em>{{model.savestatus}}</em></span>
         <span ng-if="form.$invalid || model.ytinvalid.length>0" class="muted" style="background-color: #fff; color: #f00">
-            <em ng-mouseenter="listErrors()" tooltip-html-unsafe='{{model.errorsTooltip}}' tt="Organisaationmuokkaus.validation.lomake">
+            <em ng-mouseenter="listErrors()" uib-tooltip-html-unsafe='{{model.errorsTooltip}}' tt="Organisaationmuokkaus.validation.lomake">
                 Organisaationmuokkaus.validation.lomake
             </em>
         </span>

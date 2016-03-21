@@ -151,7 +151,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </label>
             <input ng-if="model.mode !== 'update' && model.mode !== 'delete'" oph-enter
                    ng-class="{'pending-delete' : model.mode==='delete'}" ng-required="true"
-                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
+                   type="text" name="alkupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" min="model.minAlkuPvm" max="'2030-12-31'" ng-model="model.nimi.alkuPvm"
                    close-on-date-selection="true"
                    ie-placeholder placeholder="{{t('Nimenmuokkaus.alkupvm.placeholder')}}"
                    close-text="{{t('Organisaationmuokkaus.sulje')}}"
@@ -160,7 +160,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                    toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"/>
             <input ng-if="model.mode === 'update' || model.mode === 'delete'" oph-enter
                    ng-class="{'pending-delete' : model.mode==='delete'}" ng-required="true" ng-disabled="true"
-                   type="text" name="alkupvm" formatteddate datepicker-popup="dd.MM.yyyy" ng-model="model.nimi.alkuPvm"
+                   type="text" name="alkupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" ng-model="model.nimi.alkuPvm"
                    ie-placeholder placeholder="{{t('Nimenmuokkaus.alkupvm.placeholder')}}"/>
         </div>
         <div>

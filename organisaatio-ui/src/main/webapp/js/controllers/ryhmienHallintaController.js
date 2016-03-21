@@ -74,7 +74,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
 
     $scope.poista = function() {
         if ($scope.currentGroup !== null) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'ryhmanpoisto.html',
                 controller: 'RyhmaDeleteController',
                 resolve: {
@@ -168,7 +168,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: 'OrganisaatioCancelController',
                 resolve: {

@@ -15,7 +15,7 @@
  */
 
 app.controller('OrganisaatioTreeController', function OrganisaatioTreeController($scope, $location, $filter,
-                                    $modal, $log, $injector,
+                                    $uibModal, $log, $injector,
                                     Alert, Organisaatio, OrganisaatioSiirto,
                                     HakuehdotModel, OrganisaatioTreeModel) {
 
@@ -85,7 +85,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.moveOrganisaatio = function (node) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'organisaationsiirto.html',
             controller: 'OrganisaatioMoveController',
             windowClass:'modal-wide',
@@ -101,7 +101,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
         });
 
         modalInstance.result.then(function (options) {
-            var confirm = $modal.open({
+            var confirm = $uibModal.open({
                 templateUrl: 'organisaatiosiirtovarmistus.html',
                 controller: function ($scope, current, newParent) {
                     $scope.current = current;
@@ -144,7 +144,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.deleteOrganisaatio = function (node) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'organisaationpoisto.html',
             controller: 'OrganisaatioDeleteController',
             resolve: {
@@ -206,7 +206,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.luoYlinTaso = function () {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'yritysvalinta.html',
             controller: 'YritysValintaController',
             windowClass:'modal-wide',
