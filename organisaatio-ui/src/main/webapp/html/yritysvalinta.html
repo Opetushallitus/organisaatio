@@ -34,7 +34,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </tr>
     </table>
     <div>
-        <uib-alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="alert.type" close="alert.close()">{{ alert.msg }}</uib-alert>
+        <uib-alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</uib-alert>
     </div>
 </div>
 
