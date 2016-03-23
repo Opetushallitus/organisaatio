@@ -48,15 +48,15 @@ public class OrganisaatioRestToStream {
             long t0 = System.currentTimeMillis();
             // Set "caller-id" (clientSubSystemCode) and ID chain to be sent on header.
             cachingRestClient.setCallerId(IDContextMessageHelper.getClientSubSystemCode());
-            cachingRestClient.setID(IDContextMessageHelper.getIDChain());
+//            cachingRestClient.setID(IDContextMessageHelper.getIDChain());
             InputStream inputStream = cachingRestClient.get(uri);
             // Get the ID chain from received message and set it to cxf exchange.
             Reader reader = new InputStreamReader(inputStream);
             json = new JsonParser().parse(reader);
-            JsonElement ID = json.getAsJsonObject().get("ID");
-            if(ID != null) {
-                IDContextMessageHelper.setReceivedIDChain(ID.getAsString());
-            }
+//            JsonElement ID = json.getAsJsonObject().get("ID");
+//            if(ID != null) {
+//                IDContextMessageHelper.setReceivedIDChain(ID.getAsString());
+//            }
             LOG.debug("rest get done, uri: {}, took: {} ms, cacheStatus: {}",
                     new Object[] {uri, (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
         } catch (IOException e) {
