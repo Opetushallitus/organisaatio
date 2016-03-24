@@ -91,21 +91,6 @@ app.config(function($routeProvider, $httpProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-// https://github.com/angular/angular.js/issues/2614
-app.config(['$provide', function($provide) {
-    $provide.decorator('$sniffer', ['$delegate', function($sniffer) {
-            var msie = parseInt((/msie (\d+)/.exec(angular.lowercase(navigator.userAgent)) || [])[1], 10);
-            var _hasEvent = $sniffer.hasEvent;
-            $sniffer.hasEvent = function(event) {
-                if (event === 'input' && msie === 10) {
-                    return false;
-                }
-                _hasEvent.call(this, event);
-            };
-            return $sniffer;
-        }]);
-}]);
-
 // Konfiguroidaan DatePicker alkamaan viikon maanantaista (defaul = sunnuntai)
 app.config(function(uibDatepickerConfig) {
     uibDatepickerConfig.startingDay = 1;
