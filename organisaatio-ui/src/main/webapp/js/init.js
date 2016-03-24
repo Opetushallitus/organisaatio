@@ -17,6 +17,9 @@
 // Loads Localisation data from Lokalisaatiopalvelu prior to initializing the Angular App
 function organisaatioInitialize() {
     jQuery.support.cors = true;
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+    var $q = initInjector.get('$q');
 
     function initOrganisaatioApp() {
         angular.element(document).ready(function() {
@@ -24,14 +27,12 @@ function organisaatioInitialize() {
         });
     }
 
+    // Set default headers for this context.
+    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
 
     //
-    // Ladataan organisaatioiden lokalisoinnit
+    // Ladataan organisaatioiden lokalisoinnit ja käyttäjän kieli
     //
-    var initInjector = angular.injector(['ng']);
-    var $http = initInjector.get('$http');
-    var $q = initInjector.get('$q');
-
     var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
     console.log("** Loading localisation info; from: ", localisationUrl);
 

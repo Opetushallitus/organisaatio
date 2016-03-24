@@ -9,17 +9,12 @@ app.directive('formatteddate', function($log) {
             var minDate = moment(attrs.min, 'YYYY-MM-DD');
 
             function isRangeValid(date) {
-                if (date < minDate || date > maxDate) {
-                    return false;
-                }
-                return true;
+                return (date > minDate && date < maxDate);
             }
 
             // Tämä validoi päivämäärän
             ctrl.$validators.date = function validateDate(modelValue, viewValue) {
                 $log.log("Validation starts");
-                $log.log("Element value= "+element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
-
                 var date;
 
                 if (angular.isUndefined(viewValue)) {
@@ -27,12 +22,10 @@ app.directive('formatteddate', function($log) {
                     viewValue = null;
                     return true;
                 }
-
                 if (!viewValue) {
                     $log.log("ViewValue empty");
                     return true;
                 }
-
                 // Viewvalue should always be string.
                 if (angular.isString(viewValue)) {
                     $log.log("String ViewValue= " + viewValue);
@@ -52,19 +45,17 @@ app.directive('formatteddate', function($log) {
                     $log.log("Valid object ViewValue= " + viewValue);
                     return true;
                 }
-                // Unknown or invalid format.
-                log.warn("Unknown viewvalue format or invalid value.");
+                log.warn("Unknown viewvalue type or invalid value.");
                 return false;
             };
 
             ctrl.$validators.dateYear = function(modelValue, viewValue) {
                 $log.log("Format starts");
-                $log.log("ElementValue= " + element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
-
                 if (!viewValue) {
                     $log.log("ViewValue empty");
                     return true;
                 }
+                // Viewvalue should always be string
                 if (angular.isString(viewValue)) {
                     $log.log("String ViewValue= " + viewValue);
                     date = moment(viewValue, 'DD.MM.YYYY');
@@ -75,8 +66,7 @@ app.directive('formatteddate', function($log) {
                     date = moment(viewValue); // viewValue.type == Date object
                     return isRangeValid(date.toDate());
                 }
-                // Unknown or invalid format.
-                log.warn("Unknown viewvalue format or invalid value.");
+                log.warn("Unknown viewvalue type or invalid value.");
                 return false;
             };
         }
