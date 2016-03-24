@@ -41,7 +41,7 @@
         <ehcache.version>2.5.0</ehcache.version>
         <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
         <jgroups.version>2.10.0.GA</jgroups.version>
-        <phantomjs-maven-plugin.version>0.3</phantomjs-maven-plugin.version>
+        <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
         <springockito.version>1.0.9</springockito.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
@@ -51,6 +51,7 @@
         <hibernate.version>4.2.21.Final</hibernate.version>
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
         <jmeter.version>1.10.1</jmeter.version>
+        <frontend-plugin.version>0.0.29</frontend-plugin.version>
 
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>

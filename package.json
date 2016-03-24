@@ -1,0 +1,24 @@
+{
+  "name": "organisaatiopalvelu",
+  "version": "1.0.0",
+  "description": "OPH Organisaatiopalvelu",
+  "license": "EUPL-1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Opetushallitus/organisaatio.git"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "webpack": "^1.10.5"
+  },
+  "private": false,
+  "scripts": {
+    "build": "UGLIFY=false webpack -d -p",
+    "dev-build": "webpack -d --progress --colors",
+    "watch": "webpack -d --progress --colors --watch",
+    "test-ui": "mocha-phantomjs --ignore-resource-errors --setting webSecurityEnabled=false http://localhost:8081/hakuperusteet/spec/testRunner.html",
+    "admin:test-ui": "mocha-phantomjs --ignore-resource-errors --setting webSecurityEnabled=false http://localhost:8091/hakuperusteetadmin/spec/testRunner.html"
+  }
+}

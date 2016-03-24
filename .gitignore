@@ -21,3 +21,5 @@ phantomjsdriver.log
 **/*.orig
 solr-data/
 organisaatio-service/INFOSTREAM.txt
+node_modules/
+node/
