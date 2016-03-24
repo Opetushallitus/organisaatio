@@ -11,7 +11,13 @@
 
   },
   "devDependencies": {
-    "webpack": "^1.10.5"
+    "webpack" : "^1.10.5",
+    "angular" : "1.5.2",
+    "angular-mocks" : "1.5.2",
+    "angular-resource" : "1.5.2",
+    "angular-route" : "1.5.2",
+    "angular-sanitize" : "1.5.2",
+    "angular-cookies" : "1.5.2"
   },
   "private": false,
   "scripts": {

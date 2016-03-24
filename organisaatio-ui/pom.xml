@@ -163,13 +163,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>install npm</id>
+                        <id>install node and npm</id>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <nodeVersion>v5.9.1</nodeVersion>
+                            <nodeVersion>latest</nodeVersion>
                             <npmVersion>1.4.9</npmVersion>
                         </configuration>
                     </execution>
@@ -180,7 +180,6 @@
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
-                            <!--<installDirectory>${project.basedir}/src/main/webapp/</installDirectory>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -222,6 +221,12 @@
                     </webDriverCapabilities>
                     <preloadSources>
                         <source>${project.basedir}/src/main/webapp/jslib/jquery-2.1.1/jquery-2.1.1.min.js</source>
+                        <!--<source>${project.basedir}/../node_modules/angular/angular.js</source>-->
+                        <!--<source>${project.basedir}/../node_modules/angular/angular-mocks.js</source>-->
+                        <!--<source>${project.basedir}/../node_modules/angular/angular-resource.js</source>-->
+                        <!--<source>${project.basedir}/../node_modules/angular/angular-route.js</source>-->
+                        <!--<source>${project.basedir}/../node_modules/angular/angular-sanitize.js</source>-->
+                        <!--<source>${project.basedir}/../node_modules/angular/angular-cookies.js</source>-->
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.4.8/angular.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.4.8/angular-mocks.js</source>
                         <source>${project.basedir}/src/main/webapp/jslib/angular-1.4.8/angular-resource.js</source>
