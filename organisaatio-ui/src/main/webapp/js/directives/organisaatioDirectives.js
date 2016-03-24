@@ -16,84 +16,69 @@ app.directive('formatteddate', function($log) {
             }
 
             // Tämä validoi päivämäärän
-            function validateDate(viewValue) {
+            ctrl.$validators.date = function validateDate(modelValue, viewValue) {
                 $log.log("Validation starts");
                 $log.log("Element value= "+element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
 
                 var date;
 
-                if (viewValue === undefined) {
-                    $log.log("ViewValue undefined");
-                    ctrl.$setValidity('date', false);
-                    ctrl.$setValidity('dateYear', true);
-                    return null;
+                if (angular.isUndefined(viewValue)) {
+                    $log.log("ViewValue undefined.");
+                    viewValue = null;
+                    return true;
                 }
 
                 if (!viewValue) {
                     $log.log("ViewValue empty");
-                    ctrl.$setValidity('date', true);
-                    ctrl.$setValidity('dateYear', true);
-                    return null;
+                    return true;
                 }
 
-                if (typeof viewValue === "object" && moment(viewValue).isValid()) {
-                    $log.log("Valid object ViewValue= " + viewValue);
-
-                    date = moment(viewValue); // viewValue.type == Date object
-                    if (!isRangeValid(date.toDate())) {
-                        ctrl.$setValidity('dateYear', false);
-                        return viewValue;
-                    }
-                    ctrl.$setValidity('dateYear', true);
-                    ctrl.$setValidity('date', true);
-                    return viewValue;
-                }
-                else if (angular.isString(viewValue)) {
+                // Viewvalue should always be string.
+                if (angular.isString(viewValue)) {
                     $log.log("String ViewValue= " + viewValue);
+
                     if (!moment(viewValue,'DD.MM.YYYY').isValid()) {
                         $log.log("Invalid string viewValue= " + viewValue);
-                        ctrl.$setValidity('date', false);
-                        return undefined;
+                        return false;
                     }
                     date = moment(viewValue, 'DD.MM.YYYY');
                     if (!date.isValid()) {
                         $log.log("String ViewValue invalid");
-                        ctrl.$setValidity('date', false);
-                        return undefined;
+                        return false;
                     }
-                    if (!isRangeValid(date.toDate())) {
-                        ctrl.$setValidity('dateYear', false);
-                        return viewValue;
-                    }
-                    ctrl.$setValidity('dateYear', true);
-                    ctrl.$setValidity('date', true);
-                    return date.toDate();
+                    return true;
                 }
-                else {
-                    ctrl.$setValidity('date', false);
-                    return undefined;
+                if (typeof viewValue === "object" && moment(viewValue).isValid()) {
+                    $log.log("Valid object ViewValue= " + viewValue);
+                    return true;
                 }
-            }
-            ctrl.$parsers.unshift(validateDate);
+                // Unknown or invalid format.
+                log.warn("Unknown viewvalue format or invalid value.");
+                return false;
+            };
 
-            // Tämä hoitaa sen, että DatePicker saa päivämäärän oikeassa muodossa
-            ctrl.$parsers.unshift(function(viewValue) {
+            ctrl.$validators.dateYear = function(modelValue, viewValue) {
                 $log.log("Format starts");
                 $log.log("ElementValue= " + element.val() + " ViewValue= " + viewValue + " ctrl.$viewValue= " +ctrl.$viewValue);
 
-                // pass through if we clicked date from popup
-                if (typeof ctrl.$viewValue === "object" || ctrl.$viewValue === "") {
-                    $log.log("Pass through");
-                    return ctrl.$viewValue;
+                if (!viewValue) {
+                    $log.log("ViewValue empty");
+                    return true;
                 }
-                var date = moment(ctrl.$viewValue, 'DD.MM.YYYY');
-                if (date.isValid()) {
-                    $log.log("Valid ctrl.$viewValue= " + ctrl.$viewValue);
-                    ctrl.$setViewValue(date);
-                    return date.toDate();
+                if (angular.isString(viewValue)) {
+                    $log.log("String ViewValue= " + viewValue);
+                    date = moment(viewValue, 'DD.MM.YYYY');
+                    return isRangeValid(date.toDate());
                 }
-                return ctrl.$viewValue;
-            });
+                if (typeof viewValue === "object" && moment(viewValue).isValid()) {
+                    $log.log("Valid object ViewValue= " + viewValue);
+                    date = moment(viewValue); // viewValue.type == Date object
+                    return isRangeValid(date.toDate());
+                }
+                // Unknown or invalid format.
+                log.warn("Unknown viewvalue format or invalid value.");
+                return false;
+            };
         }
     };
 });
