@@ -203,7 +203,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.OPHOid = "1.2.246.562.10.00000000001";
 
-        this.savestatus = $filter('i18n')("Organisaationmuokkaus.tietojaeitallennettu");
+        this.savestatus = LocalisationService.t("Organisaationmuokkaus.tietojaeitallennettu");
 
         this.nameFormat = false;
 
@@ -2115,7 +2115,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 if(angular.isDefined(model.yhteystiedot[kieli])) {
                     if (kielet.hasOwnProperty(kieli)) {
                         if ((!model.yhteystiedot[kieli].posti.osoite || model.yhteystiedot[kieli].posti.osoite==='') &&
-                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
+                            (!model.yhteystiedot[kieli].ulkomainen_posti || !model.yhteystiedot[kieli].ulkomainen_posti.osoite
                             || model.yhteystiedot[kieli].ulkomainen_posti.osoite==='')) {
                             model.ytinvalid.push(kieli);
                         }

@@ -16,16 +16,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- YritysValinta -->
 <div class="modal-header">
-    <h3>{{'YritysValinta.otsikko' | i18n}}</h3>
+    <h3 tt="YritysValinta.otsikko">YritysValinta.otsikko</h3>
 </div>
 
 <div class="modal-body">
     <form class="form-search" novalidate ng-submit="search()">
-        <input class="" type="text" ng-model="model.hakuString" ie-placeholder placeholder="{{'YritysValinta.ytunnusTaiNimi' | i18n}}">
-        <button class="btn" type="submit">{{'YritysValinta.hae' | i18n}}</button>
+        <input class="" type="text" ng-model="model.hakuString" ie-placeholder placeholder="{{t('YritysValinta.ytunnusTaiNimi')}}">
+        <button class="btn" type="submit" tt="YritysValinta.hae">YritysValinta.hae</button>
     </form>
-    <div ng-hide="model.yritykset.length" class="form-row">
-        {{'YritysValinta.ohjeteksti' | i18n}}
+    <div ng-hide="model.yritykset.length" class="form-row" tt="YritysValinta.ohjeteksti">
+        YritysValinta.ohjeteksti
     </div>
     <table class="table table-hover">
         <tr style="cursor: pointer;" ng-repeat="yritys in model.yritykset | orderBy:'nimi'" ng-click="select(yritys)">
@@ -34,14 +34,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </tr>
     </table>
     <div>
-        <alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="alert.type" close="alert.close()">{{ alert.msg }}</alert>
+        <uib-alert ng-repeat="alert in alerts | filter:{showOnTopLevel: false}" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</uib-alert>
     </div>
 </div>
 
 <div class="modal-footer" ng-init="withoutselect = withoutselect || !model.hakuString">
     <div class="form-fluid">
-        <button class="btn" ng-click="cancel()">{{'YritysValinta.peruuta' | i18n}}</button>
-        <button ng-if="withoutselect" class="btn" ng-click="continueWithouSelect()">{{'YritysValinta.jatkaValitsematta' | i18n}}</button>
+        <button class="btn" ng-click="cancel()" tt="YritysValinta.peruuta">YritysValinta.peruuta</button>
+        <button ng-if="withoutselect" class="btn" ng-click="continueWithouSelect()" tt="YritysValinta.jatkaValitsematta">
+            YritysValinta.jatkaValitsematta
+        </button>
     </div>
 </div>
 

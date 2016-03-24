@@ -168,17 +168,17 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                 var alkuPvm = new Date(node.alkuPvm);
 
                 if (alkuPvm > today) {
-                    return ($filter('i18n')("Organisaatiot.suunniteltu",""));
+                    return (LocalisationService.t("Organisaatiot.suunniteltu",""));
                 }
             }
             if ('lakkautusPvm' in node) {
                 var lakkautusPvm = new Date(node.lakkautusPvm);
 
                 if (lakkautusPvm < today) {
-                    return ($filter('i18n')("Organisaatiot.passivoitu",""));
+                    return (LocalisationService.t("Organisaatiot.passivoitu",""));
                 }
             }
-            return ($filter('i18n')("Organisaatiot.aktiivinen",""));
+            return (LocalisationService.t("Organisaatiot.aktiivinen",""));
         },
 
         getNimi: function (node) {
@@ -217,7 +217,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                     if (i !== 0) {
                         tyypit += ", ";
                     }
-                    tyypit += $filter('i18n')("Organisaatiot."+node.organisaatiotyypit[i], "");
+                    tyypit += LocalisationService.t("Organisaatiot."+node.organisaatiotyypit[i], "");
                 }
                 return tyypit;
             }
@@ -269,7 +269,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             tree.children = organisaatiot;
 
             if (this.count === 0) {
-                Alert.add("warning", $filter('i18n')("Organisaatiot.eiHakutuloksia", ""), true);
+                Alert.add("warning", LocalisationService.t("Organisaatiot.eiHakutuloksia", ""), true);
             }
 
             var updateSubtree = function(node, level, expanded, parent) {
@@ -325,7 +325,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             function(response) {
                 loadingService.onErrorHandled(response);
                 $log.error("Organisaatiot response: " + response.status);
-                Alert.add("error", $filter('i18n')("Organisaatiot.hakuVirhe", ""), true);
+                Alert.add("error", LocalisationService.t("Organisaatiot.hakuVirhe", ""), true);
 
                 deferred.reject();
             });

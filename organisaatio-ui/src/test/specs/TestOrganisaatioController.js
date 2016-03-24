@@ -1,5 +1,6 @@
 describe("Testing OrganisaatioController", function() {
     var $scope = null;
+    var $window;
 
     var AngularLocaleManager = {};
 
@@ -21,10 +22,14 @@ describe("Testing OrganisaatioController", function() {
         module('organisaatio');
     });
 
-    beforeEach(inject(function($rootScope, $controller, $location, $routeParams) {
+    beforeEach(inject(function($rootScope, $controller, $location, $routeParams, _$window_) {
         //create a scope object for us to use.
         $scope = $rootScope.$new();
+        $window = _$window_;
+        $window.APP_CAS_ME = {};
+        $window.APP_CAS_ME.lang  = 'fi';
 
+        //spyOn($window, APP_CAS_ME.lang);
         spyOn(mockModel, "refreshIfNeeded");
         spyOn(mockModel, "persistOrganisaatio");
 

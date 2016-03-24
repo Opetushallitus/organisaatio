@@ -15,7 +15,7 @@
  */
 
 app.controller('OrganisaatioController', function OrganisaatioController($scope, $location,
-                                $routeParams, $modal,
+                                $routeParams, $uibModal,
                                 $log, $injector, $q,
                                 OrganisaatioModel) {
 
@@ -54,14 +54,15 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: 'OrganisaatioCancelController',
                 resolve: {
                     invalid: function () {
                         return $scope.form.$invalid;
                     }
-                }
+                },
+                scope: $scope
             });
 
             // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun
@@ -188,7 +189,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'nimenmuokkaus.html',
             controller: 'NimenMuokkausController',
             windowClass:'modal-wide',
@@ -217,7 +218,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 parentPattern: function () {
                     return $scope.model.parentPattern;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function (nimenmuokkausModel) {
@@ -239,7 +241,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             return;
         }
         $scope.modalOpen = true;
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'voimassaolonmuokkaus.html',
             controller: 'VoimassaolonMuokkausController',
             windowClass:'modal-large',
@@ -265,7 +267,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 monikielinenTekstiLocalizer: function () {
                     return $scope.model.getDecodedLocalizedValue;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function(voimassaolonmuokkausModel) {
@@ -290,7 +293,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
     // Ytj-tietojen haun modaalin dialogin avaus
     $scope.haeYtjTiedot = function(organisaationYtunnus) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'yritysvalinta.html',
             controller: 'YritysValintaController',
             windowClass: 'modal-wide',
@@ -298,7 +301,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 ytunnus: function() {
                     return organisaationYtunnus;
                 }
-            }
+            },
+            scope: $scope
         });
         $scope.modalOpen = true;
 
@@ -333,14 +337,15 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     };
 
     $scope.vahvistakopiointi = function(section) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'kopioinninvahvistus.html',
             controller: 'KuvailevatTiedotKopiointiController',
             resolve: {
                 nimi: function() {
                     return $scope.model.uriLocalizedNames['parentnimi'];
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function() {
@@ -374,7 +379,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
         var origText = $scope.model.organisaatio.metadata.data[field][lang];
         $scope.modalOpen = true;
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'kuvailevientietojenmuokkaus.html',
             controller: 'KuvailevatTiedotMuokkausController',
             windowClass: 'modal-large',
@@ -394,7 +399,8 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                 options: function() {
                     return tinymceOptions;
                 }
-            }
+            },
+            scope: $scope
         });
 
         modalInstance.result.then(function() {

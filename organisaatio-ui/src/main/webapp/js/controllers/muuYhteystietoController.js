@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('MuuYhteystietoController', function MuuYhteystietoController($scope, $modalInstance, data) {
+app.controller('MuuYhteystietoController', function MuuYhteystietoController($scope, $uibModalInstance, data) {
     if (data) {
         $scope.data = data;
     } else {
@@ -25,11 +25,11 @@ app.controller('MuuYhteystietoController', function MuuYhteystietoController($sc
     }
 
     $scope.cancel = function() {
-        $modalInstance.dismiss('cancel');
+        $uibModalInstance.dismiss('cancel');
     };
 
     $scope.save = function() {
-        $modalInstance.close($scope.data);
+        $uibModalInstance.close($scope.data);
     };
 });
 

@@ -15,8 +15,8 @@
  */
 
 app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
-                                   $modal, $log, $injector, $q,
-                                   RyhmienHallintaModel, Alert, UserInfo,
+                                   $uibModal, $log, $injector, $q,
+                                   RyhmienHallintaModel, Alert, LocalisationService,
                                    RyhmaKoodisto) {
     "use strict";
 
@@ -31,9 +31,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         en: ['fi', 'sv']
     };
 
-    UserInfo.then(function(s) {
-        language = s.toLowerCase();
-    });
+    language = LocalisationService.getLocale();
 
     $scope.model = RyhmienHallintaModel;
     $scope.currentGroup = null;
@@ -76,14 +74,15 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
 
     $scope.poista = function() {
         if ($scope.currentGroup !== null) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'ryhmanpoisto.html',
                 controller: 'RyhmaDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.localizeNimi($scope.currentGroup);
                     }
-                }
+                },
+                scope: $scope
             });
 
             modalInstance.result.then(function() {
@@ -169,14 +168,15 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         if ($scope.form.$dirty) {
             event.preventDefault();
             $scope.modalOpen = true;
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'organisaationmuokkauksenperuutus.html',
                 controller: 'OrganisaatioCancelController',
                 resolve: {
                     invalid: function () {
                         return $scope.form.$invalid;
                     }
-                }
+                },
+                scope: $scope
             });
 
             // Jos varmistuskyselyssä käyttäjä haluaa tallentaa muokatun

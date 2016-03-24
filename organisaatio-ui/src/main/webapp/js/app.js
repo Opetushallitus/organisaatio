@@ -91,27 +91,12 @@ app.config(function($routeProvider, $httpProvider) {
         otherwise({redirectTo:'/organisaatiot'});
 });
 
-// https://github.com/angular/angular.js/issues/2614
-app.config(['$provide', function($provide) {
-    $provide.decorator('$sniffer', ['$delegate', function($sniffer) {
-            var msie = parseInt((/msie (\d+)/.exec(angular.lowercase(navigator.userAgent)) || [])[1], 10);
-            var _hasEvent = $sniffer.hasEvent;
-            $sniffer.hasEvent = function(event) {
-                if (event === 'input' && msie === 10) {
-                    return false;
-                }
-                _hasEvent.call(this, event);
-            };
-            return $sniffer;
-        }]);
-}]);
-
 // Konfiguroidaan DatePicker alkamaan viikon maanantaista (defaul = sunnuntai)
-app.config(function(datepickerConfig) {
-    datepickerConfig.startingDay = 1;
+app.config(function(uibDatepickerConfig) {
+    uibDatepickerConfig.startingDay = 1;
 });
 
-app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
+app.run(function($http, $cookies, OrganisaatioInitAuth) {
     // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
     $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
     if($cookies.get('CSRF')) {
@@ -123,24 +108,14 @@ app.run(function($http, $cookies, OrganisaatioInitAuth, UserInfo) {
     OrganisaatioInitAuth.init();
 });
 
-app.run(function($http, $cookies) {
-    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
-    if($cookies.get('CSRF')) {
-        $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF');
-    }
-});
-
 ////////////
 //
 // Services
 //
 ////////////
-app.service('KoodistoKoodi', function($locale, $window, $http, UserInfo, $log) {
+app.service('KoodistoKoodi', function($locale, $window, $http, LocalisationService, $log) {
     $log = $log.getInstance('KoodistoKoodi');
-    var language;
-    UserInfo.then(function(s) {
-        language = s;
-    });
+    var language = LocalisationService.getLocale().toUpperCase();
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
@@ -234,34 +209,6 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     }
 ]);
 
-app.factory('UserInfo', ['$q', '$http', '$log', '$injector',
-    function($q, $http, $log, $injector) {
-        $log = $log.getInstance("UserInfo");
-        var loadingService = $injector.get('LoadingService');
-        var promise = undefined;
-        var lang;
-
-        if(angular.isUndefined(promise)) {
-            lang = 'FI';
-            promise = $http.get(CAS_ME_URL).then(function(result) {
-                $log.debug("Success on " + CAS_ME_URL, result);
-                lang = result.data.lang;
-                if (lang) {
-                    // Toistaiseksi vain SV on tuettu FI:n lisäksi
-                    lang = (lang.toUpperCase()==="SV" ? "SV" : "FI");
-                } else {
-                    $log.debug('failed parsing result, defaulting to FI');
-                }
-                return $q.when(lang);
-            }, function(err) {
-                $log.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
-                loadingService.onErrorHandled(err);
-                return $q.when(lang);
-            });
-        }
-        return promise;
-    }
-]);
 
 app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
                                      'Alert', 'OrganisaatioAuthGET',

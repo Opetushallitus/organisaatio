@@ -14,10 +14,10 @@
  European Union Public Licence for more details.
  */
 
-app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $modal,
+app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiController($scope, $filter, $uibModal,
                                         $log, $injector,
                                         YhteystietojentyyppiModel,
-                                        Alert, UserInfo) {
+                                        Alert, LocalisationService) {
     "use strict";
 
     $log = $log.getInstance("YhteystietojentyyppiController");
@@ -31,9 +31,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
         en: ['fi', 'sv']
     };
 
-    UserInfo.then(function(s) {
-        language = s.toLowerCase();
-    });
+    language = LocalisationService.getLocale();
 
     $scope.model = YhteystietojentyyppiModel;
     $scope.model.reload();
@@ -296,14 +294,15 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
     $scope.poistaYhteystietotyyppi = function() {
         Alert.clear();
         if ($scope.valittuYhteystietotyyppi !== null) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'yhteystiedonpoisto.html',
                 controller: 'YhteystietoDeleteController',
                 resolve: {
                     nimi: function () {
                         return $scope.yttNimiLang(language).value;
                     }
-                }
+                },
+                scope: $scope
             });
 
             modalInstance.result.then(function(force) {
@@ -367,14 +366,15 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
     }
 
     function _muokkaaMuuYhteystieto(callback, data) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
             templateUrl: 'muuyhteystieto.html',
             controller: 'MuuYhteystietoController',
             resolve: {
                 data: function() {
                     return data;
                 }
-            }
+            },
+            scope: $scope
         });
         $scope.modalOpen = true;
 

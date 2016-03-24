@@ -1,7 +1,6 @@
 describe('Module: Localisation', function() {
 
     var $window, LocalisationService, $compile, $q, $scope,
-        mockUserInfo = {},
         mockAngularLocaleManager = {setAngularLocale : function() {}},
         key = 'Test.avain',
         value = 'Testataan lokalisaatioiden toimivuus',
@@ -11,14 +10,13 @@ describe('Module: Localisation', function() {
 
     beforeEach(module('Localisation'));
     beforeEach(function() {
-        mockUserInfo = { language: 'se',
-            then : function() {}
+
+        $window = {
+            APP_LOCALISATION_DATA: mockLocalisations,
+            APP_CAS_ME: {lang: 'se'}
         };
 
-        $window = {APP_LOCALISATION_DATA: mockLocalisations};
-
         module(function($provide) {
-            $provide.value('UserInfo', mockUserInfo);
             $provide.value('$window', $window);
             $provide.value('AngularLocaleManager', mockAngularLocaleManager);
         });
@@ -36,7 +34,7 @@ describe('Module: Localisation', function() {
 
         beforeEach(function() {
             // Simulate initiating this value from mockUserInfo
-            LocalisationService.setLocale('se');
+            //LocalisationService.setLocale('se');
         });
 
         it('initializes properly', function() {

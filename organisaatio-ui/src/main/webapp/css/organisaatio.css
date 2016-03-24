@@ -1,3 +1,44 @@
+/*Override bootstrap 3 with bootstrap 2 class for datepicker*/
+.glyphicon-chevron-right {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../img/glyphicons-halflings.png");
+    /*background-position: 14px 14px;*/
+    background-repeat: no-repeat;
+    background-position: -456px -72px;
+}
+
+/*Override bootstrap 3 with bootstrap 2 class for datepicker*/
+.glyphicon-chevron-left {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../img/glyphicons-halflings.png");
+    /*background-position: 14px 14px;*/
+    background-repeat: no-repeat;
+    background-position: -432px -72px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
 .form-horizontal .controls .control-label.control-label-left {
   text-align: left;
   width:500px;

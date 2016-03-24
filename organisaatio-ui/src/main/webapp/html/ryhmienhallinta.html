@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Ryhmienhallinta -->
 <form name="mainform" class="form-horizontal" novalidate>
-    <h1>{{'RyhmienHallinta.otsikko'| i18n}}</h1>
+    <h1 tt="RyhmienHallinta.otsikko">RyhmienHallinta.otsikko</h1>
 
     <div class="control-group">
             <ui-select class="span10" style="left: -20px;" ng-model="currentGroupSelection.selected" theme="selectize" ng-disabled="disabled"
                        on-select="valitseRyhma($item)">
-                <ui-select-match placeholder="{{'RyhmienHallinta.valitseRyhma'| i18n}}">{{localizeNimi($select.selected)}}</ui-select-match>
+                <ui-select-match placeholder="{{t('RyhmienHallinta.valitseRyhma')}}">{{localizeNimi($select.selected)}}</ui-select-match>
                 <ui-select-choices repeat="group in model.groups | filter: $select.search | orderBy : localizeNimi">
                     <span ng-bind-html-unsafe="group.nimi.fi | highlight: $select">{{localizeNimi(group)}}</span>
                 </ui-select-choices>
@@ -31,15 +31,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <hr>
 
     <div ng-show="currentGroup" ng-form="form">
-        <h3>{{'RyhmienHallinta.nimi'| i18n}}</h3>
+        <h3 tt="RyhmienHallinta.nimi">RyhmienHallinta.nimi</h3>
         <div class="control-group">
             <div class="controls">
                 <input id="nimifi" type="text" name="nimifi" class="span6"
                        ng-model="currentGroup.nimi.fi"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.nimisuomeksi'| i18n}}" ng-required="false" names-combined-field/>
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.nimisuomeksi')}}" ng-required="false" names-combined-field/>
                 <div>
-                    <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired">
-                        {{'RyhmienHallinta.ohje.nimet'| i18n}}
+                    <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired" tt="RyhmienHallinta.ohje.nimet">
+                        RyhmienHallinta.ohje.nimet
                     </span>
                 </div>
             </div>
@@ -49,24 +49,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="nimisv" type="text" name="nimisv" class="span6"
                        ng-model="currentGroup.nimi.sv"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.nimiruotsiksi'| i18n}}" ng-required="false" names-combined-field/>
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.nimiruotsiksi')}}" ng-required="false" names-combined-field/>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="nimise" type="text" name="nimien" class="span6"
                        ng-model="currentGroup.nimi.en"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.nimienglanniksi'| i18n}}" ng-required="false" names-combined-field/>
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.nimienglanniksi')}}" ng-required="false" names-combined-field/>
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.kuvaus'| i18n}}</h3>
+        <h3 tt="RyhmienHallinta.kuvaus">RyhmienHallinta.kuvaus</h3>
 
         <div class="control-group">
             <div class="controls">
                 <input id="kuvausfi" type="text" name="kuvausfi" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_fi#1']"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvaussuomeksi'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.kuvaussuomeksi')}}" ng-required="false" />
             </div>
         </div>
 
@@ -74,57 +74,57 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="kuvaussv" type="text" name="kuvaussv" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_sv#1']"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvausruotsiksi'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.kuvausruotsiksi')}}" ng-required="false" />
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <input id="kuvausen" type="text" name="kuvausen" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_en#1']"
-                       ie-placeholder placeholder="{{'RyhmienHallinta.kuvausenglanniksi'| i18n}}" ng-required="false" />
+                       ie-placeholder placeholder="{{t('RyhmienHallinta.kuvausenglanniksi')}}" ng-required="false" />
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.ryhmatyyppi'| i18n}}</h3>
+        <h3 tt="RyhmienHallinta.ryhmatyyppi">RyhmienHallinta.ryhmatyyppi</h3>
 
         <div class="control-group">
             <div class="controls">
                 <select id="ryhmatyyppi" ng-model="currentGroup.ryhmatyypit[0]" class="span6"
                     ng-options="rTyyppi.uri as rTyyppi.nimi for rTyyppi in koodisto.ryhmatyypit | orderBy:'nimi'"
                     ng-change="form.$dirty = true" required>
-                    <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Organisaationmuokkaus.valitse</option>
                 </select>
                 <div ng-if="!currentGroup.ryhmatyypit[0]">
                     <input type="hidden" name="gtyyppivirhe" ng-model="gtyyppivirhe" required>
                     <span class="text-error" ng-show="form.gtyyppivirhe.$error.required">
-                        {{'RyhmienHallinta.ryhmatyyppi'| i18n}}
-                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                        {{t('RyhmienHallinta.ryhmatyyppi')}}
+                        {{t('Organisaationmuokkaus.validointi.pakollinen')}}
                     </span>
                 </div>
             </div>
         </div>
 
-        <h3>{{'RyhmienHallinta.kayttoryhma'| i18n}}</h3>
+        <h3 tt="RyhmienHallinta.kayttoryhma">RyhmienHallinta.kayttoryhma</h3>
 
         <div class="control-group">
             <div class="controls">
                 <select id="kayttoryhma" ng-model="currentGroup.kayttoryhmat[0]" class="span6"
                     ng-options="kTyyppi.uri as kTyyppi.nimi for kTyyppi in koodisto.kayttoryhmat | orderBy:'nimi'"
                     ng-change="form.$dirty = true" required>
-                    <option value="">{{'Organisaationmuokkaus.valitse'| i18n}}</option>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Organisaationmuokkaus.valitse</option>
                 </select>
                 <div ng-if="!currentGroup.kayttoryhmat[0]">
                     <input type="hidden" name="ktyyppivirhe" ng-model="ktyyppivirhe" required>
                     <span class="text-error" ng-show="form.ktyyppivirhe.$error.required">
-                        {{'RyhmienHallinta.kayttoryhma'| i18n}}
-                        {{'Organisaationmuokkaus.validointi.pakollinen'| i18n}}
+                        {{t('RyhmienHallinta.kayttoryhma')}}
+                        {{t('Organisaationmuokkaus.validointi.pakollinen')}}
                     </span>
                 </div>
             </div>
         </div>
 
         <div ng-show="model.paivitys.pvm">
-            <h3>{{'Organisaationtarkastelu.tallennettu'| i18n}}</h3>
+            <h3 tt="Organisaationtarkastelu.tallennettu">Organisaationtarkastelu.tallennettu</h3>
             <div class="control-group">
                 <div class="controls">
                     {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}}
@@ -136,17 +136,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="row">
         <div class="span6">
-            <button class="btn" ng-click="luoUusi()">
-                {{'RyhmienHallinta.luoUusi'| i18n}}
+            <button class="btn" ng-click="luoUusi()" tt="RyhmienHallinta.luoUusi">
+                RyhmienHallinta.luoUusi
             </button>
-            <button class="btn" ng-disabled="!currentGroup" ng-click="poista()">
-                {{'RyhmienHallinta.poista'| i18n}}
+            <button class="btn" ng-disabled="!currentGroup" ng-click="poista()" tt="RyhmienHallinta.poista">
+                RyhmienHallinta.poista
             </button>
         </div>
         <div class="offset7">
-            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
-            <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()">{{'RyhmienHallinta.peruuta'| i18n}}</button>
-            <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()">{{'RyhmienHallinta.tallenna'| i18n}}</button>
+            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
+                <i class="icon-arrow-left"></i>
+            </button>
+            <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()" tt="RyhmienHallinta.peruuta">
+                RyhmienHallinta.peruuta
+            </button>
+            <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="tallenna()"
+                    tt="RyhmienHallinta.tallenna">
+                RyhmienHallinta.tallenna
+            </button>
         </div>
     </div>
 </form>

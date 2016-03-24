@@ -17,6 +17,9 @@
 // Loads Localisation data from Lokalisaatiopalvelu prior to initializing the Angular App
 function organisaatioInitialize() {
     jQuery.support.cors = true;
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+    var $q = initInjector.get('$q');
 
     function initOrganisaatioApp() {
         angular.element(document).ready(function() {
@@ -24,28 +27,53 @@ function organisaatioInitialize() {
         });
     }
 
-    function logRequest(xhr, status) {
-        console.log("** Localisation request "+status+": "+xhr.status+" "+xhr.statusText, xhr);
-    }
+    // Set default headers for this context.
+    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
 
     //
-    // Ladataan organisaatioiden lokalisoinnit
+    // Ladataan organisaatioiden lokalisoinnit ja käyttäjän kieli
     //
     var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
     console.log("** Loading localisation info; from: ", localisationUrl);
-    jQuery.ajax(localisationUrl, {
-        dataType: 'json',
-        crossDomain: true,
-        complete: logRequest,
-        success: function(xhr, status) {
-            window.APP_LOCALISATION_DATA = xhr;
+
+    var promiseLocalisationData = $http.get(localisationUrl, {responseType: 'json'}).then(
+        function(response) {
+            window.APP_LOCALISATION_DATA = response.data;
             console.log('** Localisation info was successfully loaded.');
-            initOrganisaatioApp();
+            console.log("** Localisation request "+response.status+" "+response.statusText, response);
         },
-        error: function(xhr, status) {
+        function(response) {
             window.APP_LOCALISATION_DATA = [];
-            console.log('** There was an error while loading the localisation info: ', status, xhr);
+            console.warn('** There was an error while loading the localisation info: ', response.status, response);
+            console.log("** Localisation request "+response.status+" "+response.statusText, response);
+        }
+    );
+
+    // Make sure this function is not spammed.
+    var lang = 'fi';
+    var promiseCasMe = $http.get(CAS_ME_URL).then(
+        function(response) {
+            console.log("Success on " + CAS_ME_URL, response);
+            lang = response.data.lang;
+            if (lang) {
+                // Toistaiseksi vain SV on tuettu FI:n lisäksi
+                lang = (lang==="sv" ? "sv" : "fi");
+            } else {
+                console.warn('failed parsing result, defaulting to fi');
+            }
+            window.APP_CAS_ME = response.data;
+            window.APP_CAS_ME.lang = lang.toLowerCase();
+        },
+        function(response) {
+            console.warn("Failed to get: " + CAS_ME_URL + " --> using language: " + lang);
+            window.APP_CAS_ME = {};
+            window.APP_CAS_ME.lang = lang.toLowerCase();
+    });
+
+    // Start angular app manually when
+    $q.all([promiseLocalisationData, promiseCasMe]).then(
+        function(response) {
             initOrganisaatioApp();
         }
-    });
+    );
 }

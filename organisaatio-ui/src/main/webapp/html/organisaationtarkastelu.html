@@ -19,8 +19,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="control-group">
         <div class="offset2" ng-show="model.organisaatio.nimi">
-            <h2>{{model.uriLocalizedNames["nimi"]}}<span ng-show="model.paivitys.pvm" id="paivittaja">
-                    ({{'Organisaationtarkastelu.tallennettu'| i18n}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</span></h2>
+            <h2>{{model.uriLocalizedNames["nimi"]}}
+                <span ng-show="model.paivitys.pvm" id="paivittaja">
+                    ({{t('Organisaationtarkastelu.tallennettu')}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})
+            </span>
+            </h2>
         </div>
     </div>
     <div ng-show="model.organisaatio.metadata.kuvaEncoded">
@@ -28,13 +31,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.tyypit">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.organisaatiotyyppi'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.organisaatiotyyppi">
+            Organisaationtarkastelu.organisaatiotyyppi
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="tyyppi in model.organisaatio.tyypit">
-                    {{tyyppi| i18n}}<br>
+                    {{t(tyyppi)}}<br>
                 </div>
             </label>
         </div>
@@ -42,7 +45,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 
     <div class="control-group" ng-show="model.organisaatio.nimi">
-        <label class="control-label">{{'Organisaationtarkastelu.nimi'| i18n}}</label>
+        <label class="control-label" tt="Organisaationtarkastelu.nimi">Organisaationtarkastelu.nimi</label>
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="avain in organisaatioNimiLangs(model.organisaatio.nimi)| orderBy:orderByLang">
@@ -60,8 +63,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.alkuPvm">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.voimassaolo'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.voimassaolo">
+            Organisaationtarkastelu.voimassaolo
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -70,8 +73,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.organisaationtila'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.organisaationtila">
+            Organisaationtarkastelu.organisaationtila
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -80,8 +83,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
     <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.kotipaikka'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.kotipaikka">
+            Organisaationtarkastelu.kotipaikka
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -91,8 +94,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.yritysmuoto" ng-if='model.isKoulutustoimija()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.yritysmuoto'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.yritysmuoto">
+            Organisaationtarkastelu.yritysmuoto
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -102,8 +105,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.ytunnus" ng-if='model.isKoulutustoimija()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.ytunnus'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.ytunnus">
+            Organisaationtarkastelu.ytunnus
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -113,8 +116,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.virastotunnus" ng-if='model.isKoulutustoimija()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.virastotunnus'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.virastotunnus">
+            Organisaationtarkastelu.virastotunnus
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -124,8 +127,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.maaUri">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.maa'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.maa">
+            Organisaationtarkastelu.maa
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -136,8 +139,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 
     <div class="control-group" ng-show="model.organisaatio.kieletUris">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.kieli'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.kieli">
+            Organisaationtarkastelu.kieli
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -149,8 +152,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.tkkoodi'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.tkkoodi">
+            Organisaationtarkastelu.tkkoodi
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -160,8 +163,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" class="control-group" ng-if='model.isToimipiste()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.toimipistekoodi'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.toimipistekoodi">
+            Organisaationtarkastelu.toimipistekoodi
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -171,8 +174,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.oppilaitosTyyppiUri" ng-if='model.isOppilaitos()'>
-        <label class="control-label">
-            {{'Organisaationtarkastelu.oppilaitostyyppi'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.oppilaitostyyppi">
+            Organisaationtarkastelu.oppilaitostyyppi
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -182,8 +185,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="control-group" ng-show="model.organisaatio.vuosiluokat" ng-if="model.hasVuosiluokat()">
-        <label class="control-label">
-            {{'Organisaationtarkastelu.vuosiluokat'| i18n}}
+        <label class="control-label" tt="Organisaationtarkastelu.vuosiluokat">
+            Organisaationtarkastelu.vuosiluokat
         </label>
         <div class="controls">
             <label class="control-label control-label-left">
@@ -203,7 +206,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     <label>
                         <span ng-class="{'icon-chevron-down':ytexpanded, 'icon-chevron-right':!ytexpanded}"
                               ng-bind=""></span>
-                        {{'Organisaationmuokkaus.yhteystiedot'| i18n}}
+                        {{t('Organisaationmuokkaus.yhteystiedot')}}
                     </label>
                 </a>
             </div>
@@ -212,24 +215,31 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ytexpanded">
 
-        <tabset>
-            <tab ng-repeat="yttab in model.yttabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="yttab in model.yttabs"
                  heading="{{model.uriLocalizedNames[yttab]}}"
                  select="model.ytlang=yttab">
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite || model.yhteystiedot[model.ytlang].kaynti.postinumeroUri">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.kayntiosoite">
+                    Organisaationtarkastelu.kayntiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">{{model.yhteystiedot[model.ytlang].kaynti.osoite | decodeAmp}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].kaynti.osoite">
+                            {{model.yhteystiedot[model.ytlang].kaynti.osoite | decodeAmp}}
+                            {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo?',':''}}
+                        </span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
-                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
-                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}</span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">
+                            {{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
+                        </span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">
+                            {{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].kaynti.postinumeroUri]}}
+                        </span>
                     </label>
                 </div>
             </div>
@@ -237,8 +247,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.kayntiosoite">
+                    Organisaationtarkastelu.kayntiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -250,15 +260,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].posti.osoite || model.yhteystiedot[model.ytlang].posti.postinumeroUri">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.postiosoite">
+                    Organisaationtarkastelu.postiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">{{model.yhteystiedot[model.ytlang].posti.osoite | decodeAmp}}{{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}</span>
+                        <span ng-if="model.yhteystiedot[model.ytlang].posti.osoite">
+                            {{model.yhteystiedot[model.ytlang].posti.osoite | decodeAmp}}
+                            {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo?',':''}}
+                        </span>
                         {{model.uriKoodit[model.yhteystiedot[model.ytlang].posti.postinumeroUri].koodiArvo}}&nbsp;
-                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
-                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}</span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo == 'SV'">
+                            {{model.uriLangNames["SV"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
+                        </span>
+                        <span ng-if="model.uriKoodit[model.ytlang].koodiArvo != 'SV'">
+                            {{model.uriLangNames["FI"][model.yhteystiedot[model.ytlang].posti.postinumeroUri]}}
+                        </span>
                     </label>
                 </div>
             </div>
@@ -266,12 +283,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.postiosoite">
+                    Organisaationtarkastelu.postiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
-                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">{{model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite | decodeAmp}}</pre>
+                        <pre ng-if="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite">
+                            {{model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite | decodeAmp}}
+                        </pre>
                     </label>
                 </div>
             </div>
@@ -279,8 +298,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group"ng-if="model.yhteystiedot[model.ytlang].puhelin.numero">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.puhelinnumero">
+                    Organisaationtarkastelu.puhelinnumero
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -292,8 +311,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].faksi.numero">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.faksinumero'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.faksinumero">
+                    Organisaationtarkastelu.faksinumero
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -305,8 +324,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].www.www">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.wwwosoite">
+                    Organisaationtarkastelu.wwwosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -318,8 +337,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group">
             <div>
-                <label class="control-label" ng-if="model.yhteystiedot[model.ytlang].email.email">
-                    {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+                <label class="control-label" ng-if="model.yhteystiedot[model.ytlang].email.email"
+                       tt="Organisaationtarkastelu.sahkopostiosoite">
+                    Organisaationtarkastelu.sahkopostiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -347,12 +367,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div ng-show="ltexpanded[yta.oid]">
-            <tabset>
-                <tab ng-repeat="lttab in model.lttabs"
+            <uib-tabset>
+                <uib-tab ng-repeat="lttab in model.lttabs"
                      heading="{{model.uriLocalizedNames[lttab]}}"
                      select="model.ltlang[yta.oid]=lttab">
-                </tab>
-            </tabset>
+                </uib-tab>
+            </uib-tabset>
 
             <div class="control-group" ng-repeat="yt in model.organisaatio.yhteystietoArvos"
                  ng-show="yt['YhteystietojenTyyppi.oid'] === yta.oid && yt['YhteystietoArvo.kieli'] === model.ltlang[yta.oid]">
@@ -375,7 +395,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="hpexpanded" ng-click="hpexpanded = !hpexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':hpexpanded, 'icon-chevron-right':!hpexpanded}"></span>
-                        {{'Organisaationmuokkaus.hakijapalvelut'| i18n}}
+                        {{t('Organisaationmuokkaus.hakijapalvelut')}}
                     </label>
                 </a>
             </div>
@@ -383,18 +403,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="hpexpanded">
-        <tabset>
-            <tab ng-repeat="tab in model.mkSections.hp.tabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in model.mkSections.hp.tabs"
                  active="tab.active"
                  select="model.hplang=tab.lang"
                  heading="{{model.uriLocalizedNames[tab.lang]}}">
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
 
 
         <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistonNimi[model.hplang]">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.hakutoimistonnimi'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.hakutoimistonnimi">
+                Organisaationtarkastelu.hakutoimistonnimi
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
@@ -404,23 +424,29 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite || model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.kayntiosoite">
+                Organisaationtarkastelu.kayntiosoite
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">{{model.mdyhteystiedot[model.hplang].kaynti.osoite | decodeAmp}},&nbsp;</span>
+                    <span ng-if="model.mdyhteystiedot[model.hplang].kaynti.osoite">
+                        {{model.mdyhteystiedot[model.hplang].kaynti.osoite | decodeAmp}},&nbsp;
+                    </span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri].koodiArvo}}&nbsp;
-                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
-                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}</span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">
+                        {{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}
+                    </span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">
+                        {{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].kaynti.postinumeroUri]}}
+                    </span>
                 </label>
             </div>
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_kaynti.osoite">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.kayntiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.kayntiosoite">
+                    Organisaationtarkastelu.kayntiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -431,23 +457,29 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].posti.osoite || model.mdyhteystiedot[model.hplang].posti.postinumeroUri">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.postiosoite'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.postiosoite">
+                Organisaationtarkastelu.postiosoite
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">{{model.mdyhteystiedot[model.hplang].posti.osoite | decodeAmp}},&nbsp;</span>
+                    <span ng-if="model.mdyhteystiedot[model.hplang].posti.osoite">
+                        {{model.mdyhteystiedot[model.hplang].posti.osoite | decodeAmp}},&nbsp;
+                    </span>
                     {{model.uriKoodit[model.mdyhteystiedot[model.hplang].posti.postinumeroUri].koodiArvo}}&nbsp;
-                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">{{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
-                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">{{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}</span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo == 'SV'">
+                        {{model.uriLangNames["SV"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
+                    </span>
+                    <span ng-if="model.uriKoodit[model.hplang].koodiArvo != 'SV'">
+                        {{model.uriLangNames["FI"][model.mdyhteystiedot[model.hplang].posti.postinumeroUri]}}
+                    </span>
                 </label>
             </div>
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].ulkomainen_posti.osoite">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.postiosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.postiosoite">
+                    Organisaationtarkastelu.postiosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -458,8 +490,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].puhelin.numero">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.puhelinnumero'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.puhelinnumero">
+                Organisaationtarkastelu.puhelinnumero
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
@@ -469,8 +501,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].faksi.numero">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.faksinumero'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.faksinumero">
+                Organisaationtarkastelu.faksinumero
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
@@ -480,8 +512,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].email.email">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.sahkopostiosoite'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.sahkopostiosoite">
+                Organisaationtarkastelu.sahkopostiosoite
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
@@ -492,8 +524,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].www.www">
             <div>
-                <label class="control-label">
-                    {{'Organisaationtarkastelu.wwwosoite'| i18n}}
+                <label class="control-label" tt="Organisaationtarkastelu.wwwosoite">
+                    Organisaationtarkastelu.wwwosoite
                 </label>
                 <div class="controls">
                     <label class="control-label control-label-left">
@@ -512,7 +544,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="smexpanded" ng-click="smexpanded = !smexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':smexpanded, 'icon-chevron-right':!smexpanded}"></span>
-                        {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+                        {{t('Organisaationtarkastelu.sosiaalinenmedia')}}
                     </label>
                 </a>
             </div>
@@ -521,19 +553,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="smexpanded">
 
-        <tabset>
-            <tab ng-repeat="tab in model.mkSections.sm.tabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in model.mkSections.sm.tabs"
                  active="tab.active"
                  select="model.smlang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
 
         <div class="control-group" ng-show="model.hasSome()">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.sosiaalinenmedia'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.sosiaalinenmedia">
+                Organisaationtarkastelu.sosiaalinenmedia
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
@@ -542,7 +574,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     {{model.someurls[field].nimi}}:
                     <a ng-href="{{model.organisaatio.metadata.data[field][model.smlang]| fixHttpLink}}">
                         {{model.organisaatio.metadata.data[field][model.smlang]}}</a>
-                    <span/>
+                    </span>
                     <br/>
                 </label>
             </div>
@@ -556,7 +588,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="ectsexpanded" ng-click="ectsexpanded = !ectsexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':ectsexpanded, 'icon-chevron-right':!ectsexpanded}"></span>
-                        {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+                        {{t('Organisaationtarkastelu.hakutoimistoectsnimi')}}
                     </label>
                 </a>
             </div>
@@ -565,32 +597,32 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ectsexpanded">
 
-        <tabset>
-            <tab ng-repeat="tab in model.mkSections.ects.tabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in model.mkSections.ects.tabs"
                  active="tab.active"
                  select="model.ectslang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
 
         <div class="control-group" ng-if="model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]">
-            <label class="control-label">
-                {{'Organisaationtarkastelu.hakutoimistoectsnimi'| i18n}}
+            <label class="control-label" tt="Organisaationtarkastelu.hakutoimistoectsnimi">
+                Organisaationtarkastelu.hakutoimistoectsnimi
             </label>
             <div class="controls">
                 <label class="control-label control-label-left">
-                    <span> {{'Organisaationtarkastelu.ECTSnimi'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]}} </span><br>
+                    <span> {{t('Organisaationtarkastelu.ECTSnimi')}}: {{model.organisaatio.metadata.hakutoimistoEctsNimi[model.ectslang]}} </span><br>
                     <span ng-if="model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]">
-                        {{'Organisaationtarkastelu.ECTStehtavanimike'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]}}
+                        {{t('Organisaationtarkastelu.ECTStehtavanimike')}}: {{model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang]}}
                     </span><br>
                     <span ng-if="model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]">
-                        {{'Organisaationtarkastelu.ECTSpuhelinnumero'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]}}
+                        {{t('Organisaationtarkastelu.ECTSpuhelinnumero')}}: {{model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang]}}
                     </span><br>
                     <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]">
                         <span ng-if="model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]"></span>
-                        {{'Organisaationtarkastelu.ECTSsahkopostiosoite'| i18n}}: {{model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]}}
+                        {{t('Organisaationtarkastelu.ECTSsahkopostiosoite')}}: {{model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang]}}
                     </span>
                 </label>
             </div>
@@ -604,7 +636,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="ktexpanded" ng-click="ktexpanded = !ktexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':ktexpanded, 'icon-chevron-right':!ktexpanded}"></span>
-                        {{'Organisaationtarkastelu.koulutustarjoajatiedot'| i18n}}
+                        {{t('Organisaationtarkastelu.koulutustarjoajatiedot')}}
                     </label>
                 </a>
             </div>
@@ -613,20 +645,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div ng-show="ktexpanded"> <!-- ktexpanded -->
 
-        <tabset>
-            <tab ng-repeat="tab in model.mkSections.kt.tabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in model.mkSections.kt.tabs"
                  active="tab.active"
                  select="model.ktlang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
 
 
         <div class="control-group" ng-repeat="field in model.kttypes" ng-show="model.organisaatio.metadata.data[field][model.ktlang]">
             <label class="control-label">
-                {{'Organisaationtarkastelu.' + field| i18n}}
+                {{t('Organisaationtarkastelu.' + field)}}
             </label>
             <div class="controls" ng-bind-html="model.organisaatio.metadata.data[field][model.ktlang]">
             </div>
@@ -640,7 +672,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="oeexpanded" ng-click="oeexpanded = !oeexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':oeexpanded, 'icon-chevron-right':!oeexpanded}"></span>
-                        {{'Organisaationtarkastelu.opiskelijanedut'| i18n}}
+                        {{t('Organisaationtarkastelu.opiskelijanedut')}}
                     </label>
                 </a>
             </div>
@@ -648,19 +680,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div ng-show="oeexpanded">
-        <tabset>
-            <tab ng-repeat="tab in model.mkSections.oe.tabs"
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in model.mkSections.oe.tabs"
                  active="tab.active"
                  select="model.oelang=tab.lang">
-                <tab-heading>
+                <uib-tab-heading>
                     {{model.uriLocalizedNames[tab.lang]}}
-                </tab-heading>
-            </tab>
-        </tabset>
+                </uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
 
         <div class="control-group" ng-repeat="field in model.oetypes" ng-show="model.organisaatio.metadata.data[field][model.oelang]">
             <label class="control-label">
-                {{'Organisaationtarkastelu.' + field| i18n}}
+                {{t('Organisaationtarkastelu.' + field)}}
             </label>
             <div class="controls" ng-bind-html="model.organisaatio.metadata.data[field][model.oelang]">
             </div>
@@ -674,7 +706,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="nhexpanded" ng-click="nhexpanded = !nhexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':nhexpanded, 'icon-chevron-right':!nhexpanded}"></span>
-                        {{'Organisaationtarkastelu.nimihistoria'| i18n}}
+                        {{t('Organisaationtarkastelu.nimihistoria')}}
                     </label>
                 </a>
             </div>
@@ -693,7 +725,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="yoexpanded" ng-click="yoexpanded = !yoexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':yoexpanded, 'icon-chevron-right':!yoexpanded}"></span>
-                        {{'Organisaationtarkastelu.sisaltyyorganisaatioon'| i18n}}
+                        {{t('Organisaationtarkastelu.sisaltyyorganisaatioon')}}
                     </label>
                 </a>
             </div>
@@ -703,7 +735,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-if="yoexpanded">
             <div class="row">
                 <label class="offset2">
-                        <a href='#/organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{model.parent.tyypit[0] | i18n}})</a>
+                    <a href='#/organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{t(model.parent.tyypit[0])}})</a>
                 </label>
             </div>
         <hr>
@@ -715,7 +747,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="aoexpanded" ng-click="aoexpanded = !aoexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':aoexpanded, 'icon-chevron-right':!aoexpanded}"></span>
-                        {{'Organisaationtarkastelu.sisaltyvatorganisaatiot'| i18n}}
+                        {{t('Organisaationtarkastelu.sisaltyvatorganisaatiot')}}
                     </label>
                 </a>
             </div>
@@ -742,7 +774,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" ng-model="histexpanded" ng-click="histexpanded = !histexpanded">
                     <label>
                         <span ng-class="{'icon-chevron-down':histexpanded, 'icon-chevron-right':!histexpanded}"></span>
-                        {{'Organisaationtarkastelu.historia'| i18n}}
+                        {{t('Organisaationtarkastelu.historia')}}
                     </label>
                 </a>
             </div>
@@ -757,9 +789,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
-            <button type="button" class="btn" ng-click="cancel()" tooltip="{{'Organisaatiot.ohje.palaahakuun' | i18n}}"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}"><i class="icon-arrow-left"></i></button>
             <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
-                    auth-org="{{model.organisaatio.oid}}"><i class="icon-pencil"></i> {{'Organisaationtarkastelu.muokkaa'| i18n}}</button>
+                    auth-org="{{model.organisaatio.oid}}"><i class="icon-pencil"></i> {{t('Organisaationtarkastelu.muokkaa')}}</button>
         </div>
         <span>&nbsp;</span>
     </div>

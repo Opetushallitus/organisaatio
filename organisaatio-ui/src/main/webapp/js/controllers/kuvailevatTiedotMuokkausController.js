@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('KuvailevatTiedotMuokkausController', function KuvailevatTiedotMuokkausController($scope, $modalInstance, $log,
+app.controller('KuvailevatTiedotMuokkausController', function KuvailevatTiedotMuokkausController($scope, $uibModalInstance, $log,
                                             nimi, field, lang, data, options) {
     $scope.nimi = nimi;
     $scope.field = field;

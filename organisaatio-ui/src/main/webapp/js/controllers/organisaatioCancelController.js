@@ -14,7 +14,7 @@
  European Union Public Licence for more details.
  */
 
-app.controller('OrganisaatioCancelController', function OrganisaatioCancelController($scope, $modalInstance, $log, invalid) {
+app.controller('OrganisaatioCancelController', function OrganisaatioCancelController($scope, $uibModalInstance, $log, invalid) {
 
     $log = $log.getInstance("OrganisaatioCancelController");
 
@@ -24,16 +24,16 @@ app.controller('OrganisaatioCancelController', function OrganisaatioCancelContro
 
     $scope.cancel = function() {
         $log.debug("cancel() --> Peruuta");
-        $modalInstance.dismiss('cancel');
+        $uibModalInstance.dismiss('cancel');
     };
 
     $scope.continueWithoutSave = function() {
         $log.debug("continueWithoutSave() --> Jatka tallentamatta");
-        $modalInstance.close();
+        $uibModalInstance.close();
     };
 
     $scope.continueSave = function() {
         $log.debug("continueSave() --> Tallenna ja jatka");
-        $modalInstance.close('save');
+        $uibModalInstance.close('save');
     };
 });

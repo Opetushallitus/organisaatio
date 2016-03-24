@@ -16,7 +16,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <!-- Organisaation Siirto -->
 <div class="modal-header">
-    <h3>{{'organisaatio.move.topic' | i18n}}</h3>
+    <h3 tt="organisaatio.move.topic">organisaatio.move.topic</h3>
 </div>
 
 <script type="text/ng-template" id="siirtoKohdeTemplate.html">
@@ -27,7 +27,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="modal-body" style='overflow-y: visible;'>
 
     <div class="form-fluid">
-        {{'organisaatio.move.to.be.moved' | i18n}}: {{nimi}}
+        {{t('organisaatio.move.to.be.moved')}}: {{nimi}}
         <br/>
         <br/>
 
@@ -36,7 +36,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
                 <label class="checkbox">
                     <input type="checkbox" ng-disabled="koulutustoimija" ng-change="updateSearch()" ng-model="options.merge">
-                    {{'organisaatio.move.merge.to.parent.organization' | i18n}}
+                    {{t('organisaatio.move.merge.to.parent.organization')}}
                 </label>
 
                 <br/>
@@ -44,29 +44,30 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input type="text" class="input-xxlarge"
                        ng-model="options.newParentOrganization"
                        ng-disabled="disabled" ng-required="true"
-                       ie-placeholder placeholder="{{'Organisaatiot.haku.placeholder' | i18n}}"
-                       typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
+                       ie-placeholder placeholder="{{t('Organisaatiot.haku.placeholder')}}"
+                       uib-typeahead="suggest as suggest.name for suggest in suggests | filter:{nameTunnus: $viewValue} | limitTo:10"
                        typeahead-template-url="siirtoKohdeTemplate.html"
                        typeahead-editable="false" oph-enter>
 
                 <br/>
 
-                <label>{{'organisaatio.move.comes.into.effect' | i18n}}</label>
+                <label tt="organisaatio.move.comes.into.effect">organisaatio.move.comes.into.effects</label>
 
                 <input oph-enter type="text"
                        name="luontipvm"
                        formatteddate
-                       datepicker-popup="dd.MM.yyyy"
+                       uib-datepicker-popup="dd.MM.yyyy"
+                       is-open="dpOpen1" ng-click="dpOpen1=true"
                        min="'1900-01-01'"
                        max="'2030-12-31'"
                        ng-model="options.date"
                        close-on-date-selection="true"
                        ie-placeholder
-                       placeholder="{{'organisaatio.move.date' | i18n}}"
-                       close-text="{{'Organisaationmuokkaus.sulje'| i18n}}"
-                       current-text="{{'Organisaationmuokkaus.tanaan'| i18n}}"
-                       clear-text="{{'Organisaationmuokkaus.tyhjenna'| i18n}}"
-                       toggle-weeks-text="{{'Organisaationmuokkaus.viikkonumerot'| i18n}}"
+                       placeholder="{{t('organisaatio.move.date')}}"
+                       close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                       current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                       clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                       toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
                        required/>
             </fieldset>
         </form>
@@ -76,9 +77,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="modal-footer">
     <div class="form-fluid">
-        <button class="btn" ng-click="$dismiss()">{{'Organisaationpoisto.peruuta' | i18n}}</button>
-        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid"  ng-click="$close(options)">
-            {{'Organisaationpoisto.ok' | i18n}}
+        <button class="btn" ng-click="$dismiss()" tt="Organisaationpoisto.peruuta">Organisaationpoisto.peruuta</button>
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid"  ng-click="$close(options)"
+        tt="Organisaationpoisto.ok">
+            Organisaationpoisto.ok
         </button>
     </div>
 </div>
