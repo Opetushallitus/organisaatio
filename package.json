@@ -8,23 +8,30 @@
     "url": "https://github.com/Opetushallitus/organisaatio.git"
   },
   "dependencies": {
-
+    "angular": "1.4.8"
   },
   "devDependencies": {
-    "webpack" : "^1.10.5",
-    "angular" : "1.5.2",
-    "angular-mocks" : "1.5.2",
-    "angular-resource" : "1.5.2",
-    "angular-route" : "1.5.2",
-    "angular-sanitize" : "1.5.2",
-    "angular-cookies" : "1.5.2"
+    "webpack": "^1.12.14",
+    "expose-loader": "0.7.1",
+    "jquery": "2.1.1",
+    "jquery-file-upload": "4.0.5",
+    "angular": "1.5.2",
+    "angular-mocks": "1.5.2",
+    "angular-resource": "1.5.2",
+    "angular-route": "1.5.2",
+    "angular-sanitize": "1.5.2",
+    "angular-cookies": "1.5.2",
+    "tinymce": "4.0.26",
+    "angular-ui-tinymce": "0.0.15",
+    "angular-ui-bootstrap": "0.14.3",
+    "angular-idle": "git://github.com/HackedByChinese/ng-idle.git#0.3.2",
+    "ui-select": "0.16.1",
+    "moment": "2.7.0"
   },
   "private": false,
   "scripts": {
     "build": "UGLIFY=false webpack -d -p",
     "dev-build": "webpack -d --progress --colors",
-    "watch": "webpack -d --progress --colors --watch",
-    "test-ui": "mocha-phantomjs --ignore-resource-errors --setting webSecurityEnabled=false http://localhost:8081/hakuperusteet/spec/testRunner.html",
-    "admin:test-ui": "mocha-phantomjs --ignore-resource-errors --setting webSecurityEnabled=false http://localhost:8091/hakuperusteetadmin/spec/testRunner.html"
+    "watch": "webpack -d --progress --colors --watch"
   }
 }
