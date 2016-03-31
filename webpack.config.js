@@ -6,6 +6,9 @@ module.exports = {
         filename: 'bundle.js'
     },
     entry: {
+        vendors: ["jquery", "angular", "angular-cookies", "angular-mocks", "angular-resource", "angular-route",
+            "angular-sanitize", "tinymce", "angular-ui-tinymce", "angular-ui-bootstrap", "angular-idle", "ui-select",
+            "moment"],
         library: './index'
     },
     resolve: {
@@ -19,13 +22,14 @@ module.exports = {
             "ui-select": 'ui-select/dist/select'
         }
     },
-    // plugins: [
-    //     new webpack.ProvidePlugin({
-    //         $: "jquery",
-    //         jQuery: "jquery",
-    //         "window.jQuery": "jquery"
-    //     })
-    // ],
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendors",
+            filename: "vendors.js",
+            path: './organisaatio-ui/target/organisaatio-ui/jslib',
+            minChunks: Infinity
+        })
+    ],
     module: {
         loaders: [
             { test: /jquery\.js$/, loader: 'expose?$' },
