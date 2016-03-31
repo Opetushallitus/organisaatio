@@ -8,7 +8,8 @@ module.exports = {
     entry: {
         vendors: ["jquery", "angular", "angular-cookies", "angular-mocks", "angular-resource", "angular-route",
             "angular-sanitize", "tinymce", "angular-ui-tinymce", "angular-ui-bootstrap", "angular-idle", "ui-select",
-            "moment"],
+            "moment", "jquery.ui.widget", "jquery.iframe-transport", "jquery.fileupload"
+        ],
         library: './index'
     },
     resolve: {
@@ -19,7 +20,11 @@ module.exports = {
             "angular-idle": 'ng-idle/angular-idle',
             "moment": 'moment/moment',
             "angular-ui-tinymce": 'angular-ui-tinymce/src/tinymce',
-            "ui-select": 'ui-select/dist/select'
+            "ui-select": 'ui-select/dist/select',
+            "jquery.ui.widget": "blueimp-file-upload/js/vendor/jquery.ui.widget",
+            "jquery.iframe-transport": "blueimp-file-upload/js/jquery.iframe-transport",
+            "jquery.fileupload": "blueimp-file-upload/js/jquery.fileupload"
+
         }
     },
     plugins: [
@@ -35,7 +40,10 @@ module.exports = {
             { test: /jquery\.js$/, loader: 'expose?$' },
             { test: /jquery\.js$/, loader: 'expose?jQuery' },
             { test: /jquery\.js$/, loader: 'expose?window.jQuery' },
-            { test: /moment\.js$/, loader: 'expose?moment' }
+            { test: /moment\.js$/, loader: 'expose?moment' },
+            { test: /jquery\.ui\.widget$/, loader: 'imports?define=>false&exports=>false' },
+            { test: /jquery\.iframe\-transport$/, loader: 'imports?define=>false&exports=>false' },
+            { test: /jquery\.fileupload$/, loader: 'imports?define=>false&exports=>false' }
         ]
     }
 };
