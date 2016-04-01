@@ -3,14 +3,13 @@ var webpack = require('webpack');
 module.exports = {
     output: {
         path: './organisaatio-ui/target/organisaatio-ui/jslib',
-        filename: 'bundle.js'
+        filename: 'vendors.js'
     },
     entry: {
         vendors: ["jquery", "angular", "angular-cookies", "angular-mocks", "angular-resource", "angular-route",
             "angular-sanitize", "tinymce", "angular-ui-tinymce", "angular-ui-bootstrap", "angular-idle", "ui-select",
             "moment", "jquery.ui.widget", "jquery.iframe-transport", "jquery.fileupload"
-        ],
-        library: './index'
+        ]
     },
     resolve: {
         modulesDirectories: ['node_modules', 'web_modules'],
@@ -24,14 +23,11 @@ module.exports = {
             "jquery.ui.widget": "blueimp-file-upload/js/vendor/jquery.ui.widget",
             "jquery.iframe-transport": "blueimp-file-upload/js/jquery.iframe-transport",
             "jquery.fileupload": "blueimp-file-upload/js/jquery.fileupload"
-
         }
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name: "vendors",
-            filename: "vendors.js",
-            path: './organisaatio-ui/target/organisaatio-ui/jslib',
             minChunks: Infinity
         })
     ],
@@ -41,9 +37,9 @@ module.exports = {
             { test: /jquery\.js$/, loader: 'expose?jQuery' },
             { test: /jquery\.js$/, loader: 'expose?window.jQuery' },
             { test: /moment\.js$/, loader: 'expose?moment' },
-            { test: /jquery\.ui\.widget$/, loader: 'imports?define=>false&exports=>false' },
-            { test: /jquery\.iframe\-transport$/, loader: 'imports?define=>false&exports=>false' },
-            { test: /jquery\.fileupload$/, loader: 'imports?define=>false&exports=>false' }
+            { test: /jquery\.ui\.widget\.js$/, loader: 'imports?define=>false&exports=>false' },
+            { test: /jquery\.iframe\-transport\.js$/, loader: 'imports?define=>false&exports=>false' },
+            { test: /jquery\.fileupload\.js$/, loader: 'imports?define=>false&exports=>false' }
         ]
     }
 };
