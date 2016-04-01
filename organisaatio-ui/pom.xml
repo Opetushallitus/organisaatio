@@ -169,7 +169,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <nodeVersion>latest</nodeVersion>
+                            <nodeVersion>v5.9.1</nodeVersion>
                             <npmVersion>1.4.9</npmVersion>
                         </configuration>
                     </execution>
