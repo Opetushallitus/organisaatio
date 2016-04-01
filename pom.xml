@@ -52,13 +52,13 @@
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
         <jmeter.version>1.10.1</jmeter.version>
         <frontend-plugin.version>0.0.29</frontend-plugin.version>
+        <cxf.version>2.7.18</cxf.version>
+        <jackson.version>2.7.2</jackson.version>
 
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
-        <cxf.version>2.7.18</cxf.version>
-        <jackson.version>2.7.2</jackson.version>
     </properties>
 
     <modules>

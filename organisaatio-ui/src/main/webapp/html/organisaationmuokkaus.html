@@ -721,9 +721,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <uib-tabset>
             <uib-tab select="model.ktlang='+'">
                 <uib-tab-heading>
-                    <span class="dropdown">
-                        <span class="icon-plus-sign dropdown-toggle"></span>
-                        <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                    <span uib-dropdown>
+                        <span class="icon-plus-sign" uib-dropdown-toggle></span>
+                        <ul ng-if="true" uib-dropdown-menu style="text-decoration: none">
                             <li
                                 ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.kt.placeholder = kieli.uri;
@@ -814,9 +814,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <uib-tabset>
             <uib-tab select="model.oelang='+'">
                 <uib-tab-heading>
-                    <span class="dropdown">
-                        <span class="icon-plus-sign dropdown-toggle"></span>
-                        <ul ng-if="true" class="dropdown-menu" style="text-decoration: none">
+                    <span uib-dropdown>
+                        <span class="icon-plus-sign" uib-dropdown-toggle></span>
+                        <ul ng-if="true" uib-dropdown-menu style="text-decoration: none">
                             <li
                                 ng-repeat="kieli in model.koodisto.isokielet| orderBy:'nimi'">
                                 <a href="" ng-click="model.mkSections.oe.placeholder = kieli.uri;

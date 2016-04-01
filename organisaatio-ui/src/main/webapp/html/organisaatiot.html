@@ -26,9 +26,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                ng-click="model.expand(data)" ng-hide="model.isLeaf(data)"></a>
             <!-- Käytetään sama tila kuin ikoni käyttäisi -->
             <i class="icon icon-chevron-right" style="visibility: hidden" ng-if="model.isLeaf(data)"></i>
-            <span class="dropdown">
-                <a href="" class="icon-list dropdown-toggle" ng-click="setCurrentOid(data.oid)"></a>
-                <ul ng-if="isCurrentOid(data.oid)" class="dropdown-menu">
+            <span uib-dropdown>
+                <a href="" class="icon-list" uib-dropdown-toggle role="button" ng-click="setCurrentOid(data.oid)"></a>
+                <ul ng-if="isCurrentOid(data.oid)" uib-dropdown-menu style="text-decoration: none">
                     <li>
                         <a href='#/organisaatiot/{{data.oid}}' tt="Organisaatiot.tarkastele">Organisaatiot.tarkastele</a>
                     </li>
