@@ -21,7 +21,9 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import org.junit.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -118,6 +120,23 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertChildCountFromIndex(oldParentOid, 1);
         assertChildCountFromIndex(newParentOid, 1);
     }
+
+    @Test
+    public void editingRemovedIsNotAllowed() {
+        OrganisaatioRDTO model = new OrganisaatioRDTO();
+        String removedOid = "1.2.2004.4";
+        model.setOid(removedOid);
+        simpleJdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
+        OrganisaatioResult organisaatioResult;
+        try {
+            organisaatioResult = service.save(model, true, true);
+            Assert.fail("should throw ValidationException");
+        } catch (Throwable e) {
+            Assert.assertNotNull(e.getMessage());
+            Assert.assertTrue(e.getMessage().equals("validation.Organisaatio.poistettu"));
+        }
+    }
+
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioDAO.findByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
