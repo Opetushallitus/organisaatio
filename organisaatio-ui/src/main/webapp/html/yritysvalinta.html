@@ -29,7 +29,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
     <table class="table table-hover">
         <tr style="cursor: pointer;" ng-repeat="yritys in model.yritykset | orderBy:'nimi'" ng-click="select(yritys)">
-            <td>{{yritys.nimi}}</td>
+            <td>{{yritys.nimi ? yritys.nimi : yritys.svNimi}}</td>
             <td>{{yritys.ytunnus}}</td>
         </tr>
     </table>
