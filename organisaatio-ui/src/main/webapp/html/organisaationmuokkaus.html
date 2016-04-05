@@ -249,8 +249,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}">
                 <!-- koulutustoimija ja oppilaitos, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
-                       ng-if="model.isKoulutustoimija() || model.isOppilaitos()
-                       && !(model.hasAliorganisaatios && model.mode !== 'new')"
+                       ng-if="(model.isKoulutustoimija() || model.isOppilaitos()) && (!model.hasAliorganisaatios || model.mode === 'new')"
                        oph-enter auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" is-open="dpOpen2"
                        ng-click="dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
@@ -265,7 +264,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        && !(model.hasAliorganisaatios && model.mode !== 'new')"
                        oph-enter type="text" name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" is-open="dpOpen1"
                        ng-click="dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'" ng-model="model.organisaatio.alkuPvm"
-                       close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
+                       close-on-date-selection="true" ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}} neljäs"
                        close-text="{{t('Organisaationmuokkaus.sulje')}}"
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
                        clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
@@ -273,21 +272,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 &nbsp;-&nbsp;
                 <!-- koulutustoimija ja oppilaitos, voimassaolo-popup-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
-                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
+                       ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                         auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                         type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
                 <!-- toimipiste ja muut, voimassaolo-popup-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
-                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
+                       ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                         type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
                 <!-- koulutustoimija ja oppilaitos, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
-                       ng-if="model.isKoulutustoimija() || model.isOppilaitos()
-                       && !(model.hasAliorganisaatios && model.mode !== 'new')"
+                       ng-if="(model.isKoulutustoimija() || model.isOppilaitos())
+                       && (!model.hasAliorganisaatios || model.mode === 'new')"
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true" oph-enter
                        type="text" name="lakkautuspvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                        is-open="dpOpen3" ng-click="dpOpen3=true" min="'1900-01-01'" max="'2030-12-31'"
