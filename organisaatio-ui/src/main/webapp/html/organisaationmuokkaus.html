@@ -232,17 +232,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
         <div class="controls">
             <div>
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
+                <!-- koulutustoimija ja oppilaitos, voimassaolo-popup-->
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                        auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                        type="text" name="luontipvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                        datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}">
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
+                <!-- toimipiste ja muut, aliorganisaatioita, voimassaolo-popup-->
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                        type="text" name="luontipvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                        datetext noedit ng-click="openVoimassaolonMuokkaus(true)" ng-focus="openVoimassaolonMuokkaus(true)" ng-model="model.organisaatio.alkuPvm"
                        ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}">
+                <!-- koulutustoimija ja oppilaitos, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() || model.isOppilaitos()
                        && !(model.hasAliorganisaatios && model.mode !== 'new')"
@@ -254,6 +259,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
                        clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
                        toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" required/>
+                <!-- toimipiste ja muut, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false
                        && !(model.hasAliorganisaatios && model.mode !== 'new')"
@@ -265,15 +271,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
                        toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" required/>
                 &nbsp;-&nbsp;
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
+                <!-- koulutustoimija ja oppilaitos, voimassaolo-popup-->
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() || model.isOppilaitos()" oph-enter
                         auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                         type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
-                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'" ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
+                <!-- toimipiste ja muut, voimassaolo-popup-->
+                <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
+                       ng-show="model.hasAliorganisaatios && model.mode !== 'new'" ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false" oph-enter
                         type="text" name="lakkautuspvm2" uib-tooltip="{{t('Organisaationmuokkaus.ohje.aloitamuokkaus')}}"
                         datetext noedit ng-click="openVoimassaolonMuokkaus(false)" ng-focus="openVoimassaolonMuokkaus(false)" ng-model="model.organisaatio.lakkautusPvm"
                         ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}" >
+                <!-- koulutustoimija ja oppilaitos, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() || model.isOppilaitos()
                        && !(model.hasAliorganisaatios && model.mode !== 'new')"
@@ -286,6 +297,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                        current-text="{{t('Organisaationmuokkaus.tanaan')}}"
                        clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
                        toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}" />
+                <!-- toimipiste ja muut, datepicker-->
                 <input ng-disabled="!model.aliorganisaatioTiedotHaettu && model.mode !== 'new'"
                        ng-if="model.isKoulutustoimija() === false && model.isOppilaitos() === false
                        && !(model.hasAliorganisaatios && model.mode !== 'new')"
