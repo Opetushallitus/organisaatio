@@ -237,9 +237,6 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
     // Voimassaolon muokkauksen modaalin dialogin avaus
     $scope.openVoimassaolonMuokkaus = function (muokataanAlkupvm) {
-        if ($scope.modalOpen) {
-            return;
-        }
         $scope.modalOpen = true;
         var modalInstance = $uibModal.open({
             templateUrl: 'voimassaolonmuokkaus.html',
