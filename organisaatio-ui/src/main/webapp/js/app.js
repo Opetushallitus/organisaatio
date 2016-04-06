@@ -27,6 +27,10 @@ var app = angular.module('organisaatio',
     'ngCookies',
     'ngIdle']);
 
+app.config(function() {
+    tinyMCE.baseURL = '../jslib';
+});
+
 app.filter('fixHttpLink',function () {
     return function (text) {
         var proto = text.split("://");
