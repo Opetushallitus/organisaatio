@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var copyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     output: {
@@ -7,14 +8,13 @@ module.exports = {
     },
     entry: {
         vendors: ["jquery", "angular", "angular-cookies", "angular-mocks", "angular-resource", "angular-route",
-            "angular-sanitize", "tinymce", "angular-ui-tinymce", "angular-ui-bootstrap", "angular-idle", "ui-select",
-            "moment", "jquery.ui.widget", "jquery.iframe-transport", "jquery.fileupload"
+            "angular-sanitize", "script!./node_modules/tinymce/tinymce.js", "angular-ui-tinymce", "angular-ui-bootstrap",
+            "angular-idle", "ui-select", "moment", "jquery.ui.widget", "jquery.iframe-transport", "jquery.fileupload"
         ]
     },
     resolve: {
         modulesDirectories: ['node_modules', 'web_modules'],
         alias: {
-            "tinymce": 'tinymce/tinymce.min',
             "angular-ui-bootstrap": 'angular-ui-bootstrap/ui-bootstrap-tpls',
             "angular-idle": 'ng-idle/angular-idle',
             "moment": 'moment/moment',
@@ -25,21 +25,20 @@ module.exports = {
             "jquery.fileupload": "blueimp-file-upload/js/jquery.fileupload"
         }
     },
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "vendors",
-            minChunks: Infinity
-        })
-    ],
     module: {
         loaders: [
-            { test: /jquery\.js$/, loader: 'expose?$' },
-            { test: /jquery\.js$/, loader: 'expose?jQuery' },
-            { test: /jquery\.js$/, loader: 'expose?window.jQuery' },
+            { test: /jquery\.js$/, loader: 'expose?$!expose?jQuery' },
             { test: /moment\.js$/, loader: 'expose?moment' },
-            { test: /jquery\.ui\.widget\.js$/, loader: 'imports?define=>false&exports=>false' },
-            { test: /jquery\.iframe\-transport\.js$/, loader: 'imports?define=>false&exports=>false' },
-            { test: /jquery\.fileupload\.js$/, loader: 'imports?define=>false&exports=>false' }
+            { test: /jquery\.ui\.widget\.js$/, loader: 'imports?define=>false' },
+            { test: /jquery\.iframe\-transport\.js$/, loader: 'imports?define=>false' },
+            { test: /jquery\.fileupload\.js$/, loader: 'imports?define=>false' }
         ]
-    }
+    },
+    plugins: [
+        new copyWebpackPlugin([
+            { from: './node_modules/tinymce/plugins', to: './plugins' },
+            { from: './node_modules/tinymce/themes', to: './themes' },
+            { from: './node_modules/tinymce/skins', to: './skins' }
+        ])
+    ]
 };
