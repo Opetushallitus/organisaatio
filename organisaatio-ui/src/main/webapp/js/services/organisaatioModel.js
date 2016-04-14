@@ -1322,7 +1322,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 model.yhteystiedot['kieli_fi#1'].email.email = yritystiedot.sahkoposti;
             }
             if (yritystiedot.www) {
-                model.yhteystiedot['kieli_fi#1'].www.www = yritystiedot.www;
+                model.yhteystiedot['kieli_fi#1'].www.www = model.ensureHttpPrefix(yritystiedot.www);
             }
             if (yritystiedot.puhelin) {
                 model.yhteystiedot['kieli_fi#1'].puhelin.numero = yritystiedot.puhelin;
@@ -2127,6 +2127,16 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 }
             }
         };
+
+        this.ensureHttpPrefix = function(value) {
+            // Need to add prefix if we don't have http:// prefix already AND we don't have part of it
+            if(value && !/^(https?):\/\//i.test(value) && 'http://'.indexOf(value) !== 0 && 'https://'.indexOf(value) !== 0) {
+                return 'http://' + value;
+            }
+            else {
+                return value;
+            }
+        }
 
     };
 
