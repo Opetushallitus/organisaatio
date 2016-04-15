@@ -425,6 +425,11 @@ app.directive('httpPrefix', function() {
                     controller.$render();
                     return true;
                 }
+                else if(modelValue && !/^(https?):\/\//i.test(modelValue) &&
+                    'http://'.indexOf(modelValue) !== 0 && 'https://'.indexOf(modelValue) !== 0) {
+                    model.yhteystiedot['kieli_fi#1'].www.www = 'http://' + modelValue;
+                    return true;
+                }
                 else
                     return true;
             }
