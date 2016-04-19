@@ -419,19 +419,15 @@ app.directive('httpPrefix', function() {
         link: function(scope, element, attrs, controller) {
             controller.$validators.validateHttp = function ensureHttpPrefix(modelValue, viewValue) {
                 // Need to add prefix if we don't have http:// prefix already AND we don't have part of it
-                if(viewValue && !/^(https?):\/\//i.test(viewValue) &&
-                   'http://'.indexOf(viewValue) !== 0 && 'https://'.indexOf(viewValue) !== 0) {
+                if(needsHttpPrefix(viewValue) || needsHttpPrefix(modelValue)) {
                     controller.$setViewValue('http://' + viewValue);
                     controller.$render();
-                    return true;
                 }
-                else if(modelValue && !/^(https?):\/\//i.test(modelValue) &&
-                    'http://'.indexOf(modelValue) !== 0 && 'https://'.indexOf(modelValue) !== 0) {
-                    model.yhteystiedot['kieli_fi#1'].www.www = 'http://' + modelValue;
-                    return true;
-                }
-                else
-                    return true;
+                return true;
+            };
+            function needsHttpPrefix(value) {
+                return (value && !/^(https?):\/\//i.test(value) &&
+                    'http://'.indexOf(value) !== 0 && 'https://'.indexOf(value) !== 0);
             }
         }
     };
