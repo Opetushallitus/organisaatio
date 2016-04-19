@@ -68,11 +68,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length oph-required="yt"
                   ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite" oph-decode-name
                   ng-required="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang)"
-                  ng-disabled="disabled" ng-minlength="3" ng-maxlength="200"
+                  ng-disabled="disabled" ng-maxlength="100"
                   ng-change="model.copyAddress(false, false)" class="span6">
         </textarea>
         <div>
-            <span class="text-error" ng-show="yhteystiedot.kvpostiosoitefi.$error.minlength || yhteystiedot.kvpostiosoitefi.$error.maxlength"
+            <span class="text-error" ng-show="yhteystiedot.kvpostiosoitefi.$error.maxlength"
             tt="Organisaationmuokkaus.validointi.osoitevirheellinen">
                 Organisaationmuokkaus.validointi.osoitevirheellinen
             </span>
