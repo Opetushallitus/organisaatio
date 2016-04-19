@@ -417,19 +417,18 @@ app.directive('httpPrefix', function() {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attrs, controller) {
-            function ensureHttpPrefix(value) {
+            controller.$validators.validateHttp = function ensureHttpPrefix(modelValue, viewValue) {
                 // Need to add prefix if we don't have http:// prefix already AND we don't have part of it
-                if(value && !/^(https?):\/\//i.test(value) &&
-                   'http://'.indexOf(value) !== 0 && 'https://'.indexOf(value) !== 0) {
-                    controller.$setViewValue('http://' + value);
+                if(needsHttpPrefix(viewValue) || needsHttpPrefix(modelValue)) {
+                    controller.$setViewValue('http://' + viewValue);
                     controller.$render();
-                    return 'http://' + value;
                 }
-                else
-                    return value;
+                return true;
+            };
+            function needsHttpPrefix(value) {
+                return (value && !/^(https?):\/\//i.test(value) &&
+                    'http://'.indexOf(value) !== 0 && 'https://'.indexOf(value) !== 0);
             }
-            controller.$formatters.push(ensureHttpPrefix);
-            controller.$parsers.splice(0, 0, ensureHttpPrefix);
         }
     };
 });
