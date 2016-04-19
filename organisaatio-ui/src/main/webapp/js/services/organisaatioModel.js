@@ -1322,7 +1322,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 model.yhteystiedot['kieli_fi#1'].email.email = yritystiedot.sahkoposti;
             }
             if (yritystiedot.www) {
-                model.yhteystiedot['kieli_fi#1'].www.www = model.yritystiedot.www;
+                model.yhteystiedot['kieli_fi#1'].www.www = yritystiedot.www;
             }
             if (yritystiedot.puhelin) {
                 model.yhteystiedot['kieli_fi#1'].puhelin.numero = yritystiedot.puhelin;
