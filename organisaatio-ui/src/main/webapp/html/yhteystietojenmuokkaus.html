@@ -28,7 +28,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <span ng-if="model.isPostiOsoiteRequired(model.ytlang)">*</span>
     </label>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
-        <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required="yt"
+        <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required
                ng-model="model.yhteystiedot[model.ytlang].posti.osoite" ng-change="model.copyAddress(false, true)"
                ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang) || model.yhteystiedot.postinumerot[model.ytlang].posti"
                ng-minlength="3" ng-maxlength="100" oph-decode-name
@@ -65,8 +65,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
-        <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length oph-required="yt"
-                  ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite" oph-decode-name
+        <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length oph-required
+                  ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                   ng-required="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang)"
                   ng-disabled="disabled" ng-maxlength="100"
                   ng-change="model.copyAddress(false, false)" class="span6">
