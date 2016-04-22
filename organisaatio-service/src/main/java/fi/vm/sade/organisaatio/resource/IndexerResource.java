@@ -37,6 +37,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -65,6 +66,13 @@ public class IndexerResource {
 
     private final SolrServer solr;
 
+    // default constructor for CGLIB proxying
+    // default constructor is called first and then public constructor is called with autowired dependencies
+    // required to use the @PreAuthorize annotation on methods of this class
+    public IndexerResource() {
+        solr = null;
+    }
+
     @Autowired
     public IndexerResource(SolrServerFactory factory) {
         this.solr = factory.getSolrServer();
@@ -81,6 +89,7 @@ public class IndexerResource {
     @ApiOperation(value = "Indeksoi organisaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
             notes = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
             response = String.class)
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @Produces("text/plain")
     public String reBuildIndex(@QueryParam("clean") final boolean clean) {
         Preconditions.checkNotNull(organisaatioDAO, "need dao!");
