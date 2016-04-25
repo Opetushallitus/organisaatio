@@ -31,7 +31,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required
                ng-model="model.yhteystiedot[model.ytlang].posti.osoite" ng-change="model.copyAddress(false, true)"
                ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang) || model.yhteystiedot.postinumerot[model.ytlang].posti"
-               ng-minlength="3" ng-maxlength="100" oph-decode-name
+               ng-maxlength="100"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.osoite')}}"/>
         &nbsp;&nbsp;&nbsp;
         <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
@@ -93,7 +93,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <input id="kayntiosoitefi" type="text" maxlength="100" name="kayntiosoitefi" class="span6" oph-null-if-zero-length oph-enter
                ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite"
                ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
-               ng-minlength="3" ng-maxlength="100" oph-decode-name
+               ng-maxlength="100"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.osoite')}}"/>
         &nbsp;&nbsp;&nbsp;
         <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
@@ -121,7 +121,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen'">
         <textarea id="kvkayntiosoitefi" name="kvkayntiosoitefi" rows="6" oph-null-if-zero-length
-                  ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite" oph-decode-name
+                  ng-model="model.yhteystiedot[model.ytlang].ulkomainen_kaynti.osoite"
                   ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true" class="span6"></textarea>
         <div>
             <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
