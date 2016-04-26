@@ -93,5 +93,25 @@ public class YTJResource {
         }
         return ytjList;
     }
-    
+
+    // Api for batch searches by y-tunnuses
+    // TODO: need auth?
+    @GET
+    @Path("/{ytunnukset}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
+    public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
+                                               @PathParam("ytunnukset") List<String> ytunnuses) {
+        List<YTJDTO> ytjListResult;
+        try {
+            ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);
+        }
+        catch (YtjConnectionException ex) {
+            ex.printStackTrace();
+            LOG.error("YtjConnectionException : " + ex.toString());
+
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+        }
+        return ytjListResult;
+    }
 }
