@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +31,17 @@ public class YTJServiceMock implements YTJService {
 
     @Override
     public YTJDTO findByYTunnus(String ytunnus, YTJKieli kieli) {
-        YTJDTO result = dataByYTunnus.get(ytunnus);
-        return result;
+        return dataByYTunnus.get(ytunnus);
+    }
+
+    // Stupid mock that just adds values to the list even if value is not found and null is added to the list.
+    @Override
+    public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException {
+        List<YTJDTO> ytjdtos = new ArrayList<YTJDTO>();
+        for(String str : ytunnuses) {
+            ytjdtos.add(dataByYTunnus.get(str));
+        }
+        return ytjdtos;
     }
 
     @Override

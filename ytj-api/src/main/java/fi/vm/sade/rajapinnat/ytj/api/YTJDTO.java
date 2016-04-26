@@ -3,6 +3,9 @@
  */
 package fi.vm.sade.rajapinnat.ytj.api;
 
+import fi.ytj.ArrayOfYritysTunnusHistoriaDTO;
+import fi.ytj.YTunnusDTO;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -22,6 +25,8 @@ public class YTJDTO {
     private String nimi;
     private String svNimi;
     private String ytunnus;
+    private YTunnusDTO yritysTunnus;
+    private ArrayOfYritysTunnusHistoriaDTO yritystunnusHistoria;
     private String yritysmuoto;
     private String yritysmuotoKoodi;
     private String toimiala;
@@ -55,6 +60,22 @@ public class YTJDTO {
 
     public void setYtunnus(String ytunnus) {
         this.ytunnus = ytunnus;
+    }
+
+    public YTunnusDTO getYritysTunnus() {
+        return yritysTunnus;
+    }
+
+    public void setYritysTunnus(YTunnusDTO yritysTunnus) {
+        this.yritysTunnus = yritysTunnus;
+    }
+
+    public ArrayOfYritysTunnusHistoriaDTO getYritystunnusHistoria() {
+        return yritystunnusHistoria;
+    }
+
+    public void setYritystunnusHistoria(ArrayOfYritysTunnusHistoriaDTO yritystunnusHistoria) {
+        this.yritystunnusHistoria = yritystunnusHistoria;
     }
 
     /**

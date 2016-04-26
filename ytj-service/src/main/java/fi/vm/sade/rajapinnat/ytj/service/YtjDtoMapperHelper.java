@@ -40,6 +40,8 @@ public class YtjDtoMapperHelper {
         ytj.setKayntiOsoite( vastaus.getYrityksenKayntiOsoite() != null ?  mapYtjOsoite(vastaus.getYrityksenKayntiOsoite()) : null);
         mapYhteysTiedot(vastaus, ytj);
         mapYritysmuotoAndToimiala(vastaus, ytj);
+        ytj.setYritysTunnus(vastaus.getYritysTunnus() != null ? vastaus.getYritysTunnus() : null);
+        ytj.setYritystunnusHistoria(vastaus.getYritystunnusHistoria() != null ? vastaus.getYritystunnusHistoria() : null);
         return ytj;
     }
 

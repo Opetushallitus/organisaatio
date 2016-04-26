@@ -20,6 +20,9 @@ public interface YTJService {
     YTJDTO findByYTunnus(@WebParam String ytunnus, YTJKieli kieli) throws YtjConnectionException;
 
     @WebMethod
+    List<YTJDTO> findByYTunnusBatch(@WebParam List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException;
+
+    @WebMethod
     List<YTJDTO> findByYNimi(@WebParam String nimi, @WebParam boolean naytaPassiiviset, @WebParam YTJKieli kieli) throws YtjConnectionException;
 
 }

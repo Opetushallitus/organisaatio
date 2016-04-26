@@ -14,6 +14,7 @@ import fi.ytj.*;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -168,12 +169,54 @@ public class YTJServiceImpl implements YTJService {
             throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");  
         }
 
-
-
         return mapper.mapYritysTiedotV2DTOtoYTJDTO(vastaus);
+    }
 
+    // Fetch information of multiple organisations from YTJ by providing list of ytunnuses
+    // NOTE: there is a limit of 1000 ytunnuses for one call
+    @Override
+    public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException {
+        List<YTJDTO> ytjdtos = new ArrayList<YTJDTO>();
+        String ytunnusStr = "";
+        // ytunnuses need to be separated by semicolon
+        for(String str : ytunnuses) {
+            ytunnusStr += str + ";";
+        }
+        if(ytunnusStr.length() > 0 && ytunnusStr.charAt(ytunnusStr.length()-1) == ';') {
+            ytunnusStr = ytunnusStr.substring(0, ytunnusStr.length()-1);
+        }
+        Kieli kieli = getKieli(ytjKieli);
+        YritysTiedot yt = new YritysTiedot();
+        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
+        tarkiste = this.createHashHex(this.createHashString());
+        ArrayOfYritysTiedotV2DTO vastaus;
+        try {
+            vastaus = ytj.wmYritysTiedotMassahaku(ytunnusStr,
+                    kieli.value(),
+                    asiakastunnus,
+                    aikaleima,
+                    tarkiste,
+                    tiketti);
 
+        } catch (SOAPFaultException exp) {
+            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString(), exp);
+            throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
+        } catch (Exception commonExp) {
+            LOG.error("Unknown exception in YTJ-service : " + commonExp, commonExp);
+            throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
+        }
+
+        if (vastaus.getYritysTiedotV2DTO().get(0).getVirheTiedot() != null) {
+            LOG.error("YTJ service returned null reply");
+            throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");
+        }
+
+        for(YritysTiedotV2DTO yritysTiedotV2DTO : vastaus.getYritysTiedotV2DTO()) {
+            ytjdtos.add(mapper.mapYritysTiedotV2DTOtoYTJDTO(yritysTiedotV2DTO));
+        }
+
+        return ytjdtos;
     }
 
     /**

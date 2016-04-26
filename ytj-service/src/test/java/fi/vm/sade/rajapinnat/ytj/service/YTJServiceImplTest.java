@@ -8,6 +8,8 @@ import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
 import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import fi.ytj.Kieli;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.*;
 import org.slf4j.Logger;
@@ -90,6 +92,36 @@ public class YTJServiceImplTest {
         }
     }
 
+    @Test(expected = YtjConnectionException.class)
+    public void testFindByYTunnusBatchWithoutCredentialsFails() throws Exception {
+        List<String> ytunnus = new ArrayList<String>(){{add("1111111-1");}};
+        YTJKieli kieli = YTJKieli.FI;
+        YTJServiceImpl instance = new YTJServiceImpl();
+        List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
+        assertEquals("Diibadaa", result.get(0).getNimi().trim()); //shouldn't reach this point
+    }
+
+    // Test of findByYTunnusBatch method, of class YTJServiceImpl
+    @Ignore
+    @Test
+    public void testFindByYTunnusBatchSuccess() throws Exception {
+        List<String> ytunnus = new ArrayList<String>(){{add("0313471-7");add("0201256-6");add("2189312-7");}};
+        YTJKieli kieli = YTJKieli.FI;
+        YTJServiceImpl instance = new YTJServiceImpl();
+        instance.setAsiakastunnus("oPHallitusOPH");
+        instance.setSalainenavain("39769FB6-465D-43B7-AB26-4D891428BB42");
+        try {
+            List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
+            assertEquals("Helsingin yliopisto".toLowerCase(), result.get(0).getNimi().trim().toLowerCase());
+            assertEquals("Helsingin kaupunki".toLowerCase(), result.get(1).getNimi().trim().toLowerCase());
+            assertEquals("Mikkelin Ammattikorkeakoulu Oy".toLowerCase(), result.get(2).getNimi().trim().toLowerCase());
+        } catch (Exception exp) {
+            log.info("Exception in findByYTunnus : {}",exp.toString());
+            assertTrue(false);
+        }
+    }
+
+
     /**
      * Test of findByYTunnus method, of class YTJServiceImpl.
      */
@@ -123,5 +155,4 @@ public class YTJServiceImplTest {
         }
     }
 
-  
 }

@@ -24,5 +24,10 @@
             <version>1.5.8</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
+            <artifactId>ytj-generated-model</artifactId>
+            <version>10.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
