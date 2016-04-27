@@ -101,4 +101,9 @@ public interface OrganisaatioBusinessService {
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
 
+    /*
+    * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
+    * */
+    public void updateYTJData();
+
 }

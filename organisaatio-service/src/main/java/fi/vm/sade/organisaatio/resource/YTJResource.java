@@ -25,6 +25,7 @@ import javax.ws.rs.QueryParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -95,9 +96,9 @@ public class YTJResource {
     }
 
     // Api for batch searches by y-tunnuses
-    // TODO: need auth?
     @GET
     @Path("/{ytunnukset}")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
     public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)

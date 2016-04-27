@@ -21,6 +21,7 @@ import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.dao.*;
@@ -32,10 +33,13 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import fi.vm.sade.organisaatio.resource.YTJResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
+import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +94,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private IndexerResource solrIndexer;
+
+    @Autowired
+    private YTJResource ytjResource;
 
     @Autowired
     private OIDService oidService;
@@ -1045,6 +1052,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitetään tiedot koodistoon.
         organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+    }
+
+    // TODO create test for this
+    @Override
+    public void updateYTJData() {
+        // Create y-tunnus list of updateable arganisations
+        List<String> ytunnusList = new ArrayList<>();
+        // Search the organisations using the DAO since it provides osoites.
+        // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu)
+//        organisaatioDAO.findBySearchCriteria()
+        // Fill the Y-tunnus list
+//        for()
+
+        // Fetch data from ytj for these organisations
+        List<YTJDTO> ytjdtoList = ytjResource.findByYTunnusBatch(ytunnusList);
+
+        // Update these organisations
+
+
+        // Index? for solr!
+
     }
 
     @Override
