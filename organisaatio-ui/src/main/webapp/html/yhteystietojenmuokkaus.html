@@ -42,7 +42,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
         &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti, model.ytlang)}}
         <div>
-            <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.minlength || yhteystiedot.postiosoitefi.$error.maxlength"
+            <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.maxlength"
             tt="Organisaationmuokkaus.validointi.osoitevirheellinen">
                 Organisaationmuokkaus.validointi.osoitevirheellinen
             </span>
@@ -104,7 +104,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].kaynti, model.yhteystiedot.postinumerot[model.ytlang].kaynti)">
         &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].kaynti, model.ytlang)}}
         <div>
-            <span class="text-error" ng-show="yhteystiedot.kayntiosoitefi.$error.minlength || yhteystiedot.kayntiosoitefi.$error.maxlength"
+            <span class="text-error" ng-show="yhteystiedot.kayntiosoitefi.$error.maxlength"
             tt="Organisaationmuokkaus.validointi.osoitevirheellinen">
                 Organisaationmuokkaus.validointi.osoitevirheellinen
             </span>
