@@ -1858,8 +1858,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         /*
          * kopioi käyntisoitteen postiosoitteeksi
          * Parametrit:
-         *  md - true: käytä yhteystiedot-rakennetta
-         *       false: käytä metadatan yhteystietoja
+         *  md - true: käytä metadatan yhteystietoja
+         *       false: käytä yhteystiedot-rakennetta
          *  suomalainen - true: kopioi suomalainen muoto
          *                false: kopioi kansainvälinen muoto
          */
@@ -1881,7 +1881,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     if (ytp.postinumerot[lang].posti) {
                         ytp.postinumerot[lang].kaynti = ytp.postinumerot[lang].posti;
                     }
-                } else {                     // kopioi kansainvälinen osoitemuoto
+                } else {
+                    // kopioi kansainvälinen osoitemuoto
                     if (!('ulkomainen_kaynti' in ytp[lang])) {
                         ytp[lang].ulkomainen_kaynti = {};
                     }

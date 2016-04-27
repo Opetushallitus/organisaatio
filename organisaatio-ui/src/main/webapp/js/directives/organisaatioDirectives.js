@@ -170,6 +170,9 @@ app.directive('ophNullIfZeroLength', function($log) {
                 if (elm[0] && (elm[0].value !== null) && (elm[0].value.length === 0)) {
                     elm.value = null;
                 }
+                if(angular.isDefined(elm[0]) && angular.isUndefined(elm[0].value)) {
+                    elm.value = null;
+                }
                 return viewValue;
             };
             ctrl.$formatters.unshift(formatterValidator);
@@ -211,7 +214,6 @@ app.directive('addressCombinedField', function() {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             var parserValidator = function(viewValue) {
-                var returnUndefined = false;
                 scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', true);
                 if (scope.optional) {
                     return viewValue;
@@ -220,13 +222,8 @@ app.directive('addressCombinedField', function() {
                         !(scope.form.kayntiosoitesv.$viewValue && scope.form.postiosoitesv.$viewValue) &&
                         !scope.form.kayntiosoitekv.$viewValue && scope.form.postiosoitekv.$viewValue) {
                     scope.form.kayntiosoitefi.$setValidity('addresscombinedrequired', false);
-                    returnUndefined = true;
                 }
-                if (returnUndefined === true) {
-                    return viewValue;
-                } else {
-                    return viewValue;
-                }
+                return viewValue;
             };
             ctrl.$parsers.unshift(parserValidator);
 
