@@ -86,7 +86,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
-        return organisaatioDAO.findOidsBy(searchTerms, count, startIndex, type);
+        return organisaatioDAO.findOidsBy(false, count, startIndex, type);
     }
 
     @Override
