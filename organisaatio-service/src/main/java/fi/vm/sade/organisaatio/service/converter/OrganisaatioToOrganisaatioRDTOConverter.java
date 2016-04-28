@@ -134,7 +134,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
             }
         }
 
-        LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
+        LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 
         return t;
     }
