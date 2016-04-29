@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +39,8 @@ import org.springframework.stereotype.Component;
 @Api(value = "/dev", description = "Development operaatiot")
 @Component
 public class OrganisaatioDevResource {
+    @Autowired
+    OrganisaatioBusinessService organisaatioBusinessService;
 
     /**
      * Hakee autentikoituneen käyttäjän roolit
@@ -64,6 +68,17 @@ public class OrganisaatioDevResource {
         }
         ret.setCharAt(ret.length() - 1, ']');
         return ret.toString();
+    }
+
+    @GET
+    @Path("/ytjbatchupdate")
+    @Produces(MediaType.TEXT_PLAIN + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
+            notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
+            response = String.class)
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String updateYtj() {
+        return Integer.toString(organisaatioBusinessService.updateYTJData());
     }
 
 }

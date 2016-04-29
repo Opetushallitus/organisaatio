@@ -112,9 +112,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
 
-    @Autowired
-    private OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter;
-
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -1061,7 +1058,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     // TODO create test for this
     @Override
-    public void updateYTJData() {
+    public int updateYTJData() {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<String> ytunnusList = new ArrayList<>();
@@ -1072,6 +1069,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        // TODO for debugging purposes
+//        oidList = new ArrayList<String>() {{add("1.2.246.562.10.58466113707");}};
         organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
         for(Organisaatio organisaatio : organisaatioList) {
@@ -1156,13 +1155,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Update these organisations
-//        List<OrganisaatioRDTO> updateOrganisaatioRDTOList = new ArrayList<>();
         for(Organisaatio organisaatio : updateOrganisaatioList) {
-            this.save(organisaatioToOrganisaatioRDTOConverter.convert(organisaatio), true, true);
+//            this.save(organisaatioToOrganisaatioRDTOConverter.convert(organisaatio), true, true);
+            organisaatioDAO.update(organisaatio);
         }
-
         // Index? for solr!
+        solrIndexer.index(updateOrganisaatioList);
 
+        return updateOrganisaatioList.size();
     }
 
     @Override

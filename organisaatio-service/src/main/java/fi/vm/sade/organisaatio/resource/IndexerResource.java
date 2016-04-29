@@ -31,6 +31,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
@@ -90,7 +92,7 @@ public class IndexerResource {
             notes = "Indeksoi organiasaatiot tietokannasta uudelleen Solriin. Vain kehityskäyttöön.",
             response = String.class)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @Produces("text/plain")
+    @Produces(MediaType.TEXT_PLAIN)
     public String reBuildIndex(@QueryParam("clean") final boolean clean) {
         Preconditions.checkNotNull(organisaatioDAO, "need dao!");
         Preconditions.checkNotNull(transactionManager, "need TM!");
