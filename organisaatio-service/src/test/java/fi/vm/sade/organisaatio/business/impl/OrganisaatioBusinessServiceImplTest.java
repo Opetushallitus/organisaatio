@@ -17,6 +17,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
@@ -24,11 +25,12 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import org.junit.Assert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -147,6 +149,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Organisaatio org = organisaatioDAO.findByOid(oid);
         Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), org.getParent().getOid());
         return org;
+    }
+
+//    @Ignore
+    @Test
+    public void updateYTJDataTest() {
+        int updatedOrganisations;
+        updatedOrganisations = service.updateYTJData();
+        Assert.assertEquals(updatedOrganisations, 2);
     }
 
 }
