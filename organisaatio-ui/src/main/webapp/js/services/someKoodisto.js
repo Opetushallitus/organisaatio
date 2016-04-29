@@ -72,6 +72,12 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         if (type === 'TWITTER' || type === 'sosiaalinenmedia_4#1') {
             return 'https://twitter.com/';
         }
+        if (type === 'INSTAGRAM' || type === 'sosiaalinenmedia_6#1') {
+            return 'https://www.instagram.com/';
+        }
+        if (type === 'YOUTUBE' || type === 'sosiaalinenmedia_7#1') {
+            return 'https://www.youtube.com/';
+        }
 
         // Default / MUU
         return 'https://';
@@ -89,6 +95,12 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         }
         if (type === 'TWITTER' || type === 'sosiaalinenmedia_4#1') {
             return '^https{0,1}://(?:www\.){0,1}twitter.com/.+';
+        }
+        if (type === 'INSTAGRAM' || type === 'sosiaalinenmedia_6#1') {
+            return '^https{0,1}://(?:www\.){0,1}instagram.com/.+';
+        }
+        if (type === 'YOUTUBE' || type === 'sosiaalinenmedia_7#1') {
+            return '^https{0,1}://(?:www\.){0,1}youtube.com/.+';
         }
 
         // Default / MUU
