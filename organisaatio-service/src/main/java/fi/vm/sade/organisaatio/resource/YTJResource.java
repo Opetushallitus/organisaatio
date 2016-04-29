@@ -97,7 +97,7 @@ public class YTJResource {
 
     // Api for batch searches by y-tunnuses
     @GET
-    @Path("/{ytunnukset}")
+    @Path("/massahaku/{ytunnukset}")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
