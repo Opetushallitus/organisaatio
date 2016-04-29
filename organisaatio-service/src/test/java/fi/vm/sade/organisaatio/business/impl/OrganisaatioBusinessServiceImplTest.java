@@ -157,6 +157,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         int updatedOrganisations;
         updatedOrganisations = service.updateYTJData();
         Assert.assertEquals(updatedOrganisations, 2);
+        // TODO verify that the database is updated
     }
 
 }
