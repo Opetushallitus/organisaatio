@@ -1122,13 +1122,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         organisaatio.setNimihaku(ytjdto.getSvNimi());
                         update = true;
                     }
+
                     // Update Osoite
                     List <Yhteystieto> unmodifiableYhteystietoList = organisaatio.getYhteystiedot();
                     Osoite osoite = null;
                     // Find osoite with right language (finnish or swedish)
-                    // TODO check if getYrityksenkieli is not null
                     for(Yhteystieto yhteystieto : unmodifiableYhteystietoList) {
                         if(yhteystieto instanceof Osoite && yhteystieto.getKieli().equals("kieli_sv#1")
+                                && ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite = (Osoite)yhteystieto;
                             break;
@@ -1139,18 +1140,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         }
                     }
                     // If no osoite is found create empty one to be fetched from YTJ.
-                    // TODO add new kieli to organisation
+                    // TODO bind the newly created osoite to the organisation
                     if(osoite == null) {
                         osoite = new Osoite();
                         if(ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite.setKieli("kieli_sv#1");
-                            organisaatio.setKielet(new ArrayList<String>(){{add("oppilaitoksenopetuskieli_2#1");}});
                         }
                         else {
                             osoite.setKieli("kieli_fi#1");
-                            organisaatio.setKielet(new ArrayList<String>(){{add("oppilaitoksenopetuskieli_1#1");}});
                         }
+
                     }
                     if(!osoite.getPostinumero().trim().equals(ytjdto.getPostiOsoite().getPostinumero().trim())
                             && ytjdto.getPostiOsoite().getPostinumero() != null) {
@@ -1171,8 +1171,38 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         update = true;
                     }
                     if(update) {
+                        // add new kieli to the organisation if it does not exist
+                        Boolean kieliExists = false;
+                        for(String kieli : organisaatio.getKielet()) {
+                            if(kieli.trim().equals("oppilaitoksenopetuskieli_1#1")
+                                    && ytjdto.getYrityksenKieli().trim().equals("Suomi")) {
+                                kieliExists = true;
+                                break;
+                            }
+                            if(kieli.trim().equals("oppilaitoksenopetuskieli_2#1")
+                                    && ytjdto.getYrityksenKieli().trim().equals("Svenska")) {
+                                kieliExists = true;
+                                break;
+                            }
+                        }
+                        if(!kieliExists) {
+                            String newKieli = "";
+                            List<String> newKieliList = new ArrayList<>();
+                            if(ytjdto.getYrityksenKieli().trim().equals("Svenska")) {
+                                newKieli = "oppilaitoksenopetuskieli_2#1";
+                            }
+                            else {
+                                newKieli = "oppilaitoksenopetuskieli_1#1";
+                            }
+                            for(String kieli : organisaatio.getKielet()) {
+                                newKieliList.add(kieli);
+                            }
+                            newKieliList.add(newKieli);
+                            organisaatio.setKielet(newKieliList);
+                        }
                         updateOrganisaatioList.add(organisaatio);
                     }
+                    // Match for this organisation found from ytj data so no need to search further.
                     break;
                 }
             }
