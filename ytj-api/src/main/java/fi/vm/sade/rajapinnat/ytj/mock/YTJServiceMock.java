@@ -73,24 +73,36 @@ public class YTJServiceMock implements YTJService {
         YTJDTO dto = new YTJDTO();
         dto.setNimi(nimi);
         dto.setYtunnus(ytunnus);
-        if (!ytunnus.trim().equals("2255802-1")) {
-        YTJOsoiteDTO osoite = new YTJOsoiteDTO();
-        osoite.setKatu("Tie 1");
-        osoite.setMaa("Suami");
-        osoite.setMaakoodi("FI");
-        osoite.setToimipaikka("Helsinki");
-        osoite.setPostinumero("00100");
-        dto.setPostiOsoite(osoite);
-        dto.setKayntiOsoite(osoite);
-        } else {
+        if (ytunnus.trim().equals("2255802-1")) {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
-        osoite.setKatu("Ygankuja 1");
-        osoite.setMaa("Suomi");
-        osoite.setMaakoodi("FI");
-        osoite.setToimipaikka("Helsinki");
-        osoite.setPostinumero("00100");
-        dto.setPostiOsoite(osoite);
-        
+            osoite.setKatu("Ygankuja 1");
+            osoite.setMaa("Suomi");
+            osoite.setMaakoodi("FI");
+            osoite.setToimipaikka("Helsinki");
+            osoite.setPostinumero("00100");
+            dto.setPostiOsoite(osoite);
+            dto.setYrityksenKieli("Suomi");
+        }
+        else if(ytunnus.trim().equals("1492449-0")) {
+            YTJOsoiteDTO osoite = new YTJOsoiteDTO();
+            osoite.setKatu("Svenska gatan 1");
+            osoite.setMaa("Ruotsi");
+            osoite.setMaakoodi("SV");
+            osoite.setToimipaikka("Helsinki");
+            osoite.setPostinumero("00100");
+            dto.setPostiOsoite(osoite);
+            dto.setYrityksenKieli("Svenska");
+        }
+        else {
+            YTJOsoiteDTO osoite = new YTJOsoiteDTO();
+            osoite.setKatu("Tie 1");
+            osoite.setMaa("Suami");
+            osoite.setMaakoodi("FI");
+            osoite.setToimipaikka("Helsinki");
+            osoite.setPostinumero("00100");
+            dto.setPostiOsoite(osoite);
+            dto.setKayntiOsoite(osoite);
+            dto.setYrityksenKieli("Suomi");
         }
         return dto;
     }
@@ -139,6 +151,7 @@ public class YTJServiceMock implements YTJService {
         {"2397998-7", "Vasara, Helsingin yliopiston geologinen kerho ry ", "Aatteellinen yhdistys"},
         {"2255802-1", "Katva Consulting","Yksityinen elinkeinonharjoittaja"},
         {"1111111-1", "Diibadaa","Yksityinen elinkeinonharjoittaja"},
-        {"2222222-1", "Diibadaadaa","Yksityinen elinkeinonharjoittaja"}
+        {"2222222-1", "Diibadaadaa","Yksityinen elinkeinonharjoittaja"},
+        {"1492449-0", "Ruotsalainen koulutustoimija", "Yksityinen elinkeinonharjoittaja"}
     };
 }
