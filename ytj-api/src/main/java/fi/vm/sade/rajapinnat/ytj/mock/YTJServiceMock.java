@@ -71,7 +71,6 @@ public class YTJServiceMock implements YTJService {
 
     private YTJDTO create(String ytunnus, String nimi, String yritysmuoto) {
         YTJDTO dto = new YTJDTO();
-        dto.setNimi(nimi);
         dto.setYtunnus(ytunnus);
         if (ytunnus.trim().equals("2255802-1")) {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
@@ -80,8 +79,10 @@ public class YTJServiceMock implements YTJService {
             osoite.setMaakoodi("FI");
             osoite.setToimipaikka("Helsinki");
             osoite.setPostinumero("00100");
+            osoite.setKieli(1);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setNimi(nimi);
         }
         else if(ytunnus.trim().equals("1492449-0")) {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
@@ -90,8 +91,10 @@ public class YTJServiceMock implements YTJService {
             osoite.setMaakoodi("SV");
             osoite.setToimipaikka("Helsinki");
             osoite.setPostinumero("00100");
+            osoite.setKieli(2);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Svenska");
+            dto.setSvNimi(nimi);
         }
         else {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
@@ -100,9 +103,11 @@ public class YTJServiceMock implements YTJService {
             osoite.setMaakoodi("FI");
             osoite.setToimipaikka("Helsinki");
             osoite.setPostinumero("00100");
+            osoite.setKieli(1);
             dto.setPostiOsoite(osoite);
             dto.setKayntiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setNimi(nimi);
         }
         return dto;
     }
