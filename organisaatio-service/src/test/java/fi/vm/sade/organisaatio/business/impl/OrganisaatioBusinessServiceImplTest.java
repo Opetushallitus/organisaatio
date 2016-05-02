@@ -38,6 +38,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -151,13 +152,22 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         return org;
     }
 
-//    @Ignore
     @Test
     public void updateYTJDataTest() {
         int updatedOrganisations;
         updatedOrganisations = service.updateYTJData();
         Assert.assertEquals(updatedOrganisations, 2);
         // TODO verify that the database is updated
+        List<String> oidList = new ArrayList<>();
+        List<Organisaatio> organisaatioList;
+        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
+
+        Assert.assertEquals(organisaatioList.size(), 2);
+        Assert.assertEquals(organisaatioList.get(0).getNimi().getString("fi"), "Katva Consulting");
+        Assert.assertEquals(organisaatioList.get(0).getPostiosoite().getOsoite(), "Ygankuja 1");
     }
 
 }
