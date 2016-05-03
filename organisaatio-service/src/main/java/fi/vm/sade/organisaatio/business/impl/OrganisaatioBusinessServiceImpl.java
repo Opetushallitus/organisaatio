@@ -114,6 +114,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private static final String parentSeparator = "|";
 
+    public static final String KIELI_KOODI_FI = "kieli_fi#1";
+    public static final String KIELI_KOODI_SV = "kieli_sv#1";
+    public static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
+    public static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
+
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
             if (orgEntity.getKuvaus2() != null) {
@@ -1145,13 +1150,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     Osoite osoite = null;
                     // Find osoite with right language (finnish or swedish)
                     for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
-                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals("kieli_sv#1")
+                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals(KIELI_KOODI_SV)
                                 && ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite = (Osoite)yhteystieto;
                             break;
                         }
-                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals("kieli_fi#1")) {
+                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals(KIELI_KOODI_FI)) {
                             osoite = (Osoite)yhteystieto;
                             break;
                         }
@@ -1162,10 +1167,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         osoite = new Osoite();
                         if(ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                            osoite.setKieli("kieli_sv#1");
+                            osoite.setKieli(KIELI_KOODI_SV);
                         }
                         else {
-                            osoite.setKieli("kieli_fi#1");
+                            osoite.setKieli(KIELI_KOODI_FI);
                         }
                         organisaatio.addYhteystieto(osoite);
                     }
@@ -1192,12 +1197,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         // add new kieli to the organisation if there isn't one matching the YTJ kieli
                         Boolean kieliExists = false;
                         for(String kieli : organisaatio.getKielet()) {
-                            if(kieli.trim().equals("oppilaitoksenopetuskieli_1#1")
+                            if(kieli.trim().equals(ORG_KIELI_KOODI_FI)
                                     && ytjdto.getYrityksenKieli().trim().equals("Suomi")) {
                                 kieliExists = true;
                                 break;
                             }
-                            if(kieli.trim().equals("oppilaitoksenopetuskieli_2#1")
+                            if(kieli.trim().equals(ORG_KIELI_KOODI_SV)
                                     && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                                 kieliExists = true;
                                 break;
@@ -1207,10 +1212,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             String newKieli = "";
                             List<String> newKieliList = new ArrayList<>();
                             if(ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                                newKieli = "oppilaitoksenopetuskieli_2#1";
+                                newKieli = ORG_KIELI_KOODI_SV;
                             }
                             else {
-                                newKieli = "oppilaitoksenopetuskieli_1#1";
+                                newKieli = ORG_KIELI_KOODI_FI;
                             }
                             for(String kieli : organisaatio.getKielet()) {
                                 newKieliList.add(kieli);
