@@ -1054,7 +1054,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     // Updates nimi and osoitetieto for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations
-    // TODO: more try/catch
     @Override
     public int updateYTJData() {
         // Create y-tunnus list of updateable arganisations
@@ -1089,7 +1088,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if(organisaatio.getYtunnus().trim().equals(ytjdto.getYtunnus().trim())) {
                     Boolean update = false;
                     // Update nimi
-                    // TODO: handle the case when name does not already exist (what to do with nimihistory == nimet). There should always exist at least one name so it can be combined into that! (verify by heidi)
+                    // handle the case when name does not already exist (what to do with nimihistory == nimet). There should always exist at least one name so it can be combined into that!
+                    if(organisaatio.getNimi() == null) {
+                        LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
+                        break;
+                    }
                     if(organisaatio.getNimi() != null && ytjdto.getNimi() != null
                             && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi"))) {
                         // save copy of old nimi to organisaatio nimet as history and modify the old one.
@@ -1218,7 +1221,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             try {
                 organisaatioDAO.update(organisaatio);
             } catch (OptimisticLockException ole) {
-                // TODO should I throw something?
+                LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
             }
         }
