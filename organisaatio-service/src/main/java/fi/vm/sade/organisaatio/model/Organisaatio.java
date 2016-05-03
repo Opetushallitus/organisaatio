@@ -732,4 +732,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public void setNimet(List<OrganisaatioNimi> nimet) {
         this.nimet = nimet;
     }
+
+    public void addNimi(OrganisaatioNimi organisaatioNimi) {
+        this.nimet.add(organisaatioNimi);
+    }
 }

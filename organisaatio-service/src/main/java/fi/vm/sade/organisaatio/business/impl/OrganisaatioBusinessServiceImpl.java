@@ -1088,7 +1088,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if(organisaatio.getYtunnus().trim().equals(ytjdto.getYtunnus().trim())) {
                     Boolean update = false;
                     // Update nimi
-                    // handle the case when name does not already exist (what to do with nimihistory == nimet). There should always exist at least one name so it can be combined into that!
+                    // handle the case when name does not already exist (what to do with nimihistory == nimet).
+                    // There should always exist at least one name.
                     if(organisaatio.getNimi() == null) {
                         LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
                         break;
@@ -1101,9 +1102,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 // Check that the nimet is the same on that is referred from nimi
                                 if(orgNimi.getNimi() == organisaatio.getNimi()) {
                                     MonikielinenTeksti newNimi = new MonikielinenTeksti();
+                                    OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
                                     newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
-                                    organisaatioNimiDAO.addNimi(organisaatio, newNimi,
-                                            orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
+                                    newOrgNimi.setNimi(newNimi);
+                                    newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
+                                    newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
+                                    newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
+                                    organisaatio.addNimi(newOrgNimi);
                                     break;
                                 }
                             }
@@ -1120,9 +1125,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                                 // Check that the nimet is the same on that is referred from nimi
                                 MonikielinenTeksti newNimi = new MonikielinenTeksti();
+                                OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
                                 newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
-                                organisaatioNimiDAO.addNimi(organisaatio, newNimi,
-                                        orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
+                                newOrgNimi.setNimi(newNimi);
+                                newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
+                                newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
+                                newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
+                                organisaatio.addNimi(newOrgNimi);
                                 break;
                             }
                         }
