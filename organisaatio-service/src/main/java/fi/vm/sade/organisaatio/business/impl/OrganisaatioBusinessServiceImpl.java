@@ -1066,16 +1066,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<String> ytunnusList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
         List<Organisaatio> updateOrganisaatioList = new ArrayList<>();
+        int searchLimit = 10000;
         // Search the organisations using the DAO since it provides osoites.
         // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
-        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.TYOELAMAJARJESTO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
             return 0;
         }
-        organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
+        organisaatioList = organisaatioDAO.findByOidList(oidList, searchLimit);
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
         for(Organisaatio organisaatio : organisaatioList) {
             if(organisaatio.getStatus() == Organisaatio.OrganisaatioStatus.AKTIIVINEN
@@ -1093,8 +1094,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if(organisaatio.getYtunnus().trim().equals(ytjdto.getYtunnus().trim())) {
                     Boolean update = false;
                     // Update nimi
-                    // handle the case when name does not already exist (what to do with nimihistory == nimet).
-                    // There should always exist at least one name.
+                    // There should always exist at least one nimi.
                     if(organisaatio.getNimi() == null) {
                         LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
                         break;
@@ -1160,20 +1160,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         }
                         organisaatio.addYhteystieto(osoite);
                     }
-                    if(!osoite.getPostinumero().trim().equals(ytjdto.getPostiOsoite().getPostinumero().trim())
-                            && ytjdto.getPostiOsoite().getPostinumero() != null) {
+                    if(ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
+                            && !ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero())) {
                         osoite.setPostinumero(ytjdto.getPostiOsoite().getPostinumero().trim());
                         osoite.setYtjPaivitysPvm(new Date());
                         update = true;
                     }
-                    if(!osoite.getOsoite().trim().equals(ytjdto.getPostiOsoite().getKatu().trim())
-                            && ytjdto.getPostiOsoite().getKatu() != null) {
+                    if(ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getKatu() != null
+                            && !ytjdto.getPostiOsoite().getKatu().trim().equals(osoite.getOsoite())) {
                         osoite.setOsoite(ytjdto.getPostiOsoite().getKatu().trim());
                         osoite.setYtjPaivitysPvm(new Date());
                         update = true;
                     }
-                    if(!osoite.getPostitoimipaikka().trim().equals(ytjdto.getPostiOsoite().getToimipaikka().trim())
-                            && ytjdto.getPostiOsoite().getToimipaikka() != null) {
+                    if(ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getToimipaikka() != null
+                            && !ytjdto.getPostiOsoite().getToimipaikka().trim().equals(osoite.getPostitoimipaikka())) {
                         osoite.setPostitoimipaikka(ytjdto.getPostiOsoite().getToimipaikka().trim());
                         osoite.setYtjPaivitysPvm(new Date());
                         update = true;
