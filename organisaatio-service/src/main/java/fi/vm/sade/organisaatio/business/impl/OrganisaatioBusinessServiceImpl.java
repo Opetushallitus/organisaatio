@@ -1100,7 +1100,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                                 // Check that the nimet is the same on that is referred from nimi
                                 if(orgNimi.getNimi() == organisaatio.getNimi()) {
-                                    organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
+                                    MonikielinenTeksti newNimi = new MonikielinenTeksti();
+                                    newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
+                                    organisaatioNimiDAO.addNimi(organisaatio, newNimi,
                                             orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
                                     break;
                                 }
@@ -1117,9 +1119,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         if(organisaatio.getNimi().getString("sv") != null) {
                             for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                                 // Check that the nimet is the same on that is referred from nimi
-                                if(orgNimi.getNimi() == organisaatio.getNimi()) {
-                                    organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
-                                            orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
+                                MonikielinenTeksti newNimi = new MonikielinenTeksti();
+                                newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
+                                organisaatioNimiDAO.addNimi(organisaatio, newNimi,
+                                        orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
                                     break;
                                 }
                             }
@@ -1131,10 +1134,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
 
                     // Update Osoite
-                    List <Yhteystieto> unmodifiableYhteystietoList = organisaatio.getYhteystiedot();
                     Osoite osoite = null;
                     // Find osoite with right language (finnish or swedish)
-                    for(Yhteystieto yhteystieto : unmodifiableYhteystietoList) {
+                    for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
                         if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals("kieli_sv#1")
                                 && ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
