@@ -1099,10 +1099,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
                         break;
                     }
-                    if(organisaatio.getNimi() != null && ytjdto.getNimi() != null
-                            && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi"))) {
+                    if((organisaatio.getNimi() != null && ytjdto.getNimi() != null
+                            && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
+                    || (ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
+                            && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))) {
                         // save copy of old nimi to organisaatio nimet as history and modify the old one.
-                        if(organisaatio.getNimi().getString("fi") != null) {
+                        if(organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
                             for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                                 // Check that the nimet is the same on that is referred from nimi
                                 if(orgNimi.getNimi() == organisaatio.getNimi()) {
@@ -1118,31 +1120,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 }
                             }
                         }
-                        organisaatio.getNimi().getValues().put("fi", ytjdto.getNimi());
                         organisaatio.setYtjPaivitysPvm(new Date());
-                        organisaatio.setNimihaku(ytjdto.getNimi());
-                        update = true;
-                    }
-                    if(ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
-                            && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv"))) {
-                        // save copy of old nimi to organisaatio nimet as history and modify the old one.
-                        if(organisaatio.getNimi().getString("sv") != null) {
-                            for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                                // Check that the nimet is the same on that is referred from nimi
-                                MonikielinenTeksti newNimi = new MonikielinenTeksti();
-                                OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
-                                newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
-                                newOrgNimi.setNimi(newNimi);
-                                newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
-                                newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
-                                newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
-                                organisaatio.addNimi(newOrgNimi);
-                                break;
-                            }
+                        if(ytjdto.getNimi() != null) {
+                            organisaatio.getNimi().getValues().put("fi", ytjdto.getNimi());
+                            organisaatio.setNimihaku(ytjdto.getNimi());
                         }
-                        organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
-                        organisaatio.setYtjPaivitysPvm(new Date());
-                        organisaatio.setNimihaku(ytjdto.getSvNimi());
+                        if(ytjdto.getSvNimi() != null) {
+                            organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
+                            organisaatio.setNimihaku(ytjdto.getSvNimi());
+                        }
                         update = true;
                     }
 
