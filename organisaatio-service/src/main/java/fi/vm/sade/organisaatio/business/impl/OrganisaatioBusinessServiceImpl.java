@@ -1123,8 +1123,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
                                 organisaatioNimiDAO.addNimi(organisaatio, newNimi,
                                         orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
-                                    break;
-                                }
+                                break;
                             }
                         }
                         organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
