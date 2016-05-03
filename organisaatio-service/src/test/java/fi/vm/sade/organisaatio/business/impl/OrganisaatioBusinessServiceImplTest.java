@@ -157,7 +157,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         int updatedOrganisations;
         updatedOrganisations = service.updateYTJData();
         Assert.assertEquals(updatedOrganisations, 2);
-        // TODO verify that the database is updated
+        // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
@@ -168,6 +168,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals(organisaatioList.size(), 2);
         Assert.assertEquals(organisaatioList.get(0).getNimi().getString("fi"), "Katva Consulting");
         Assert.assertEquals(organisaatioList.get(0).getPostiosoite().getOsoite(), "Ygankuja 1");
+        Assert.assertEquals(organisaatioList.get(0).getKielet().get(0), "oppilaitoksenopetuskieli_1#1");
+        Assert.assertEquals(organisaatioList.get(1).getNimi().getString("sv"), "Ruotsalainen koulutustoimija");
+        Assert.assertEquals(organisaatioList.get(1).getPostiosoite().getOsoite(), "Svenska gatan 1");
+        Assert.assertEquals(organisaatioList.get(1).getKielet().get(0), "oppilaitoksenopetuskieli_2#1");
     }
 
 }
