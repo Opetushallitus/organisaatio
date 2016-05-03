@@ -1086,19 +1086,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Check which organisations need to be updated. YtjPaivitysPvm is the date info is fetched from YTJ.
         for(YTJDTO ytjdto : ytjdtoList) {
             for(Organisaatio organisaatio : organisaatioList) {
-                if(organisaatio.getYtunnus().equals(ytjdto.getYtunnus())) {
+                if(organisaatio.getYtunnus().trim().equals(ytjdto.getYtunnus().trim())) {
                     Boolean update = false;
                     // Update nimi
-                    // TODO: what if organisation has 2 languages? follow YTJ kieli
-                    if(organisaatio.getNimi().getString("fi") != null && ytjdto.getNimi() != null
-                            && !organisaatio.getNimi().getString("fi").equals(ytjdto.getNimi())) {
+                    // TODO: handle the case when name does not already exist (what to do with nimihistory == nimet). There should always exist at least one name so it can be combined into that! (verify by heidi)
+                    if(organisaatio.getNimi() != null && ytjdto.getNimi() != null
+                            && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi"))) {
                         // save copy of old nimi to organisaatio nimet as history and modify the old one.
-                        for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                            // Check that the nimet is the same on that is referred from nimi
-                            if(orgNimi.getNimi() == organisaatio.getNimi()) {
-                                organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
-                                        orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
-                                break;
+                        if(organisaatio.getNimi().getString("fi") != null) {
+                            for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
+                                // Check that the nimet is the same on that is referred from nimi
+                                if(orgNimi.getNimi() == organisaatio.getNimi()) {
+                                    organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
+                                            orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
+                                    break;
+                                }
                             }
                         }
                         organisaatio.getNimi().getValues().put("fi", ytjdto.getNimi());
@@ -1106,15 +1108,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         organisaatio.setNimihaku(ytjdto.getNimi());
                         update = true;
                     }
-                    if(organisaatio.getNimi().getString("sv") != null && ytjdto.getSvNimi() != null
-                            && !organisaatio.getNimi().getString("sv").equals(ytjdto.getSvNimi())) {
+                    if(ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
+                            && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv"))) {
                         // save copy of old nimi to organisaatio nimet as history and modify the old one.
-                        for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                            // Check that the nimet is the same on that is referred from nimi
-                            if(orgNimi.getNimi() == organisaatio.getNimi()) {
-                                organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
-                                        orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
-                                break;
+                        if(organisaatio.getNimi().getString("sv") != null) {
+                            for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
+                                // Check that the nimet is the same on that is referred from nimi
+                                if(orgNimi.getNimi() == organisaatio.getNimi()) {
+                                    organisaatioNimiDAO.addNimi(organisaatio, orgNimi.getNimi(),
+                                            orgNimi.getAlkuPvm(), orgNimi.getPaivittaja());
+                                    break;
+                                }
                             }
                         }
                         organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
@@ -1128,29 +1132,29 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     Osoite osoite = null;
                     // Find osoite with right language (finnish or swedish)
                     for(Yhteystieto yhteystieto : unmodifiableYhteystietoList) {
-                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().equals("kieli_sv#1")
+                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals("kieli_sv#1")
                                 && ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite = (Osoite)yhteystieto;
                             break;
                         }
-                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().equals("kieli_fi#1")) {
+                        if(yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals("kieli_fi#1")) {
                             osoite = (Osoite)yhteystieto;
                             break;
                         }
                     }
-                    // If no osoite is found create empty one to be fetched from YTJ.
-                    // TODO bind the newly created osoite to the organisation
+                    // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
+                    // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
                     if(osoite == null) {
                         osoite = new Osoite();
                         if(ytjdto.getYrityksenKieli() != null
-                                && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite.setKieli("kieli_sv#1");
                         }
                         else {
                             osoite.setKieli("kieli_fi#1");
                         }
-
+                        organisaatio.addYhteystieto(osoite);
                     }
                     if(!osoite.getPostinumero().trim().equals(ytjdto.getPostiOsoite().getPostinumero().trim())
                             && ytjdto.getPostiOsoite().getPostinumero() != null) {
@@ -1170,8 +1174,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         osoite.setYtjPaivitysPvm(new Date());
                         update = true;
                     }
+
                     if(update) {
-                        // add new kieli to the organisation if it does not exist
+                        // add new kieli to the organisation if there isn't one matching the YTJ kieli
                         Boolean kieliExists = false;
                         for(String kieli : organisaatio.getKielet()) {
                             if(kieli.trim().equals("oppilaitoksenopetuskieli_1#1")
@@ -1180,7 +1185,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 break;
                             }
                             if(kieli.trim().equals("oppilaitoksenopetuskieli_2#1")
-                                    && ytjdto.getYrityksenKieli().trim().equals("Svenska")) {
+                                    && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                                 kieliExists = true;
                                 break;
                             }
@@ -1188,7 +1193,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         if(!kieliExists) {
                             String newKieli = "";
                             List<String> newKieliList = new ArrayList<>();
-                            if(ytjdto.getYrityksenKieli().trim().equals("Svenska")) {
+                            if(ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                                 newKieli = "oppilaitoksenopetuskieli_2#1";
                             }
                             else {
