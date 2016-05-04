@@ -186,6 +186,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("Ygankuja 1", organisaatioList.get(1).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(1).getKielet().get(0));
         Assert.assertNotEquals(organisaatioList.get(1).getNimet().get(0).getNimi(), organisaatioList.get(1).getNimet().get(1).getNimi());
+
         Assert.assertEquals("Ruotsalainen koulutustoimija", organisaatioList.get(2).getNimi().getString("sv"));
         Assert.assertEquals("Svenska gatan 1", organisaatioList.get(2).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_2#1", organisaatioList.get(2).getKielet().get(0));
