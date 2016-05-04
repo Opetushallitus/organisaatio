@@ -1103,6 +1103,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if (organisaatio.getNimi() == null) {
                     LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
                     // TODO we don't need to check this if we do the name stuff differently and just create and add the new name...
+                    continue;
                 }
                 else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
                         && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
