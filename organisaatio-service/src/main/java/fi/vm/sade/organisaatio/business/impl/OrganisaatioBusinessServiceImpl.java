@@ -1069,9 +1069,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         int searchLimit = 10000;
         // Search the organisations using the DAO since it provides osoites.
         // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.TYOELAMAJARJESTO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 1, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
             return 0;
@@ -1151,6 +1151,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
                     if(osoite == null) {
                         osoite = new Osoite();
+                        osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
+                        try {
+                            osoite.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
+                        }
+                        catch(ExceptionMessage e) {
+                            LOG.error("Could not generate oid, not updating this organisation", e);
+                            break;
+                        }
                         if(ytjdto.getYrityksenKieli() != null
                                 && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                             osoite.setKieli(KIELI_KOODI_SV);
