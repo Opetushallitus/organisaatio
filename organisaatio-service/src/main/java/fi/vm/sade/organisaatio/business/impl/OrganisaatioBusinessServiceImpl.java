@@ -1165,6 +1165,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if (osoite == null) {
                     osoite = new Osoite();
                     osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
+                    osoite.setOrganisaatio(organisaatio);
                     try {
                         osoite.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
                     } catch (ExceptionMessage e) {

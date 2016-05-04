@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.model.Osoite;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import org.junit.*;
@@ -178,7 +179,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("node231 foo bar", organisaatioList.get(0).getNimi().getString("sv"));
         // TODO check the getNames() elements too!
         Assert.assertEquals("Mannerheimintie 2", organisaatioList.get(0).getPostiosoite().getOsoite());
-//        Assert.assertEquals("Tie 1", organisaatioList.get(0).getPostiosoite().getOsoite());
+        Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(0).getYhteystiedot().get(1)).getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(0).getKielet().get(0));
 
         Assert.assertEquals("Katva Consulting", organisaatioList.get(1).getNimi().getString("fi"));
