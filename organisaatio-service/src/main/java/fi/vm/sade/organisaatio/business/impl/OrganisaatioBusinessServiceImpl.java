@@ -1143,17 +1143,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 // Update Osoite
                 Osoite osoite = null;
                 // Find osoite with right language (finnish or swedish)
-                // TODO to make things more complicated, there is also direct references getPostiosoite in Organisaatio
+                // TODO to make things more complicated, there is also direct references getPostiosoite in Organisaatio. getPostiosoite() simply returns always the first Osoite() it finds without considering which language it is.
                 for (Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
                     if (yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals(KIELI_KOODI_SV)
                             && ytjdto.getYrityksenKieli() != null
                             && ytjdto.getYrityksenKieli().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                        osoite = (Osoite) yhteystieto;
-                        break;
+                        if(((Osoite) yhteystieto).getOsoiteTyyppi().equals(Osoite.TYYPPI_POSTIOSOITE)) {
+                            osoite = (Osoite) yhteystieto;
+                            break;
+                        }
                     }
                     if (yhteystieto instanceof Osoite && yhteystieto.getKieli().trim().equals(KIELI_KOODI_FI)) {
-                        osoite = (Osoite) yhteystieto;
-                        break;
+                        if(((Osoite) yhteystieto).getOsoiteTyyppi().equals(Osoite.TYYPPI_POSTIOSOITE)) {
+                            osoite = (Osoite) yhteystieto;
+                            break;
+                        }
                     }
                 }
                 // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
