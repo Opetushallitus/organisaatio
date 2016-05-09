@@ -171,22 +171,28 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
-        //TODO: mock oid gen? when creating new Osoite DAO.update() loses it.
+        //TODO: mock oid gen?
         // What should be put to nimi alkupvm updated from YTJ?
         Assert.assertEquals(3, updatedOrganisations);
         Assert.assertEquals(3, organisaatioList.size());
+
+        // Case: Has sv name, gets new fi name from YTJ
+        Assert.assertEquals(1, organisaatioList.get(0).getNimet().size());
         Assert.assertEquals("Helsingin yliopistomuseon säätiö", organisaatioList.get(0).getNimi().getString("fi"));
         Assert.assertEquals("node231 foo bar", organisaatioList.get(0).getNimi().getString("sv"));
-        // TODO check the getNames() elements too!
         Assert.assertEquals("Mannerheimintie 2", organisaatioList.get(0).getPostiosoite().getOsoite());
         Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(0).getYhteystiedot().get(1)).getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(0).getKielet().get(0));
 
+        // Case: Has fi and sv name, gets fi updated from YTJ
+        Assert.assertEquals(2, organisaatioList.get(1).getNimet().size());
         Assert.assertEquals("Katva Consulting", organisaatioList.get(1).getNimi().getString("fi"));
         Assert.assertEquals("Ygankuja 1", organisaatioList.get(1).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(1).getKielet().get(0));
         Assert.assertNotEquals(organisaatioList.get(1).getNimet().get(0).getNimi(), organisaatioList.get(1).getNimet().get(1).getNimi());
 
+        // Case: Has fi name, gets new sv name from YTJ
+        Assert.assertEquals(1, organisaatioList.get(2).getNimet().size());
         Assert.assertEquals("Ruotsalainen koulutustoimija", organisaatioList.get(2).getNimi().getString("sv"));
         Assert.assertEquals("Svenska gatan 1", organisaatioList.get(2).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_2#1", organisaatioList.get(2).getKielet().get(0));

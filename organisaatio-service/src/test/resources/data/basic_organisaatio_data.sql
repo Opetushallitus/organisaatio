@@ -13,6 +13,7 @@ INSERT INTO MONIKIELINENTEKSTI(ID, VERSION) VALUES
 INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
 (1, 'opetushallitus', 'fi'),
 (2, 'root test koulutustoimija', 'fi'),
+(2, 'root test utbildningsoperatör', 'sv'),
 (3, 'node1 asd', 'fi'),
 (4, 'node2 foo', 'fi'),
 (5, 'node22 foo bar', 'fi'),
