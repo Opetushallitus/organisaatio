@@ -1114,20 +1114,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     // TODO I still don't like this solution.
                     // save copy of old nimi to organisaatio nimet as history and modify the old one.
                     if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
-                        for (OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
+                        for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                             // Update nimet (history) with a copy of the old current nimi (orgNimi)
                             if (orgNimi.getNimi() == organisaatio.getNimi()) {
-                                // TODO: Don't add different languages to the history
                                 if((ytjdto.getNimi() != null && orgNimi.getNimi().getString("fi") != null)
                                         || (ytjdto.getSvNimi() != null && orgNimi.getNimi().getString("sv") != null)) {
+                                    // Create new entry to nimihistoria
                                     MonikielinenTeksti newNimi = new MonikielinenTeksti();
                                     OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
-                                    newNimi.setValues(new HashMap<>(orgNimi.getNimi().getValues()));
+                                    // Add only the language to be updated to the history entry
+                                    if(ytjdto.getSvNimi() != null) {
+                                        newNimi.setValues(new HashMap<String, String>() {{put("sv", orgNimi.getNimi().getValues().get("sv"));}});
+                                    }
+                                    else {
+                                        newNimi.setValues(new HashMap<String, String>() {{put("fi", orgNimi.getNimi().getValues().get("fi"));}});
+                                    }
                                     newOrgNimi.setNimi(newNimi);
                                     newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
                                     newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
                                     newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
                                     organisaatio.addNimi(newOrgNimi);
+
                                     // TODO should this be done in some other cases?
                                     // If the language to be updated from YTJ is the same, update alkupvm.
                                     try {
