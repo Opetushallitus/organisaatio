@@ -178,22 +178,25 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         // Case: Has sv name, gets new fi name from YTJ
         Assert.assertEquals(1, organisaatioList.get(0).getNimet().size());
-        Assert.assertEquals("Helsingin yliopistomuseon säätiö", organisaatioList.get(0).getNimi().getString("fi"));
-        Assert.assertEquals("node231 foo bar", organisaatioList.get(0).getNimi().getString("sv"));
+        Assert.assertEquals("Helsingin yliopistomuseon säätiö", organisaatioList.get(0).getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals("node231 foo bar", organisaatioList.get(0).getNimet().get(0).getNimi().getString("sv"));
         Assert.assertEquals("Mannerheimintie 2", organisaatioList.get(0).getPostiosoite().getOsoite());
         Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(0).getYhteystiedot().get(1)).getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(0).getKielet().get(0));
 
         // Case: Has fi and sv name, gets fi updated from YTJ
         Assert.assertEquals(2, organisaatioList.get(1).getNimet().size());
-        Assert.assertEquals("Katva Consulting", organisaatioList.get(1).getNimi().getString("fi"));
+        Assert.assertEquals("Katva Consulting", organisaatioList.get(1).getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals("root test utbildningsoperatör", organisaatioList.get(1).getNimet().get(0).getNimi().getString("sv"));
+        Assert.assertEquals("root test koulutustoimija", organisaatioList.get(1).getNimet().get(1).getNimi().getString("fi"));
         Assert.assertEquals("Ygankuja 1", organisaatioList.get(1).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(1).getKielet().get(0));
         Assert.assertNotEquals(organisaatioList.get(1).getNimet().get(0).getNimi(), organisaatioList.get(1).getNimet().get(1).getNimi());
 
         // Case: Has fi name, gets new sv name from YTJ
         Assert.assertEquals(1, organisaatioList.get(2).getNimet().size());
-        Assert.assertEquals("Ruotsalainen koulutustoimija", organisaatioList.get(2).getNimi().getString("sv"));
+        Assert.assertEquals("Ruotsalainen koulutustoimija", organisaatioList.get(2).getNimet().get(0).getNimi().getString("sv"));
+        Assert.assertEquals("root2 test2 koulutustoimija2", organisaatioList.get(2).getNimet().get(0).getNimi().getString("fi"));
         Assert.assertEquals("Svenska gatan 1", organisaatioList.get(2).getPostiosoite().getOsoite());
         Assert.assertEquals("oppilaitoksenopetuskieli_2#1", organisaatioList.get(2).getKielet().get(0));
         Assert.assertEquals(2, organisaatioList.get(2).getNimet().get(0).getNimi().getValues().size());
