@@ -1135,16 +1135,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                     newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
                                     organisaatio.addNimi(newOrgNimi);
 
-                                    // TODO should this be done in some other cases?
-                                    // If the language to be updated from YTJ is the same, update alkupvm.
-                                    try {
-                                        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                                        orgNimi.setAlkuPvm(format.parse(ytjdto.getAloitusPvm()));
-                                    }
-                                    catch(ParseException | NullPointerException e) {
-                                        LOG.error("Could not parse YTJ date. Setting to null.", e);
-                                        orgNimi.setAlkuPvm(null);
-                                    }
+                                }
+                                // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
+                                try {
+                                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                                    orgNimi.setAlkuPvm(format.parse(ytjdto.getAloitusPvm()));
+                                }
+                                catch(ParseException | NullPointerException e) {
+                                    LOG.error("Could not parse YTJ date. Setting to null.", e);
+                                    orgNimi.setAlkuPvm(null);
                                 }
                                 break;
                             }
