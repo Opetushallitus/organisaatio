@@ -1117,7 +1117,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
                 // Update Osoite
                 // Find osoite with right language (finnish or swedish)
-                // TODO to make things more complicated, there is also direct references getPostiosoite in Organisaatio. getPostiosoite() simply returns always the first Osoite() it finds without considering which language it is.
                 Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
                 // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
                 // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
@@ -1146,7 +1145,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         // Index the updated resources.
         solrIndexer.index(updateOrganisaatioList);
-        // TODO update koodisto (on what condition? At least when name has changed)
+        // TODO update koodisto (When name has changed)
 
         return updateOrganisaatioList.size();
     }
@@ -1184,7 +1183,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Boolean update, Osoite osoite) {
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
                 && !ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero())) {
-            osoite.setPostinumero(ytjdto.getPostiOsoite().getPostinumero().trim());
+            osoite.setPostinumero("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
