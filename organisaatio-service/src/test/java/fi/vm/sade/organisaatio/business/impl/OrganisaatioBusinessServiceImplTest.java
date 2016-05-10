@@ -163,7 +163,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Test
     public void updateYTJDataTest() {
         int updatedOrganisations;
-        updatedOrganisations = service.updateYTJData();
+        updatedOrganisations = service.updateYTJData(false);
         // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;

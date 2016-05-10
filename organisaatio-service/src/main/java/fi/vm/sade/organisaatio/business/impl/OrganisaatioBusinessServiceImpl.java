@@ -1062,7 +1062,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     // Updates nimi and osoitetieto for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations
     @Override
-    public int updateYTJData() {
+    public int updateYTJData(final boolean forceUpdate) {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<String> ytunnusList = new ArrayList<>();
@@ -1099,7 +1099,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             Organisaatio organisaatio = organisaatioMap.get(ytjdto.getYtunnus().trim());
 
             if (organisaatio != null) {
-                Boolean update = false;
+                Boolean updateNimi = false;
+                Boolean updateOsoite = false;
                 // Update nimi
                 // There should always exist at least one nimi.
                 if (organisaatio.getNimi() == null) {
@@ -1110,9 +1111,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
                         && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
                         || (ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
-                        && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))) {
+                        && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
+                        || forceUpdate) {
                     updateNamesFromYTJ(ytjdto, organisaatio);
-                    update = true;
+                    updateNimi = true;
                 }
 
                 // Update Osoite
@@ -1121,12 +1123,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
                 // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
                 if (osoite == null) {
-                    osoite = addOsoiteForOrgFromYTJData(ytjdto, organisaatio);
-                    // TODO handle properly if adding failed
+                    try{
+                        osoite = addOsoiteForOrgFromYTJData(ytjdto, organisaatio);
+                    } catch (ExceptionMessage e) {
+                        // handle properly if adding failed
+                        LOG.error("Could not generate oid, skipping organisation", e);
+                        continue;
+                    }
                 }
-                update = updateAddressDataFromYTJ(ytjdto, update, osoite);
+                updateOsoite = updateAddressDataFromYTJ(ytjdto, osoite, forceUpdate);
 
-                if (update) {
+                if (updateNimi || updateOsoite) {
                     // add new kieli to the organisation if there isn't one matching the YTJ kieli
                     updateLangFromYTJ(ytjdto, organisaatio);
                     updateOrganisaatioList.add(organisaatio);
@@ -1180,21 +1187,25 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Boolean update, Osoite osoite) {
-        if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
-                && !ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero())) {
+    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, boolean forceUpdate) {
+        Boolean update = false;
+        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getPostinumero() != null
+                && !ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero()))
+                || forceUpdate)) {
             osoite.setPostinumero("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
-        if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getKatu() != null
-                && !ytjdto.getPostiOsoite().getKatu().trim().equals(osoite.getOsoite())) {
+        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getKatu() != null
+                && !ytjdto.getPostiOsoite().getKatu().trim().equals(osoite.getOsoite()))
+                || forceUpdate)) {
             osoite.setOsoite(ytjdto.getPostiOsoite().getKatu().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
-        if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getToimipaikka() != null
-                && !ytjdto.getPostiOsoite().getToimipaikka().trim().equals(osoite.getPostitoimipaikka())) {
+        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getToimipaikka() != null
+                && !ytjdto.getPostiOsoite().getToimipaikka().trim().equals(osoite.getPostitoimipaikka()))
+                || forceUpdate)) {
             osoite.setPostitoimipaikka(ytjdto.getPostiOsoite().getToimipaikka().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
@@ -1202,7 +1213,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return update;
     }
 
-    private Osoite addOsoiteForOrgFromYTJData(YTJDTO ytjdto, Organisaatio organisaatio) {
+    private Osoite addOsoiteForOrgFromYTJData(YTJDTO ytjdto, Organisaatio organisaatio) throws ExceptionMessage {
         Osoite osoite;
         osoite = new Osoite();
         osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
@@ -1211,8 +1222,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             osoite.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
         } catch (ExceptionMessage e) {
             LOG.error("Could not generate oid, not updating this organisation", e);
-            // TODO throw exception and catch it where this is called
-            return null;
+            throw e;
         }
         if (ytjdto.getYrityksenKieli() != null
                 && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
