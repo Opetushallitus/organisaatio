@@ -1189,22 +1189,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, boolean forceUpdate) {
         Boolean update = false;
-        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getPostinumero() != null
-                && !ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero()))
+        if (ytjdto.getPostiOsoite() != null && (ytjdto.getPostiOsoite().getPostinumero() != null
+                && (!ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero()))
                 || forceUpdate)) {
             osoite.setPostinumero("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
-        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getKatu() != null
-                && !ytjdto.getPostiOsoite().getKatu().trim().equals(osoite.getOsoite()))
+        if (ytjdto.getPostiOsoite() != null && (ytjdto.getPostiOsoite().getKatu() != null
+                && (!ytjdto.getPostiOsoite().getKatu().trim().equals(osoite.getOsoite()))
                 || forceUpdate)) {
             osoite.setOsoite(ytjdto.getPostiOsoite().getKatu().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
-        if (ytjdto.getPostiOsoite() != null && ((ytjdto.getPostiOsoite().getToimipaikka() != null
-                && !ytjdto.getPostiOsoite().getToimipaikka().trim().equals(osoite.getPostitoimipaikka()))
+        if (ytjdto.getPostiOsoite() != null && (ytjdto.getPostiOsoite().getToimipaikka() != null
+                && (!ytjdto.getPostiOsoite().getToimipaikka().trim().equals(osoite.getPostitoimipaikka()))
                 || forceUpdate)) {
             osoite.setPostitoimipaikka(ytjdto.getPostiOsoite().getToimipaikka().trim());
             osoite.setYtjPaivitysPvm(new Date());

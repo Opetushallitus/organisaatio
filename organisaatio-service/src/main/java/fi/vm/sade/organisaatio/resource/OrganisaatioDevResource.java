@@ -15,10 +15,7 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import com.wordnik.swagger.annotations.Api;
@@ -78,7 +75,7 @@ public class OrganisaatioDevResource {
             notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
             response = String.class)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String updateYtj(@QueryParam("forceUpdate") final boolean forceUpdate) {
+    public String updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
         return Integer.toString(organisaatioBusinessService.updateYTJData(forceUpdate));
     }
 
