@@ -1287,8 +1287,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         orgNimi.setAlkuPvm(format.parse(ytjdto.getAloitusPvm()));
                     }
                     catch(ParseException | NullPointerException e) {
-                        LOG.error("Could not parse YTJ date. Setting to null.", e);
-                        orgNimi.setAlkuPvm(null);
+                        LOG.error("Could not parse YTJ date. Using the old date..", e);
+//                        orgNimi.setAlkuPvm(null);
                     }
                     break;
                 }
