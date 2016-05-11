@@ -1147,6 +1147,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 organisaatioDAO.update(organisaatio);
                 // update koodisto (When name has changed)
                 // TODO reauthorize parameter true or false?
+                // TODO is päivityspvm updated? (should not, only nimi)
 //                organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
             } catch (OptimisticLockException ole) {
                 LOG.error(ole.getMessage());
