@@ -58,6 +58,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -1109,10 +1110,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     continue;
                 }
                 else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
-                        && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
+                        && !HtmlUtils.htmlEscape(ytjdto.getNimi()).equals(organisaatio.getNimi().getString("fi")))
                         || (ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
-                        && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
+                        && !HtmlUtils.htmlEscape(ytjdto.getSvNimi()).equals(organisaatio.getNimi().getString("sv")))
                         || forceUpdate) {
+                    // Escape YTJ nimi for html characters (eg. & => &amp;)
+                    ytjdto.setNimi(HtmlUtils.htmlEscape(ytjdto.getNimi()));
+                    ytjdto.setSvNimi(HtmlUtils.htmlEscape(ytjdto.getSvNimi()));
                     updateNamesFromYTJ(ytjdto, organisaatio);
                     updateNimi = true;
                 }
