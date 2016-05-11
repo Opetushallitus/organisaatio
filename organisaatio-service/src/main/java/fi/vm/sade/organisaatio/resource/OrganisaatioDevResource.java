@@ -30,6 +30,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ import java.util.List;
 @Path("/dev")
 @Api(value = "/dev", description = "Development operaatiot")
 @Component
+@Transactional(readOnly = true)
 public class OrganisaatioDevResource {
     @Autowired
     OrganisaatioBusinessService organisaatioBusinessService;
