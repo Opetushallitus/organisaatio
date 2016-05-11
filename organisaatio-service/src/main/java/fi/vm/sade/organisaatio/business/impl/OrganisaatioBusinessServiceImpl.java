@@ -1102,6 +1102,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (organisaatio != null) {
                 Boolean updateNimi = false;
                 Boolean updateOsoite = false;
+                Boolean updatePuhelin = false;
+                Boolean updateWww = false;
                 // Update nimi
                 // There should always exist at least one nimi.
                 if (organisaatio.getNimi() == null) {
@@ -1137,7 +1139,54 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
                 updateOsoite = updateAddressDataFromYTJ(ytjdto, osoite, forceUpdate);
 
-                if (updateNimi || updateOsoite) {
+                if(ytjdto.getPuhelin() != null) {
+                    // Create new puhelinnumero if one does not exist
+                    if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
+                        try {
+                            organisaatio.addYhteystieto(new Puhelinnumero(null, Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
+                        } catch (ExceptionMessage e) {
+                            LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
+                            continue;
+                        }
+                        updatePuhelin = true;
+                    }
+                    // Update puhelinnumero from YTJ if it missmatches the current one.
+                    if((organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null
+                            && (!ytjdto.getPuhelin().equals(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero()))
+                            || forceUpdate)) {
+                        organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).setPuhelinnumero(ytjdto.getPuhelin());
+                        updatePuhelin = true;
+                    }
+                }
+
+                if(ytjdto.getWww() != null) {
+                    Www www = null;
+                    for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
+                        if(yhteystieto instanceof Www) {
+                            www = (Www)yhteystieto;
+                            break;
+                        }
+                    }
+                    // Create new www if one does not exist
+                    if(www == null) {
+                        try {
+                            www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
+                        } catch (ExceptionMessage e) {
+                            LOG.error("Could not generate oid for Www, skipping organisation", e);
+                            continue;
+                        }
+                        organisaatio.addYhteystieto(www);
+                        updateWww = true;
+                    }
+                    // Update www from YTJ if it missmatches the current one.
+                    if((!ytjdto.getWww().equals(www.getWwwOsoite()))
+                            || forceUpdate) {
+                        www.setWwwOsoite(ytjdto.getWww());
+                        updateWww = true;
+                    }
+                }
+
+                if (updateNimi || updateOsoite || updatePuhelin || updateWww) {
                     // add new kieli to the organisation if there isn't one matching the YTJ kieli
                     updateLangFromYTJ(ytjdto, organisaatio);
                     updateOrganisaatioList.add(organisaatio);
