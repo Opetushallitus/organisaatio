@@ -1145,6 +1145,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
                 organisaatioDAO.update(organisaatio);
+                // update koodisto (When name has changed)
+                // TODO reauthorize parameter true or false?
+//                organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
             } catch (OptimisticLockException ole) {
                 LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
@@ -1152,7 +1155,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         // Index the updated resources.
         solrIndexer.index(updateOrganisaatioList);
-        // TODO update koodisto (When name has changed)
 
         return updateOrganisaatioList;
     }
@@ -1187,10 +1189,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, boolean forceUpdate) {
+    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, final boolean forceUpdate) {
         Boolean update = false;
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
-                && (!ytjdto.getPostiOsoite().getPostinumero().trim().equals(osoite.getPostinumero())
+                && (!("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
                 || forceUpdate)) {
             osoite.setPostinumero("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim());
             osoite.setYtjPaivitysPvm(new Date());
@@ -1287,7 +1289,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         orgNimi.setAlkuPvm(format.parse(ytjdto.getAloitusPvm()));
                     }
                     catch(ParseException | NullPointerException e) {
-                        LOG.error("Could not parse YTJ date. Using the old date..", e);
+                        LOG.error("Could not parse YTJ date. Using the old date.", e);
 //                        orgNimi.setAlkuPvm(null);
                     }
                     break;
