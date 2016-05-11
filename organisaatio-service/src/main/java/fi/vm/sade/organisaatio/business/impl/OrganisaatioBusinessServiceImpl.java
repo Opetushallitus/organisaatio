@@ -1062,7 +1062,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     // Updates nimi and osoitetieto for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations
     @Override
-    public int updateYTJData(final boolean forceUpdate) {
+    public List<Organisaatio> updateYTJData(final boolean forceUpdate) {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<String> ytunnusList = new ArrayList<>();
@@ -1076,7 +1076,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
-            return 0;
+            return updateOrganisaatioList;
         }
         organisaatioList = organisaatioDAO.findByOidList(oidList, searchLimit);
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
@@ -1154,7 +1154,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(updateOrganisaatioList);
         // TODO update koodisto (When name has changed)
 
-        return updateOrganisaatioList.size();
+        return updateOrganisaatioList;
     }
 
     private void updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {

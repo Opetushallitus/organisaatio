@@ -21,12 +21,15 @@ import javax.ws.rs.core.MediaType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Development operaatiot
@@ -73,10 +76,10 @@ public class OrganisaatioDevResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
-            response = String.class)
+            response = Organisaatio.class)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
-        return Integer.toString(organisaatioBusinessService.updateYTJData(forceUpdate));
+    public List<Organisaatio> updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
+        return organisaatioBusinessService.updateYTJData(forceUpdate);
     }
 
 }

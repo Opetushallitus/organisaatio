@@ -104,6 +104,6 @@ public interface OrganisaatioBusinessService {
     /*
     * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
     * */
-    public int updateYTJData(final boolean forceUpdate);
+    public List<Organisaatio> updateYTJData(final boolean forceUpdate);
 
 }
