@@ -76,7 +76,8 @@ public class OrganisaatioDevResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
-            response = Organisaatio.class)
+            response = Organisaatio.class,
+            responseContainer = "List")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<Organisaatio> updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
         return organisaatioBusinessService.updateYTJData(forceUpdate);
