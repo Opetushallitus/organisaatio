@@ -1112,13 +1112,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     continue;
                 }
                 else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
-                        && !HtmlUtils.htmlEscape(ytjdto.getNimi()).equals(organisaatio.getNimi().getString("fi")))
+                        && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
                         || (ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
-                        && !HtmlUtils.htmlEscape(ytjdto.getSvNimi()).equals(organisaatio.getNimi().getString("sv")))
+                        && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
                         || forceUpdate) {
-                    // Escape YTJ nimi for html characters (eg. & => &amp;)
-                    ytjdto.setNimi(HtmlUtils.htmlEscape(ytjdto.getNimi()));
-                    ytjdto.setSvNimi(HtmlUtils.htmlEscape(ytjdto.getSvNimi()));
                     updateNamesFromYTJ(ytjdto, organisaatio);
                     updateNimi = true;
                 }
