@@ -94,6 +94,8 @@ public class YTJServiceMock implements YTJService {
             osoite.setKieli(2);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Svenska");
+            dto.setWww("http://www.ytj.sv");
+            dto.setPuhelin("0100000210");
             dto.setSvNimi(nimi);
         }
         else {
@@ -107,6 +109,8 @@ public class YTJServiceMock implements YTJService {
             dto.setPostiOsoite(osoite);
             dto.setKayntiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setWww("http://www.ytj.fi");
+            dto.setPuhelin("0100000211");
             dto.setNimi(nimi);
         }
         return dto;
