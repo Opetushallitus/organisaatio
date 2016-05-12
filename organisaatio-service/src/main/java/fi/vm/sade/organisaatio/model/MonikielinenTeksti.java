@@ -54,6 +54,8 @@ public class MonikielinenTeksti extends BaseEntity {
     public void filterXss() {
     	for (Map.Entry<String, String> e : values.entrySet()) {
     		e.setValue(XssFilter.filter(e.getValue()));
+            // Allow ampersand characters
+            e.setValue(e.getValue().replace("&amp;", "&"));
     	}
     }
 
