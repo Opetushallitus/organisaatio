@@ -200,7 +200,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         id = 2;
         // Case: Has fi name, puhelin, www; gets new sv name and updated puhelin, www from YTJ
         Assert.assertEquals(1, organisaatioList.get(id).getNimet().size());
-        Assert.assertEquals("Ruotsalainen koulutustoimija", organisaatioList.get(id).getNimet().get(0).getNimi().getString("sv"));
+        Assert.assertEquals("Ruotsalainen & koulutustoimija", organisaatioList.get(id).getNimet().get(0).getNimi().getString("sv"));
         Assert.assertEquals("root2 test2 koulutustoimija2", organisaatioList.get(id).getNimet().get(0).getNimi().getString("fi"));
         Assert.assertEquals("Svenska gatan 1", organisaatioList.get(id).getPostiosoite().getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(0)).getPostinumero());
