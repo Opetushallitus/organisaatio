@@ -1139,7 +1139,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 // Update puhelin
                 if(ytjdto.getPuhelin() != null) {
                     // Parse extra stuff off.
-                    ytjdto.setPuhelin(ytjdto.getPuhelin().split(", *")[0]);
+                    ytjdto.setPuhelin(ytjdto.getPuhelin().split(",|; *")[0]);
                     // Create new puhelinnumero if one does not exist
                     if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
                         try {
@@ -1161,6 +1161,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
                 // Update www
                 if(ytjdto.getWww() != null) {
+                    ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
                     Www www = null;
                     for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
                         if(yhteystieto instanceof Www) {
@@ -1219,6 +1220,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(updateOrganisaatioList);
 
         return updateOrganisaatioList;
+    }
+
+    private String fixHttpPrefix(String www) {
+        if(www != null && !www.matches("^(https?:\\/\\/).*$")) {
+            www = "http://" + www;
+        }
+        return www;
     }
 
     private void updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
