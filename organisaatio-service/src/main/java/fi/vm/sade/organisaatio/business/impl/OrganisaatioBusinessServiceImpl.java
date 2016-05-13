@@ -1207,8 +1207,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
             } catch (RuntimeException re) {
-                if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null) {
-                    LOG.error("Puhelinnumero:" + organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero() + ":");
+                for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
+                    if(yhteystieto instanceof Www) {
+                        LOG.error("Www:" + ((Www) yhteystieto).getWwwOsoite() + ":");
+                    }
                 }
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re);
             }
