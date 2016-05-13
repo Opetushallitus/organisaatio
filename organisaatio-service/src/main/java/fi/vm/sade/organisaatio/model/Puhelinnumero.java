@@ -38,7 +38,7 @@ public class Puhelinnumero extends Yhteystieto {
     public static final String TYYPPI_FAKSI = "faksi";
     
     @NotNull
-    @Pattern(regexp = "(\\+|\\-| |\\(|\\)|[0-9]){3,100}", message = "{validation.invalid.phone}")
+    @Pattern(regexp = "/(\\+|\\-| |\\(|\\)|[0-9]){3,100}/", message = "{validation.invalid.phone}")
     @FilterXss
     private String puhelinnumero;
     

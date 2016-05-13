@@ -1137,9 +1137,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 updateOsoite = updateAddressDataFromYTJ(ytjdto, osoite, forceUpdate);
 
                 // Update puhelin
-                if(ytjdto.getPuhelin() != null && ytjdto.getPuhelin().split("(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}")[0] != null) {
+                if(ytjdto.getPuhelin() != null && ytjdto.getPuhelin().split("/(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}/").length > 0) {
                     // Parse extra stuff off.
-                    ytjdto.setPuhelin(ytjdto.getPuhelin().split("(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}")[0]);
+                    ytjdto.setPuhelin(ytjdto.getPuhelin().split("/(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}/")[0]);
                     // Create new puhelinnumero if one does not exist
                     if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
                         try {
