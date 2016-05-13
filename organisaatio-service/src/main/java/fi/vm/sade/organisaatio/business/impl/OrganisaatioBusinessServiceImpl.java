@@ -1315,8 +1315,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                 // Update nimet (history) with a copy of the old current nimi (orgNimi)
                 if (orgNimi.getNimi() == organisaatio.getNimi()) {
-                    if((ytjdto.getNimi() != null && orgNimi.getNimi().getString("fi") != null)
-                            || (ytjdto.getSvNimi() != null && orgNimi.getNimi().getString("sv") != null)) {
+                    // Check equality in case of forceUpdate to prevent spam in name history.
+                    if((ytjdto.getNimi() != null && orgNimi.getNimi().getString("fi") != null
+                            && !ytjdto.getNimi().equals(orgNimi.getNimi().getString("fi")))
+                            ||
+                            (ytjdto.getSvNimi() != null && orgNimi.getNimi().getString("sv") != null)
+                            && !ytjdto.getSvNimi().equals(orgNimi.getNimi().getString("sv"))) {
                         // Create new entry to nimihistoria
                         MonikielinenTeksti newNimi = new MonikielinenTeksti();
                         OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
