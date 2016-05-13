@@ -1140,7 +1140,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     // Create new puhelinnumero if one does not exist
                     if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
                         try {
-                            organisaatio.addYhteystieto(new Puhelinnumero(null, Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
+                            organisaatio.addYhteystieto(new Puhelinnumero(" ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
                         } catch (ExceptionMessage e) {
                             LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
                             continue;
