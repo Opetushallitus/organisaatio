@@ -1136,11 +1136,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
                 updateOsoite = updateAddressDataFromYTJ(ytjdto, osoite, forceUpdate);
 
-                if(ytjdto.getPuhelin() != null) {
+                // Update puhelin
+                if(ytjdto.getPuhelin() != null && ytjdto.getPuhelin().split("(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}")[0] != null) {
+                    // Parse extra stuff off.
+                    ytjdto.setPuhelin(ytjdto.getPuhelin().split("(\\+|\\-|\\s|\\(|\\)|[0-9]){3,100}")[0]);
                     // Create new puhelinnumero if one does not exist
                     if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
                         try {
-                            organisaatio.addYhteystieto(new Puhelinnumero(" ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
+                            organisaatio.addYhteystieto(new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
                         } catch (ExceptionMessage e) {
                             LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
                             continue;
@@ -1156,6 +1159,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                 }
 
+                // Update www
                 if(ytjdto.getWww() != null) {
                     Www www = null;
                     for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
@@ -1203,8 +1207,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
             } catch (RuntimeException re) {
-                LOG.error("Could not update organisation " + organisaatio.getOid() + " with nro :"
-                        + organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero() + ":", re);
+                if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null) {
+                    LOG.error("Puhelinnumero:" + organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero() + ":");
+                }
+                LOG.error("Could not update organisation " + organisaatio.getOid(), re);
             }
         }
         // Index the updated resources.
