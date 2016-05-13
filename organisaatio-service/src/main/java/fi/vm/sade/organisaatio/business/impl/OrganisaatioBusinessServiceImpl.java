@@ -1142,12 +1142,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     ytjdto.setPuhelin(ytjdto.getPuhelin().split(",|; *")[0]);
                     // Create new puhelinnumero if one does not exist
                     if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
+                        Puhelinnumero puhelinnumero = null;
                         try {
-                            organisaatio.addYhteystieto(new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5)));
+                            puhelinnumero = new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
                         } catch (ExceptionMessage e) {
                             LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
                             continue;
                         }
+                        puhelinnumero.setOrganisaatio(organisaatio);
+                        if (ytjdto.getYrityksenKieli() != null
+                                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                            puhelinnumero.setKieli(KIELI_KOODI_SV);
+                        } else {
+                            puhelinnumero.setKieli(KIELI_KOODI_FI);
+                        }
+                        organisaatio.addYhteystieto(puhelinnumero);
                         updatePuhelin = true;
                     }
                     // Update puhelinnumero from YTJ if it missmatches the current one.
@@ -1177,6 +1186,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             LOG.error("Could not generate oid for Www, skipping organisation", e);
                             continue;
                         }
+                        www.setOrganisaatio(organisaatio);
+                        if (ytjdto.getYrityksenKieli() != null
+                                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                            www.setKieli(KIELI_KOODI_SV);
+                        } else {
+                            www.setKieli(KIELI_KOODI_FI);
+                        }
+
                         organisaatio.addYhteystieto(www);
                         updateWww = true;
                     }
