@@ -1203,7 +1203,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
             } catch (RuntimeException re) {
-                LOG.error("Could not update organisation " + organisaatio.getOid(), re);
+                LOG.error("Could not update organisation " + organisaatio.getOid() + " with nro "
+                        + organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN), re);
             }
         }
         // Index the updated resources.
