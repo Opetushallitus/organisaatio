@@ -1063,12 +1063,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
-    public List<Organisaatio> updateYTJData(final boolean forceUpdate) {
+    public List<Organisaatio> updateYTJData(final boolean forceUpdate) throws OrganisaatioResourceException{
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<String> ytunnusList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
         List<Organisaatio> updateOrganisaatioList = new ArrayList<>();
+        List<YTJDTO> ytjdtoList;
         int searchLimit = 10000;
         // Search the organisations using the DAO since it provides osoites.
         // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
@@ -1088,8 +1089,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        // Fetch data from ytj for these organisations
-        List<YTJDTO> ytjdtoList = ytjResource.findByYTunnusBatch(ytunnusList);
+        try {
+            // Fetch data from ytj for these organisations
+            ytjdtoList = ytjResource.findByYTunnusBatch(ytunnusList);
+        } catch(OrganisaatioResourceException ore) {
+            LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
+            // TODO add info for UI to fetch
+            throw ore;
+        }
 
         Map<String,Organisaatio> organisaatioMap = new HashMap<String,Organisaatio>();
         for (Organisaatio o : organisaatioList) {
@@ -1172,7 +1179,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        // Update these organisations
+        // Update listed organisations to db and koodisto service.
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
                 checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
@@ -1266,6 +1273,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return www;
     }
 
+    // Adds the missing language information to Organisaatio according to the YTJ language.
     private void updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
         Boolean kieliExists = false;
         for (String kieli : organisaatio.getKielet()) {
@@ -1364,9 +1372,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return osoite;
     }
 
-    private void updateNamesFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
+    // Update nimi to Organisaatio from YTJ and handle the name history (nimet).
+    // TODO refactor to create new name and change references everywhere to point to this one leaving old as history entry
+    // TODO instead of editing the current one and creating new history entry.
+    private void updateNamesFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio) {
         if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
-            // TODO I still don't like this solution.
+            // If organisaatio (faultly) has no nimihistoria but organisaatio still has nimi create new entry
+            // containing current information.
+            if(organisaatio.getNimet().isEmpty()) {
+                organisaatio.addNimi(new OrganisaatioNimi(){{
+                    setOrganisaatio(organisaatio);
+                    setNimi(organisaatio.getNimi());
+                    setAlkuPvm(organisaatio.getAlkuPvm());
+                }});
+            }
             // save copy of old nimi to organisaatio nimet as history and modify the old one.
             for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                 // Update nimet (history) with a copy of the old current nimi (orgNimi)
@@ -1392,7 +1411,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
                         newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
                         organisaatio.addNimi(newOrgNimi);
-
                     }
                     // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
                     try {
@@ -1401,7 +1419,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                     catch(ParseException | NullPointerException e) {
                         LOG.error("Could not parse YTJ date. Using the old date.", e);
-//                        orgNimi.setAlkuPvm(null);
                     }
                     break;
                 }
