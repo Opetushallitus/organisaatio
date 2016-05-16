@@ -10,6 +10,7 @@
 
     <!-- NON SERVICE VERSION -->
     <bean id="oidService" class="fi.vm.sade.oid.service.mock.OIDServiceMock"/>
+    <bean id="organisaatioKoodisto" class="fi.vm.sade.organisaatio.business.impl.OrganisaatioKoodistoMock" />
     <!-- Use following for testing purposes -->
     <bean id="ytjService" class="fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock"/>
 

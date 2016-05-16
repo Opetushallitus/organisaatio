@@ -22,6 +22,7 @@ import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.dao.*;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -58,7 +59,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -1217,18 +1217,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
                 organisaatioDAO.update(organisaatio);
-                // update koodisto (When name has changed)
+                // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
                 organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
             } catch (OptimisticLockException ole) {
                 LOG.error(ole.getMessage());
 //                throw new OrganisaatioModifiedException(ole);
             } catch (RuntimeException re) {
-                for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
-                    if(yhteystieto instanceof Www) {
-                        LOG.error("Www:" + ((Www) yhteystieto).getWwwOsoite() + ":");
-                    }
-                }
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re);
             }
         }

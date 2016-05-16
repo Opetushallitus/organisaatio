@@ -152,13 +152,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void addNewNameFromYTJToNameHistoryTest() {
-        // TODO make a test case with several names in the name history and new name from YTJ
-        // and see that everything goes correctly
-        Assert.assertTrue(true);
-    }
-
-    @Test
     public void updateYTJDataTest() {
         int updatedOrganisations;
         updatedOrganisations = service.updateYTJData(false).size();
@@ -169,7 +162,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
-        //TODO: mock oid gen?
         Assert.assertEquals(3, updatedOrganisations);
         Assert.assertEquals(3, organisaatioList.size());
 

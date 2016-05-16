@@ -16,6 +16,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class OrganisaatioKoodisto {
+public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -47,26 +48,10 @@ public class OrganisaatioKoodisto {
 
     private boolean reauthorize;
 
-    public enum KoodistoUri {
-        TOIMIPISTE("opetuspisteet"),
-        OPPILAITOS("oppilaitosnumero"),
-        KOULUTUSTOIMIJA("koulutustoimija"),
-        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi");
-        private final String uri;
-
-        KoodistoUri(String koodistoUri) {
-            uri = koodistoUri;
-        }
-
-        public String uri() {
-            return uri;
-        }
-    }
-
     /**
      * Luo instanssin ja alustaa gson:in
      */
-    public OrganisaatioKoodisto() {
+    public OrganisaatioKoodistoImpl() {
         gson = new GsonBuilder().create();
     }
 
@@ -274,6 +259,7 @@ public class OrganisaatioKoodisto {
      *
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
+    @Override
     public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
@@ -419,6 +405,7 @@ public class OrganisaatioKoodisto {
      *
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
+    @Override
     public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
         this.reauthorize = reauthorize;
 
