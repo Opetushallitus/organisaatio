@@ -1138,71 +1138,23 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
                 // Update puhelin
                 if(ytjdto.getPuhelin() != null) {
-                    // Parse extra stuff off.
-                    ytjdto.setPuhelin(ytjdto.getPuhelin().split(",|; *")[0]);
-                    // Create new puhelinnumero if one does not exist
-                    if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
-                        Puhelinnumero puhelinnumero = null;
-                        try {
-                            puhelinnumero = new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
-                        } catch (ExceptionMessage e) {
-                            LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
-                            continue;
-                        }
-                        puhelinnumero.setOrganisaatio(organisaatio);
-                        if (ytjdto.getYrityksenKieli() != null
-                                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                            puhelinnumero.setKieli(KIELI_KOODI_SV);
-                        } else {
-                            puhelinnumero.setKieli(KIELI_KOODI_FI);
-                        }
-                        organisaatio.addYhteystieto(puhelinnumero);
-                        updatePuhelin = true;
-                    }
-                    // Update puhelinnumero from YTJ if it missmatches the current one.
-                    if((organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null
-                            && (!ytjdto.getPuhelin().equals(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero()))
-                            || forceUpdate)) {
-                        organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).setPuhelinnumero(ytjdto.getPuhelin());
-                        updatePuhelin = true;
+                    try {
+                        updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(forceUpdate, ytjdto, organisaatio);
+                    } catch (ExceptionMessage e) {
+                        LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
+                        continue;
                     }
                 }
 
                 // Update www
                 if(ytjdto.getWww() != null) {
-                    ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
-                    Www www = null;
-                    for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
-                        if(yhteystieto instanceof Www) {
-                            www = (Www)yhteystieto;
-                            break;
-                        }
+                    try {
+                        updateWww = updateWwwFromYTJToOrganisation(forceUpdate, ytjdto, organisaatio);
+                    } catch (ExceptionMessage e) {
+                        LOG.error("Could not generate oid for Www, skipping organisation", e);
+                        continue;
                     }
-                    // Create new www if one does not exist
-                    if(www == null) {
-                        try {
-                            www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
-                        } catch (ExceptionMessage e) {
-                            LOG.error("Could not generate oid for Www, skipping organisation", e);
-                            continue;
-                        }
-                        www.setOrganisaatio(organisaatio);
-                        if (ytjdto.getYrityksenKieli() != null
-                                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                            www.setKieli(KIELI_KOODI_SV);
-                        } else {
-                            www.setKieli(KIELI_KOODI_FI);
-                        }
 
-                        organisaatio.addYhteystieto(www);
-                        updateWww = true;
-                    }
-                    // Update www from YTJ if it missmatches the current one.
-                    if((!ytjdto.getWww().equals(www.getWwwOsoite()))
-                            || forceUpdate) {
-                        www.setWwwOsoite(ytjdto.getWww());
-                        updateWww = true;
-                    }
                 }
 
                 if (updateNimi || updateOsoite || updatePuhelin || updateWww) {
@@ -1226,7 +1178,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             } catch(OrganisaatioKoodistoException e) {
                 LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid(), e);
             } catch (OptimisticLockException ole) {
-                LOG.error("Java persistance exception with organisation" + organisaatio.getOid(), ole.getMessage());
+                LOG.error("Java persistance exception with organisation " + organisaatio.getOid(), ole.getMessage());
             } catch (RuntimeException re) {
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re);
             }
@@ -1235,6 +1187,69 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(updateOrganisaatioList);
 
         return updateOrganisaatioList;
+    }
+
+    private boolean updateWwwFromYTJToOrganisation(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio)
+            throws ExceptionMessage {
+        ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
+        Www www = null;
+        boolean update = false;
+        for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
+            if(yhteystieto instanceof Www) {
+                www = (Www)yhteystieto;
+                break;
+            }
+        }
+        // Create new www if one does not exist
+        if(www == null) {
+            www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
+            www.setOrganisaatio(organisaatio);
+            if (ytjdto.getYrityksenKieli() != null
+                    && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                www.setKieli(KIELI_KOODI_SV);
+            } else {
+                www.setKieli(KIELI_KOODI_FI);
+            }
+
+            organisaatio.addYhteystieto(www);
+            update = true;
+        }
+        // Update www from YTJ if it missmatches the current one.
+        if((!ytjdto.getWww().equals(www.getWwwOsoite()))
+                || forceUpdate) {
+            www.setWwwOsoite(ytjdto.getWww());
+            update = true;
+        }
+        return update;
+    }
+
+    private boolean updatePuhelinFromYTJtoOrganisaatio(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio)
+            throws ExceptionMessage {
+        boolean update = false;
+        // Parse extra stuff off.
+        ytjdto.setPuhelin(ytjdto.getPuhelin().split(",|; *")[0]);
+        // Create new puhelinnumero if one does not exist
+        if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
+            Puhelinnumero puhelinnumero =
+                    new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
+            puhelinnumero.setOrganisaatio(organisaatio);
+            if (ytjdto.getYrityksenKieli() != null
+                    && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                puhelinnumero.setKieli(KIELI_KOODI_SV);
+            } else {
+                puhelinnumero.setKieli(KIELI_KOODI_FI);
+            }
+            organisaatio.addYhteystieto(puhelinnumero);
+            update = true;
+        }
+        // Update puhelinnumero from YTJ if it missmatches the current one.
+        if((organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null
+                && (!ytjdto.getPuhelin().equals(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero()))
+                || forceUpdate)) {
+            organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).setPuhelinnumero(ytjdto.getPuhelin());
+            update = true;
+        }
+        return update;
     }
 
     private String fixHttpPrefix(String www) {
