@@ -1216,13 +1216,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Update these organisations
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
+                checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
                 organisaatioDAO.update(organisaatio);
                 // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
                 organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
+            } catch(OrganisaatioNameHistoryNotValidException onhnve) {
+                LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid(), onhnve);
+            } catch(OrganisaatioKoodistoException e) {
+                LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid(), e);
             } catch (OptimisticLockException ole) {
-                LOG.error(ole.getMessage());
-//                throw new OrganisaatioModifiedException(ole);
+                LOG.error("Java persistance exception with organisation" + organisaatio.getOid(), ole.getMessage());
             } catch (RuntimeException re) {
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re);
             }
