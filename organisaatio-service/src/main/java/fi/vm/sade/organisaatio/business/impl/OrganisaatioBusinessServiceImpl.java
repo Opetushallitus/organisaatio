@@ -1105,6 +1105,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Boolean updatePuhelin = false;
                 Boolean updateWww = false;
                 // Update nimi
+                // Allow ampersand characters
+                if(ytjdto.getNimi() != null) {
+                    ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
+                }
+                if(ytjdto.getSvNimi() != null) {
+                    ytjdto.setSvNimi(ytjdto.getSvNimi().replace("&amp;", "&"));
+                }
                 // There should always exist at least one nimi.
                 if (organisaatio.getNimi() == null) {
                     LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
@@ -1358,13 +1365,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void updateNamesFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
-        // Allow ampersand characters
-        if(ytjdto.getNimi() != null) {
-            ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
-        }
-        if(ytjdto.getSvNimi() != null) {
-            ytjdto.setSvNimi(ytjdto.getSvNimi().replace("&amp;", "&"));
-        }
         if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
             // TODO I still don't like this solution.
             // save copy of old nimi to organisaatio nimet as history and modify the old one.
