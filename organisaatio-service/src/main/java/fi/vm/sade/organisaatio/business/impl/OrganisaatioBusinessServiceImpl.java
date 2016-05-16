@@ -1061,7 +1061,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
     }
 
-    // Updates nimi and osoitetieto for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations
+    // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
     public List<Organisaatio> updateYTJData(final boolean forceUpdate) {
         // Create y-tunnus list of updateable arganisations
@@ -1158,7 +1158,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
 
                 if (updateNimi || updateOsoite || updatePuhelin || updateWww) {
-                    // add new kieli to the organisation if there isn't one matching the YTJ kieli
+                    // Add new kieli to the organisation if there isn't one matching the YTJ kieli
                     updateLangFromYTJ(ytjdto, organisaatio);
                     updateOrganisaatioList.add(organisaatio);
                 }
@@ -1358,6 +1358,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void updateNamesFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
+        // Allow ampersand characters
+        if(ytjdto.getNimi() != null) {
+            ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
+        }
+        if(ytjdto.getSvNimi() != null) {
+            ytjdto.setSvNimi(ytjdto.getSvNimi().replace("&amp;", "&"));
+        }
         if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
             // TODO I still don't like this solution.
             // save copy of old nimi to organisaatio nimet as history and modify the old one.
