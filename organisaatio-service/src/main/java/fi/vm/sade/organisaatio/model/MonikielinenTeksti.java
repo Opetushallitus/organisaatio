@@ -42,7 +42,7 @@ public class MonikielinenTeksti extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	@ElementCollection(fetch= FetchType.EAGER)
+    @ElementCollection(fetch= FetchType.EAGER)
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
     @CollectionTable(joinColumns=@JoinColumn(name="id"))
@@ -54,11 +54,17 @@ public class MonikielinenTeksti extends BaseEntity {
     public void filterXss() {
     	for (Map.Entry<String, String> e : values.entrySet()) {
     		e.setValue(XssFilter.filter(e.getValue()));
+            // Allow ampersand characters
+            e.setValue(e.getValue().replace("&amp;", "&"));
     	}
     }
 
     public Map<String, String> getValues() {
         return values;
+    }
+
+    public void setValues(Map<String, String> values) {
+        this.values = values;
     }
 
     public void addString(String key, String value) {

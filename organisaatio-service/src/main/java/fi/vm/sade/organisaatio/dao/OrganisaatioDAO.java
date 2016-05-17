@@ -116,13 +116,13 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     /**
      * Finds list of oids with given query params.
      *
-     * @param searchTerms
+     * @param requireYtunnus
      * @param count
      * @param startIndex
      * @param type
      * @return
      */
-    List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type);
+    List<String> findOidsBy(Boolean requireYtunnus, int count, int startIndex, OrganisaatioTyyppi type);
 
     Organisaatio findByVirastoTunnus(String oid);
 

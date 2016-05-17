@@ -691,24 +691,27 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     /**
      * Finds list of oids with given query params.
      *
-     * @param searchTerms
+     * @param requireYtunnus
      * @param count
      * @param startIndex
      * @param type
      * @return
      */
     @Override
-    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
+    public List<String> findOidsBy(Boolean requireYtunnus, int count, int startIndex, OrganisaatioTyyppi type) {
 
-        LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {searchTerms, count, startIndex, type});
+        LOG.debug("findOidsBy({}, {}, {}, {}, {}, {})", new Object[] {requireYtunnus, count, startIndex, type});
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        BooleanExpression whereExpr = org.organisaatioPoistettu.isFalse();
-
+        BooleanBuilder whereExpr = new BooleanBuilder();
+        whereExpr.and(org.organisaatioPoistettu.isFalse());
         // Select by Org tyyppi
         if (type != null) {
-            // whereExpr = org.tyypit.contains(type.value());
-            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.value() + "%"));
+             whereExpr.and(org.tyypit.contains(type.value()));
+//            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.value() + "%"));
+        }
+        if(requireYtunnus) {
+            whereExpr.and(org.ytunnus.isNotNull());
         }
 
         JPAQuery q = new JPAQuery(getEntityManager());

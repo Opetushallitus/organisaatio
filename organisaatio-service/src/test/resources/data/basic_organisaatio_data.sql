@@ -7,17 +7,20 @@ INSERT INTO MONIKIELINENTEKSTI(ID, VERSION) VALUES
 (6, 0),
 (7, 0),
 (8, 0),
+(9, 0),
 (1000, 0);
 
 INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
 (1, 'opetushallitus', 'fi'),
 (2, 'root test koulutustoimija', 'fi'),
+(2, 'root test utbildningsoperator', 'sv'),
 (3, 'node1 asd', 'fi'),
 (4, 'node2 foo', 'fi'),
 (5, 'node22 foo bar', 'fi'),
 (6, 'node23 foo bar', 'fi'),
 (7, 'root2 test2 koulutustoimija2', 'fi'),
 (8, 'nodex bar', 'fi'),
+(9, 'node231 foo bar', 'sv'),
 (1000, 'Hakutoimiston nimi FI', 'kieli_fi#1'),
 (1000, 'Hakutoimiston nimi EN', 'kieli_en#1');
 
@@ -26,9 +29,9 @@ INSERT INTO ORGANISAATIOMETADATA(ID, VERSION, LUONTIPVM, MUOKKAUSPVM, HAKUTOIMIS
 (2, 1, DATE '1970-01-01', DATE '1970-01-01', 1000);
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, YHTEYSTIETOOID, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, KIELI) VALUES 
-('Osoite', 1000, 1, '1.2.2004.4', 'Hassuttimenkatu 2', 'kaynti', '10000', 'Juupajoki', 'kieli_fi#1'),
-('Osoite', 1001, 1, '1.2.2004.5', 'Hassuttimenkatu 2', 'posti', '10000', 'Juupajoki', 'kieli_fi#1'),
-('Osoite', 1002, 1, '1.2.2004.6', 'Hassutingatan 2', 'kaynti', '10000', 'Juupajoki', 'kieli_sv#1'),
+('Osoite', 1000, 1, '1.2.2004.4', 'Hassuttimenkatu 2', 'kaynti', 'posti_10000', 'Juupajoki', 'kieli_fi#1'),
+('Osoite', 1001, 1, '1.2.2004.5', 'Hassuttimenkatu 2', 'posti', 'posti_10000', 'Juupajoki', 'kieli_fi#1'),
+('Osoite', 1002, 1, '1.2.2004.6', 'Hassutingatan 2', 'kaynti', 'posti_10000', 'Juupajoki', 'kieli_sv#1'),
 ('Osoite', 1003, 1, '1.2.2004.7', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'ulkomainen_kaynti', null, null, 'kieli_en#1'),
 ('Osoite', 1004, 1, '1.2.2004.8', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'ulkomainen_posti', null, null, 'kieli_en#1'),
 ('Osoite', 1005, 1, '1.2.2004.9', 'Hassuttimenkatu 2, 10000 Juupajoki, Finland', 'kaynti', null, null, 'kieli_en#1'),
@@ -58,66 +61,67 @@ INSERT INTO ORGANISAATIOMETADATA_YHTEYSTIETO(ORGANISAATIOMETADATA_ID, YHTEYSTIED
 (1, 1301);
 
 INSERT INTO ORGANISAATIO(ID, VERSION, ALKUPVM, DOMAINNIMI, KOTIPAIKKA, LAKKAUTUSPVM, MAA, NIMIHAKU, OID, OPETUSPISTEENJARJNRO, OPPILAITOSKOODI, OPPILAITOSTYYPPI, ORGANISAATIOPOISTETTU, ORGANISAATIOTYYPITSTR, PAIVITTAJA, PAIVITYSPVM, PARENTIDPATH, PARENTOIDPATH, TOIMIPISTEKOODI, TUONTIPVM, VIRASTOTUNNUS, YHTEISHAUNKOULUKOODI, YRITYSMUOTO, YTJPAIVITYSPVM, YTUNNUS, KUVAUS_MKT, METADATA_ID, NIMI_MKT) VALUES
-(1, 0, NULL, NULL, 'Helsinki', NULL, NULL, 'opetushallitus', '1.2.246.562.24.00000000001', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'oy', NULL, '6666666-6', NULL, NULL, 1),
-(2, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'root test koulutustoimija', '1.2.2004.1', NULL, '12345', NULL, FALSE, NULL, NULL, NULL, '|1|', '|1.2.246.562.24.00000000001|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-1', NULL, NULL, 2),
+(1, 0, NULL, NULL, 'Helsinki', NULL, NULL, 'opetushallitus', '1.2.246.562.24.00000000001', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'oy', NULL, NULL, NULL, NULL, 1),
+(2, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'root test koulutustoimija', '1.2.2004.1', NULL, '12345', NULL, FALSE, NULL, NULL, NULL, '|1|', '|1.2.246.562.24.00000000001|', NULL, NULL, NULL, NULL, 'oy', NULL, '2255802-1', NULL, NULL, 2),
 (3, 2, DATE '2013-06-29', NULL, 'Helsinki', NULL, NULL, 'node1 asd', '1.2.2004.2', 1, NULL, 'oppilaitostyyppi_41#1', FALSE, NULL, NULL, NULL, '|1|2|', '|1.2.246.562.24.00000000001|1.2.2004.1|', '123451', NULL, NULL, NULL, 'oy', NULL, '1234567-2', NULL, NULL, 3),
 (4, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node2 foo', '1.2.2004.3', 2, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|', '|1.2.246.562.24.00000000001|1.2.2004.1|', '123452', NULL, NULL, NULL, 'oy', NULL, '1234567-3', NULL, 1, 4),
 (5, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node22 foo bar', '1.2.2004.4', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-4', NULL, NULL, 5),
 (6, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node23 foo bar', '1.2.2005.4', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234568-4', NULL, NULL, 6),
-(7, 2, DATE '2013-06-29', NULL, 'Helsinki', NULL, NULL, 'root2 test2 koulutustoimija2', '1.2.2004.5', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, '|1|', '|1.2.246.562.24.00000000001|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-5', NULL, NULL, 7),
+(7, 2, DATE '2013-06-29', NULL, 'Helsinki', NULL, NULL, 'root2 test2 koulutustoimija2', '1.2.2004.5', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, '|1|', '|1.2.246.562.24.00000000001|', NULL, NULL, NULL, NULL, 'oy', NULL, '1492449-0', NULL, NULL, 7),
 (8, 1, NULL, NULL, 'Helsinki', DATE '2011-06-29', NULL, 'nodex bar', '1.2.2004.6', NULL, NULL, 'oppilaitostyyppi_41#1', FALSE, NULL, NULL, NULL, '|1|7|', '|1.2.246.562.24.00000000001|1.2.2004.5|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234567-6', NULL, NULL, 8),
-(9, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node231 foo bar', '1.2.2005.5', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|1.2.2004.4|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-4', NULL, NULL, 6),
+(9, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'node231 foo bar', '1.2.2005.5', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|1.2.2004.3|1.2.2004.4|', NULL, NULL, NULL, NULL, 'oy', NULL, '1730639-9', NULL, NULL, 9),
 (10, 2, NULL, NULL, 'Helsinki', NULL, NULL, 'mixed osoitetyyppi organisaatio', 'tyyppitesti', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, NULL, NULL, '|1|2|4|5|', '|1.2.246.562.24.00000000001|1.2.2004.1|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-5', NULL, 2, 6);
 
 INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, KIELI, YHTEYSTIETOOID, COORDINATETYPE, EXTRARIVI, LAT, LNG, MAA, OSAVALTIO, OSOITE, OSOITETYYPPI, POSTINUMERO, POSTITOIMIPAIKKA, YTJPAIVITYSPVM, PUHELINNUMERO, TYYPPI, EMAIL, WWWOSOITE, ORGANISAATIO_ID) VALUES
-('Osoite', 1, 0, 'kieli_fi#1', '14175174062990.39764983115354857', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 1),
-('Osoite', 2, 0, 'kieli_fi#1', '14175174062990.620466503755304', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 1),
+('Osoite', 1, 0, 'kieli_fi#1', '14175174062990.39764983115354857', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 1),
+('Osoite', 2, 0, 'kieli_fi#1', '14175174062990.620466503755304', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 1),
 ('Puhelinnumero', 3, 0, 'kieli_fi#1', '14175174062990.8204006983929734', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 1),
 ('Puhelinnumero', 4, 0, 'kieli_fi#1', '14175174062990.4033592243042333', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 1),
 ('Www', 5, 0, 'kieli_fi#1', '14175174062990.27296380481785454', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 1),
 ('Email', 6, 0, 'kieli_fi#1', '14175174062990.12215188486861617', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 1),
-('Osoite', 7, 0, 'kieli_fi#1', '14175174064390.7485633929107891', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 2),
-('Osoite', 8, 0, 'kieli_fi#1', '14175174064390.6645604532079388', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 2),
+('Osoite', 7, 0, 'kieli_fi#1', '14175174064390.7485633929107891', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 2),
+('Osoite', 8, 0, 'kieli_fi#1', '14175174064390.6645604532079388', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 2),
 ('Puhelinnumero', 9, 0, 'kieli_fi#1', '14175174064390.759769529586222', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 2),
 ('Puhelinnumero', 10, 0, 'kieli_fi#1', '14175174064390.45819195421160763', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 2),
 ('Www', 11, 0, 'kieli_fi#1', '14175174064390.5602732430162826', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 2),
 ('Email', 12, 0, 'kieli_fi#1', '14175174064390.5149287835370774', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 2),
-('Osoite', 13, 0, 'kieli_fi#1', '14175174064820.8648056949629902', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 3),
-('Osoite', 14, 0, 'kieli_fi#1', '14175174064820.7481032001042686', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 3),
+('Osoite', 13, 0, 'kieli_fi#1', '14175174064820.8648056949629902', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 3),
+('Osoite', 14, 0, 'kieli_fi#1', '14175174064820.7481032001042686', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 3),
 ('Puhelinnumero', 15, 0, 'kieli_fi#1', '14175174064820.023236488244545495', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 3),
 ('Puhelinnumero', 16, 0, 'kieli_fi#1', '14175174064820.8954668756192523', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 3),
 ('Www', 17, 0, 'kieli_fi#1', '14175174064820.6076819639840219', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 3),
 ('Email', 18, 0, 'kieli_fi#1', '14175174064820.8327622948696073', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 3),
-('Osoite', 19, 0, 'kieli_fi#1', '14175174065080.4219192693239784', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 4),
-('Osoite', 20, 0, 'kieli_fi#1', '14175174065080.550941563558955', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 4),
+('Osoite', 19, 0, 'kieli_fi#1', '14175174065080.4219192693239784', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 4),
+('Osoite', 20, 0, 'kieli_fi#1', '14175174065080.550941563558955', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 4),
 ('Puhelinnumero', 21, 0, 'kieli_fi#1', '14175174065080.10010532775601144', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 4),
 ('Puhelinnumero', 22, 0, 'kieli_fi#1', '14175174065080.3496385522359694', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 4),
 ('Www', 23, 0, 'kieli_fi#1', '14175174065080.48943728578096246', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 4),
 ('Email', 24, 0, 'kieli_fi#1', '14175174065080.4533891151600614', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 4),
-('Osoite', 25, 0, 'kieli_fi#1', '14175174065360.6247828466966071', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 5),
-('Osoite', 26, 0, 'kieli_fi#1', '14175174065360.9464436263842728', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 5),
+('Osoite', 25, 0, 'kieli_fi#1', '14175174065360.6247828466966071', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 5),
+('Osoite', 26, 0, 'kieli_fi#1', '14175174065360.9464436263842728', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 5),
 ('Puhelinnumero', 27, 0, 'kieli_fi#1', '14175174065360.2214006361289652', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 5),
 ('Puhelinnumero', 28, 0, 'kieli_fi#1', '14175174065360.6360865927247634', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 5),
 ('Www', 29, 0, 'kieli_fi#1', '14175174065360.6067320470604116', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 5),
 ('Email', 30, 0, 'kieli_fi#1', '14175174065360.7605481160245522', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 5),
-('Osoite', 31, 0, 'kieli_fi#1', '14175174065630.9590734144321167', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 6),
-('Osoite', 32, 0, 'kieli_fi#1', '14175174065630.7513744924059244', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 6),
+('Osoite', 31, 0, 'kieli_fi#1', '14175174065630.9590734144321167', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 6),
+('Osoite', 32, 0, 'kieli_fi#1', '14175174065630.7513744924059244', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 6),
 ('Puhelinnumero', 33, 0, 'kieli_fi#1', '14175174065630.6480495083244752', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 6),
 ('Puhelinnumero', 34, 0, 'kieli_fi#1', '14175174065630.01514827024443044', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 6),
 ('Www', 35, 0, 'kieli_fi#1', '14175174065630.6106530088032424', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 6),
 ('Email', 36, 0, 'kieli_fi#1', '14175174065630.7174733712778176', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 6),
-('Osoite', 37, 0, 'kieli_fi#1', '14175174066030.7317595529754113', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 7),
-('Osoite', 38, 0, 'kieli_fi#1', '14175174066030.21304763052326048', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 7),
+('Osoite', 37, 0, 'kieli_fi#1', '14175174066030.7317595529754113', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 7),
+('Osoite', 38, 0, 'kieli_fi#1', '14175174066030.21304763052326048', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 7),
 ('Puhelinnumero', 39, 0, 'kieli_fi#1', '14175174066030.517169300422662', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 7),
 ('Puhelinnumero', 40, 0, 'kieli_fi#1', '14175174066030.2774451391027951', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 7),
 ('Www', 41, 0, 'kieli_fi#1', '14175174066030.29118402444503866', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 7),
 ('Email', 42, 0, 'kieli_fi#1', '14175174066030.945052372475997', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 7),
-('Osoite', 43, 0, 'kieli_fi#1', '14175174066260.2634494684757879', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 8),
-('Osoite', 44, 0, 'kieli_fi#1', '14175174066260.1577075445656858', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', '00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 8),
+('Osoite', 43, 0, 'kieli_fi#1', '14175174066260.2634494684757879', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 8),
+('Osoite', 44, 0, 'kieli_fi#1', '14175174066260.1577075445656858', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 1', 'kaynti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 8),
 ('Puhelinnumero', 45, 0, 'kieli_fi#1', '14175174066260.08834572445754851', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'puhelin', NULL, NULL, 8),
 ('Puhelinnumero', 46, 0, 'kieli_fi#1', '14175174066260.7723612635633675', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '12345', 'faksi', NULL, NULL, 8),
 ('Www', 47, 0, 'kieli_fi#1', '14175174066260.684789002737332', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.oph.fi', 8),
-('Email', 48, 0, 'kieli_fi#1', '14175174066260.7840178553027418', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 8);      
+('Email', 48, 0, 'kieli_fi#1', '14175174066260.7840178553027418', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testi@oph.fi', NULL, 8),
+('Osoite', 49, 0, 'kieli_sv#1', '14175174066260.2634494684757834', NULL, NULL, NULL, NULL, NULL, NULL, 'Mannerheimintie 2', 'posti', 'posti_00100', 'Helsinki', NULL, NULL, NULL, NULL, NULL, 9);
 
 INSERT INTO ORGANISAATIO_NIMI(ID, VERSION, ALKUPVM, PAIVITTAJA, NIMI_MKT, ORGANISAATIO_ID) VALUES
 (1, 0, DATE '1970-01-01', NULL, 1, 1),
@@ -127,7 +131,8 @@ INSERT INTO ORGANISAATIO_NIMI(ID, VERSION, ALKUPVM, PAIVITTAJA, NIMI_MKT, ORGANI
 (5, 0, DATE '1970-01-01', NULL, 5, 5),
 (6, 0, DATE '1970-01-01', NULL, 6, 6),
 (7, 0, DATE '1970-01-01', NULL, 7, 7),
-(8, 0, DATE '1970-01-01', NULL, 8, 8);               
+(8, 0, DATE '1970-01-01', NULL, 8, 8),
+(9, 0, DATE '1970-01-01', NULL, 9, 9);
 
 INSERT INTO ORGANISAATIO_TYYPIT(ORGANISAATIO_ID, TYYPIT) VALUES
 (1, 'Koulutustoimija'),

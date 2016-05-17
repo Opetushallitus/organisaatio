@@ -186,7 +186,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         if("en".equals(lang)) {
             return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "Hassuttimenkatu 2, 10000 Juupajoki, Finland", null, null);
         }
-        return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "10000" , "Juupajoki");
+        return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "posti_10000" , "Juupajoki");
     }
 
     @Test

@@ -15,18 +15,25 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Development operaatiot
@@ -36,7 +43,13 @@ import org.springframework.stereotype.Component;
 @Path("/dev")
 @Api(value = "/dev", description = "Development operaatiot")
 @Component
+@Transactional(readOnly = true)
 public class OrganisaatioDevResource {
+    @Autowired
+    OrganisaatioBusinessService organisaatioBusinessService;
+
+    @Autowired
+    ConversionService conversionService;
 
     /**
      * Hakee autentikoituneen käyttäjän roolit
@@ -64,6 +77,23 @@ public class OrganisaatioDevResource {
         }
         ret.setCharAt(ret.length() - 1, ']');
         return ret.toString();
+    }
+
+    @GET
+    @Path("/ytjbatchupdate")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
+            notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
+            response = OrganisaatioRDTO.class,
+            responseContainer = "List")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public List<OrganisaatioRDTO> updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
+        List<OrganisaatioRDTO> organisaatioRDTOList = new ArrayList<>();
+        List<Organisaatio> organisaatioList = organisaatioBusinessService.updateYTJData(forceUpdate);
+        for(Organisaatio organisaatio : organisaatioList) {
+            organisaatioRDTOList.add(conversionService.convert(organisaatio, OrganisaatioRDTO.class));
+        }
+        return organisaatioRDTOList;
     }
 
 }

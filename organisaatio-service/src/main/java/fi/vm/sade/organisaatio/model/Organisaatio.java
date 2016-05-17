@@ -245,6 +245,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         yhteystiedot = newYhteystiedot;
     }
 
+    public void addYhteystieto(Yhteystieto yhteystieto) {
+        this.yhteystiedot.add(yhteystieto);
+    }
 
     public String getYtunnus() {
         return ytunnus;
@@ -728,5 +731,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setNimet(List<OrganisaatioNimi> nimet) {
         this.nimet = nimet;
+    }
+
+    public void addNimi(OrganisaatioNimi organisaatioNimi) {
+        this.nimet.add(organisaatioNimi);
     }
 }
