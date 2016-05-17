@@ -68,6 +68,7 @@ import org.springframework.util.CollectionUtils;
 @Service("organisaatioBusinessService")
 public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessService {
 
+    public static final String POSTIOSOITE_PREFIX = "posti_";
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -1078,6 +1079,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
+            // TODO exception, update failed
             return updateOrganisaatioList;
         }
         organisaatioList = organisaatioDAO.findByOidList(oidList, searchLimit);
@@ -1106,6 +1108,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (YTJDTO ytjdto : ytjdtoList) {
             Organisaatio organisaatio = organisaatioMap.get(ytjdto.getYtunnus().trim());
 
+            // TODO some basic validation first (null checks, corner cases etc)
+            // don't proceed to update if there's something wrong
+            // collect info to some map structure
             if (organisaatio != null) {
                 Boolean updateNimi = false;
                 Boolean updateOsoite = false;
@@ -1113,16 +1118,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Boolean updateWww = false;
                 // Update nimi
                 // Allow ampersand characters
-                if(ytjdto.getNimi() != null) {
-                    ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
-                }
-                if(ytjdto.getSvNimi() != null) {
-                    ytjdto.setSvNimi(ytjdto.getSvNimi().replace("&amp;", "&"));
-                }
+                htmlDecodeAmpInNames(ytjdto);
+
                 // There should always exist at least one nimi.
                 if (organisaatio.getNimi() == null) {
                     LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
-                    // TODO we don't need to check this if we do the name stuff differently and just create and add the new name...
+                    // TODO move this to the beginning
                     continue;
                 }
                 else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
@@ -1145,6 +1146,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     } catch (ExceptionMessage e) {
                         // handle properly if adding failed
                         LOG.error("Could not generate oid, skipping organisation", e);
+                        // TODO move validation checks to the beginning
                         continue;
                     }
                 }
@@ -1156,6 +1158,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(forceUpdate, ytjdto, organisaatio);
                     } catch (ExceptionMessage e) {
                         LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
+                        // TODO move validation checks to the beginning
                         continue;
                     }
                 }
@@ -1166,9 +1169,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         updateWww = updateWwwFromYTJToOrganisation(forceUpdate, ytjdto, organisaatio);
                     } catch (ExceptionMessage e) {
                         LOG.error("Could not generate oid for Www, skipping organisation", e);
+                        // TODO move validation checks to the beginning
                         continue;
                     }
-
                 }
 
                 if (updateNimi || updateOsoite || updatePuhelin || updateWww) {
@@ -1182,10 +1185,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Update listed organisations to db and koodisto service.
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
+                // TODO move name history validation checks to the beginning and handle properly
                 checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
                 organisaatioDAO.update(organisaatio);
                 // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
+                // TODO it would be good to get an exception from the koodisto client if anything fails
                 organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
             } catch(OrganisaatioNameHistoryNotValidException onhnve) {
                 LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid(), onhnve);
@@ -1266,13 +1271,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return update;
     }
 
-    private String fixHttpPrefix(String www) {
-        if(www != null && !www.matches("^(https?:\\/\\/).*$")) {
-            www = "http://" + www;
-        }
-        return www;
-    }
-
     // Adds the missing language information to Organisaatio according to the YTJ language.
     private void updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
         Boolean kieliExists = false;
@@ -1307,9 +1305,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, final boolean forceUpdate) {
         Boolean update = false;
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
-                && (!("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
+                && (!(POSTIOSOITE_PREFIX + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
                 || forceUpdate)) {
-            osoite.setPostinumero("posti_" + ytjdto.getPostiOsoite().getPostinumero().trim());
+            osoite.setPostinumero(POSTIOSOITE_PREFIX + ytjdto.getPostiOsoite().getPostinumero().trim());
             osoite.setYtjPaivitysPvm(new Date());
             update = true;
         }
@@ -1397,19 +1395,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             (ytjdto.getSvNimi() != null && orgNimi.getNimi().getString("sv") != null)
                             && !ytjdto.getSvNimi().equals(orgNimi.getNimi().getString("sv"))) {
                         // Create new entry to nimihistoria
-                        MonikielinenTeksti newNimi = new MonikielinenTeksti();
-                        OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
-                        // Add only the language to be updated to the history entry
-                        if(ytjdto.getSvNimi() != null) {
-                            newNimi.setValues(new HashMap<String, String>() {{put("sv", orgNimi.getNimi().getValues().get("sv"));}});
-                        }
-                        else {
-                            newNimi.setValues(new HashMap<String, String>() {{put("fi", orgNimi.getNimi().getValues().get("fi"));}});
-                        }
-                        newOrgNimi.setNimi(newNimi);
-                        newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
-                        newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
-                        newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
+                        OrganisaatioNimi newOrgNimi = createOrganisaatioNimiWithYTJLang(ytjdto, orgNimi);
                         organisaatio.addNimi(newOrgNimi);
                     }
                     // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
@@ -1434,6 +1420,40 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (ytjdto.getSvNimi() != null) {
             organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
             organisaatio.setNimihaku(ytjdto.getSvNimi());
+        }
+    }
+
+    private OrganisaatioNimi createOrganisaatioNimiWithYTJLang(YTJDTO ytjdto, final OrganisaatioNimi orgNimi) {
+        MonikielinenTeksti newNimi = new MonikielinenTeksti();
+        OrganisaatioNimi newOrgNimi = new OrganisaatioNimi();
+        // Add only the language to be updated to the history entry
+        if(ytjdto.getSvNimi() != null) {
+            newNimi.setValues(new HashMap<String, String>() {{put("sv", orgNimi.getNimi().getValues().get("sv"));}});
+        }
+        else {
+            newNimi.setValues(new HashMap<String, String>() {{put("fi", orgNimi.getNimi().getValues().get("fi"));}});
+        }
+        newOrgNimi.setNimi(newNimi);
+        newOrgNimi.setPaivittaja(orgNimi.getPaivittaja());
+        newOrgNimi.setOrganisaatio(orgNimi.getOrganisaatio());
+        newOrgNimi.setAlkuPvm(orgNimi.getAlkuPvm());
+        return newOrgNimi;
+    }
+
+    private String fixHttpPrefix(String www) {
+        if(www != null && !www.matches("^(https?:\\/\\/).*$")) {
+            www = "http://" + www;
+        }
+        return www;
+    }
+
+    private void htmlDecodeAmpInNames(YTJDTO ytjdto) {
+        // TODO this would be better to fix in validator (or get rid of html encoding in the backend)
+        if(ytjdto.getNimi() != null) {
+            ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
+        }
+        if(ytjdto.getSvNimi() != null) {
+            ytjdto.setSvNimi(ytjdto.getSvNimi().replace("&amp;", "&"));
         }
     }
 
