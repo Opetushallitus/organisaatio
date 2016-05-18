@@ -1120,7 +1120,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Boolean updateWww = false;
                 // Update nimi
                 if (ytjErrorsDto.nimiValid  || ytjErrorsDto.nimiSvValid) {
-                    updateNimi = updateNamesFromYTJ(ytjdto, organisaatio, ytjErrorsDto, forceUpdate);
+                    updateNimi = updateNamesFromYTJ(ytjdto, organisaatio, forceUpdate);
                 }
 
                 // Update Osoite
@@ -1152,16 +1152,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 organisaatioDAO.update(organisaatio);
                 // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
-                // TODO it would be good to get an exception from the koodisto client if anything fails
-                organisaatioKoodisto.paivitaKoodisto(organisaatio, false);
+                if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
+                    LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid());
+                    // TODO log the failure to errordto
+                }
             } catch(OrganisaatioNameHistoryNotValidException onhnve) {
                 LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid(), onhnve);
-            } catch(OrganisaatioKoodistoException e) {
-                LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid(), e);
+                // TODO log the failure to errordto
             } catch (OptimisticLockException ole) {
                 LOG.error("Java persistance exception with organisation " + organisaatio.getOid(), ole.getMessage());
+                // TODO log the failure to errordto
             } catch (RuntimeException re) {
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re);
+                // TODO log the failure to errordto
             }
         }
         // Index the updated resources.
@@ -1427,14 +1430,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return osoite;
     }
 
-    // Update nimi to Organisaatio from YTJ and handle the name history (nimet).
+    // Update nimi to Organisaatio from YTJ and handle the name history (nimet). Does not require nimi.get(lang) to exist.
     // TODO refactor to create new name and change references everywhere to point to this one leaving old as history entry
     // TODO instead of editing the current one and creating new history entry.
-    private boolean updateNamesFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio, YTJErrorsDto ytjErrorsDto, boolean forceUpdate) {
+    private boolean updateNamesFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio, final boolean forceUpdate) {
         boolean update = false;
-        if((ytjErrorsDto.nimiValid && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
-                || (ytjErrorsDto.nimiSvValid && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
-                || ((ytjErrorsDto.nimiValid || ytjErrorsDto.nimiSvValid) && forceUpdate)) {
+        if((ytjdto.getNimi() != null && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
+                || (ytjdto.getSvNimi() != null && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
+                || ((ytjdto.getNimi() != null || ytjdto.getSvNimi() != null) && forceUpdate)) {
             if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
                 // save copy of old nimi to organisaatio nimet as history and modify the old one.
                 for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
