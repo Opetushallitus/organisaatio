@@ -16,6 +16,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import fi.vm.sade.generic.common.validation.ValidationConstants;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
@@ -1261,6 +1262,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+    // Validates data coming from ytj so that update() does not need to worry about getting stuck on hibernate validation.
     private void validateYTJData(YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
         if(ytjdto == null) {
             ytjErrorsDto.organisaatioValid = false;
@@ -1270,7 +1272,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if(ytjdto.getNimi() == null) {
                 ytjErrorsDto.nimiValid = false;
             }
+            else if(ytjdto.getNimi().length() > ValidationConstants.GENERIC_MAX) {
+                ytjErrorsDto.nimiValid = false;
+            }
             if(ytjdto.getSvNimi() == null) {
+                ytjErrorsDto.nimiSvValid = false;
+            }
+            else if(ytjdto.getSvNimi().length() > ValidationConstants.GENERIC_MAX) {
                 ytjErrorsDto.nimiSvValid = false;
             }
             // Allow ampersand characters
@@ -1280,9 +1288,24 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if(ytjdto.getPostiOsoite() == null) {
                 ytjErrorsDto.osoiteValid = false;
             }
+            else if(ytjdto.getPostiOsoite().getKatu() != null
+                    && ytjdto.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) {
+                ytjErrorsDto.osoiteValid = false;
+            }
+            else if(ytjdto.getPostiOsoite().getToimipaikka() != null
+                    && ytjdto.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) {
+                ytjErrorsDto.osoiteValid = false;
+            }
+            else if(ytjdto.getPostiOsoite().getPostinumero() != null
+                    && ytjdto.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX) {
+                ytjErrorsDto.osoiteValid = false;
+            }
 
             // puhelin
             if(ytjdto.getPuhelin() == null) {
+                ytjErrorsDto.puhelinnumeroValid = false;
+            }
+            else if(ytjdto.getPuhelin().length() > ValidationConstants.GENERIC_MAX) {
                 ytjErrorsDto.puhelinnumeroValid = false;
             }
             else {
@@ -1294,12 +1317,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if(ytjdto.getWww() == null) {
                 ytjErrorsDto.wwwValid = false;
             }
+            else if(ytjdto.getWww().length() > ValidationConstants.GENERIC_MAX) {
+                ytjErrorsDto.wwwValid = false;
+            }
+            else {
+                // http://-prefix check and fix.
+                ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
+            }
+
         }
     }
 
     private boolean updateWwwFromYTJToOrganisation(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio) {
         boolean update = false;
-        ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
         Www www = new Www();
         // Find the www from organisaatio
         for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
