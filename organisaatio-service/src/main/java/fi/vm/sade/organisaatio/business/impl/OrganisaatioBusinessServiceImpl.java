@@ -1121,8 +1121,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 Boolean updatePuhelin = false;
                 Boolean updateWww = false;
                 // Update nimi
-                // Allow ampersand characters
-                htmlDecodeAmpInNames(ytjdto);
                 if ((ytjErrorsDto.nimi && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
                         || (ytjErrorsDto.nimisv && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
                         || ((ytjErrorsDto.nimi || ytjErrorsDto.nimisv) && forceUpdate)) {
@@ -1131,21 +1129,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
 
                 // Update Osoite
-                // Find osoite with right language (finnish or swedish)
-                Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
-                // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
-                // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
-                if (osoite == null) {
-                    try{
-                        osoite = addOsoiteForOrgFromYTJData(ytjdto, organisaatio);
-                    } catch (ExceptionMessage e) {
-                        // handle properly if adding failed
-                        LOG.error("Could not generate oid, skipping organisation", e);
-                        // TODO move validation checks to the beginning
-                        continue;
-                    }
+                if(ytjErrorsDto.osoite) {
+                    updateOsoite = updateAddressDataFromYTJ(ytjdto, organisaatio, forceUpdate);
                 }
-                updateOsoite = updateAddressDataFromYTJ(ytjdto, osoite, forceUpdate);
 
                 // Update puhelin
                 if(ytjdto.getPuhelin() != null) {
@@ -1226,6 +1212,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             // validate osoite
+            // Find osoite with right language (finnish or swedish)
+            Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
+            // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
+            // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
+            if (osoite == null) {
+                try{
+                    addOsoiteForOrgWithYtjLang(ytjdto, organisaatio);
+                } catch (ExceptionMessage e) {
+                    // handle properly if adding failed
+                    LOG.error("Could not generate oid for osoite, skipping the field for " + organisaatio.getOid(), e);
+                    ytjErrorsDto.osoite = false;
+                }
+            }
 
             // validate puhelinnumero
             // Create new puhelinnumero if one does not exist
@@ -1242,11 +1241,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                     organisaatio.addYhteystieto(puhelinnumero);
                 } catch (ExceptionMessage e) {
-                    LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
-                    // TODO move validation checks to the beginning
-//                    continue;
+                    LOG.error("Could not generate oid for puhelinnumero, skipping the field for " + organisaatio.getOid(), e);
+                    ytjErrorsDto.puhelinnumero = false;
                 }
-//                update = true;
             }
 
             // validate www
@@ -1260,7 +1257,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             ytjErrorsDto.organisaatio = false;
         }
         else {
-
+            // Allow ampersand characters
+            htmlDecodeAmpInYtjNames(ytjdto);
         }
     }
 
@@ -1343,7 +1341,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Osoite osoite, final boolean forceUpdate) {
+    private Boolean updateAddressDataFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio, final boolean forceUpdate) {
+        // Find osoite with right language (finnish or swedish)
+        Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
         Boolean update = false;
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
                 && (!(POSTIOSOITE_PREFIX + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
@@ -1369,7 +1369,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return update;
     }
 
-    private Osoite addOsoiteForOrgFromYTJData(YTJDTO ytjdto, Organisaatio organisaatio) throws ExceptionMessage {
+    private Osoite addOsoiteForOrgWithYtjLang(YTJDTO ytjdto, Organisaatio organisaatio) throws ExceptionMessage {
         Osoite osoite;
         osoite = new Osoite();
         osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
@@ -1480,7 +1480,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return www;
     }
 
-    private void htmlDecodeAmpInNames(YTJDTO ytjdto) {
+    private void htmlDecodeAmpInYtjNames(YTJDTO ytjdto) {
         // TODO this would be better to fix in validator (or get rid of html encoding in the backend)
         if(ytjdto.getNimi() != null) {
             ytjdto.setNimi(ytjdto.getNimi().replace("&amp;", "&"));
