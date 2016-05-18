@@ -1,19 +1,19 @@
 package fi.vm.sade.organisaatio.model.dto;
 
 public class YTJErrorsDto {
-    public boolean organisaatio;
-    public boolean nimi;
-    public boolean nimisv;
-    public boolean osoite;
-    public boolean www;
-    public boolean puhelinnumero;
+    public boolean organisaatioValid;
+    public boolean nimiValid;
+    public boolean nimisvValid;
+    public boolean osoiteValid;
+    public boolean wwwValid;
+    public boolean puhelinnumeroValid;
 
     public YTJErrorsDto() {
-        organisaatio = true;
-        nimi = true;
-        nimisv = true;
-        osoite = true;
-        www = true;
-        puhelinnumero = true;
+        organisaatioValid = true;
+        nimiValid = true;
+        nimisvValid = true;
+        osoiteValid = true;
+        wwwValid = true;
+        puhelinnumeroValid = true;
     }
 }
