@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.model.dto.YTJErrorsDto;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
@@ -1107,11 +1108,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         for (YTJDTO ytjdto : ytjdtoList) {
             Organisaatio organisaatio = organisaatioMap.get(ytjdto.getYtunnus().trim());
-
+            YTJErrorsDto ytjErrorsDto = new YTJErrorsDto();
             // TODO some basic validation first (null checks, corner cases etc)
+            validateOrganisaatioDataForYTJ(organisaatio, ytjdto, ytjErrorsDto);
+            validateYTJData(ytjdto, ytjErrorsDto);
+
             // don't proceed to update if there's something wrong
             // collect info to some map structure
-            if (organisaatio != null) {
+            if (ytjErrorsDto.organisaatio) {
                 Boolean updateNimi = false;
                 Boolean updateOsoite = false;
                 Boolean updatePuhelin = false;
@@ -1119,18 +1123,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 // Update nimi
                 // Allow ampersand characters
                 htmlDecodeAmpInNames(ytjdto);
-
-                // There should always exist at least one nimi.
-                if (organisaatio.getNimi() == null) {
-                    LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
-                    // TODO move this to the beginning
-                    continue;
-                }
-                else if ((organisaatio.getNimi() != null && ytjdto.getNimi() != null
-                        && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
-                        || (ytjdto.getSvNimi() != null && organisaatio.getNimi() != null
-                        && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
-                        || forceUpdate) {
+                if ((ytjErrorsDto.nimi && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
+                        || (ytjErrorsDto.nimisv && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
+                        || ((ytjErrorsDto.nimi || ytjErrorsDto.nimisv) && forceUpdate)) {
                     updateNamesFromYTJ(ytjdto, organisaatio);
                     updateNimi = true;
                 }
@@ -1154,13 +1149,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
                 // Update puhelin
                 if(ytjdto.getPuhelin() != null) {
-                    try {
-                        updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(forceUpdate, ytjdto, organisaatio);
-                    } catch (ExceptionMessage e) {
-                        LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
-                        // TODO move validation checks to the beginning
-                        continue;
-                    }
+                    updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(forceUpdate, ytjdto, organisaatio);
                 }
 
                 // Update www
@@ -1208,6 +1197,73 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return updateOrganisaatioList;
     }
 
+    private void validateOrganisaatioDataForYTJ(final Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
+        // There should always exist at least one nimi.
+        if (organisaatio == null) {
+            LOG.warn("Organisation does not have a name. Invalid organisation. Not updating.");
+            ytjErrorsDto.organisaatio = false;
+        }
+        else {
+            // validate nimi
+            if(organisaatio.getNimi() == null) {
+                ytjErrorsDto.nimi = false;
+                ytjErrorsDto.nimisv = false;
+            }
+            // If organisaatio (faultly) has no nimihistoria but organisaatio still has nimi create new entry
+            // containing current information.
+            if(organisaatio.getNimet().isEmpty()) {
+                organisaatio.addNimi(new OrganisaatioNimi(){{
+                    setOrganisaatio(organisaatio);
+                    setNimi(organisaatio.getNimi());
+                    setAlkuPvm(organisaatio.getAlkuPvm());
+                }});
+            }
+            if(ytjdto.getNimi() == null && organisaatio.getNimi().getString("fi") != null) {
+                ytjErrorsDto.nimi = false;
+            }
+            if(ytjdto.getSvNimi() == null && organisaatio.getNimi().getString("sv") != null) {
+                ytjErrorsDto.nimisv = false;
+            }
+
+            // validate osoite
+
+            // validate puhelinnumero
+            // Create new puhelinnumero if one does not exist
+            if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
+                try {
+                    Puhelinnumero puhelinnumero =
+                            new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
+                    puhelinnumero.setOrganisaatio(organisaatio);
+                    if (ytjdto.getYrityksenKieli() != null
+                            && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
+                        puhelinnumero.setKieli(KIELI_KOODI_SV);
+                    } else {
+                        puhelinnumero.setKieli(KIELI_KOODI_FI);
+                    }
+                    organisaatio.addYhteystieto(puhelinnumero);
+                } catch (ExceptionMessage e) {
+                    LOG.error("Could not generate oid for Puhelinnumero, skipping organisation", e);
+                    // TODO move validation checks to the beginning
+//                    continue;
+                }
+//                update = true;
+            }
+
+            // validate www
+
+        }
+
+    }
+
+    private void validateYTJData(YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
+        if(ytjdto == null) {
+            ytjErrorsDto.organisaatio = false;
+        }
+        else {
+
+        }
+    }
+
     private boolean updateWwwFromYTJToOrganisation(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio)
             throws ExceptionMessage {
         ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
@@ -1242,25 +1298,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return update;
     }
 
-    private boolean updatePuhelinFromYTJtoOrganisaatio(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio)
-            throws ExceptionMessage {
+    private boolean updatePuhelinFromYTJtoOrganisaatio(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio) {
         boolean update = false;
         // Parse extra stuff off.
         ytjdto.setPuhelin(ytjdto.getPuhelin().split(",|; *")[0]);
-        // Create new puhelinnumero if one does not exist
-        if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
-            Puhelinnumero puhelinnumero =
-                    new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
-            puhelinnumero.setOrganisaatio(organisaatio);
-            if (ytjdto.getYrityksenKieli() != null
-                    && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
-                puhelinnumero.setKieli(KIELI_KOODI_SV);
-            } else {
-                puhelinnumero.setKieli(KIELI_KOODI_FI);
-            }
-            organisaatio.addYhteystieto(puhelinnumero);
-            update = true;
-        }
         // Update puhelinnumero from YTJ if it missmatches the current one.
         if((organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) != null
                 && (!ytjdto.getPuhelin().equals(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero()))
@@ -1375,15 +1416,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     // TODO instead of editing the current one and creating new history entry.
     private void updateNamesFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio) {
         if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
-            // If organisaatio (faultly) has no nimihistoria but organisaatio still has nimi create new entry
-            // containing current information.
-            if(organisaatio.getNimet().isEmpty()) {
-                organisaatio.addNimi(new OrganisaatioNimi(){{
-                    setOrganisaatio(organisaatio);
-                    setNimi(organisaatio.getNimi());
-                    setAlkuPvm(organisaatio.getAlkuPvm());
-                }});
-            }
+
             // save copy of old nimi to organisaatio nimet as history and modify the old one.
             for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                 // Update nimet (history) with a copy of the old current nimi (orgNimi)
