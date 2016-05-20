@@ -70,8 +70,8 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("Helsingin yliopistomuseon säätiö", organisaatioList.get(id).getNimet().get(0).getNimi().getString("fi"));
         Assert.assertEquals("node231 foo bar", organisaatioList.get(id).getNimet().get(0).getNimi().getString("sv"));
         Assert.assertEquals("Mannerheimintie 2", organisaatioList.get(id).getPostiosoite().getOsoite());
-        Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(1)).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(0)).getPostinumero());
+        Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(1)).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(1)).getPostinumero());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(id).getKielet().get(0));
 
@@ -99,7 +99,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("0100000210", organisaatioList.get(id).getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.ytj.sv", ((Www)organisaatioList.get(id).getYhteystiedot().get(4)).getWwwOsoite());
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().get(0).getNimi().getValues().size());
-    }
+   }
 
 
 }
