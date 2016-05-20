@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,9 @@ import java.util.List;
 @Component
 @Transactional(readOnly = true)
 public class OrganisaatioDevResource {
+
     @Autowired
-    OrganisaatioBusinessService organisaatioBusinessService;
+    OrganisaatioYtjService organisaatioYtjService;
 
     @Autowired
     ConversionService conversionService;
@@ -89,7 +91,7 @@ public class OrganisaatioDevResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<OrganisaatioRDTO> updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
         List<OrganisaatioRDTO> organisaatioRDTOList = new ArrayList<>();
-        List<Organisaatio> organisaatioList = organisaatioBusinessService.updateYTJData(forceUpdate);
+        List<Organisaatio> organisaatioList = organisaatioYtjService.updateYTJData(forceUpdate);
         for(Organisaatio organisaatio : organisaatioList) {
             organisaatioRDTOList.add(conversionService.convert(organisaatio, OrganisaatioRDTO.class));
         }
