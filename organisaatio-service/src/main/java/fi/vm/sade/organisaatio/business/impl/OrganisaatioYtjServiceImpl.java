@@ -142,8 +142,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Update listed organisations to db and koodisto service.
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
-                // TODO move name history validation checks to the beginning and handle properly
-                checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
                 organisaatioDAO.update(organisaatio);
                 // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
@@ -151,14 +149,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid());
                     // TODO log the failure to errordto
                 }
-            } catch(OrganisaatioNameHistoryNotValidException onhnve) {
-                LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid(), onhnve);
-                // TODO log the failure to errordto
             } catch (OptimisticLockException ole) {
                 LOG.error("Java persistance exception with organisation " + organisaatio.getOid(), ole.getMessage());
                 // TODO log the failure to errordto
             } catch (RuntimeException re) {
-                LOG.error("Could not update organisation " + organisaatio.getOid(), re);
+                LOG.error("Could not update organisation " + organisaatio.getOid(), re.getMessage());
                 // TODO log the failure to errordto
             }
         }
@@ -185,12 +180,23 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             // If organisaatio (faultly) has no nimihistoria but organisaatio still has nimi create new entry
             // containing current information.
-            if(organisaatio.getNimet().isEmpty()) {
+            else if(organisaatio.getNimet().isEmpty()) {
                 organisaatio.addNimi(new OrganisaatioNimi(){{
                     setOrganisaatio(organisaatio);
                     setNimi(organisaatio.getNimi());
                     setAlkuPvm(organisaatio.getAlkuPvm());
                 }});
+            }
+            else {
+                // name history validation checks and handle
+                try {
+                    checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
+                } catch (OrganisaatioNameHistoryNotValidException e) {
+                    // TODO handle if bad
+                    ytjErrorsDto.nimiValid = false;
+                    ytjErrorsDto.nimiSvValid = false;
+                    LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid());
+                }
             }
 
             // validate osoite
@@ -198,7 +204,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
             // No matching kieli found from organisation so we will create an empty one to be fetched from YTJ.
             // (organisation language could be eg. fi/sv (dual) or en which are not in YTJ)
-            if (osoite == null) {
+            if (osoite == null && ytjdto.getPostiOsoite() != null) {
                 try{
                     addOsoiteForOrgWithYtjLang(ytjdto, organisaatio);
                 } catch (ExceptionMessage e) {
@@ -210,7 +216,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
             // validate puhelinnumero
             // Create new puhelinnumero if one does not exist
-            if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null) {
+            if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null && ytjdto.getPuhelin() != null) {
                 try {
                     Puhelinnumero puhelinnumero =
                             new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
@@ -236,8 +242,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     break;
                 }
             }
-            // Create new www if one does not exist
-            if(www == null) {
+            // Create new www if one does not exist (and ytj has data)
+            if(www == null && ytjdto.getWww() != null) {
                 try {
                     www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
                     www.setOrganisaatio(organisaatio);
