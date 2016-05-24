@@ -7,7 +7,6 @@ import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.*;
@@ -115,7 +114,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 Boolean updateWww = false;
                 // Update nimi
                 if (ytjErrorsDto.nimiValid  || ytjErrorsDto.nimiSvValid) {
-                    updateNimi = updateNamesFromYTJ(ytjdto, organisaatio, forceUpdate);
+                    updateNimi = updateNameFromYTJ(ytjdto, organisaatio, forceUpdate);
                 }
 
                 // Update Osoite
@@ -463,35 +462,44 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // Update nimi to Organisaatio from YTJ and handle the name history (nimet). Does not require nimi.get(lang) to exist.
     // TODO refactor to create new name and change references everywhere to point to this one leaving old as history entry
     // TODO instead of editing the current one and creating new history entry.
-    private boolean updateNamesFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio, final boolean forceUpdate) {
+    private boolean updateNameFromYTJ(YTJDTO ytjdto, final Organisaatio organisaatio, final boolean forceUpdate) {
         boolean update = false;
         if((ytjdto.getNimi() != null && !ytjdto.getNimi().equals(organisaatio.getNimi().getString("fi")))
                 || (ytjdto.getSvNimi() != null && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
                 || ((ytjdto.getNimi() != null || ytjdto.getSvNimi() != null) && forceUpdate)) {
-            if (organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
-                // save copy of old nimi to organisaatio nimet as history and modify the old one.
-                for (final OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                    // Update nimet (history) with a copy of the old current nimi (orgNimi)
-                    if (orgNimi.getNimi() == organisaatio.getNimi()) {
-                        // Check equality in case of forceUpdate to prevent spam in name history.
-                        if((ytjdto.getNimi() != null && orgNimi.getNimi().getString("fi") != null
-                                && !ytjdto.getNimi().equals(orgNimi.getNimi().getString("fi")))
-                                ||
-                                (ytjdto.getSvNimi() != null && orgNimi.getNimi().getString("sv") != null)
-                                        && !ytjdto.getSvNimi().equals(orgNimi.getNimi().getString("sv"))) {
-                            // Create new entry to nimihistoria
-                            OrganisaatioNimi newOrgNimi = createOrganisaatioNimiWithYTJLang(ytjdto, orgNimi);
-                            organisaatio.addNimi(newOrgNimi);
-                        }
-                        // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
-                        try {
-                            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                            orgNimi.setAlkuPvm(format.parse(ytjdto.getAloitusPvm()));
-                        }
-                        catch(ParseException | NullPointerException e) {
-                            LOG.error("Could not parse YTJ date. Using the old date.", e);
-                        }
+            Date ytjAlkupvm = null;
+            OrganisaatioNimi currentOrgNimi = null;
+            if(organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
+                boolean updateNimiHistory = true;
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
+                }
+                catch(ParseException | NullPointerException e) {
+                    updateNimiHistory = false;
+                    LOG.error("Could not parse YTJ date. Using the old date.", e);
+                }
+                // In case nimi alkupvm already exist or ytj has no alkupvm, do not update name history.
+                for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
+                    if(ytjdto.getAloitusPvm() == null || orgNimi.getAlkuPvm().equals(ytjAlkupvm)) {
+                        updateNimiHistory = false;
                         break;
+                    }
+                    if(orgNimi.getNimi() == organisaatio.getNimi()) {
+                        currentOrgNimi = orgNimi;
+                    }
+                }
+                // Update nimet (history) with a copy of the old current nimi (orgNimi)
+                if(updateNimiHistory && currentOrgNimi != null) {
+                    // Check equality in case of forceUpdate to prevent duplicates in name history.
+                    if((ytjdto.getNimi() != null && currentOrgNimi.getNimi().getString("fi") != null
+                            && !ytjdto.getNimi().equals(currentOrgNimi.getNimi().getString("fi")))
+                            ||
+                            (ytjdto.getSvNimi() != null && currentOrgNimi.getNimi().getString("sv") != null)
+                                    && !ytjdto.getSvNimi().equals(currentOrgNimi.getNimi().getString("sv"))) {
+                        // Create new entry to nimihistoria
+                        OrganisaatioNimi newOrgNimi = createOrganisaatioNimiWithYTJLang(ytjdto, currentOrgNimi);
+                        organisaatio.addNimi(newOrgNimi);
                     }
                 }
             }
@@ -505,6 +513,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             if (ytjdto.getSvNimi() != null) {
                 organisaatio.getNimi().getValues().put("sv", ytjdto.getSvNimi());
                 organisaatio.setNimihaku(ytjdto.getSvNimi());
+            }
+            // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
+            if(ytjAlkupvm != null && currentOrgNimi != null) {
+                currentOrgNimi.setAlkuPvm(ytjAlkupvm);
             }
             update = true;
         }
