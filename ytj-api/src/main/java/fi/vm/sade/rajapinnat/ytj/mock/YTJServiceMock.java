@@ -82,6 +82,7 @@ public class YTJServiceMock implements YTJService {
             osoite.setKieli(1);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setAloitusPvm("10.02.1999");
             dto.setNimi(nimi);
         }
         else if(ytunnus.trim().equals("1492449-0")) {
@@ -96,6 +97,7 @@ public class YTJServiceMock implements YTJService {
             dto.setYrityksenKieli("Svenska");
             dto.setWww("http://www.ytj.sv");
             dto.setPuhelin("0100000210");
+            dto.setAloitusPvm("11.03.1999");
             dto.setSvNimi(nimi);
         }
         else {
@@ -111,6 +113,7 @@ public class YTJServiceMock implements YTJService {
             dto.setYrityksenKieli("Suomi");
             dto.setWww("http://www.ytj.fi");
             dto.setPuhelin("0100000211");
+            dto.setAloitusPvm("12.04.1999");
             dto.setNimi(nimi);
         }
         return dto;
