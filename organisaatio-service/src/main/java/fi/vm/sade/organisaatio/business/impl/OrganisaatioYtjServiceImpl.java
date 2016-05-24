@@ -14,6 +14,7 @@ import fi.vm.sade.organisaatio.model.dto.YTJErrorsDto;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import fi.vm.sade.rajapinnat.ytj.service.YtjDtoMapperHelper;
 import org.slf4j.Logger;
@@ -190,11 +191,21 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 // name history validation checks and handle
                 try {
                     checker.checkNimihistoriaAlkupvm(organisaatio.getNimet());
+                    MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(organisaatio.getNimet());
+                    if (nimi == null) {
+                        throw new OrganisaatioNameHistoryNotValidException();
+                    }
+
+                    // Tarkistetaan, että organisaatiolle asetettu nimi ei ole
+                    // ristiriidassa nimihistorian kanssa
+                    if (nimi.getValues().equals(organisaatio.getNimi().getValues()) == false) {
+                        throw new OrganisaatioNameHistoryNotValidException();
+                    }
                 } catch (OrganisaatioNameHistoryNotValidException e) {
                     // TODO handle if bad
                     ytjErrorsDto.nimiValid = false;
                     ytjErrorsDto.nimiSvValid = false;
-                    LOG.error("Organisation name history alkupvm invalid with organisation " + organisaatio.getOid());
+                    LOG.error("Organisation name history invalid with organisation " + organisaatio.getOid());
                 }
             }
 
