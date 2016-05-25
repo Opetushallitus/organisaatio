@@ -67,12 +67,22 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
         // Case: Has sv name; gets new fi name from YTJ, no puhelin, www updated
         Assert.assertEquals(1, organisaatioList.get(id).getNimet().size());
+<<<<<<< HEAD
         Assert.assertEquals("Helsingin yliopistomuseon säätiö", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals("node231 foo bar", orgSortedNimet.get(0).getNimi().getString("sv"));
         Assert.assertEquals("Mannerheimintie 2", ((Osoite)orgSortedYhteystiedot.get(0)).getOsoite());
         Assert.assertEquals("Tie 1", ((Osoite)orgSortedYhteystiedot.get(1)).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(1)).getPostinumero());
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(0)).getPostinumero());
+=======
+        Assert.assertEquals("Helsingin yliopistomuseon säätiö", organisaatioList.get(id).getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals("node231 foo bar", organisaatioList.get(id).getNimet().get(0).getNimi().getString("sv"));
+        Assert.assertEquals(923864400000L, organisaatioList.get(id).getNimet().get(0).getAlkuPvm().getTime());
+        Assert.assertEquals("Mannerheimintie 2", organisaatioList.get(id).getPostiosoite().getOsoite());
+        Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(0)).getPostinumero());
+        Assert.assertEquals("Tie 1", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(1)).getOsoite());
+        Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(1)).getPostinumero());
+>>>>>>> OH-378
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(id).getKielet().get(0));
 
         id = 1;
@@ -82,11 +92,21 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
         // Case: Has fi and sv name, puhelin, www; gets fi updated from YTJ
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().size());
+<<<<<<< HEAD
         Assert.assertEquals("root test koulutustoimija", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals("Katva Consulting", orgSortedNimet.get(1).getNimi().getString("fi"));
         Assert.assertEquals("root test utbildningsoperator", orgSortedNimet.get(1).getNimi().getString("sv"));
         Assert.assertEquals("Ygankuja 1", ((Osoite)orgSortedYhteystiedot.get(0)).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(0)).getPostinumero());
+=======
+        Assert.assertEquals("root test koulutustoimija", organisaatioList.get(id).getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals("Katva Consulting", organisaatioList.get(id).getNimet().get(1).getNimi().getString("fi"));
+        Assert.assertEquals("root test utbildningsoperator", organisaatioList.get(id).getNimet().get(1).getNimi().getString("sv"));
+        Assert.assertEquals(-7200000L, organisaatioList.get(id).getNimet().get(0).getAlkuPvm().getTime());
+        Assert.assertEquals(918597600000L, organisaatioList.get(id).getNimet().get(1).getAlkuPvm().getTime());
+        Assert.assertEquals("Ygankuja 1", organisaatioList.get(id).getPostiosoite().getOsoite());
+        Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(0)).getPostinumero());
+>>>>>>> OH-378
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(id).getKielet().get(0));
         Assert.assertEquals("12345", organisaatioList.get(id).getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.oph.fi", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
@@ -99,15 +119,23 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
         // Case: Has fi name, puhelin, www; gets new sv name and updated puhelin, www from YTJ
         Assert.assertEquals(1, organisaatioList.get(id).getNimet().size());
+<<<<<<< HEAD
         Assert.assertEquals("Ruotsalainen & koulutustoimija", orgSortedNimet.get(0).getNimi().getString("sv"));
         Assert.assertEquals("root2 test2 koulutustoimija2", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals("Svenska gatan 1", ((Osoite)orgSortedYhteystiedot.get(0)).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(0)).getPostinumero());
+=======
+        Assert.assertEquals("Ruotsalainen & koulutustoimija", organisaatioList.get(id).getNimet().get(0).getNimi().getString("sv"));
+        Assert.assertEquals("root2 test2 koulutustoimija2", organisaatioList.get(id).getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals(921103200000L, organisaatioList.get(id).getNimet().get(0).getAlkuPvm().getTime());
+        Assert.assertEquals("Svenska gatan 1", organisaatioList.get(id).getPostiosoite().getOsoite());
+        Assert.assertEquals("posti_00100", ((Osoite)organisaatioList.get(id).getYhteystiedot().get(0)).getPostinumero());
+>>>>>>> OH-378
         Assert.assertEquals("oppilaitoksenopetuskieli_2#1", organisaatioList.get(id).getKielet().get(0));
         Assert.assertEquals("0100000210", organisaatioList.get(id).getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.ytj.sv", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().get(0).getNimi().getValues().size());
-    }
+   }
 
     private void sortOrganisaatioYhteystiedot(List<Organisaatio> organisaatioList, int id, List<Yhteystieto> orgSortedYhteystiedot) {
         for(Yhteystieto yhteystieto : organisaatioList.get(id).getYhteystiedot()) {

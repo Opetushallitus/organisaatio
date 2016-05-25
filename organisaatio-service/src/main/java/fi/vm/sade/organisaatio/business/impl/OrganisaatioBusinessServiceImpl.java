@@ -16,6 +16,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import fi.vm.sade.generic.common.validation.ValidationConstants;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
@@ -31,6 +32,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.model.dto.YTJErrorsDto;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
