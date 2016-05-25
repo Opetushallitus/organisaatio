@@ -157,6 +157,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
 
                 if (updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm) {
+                    if(ytjdto.getYrityksenKieli() != null) {
+                        organisaatio.setYtjKieli(ytjdto.getYrityksenKieli());
+                    }
                     updateOrganisaatioList.add(organisaatio);
                 }
             }
