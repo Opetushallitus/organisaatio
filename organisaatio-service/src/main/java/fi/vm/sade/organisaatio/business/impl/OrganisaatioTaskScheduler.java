@@ -17,6 +17,8 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import java.util.Date;
+
+import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class OrganisaatioTaskScheduler {
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
 
+    @Autowired
+    private OrganisaatioYtjService organisaatioYtjService;
+
     @Value("${organisaatio-service.scheduled.update.cron.expression}")
     private String nameUpdateCronExpression;
 
@@ -50,5 +55,7 @@ public class OrganisaatioTaskScheduler {
 
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
+        organisaatioYtjService.updateYTJData(false);
+
     }
  }
