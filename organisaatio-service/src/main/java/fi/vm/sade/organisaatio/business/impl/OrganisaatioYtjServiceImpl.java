@@ -303,6 +303,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                         if(organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
                             ytjErrorsDto.nimiValid = false;
                             ytjErrorsDto.nimiSvValid = false;
+                            // TODO gather error data
+                            break;
                         }
                     }
                 }
