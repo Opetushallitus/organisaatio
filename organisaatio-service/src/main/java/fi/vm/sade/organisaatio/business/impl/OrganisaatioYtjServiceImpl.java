@@ -104,7 +104,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             YTJErrorsDto ytjErrorsDto = new YTJErrorsDto();
             // some basic validation first (null checks, corner cases etc)
             validateOrganisaatioDataForYTJ(organisaatio, ytjdto, ytjErrorsDto);
-            validateYTJData(ytjdto, ytjErrorsDto);
+            validateYTJData(organisaatio, ytjdto, ytjErrorsDto);
 
             // don't proceed to update if there's something wrong
             // collect info to some map structure
@@ -150,7 +150,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     // TODO log the failure to errordto
                 }
             } catch (OptimisticLockException ole) {
-                LOG.error("Java persistance exception with organisation " + organisaatio.getOid(), ole.getMessage());
+                LOG.error("Java persistence exception with organisation " + organisaatio.getOid(), ole.getMessage());
                 // TODO log the failure to errordto
             } catch (RuntimeException re) {
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re.getMessage());
@@ -245,6 +245,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
 
             // validate www
+            // Create new www if one does not exist (and ytj has data)
             Www www = null;
             for(Yhteystieto yhteystieto : organisaatio.getYhteystiedot()) {
                 if(yhteystieto instanceof Www) {
@@ -252,7 +253,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     break;
                 }
             }
-            // Create new www if one does not exist (and ytj has data)
             if(www == null && ytjdto.getWww() != null) {
                 try {
                     www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
@@ -273,7 +273,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Validates data coming from ytj so that update() does not need to worry about getting stuck on hibernate validation.
-    private void validateYTJData(YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
+    private void validateYTJData(Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
         if(ytjdto == null) {
             ytjErrorsDto.organisaatioValid = false;
         }
@@ -293,6 +293,23 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             // Allow ampersand characters
             htmlDecodeAmpInYtjNames(ytjdto);
+            // In case updating from ytj would violate organisation service rule that current nimi must be the newest one,
+            // we do not update nimi
+            if(ytjdto.getAloitusPvm() != null) {
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    Date ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
+                    for(OrganisaatioNimi organisaatioNimi : organisaatio.getNimet()) {
+                        if(organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
+                            ytjErrorsDto.nimiValid = false;
+                            ytjErrorsDto.nimiSvValid = false;
+                        }
+                    }
+                }
+                catch(ParseException | NullPointerException e) {
+                    LOG.error("Could not parse YTJ date.", e);
+                }
+            }
 
             // osoite
             if(ytjdto.getPostiOsoite() == null) {
@@ -334,7 +351,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 // http://-prefix check and fix.
                 ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
             }
-
         }
     }
 
@@ -488,7 +504,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
                 catch(ParseException | NullPointerException e) {
                     updateNimiHistory = false;
-                    LOG.error("Could not parse YTJ date. Using the old date.", e);
+                    LOG.error("Could not parse YTJ date.", e);
                 }
                 // In case nimi alkupvm already exist or ytj has no alkupvm, do not update name history.
                 for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
