@@ -147,6 +147,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @NotNull
     private String oid;
 
+    private String ytjKieli;
+
     @Temporal(TemporalType.DATE)
     private Date ytjPaivitysPvm;
 
@@ -452,6 +454,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setOrganisaatioPoistettu(boolean organisaatioPoistettu) {
         this.organisaatioPoistettu = organisaatioPoistettu;
+    }
+
+    public String getYtjKieli() {
+        return ytjKieli;
+    }
+
+    public void setYtjKieli(String ytjKieli) {
+        this.ytjKieli = ytjKieli;
     }
 
     /**
