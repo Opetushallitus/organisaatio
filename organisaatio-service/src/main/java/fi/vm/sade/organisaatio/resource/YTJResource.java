@@ -74,7 +74,7 @@ public class YTJResource {
         }
         
         return ytj; 
-    };
+    }
 
     @GET
     @Path("/hae")
@@ -103,6 +103,10 @@ public class YTJResource {
     @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
     public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
                                                @PathParam("ytunnukset") List<String> ytunnuses) {
+        return doYtjMassSearch(ytunnuses);
+    }
+
+    public List<YTJDTO> doYtjMassSearch(List<String> ytunnuses) {
         List<YTJDTO> ytjListResult;
         try {
             ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);

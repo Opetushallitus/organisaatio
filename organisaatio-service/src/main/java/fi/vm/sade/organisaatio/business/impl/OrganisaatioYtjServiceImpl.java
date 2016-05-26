@@ -52,11 +52,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    public static final String POSTIOSOITE_PREFIX = "posti_";
-    public static final String KIELI_KOODI_FI = "kieli_fi#1";
-    public static final String KIELI_KOODI_SV = "kieli_sv#1";
-    public static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
-    public static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
+    private static final String POSTIOSOITE_PREFIX = "posti_";
+    private static final String KIELI_KOODI_FI = "kieli_fi#1";
+    private static final String KIELI_KOODI_SV = "kieli_sv#1";
+    private static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
+    private static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
+    private static final int SEARCH_LIMIT = 10000;
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
@@ -68,18 +69,17 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         List<YTJDTO> ytjdtoList;
         Map<String,Organisaatio> organisaatioMap = new HashMap<>();
         List<Organisaatio> updateOrganisaatioList = new ArrayList<>();
-        int searchLimit = 10000;
         // Search the organisations using the DAO since it provides osoites.
         // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, searchLimit, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
             // TODO exception, update failed
             return updateOrganisaatioList;
         }
-        organisaatioList = organisaatioDAO.findByOidList(oidList, searchLimit);
+        organisaatioList = organisaatioDAO.findByOidList(oidList, SEARCH_LIMIT);
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
         for(Organisaatio organisaatio : organisaatioList) {
             if(organisaatio.getStatus() == Organisaatio.OrganisaatioStatus.AKTIIVINEN
@@ -91,7 +91,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         try {
             // Fetch data from ytj for these organisations
-            ytjdtoList = ytjResource.findByYTunnusBatch(ytunnusList);
+            ytjdtoList = ytjResource.doYtjMassSearch(ytunnusList);
         } catch(OrganisaatioResourceException ore) {
             LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
             // TODO add info for UI to fetch
@@ -198,7 +198,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
                     // Tarkistetaan, että organisaatiolle asetettu nimi ei ole
                     // ristiriidassa nimihistorian kanssa
-                    if (nimi.getValues().equals(organisaatio.getNimi().getValues()) == false) {
+                    if (!nimi.getValues().equals(organisaatio.getNimi().getValues())) {
                         throw new OrganisaatioNameHistoryNotValidException();
                     }
                 } catch (OrganisaatioNameHistoryNotValidException e) {
@@ -403,7 +403,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
         if (!kieliExists) {
-            String newKieli = "";
+            String newKieli;
             List<String> newKieliList = new ArrayList<>();
             if (ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
                 newKieli = ORG_KIELI_KOODI_SV;
