@@ -66,7 +66,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
         List<String> ytunnusList = new ArrayList<>();
-        List<YTJDTO> ytjdtoList;
+        List<YTJDTO> ytjdtoList = new ArrayList<>();
         Map<String,Organisaatio> organisaatioMap = new HashMap<>();
         List<Organisaatio> updateOrganisaatioList = new ArrayList<>();
         // Search the organisations using the DAO since it provides osoites.
@@ -89,13 +89,16 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
 
-        try {
-            // Fetch data from ytj for these organisations
-            ytjdtoList = ytjResource.doYtjMassSearch(ytunnusList);
-        } catch(OrganisaatioResourceException ore) {
-            LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
-            // TODO add info for UI to fetch
-            throw ore;
+        int partitionSize = 1000;
+        for(int i = 0; i< ytunnusList.size(); i+= partitionSize) {
+            try {
+                // Fetch data from ytj for these organisations
+                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + partitionSize, ytunnusList.size()))));
+            } catch(OrganisaatioResourceException ore) {
+                LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
+                // TODO add info for UI to fetch
+                throw ore;
+            }
         }
 
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
