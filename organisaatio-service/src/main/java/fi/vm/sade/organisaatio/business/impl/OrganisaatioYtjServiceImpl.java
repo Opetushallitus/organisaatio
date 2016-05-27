@@ -89,17 +89,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
 
-        int partitionSize = 1000;
-        for(int i = 0; i< ytunnusList.size(); i+= partitionSize) {
-            try {
-                // Fetch data from ytj for these organisations
-                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + partitionSize, ytunnusList.size()))));
-            } catch(OrganisaatioResourceException ore) {
-                LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
-                // TODO add info for UI to fetch
-                throw ore;
-            }
-        }
+        fetchDataFromYtj(ytunnusList, ytjdtoList);
 
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         for (YTJDTO ytjdto : ytjdtoList) {
@@ -164,6 +154,20 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         solrIndexer.index(updateOrganisaatioList);
 
         return updateOrganisaatioList;
+    }
+
+    private void fetchDataFromYtj(List<String> ytunnusList, List<YTJDTO> ytjdtoList) {
+        int partitionSize = 1000;
+        for(int i = 0; i< ytunnusList.size(); i+= partitionSize) {
+            try {
+                // Fetch data from ytj for these organisations
+                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + partitionSize, ytunnusList.size()))));
+            } catch(OrganisaatioResourceException ore) {
+                LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
+                // TODO add info for UI to fetch
+                throw ore;
+            }
+        }
     }
 
     private void validateOrganisaatioDataForYTJ(final Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
