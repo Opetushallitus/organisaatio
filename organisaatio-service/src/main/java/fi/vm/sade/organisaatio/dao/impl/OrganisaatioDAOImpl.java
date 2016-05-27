@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -215,6 +216,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         organisaatiot = retrieveParentsAndChildren(organisaatiot, new TreeSet<>(oids), suunnitellut, lakkautetut);
 
         return organisaatiot;
+    }
+
+    public void updateOrg(Organisaatio org) throws OptimisticLockException {
+        getEntityManager().merge(org);
     }
 
     private void appendParentOrganisation(List<OrgPerustieto> ret, String poid, boolean suunnitellut, boolean poistetut) {

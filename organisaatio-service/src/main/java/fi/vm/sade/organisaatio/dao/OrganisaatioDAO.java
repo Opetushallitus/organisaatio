@@ -19,6 +19,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
+
+import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -171,4 +173,11 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     List<Organisaatio> findModifiedSince(Date lastModifiedSince);
+
+    /**
+     * Implementation of merge without flush, let hibernate decide when
+     * @param org
+     * @throws OptimisticLockException
+     */
+    public void updateOrg(Organisaatio org) throws OptimisticLockException;
 }

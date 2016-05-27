@@ -142,7 +142,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Update listed organisations to db and koodisto service.
         for(Organisaatio organisaatio : updateOrganisaatioList) {
             try {
-                organisaatioDAO.update(organisaatio);
+                organisaatioDAO.updateOrg(organisaatio);
                 // update koodisto (When name has changed) TODO: call only when name actually changes.
                 // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
                 if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
