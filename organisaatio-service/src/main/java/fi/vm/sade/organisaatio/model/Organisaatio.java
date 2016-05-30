@@ -34,6 +34,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -117,7 +118,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("alkuPvm")
     private List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
 
-
     private String yritysmuoto;
 
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -144,6 +144,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String oppilaitosTyyppi;
 
+    @NotNull
     private String oid;
 
     @Temporal(TemporalType.DATE)

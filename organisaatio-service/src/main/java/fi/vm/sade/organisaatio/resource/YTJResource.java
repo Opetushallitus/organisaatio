@@ -37,12 +37,15 @@ import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
 import fi.vm.sade.rajapinnat.ytj.api.YTJService;
 import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/ytj")
 @Component("ytjResource")
+@Transactional(readOnly = true)
 @Api(value = "/ytj", description = "YTJ hakuoperaatiot")
 public class YTJResource {
 

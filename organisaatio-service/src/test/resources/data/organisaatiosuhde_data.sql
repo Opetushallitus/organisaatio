@@ -1,12 +1,12 @@
 -- Organisations --
-insert into organisaatio (id, version) values
-  (1, 1),
-  (2, 1),
-  (3, 1),
-  (4, 1),
-  (5, 1),
-  (6, 1),
-  (7, 1);
+insert into organisaatio (id, version, oid) values
+  (1, 1, '23456.0'),
+  (2, 1, '23457.0'),
+  (3, 1, '23458.0'),
+  (4, 1, '23459.0'),
+  (5, 1, '23460.0'),
+  (6, 1, '23461.0'),
+  (7, 1, '23462.0');
 -- Organisation relations --
 insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values
   (1, 1, 'HISTORIA', 2, 1, '2000-01-01'),

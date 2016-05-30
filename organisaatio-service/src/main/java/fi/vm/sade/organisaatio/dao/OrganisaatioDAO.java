@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 
+import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 import java.util.Date;
@@ -180,4 +181,8 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @throws OptimisticLockException
      */
     public void updateOrg(Organisaatio org) throws OptimisticLockException;
+
+    void flush();
+
+    EntityManager getEM();
 }

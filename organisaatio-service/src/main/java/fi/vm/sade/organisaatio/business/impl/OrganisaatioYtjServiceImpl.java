@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.generic.common.validation.ValidationConstants;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
@@ -21,15 +22,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.persistence.OptimisticLockException;
+import javax.validation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Transactional
 @Service("organisaatioYtjService")
+@Transactional(rollbackFor = Throwable.class, readOnly = true)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     @Autowired
@@ -50,6 +54,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private IndexerResource solrIndexer;
 
+    private static Validator validator;
+
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String POSTIOSOITE_PREFIX = "posti_";
@@ -60,9 +66,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private static final int SEARCH_LIMIT = 10000;
     private static final int PARTITION_SIZE = 1000;
 
+    public OrganisaatioYtjServiceImpl() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
-    public List<Organisaatio> updateYTJData(final boolean forceUpdate) throws OrganisaatioResourceException{
+    public List<Organisaatio> updateYTJData(final boolean forceUpdate) {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
@@ -90,8 +101,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
 
-        fetchDataFromYtj(ytunnusList, ytjdtoList);
-
+        try {
+            // Fetch data from ytj for these organisations
+            ytjdtoList = ytjResource.doYtjMassSearch(ytunnusList);
+        } catch(OrganisaatioResourceException ore) {
+            LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
+            // TODO add info for UI to fetch
+            throw ore;
+        }
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         for (YTJDTO ytjdto : ytjdtoList) {
             Organisaatio organisaatio = organisaatioMap.get(ytjdto.getYtunnus().trim());
@@ -99,7 +116,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             // some basic validation first (null checks, corner cases etc)
             validateOrganisaatioDataForYTJ(organisaatio, ytjdto, ytjErrorsDto);
             validateYTJData(organisaatio, ytjdto, ytjErrorsDto);
-
             // don't proceed to update if there's something wrong
             // collect info to some map structure
             if (ytjErrorsDto.organisaatioValid) {
@@ -132,25 +148,37 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
             }
         }
-
         // Update listed organisations to db and koodisto service.
-        for(Organisaatio organisaatio : updateOrganisaatioList) {
+        for(Iterator<Organisaatio> iterator = updateOrganisaatioList.iterator(); iterator.hasNext();) {
+            Organisaatio organisaatio = iterator.next();
             try {
+                Set<ConstraintViolation<Organisaatio>> constraintViolations = validator.validate(organisaatio);
+                if(constraintViolations.size() > 0) {
+                    throw new ValidationException(constraintViolations.iterator().next().getMessage());
+                }
                 organisaatioDAO.updateOrg(organisaatio);
-                // update koodisto (When name has changed) TODO: call only when name actually changes.
-                // Update only nimi if changed. organisaatio.paivityspvm should not have be changed here.
+                // update koodisto (When name has changed)
                 if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
                     LOG.error("Could not update name to koodisto with organisation " + organisaatio.getOid());
                     // TODO log the failure to errordto
                 }
+            } catch(ConstraintViolationException | ValidationException ve) {
+                LOG.error("Validation exception with organisation " + organisaatio.getOid());
+                iterator.remove();
+                // TODO log the failure to errordto
             } catch (OptimisticLockException ole) {
                 LOG.error("Java persistence exception with organisation " + organisaatio.getOid(), ole.getMessage());
+                iterator.remove();
                 // TODO log the failure to errordto
             } catch (RuntimeException re) {
                 LOG.error("Could not update organisation " + organisaatio.getOid(), re.getMessage());
+                iterator.remove();
                 // TODO log the failure to errordto
             }
         }
+        // Call this since the class is readOnly so it won't be called automatically by transaction manager.
+        organisaatioDAO.flush();
+
         // Index the updated resources.
         solrIndexer.index(updateOrganisaatioList);
 
@@ -235,8 +263,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             // Create new puhelinnumero if one does not exist
             if(organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN) == null && ytjdto.getPuhelin() != null) {
                 try {
-                    Puhelinnumero puhelinnumero =
-                            new Puhelinnumero("   ", Puhelinnumero.TYYPPI_PUHELIN, oidService.newOid(NodeClassCode.TEKN_5));
+                    Puhelinnumero puhelinnumero = new Puhelinnumero();
+                    puhelinnumero.setPuhelinnumero("123456789");
+                    puhelinnumero.setTyyppi(Puhelinnumero.TYYPPI_PUHELIN);
+                    puhelinnumero.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
                     puhelinnumero.setOrganisaatio(organisaatio);
                     if (ytjdto.getYrityksenKieli() != null
                             && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
@@ -262,7 +292,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             if(www == null && ytjdto.getWww() != null) {
                 try {
-                    www = new Www(oidService.newOid(NodeClassCode.TEKN_5));
+                    www = new Www();
+                    www.setYhteystietoOid(oidService.newOid(NodeClassCode.TEKN_5));
                     www.setOrganisaatio(organisaatio);
                     if (ytjdto.getYrityksenKieli() != null
                             && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV)) {
