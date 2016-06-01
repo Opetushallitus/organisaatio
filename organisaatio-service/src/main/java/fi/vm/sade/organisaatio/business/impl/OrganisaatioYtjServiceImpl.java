@@ -333,40 +333,27 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             htmlDecodeAmpInYtjNames(ytjdto);
             // In case updating from ytj would violate organisation service rule that current nimi must be the newest one,
             // we do not update nimi
-            if(ytjdto.getAloitusPvm() != null) {
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                    Date ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
-                    for(OrganisaatioNimi organisaatioNimi : organisaatio.getNimet()) {
-                        if(organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
-                            ytjErrorsDto.nimiValid = false;
-                            ytjErrorsDto.nimiSvValid = false;
-                            // TODO gather error data
-                            break;
-                        }
-                    }
-                }
-                catch(ParseException | NullPointerException e) {
-                    LOG.error("Could not parse YTJ date.", e);
-                }
+            Date ytjAlkupvm = null;
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
             }
-
-            // Nimi history
-            if(organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
-                Date ytjAlkupvm = null;
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                    ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
-                } catch (ParseException | NullPointerException e) {
-                    ytjErrorsDto.nimiHistory = false;
-                    LOG.error("Could not parse YTJ date.", e);
-                }
-                // In case nimi alkupvm already exist or ytj has no alkupvm or newer alkupvm exist, do not update name history.
-                for (OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                    if (ytjAlkupvm == null || orgNimi.getAlkuPvm().equals(ytjAlkupvm) || orgNimi.getAlkuPvm().after(ytjAlkupvm)) {
+            catch(ParseException | NullPointerException e) {
+                LOG.error("Could not parse YTJ date. Not updating name history.");
+                ytjErrorsDto.nimiHistory = false;
+            }
+            // Nimi and nimihistory validation
+            if(ytjAlkupvm != null) {
+                for(OrganisaatioNimi organisaatioNimi : organisaatio.getNimet()) {
+                    // In case nimi alkupvm already exist or newer alkupvm exist, do not update name history.
+                    if(organisaatioNimi.getAlkuPvm().equals(ytjAlkupvm) || organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
+                        LOG.error("YTJ ");
                         LOG.error("YTJ alkupvm do not exist, is already in name history or there is newer enty in " +
                                 "name history for organisation " + organisaatio.getOid());
+                        ytjErrorsDto.nimiValid = false;
+                        ytjErrorsDto.nimiSvValid = false;
                         ytjErrorsDto.nimiHistory = false;
+                        // TODO gather error data
                         break;
                     }
                 }
@@ -596,7 +583,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     currentOrgNimi.setAlkuPvm(ytjAlkupvm);
                 }
                 catch(ParseException | NullPointerException e) {
-                    LOG.error("Could not parse YTJ date.", e);
+                    LOG.error("Could not parse YTJ date.");
                 }
             }
             update = true;
