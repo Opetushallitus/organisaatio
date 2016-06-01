@@ -996,9 +996,4 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public void flush() {
         getEntityManager().flush();
     }
-
-    @Override
-    public EntityManager getEM() {
-        return this.getEntityManager();
-    }
 }
