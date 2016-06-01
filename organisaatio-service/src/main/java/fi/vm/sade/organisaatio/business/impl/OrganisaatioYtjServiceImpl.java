@@ -546,9 +546,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     updateNimiHistory = false;
                     LOG.error("Could not parse YTJ date.", e);
                 }
-                // In case nimi alkupvm already exist or ytj has no alkupvm, do not update name history.
+                // In case nimi alkupvm already exist or ytj has no alkupvm or newer alkupvm exist, do not update name history.
                 for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
-                    if(ytjdto.getAloitusPvm() == null || orgNimi.getAlkuPvm().equals(ytjAlkupvm)) {
+                    if(ytjAlkupvm == null || orgNimi.getAlkuPvm().equals(ytjAlkupvm) || orgNimi.getAlkuPvm().after(ytjAlkupvm)) {
+                        LOG.error("YTJ alkupvm do not exist, is already in name history or there is newer enty in " +
+                                "name history for organisation " + organisaatio.getOid());
                         updateNimiHistory = false;
                         break;
                     }
