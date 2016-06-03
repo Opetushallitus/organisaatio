@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
+import fi.ytj.YTunnusDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +100,9 @@ public class YTJServiceMock implements YTJService {
             dto.setPuhelin("0100000210");
             dto.setAloitusPvm("11.03.1999");
             dto.setSvNimi(nimi);
+            dto.setYritysTunnus(new YTunnusDTO() {{
+                setAlkupvm("11.06.2013");
+            }});
         }
         else {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
