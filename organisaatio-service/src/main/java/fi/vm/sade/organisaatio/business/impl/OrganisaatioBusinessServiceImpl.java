@@ -904,7 +904,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             return edited; // tässä vaiheessa tyhjä lista.
         }
         LOG.debug("bulkUpdatePvm(): organisaatiolista:" + organisaatios);
-        
+
         batchValidatePvm(givenData, organisaatioMap);
 
 

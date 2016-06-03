@@ -8,6 +8,7 @@ public class YTJErrorsDto {
     public boolean osoiteValid;
     public boolean wwwValid;
     public boolean puhelinnumeroValid;
+    public boolean ytunnusPvmValid;
 
     public YTJErrorsDto() {
         organisaatioValid = true;
@@ -17,5 +18,6 @@ public class YTJErrorsDto {
         osoiteValid = true;
         wwwValid = true;
         puhelinnumeroValid = true;
+        ytunnusPvmValid = true;
     }
 }

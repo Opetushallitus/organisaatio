@@ -6,10 +6,14 @@ import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
+import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.YTJErrorsDto;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
@@ -55,6 +59,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private IndexerResource solrIndexer;
 
     private static Validator validator;
+    
+    @Autowired
+    private OrganisaatioBusinessService businessService;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -103,7 +110,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         try {
             // Fetch data from ytj for these organisations
-            ytjdtoList = ytjResource.doYtjMassSearch(ytunnusList);
+            ytjdtoList = ytjResource.fetchDataFromYtj(ytunnusList);
         } catch(OrganisaatioResourceException ore) {
             LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
             // TODO add info for UI to fetch
@@ -123,6 +130,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 Boolean updateOsoite = false;
                 Boolean updatePuhelin = false;
                 Boolean updateWww = false;
+                Boolean updateAlkupvm = false;
                 // Update nimi
                 if (ytjErrorsDto.nimiValid  || ytjErrorsDto.nimiSvValid) {
                     updateNimi = updateNameFromYTJ(ytjdto, organisaatio, forceUpdate, ytjErrorsDto.nimiHistory);
@@ -143,7 +151,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     updateWww = updateWwwFromYTJToOrganisation(forceUpdate, ytjdto, organisaatio);
                 }
 
-                if (updateNimi || updateOsoite || updatePuhelin || updateWww) {
+                // Update alkupvm
+                if(ytjErrorsDto.ytunnusPvmValid) {
+                    updateAlkupvm = updateOrgAlkupvm(ytjdto, organisaatio, forceUpdate);
+                }
+
+                if (updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm) {
                     updateOrganisaatioList.add(organisaatio);
                 }
             }
@@ -196,6 +209,22 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 throw ore;
             }
         }
+
+	private Boolean updateOrgAlkupvm(YTJDTO ytjdto, Organisaatio organisaatio, Boolean forceUpdate) {
+        Boolean update = false;
+        Date ytunnusAlkupvm = null;
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+            ytunnusAlkupvm = format.parse(ytjdto.getYritysTunnus().getAlkupvm());
+        } catch(ParseException | NullPointerException pe) {
+            LOG.error("");
+            return false;
+        }
+        if(ytunnusAlkupvm != null && !ytunnusAlkupvm.equals(organisaatio.getAlkuPvm())) {
+            organisaatio.setAlkuPvm(ytunnusAlkupvm);
+            update = true;
+        }
+        return update;
     }
 
     private void validateOrganisaatioDataForYTJ(final Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
@@ -303,7 +332,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Validates data coming from ytj so that update() does not need to worry about getting stuck on hibernate validation.
-    private void validateYTJData(Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
+    private void validateYTJData(final Organisaatio organisaatio, final YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
         if(ytjdto == null) {
             ytjErrorsDto.organisaatioValid = false;
         }
@@ -390,6 +419,40 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             else {
                 // http://-prefix check and fix.
                 ytjdto.setWww(fixHttpPrefix(ytjdto.getWww()));
+            }
+
+            // organisaatio alkupvm
+            if(ytjdto.getYritysTunnus() == null || ytjdto.getYritysTunnus().getAlkupvm() == null) {
+                ytjErrorsDto.ytunnusPvmValid = false;
+
+            }
+            else {
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    final Date ytunnusAlkupvm = format.parse(ytjdto.getYritysTunnus().getAlkupvm());
+                    final OrganisaatioMuokkausTiedotDTO tiedotDTO = new OrganisaatioMuokkausTiedotDTO() {{
+                        setAlkuPvm(ytunnusAlkupvm);
+                        setOid(organisaatio.getOid());
+                    }};
+
+                    businessService.batchValidatePvm(
+                            new HashMap<String, OrganisaatioMuokkausTiedotDTO>() {{
+                                put(tiedotDTO.getOid(), tiedotDTO);
+                            }},
+                            new HashMap<String, Organisaatio>() {{
+                                put(organisaatio.getOid(), organisaatio);
+                            }});
+                } catch(ParseException | NullPointerException e) {
+                    LOG.error("Could not parse YTJ ytunnus alkupvm for organisation " + organisaatio.getOid());
+                    ytjErrorsDto.ytunnusPvmValid = false;
+                } catch (OrganisaatioDateException de) {
+                    LOG.error("YTJ ytunnus alkupvm does not pass pvm constraints for organisation " + organisaatio.getOid());
+                    ytjErrorsDto.ytunnusPvmValid = false;
+                } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
+                    LOG.error("YTJ ytunnus loppupvm matching organisation has koulutuksia after loppupvm for organisation ",
+                            organisaatio.getOid());
+                    ytjErrorsDto.ytunnusPvmValid = false;
+                }
             }
         }
     }
