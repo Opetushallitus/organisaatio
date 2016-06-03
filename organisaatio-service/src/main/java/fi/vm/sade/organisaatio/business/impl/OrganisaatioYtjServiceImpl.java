@@ -220,7 +220,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.error("");
             return false;
         }
-        if(ytunnusAlkupvm != null && !ytunnusAlkupvm.equals(organisaatio.getAlkuPvm())) {
+        if(ytunnusAlkupvm != null && (!ytunnusAlkupvm.equals(organisaatio.getAlkuPvm()) || forceUpdate)) {
             organisaatio.setAlkuPvm(ytunnusAlkupvm);
             update = true;
         }
@@ -424,7 +424,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             // organisaatio alkupvm
             if(ytjdto.getYritysTunnus() == null || ytjdto.getYritysTunnus().getAlkupvm() == null) {
                 ytjErrorsDto.ytunnusPvmValid = false;
-
             }
             else {
                 try {
