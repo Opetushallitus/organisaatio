@@ -50,6 +50,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
@@ -943,6 +944,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return edited;
     }
 
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void batchValidatePvm(HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData, HashMap<String, Organisaatio> organisaatioMap) {
         // näiden oidien vanhemmuussuhteet on jo löydetty
         Set<String> processed = new HashSet<>(givenData.size());
