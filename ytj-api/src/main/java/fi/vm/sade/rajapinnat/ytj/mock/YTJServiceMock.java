@@ -119,6 +119,9 @@ public class YTJServiceMock implements YTJService {
             dto.setPuhelin("0100000211");
             dto.setAloitusPvm("12.04.1999");
             dto.setNimi(nimi);
+            dto.setYritysTunnus(new YTunnusDTO() {{
+                setAlkupvm("01.01.1999");
+            }});
         }
         return dto;
     }
