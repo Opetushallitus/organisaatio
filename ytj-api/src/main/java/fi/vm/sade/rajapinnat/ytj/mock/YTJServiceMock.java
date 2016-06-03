@@ -101,7 +101,7 @@ public class YTJServiceMock implements YTJService {
             dto.setAloitusPvm("11.03.1999");
             dto.setSvNimi(nimi);
             dto.setYritysTunnus(new YTunnusDTO() {{
-                setAlkupvm("11.06.2013");
+                setAlkupvm("29.02.2011");
             }});
         }
         else {
