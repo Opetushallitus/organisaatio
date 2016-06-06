@@ -58,6 +58,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
     private static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
     private static final int SEARCH_LIMIT = 10000;
+    private static final int PARTITION_SIZE = 1000;
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
@@ -157,11 +158,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private void fetchDataFromYtj(List<String> ytunnusList, List<YTJDTO> ytjdtoList) {
-        int partitionSize = 1000;
-        for(int i = 0; i< ytunnusList.size(); i+= partitionSize) {
+        for(int i = 0; i< ytunnusList.size(); i+= PARTITION_SIZE) {
             try {
                 // Fetch data from ytj for these organisations
-                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + partitionSize, ytunnusList.size()))));
+                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + PARTITION_SIZE, ytunnusList.size()))));
             } catch(OrganisaatioResourceException ore) {
                 LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
                 // TODO add info for UI to fetch
