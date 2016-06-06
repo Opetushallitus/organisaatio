@@ -58,6 +58,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
     private static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
     private static final int SEARCH_LIMIT = 10000;
+    private static final int PARTITION_SIZE = 1000;
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
@@ -66,7 +67,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
         List<String> ytunnusList = new ArrayList<>();
-        List<YTJDTO> ytjdtoList;
+        List<YTJDTO> ytjdtoList = new ArrayList<>();
         Map<String,Organisaatio> organisaatioMap = new HashMap<>();
         List<Organisaatio> updateOrganisaatioList = new ArrayList<>();
         // Search the organisations using the DAO since it provides osoites.
@@ -89,14 +90,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
 
-        try {
-            // Fetch data from ytj for these organisations
-            ytjdtoList = ytjResource.doYtjMassSearch(ytunnusList);
-        } catch(OrganisaatioResourceException ore) {
-            LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
-            // TODO add info for UI to fetch
-            throw ore;
-        }
+        fetchDataFromYtj(ytunnusList, ytjdtoList);
 
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         for (YTJDTO ytjdto : ytjdtoList) {
@@ -161,6 +155,19 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         solrIndexer.index(updateOrganisaatioList);
 
         return updateOrganisaatioList;
+    }
+
+    private void fetchDataFromYtj(List<String> ytunnusList, List<YTJDTO> ytjdtoList) {
+        for(int i = 0; i< ytunnusList.size(); i+= PARTITION_SIZE) {
+            try {
+                // Fetch data from ytj for these organisations
+                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + PARTITION_SIZE, ytunnusList.size()))));
+            } catch(OrganisaatioResourceException ore) {
+                LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
+                // TODO add info for UI to fetch
+                throw ore;
+            }
+        }
     }
 
     private void validateOrganisaatioDataForYTJ(final Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
