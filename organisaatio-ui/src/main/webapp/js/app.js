@@ -76,6 +76,9 @@ app.config(function($routeProvider, $httpProvider) {
         // front page
         when('/organisaatiot', {controller: 'OrganisaatioTreeController', templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
 
+        // view notifications
+        when('/organisaatiot/ilmoitukset', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'ytjilmoitukset.html'}).
+
         // read one
         when('/organisaatiot/:oid', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
 
