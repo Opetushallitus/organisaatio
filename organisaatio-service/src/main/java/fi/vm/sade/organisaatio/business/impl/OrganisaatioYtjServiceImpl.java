@@ -110,7 +110,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         try {
             // Fetch data from ytj for these organisations
-            ytjdtoList = ytjResource.fetchDataFromYtj(ytunnusList);
+            fetchDataFromYtj(ytunnusList, ytjdtoList);
         } catch(OrganisaatioResourceException ore) {
             LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
             // TODO add info for UI to fetch
@@ -199,16 +199,17 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private void fetchDataFromYtj(List<String> ytunnusList, List<YTJDTO> ytjdtoList) {
-        for(int i = 0; i< ytunnusList.size(); i+= PARTITION_SIZE) {
+        for (int i = 0; i < ytunnusList.size(); i += PARTITION_SIZE) {
             try {
                 // Fetch data from ytj for these organisations
                 ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + PARTITION_SIZE, ytunnusList.size()))));
-            } catch(OrganisaatioResourceException ore) {
+            } catch (OrganisaatioResourceException ore) {
                 LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
                 // TODO add info for UI to fetch
                 throw ore;
             }
         }
+    }
 
 	private Boolean updateOrgAlkupvm(YTJDTO ytjdto, Organisaatio organisaatio, Boolean forceUpdate) {
         Boolean update = false;
