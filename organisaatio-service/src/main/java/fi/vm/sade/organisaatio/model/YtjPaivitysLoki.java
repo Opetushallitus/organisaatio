@@ -33,10 +33,10 @@ public class YtjPaivitysLoki extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date paivitysaika;
 
-    @Column
+    @Column(name = "paivitetyt_lkm")
     private int paivitetytLkm;
 
-    @Column
+    @Column(name = "paivitys_tila")
     private String paivitysTila;
 
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
