@@ -25,6 +25,9 @@ public class YtjPaivitysLokiDaoImplTest {
     @Autowired
     private YtjPaivitysLokiDaoImpl ytjPaivitysLokiDao;
 
+    YtjPaivitysLoki oldLog = new YtjPaivitysLoki();
+    YtjPaivitysLoki newLog = new YtjPaivitysLoki();
+
     @Before
     public void setUp() {
         YtjVirhe virhe = new YtjVirhe();
@@ -32,16 +35,16 @@ public class YtjPaivitysLokiDaoImplTest {
         virhe.setVirhekentta("foo");
         virhe.setVirheviesti("bar");
         // vanhempi loki
-        YtjPaivitysLoki oldLog = new YtjPaivitysLoki();
         oldLog.setPaivitetytLkm(1);
         oldLog.setPaivitysaika(createDate(2016, 0, 1));
         oldLog.setYtjVirheet((new ArrayList<YtjVirhe>()));
         oldLog.getYtjVirheet().add(virhe);
         ytjPaivitysLokiDao.insert(oldLog);
         // uudempi loki
-        YtjPaivitysLoki newLog = new YtjPaivitysLoki();
         newLog.setPaivitetytLkm(1);
         newLog.setPaivitysaika(createDate(2016, 5 ,5));
+        newLog.setYtjVirheet((new ArrayList<YtjVirhe>()));
+        newLog.getYtjVirheet().add(virhe);
         ytjPaivitysLokiDao.insert(newLog);
     }
 
@@ -51,13 +54,22 @@ public class YtjPaivitysLokiDaoImplTest {
 
     @Test
     public void fetchOnlyNewLog() {
-        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findPaivityksenTilat(createDate(2016, 2, 2), createDate(2016, 6, 6));
+        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findByDateRange(createDate(2016, 2, 2), createDate(2016, 6, 6));
         Assert.assertEquals(1, logs.size());
+        Assert.assertFalse(logs.get(0).getYtjVirheet().isEmpty());
+        Assert.assertEquals(1, logs.get(0).getYtjVirheet().size());
     }
 
     @Test
     public void fetchBothLogs() {
-        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findPaivityksenTilat(createDate(2015, 2, 2), createDate(2017, 6, 6));
+        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findByDateRange(createDate(2015, 2, 2), createDate(2017, 6, 6));
         Assert.assertEquals(2, logs.size());
+    }
+
+    @Test
+    public void fetchLatest() {
+        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findLatest(1);
+        Assert.assertEquals(1, logs.size());
+        Assert.assertEquals(newLog.getId(), logs.get(0).getId());
     }
 }

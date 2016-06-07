@@ -30,6 +30,7 @@ public interface YtjPaivitysLokiDao extends JpaDAO<YtjPaivitysLoki, Long> {
      * @param loppupvm alkupäivämäärä
      * @return Annetun aikavälit massapäivitystilanteet listana
      */
-    List<YtjPaivitysLoki> findPaivityksenTilat(Date alkupvm, Date loppupvm);
+    List<YtjPaivitysLoki> findByDateRange(Date alkupvm, Date loppupvm);
 
+    List<YtjPaivitysLoki> findLatest(int limit);
 }
