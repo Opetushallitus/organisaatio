@@ -34,7 +34,7 @@ public class YtjPaivitysLoki extends BaseEntity {
     private Date paivitysaika;
 
     @Column(name = "paivitetyt_lkm")
-    private int paivitetytLkm;
+    private long paivitetytLkm;
 
     @Column(name = "paivitys_tila")
     private String paivitysTila;
@@ -50,11 +50,11 @@ public class YtjPaivitysLoki extends BaseEntity {
         this.paivitysaika = paivitysaika;
     }
 
-    public int getPaivitetytLkm() {
+    public long getPaivitetytLkm() {
         return paivitetytLkm;
     }
 
-    public void setPaivitetytLkm(int paivitetytLkm) {
+    public void setPaivitetytLkm(long paivitetytLkm) {
         this.paivitetytLkm = paivitetytLkm;
     }
 
