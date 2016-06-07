@@ -19,11 +19,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.dao.YtjPaivitysLokiDao;
-import fi.vm.sade.organisaatio.dao.YtjVirheDao;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
-import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
-import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
-import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +31,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,15 +46,28 @@ public class YTJPaivitysLokiResource {
     private YtjPaivitysLokiDao ytjPaivitysLokiDao;
 
     @GET
-    @Path("/hae")
+    @Path("/aikavali")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee päivitystilanteen ajankohdan perusteella", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle ajankohdalle.")
+    @ApiOperation(value = "Hakee annetulta aikaväliltä", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle aikaväliltä.")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "alkupvm", required = true) @QueryParam("alkupvm") Date alkupvm,
                                                  @ApiParam(value = "loppupvm", required = true) @QueryParam("loppupvm") Date loppupvm) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
         if (alkupvm != null && loppupvm != null) {
-            ytjLoki = ytjPaivitysLokiDao.findPaivityksenTilat(alkupvm, loppupvm);
+            ytjLoki = ytjPaivitysLokiDao.findByDateRange(alkupvm, loppupvm);
+        }
+        return ytjLoki;
+    }
+
+    @GET
+    @Path("/uusimmat")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee viimeisimmät", notes = "Operaatio palauttaa viimeisimpien päivityksen statuksen ja virheet.")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "limit", required = true) @QueryParam("limit") int limit) {
+        List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
+        if (limit > 0) {
+            ytjLoki = ytjPaivitysLokiDao.findLatest(limit);
         }
         return ytjLoki;
     }

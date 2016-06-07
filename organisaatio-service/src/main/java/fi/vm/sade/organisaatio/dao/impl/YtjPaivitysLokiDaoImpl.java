@@ -30,10 +30,18 @@ import java.util.List;
 public class YtjPaivitysLokiDaoImpl extends AbstractJpaDAOImpl<YtjPaivitysLoki, Long> implements YtjPaivitysLokiDao {
 
     @Override
-    public List<YtjPaivitysLoki> findPaivityksenTilat(Date alkupvm, Date loppupvm) {
+    public List<YtjPaivitysLoki> findByDateRange(Date alkupvm, Date loppupvm) {
         Query query = getEntityManager().createQuery("SELECT loki FROM YtjPaivitysLoki loki WHERE loki.paivitysaika BETWEEN :alkupvm AND :loppupvm");
         query.setParameter("alkupvm", alkupvm);
         query.setParameter("loppupvm", loppupvm);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<YtjPaivitysLoki> findLatest(int limit) {
+        Query query = getEntityManager().createQuery("SELECT loki FROM YtjPaivitysLoki loki ORDER BY loki.paivitysaika DESC");
+        query.setFirstResult(0);
+        query.setMaxResults(limit);
         return query.getResultList();
     }
 }
