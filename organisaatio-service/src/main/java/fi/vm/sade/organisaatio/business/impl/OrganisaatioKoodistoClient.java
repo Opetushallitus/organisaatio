@@ -17,107 +17,43 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
-public class OrganisaatioKoodistoClient {
-
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Value("${organisaatio-service.koodisto-service.rest.url}")
-    private String koodistoServiceUrl;
-
-    @Value("${organisaatio-service.service-access.url}")
-    private String serviceAccessUrl;
+    protected String koodistoServiceUrl;
 
     @Value("${organisaatio.service.username.to.koodisto}")
-    private String clientUsername;
+    private String koodistoClientUsername;
 
     @Value("${organisaatio.service.password.to.koodisto}")
-    private String clientPassword;
+    private String koodistoClientPassword;
 
-    private String ticket;
-    private boolean reauthorize;
-
-    public OrganisaatioKoodistoClient() {
-    }
-
-    /**
-     * Configure authorization
-     *
-     * @param reauthorize If true, new ticket will be used for each request
-     */
-    public void setReauthorize(boolean reauthorize) {
-        if (this.reauthorize != reauthorize) {
-            this.ticket = null;
-        }
-        this.reauthorize = reauthorize;
-    }
-
-    private void authorize() throws OrganisaatioKoodistoException {
-        if (ticket != null && !reauthorize) {
-            LOG.debug("Using existing ticket.");
-            return;
-        }
-        if (clientPassword.isEmpty() || clientUsername.isEmpty()) {
-            String err = "Failed to authorize for koodisto-service because of missing username/password. Please set " +
-                    "organisaatio.service.username.to.koodisto" + " and " +
-                    "organisaatio.service.password.to.koodisto properties properly.";
-            LOG.error(err);
-            throw new OrganisaatioKoodistoException(err);
-        } else {
-            ArrayList<NameValuePair> postParameters = new ArrayList<>();
-            HttpPost post = new HttpPost(serviceAccessUrl + "/accessTicket");
-            post.addHeader("ID", IDContextMessageHelper.getIDChain());
-            post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
-            postParameters.add(new BasicNameValuePair("client_id", clientUsername));
-            postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
-            postParameters.add(new BasicNameValuePair("service_url", koodistoServiceUrl));
-            try {
-                post.setEntity(new UrlEncodedFormEntity(postParameters));
-                HttpClient client = new DefaultHttpClient();
-                HttpResponse resp = client.execute(post);
-                Header header = resp.getFirstHeader("ID");
-                if(header != null) {
-                    IDContextMessageHelper.setReceivedIDChain(header.getValue());
-                }
-                ticket = EntityUtils.toString(resp.getEntity()).trim();
-                if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED || ticket.isEmpty()) {
-                    LOG.error("Failed to get ticket from :" + serviceAccessUrl + ". Response code:"
-                            + resp.getStatusLine().getStatusCode() + ", text:" + ticket);
-                    throw new OrganisaatioKoodistoException("Invalid service-access response: " + resp.getStatusLine().getStatusCode());
-                }
-                LOG.debug("Got ticket: " + ticket);
-            } catch (IOException e) {
-                LOG.error("Failed to get ticket: " + e.getMessage());
-                throw new OrganisaatioKoodistoException(e.getMessage());
-            }
-        }
+    @PostConstruct
+    public void init() {
+        setUp(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
     }
 
     private String createKoodistoServiceParameters() {

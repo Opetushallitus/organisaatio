@@ -31,6 +31,8 @@ organisaatio.solr.url={{organisaatio_solr_url}}
 organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
 organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koodisto}}
 organisaatio-service.scheduled.update.cron.expression=0 0 0-6/1 * * ?
+organisaatio.service.username.to.viestinta={{organisaatio_service_username_to_viestinta}}
+organisaatio.service.password.to.viestinta={{organisaatio_service_password_to_viestinta}}
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
