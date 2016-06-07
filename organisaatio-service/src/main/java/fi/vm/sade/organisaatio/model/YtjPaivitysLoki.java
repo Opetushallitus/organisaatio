@@ -19,7 +19,6 @@ import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +39,7 @@ public class YtjPaivitysLoki extends BaseEntity {
     private String paivitysTila;
 
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<YtjVirhe> ytjvirheet = new ArrayList<YtjVirhe>();
+    private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
 
     public Date getPaivitysaika() {
         return paivitysaika;
@@ -66,11 +65,11 @@ public class YtjPaivitysLoki extends BaseEntity {
         this.paivitysTila = paivitysTila;
     }
 
-    public List<YtjVirhe> getYtjvirheet() {
-        return ytjvirheet;
+    public List<YtjVirhe> getYtjVirheet() {
+        return ytjVirheet;
     }
 
-    public void setYtjvirheet(List<YtjVirhe> ytjvirheet) {
-        this.ytjvirheet = ytjvirheet;
+    public void setYtjVirheet(List<YtjVirhe> ytjVirheet) {
+        this.ytjVirheet = ytjVirheet;
     }
 }

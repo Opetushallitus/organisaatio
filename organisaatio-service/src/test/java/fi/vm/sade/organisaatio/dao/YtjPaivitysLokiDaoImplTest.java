@@ -1,0 +1,63 @@
+package fi.vm.sade.organisaatio.dao;
+
+import fi.vm.sade.organisaatio.dao.impl.YtjPaivitysLokiDaoImpl;
+import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.organisaatio.model.YtjVirhe;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
+public class YtjPaivitysLokiDaoImplTest {
+
+    @Autowired
+    private YtjPaivitysLokiDaoImpl ytjPaivitysLokiDao;
+
+    @Before
+    public void setUp() {
+        YtjVirhe virhe = new YtjVirhe();
+        virhe.setOid("12345.0");
+        virhe.setVirhekentta("foo");
+        virhe.setVirheviesti("bar");
+        // vanhempi loki
+        YtjPaivitysLoki oldLog = new YtjPaivitysLoki();
+        oldLog.setPaivitetytLkm(1);
+        oldLog.setPaivitysaika(createDate(2016, 0, 1));
+        oldLog.setYtjVirheet((new ArrayList<YtjVirhe>()));
+        oldLog.getYtjVirheet().add(virhe);
+        ytjPaivitysLokiDao.insert(oldLog);
+        // uudempi loki
+        YtjPaivitysLoki newLog = new YtjPaivitysLoki();
+        newLog.setPaivitetytLkm(1);
+        newLog.setPaivitysaika(createDate(2016, 5 ,5));
+        ytjPaivitysLokiDao.insert(newLog);
+    }
+
+    public Date createDate(int year, int month, int day) {
+        return new GregorianCalendar(year, month, day).getTime();
+    }
+
+    @Test
+    public void fetchOnlyNewLog() {
+        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findPaivityksenTilat(createDate(2016, 2, 2), createDate(2016, 6, 6));
+        Assert.assertEquals(1, logs.size());
+    }
+
+    @Test
+    public void fetchBothLogs() {
+        List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findPaivityksenTilat(createDate(2015, 2, 2), createDate(2017, 6, 6));
+        Assert.assertEquals(2, logs.size());
+    }
+}
