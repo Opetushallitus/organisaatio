@@ -21,7 +21,7 @@ import fi.vm.sade.organisaatio.model.YtjVirhe;
 import java.util.Date;
 import java.util.List;
 
-public interface YtjPaivitysLokiDao extends JpaDAO<YtjVirhe, Long> {
+public interface YtjPaivitysLokiDao extends JpaDAO<YtjPaivitysLoki, Long> {
 
     /**
      * Haetaan YTJ-massapäivityksen statukset annetulta aikaväliltä

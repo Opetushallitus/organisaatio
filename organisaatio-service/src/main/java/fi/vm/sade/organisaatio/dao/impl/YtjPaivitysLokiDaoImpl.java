@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class YtjPaivitysLokiDaoImpl extends AbstractJpaDAOImpl<YtjVirhe, Long> implements YtjPaivitysLokiDao {
+public class YtjPaivitysLokiDaoImpl extends AbstractJpaDAOImpl<YtjPaivitysLoki, Long> implements YtjPaivitysLokiDao {
 
     @Override
     public List<YtjPaivitysLoki> findPaivityksenTilat(Date alkupvm, Date loppupvm) {

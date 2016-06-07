@@ -34,6 +34,9 @@ public class YtjVirhe extends BaseEntity {
     private String oid;
 
     @Column(length = 255)
+    private String orgNimi;
+
+    @Column(length = 255)
     private String virhekentta;
 
     @Column(length = 255)
@@ -45,6 +48,14 @@ public class YtjVirhe extends BaseEntity {
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public String getOrgNimi() {
+        return orgNimi;
+    }
+
+    public void setOrgNimi(String orgNimi) {
+        this.orgNimi = orgNimi;
     }
 
     public String getVirhekentta() {

@@ -11,6 +11,7 @@ CREATE TABLE ytjvirhe (
   id              INT8         NOT NULL UNIQUE,
   version         INT8         NOT NULL,
   oid             VARCHAR(255) NOT NULL,
+  orgNimi         VARCHAR(255),
   ytjpaivitysloki_id INT8      NOT NULL,
   virhekentta     VARCHAR(255),
   virheviesti   VARCHAR(255),
@@ -24,5 +25,6 @@ REFERENCES ytjpaivitysloki;
 
 CREATE INDEX ytjvirhe_oid_idx ON ytjvirhe (oid);
 CREATE INDEX ytjpaivitysloki_paivitysaika_idx ON ytjpaivitysloki (paivitysaika);
+
 
 
