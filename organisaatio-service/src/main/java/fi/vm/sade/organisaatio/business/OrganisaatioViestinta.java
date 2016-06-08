@@ -15,10 +15,14 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+
 import java.util.List;
 
 public interface OrganisaatioViestinta {
-    void sendEmail(String message);
+    void sendStringViestintaEmail(String message);
 
-    void sendEmail(String message, List<String> receivers);
+    void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
+
+    void sendEmail(String content, List<String> receiverEmails);
 }

@@ -15,34 +15,78 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
+import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.viestintapalvelu.api.message.MessageData;
+import fi.vm.sade.viestintapalvelu.api.message.Receiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private final Gson gson;
+
     @Value("$viestintapalvelu.email")
     private String email;
 
     @Autowired
-    private OrganisaatioViestintaClient organisaatioViestintaClient;
+    private OrganisaatioViestintaClient viestintaClient;
 
-    @Override
-    public void sendEmail(String message) {
-        sendEmail(message, new ArrayList<String>(){{add(email);}});
+    public OrganisaatioViestintaImpl() {
+        gson = new GsonBuilder().create();
+    }
+
+    private OrganisaatioViestintaClient getClient() {
+        if (viestintaClient == null) {
+            viestintaClient = new OrganisaatioViestintaClient();
+        }
+//        viestintaClient.setReauthorize(reauthorize);
+        return viestintaClient;
     }
 
     @Override
-    public void sendEmail(String message, List<String> receivers) {
-        try {
-            organisaatioViestintaClient.post(message, "messagesendMessageViaAsiointiTiliOrEmail");
-        } catch (OrganisaatioViestintaException ve) {
+    public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki) {
+        String msgContent = "";
+        // ...
 
+        sendStringViestintaEmail(msgContent);
+    }
+
+    @Override
+    public void sendStringViestintaEmail(String msgContent) {
+        sendEmail(msgContent, new ArrayList<String>(){{add(email);}});
+    }
+
+    @Override
+    public void sendEmail(String msgContent, List<String> receiverEmails) {
+        String templateName = "osoitepalvelu_email";
+        List<Receiver> receiverList = new ArrayList<>();
+        Map<String, Object> commonReplacements = new HashMap<>();
+        for(String receiverEmail : receiverEmails) {
+            Receiver receiver = new Receiver(null, receiverEmail, null, null, null);
+            receiverList.add(receiver);
+        }
+        commonReplacements.put("$sisalto/sisalto", "sisaltöä");
+        MessageData messageData = new MessageData(templateName, receiverList, commonReplacements);
+        String json = gson.toJson(messageData);
+        try {
+            getClient().post(json, "messagesendMessageViaAsiointiTiliOrEmail");
+        } catch (OrganisaatioViestintaException ve) {
+            LOG.error("Could not send email.");
         }
     }
 }
