@@ -158,7 +158,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
                 if (updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm) {
                     if (ytjdto.getYrityksenKieli() != null) {
-                        organisaatio.setYtjKieli(ytjdto.getYrityksenKieli());
+                        updateYtjkieliFromYtjToOrganisaatio(organisaatio, ytjdto);
                     }
                     updateOrganisaatioList.add(organisaatio);
                 }
@@ -457,17 +457,19 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     ytjErrorsDto.ytunnusPvmValid = false;
                 }
             }
+        }
+    }
 
-            // Validate ytjKieli
-            if(YtjDtoMapperHelper.KIELI_SV.equals(ytjdto.getYrityksenKieli())) {
-                organisaatio.setYtjKieli(KIELI_KOODI_SV);
-            }
-            else if(ytjdto.getYrityksenKieli() != null) {
-                organisaatio.setYtjKieli(KIELI_KOODI_FI);
-            }
-            else {
-                LOG.error("No kieli on ytj for organisaatio " + organisaatio.getOid());
-            }
+    private void updateYtjkieliFromYtjToOrganisaatio(Organisaatio organisaatio, YTJDTO ytjdto) {
+        // Validate ytjKieli
+        if(YtjDtoMapperHelper.KIELI_SV.equals(ytjdto.getYrityksenKieli())) {
+            organisaatio.setYtjKieli(KIELI_KOODI_SV);
+        }
+        else if(ytjdto.getYrityksenKieli() != null) {
+            organisaatio.setYtjKieli(KIELI_KOODI_FI);
+        }
+        else {
+            LOG.error("No kieli on ytj for organisaatio " + organisaatio.getOid());
         }
     }
 
