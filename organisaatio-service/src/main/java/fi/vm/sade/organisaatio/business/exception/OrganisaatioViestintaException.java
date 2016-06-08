@@ -13,12 +13,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
 
-package fi.vm.sade.organisaatio.business;
+package fi.vm.sade.organisaatio.business.exception;
 
-import java.util.List;
+public class OrganisaatioViestintaException extends OrganisaatioBusinessException {
 
-public interface OrganisaatioViestinta {
-    void sendEmail(String message);
+    public OrganisaatioViestintaException(String msg) {
+        super(msg);
+    }
 
-    void sendEmail(String message, List<String> receivers);
+    @Override
+    public String getErrorKey() {
+        return "organisaatio.exception.viestinta";
+    }
+
 }
