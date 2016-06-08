@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import java.lang.Exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +22,8 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.viestinta}")
     private String viestintaClientPassword;
 
-    @PostConstruct
-    public void init() {
-        setUp(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
+    private void authorize() throws Exception {
+        authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
     }
 
     public void post(String message, List<String> receivers) {
