@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
+import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -25,6 +26,8 @@ public abstract class OrganisaatioBaseClient {
     @Value("${organisaatio-service.service-access.url}")
     private String serviceAccessUrl;
     private boolean reauthorize;
+
+    protected abstract void authorize() throws Exception;
 
     /**
      * Configure authorization

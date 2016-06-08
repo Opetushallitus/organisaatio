@@ -36,7 +36,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
@@ -52,8 +51,13 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.koodisto}")
     private String koodistoClientPassword;
 
-    private void authorize() throws Exception {
+    @Override
+    protected void authorize() throws OrganisaatioKoodistoException {
+        try {
             authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
+        } catch (Exception e) {
+            throw new OrganisaatioKoodistoException(e.getMessage());
+        }
     }
 
     private String createKoodistoServiceParameters() {
@@ -115,11 +119,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String uri = "/rest/codeelement/save";
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
-        try {
             authorize();
-        } catch (Exception e) {
-            throw new OrganisaatioKoodistoException(e.getMessage());
-        }
         HttpClient client = new DefaultHttpClient();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
@@ -161,11 +161,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String path = "/rest/codeelement/" + uri;
         LOG.debug("POST " + koodistoServiceUrl + path);
         LOG.debug("POST data=" + json);
-        try {
             authorize();
-        } catch (Exception e) {
-            throw new OrganisaatioKoodistoException(e.getMessage());
-        }
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(koodistoServiceUrl + path);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
