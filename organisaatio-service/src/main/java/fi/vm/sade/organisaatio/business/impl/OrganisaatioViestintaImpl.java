@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.organisaatio.model.YtjVirhe;
 import fi.vm.sade.viestintapalvelu.api.message.MessageData;
 import fi.vm.sade.viestintapalvelu.api.message.Receiver;
 import org.slf4j.Logger;
@@ -43,6 +44,9 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Value("$viestintapalvelu.email")
     private String email;
 
+    @Value("$host.virkailija")
+    private String hostUri;
+
     @Autowired
     private OrganisaatioViestintaClient viestintaClient;
 
@@ -60,8 +64,26 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     @Override
     public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki) {
-        String msgContent = "";
-        // ...
+        String msgContent = "YTJ-Tietojen haku " + ytjPaivitysLoki.getPaivitysaika().toString() + " ";
+        if(ytjPaivitysLoki.getPaivitysTila().equals("ok")) {
+            msgContent += "onnistui";
+            if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
+                msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
+            }
+            msgContent += "\r\n";
+        }
+        else {
+            msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")\r\n";
+
+        }
+
+        for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
+            msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
+                    + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a>\r\n";
+        }
+
+        msgContent += "\r\n<a href=\"https://" + hostUri
+                + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
 
         sendStringViestintaEmail(msgContent);
     }
@@ -80,7 +102,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             Receiver receiver = new Receiver(null, receiverEmail, null, null, null);
             receiverList.add(receiver);
         }
-        commonReplacements.put("$sisalto/sisalto", "sisaltöä");
+        commonReplacements.put("sisalto", msgContent);
         MessageData messageData = new MessageData(templateName, receiverList, commonReplacements);
         String json = gson.toJson(messageData);
         try {

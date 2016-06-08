@@ -75,12 +75,14 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
                 IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + viestintaServiceUrl + path;
+                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST "
+                        + viestintaServiceUrl + path;
                 LOG.error(err);
                 LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
                 throw new OrganisaatioViestintaException(err);
             } else {
-                LOG.info("Code " + viestintaServiceUrl + path + " succesfully posted: return code " + resp.getStatusLine().getStatusCode());
+                LOG.info("Code " + viestintaServiceUrl + path + " succesfully posted: return code "
+                        + resp.getStatusLine().getStatusCode());
             }
         } catch (IOException e) {
             String err = "Failed to POST " + viestintaServiceUrl + path + ": " + e.getMessage();
