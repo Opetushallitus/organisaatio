@@ -130,7 +130,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             umt.setNimi(entity.getNimi().getString(lang));
             uk.getMetadata().add(umt);
         }
-        if (lisaaKoodi(uk, uri) == true) {
+        if (lisaaKoodi(uk, uri)) {
             try {
                 uk = haeKoodi(uri, tunniste);
             } catch (OrganisaatioKoodistoException e) {
