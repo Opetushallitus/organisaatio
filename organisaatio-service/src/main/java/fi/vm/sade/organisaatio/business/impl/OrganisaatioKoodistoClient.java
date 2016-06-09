@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
+import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -115,7 +116,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String uri = "/rest/codeelement/save";
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
-        authorize();
+            authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
@@ -157,7 +158,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String path = "/rest/codeelement/" + uri;
         LOG.debug("POST " + koodistoServiceUrl + path);
         LOG.debug("POST data=" + json);
-        authorize();
+            authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(koodistoServiceUrl + path);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());

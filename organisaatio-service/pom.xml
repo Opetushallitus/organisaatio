@@ -22,7 +22,6 @@
     </properties>
 
     <build>
-
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
@@ -428,6 +427,11 @@
                     <artifactId>jackson-jaxrs</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.viestintapalvelu</groupId>
+            <artifactId>viestintapalvelu-api</artifactId>
+            <version>${viestinta.version}</version>
         </dependency>
 
         <dependency>

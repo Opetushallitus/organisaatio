@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
+import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -47,7 +48,8 @@ public abstract class OrganisaatioBaseClient {
         this.reauthorize = reauthorize;
     }
 
-    protected void authorize() throws OrganisaatioKoodistoException {
+    protected void authorize(String serviceUrl, String clientUsername, String clientPassword)
+            throws Exception {
         if (ticket != null && !reauthorize) {
             LOG.debug("Using existing ticket.");
             return;
@@ -57,7 +59,7 @@ public abstract class OrganisaatioBaseClient {
                     "organisaatio.service.username.to.*" + " and " +
                     "organisaatio.service.password.to.* properties properly.";
             LOG.error(err);
-            throw new OrganisaatioKoodistoException(err);
+            throw new Exception(err);
         } else {
             ArrayList<NameValuePair> postParameters = new ArrayList<>();
             HttpPost post = new HttpPost(serviceAccessUrl + "/accessTicket");
@@ -78,12 +80,12 @@ public abstract class OrganisaatioBaseClient {
                 if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED || ticket.isEmpty()) {
                     LOG.error("Failed to get ticket from :" + serviceAccessUrl + ". Response code:"
                             + resp.getStatusLine().getStatusCode() + ", text:" + ticket);
-                    throw new OrganisaatioKoodistoException("Invalid service-access response: " + resp.getStatusLine().getStatusCode());
+                    throw new Exception("Invalid service-access response: " + resp.getStatusLine().getStatusCode());
                 }
                 LOG.debug("Got ticket: " + ticket);
             } catch (IOException e) {
                 LOG.error("Failed to get ticket: " + e.getMessage());
-                throw new OrganisaatioKoodistoException(e.getMessage());
+                throw new Exception(e.getMessage());
             }
         }
     }

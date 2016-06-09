@@ -34,6 +34,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -117,7 +118,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("alkuPvm")
     private List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
 
-
     private String yritysmuoto;
 
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -144,7 +144,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String oppilaitosTyyppi;
 
+    @NotNull
     private String oid;
+
+    private String ytjKieli;
 
     @Temporal(TemporalType.DATE)
     private Date ytjPaivitysPvm;
@@ -451,6 +454,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setOrganisaatioPoistettu(boolean organisaatioPoistettu) {
         this.organisaatioPoistettu = organisaatioPoistettu;
+    }
+
+    public String getYtjKieli() {
+        return ytjKieli;
+    }
+
+    public void setYtjKieli(String ytjKieli) {
+        this.ytjKieli = ytjKieli;
     }
 
     /**

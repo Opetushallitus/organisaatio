@@ -65,7 +65,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         sortOrganisaatioNimet(organisaatioList, id, orgSortedNimet);
         List<Yhteystieto> orgSortedYhteystiedot = new ArrayList<>();
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
-        // Case: Has sv name; gets new fi name from YTJ, no puhelin, www updated
+        // Case: Has sv name; gets new fi name from YTJ, no puhelin, www, alkupvm updated
         Assert.assertEquals(1, organisaatioList.get(id).getNimet().size());
         Assert.assertEquals("Helsingin yliopistomuseon säätiö", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals("node231 foo bar", orgSortedNimet.get(0).getNimi().getString("sv"));
@@ -75,13 +75,15 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(1)).getPostinumero());
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(0)).getPostinumero());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(id).getKielet().get(0));
+        Assert.assertEquals(915141600000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_fi#1", organisaatioList.get(id).getYtjKieli());
 
         id = 1;
         orgSortedNimet = new ArrayList<>();
         sortOrganisaatioNimet(organisaatioList, id, orgSortedNimet);
         orgSortedYhteystiedot = new ArrayList<>();
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
-        // Case: Has fi and sv name, puhelin, www; gets fi updated from YTJ
+        // Case: Has fi and sv name, puhelin, www, alkupvm; gets fi name updated from YTJ
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().size());
         Assert.assertEquals("root test koulutustoimija", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals("Katva Consulting", orgSortedNimet.get(1).getNimi().getString("fi"));
@@ -94,13 +96,16 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("12345", organisaatioList.get(id).getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.oph.fi", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
         Assert.assertNotEquals(organisaatioList.get(id).getNimet().get(0).getNimi(), organisaatioList.get(1).getNimet().get(1).getNimi());
+        Assert.assertEquals(1091912400000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_fi#1", organisaatioList.get(id).getYtjKieli());
 
         id = 2;
         orgSortedNimet = new ArrayList<>();
         sortOrganisaatioNimet(organisaatioList, id, orgSortedNimet);
         orgSortedYhteystiedot = new ArrayList<>();
         sortOrganisaatioYhteystiedot(organisaatioList, id, orgSortedYhteystiedot);
-        // Case: Has fi name, puhelin, www; gets new sv name and updated puhelin, www from YTJ
+        // Case: Has fi name, puhelin, www, alkupvm; gets new sv name and updated puhelin, www from YTJ;
+        // alkupvm not updated since ytj invalid data
         Assert.assertEquals(1, organisaatioList.get(id).getNimet().size());
         Assert.assertEquals("Ruotsalainen & koulutustoimija", orgSortedNimet.get(0).getNimi().getString("sv"));
         Assert.assertEquals("root2 test2 koulutustoimija2", orgSortedNimet.get(0).getNimi().getString("fi"));
@@ -111,6 +116,8 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("0100000210", organisaatioList.get(id).getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.ytj.sv", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().get(0).getNimi().getValues().size());
+        Assert.assertEquals(1151528400000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_sv#1", organisaatioList.get(id).getYtjKieli());
    }
 
     private void sortOrganisaatioYhteystiedot(List<Organisaatio> organisaatioList, int id, List<Yhteystieto> orgSortedYhteystiedot) {

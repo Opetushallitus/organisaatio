@@ -46,21 +46,21 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
     @Test
     public void doTest() {
         LOG.info("doTest()...");
-
+        int counter=12345;
         //Organisaatio that resembles the hidden root organisation (i.e. the parent of roots)
-        Organisaatio OPH = createOrganisaatio("OPH");
+        Organisaatio OPH = createOrganisaatio("OPH",(String.valueOf(counter++).concat(".0")));
 
         Date t = createDate("1.1.2000");
 
-        Organisaatio a = createOrganisaatio("A");
+        Organisaatio a = createOrganisaatio("A", (String.valueOf(counter++).concat(".0")));
         organisaatioSuhdeDAO.addChild(OPH.getId(), a.getId(), t, null);
-        Organisaatio b = createOrganisaatio("B");
+        Organisaatio b = createOrganisaatio("B", (String.valueOf(counter++).concat(".0")));
         organisaatioSuhdeDAO.addChild(OPH.getId(), b.getId(), t, null);
-        Organisaatio c = createOrganisaatio("C");
+        Organisaatio c = createOrganisaatio("C", (String.valueOf(counter++).concat(".0")));
         organisaatioSuhdeDAO.addChild(OPH.getId(), c.getId(), t, null);
-        Organisaatio d = createOrganisaatio("D");
+        Organisaatio d = createOrganisaatio("D", (String.valueOf(counter++).concat(".0")));
         organisaatioSuhdeDAO.addChild(OPH.getId(), d.getId(), t, null);
-        Organisaatio e = createOrganisaatio("E");
+        Organisaatio e = createOrganisaatio("E", (String.valueOf(counter++).concat(".0")));
         organisaatioSuhdeDAO.addChild(OPH.getId(), e.getId(), t, null);
 
         printOrganisaatioSuhdeTable();
@@ -249,11 +249,11 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
         }
     }
 
-    private Organisaatio createOrganisaatio(String nimi) {
+    private Organisaatio createOrganisaatio(String nimi, String oid) {
         LOG.info("createOrganisaatio({})", nimi);
 
         Organisaatio o = new Organisaatio();
-
+        o.setOid(oid);
         o.setNimi(new MonikielinenTeksti());
         o.getNimi().addString("FI", nimi);
 
