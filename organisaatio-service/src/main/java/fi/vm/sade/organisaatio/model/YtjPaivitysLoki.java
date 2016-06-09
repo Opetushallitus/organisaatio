@@ -37,7 +37,7 @@ public class YtjPaivitysLoki extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "paivitys_tila")
-    private String paivitysTila;
+    private YTJPaivitysStatus paivitysTila;
 
     public enum YTJPaivitysStatus {
         ONNISTUNUT,
@@ -64,11 +64,11 @@ public class YtjPaivitysLoki extends BaseEntity {
         this.paivitetytLkm = paivitetytLkm;
     }
 
-    public String getPaivitysTila() {
+    public YTJPaivitysStatus getPaivitysTila() {
         return paivitysTila;
     }
 
-    public void setPaivitysTila(String paivitysTila) {
+    public void setPaivitysTila(YTJPaivitysStatus paivitysTila) {
         this.paivitysTila = paivitysTila;
     }
 
