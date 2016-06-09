@@ -24,6 +24,6 @@ public interface OrganisaatioYtjService {
     /**
     * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
     */
-    public List<Organisaatio> updateYTJData(final boolean forceUpdate);
+    List<Organisaatio> updateYTJData(final boolean forceUpdate);
 
 }
