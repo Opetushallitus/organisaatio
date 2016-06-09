@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 
+import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 import java.util.Date;
@@ -43,7 +44,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param limit hakutuloksen määrän rajoite
      * @return
      */
-    public List<Organisaatio> findBySearchCriteria(
+    List<Organisaatio> findBySearchCriteria(
             List<String> kieliList,
             List<String> kuntaList,
             List<String> oppilaitostyyppiList,
@@ -58,7 +59,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param oid
      * @return
      */
-    public Organisaatio findByOid(String oid);
+    Organisaatio findByOid(String oid);
 
     /**
      * Haetaan organisaatioita oidlistan perusteella.
@@ -96,7 +97,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      *
      * @return
      */
-    public List<Organisaatio> findGroups();
+    List<Organisaatio> findGroups();
 
     /**
      * Tarkistetaan onko annetulle ytunnukselle olemassa jo aktiivinen organisaatio.
@@ -113,7 +114,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param oid Poistettavan organisaation oid
      * @return Poistettavan organisaation parent
      */
-    public Organisaatio markRemoved(String oid);
+    Organisaatio markRemoved(String oid);
 
     /**
      * Finds list of oids with given query params.
@@ -179,5 +180,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param org
      * @throws OptimisticLockException
      */
-    public void updateOrg(Organisaatio org) throws OptimisticLockException;
+    void updateOrg(Organisaatio org) throws OptimisticLockException;
+
+    void flush();
 }

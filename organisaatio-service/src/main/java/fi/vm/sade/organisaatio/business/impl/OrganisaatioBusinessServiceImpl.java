@@ -50,6 +50,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
@@ -895,55 +896,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("bulkUpdatePvm(): haetaan oideilla:" + oids);
         List<Organisaatio> organisaatios = this.organisaatioDAO.findByOidList(oids, oids.size());
 
+        for (Organisaatio o : organisaatios) {
+            organisaatioMap.put(o.getOid(), o);
+        }
+
         if (organisaatios.isEmpty()) {
             LOG.debug("bulkUpdatePvm(): organisaatiolista tyhjä");
             return edited; // tässä vaiheessa tyhjä lista.
         }
         LOG.debug("bulkUpdatePvm(): organisaatiolista:" + organisaatios);
 
-        // näiden oidien vanhemmuussuhteet on jo löydetty
-        Set<String> processed = new HashSet<>(tiedot.size());
-        List<Organisaatio> roots = new ArrayList<>(tiedot.size());
+        batchValidatePvm(givenData, organisaatioMap);
 
-        // etsitään juuriorganisaatiot, eli ne, joiden vanhempaa ei löydy annetuista oideista
-        for (Organisaatio o : organisaatios) {
-            LOG.debug("bulkUpdatePvm(): käsitellään organisaatio:" + o + ",oid:" + o.getOid());
-            organisaatioMap.put(o.getOid(), o);
-            while (!processed.contains(o.getOid())) {
-                processed.add(o.getOid());
-
-                // jos vanhempaa ei löyty annetusta oidlistasta, tämä on juuriorganisaatio
-                if (!givenOids.contains(o.getParent().getOid())) {
-                    roots.add(o);
-                    break;
-                }
-                o = o.getParent();
-            }
-        }
-        LOG.debug("bulkUpdatePvm(): processed:" + processed);
-
-        String virheViesti = "";
-        // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
-        for (Organisaatio o: roots) {
-            virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
-            if (!virheViesti.equals("")) {
-                LOG.error(String.format("bulkUpdatePvm() error: %s", virheViesti));
-                throw new OrganisaatioDateException();
-            }
-        }
-        for(String oid: organisaatioMap.keySet()) {
-            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-            Organisaatio org = organisaatioMap.get(oid);
-
-            if (tieto != null) {
-                LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
-                if ((tieto.getLoppuPvm() != null) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
-                    String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
-                    LOG.error(String.format(virhe));
-                    throw new AliorganisaatioLakkautusKoulutuksiaException();
-                }
-            }
-        }
 
         List<Organisaatio> indeksoitavat = new ArrayList<>(givenData.size());
         for(String oid: organisaatioMap.keySet()) {
@@ -978,6 +942,53 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(indeksoitavat);
 
         return edited;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void batchValidatePvm(HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData, HashMap<String, Organisaatio> organisaatioMap) {
+        // näiden oidien vanhemmuussuhteet on jo löydetty
+        Set<String> processed = new HashSet<>(givenData.size());
+        List<Organisaatio> roots = new ArrayList<>(givenData.size());
+
+        // etsitään juuriorganisaatiot, eli ne, joiden vanhempaa ei löydy annetuista oideista
+        for (Organisaatio o : organisaatioMap.values()) {
+            LOG.debug("bulkUpdatePvm(): käsitellään organisaatio:" + o + ",oid:" + o.getOid());
+            while (!processed.contains(o.getOid())) {
+                processed.add(o.getOid());
+
+                // jos vanhempaa ei löyty annetusta oidlistasta, tämä on juuriorganisaatio
+                if (!givenData.keySet().contains(o.getParent().getOid())) {
+                    roots.add(o);
+                    break;
+                }
+                o = o.getParent();
+            }
+        }
+        LOG.debug("bulkUpdatePvm(): processed:" + processed);
+
+        String virheViesti = "";
+        // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
+        for (Organisaatio o: roots) {
+            virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
+            if (!virheViesti.equals("")) {
+                LOG.error(String.format("bulkUpdatePvm() error: %s", virheViesti));
+                throw new OrganisaatioDateException();
+            }
+        }
+        for(String oid: organisaatioMap.keySet()) {
+            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
+            Organisaatio org = organisaatioMap.get(oid);
+
+            if (tieto != null) {
+                LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
+                if ((tieto.getLoppuPvm() != null) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
+                    String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
+                    LOG.error(String.format(virhe));
+                    throw new AliorganisaatioLakkautusKoulutuksiaException();
+                }
+            }
+        }
     }
 
     @Override

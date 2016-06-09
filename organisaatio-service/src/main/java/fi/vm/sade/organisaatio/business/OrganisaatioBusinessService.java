@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -101,4 +102,10 @@ public interface OrganisaatioBusinessService {
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
 
+    /**
+     *
+     * @param givenData Pvm data wanted to be changed
+     * @param organisaatioMap The organisations that the data is used to update
+     */
+    void batchValidatePvm(HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData, HashMap<String, Organisaatio> organisaatioMap);
 }

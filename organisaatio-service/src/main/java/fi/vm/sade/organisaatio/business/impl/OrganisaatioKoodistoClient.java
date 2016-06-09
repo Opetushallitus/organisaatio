@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
+import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -35,7 +36,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
@@ -51,9 +51,13 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.koodisto}")
     private String koodistoClientPassword;
 
-    @PostConstruct
-    public void init() {
-        setUp(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
+    @Override
+    protected void authorize() throws OrganisaatioKoodistoException {
+        try {
+            authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
+        } catch (Exception e) {
+            throw new OrganisaatioKoodistoException(e.getMessage());
+        }
     }
 
     private String createKoodistoServiceParameters() {
@@ -115,7 +119,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String uri = "/rest/codeelement/save";
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
-        authorize();
+            authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
@@ -157,7 +161,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String path = "/rest/codeelement/" + uri;
         LOG.debug("POST " + koodistoServiceUrl + path);
         LOG.debug("POST data=" + json);
-        authorize();
+            authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(koodistoServiceUrl + path);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
