@@ -29,6 +29,12 @@ import java.util.List;
 @EntityListeners(XssFilterListener.class)
 public class YtjPaivitysLoki extends BaseEntity {
 
+    public enum YTJPaivitysStatus {
+        ONNISTUNUT,
+        ONNISTUNUT_VIRHEITA,
+        EPAONNISTUNUT
+    }
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date paivitysaika;
 
@@ -37,13 +43,7 @@ public class YtjPaivitysLoki extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "paivitys_tila")
-    private String paivitysTila;
-
-    public enum YTJPaivitysStatus {
-        ONNISTUNUT,
-        ONNISTUNUT_VIRHEITA,
-        EPAONNISTUNUT
-    }
+    private YTJPaivitysStatus paivitysTila;
 
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
@@ -64,11 +64,11 @@ public class YtjPaivitysLoki extends BaseEntity {
         this.paivitetytLkm = paivitetytLkm;
     }
 
-    public String getPaivitysTila() {
+    public YTJPaivitysStatus getPaivitysTila() {
         return paivitysTila;
     }
 
-    public void setPaivitysTila(String paivitysTila) {
+    public void setPaivitysTila(YTJPaivitysStatus paivitysTila) {
         this.paivitysTila = paivitysTila;
     }
 
