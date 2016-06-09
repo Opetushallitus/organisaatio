@@ -35,8 +35,15 @@ public class YtjPaivitysLoki extends BaseEntity {
     @Column(name = "paivitetyt_lkm")
     private long paivitetytLkm;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "paivitys_tila")
     private String paivitysTila;
+
+    public enum YTJPaivitysStatus {
+        ONNISTUNUT,
+        ONNISTUNUT_VIRHEITA,
+        EPAONNISTUNUT
+    }
 
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
