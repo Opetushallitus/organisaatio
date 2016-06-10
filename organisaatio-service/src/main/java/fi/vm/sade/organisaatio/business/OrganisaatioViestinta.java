@@ -24,5 +24,5 @@ public interface OrganisaatioViestinta {
 
     void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
 
-    void sendEmail(String content, List<String> receiverEmails);
+    void generateAndSendEmail(String content, List<String> receiverEmails);
 }
