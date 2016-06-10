@@ -33,4 +33,6 @@ public interface YtjPaivitysLokiDao extends JpaDAO<YtjPaivitysLoki, Long> {
     List<YtjPaivitysLoki> findByDateRange(Date alkupvm, Date loppupvm);
 
     List<YtjPaivitysLoki> findLatest(int limit);
+
+    void flush();
 }

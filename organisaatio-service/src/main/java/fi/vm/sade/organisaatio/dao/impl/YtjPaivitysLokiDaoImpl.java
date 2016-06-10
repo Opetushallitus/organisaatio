@@ -44,4 +44,9 @@ public class YtjPaivitysLokiDaoImpl extends AbstractJpaDAOImpl<YtjPaivitysLoki, 
         query.setMaxResults(limit);
         return query.getResultList();
     }
+
+    @Override
+    public void flush() {
+        getEntityManager().flush();
+    }
 }
