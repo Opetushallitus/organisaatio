@@ -28,6 +28,7 @@ import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulut
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.YtjPaivitysLokiDao;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.YTJErrorsDto;
@@ -57,6 +58,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
+
+    @Autowired
+    private YtjPaivitysLokiDao ytjPaivitysLokiDao;
 
     @Autowired
     private OIDService oidService;
@@ -98,6 +102,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
         YtjPaivitysLoki ytjPaivitysLoki = new YtjPaivitysLoki();
         ytjPaivitysLoki.setPaivitysaika(new Date());
+        ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT);
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
@@ -218,6 +223,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         // Index the updated resources.
         solrIndexer.index(updateOrganisaatioList);
+
+        ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
+        ytjPaivitysLokiDao.flush();
 
         return ytjPaivitysLoki;
     }
