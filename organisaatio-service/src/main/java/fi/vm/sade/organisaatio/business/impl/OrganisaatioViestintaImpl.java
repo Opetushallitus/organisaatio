@@ -21,8 +21,9 @@ import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
-import fi.vm.sade.viestintapalvelu.api.message.MessageData;
-import fi.vm.sade.viestintapalvelu.api.message.Receiver;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
@@ -113,20 +112,18 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     @Override
     public void generateAndSendEmail(String msgContent, List<String> receiverEmails) {
-        String templateName = "osoitepalvelu_email";
-        List<Receiver> receiverList = new ArrayList<>();
-        Map<String, Object> commonReplacements = new HashMap<>();
+        List<EmailRecipient> receiverList = new ArrayList<>();
         for(String receiverEmail : receiverEmails) {
-            Receiver receiver = new Receiver(null, receiverEmail, null, null, null);
+            EmailRecipient receiver = new EmailRecipient(null, receiverEmail);
             receiverList.add(receiver);
         }
-        commonReplacements.put("sisalto", msgContent);
-        MessageData messageData = new MessageData(templateName, receiverList, commonReplacements);
+        EmailMessage emailMessage = new EmailMessage("Organisaatio-service", null, null, "YTJ-paivitys info", msgContent);
+        EmailData messageData = new EmailData(receiverList, emailMessage);
         String json = gson.toJson(messageData);
         try {
-            getClient().post(json, "messagesendMessageViaAsiointiTiliOrEmail");
+            getClient().post(json, "");
         } catch (OrganisaatioViestintaException ve) {
-            LOG.error("Could not send email.");
+            LOG.error("Could not send email.", ve);
         }
     }
 }
