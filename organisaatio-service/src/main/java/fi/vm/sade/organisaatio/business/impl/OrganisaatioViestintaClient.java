@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import java.io.IOException;
 import java.lang.Exception;
-import java.util.List;
 
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
@@ -41,7 +40,7 @@ import java.util.List;
 public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    @Value("${organisaatio-service.viestinta-service.rest.url}")
+    @Value("${organisaatio-service.ryhmasahkoposti-service.rest.url}")
     protected String viestintaServiceUrl;
 
     @Value("${organisaatio.service.username.to.viestinta}")
@@ -65,7 +64,7 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     }
 
     public void post(String json, String uri) throws OrganisaatioViestintaException {
-        String path = "/api/v1/" + uri;
+        String path = "/email" + uri;
         LOG.debug("POST " + viestintaServiceUrl + path);
         LOG.debug("POST data=" + json);
         authorize();
