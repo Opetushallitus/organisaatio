@@ -432,6 +432,12 @@
             <groupId>fi.vm.sade.viestintapalvelu</groupId>
             <artifactId>viestintapalvelu-api</artifactId>
             <version>${viestinta.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.wordnik</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

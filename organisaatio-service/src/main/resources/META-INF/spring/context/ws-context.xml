@@ -61,11 +61,12 @@
             <ref bean="tempfileResource"/>
             <ref bean="sessionResource"/>
             <ref bean="organisaatioDevResource"/>
+            <ref bean="ytjPaivitysResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="organisaatioJsonProvider" />
-            <ref bean="inputFilter" />
-            <ref bean="outputFilter" />
+            <ref bean="organisaatioJsonProvider"/>
+            <ref bean="inputFilter"/>
+            <ref bean="outputFilter"/>
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />
