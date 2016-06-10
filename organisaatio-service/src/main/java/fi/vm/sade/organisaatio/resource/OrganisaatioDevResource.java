@@ -23,6 +23,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -86,16 +87,11 @@ public class OrganisaatioDevResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
-            response = OrganisaatioRDTO.class,
+            response = YtjPaivitysLoki.class,
             responseContainer = "List")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<OrganisaatioRDTO> updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
-        List<OrganisaatioRDTO> organisaatioRDTOList = new ArrayList<>();
-        List<Organisaatio> organisaatioList = organisaatioYtjService.updateYTJData(forceUpdate);
-        for(Organisaatio organisaatio : organisaatioList) {
-            organisaatioRDTOList.add(conversionService.convert(organisaatio, OrganisaatioRDTO.class));
-        }
-        return organisaatioRDTOList;
+    public YtjPaivitysLoki updateYtj(@DefaultValue("false") @QueryParam("forceUpdate") final boolean forceUpdate) {
+        return organisaatioYtjService.updateYTJData(forceUpdate);
     }
 
 }

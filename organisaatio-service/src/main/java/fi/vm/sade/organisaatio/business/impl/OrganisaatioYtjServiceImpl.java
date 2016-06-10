@@ -95,7 +95,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
-    public List<Organisaatio> updateYTJData(final boolean forceUpdate) {
+    public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
+        YtjPaivitysLoki ytjPaivitysLoki = new YtjPaivitysLoki();
+        ytjPaivitysLoki.setPaivitysaika(new Date());
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
@@ -111,7 +113,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
             // TODO exception, update failed
-            return updateOrganisaatioList;
+            // TODO status description?
+            ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
+            ytjPaivitysLoki.setPaivitetytLkm(0);
+            return ytjPaivitysLoki;
         }
         organisaatioList = organisaatioDAO.findByOidList(oidList, SEARCH_LIMIT);
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
@@ -129,7 +134,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         } catch(OrganisaatioResourceException ore) {
             LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
             // TODO add info for UI to fetch
-            throw ore;
+            // TODO status description?
+            ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
+            ytjPaivitysLoki.setPaivitetytLkm(0);
+            return ytjPaivitysLoki;
+            //throw ore;
         }
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         for (YTJDTO ytjdto : ytjdtoList) {
@@ -213,7 +222,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Index the updated resources.
         solrIndexer.index(updateOrganisaatioList);
 
-        return updateOrganisaatioList;
+        return ytjPaivitysLoki;
     }
 
     private void fetchDataFromYtj(List<String> ytunnusList, List<YTJDTO> ytjdtoList) {

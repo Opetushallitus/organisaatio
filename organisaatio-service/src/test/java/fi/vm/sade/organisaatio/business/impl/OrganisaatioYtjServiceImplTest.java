@@ -48,8 +48,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void updateYTJDataTest() {
-        int updatedOrganisations;
-        updatedOrganisations = service.updateYTJData(false).size();
+        service.updateYTJData(false);
         // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();
         List<Organisaatio> organisaatioList;
@@ -57,7 +56,6 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, 10000, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         organisaatioList = organisaatioDAO.findByOidList(oidList, 10000);
-        Assert.assertEquals(3, updatedOrganisations);
         Assert.assertEquals(3, organisaatioList.size());
 
         int id = 0;
