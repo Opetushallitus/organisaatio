@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,10 +47,11 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Value("$host.virkailija")
     private String hostUri;
 
-    @Autowired
     private OrganisaatioViestintaClient viestintaClient;
 
-    public OrganisaatioViestintaImpl() {
+    @Autowired
+    public OrganisaatioViestintaImpl(OrganisaatioViestintaClient viestintaClient) {
+        this.viestintaClient = viestintaClient;
         gson = new GsonBuilder().create();
     }
 
@@ -63,37 +65,54 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     @Override
     public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki) {
-        String msgContent = "YTJ-Tietojen haku " + ytjPaivitysLoki.getPaivitysaika().toString() + " ";
-        if(ytjPaivitysLoki.getPaivitysTila().equals("ok")) {
-            msgContent += "onnistui";
-            if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
-                msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
+        if(ytjPaivitysLoki != null) {
+            String time = "";
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy 'klo' HH.mm");
+                simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
+            } catch (NullPointerException e) {
+                time = "(aikaa ei asetettu)";
             }
-            msgContent += "\r\n";
+            String msgContent = "YTJ-Tietojen haku " + time + " ";
+            if(ytjPaivitysLoki.getPaivitysTila().equals(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT)) {
+                msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")<br>";
+            }
+            else {
+                msgContent += "onnistui";
+                if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
+                    msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
+                }
+                msgContent += "<br>";
+
+            }
+
+            for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
+                msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
+                        + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a> (" + ytjVirhe.getVirhekentta() + ")<br>";
+            }
+
+            msgContent += "<br><a href=\"https://" + hostUri
+                    + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+
+            sendStringViestintaEmail(msgContent);
         }
         else {
-            msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")\r\n";
-
+            LOG.error("Null ytjPaivitysLoki. Could not send email.");
         }
-
-        for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
-            msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
-                    + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a>\r\n";
-        }
-
-        msgContent += "\r\n<a href=\"https://" + hostUri
-                + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
-
-        sendStringViestintaEmail(msgContent);
     }
 
     @Override
     public void sendStringViestintaEmail(String msgContent) {
-        sendEmail(msgContent, new ArrayList<String>(){{add(email);}});
+        if(msgContent == null || msgContent.isEmpty()) {
+            LOG.error("Null or empty string. Could not send email.");
+        }
+        else {
+            generateAndSendEmail(msgContent, new ArrayList<String>(){{add("petri.ryhanen@csc.fi");}});
+        }
     }
 
     @Override
-    public void sendEmail(String msgContent, List<String> receiverEmails) {
+    public void generateAndSendEmail(String msgContent, List<String> receiverEmails) {
         String templateName = "osoitepalvelu_email";
         List<Receiver> receiverList = new ArrayList<>();
         Map<String, Object> commonReplacements = new HashMap<>();

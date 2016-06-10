@@ -23,6 +23,7 @@ import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
@@ -81,6 +82,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     
     @Autowired
     private OrganisaatioBusinessService businessService;
+
+    @Autowired
+    private OrganisaatioViestinta organisaatioViestinta;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -226,6 +230,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
         ytjPaivitysLokiDao.flush();
+
+        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
 
         return ytjPaivitysLoki;
     }
