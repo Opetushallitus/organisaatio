@@ -28,6 +28,18 @@ import javax.validation.constraints.NotNull;
 @EntityListeners(XssFilterListener.class)
 public class YtjVirhe extends BaseEntity {
 
+    public enum YTJVirheKohde {
+        KOODISTO,
+        TALLENNUS,
+        TUNTEMATON,
+        ALKUPVM,
+        NIMI,
+        KIELI,
+        OSOITE,
+        PUHELIN,
+        WWW
+    }
+
     @JsonIgnore
     @ManyToOne
     private YtjPaivitysLoki ytjPaivitysLoki;
@@ -38,8 +50,9 @@ public class YtjVirhe extends BaseEntity {
     @Column(length = 255)
     private String orgNimi;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 255)
-    private String virhekentta;
+    private YTJVirheKohde virhekohde;
 
     @Column(length = 255)
     private String virheviesti;
@@ -60,12 +73,12 @@ public class YtjVirhe extends BaseEntity {
         this.orgNimi = orgNimi;
     }
 
-    public String getVirhekentta() {
-        return virhekentta;
+    public YTJVirheKohde getVirhekohde() {
+        return virhekohde;
     }
 
-    public void setVirhekentta(String virhekentta) {
-        this.virhekentta = virhekentta;
+    public void setVirhekohde(YTJVirheKohde virhekohde) {
+        this.virhekohde = virhekohde;
     }
 
     public String getVirheviesti() {
