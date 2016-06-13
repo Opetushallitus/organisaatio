@@ -86,7 +86,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         }
         String msgContent = "YTJ-Tietojen haku " + time + " ";
         if(ytjPaivitysLoki.getPaivitysTila().equals(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT)) {
-            msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")<br>";
+            msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTilaSelite() + ")<br>";
         }
         else {
             msgContent += "onnistui";

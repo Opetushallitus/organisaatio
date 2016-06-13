@@ -64,7 +64,6 @@ public class YtjPaivitysLokiDaoImplTest {
     }
 
     @Test
-    @Ignore
     public void fetchBothLogs() {
         List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findByDateRange(createDate(2016, 2, 2), createDate(2018, 6, 6));
         // TODO add data cleanup so that tests don't mess each other's data (OrgYtjServiceImplTest)
