@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
@@ -76,6 +77,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     private String generateMessageFromPaivitysloki(YtjPaivitysLoki ytjPaivitysLoki) {
         String time = "";
+        Map<String, List<YtjVirhe>> virheMap = YtjPaivitysLoki.getYtjVirheetMapByOid(ytjPaivitysLoki.getYtjVirheet());
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy 'klo' HH.mm");
             simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
@@ -89,15 +91,24 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         else {
             msgContent += "onnistui";
             if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
-                msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
+                msgContent += ", " + Integer.toString(virheMap.size()) + " virheellistä";
             }
             msgContent += "<br>";
 
         }
 
-        for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
+        for(Map.Entry<String, List<YtjVirhe>> entry : virheMap.entrySet()) {
+            String oid = entry.getKey();
+            List<YtjVirhe> ytjVirheList = entry.getValue();
+
             msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
-                    + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a> (" + ytjVirhe.getVirhekentta() + ")<br>";
+                    + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
+            String separator = "";
+            for(YtjVirhe ytjVirhe : ytjVirheList) {
+                msgContent += separator + ytjVirhe.getVirhekentta();
+                separator = ", ";
+            }
+            msgContent += ")<br>";
         }
 
         msgContent += "<br><a href=\"https://" + hostUri

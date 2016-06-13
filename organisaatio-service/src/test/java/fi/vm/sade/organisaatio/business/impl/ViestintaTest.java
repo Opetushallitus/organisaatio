@@ -73,12 +73,17 @@ public class ViestintaTest {
 
 
     @Test
-    public void messageFromLogTestWith2Error() {
+    public void messageFromLogTestWith3Error() {
         final YtjVirhe virhe = new YtjVirhe();
         final YtjVirhe virhe2 = new YtjVirhe();
+        final YtjVirhe virhe3 = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
-        String validMessage = "YTJ-Tietojen haku  onnistui, 2 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (foofoo)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
-        // virhe
+        String validMessagePart1 = "YTJ-Tietojen haku  onnistui, 2 virheellistä<br>";
+        String validMessagePart2 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (foofoo, foofoofoo)<br>";
+        String validMessagePart3 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br>";
+        String validMessagePart4 = "<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+
+        // virhe 1
         virhe.setOid("12345.0");
         virhe.setVirhekentta("foo");
         virhe.setVirheviesti("bar");
@@ -88,13 +93,21 @@ public class ViestintaTest {
         virhe2.setVirhekentta("foofoo");
         virhe2.setVirheviesti("barbar");
         virhe2.setOrgNimi("Organisaatio y");
+        // virhe 3
+        virhe3.setOid("12345.2");
+        virhe3.setVirhekentta("foofoofoo");
+        virhe3.setVirheviesti("barbarbar");
+        virhe3.setOrgNimi("Organisaatio y");
         // loki
         loki.setPaivitetytLkm(4);
         loki.setPaivitysaika(new GregorianCalendar(2014, 0, 1).getTime());
-        loki.setYtjVirheet(new ArrayList<YtjVirhe>() {{add(virhe);add(virhe2);}});
+        loki.setYtjVirheet(new ArrayList<YtjVirhe>() {{add(virhe);add(virhe2);add(virhe3);}});
         loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
 
         String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
-        Assert.assertEquals(validMessage, outputMessage);
+        Assert.assertTrue(outputMessage.contains(validMessagePart1));
+        Assert.assertTrue(outputMessage.contains(validMessagePart2));
+        Assert.assertTrue(outputMessage.contains(validMessagePart3));
+        Assert.assertTrue(outputMessage.contains(validMessagePart4));
     }
 }
