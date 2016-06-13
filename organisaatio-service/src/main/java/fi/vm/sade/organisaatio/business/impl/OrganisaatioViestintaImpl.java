@@ -65,39 +65,44 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Override
     public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki) {
         if(ytjPaivitysLoki != null) {
-            String time = "";
-            try {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy 'klo' HH.mm");
-                simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
-            } catch (NullPointerException e) {
-                time = "(aikaa ei asetettu)";
-            }
-            String msgContent = "YTJ-Tietojen haku " + time + " ";
-            if(ytjPaivitysLoki.getPaivitysTila().equals(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT)) {
-                msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")<br>";
-            }
-            else {
-                msgContent += "onnistui";
-                if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
-                    msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
-                }
-                msgContent += "<br>";
-
-            }
-
-            for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
-                msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
-                        + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a> (" + ytjVirhe.getVirhekentta() + ")<br>";
-            }
-
-            msgContent += "<br><a href=\"https://" + hostUri
-                    + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+            String msgContent = generateMessageFromPaivitysloki(ytjPaivitysLoki);
 
             sendStringViestintaEmail(msgContent);
         }
         else {
             LOG.error("Null ytjPaivitysLoki. Could not send email.");
         }
+    }
+
+    private String generateMessageFromPaivitysloki(YtjPaivitysLoki ytjPaivitysLoki) {
+        String time = "";
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy 'klo' HH.mm");
+            simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
+        } catch (NullPointerException e) {
+            time = "(aikaa ei asetettu)";
+        }
+        String msgContent = "YTJ-Tietojen haku " + time + " ";
+        if(ytjPaivitysLoki.getPaivitysTila().equals(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT)) {
+            msgContent+= "epäonnistui (" + ytjPaivitysLoki.getPaivitysTila() + ")<br>";
+        }
+        else {
+            msgContent += "onnistui";
+            if(!ytjPaivitysLoki.getYtjVirheet().isEmpty()) {
+                msgContent += ", " + Integer.toString(ytjPaivitysLoki.getYtjVirheet().size()) + " virheellistä";
+            }
+            msgContent += "<br>";
+
+        }
+
+        for(YtjVirhe ytjVirhe : ytjPaivitysLoki.getYtjVirheet()) {
+            msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
+                    + ytjVirhe.getOid() +"\">" + ytjVirhe.getOrgNimi() + "</a> (" + ytjVirhe.getVirhekentta() + ")<br>";
+        }
+
+        msgContent += "<br><a href=\"https://" + hostUri
+                + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        return msgContent;
     }
 
     @Override
