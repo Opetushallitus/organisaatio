@@ -15,8 +15,11 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class YtjPaivitysLoki extends BaseEntity {
     @Column(name = "paivitys_tila")
     private YTJPaivitysStatus paivitysTila;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
 
