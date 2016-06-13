@@ -17,11 +17,13 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -35,9 +37,10 @@ public class ViestintaTest {
     private OrganisaatioViestintaImpl organisaatioViestinta;
 
     @Test
-    public void messageFromLogTest() {
+    public void messageFromLogTestWith1Error() {
         final YtjVirhe virhe = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
+        String validMessage = "YTJ-Tietojen haku  onnistui, 1 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
         // virhe
         virhe.setOid("12345.0");
         virhe.setVirhekentta("foo");
@@ -49,6 +52,49 @@ public class ViestintaTest {
         loki.setYtjVirheet(new ArrayList<YtjVirhe>() {{add(virhe);}});
         loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
 
-        organisaatioViestinta.sendPaivitysLokiViestintaEmail(loki);
+        String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
+        Assert.assertEquals(validMessage, outputMessage);
+    }
+
+    @Test
+    public void messageFromLogTestWithNoErrors() {
+        final YtjVirhe virhe = new YtjVirhe();
+        YtjPaivitysLoki loki = new YtjPaivitysLoki();
+        String validMessage = "YTJ-Tietojen haku  onnistui<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        // loki
+        loki.setPaivitetytLkm(3);
+        loki.setPaivitysaika(new GregorianCalendar(2017, 0, 1).getTime());
+        loki.setYtjVirheet(new ArrayList<YtjVirhe>());
+        loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
+
+        String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
+        Assert.assertEquals(validMessage, outputMessage);
+    }
+
+
+    @Test
+    public void messageFromLogTestWith2Error() {
+        final YtjVirhe virhe = new YtjVirhe();
+        final YtjVirhe virhe2 = new YtjVirhe();
+        YtjPaivitysLoki loki = new YtjPaivitysLoki();
+        String validMessage = "YTJ-Tietojen haku  onnistui, 2 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (foofoo)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        // virhe
+        virhe.setOid("12345.0");
+        virhe.setVirhekentta("foo");
+        virhe.setVirheviesti("bar");
+        virhe.setOrgNimi("Organisaatio x");
+        // virhe 2
+        virhe2.setOid("12345.2");
+        virhe2.setVirhekentta("foofoo");
+        virhe2.setVirheviesti("barbar");
+        virhe2.setOrgNimi("Organisaatio y");
+        // loki
+        loki.setPaivitetytLkm(4);
+        loki.setPaivitysaika(new GregorianCalendar(2014, 0, 1).getTime());
+        loki.setYtjVirheet(new ArrayList<YtjVirhe>() {{add(virhe);add(virhe2);}});
+        loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
+
+        String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
+        Assert.assertEquals(validMessage, outputMessage);
     }
 }
