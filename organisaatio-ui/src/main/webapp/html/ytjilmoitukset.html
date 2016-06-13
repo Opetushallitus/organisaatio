@@ -25,21 +25,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);">
-        <div class="container">
-            <div class="row">
-                <div class="span2" style="display: table;">
-                    <h4 >12.3.2016 04:00</h4>
-                </div>
-                <div class="span10">
-                    <uib-accordion close-others="false">
-                        <uib-accordion-group heading="Static Header, initially expanded">
-                            This content is straight in the template.
-                        </uib-accordion-group>
-                    </uib-accordion>
+        <div ng-repeat="log in logs">
+            <div class="container" >
+                <div class="row">
+                    <div class="span2" style="display: table;">
+                        <h4>{{log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
+                    </div>
+                    <div class="span10">
+                        <uib-accordion close-others="false">
+                            <uib-accordion-group heading="Tietojen päivitys {{log.paivitysTila}}, {{log.ytjVirheet.length}} virheellistä">
+                                <div ng-repeat="virhe in log.ytjVirheet">
+                                    <a href="{{UI_URL_BASE}}html/index.html#/organisaatiot/{{virhe.oid}}">{{virhe.orgNimi}}</a>
+                                    ({{virhe.virhekentta}})
+                                </div>
+                            </uib-accordion-group>
+                        </uib-accordion>
+                    </div>
                 </div>
             </div>
+            <hr>
         </div>
-        <hr>
         <div class="container">
             <div class="row">
                 <div class="span2">

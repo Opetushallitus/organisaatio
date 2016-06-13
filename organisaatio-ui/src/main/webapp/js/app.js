@@ -77,7 +77,7 @@ app.config(function($routeProvider, $httpProvider) {
         when('/organisaatiot', {controller: 'OrganisaatioTreeController', templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
 
         // view notifications
-        when('/organisaatiot/ilmoitukset', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'ytjilmoitukset.html'}).
+        when('/organisaatiot/ilmoitukset', {controller: 'YtjIlmoituksetController', templateUrl:TEMPLATE_URL_BASE + 'ytjilmoitukset.html'}).
 
         // read one
         when('/organisaatiot/:oid', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
@@ -538,5 +538,11 @@ app.factory('KoodistoArrayByUri', function($resource) {
 app.factory('Historia', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
+    });
+});
+
+app.factory('YtjLoki', function($resource) {
+    return $resource(SERVICE_URL_BASE + "ytjpaivitysloki/uusimmat", {limit: 5}, {
+        get: {method: 'GET', withCredentials: true, isArray: true}
     });
 });
