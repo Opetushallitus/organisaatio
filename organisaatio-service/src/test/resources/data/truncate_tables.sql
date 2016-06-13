@@ -20,4 +20,6 @@ truncate table yhteystietoelementti;
 truncate table yhteystietojentyyppi;
 truncate table yhteystietojentyyppi_oppilaitostyypit;
 truncate table yhteystietojentyyppi_organisaatiotyypit;
+truncate table ytjpaivitysloki;
+truncate table ytjvirhe;
 set referential_integrity true;

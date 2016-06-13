@@ -4,6 +4,7 @@ CREATE TABLE ytjpaivitysloki (
   paivitysaika    TIMESTAMP    NOT NULL,
   paivitetyt_lkm  INT8,
   paivitys_tila   VARCHAR(255) NOT NULL,
+  paivitys_tila_selite VARCHAR(255),
   PRIMARY KEY (id)
 );
 

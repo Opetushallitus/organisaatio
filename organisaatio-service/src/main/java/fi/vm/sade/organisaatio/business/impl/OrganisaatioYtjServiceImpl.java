@@ -121,9 +121,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
         if(oidList.isEmpty()) {
             LOG.debug("oidList is empty, no organisations updated from YTJ!");
-            // TODO exception, update failed
-            // TODO status description?
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
+            ytjPaivitysLoki.setPaivitysTilaSelite("päivitettävien organisaatioiden haku organisaatiopalvelusta epäonnistui");
             ytjPaivitysLoki.setPaivitetytLkm(0);
             return ytjPaivitysLoki;
         }
@@ -142,9 +141,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             fetchDataFromYtj(ytunnusList, ytjdtoList);
         } catch(OrganisaatioResourceException ore) {
             LOG.error("Could not fetch ytj data. Aborting ytj data update.", ore);
-            // TODO add info for UI to fetch
-            // TODO status description?
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
+            ytjPaivitysLoki.setPaivitysTilaSelite("tietojen haku YTJ-palvelusta epäonnistui");
             ytjPaivitysLoki.setPaivitetytLkm(0);
             return ytjPaivitysLoki;
             //throw ore;

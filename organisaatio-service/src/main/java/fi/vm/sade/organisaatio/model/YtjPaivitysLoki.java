@@ -46,6 +46,9 @@ public class YtjPaivitysLoki extends BaseEntity {
     @Column(name = "paivitys_tila")
     private YTJPaivitysStatus paivitysTila;
 
+    @Column(name = "paivitys_tila_selite")
+    private String paivitysTilaSelite;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
@@ -72,6 +75,14 @@ public class YtjPaivitysLoki extends BaseEntity {
 
     public void setPaivitysTila(YTJPaivitysStatus paivitysTila) {
         this.paivitysTila = paivitysTila;
+    }
+
+    public String getPaivitysTilaSelite() {
+        return paivitysTilaSelite;
+    }
+
+    public void setPaivitysTilaSelite(String paivitysTilaSelite) {
+        this.paivitysTilaSelite = paivitysTilaSelite;
     }
 
     public List<YtjVirhe> getYtjVirheet() {
