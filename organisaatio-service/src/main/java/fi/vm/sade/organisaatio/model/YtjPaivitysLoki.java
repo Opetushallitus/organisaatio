@@ -22,9 +22,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "ytjpaivitysloki")
@@ -82,5 +80,18 @@ public class YtjPaivitysLoki extends BaseEntity {
 
     public void setYtjVirheet(List<YtjVirhe> ytjVirheet) {
         this.ytjVirheet = ytjVirheet;
+    }
+
+    public static Map<String, List<YtjVirhe>> getYtjVirheetMapByOid(List<YtjVirhe> ytjVirheet) {
+        Map<String, List<YtjVirhe>> virheMap = new HashMap<>();
+        for(final YtjVirhe ytjVirhe : ytjVirheet) {
+            if(virheMap.containsKey(ytjVirhe.getOid())) {
+                virheMap.get(ytjVirhe.getOid()).add(ytjVirhe);
+            }
+            else {
+                virheMap.put(ytjVirhe.getOid(), new ArrayList<YtjVirhe>(){{add(ytjVirhe);}});
+            }
+        }
+        return virheMap;
     }
 }
