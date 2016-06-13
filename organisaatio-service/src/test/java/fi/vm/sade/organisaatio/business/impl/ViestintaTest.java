@@ -40,11 +40,11 @@ public class ViestintaTest {
     public void messageFromLogTestWith1Error() {
         final YtjVirhe virhe = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
-        String validMessage = "YTJ-Tietojen haku  onnistui, 1 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        String validMessage = "YTJ-Tietojen haku  onnistui, 1 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (ytj.virhe.nimi)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
         // virhe
         virhe.setOid("12345.0");
-        virhe.setVirhekentta("foo");
-        virhe.setVirheviesti("bar");
+        virhe.setVirhekohde(YtjVirhe.YTJVirheKohde.NIMI);
+        virhe.setVirheviesti("ytj.virhe.nimi");
         virhe.setOrgNimi("Organisaatio x");
         // loki
         loki.setPaivitetytLkm(1);
@@ -79,23 +79,23 @@ public class ViestintaTest {
         final YtjVirhe virhe3 = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
         String validMessagePart1 = "YTJ-Tietojen haku  onnistui, 2 virheellistä<br>";
-        String validMessagePart2 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (foofoo, foofoofoo)<br>";
-        String validMessagePart3 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (foo)<br>";
+        String validMessagePart2 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (barbar, barbarbar)<br>";
+        String validMessagePart3 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (bar)<br>";
         String validMessagePart4 = "<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
 
         // virhe 1
         virhe.setOid("12345.0");
-        virhe.setVirhekentta("foo");
+        virhe.setVirhekohde(YtjVirhe.YTJVirheKohde.NIMI);
         virhe.setVirheviesti("bar");
         virhe.setOrgNimi("Organisaatio x");
         // virhe 2
         virhe2.setOid("12345.2");
-        virhe2.setVirhekentta("foofoo");
+        virhe2.setVirhekohde(YtjVirhe.YTJVirheKohde.TALLENNUS);
         virhe2.setVirheviesti("barbar");
         virhe2.setOrgNimi("Organisaatio y");
         // virhe 3
         virhe3.setOid("12345.2");
-        virhe3.setVirhekentta("foofoofoo");
+        virhe3.setVirhekohde(YtjVirhe.YTJVirheKohde.TUNTEMATON);
         virhe3.setVirheviesti("barbarbar");
         virhe3.setOrgNimi("Organisaatio y");
         // loki

@@ -105,7 +105,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
-                msgContent += separator + ytjVirhe.getVirhekentta();
+                msgContent += separator + ytjVirhe.getVirheviesti();
                 separator = ", ";
             }
             msgContent += ")<br>";

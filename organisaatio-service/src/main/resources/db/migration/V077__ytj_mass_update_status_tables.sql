@@ -14,7 +14,7 @@ CREATE TABLE ytjvirhe (
   oid             VARCHAR(255) NOT NULL,
   orgNimi         VARCHAR(255),
   ytjpaivitysloki_id INT8      NOT NULL,
-  virhekentta     VARCHAR(255),
+  virhekohde     VARCHAR(255),
   virheviesti   VARCHAR(255),
   PRIMARY KEY (id)
 );

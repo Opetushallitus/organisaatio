@@ -30,7 +30,7 @@ public class YtjPaivitysLokiDaoImplTest {
     public void setUp() {
         YtjVirhe virhe = new YtjVirhe();
         virhe.setOid("12345.0");
-        virhe.setVirhekentta("foo");
+        virhe.setVirhekohde(YtjVirhe.YTJVirheKohde.ALKUPVM);
         virhe.setVirheviesti("bar");
         // vanhempi loki
         oldLog.setPaivitetytLkm(1);
@@ -66,7 +66,6 @@ public class YtjPaivitysLokiDaoImplTest {
     @Test
     public void fetchBothLogs() {
         List<YtjPaivitysLoki> logs = ytjPaivitysLokiDao.findByDateRange(createDate(2016, 2, 2), createDate(2018, 6, 6));
-        // TODO add data cleanup so that tests don't mess each other's data (OrgYtjServiceImplTest)
         Assert.assertEquals(2, logs.size());
     }
 
