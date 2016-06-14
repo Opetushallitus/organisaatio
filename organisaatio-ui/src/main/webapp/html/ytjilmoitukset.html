@@ -26,6 +26,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);">
         <div ng-repeat="log in logs">
+            <hr ng-if="$index > 0">
             <div class="container" >
                 <div class="row">
                     <div class="span2" style="display: table;">
@@ -33,32 +34,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </div>
                     <div class="span10">
                         <uib-accordion close-others="false">
-                            <uib-accordion-group heading="Tietojen päivitys {{log.paivitysTila}}, {{log.ytjVirheet.length}} virheellistä">
-                                <div ng-repeat="virhe in log.ytjVirheet">
-                                    <a href="{{UI_URL_BASE}}html/index.html#/organisaatiot/{{virhe.oid}}">{{virhe.orgNimi}}</a>
-                                    ({{virhe.virhekentta}})
+                            <uib-accordion-group heading="{{getVirheHeader(log)}}">
+                                <div ng-repeat="virheList in log.ytjVirheet">
+                                    <a href="{{UI_URL_BASE}}index.html#/organisaatiot/{{virheList[0].oid}}" target="_blank">
+                                        {{virheList[0].orgNimi}}
+                                    </a>
+                                    <!-- Put this all together to avoid white spaces between elements -->
+                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span>{{virhe.virhekentta}}</span>)
                                 </div>
                             </uib-accordion-group>
                         </uib-accordion>
                     </div>
                 </div>
             </div>
-            <hr>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="span2">
-                    <h4>12.3.2016 04:00</h4>
-                </div>
-                <div class="span10">
-                    <uib-accordion close-others="false">
-                        <uib-accordion-group heading="Static Header, initially expanded">
-                            This content is straight in the template.
-                        </uib-accordion-group>
-                    </uib-accordion>
-                </div>
-            </div>
-        </div>
-        <hr>
     </div>
 </div>
