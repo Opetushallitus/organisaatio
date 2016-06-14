@@ -78,10 +78,11 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     private String generateMessageFromPaivitysloki(YtjPaivitysLoki ytjPaivitysLoki) {
         String time = "";
         Map<String, List<YtjVirhe>> virheMap = YtjPaivitysLoki.getYtjVirheetMapByOid(ytjPaivitysLoki.getYtjVirheet());
-        try {
+        if(ytjPaivitysLoki.getPaivitysaika() != null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy 'klo' HH.mm");
-            simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
-        } catch (NullPointerException e) {
+            time = simpleDateFormat.format(ytjPaivitysLoki.getPaivitysaika());
+        }
+        else {
             time = "(aikaa ei asetettu)";
         }
         String msgContent = "YTJ-Tietojen haku " + time + " ";
