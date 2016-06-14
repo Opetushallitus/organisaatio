@@ -41,10 +41,10 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     private final Gson gson;
 
-    @Value("$viestintapalvelu.email")
+    @Value("${viestintapalvelu.email}")
     private String email;
 
-    @Value("$host.virkailija")
+    @Value("${host.virkailija}")
     private String hostUri;
 
     private OrganisaatioViestintaClient viestintaClient;
