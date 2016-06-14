@@ -40,7 +40,7 @@ public class ViestintaTest {
     public void messageFromLogTestWith1Error() {
         final YtjVirhe virhe = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
-        String validMessage = "YTJ-Tietojen haku  onnistui, 1 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (ytj.virhe.nimi)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        String validMessage = "YTJ-Tietojen haku 01.01.2017 klo 00.00 onnistui, 1 virheellistä<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (ytj.virhe.nimi)<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
         // virhe
         virhe.setOid("12345.0");
         virhe.setVirhekohde(YtjVirhe.YTJVirheKohde.NIMI);
@@ -58,9 +58,8 @@ public class ViestintaTest {
 
     @Test
     public void messageFromLogTestWithNoErrors() {
-        final YtjVirhe virhe = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
-        String validMessage = "YTJ-Tietojen haku  onnistui<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+        String validMessage = "YTJ-Tietojen haku 01.01.2017 klo 00.00 onnistui<br><br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
         // loki
         loki.setPaivitetytLkm(3);
         loki.setPaivitysaika(new GregorianCalendar(2017, 0, 1).getTime());
@@ -71,15 +70,14 @@ public class ViestintaTest {
         Assert.assertEquals(validMessage, outputMessage);
     }
 
-
     @Test
     public void messageFromLogTestWith3Error() {
         final YtjVirhe virhe = new YtjVirhe();
         final YtjVirhe virhe2 = new YtjVirhe();
         final YtjVirhe virhe3 = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
-        String validMessagePart1 = "YTJ-Tietojen haku  onnistui, 2 virheellistä<br>";
-        String validMessagePart2 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (barbar, barbarbar)<br>";
+        String validMessagePart1 = "YTJ-Tietojen haku 01.01.2014 klo 00.00 onnistui, 2 virheellistä<br>";
+        String validMessagePart2 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.2\">Organisaatio y</a> (foofoo, barbarbar)<br>";
         String validMessagePart3 = "<a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/12345.0\">Organisaatio x</a> (bar)<br>";
         String validMessagePart4 = "<br><a href=\"https://null/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
 
@@ -91,7 +89,7 @@ public class ViestintaTest {
         // virhe 2
         virhe2.setOid("12345.2");
         virhe2.setVirhekohde(YtjVirhe.YTJVirheKohde.TALLENNUS);
-        virhe2.setVirheviesti("barbar");
+        virhe2.setVirheviesti("foofoo");
         virhe2.setOrgNimi("Organisaatio y");
         // virhe 3
         virhe3.setOid("12345.2");
