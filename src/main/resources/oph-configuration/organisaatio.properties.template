@@ -33,6 +33,7 @@ organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koo
 organisaatio-service.scheduled.update.cron.expression=0 0 0-6/1 * * ?
 organisaatio.service.username.to.viestinta={{organisaatio_service_username_to_viestinta | default("username")}}
 organisaatio.service.password.to.viestinta={{organisaatio_service_password_to_viestinta | default("password")}}
+ryhmasahkoposti.service.email={{ryhmasahkoposti_service_email | default("jatkuvatpalvelut@oph.fi")}}
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService

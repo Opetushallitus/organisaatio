@@ -41,7 +41,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     private final Gson gson;
 
-    @Value("${viestintapalvelu.email}")
+    @Value("${ryhmasahkoposti.service.email}")
     private String email;
 
     @Value("${host.virkailija}")
@@ -123,7 +123,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             LOG.error("Null or empty string. Could not send email.");
         }
         else {
-            generateAndSendEmail(msgContent, new ArrayList<String>(){{add("petri.ryhanen@csc.fi");}});
+            generateAndSendEmail(msgContent, new ArrayList<String>(){{add(email);}});
         }
     }
 
