@@ -31,6 +31,7 @@ public class YtjVirhe extends BaseEntity {
     public enum YTJVirheKohde {
         KOODISTO,
         TALLENNUS,
+        VALIDOINTI,
         TUNTEMATON,
         ALKUPVM,
         NIMI,
