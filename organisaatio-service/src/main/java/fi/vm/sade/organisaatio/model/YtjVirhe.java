@@ -58,6 +58,14 @@ public class YtjVirhe extends BaseEntity {
     @Column(length = 255)
     private String virheviesti;
 
+    public YtjPaivitysLoki getYtjPaivitysLoki() {
+        return ytjPaivitysLoki;
+    }
+
+    public void setYtjPaivitysLoki(YtjPaivitysLoki ytjPaivitysLoki) {
+        this.ytjPaivitysLoki = ytjPaivitysLoki;
+    }
+
     public String getOid() {
         return oid;
     }

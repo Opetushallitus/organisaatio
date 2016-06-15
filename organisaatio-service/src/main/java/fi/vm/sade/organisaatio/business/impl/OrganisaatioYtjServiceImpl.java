@@ -741,6 +741,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         virhe.setOrgNimi(organisaatio.getNimihaku());
         virhe.setVirhekohde(kohde);
         virhe.setVirheviesti(viesti);
+        virhe.setYtjPaivitysLoki(ytjPaivitysLoki);
         ytjPaivitysLoki.getYtjVirheet().add(virhe);
     }
 
