@@ -659,12 +659,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element minOccurs="0" name="ytjKieli" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation xml:lang="fi">Kieli, jolla YTJ:stä haetut tiedot on päivitetty
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element minOccurs="0" name="tuontiPvm" type="xs:dateTime">
                 <xs:annotation>
                     <xs:documentation xml:lang="fi">Aikaleima, jolloin tiedot tuotu koulutasta.</xs:documentation>
