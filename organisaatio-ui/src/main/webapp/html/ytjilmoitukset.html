@@ -24,7 +24,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <p tt="ilmoitukset.tapahtumat">TAPAHTUMAT</p>
     </div>
 
-    <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);">
+    <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);"
+         auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
         <div ng-repeat="log in logs">
             <hr ng-if="$index > 0">
             <div class="container" >
@@ -49,4 +50,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
     </div>
+</div>
+<!-- -->
+<div class="row fixed-footer" ng-hide="isLoading()">
+    <div class="align-right" style="white-space: nowrap;">
+        <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
+            <i class="icon-arrow-left"></i>
+        </button>
+    </div>
+    <span>&nbsp;</span>
 </div>
