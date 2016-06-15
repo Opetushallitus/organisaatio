@@ -41,7 +41,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                         {{virheList[0].orgNimi}}
                                     </a>
                                     <!-- Put this all together to avoid white spaces between elements -->
-                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span>{{virhe.virhekentta}}</span>)
+                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{virhe.virheviesti}}">{{virhe.virhekohde}}</a></span>)
                                 </div>
                             </uib-accordion-group>
                         </uib-accordion>
