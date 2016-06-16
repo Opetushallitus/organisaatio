@@ -31,19 +31,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="container" >
                 <div class="row">
                     <div class="span2" style="display: table;">
-                        <h4>{{log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
+                        <h4>{{::log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
                     </div>
                     <div class="span10">
                         <uib-accordion close-others="false">
-                            <uib-accordion-group heading="{{getVirheHeader(log)}}" is-open="openIndex[$index]">
-                                <div ng-if="openIndex[$index]">
-                                    <div ng-repeat="virheList in log.ytjVirheet">
-                                        <a href="{{UI_URL_BASE}}index.html#/organisaatiot/{{virheList[0].oid}}" target="_blank">
-                                            {{virheList[0].orgNimi}}
-                                        </a>
-                                        <!-- Put this all together to avoid white spaces between elements -->
-                                        (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{virhe.virheviesti}}">{{virhe.virhekohde}}</a></span>)
-                                    </div>
+                            <uib-accordion-group heading="{{::getVirheHeader(log)}}" is-open="openIndex[$index]">
+                                <div ng-repeat="virheList in log.ytjVirheet">
+                                    <a href="{{::UI_URL_BASE}}index.html#/organisaatiot/{{::virheList[0].oid}}" target="_blank">
+                                        {{::virheList[0].orgNimi}}
+                                    </a>
+                                    <!-- Put this all together to avoid white spaces between elements -->
+                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::virhe.virheviesti}}">{{::virhe.virhekohde}}</a></span>)
                                 </div>
                             </uib-accordion-group>
                         </uib-accordion>
@@ -56,7 +54,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 <div class="row fixed-footer" ng-hide="isLoading()">
     <div class="align-right" style="white-space: nowrap;">
-        <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
+        <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{::t('Organisaatiot.ohje.palaahakuun')}}">
             <i class="icon-arrow-left"></i>
         </button>
     </div>
