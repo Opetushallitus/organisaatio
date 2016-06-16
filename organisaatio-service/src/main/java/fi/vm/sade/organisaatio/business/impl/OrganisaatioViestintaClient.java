@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
+
 @Component
 public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -46,7 +49,6 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.viestinta}")
     private String viestintaClientPassword;
 
-    @Override
     protected void authorize() throws OrganisaatioViestintaException {
         try {
             authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);

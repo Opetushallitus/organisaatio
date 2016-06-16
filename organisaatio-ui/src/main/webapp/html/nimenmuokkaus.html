@@ -62,7 +62,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <input class="span4" ng-if="model.toimipiste === true" type="text" disabled placeholder="{{model.parentNimi.fi}}"/>
             <span ng-if="model.toimipiste === true">, </span>
-            <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+            <input ng-disabled="model.mode === 'delete' || isFromYtj('kieli_fi#1')"
+                   ng-class="{'pending-delete' : model.mode==='delete'}"
                    ng-if="model.toimipiste === false"
                    type="text" name="nimifi" class="span6"
                    ng-model="model.nimi.nimi.fi" oph-decode-name oph-enter
@@ -92,7 +93,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div>
             <input class="span4" ng-if="model.toimipiste === true" type="text" disabled placeholder="{{model.parentNimi.sv}}"/>
             <span ng-if="model.toimipiste === true">, </span>
-            <input ng-disabled="model.mode === 'delete'" ng-class="{'pending-delete' : model.mode==='delete'}"
+            <input ng-disabled="model.mode === 'delete' || isFromYtj('kieli_sv#1')"
+                   ng-class="{'pending-delete' : model.mode==='delete'}"
                    ng-if="model.toimipiste === false"
                    type="text" name="nimisv" class="span6"
                    ng-model="model.nimi.nimi.sv" oph-decode-name oph-enter

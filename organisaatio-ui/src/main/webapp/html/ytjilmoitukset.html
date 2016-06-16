@@ -35,13 +35,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </div>
                     <div class="span10">
                         <uib-accordion close-others="false">
-                            <uib-accordion-group heading="{{getVirheHeader(log)}}">
-                                <div ng-repeat="virheList in log.ytjVirheet">
+                            <uib-accordion-group heading="{{getVirheHeader(log)}}" is-open="openIndex[$index]">
+                                <div ng-repeat="virheList in log.ytjVirheet" ng-if="openIndex[$index]">
                                     <a href="{{UI_URL_BASE}}index.html#/organisaatiot/{{virheList[0].oid}}" target="_blank">
                                         {{virheList[0].orgNimi}}
                                     </a>
                                     <!-- Put this all together to avoid white spaces between elements -->
-                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span>{{virhe.virhekentta}}</span>)
+                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{virhe.virheviesti}}">{{virhe.virhekohde}}</a></span>)
                                 </div>
                             </uib-accordion-group>
                         </uib-accordion>

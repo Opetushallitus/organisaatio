@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
@@ -51,7 +53,6 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.koodisto}")
     private String koodistoClientPassword;
 
-    @Override
     protected void authorize() throws OrganisaatioKoodistoException {
         try {
             authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
@@ -59,6 +60,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
             throw new OrganisaatioKoodistoException(e.getMessage());
         }
     }
+
 
     private String createKoodistoServiceParameters() {
         // Estetään cachen käyttö
@@ -119,7 +121,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String uri = "/rest/codeelement/save";
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
-            authorize();
+        authorize();
         HttpClient client = new DefaultHttpClient();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());

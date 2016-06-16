@@ -50,6 +50,8 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Date _lakkautusPvm;
 
+    private String _ytjKieli;
+
     private Date _ytjPaivitysPvm;
 
     private List<String> _kieletUris;
@@ -148,6 +150,15 @@ public class OrganisaatioRDTO implements Serializable {
 
     public void setLakkautusPvm(Date _lakkautusPvm) {
         this._lakkautusPvm = _lakkautusPvm;
+    }
+
+    @ApiModelProperty(value = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", required = true)
+    public String getYTJKieli() {
+        return _ytjKieli;
+    }
+
+    public void setYTJKieli(String _ytjKieli) {
+        this._ytjKieli = _ytjKieli;
     }
 
     @ApiModelProperty(value = "YTJ:n päivityspäivämäärä", required = true)

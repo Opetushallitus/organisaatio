@@ -18,7 +18,7 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
     function YtjIlmoituksetController($scope, $log, $location, YtjLoki, LocalisationService) {
         $log = $log.getInstance("YtjIlmoituksetController");
         $scope.logs = [];
-
+        $scope.openIndex = [true];
         $scope.$on('$routeChangeSuccess', function() {
             YtjLoki.get({}, function (result) {
                 $log.info("resuls", result);
