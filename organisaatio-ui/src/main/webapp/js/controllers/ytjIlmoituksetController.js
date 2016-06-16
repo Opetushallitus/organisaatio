@@ -25,20 +25,22 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
                 $log.info("resuls", result);
                 $scope.logs.length = 0;
                 angular.forEach(result, function (loki) {
-                    var obj = {};
-                    var virheet = loki.ytjVirheet;
+                    var virheList = loki.ytjVirheet;
                     loki.ytjVirheet = [];
-                    // Group by oid and name
-                    angular.forEach(virheet, function(virhe) {
-                        if(angular.isUndefined(obj[virhe.oid])) {
-                            obj.oid = virhe[0].oid;
-                            obj.orgNimi = virhe[0].orgNimi;
-                            obj.virheet = virhe;
-                        }
-                        else {
-                            obj.virheet.push(virhe);
-                        }
-                        loki.ytjVirheet.push(obj);
+                    angular.forEach(virheList, function (ytjVirheList) {
+                        var ytjVirhe = {};
+                        // Group by oid and name
+                        angular.forEach(ytjVirheList, function(virhe) {
+                            if(angular.isUndefined(ytjVirhe.oid)) {
+                                ytjVirhe.oid = virhe.oid;
+                                ytjVirhe.orgNimi = virhe.orgNimi;
+                                ytjVirhe.virheet = [virhe];
+                            }
+                            else {
+                                ytjVirhe.virheet.push(virhe);
+                            }
+                        });
+                        loki.ytjVirheet.push(ytjVirhe);
                     });
                     $scope.logs.push(loki);
                 });
