@@ -36,12 +36,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     <div class="span10">
                         <uib-accordion close-others="false">
                             <uib-accordion-group heading="{{getVirheHeader(log)}}" is-open="openIndex[$index]">
-                                <div ng-repeat="virheList in log.ytjVirheet" ng-if="openIndex[$index]">
-                                    <a href="{{UI_URL_BASE}}index.html#/organisaatiot/{{virheList[0].oid}}" target="_blank">
-                                        {{virheList[0].orgNimi}}
-                                    </a>
-                                    <!-- Put this all together to avoid white spaces between elements -->
-                                    (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{virhe.virheviesti}}">{{virhe.virhekohde}}</a></span>)
+                                <div ng-if="openIndex[$index]">
+                                    <div ng-repeat="virheList in log.ytjVirheet">
+                                        <a href="{{UI_URL_BASE}}index.html#/organisaatiot/{{virheList[0].oid}}" target="_blank">
+                                            {{virheList[0].orgNimi}}
+                                        </a>
+                                        <!-- Put this all together to avoid white spaces between elements -->
+                                        (<span ng-repeat="virhe in virheList"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{virhe.virheviesti}}">{{virhe.virhekohde}}</a></span>)
+                                    </div>
                                 </div>
                             </uib-accordion-group>
                         </uib-accordion>
@@ -51,7 +53,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 </div>
-<!-- -->
+
 <div class="row fixed-footer" ng-hide="isLoading()">
     <div class="align-right" style="white-space: nowrap;">
         <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
