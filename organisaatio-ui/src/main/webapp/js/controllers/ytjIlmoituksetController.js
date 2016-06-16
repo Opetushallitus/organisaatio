@@ -19,22 +19,27 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
         $log = $log.getInstance("YtjIlmoituksetController");
         $scope.logs = [];
         $scope.openIndex = [true];
+
         $scope.$on('$routeChangeSuccess', function() {
             YtjLoki.get({}, function (result) {
                 $log.info("resuls", result);
                 $scope.logs.length = 0;
                 angular.forEach(result, function (loki) {
                     var obj = {};
-                    // Group by oid
-                    angular.forEach(loki.ytjVirheet, function(virhe) {
+                    var virheet = loki.ytjVirheet;
+                    loki.ytjVirheet = [];
+                    // Group by oid and name
+                    angular.forEach(virheet, function(virhe) {
                         if(angular.isUndefined(obj[virhe.oid])) {
-                            obj[virhe.oid] = [virhe];
+                            obj.oid = virhe[0].oid;
+                            obj.orgNimi = virhe[0].orgNimi;
+                            obj.virheet = virhe;
                         }
                         else {
-                            obj[virhe.oid].push(virhe);
+                            obj.virheet.push(virhe);
                         }
+                        loki.ytjVirheet.push(obj);
                     });
-                    loki.ytjVirheet = obj;
                     $scope.logs.push(loki);
                 });
             }, function () {
@@ -50,7 +55,7 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
                 return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length]);
             }
             else if(log.paivitysTila === 'EPAONNISTUNUT') {
-                return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet[0].virheKohde]);
+                return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet[0].virheet[0].virheViesti]);
             }
             else {
                 $log.error('Invalid paivitysTila');
@@ -61,5 +66,12 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
         $scope.cancel = function() {
             $location.path("/");
         };
+
+        $scope.closeOthers = function(index) {
+            angular.forEach($scope.openIndex, function (value, key) {
+                $scope.openIndex[key] = false;
+            });
+            $scope.openIndex[index] = true;
+        }
     }
 ]);
