@@ -49,12 +49,6 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.viestinta}")
     private String viestintaClientPassword;
 
-    @PostConstruct
-    public void init() {
-        setUp(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
-    }
-
-    @Override
     protected void authorize() throws OrganisaatioViestintaException {
         try {
             authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
