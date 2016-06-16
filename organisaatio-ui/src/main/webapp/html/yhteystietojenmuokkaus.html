@@ -28,10 +28,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <span ng-if="model.isPostiOsoiteRequired(model.ytlang)">*</span>
     </label>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
-        <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length oph-enter oph-required
+        <input id="postiosoitefi" type="text" maxlength="100" name="postiosoitefi" class="span6" oph-null-if-zero-length
+               oph-enter oph-required
                ng-model="model.yhteystiedot[model.ytlang].posti.osoite" ng-change="model.copyAddress(false, true)"
-               ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang) || model.yhteystiedot.postinumerot[model.ytlang].posti"
+               ng-required="model.osoitemuoto.yt[model.ytlang] === 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang)
+               || model.yhteystiedot.postinumerot[model.ytlang].posti"
                ng-maxlength="100"
+               ng-disabled="isFromYtj(model.ytlang)"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.osoite')}}"/>
         &nbsp;&nbsp;&nbsp;
         <input id="postipostifi" name="postipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
@@ -39,7 +42,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                uib-typeahead="nro for nro in model.koodisto.postinumerot | filter:$viewValue | limitTo:10"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.postinumero')}}" typeahead-editable="true"
                ng-required="model.yhteystiedot.postinumerot && model.yhteystiedot[model.ytlang].posti.osoite"
-               ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti, model.yhteystiedot.postinumerot[model.ytlang].posti)">
+               ng-disabled="isFromYtj(model.ytlang)"
+               ng-blur="model.setPostinumero(false, model.yhteystiedot[model.ytlang].posti,
+               model.yhteystiedot.postinumerot[model.ytlang].posti)">
         &nbsp;{{model.getLocalizedPaikka(model.yhteystiedot.postinumerot[model.ytlang].posti, model.ytlang)}}
         <div>
             <span class="text-error" ng-show="yhteystiedot.postiosoitefi.$error.maxlength"
@@ -68,7 +73,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <textarea id="kvpostiosoitefi" name="kvpostiosoitefi" rows="6" oph-null-if-zero-length oph-required
                   ng-model="model.yhteystiedot[model.ytlang].ulkomainen_posti.osoite"
                   ng-required="model.osoitemuoto.yt[model.ytlang] !== 'suomalainen' && model.isPostiOsoiteRequired(model.ytlang)"
-                  ng-disabled="disabled" ng-maxlength="100"
+                  ng-maxlength="100"
                   ng-change="model.copyAddress(false, false)" class="span6">
         </textarea>
         <div>
@@ -135,7 +140,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         Organisaationtarkastelu.puhelinnumero
     </label>
     <div class="controls">
-        <input id="puhelinnumero" type="text" name="puhelinnumero"
+        <input id="puhelinnumero" type="text" name="puhelinnumero" ng-disabled="isFromYtj(model.ytlang)"
                ng-model="model.yhteystiedot[model.ytlang].puhelin.numero" oph-null-if-zero-length oph-enter
                ie-placeholder placeholder="{{t('Organisaationtarkastelu.puhelinnumero')}}" ng-pattern="/^[\d \-\+]+$/"/>
         <div>
@@ -171,7 +176,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="controls">
         <input id="sahkopostiosoite" type="email" name="sahkopostiosoite" class="span6" maxlength="255"
                ng-model="model.yhteystiedot[model.ytlang].email.email" oph-null-if-zero-length oph-enter
-               ie-placeholder placeholder="{{t('Organisaationtarkastelu.sahkopostiosoite')}}"/>
+               ie-placeholder placeholder="{{t('Organisaationtarkastelu.sahkopostiosoite')}}"
+               ng-disabled="isFromYtj(model.ytlang)"/>
         <div>
             <span class="text-error" ng-show="yhteystiedot.sahkopostiosoite.$error.email">
                 {{t('Organisaationtarkastelu.sahkopostiosoite')}}
@@ -189,7 +195,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <input id="wwwosoite" type="text" name="wwwosoite" class="span6" maxlength="255"
                ng-model="model.yhteystiedot[model.ytlang].www.www" oph-null-if-zero-length oph-enter
                ie-placeholder placeholder="{{t('Organisaationtarkastelu.wwwosoite')}}" ng-required="false"
-               http-prefix oph-pattern="{{model.url.validator}}"/>
+               http-prefix oph-pattern="{{model.url.validator}}" ng-disabled="isFromYtj(model.ytlang)"/>
         <div>
             <span class="text-error" ng-show="yhteystiedot.wwwosoite.$error.ophPattern" tt="Organisaationmuokkaus.validation.some">
                 Organisaationmuokkaus.validation.some

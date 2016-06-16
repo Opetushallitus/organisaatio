@@ -17,17 +17,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <!-- Organisaation muokkaus -->
 <form name="form" class="form-horizontal" novalidate>
     <div class="control-group" >
-            <div class="offset2">
-                <h3>
-                    <span ng-show="model.mode === 'edit'">{{t('Organisaationmuokkaus.muokkaus')}} {{model.uriLocalizedNames["nimi"]}}</span>
-                    <span ng-show="model.mode === 'new'">{{t('Organisaationmuokkaus.uudenluonti')}} {{model.uriLocalizedNames["parentnimi"]}}</span>
-                    <span ng-show="model.paivitys.pvm" id="paivittaja">
-                    ({{t('Organisaationtarkastelu.tallennettu')}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</span>
-                </h3>
-                <div>
-            <em class="muted" tt="Organisaationmuokkaus.ohje.pakollisuus">Pakollisuusohje</em>
-        </div>
+        <div class="offset2">
+            <h3>
+                <span ng-show="model.mode === 'edit'">{{t('Organisaationmuokkaus.muokkaus')}} {{model.uriLocalizedNames["nimi"]}}</span>
+                <span ng-show="model.mode === 'new'">{{t('Organisaationmuokkaus.uudenluonti')}} {{model.uriLocalizedNames["parentnimi"]}}</span>
+                <span ng-show="model.paivitys.pvm" id="paivittaja">
+                ({{t('Organisaationtarkastelu.tallennettu')}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</span>
+            </h3>
+            <div ng-if="!!model.organisaatio.ytjkieli">
+                <span tt="organisaationmuokkaus.ohje.ytj_tiedot">YTJ:n tiedot päivitetään joka yö</span>
             </div>
+            <div ng-if="!!model.organisaatio.ytjkieli">
+                <span class="pull-right">
+                    <a href="https://asiointi.ytj.fi/ytjap" target="_blank"><i class="icon-pencil" aria-hidden="true"></i>
+                        &nbsp;<label tt="organisaationmuokkaus.ohje.ytj_muokkaus_link">Muuta YTJ-tietoja</label></a>
+                </span>
+            </div>
+            <div>
+                <em class="muted" tt="Organisaationmuokkaus.ohje.pakollisuus">Pakollisuusohje</em>
+            </div>
+        </div>
     </div>
 
     <div class="control-group">

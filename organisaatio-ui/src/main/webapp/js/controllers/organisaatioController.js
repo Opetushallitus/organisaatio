@@ -424,4 +424,11 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         }
         return false;
     };
+    $scope.isFromYtj = function(lang) {
+        var currentOrganizationTypes = $scope.model.organisaatio.tyypit;
+        return $scope.model.mode == 'edit' && $scope.model.organisaatio.ytjkieli == lang
+            && (currentOrganizationTypes.indexOf("Koulutustoimija") > -1
+            || currentOrganizationTypes.indexOf("Muu organisaatio") > -1
+            || currentOrganizationTypes.indexOf("Tyoelamajarjesto") > -1);
+    };
 });

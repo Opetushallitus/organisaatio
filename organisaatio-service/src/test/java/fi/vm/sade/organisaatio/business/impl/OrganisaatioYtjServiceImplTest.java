@@ -76,6 +76,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("posti_00100", ((Osoite)orgSortedYhteystiedot.get(0)).getPostinumero());
         Assert.assertEquals("oppilaitoksenopetuskieli_1#1", organisaatioList.get(id).getKielet().get(0));
         Assert.assertEquals(915141600000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_fi#1", organisaatioList.get(id).getYtjKieli());
 
         id = 1;
         orgSortedNimet = new ArrayList<>();
@@ -96,6 +97,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("http://www.oph.fi", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
         Assert.assertNotEquals(organisaatioList.get(id).getNimet().get(0).getNimi(), organisaatioList.get(1).getNimet().get(1).getNimi());
         Assert.assertEquals(1091912400000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_fi#1", organisaatioList.get(id).getYtjKieli());
 
         id = 2;
         orgSortedNimet = new ArrayList<>();
@@ -115,6 +117,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("http://www.ytj.sv", ((Www)orgSortedYhteystiedot.get(4)).getWwwOsoite());
         Assert.assertEquals(2, organisaatioList.get(id).getNimet().get(0).getNimi().getValues().size());
         Assert.assertEquals(1151528400000L, organisaatioList.get(id).getAlkuPvm().getTime());
+        Assert.assertEquals("kieli_sv#1", organisaatioList.get(id).getYtjKieli());
    }
 
     private void sortOrganisaatioYhteystiedot(List<Organisaatio> organisaatioList, int id, List<Yhteystieto> orgSortedYhteystiedot) {
