@@ -21,7 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="offset1">
-        <p tt="ilmoitukset.tapahtumat">TAPAHTUMAT</p>
+        <p class="text-info" tt="ilmoitukset.tapahtumat">TAPAHTUMAT</p>
     </div>
 
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);"
@@ -31,14 +31,21 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="container" >
                 <div class="row">
                     <div class="span2">
-                        <h4>{{::log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
+                        <h4 class="text-info">{{::log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
                     </div>
                     <div class="span8">
                         <uib-accordion>
-                            <uib-accordion-group heading="{{::getVirheHeader(log)}}" is-open="openIndex[$index]"
+                            <uib-accordion-group is-open="openIndex[$index]"
                                                  ng-click="closeOthers($index)">
+                                <uib-accordion-heading>
+                                    <div class="text-error">{{::getVirheHeader(log)}}</div>
+                                </uib-accordion-heading>
                                 <div ng-if="openIndex[$index]">
                                     <div ng-repeat="ytjVirhe in log.ytjVirheet | orderBy: 'orgNimi'">
+                                        <span class="fa-stack">
+                                            <i class="fa fa-circle fa-lg fa-stack-1x" style="color: #ededed;"></i>
+                                            <i class="fa fa-exclamation fa-stack-1x" style="color: red; font-size: 10px;"></i>
+                                        </span>
                                         <a href="{{::UI_URL_BASE}}index.html#/organisaatiot/{{::ytjVirhe.oid}}" target="_blank">
                                             {{::ytjVirhe.orgNimi}}
                                         </a>
