@@ -43,7 +43,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                             {{::ytjVirhe.orgNimi}}
                                         </a>
                                         <!-- Put this all together to avoid white spaces between elements -->
-                                        (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::virhe.virheviesti}}">{{::virhe.virhekohde}}</a></span>)
+                                        (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::virhe.virheviesti}}" tooltip-append-to-body="true">{{::virhe.virhekohde}}</a></span>)
                                     </div>
                                 </div>
                             </uib-accordion-group>
