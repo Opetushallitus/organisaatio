@@ -14,8 +14,8 @@
  European Union Public Licence for more details.
  */
 
-app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjLoki', 'LocalisationService',
-    function YtjIlmoituksetController($scope, $log, $location, YtjLoki, LocalisationService) {
+app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$filter', 'YtjLoki', 'LocalisationService',
+    function YtjIlmoituksetController($scope, $log, $location, $filter, YtjLoki, LocalisationService) {
         $log = $log.getInstance("YtjIlmoituksetController");
         $scope.logs = [];
         $scope.openIndex = [true];
@@ -25,22 +25,26 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', 'YtjL
                 $log.info("resuls", result);
                 $scope.logs.length = 0;
                 angular.forEach(result, function (loki) {
+                    var oidList = [];
                     var virheList = loki.ytjVirheet;
                     loki.ytjVirheet = [];
-                    angular.forEach(virheList, function (ytjVirheList) {
+                    // Group by oid and name
+                    angular.forEach(virheList, function(virhe) {
                         var ytjVirhe = {};
-                        // Group by oid and name
-                        angular.forEach(ytjVirheList, function(virhe) {
-                            if(angular.isUndefined(ytjVirhe.oid)) {
-                                ytjVirhe.oid = virhe.oid;
-                                ytjVirhe.orgNimi = virhe.orgNimi;
-                                ytjVirhe.virheet = [virhe];
-                            }
-                            else {
-                                ytjVirhe.virheet.push(virhe);
-                            }
-                        });
-                        loki.ytjVirheet.push(ytjVirhe);
+                        if(oidList.indexOf(virhe.oid) === -1) {
+                            ytjVirhe.oid = virhe.oid;
+                            ytjVirhe.orgNimi = virhe.orgNimi;
+                            ytjVirhe.virheet = [virhe];
+                            loki.ytjVirheet.push(ytjVirhe);
+
+                            oidList.push(virhe.oid);
+                        }
+                        else {
+                            var ytjVirheList = loki.ytjVirheet.filter(function (obj) {
+                                return obj.oid === virhe.oid;
+                            });
+                            ytjVirheList[0].virheet.push(virhe);
+                        }
                     });
                     $scope.logs.push(loki);
                 });
