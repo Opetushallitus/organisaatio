@@ -59,10 +59,15 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$fil
         };
 
         $scope.closeOthers = function(index) {
-            angular.forEach($scope.openIndex, function (value, key) {
-                $scope.openIndex[key] = false;
-            });
-            $scope.openIndex[index] = true;
+            console.log('index' + index);
+            console.log($scope.openIndex);
+            if($scope.openIndex.indexOf(true) !== -1) {
+                angular.forEach($scope.openIndex, function (value, key) {
+                    $scope.openIndex[key] = false;
+                });
+                $scope.openIndex[index] = true;
+            }
+            console.log($scope.openIndex);
         }
     }
 ]);

@@ -35,8 +35,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </div>
                     <div class="span8">
                         <uib-accordion>
-                            <uib-accordion-group is-open="openIndex[$index]"
-                                                 ng-click="closeOthers($index)">
+                            <uib-accordion-group is-open="openIndex[$index]" ng-click="closeOthers($index)">
                                 <uib-accordion-heading>
                                     <div ng-if="log.paivitysTila === 'ONNISTUNUT'">{{::t('ilmoitukset.log.ONNISTUNUT')}}</div>
                                     <div ng-if="log.paivitysTila === 'ONNISTUNUT_VIRHEITA'">{{::t('ilmoitukset.log.ONNISTUNUT')}}, <span class="text-error">{{::t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length])}}</span></div>
