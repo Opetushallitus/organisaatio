@@ -744,7 +744,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
         YtjVirhe virhe = new YtjVirhe();
         virhe.setOid(organisaatio.getOid());
-        virhe.setOrgNimi(organisaatio.getNimihaku());
+        virhe.setOrgNimi(organisaatio.getNimi().getString("fi"));
         virhe.setVirhekohde(kohde);
         virhe.setVirheviesti(viesti);
         virhe.setYtjPaivitysLoki(ytjPaivitysLoki);
