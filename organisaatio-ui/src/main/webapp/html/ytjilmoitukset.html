@@ -30,10 +30,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <hr ng-if="$index > 0">
             <div class="container" >
                 <div class="row">
-                    <div class="span2" style="display: table;">
+                    <div class="span2">
                         <h4>{{::log.paivitysaika | date:'dd.MM.yyyy HH.mm'}}</h4>
                     </div>
-                    <div class="span10">
+                    <div class="span8">
                         <uib-accordion>
                             <uib-accordion-group heading="{{::getVirheHeader(log)}}" is-open="openIndex[$index]"
                                                  ng-click="closeOthers($index)">
