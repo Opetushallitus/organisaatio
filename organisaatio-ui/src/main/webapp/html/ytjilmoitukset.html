@@ -21,7 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <div class="offset1">
-        <p class="text-info" tt="ilmoitukset.tapahtumat">TAPAHTUMAT</p>
+        <h4 class="text-info" style="margin-bottom: 0">{{t('ilmoitukset.tapahtumat') | uppercase}}</h4>
     </div>
 
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);"
@@ -38,21 +38,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                             <uib-accordion-group is-open="openIndex[$index]"
                                                  ng-click="closeOthers($index)">
                                 <uib-accordion-heading>
-                                    <div class="text-error">{{::getVirheHeader(log)}}</div>
+                                    <div ng-if="log.paivitysTila === 'ONNISTUNUT'">{{::t('ilmoitukset.log.ONNISTUNUT')}}</div>
+                                    <div ng-if="log.paivitysTila === 'ONNISTUNUT_VIRHEITA'">{{::t('ilmoitukset.log.ONNISTUNUT')}}, <span class="text-error">{{::t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length])}}</span></div>
+                                    <div ng-if="log.paivitysTila === 'EPAONNISTUNUT'" class="text-error">{{::t('ilmoitukset.log.EPAONNISTUNUT', [log.ytjVirheet[0].virheet[0].virheviesti])}}</div>
                                 </uib-accordion-heading>
-                                <div ng-if="openIndex[$index]">
-                                    <div ng-repeat="ytjVirhe in log.ytjVirheet | orderBy: 'orgNimi'">
-                                        <span class="fa-stack">
+                                <ul class="fa-ul" style="list-style-position: outside; text-indent: -30px;" ng-if="openIndex[$index] && log.paivitysTila !== 'EPAONNISTUNUT'">
+                                    <li ng-repeat="ytjVirhe in log.ytjVirheet | orderBy: 'orgNimi'">
+                                        <span class="fa-stack fa-li" style="position: relative; left: 15px;">
                                             <i class="fa fa-circle fa-lg fa-stack-1x" style="color: #ededed;"></i>
-                                            <i class="fa fa-exclamation fa-stack-1x" style="color: red; font-size: 10px;"></i>
+                                            <i class="fa fa-exclamation fa-stack-1x" style="color: orangered; font-size: 10px;"></i>
                                         </span>
                                         <a href="{{::UI_URL_BASE}}index.html#/organisaatiot/{{::ytjVirhe.oid}}" target="_blank">
                                             {{::ytjVirhe.orgNimi}}
                                         </a>
                                         <!-- Put this all together to avoid white spaces between elements -->
                                         (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::virhe.virheviesti}}" tooltip-append-to-body="true">{{::virhe.virhekohde}}</a></span>)
-                                    </div>
-                                </div>
+                                    </li>
+                                </ul>
                             </uib-accordion-group>
                         </uib-accordion>
                     </div>

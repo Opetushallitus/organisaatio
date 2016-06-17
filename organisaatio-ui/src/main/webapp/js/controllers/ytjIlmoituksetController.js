@@ -53,21 +53,6 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$fil
             })
         });
         
-        $scope.getVirheHeader = function(log) {
-            if(log.paivitysTila === 'ONNISTUNUT') {
-                return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila);
-            }
-            else if(log.paivitysTila === 'ONNISTUNUT_VIRHEITA') {
-                return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length]);
-            }
-            else if(log.paivitysTila === 'EPAONNISTUNUT') {
-                return LocalisationService.t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet[0].virheet[0].virheViesti]);
-            }
-            else {
-                $log.error('Invalid paivitysTila');
-            }
-        };
-
         // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
         $scope.cancel = function() {
             $location.path("/");
