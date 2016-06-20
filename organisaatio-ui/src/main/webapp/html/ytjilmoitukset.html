@@ -26,7 +26,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);"
          auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
-        <div ng-repeat="log in logs">
+        <div ng-repeat="log in logs | orderBy: '-paivitysaika'">
             <hr ng-if="$index > 0">
             <div class="container" >
                 <div class="row">
