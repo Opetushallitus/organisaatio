@@ -233,21 +233,15 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjdto.getYritysTunnus().getAlkupvm() == null) {
             return false;
         }
-        Date ytunnusAlkupvm;
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-            ytunnusAlkupvm = format.parse(ytjdto.getYritysTunnus().getAlkupvm());
-        } catch (ParseException pe) {
-            logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "virheellinen Y-tunnuksen päivämäärä");
-            LOG.error("virheellinen Y-tunnuksen päivämäärä");
-            return false;
-        }
+        Date ytunnusAlkupvm = parseDate(ytjdto.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.parse");
         if (ytunnusAlkupvm != null && (!ytunnusAlkupvm.equals(organisaatio.getAlkuPvm()) || forceUpdate)) {
             organisaatio.setAlkuPvm(ytunnusAlkupvm);
             update = true;
         }
         return update;
     }
+
+
 
     private void validateOrganisaatioDataForYTJ(final Organisaatio organisaatio, YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
 
@@ -413,35 +407,31 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 ytjErrorsDto.ytunnusPvmValid = false;
             }
             else {
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                    final Date ytunnusAlkupvm = format.parse(ytjdto.getYritysTunnus().getAlkupvm());
+                final Date ytunnusAlkupvm = parseDate(ytjdto.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "Y-tunnus");
+                if(ytunnusAlkupvm != null) {
                     final OrganisaatioMuokkausTiedotDTO tiedotDTO = new OrganisaatioMuokkausTiedotDTO() {{
                         setAlkuPvm(ytunnusAlkupvm);
                         setOid(organisaatio.getOid());
                     }};
-
-                    businessService.batchValidatePvm(
-                            new HashMap<String, OrganisaatioMuokkausTiedotDTO>() {{
-                                put(tiedotDTO.getOid(), tiedotDTO);
-                            }},
-                            new HashMap<String, Organisaatio>() {{
-                                put(organisaatio.getOid(), organisaatio);
-                            }});
-                } catch(ParseException | NullPointerException e) {
-                    logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.parse");
-                    LOG.error("YTJ alkupäivämäärä virheellisessä muodossa organisaatiolle " + organisaatio.getOid());
-                    ytjErrorsDto.ytunnusPvmValid = false;
-                } catch (OrganisaatioDateException de) {
-                    logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.tarkistukset");
-                    LOG.error("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
-                    ytjErrorsDto.ytunnusPvmValid = false;
-                } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
-                    // this can't actually happend because we don't import end date, so no ytj error logging
-                    // still have to process the error that the validation method throws
-                    LOG.error("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
-                            organisaatio.getOid() + " jolla on alkavia koulutuksia");
-                    ytjErrorsDto.ytunnusPvmValid = false;
+                    try {
+                        businessService.batchValidatePvm(
+                                new HashMap<String, OrganisaatioMuokkausTiedotDTO>() {{
+                                    put(tiedotDTO.getOid(), tiedotDTO);
+                                }},
+                                new HashMap<String, Organisaatio>() {{
+                                    put(organisaatio.getOid(), organisaatio);
+                                }});
+                    } catch (OrganisaatioDateException de) {
+                        logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.tarkistukset");
+                        LOG.error("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
+                        ytjErrorsDto.ytunnusPvmValid = false;
+                    } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
+                        // this can't actually happend because we don't import end date, so no ytj error logging
+                        // but we still have to process the error that the validation method throws
+                        LOG.error("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
+                                organisaatio.getOid() + " jolla on alkavia koulutuksia");
+                        ytjErrorsDto.ytunnusPvmValid = false;
+                    }
                 }
             }
         }
@@ -475,7 +465,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         } else {
             if(ytjdto.getNimi() == null) {
-                logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.puuttuu");
+                logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.puuttuu.ytj");
                 ytjErrorsDto.nimiValid = false;
             }
             else if(ytjdto.getNimi().length() > ValidationConstants.GENERIC_MAX) {
@@ -488,18 +478,15 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         htmlDecodeAmpInYtjNames(ytjdto);
         // In case updating from ytj would violate organisation service rule that current nimi must be the newest one,
         // we do not update nimi
-        Date ytjAlkupvm = null;
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-            ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
-        }
-        catch(ParseException | NullPointerException e) {
-            LOG.error("Could not parse YTJ date. Not updating name history.");
-            // TODO error log, and refactor duplicated alkupvm parsing to a single method
+        if(ytjdto.getAloitusPvm() == null) {
             ytjErrorsDto.nimiHistory = false;
+            logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.puuttuu");
         }
-        // Nimi and nimihistory validation
-        if(ytjAlkupvm != null) {
+        Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
+        if(ytjAlkupvm == null) {
+            ytjErrorsDto.nimiHistory = false;
+        } else {
+            // Nimi and nimihistory validation
             checkNameHistoryForYtj(organisaatio, ytjErrorsDto, ytjAlkupvm);
         }
     }
@@ -507,11 +494,13 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private void checkNameHistoryForYtj(Organisaatio organisaatio, YTJErrorsDto ytjErrorsDto, Date ytjAlkupvm) {
         for(OrganisaatioNimi organisaatioNimi : organisaatio.getNimet()) {
             // In case nimi alkupvm already exist or newer alkupvm exist, do not update name history.
-            if(organisaatioNimi.getAlkuPvm().equals(ytjAlkupvm) || organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
-                LOG.error("There is a name with same or later date in YTJ for organisation " + organisaatio.getOid());
-                // TODO halutaanko virhelokittaa jos YTJ:ssä on vanhentuneet tiedot eli eri nimi vanhemmalla päiväyksellä??
-                // remove error logging for now because there is too much bloat
-                // logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "Organisaatiolla on nimi samalla tai uudemmalla alkupäivämäärällä kuin YTJ:ssä");
+            if(organisaatioNimi.getAlkuPvm().equals(ytjAlkupvm)) {
+                ytjErrorsDto.nimiValid = false;
+                ytjErrorsDto.nimiSvValid = false;
+                ytjErrorsDto.nimiHistory = false;
+            } else if (organisaatioNimi.getAlkuPvm().after(ytjAlkupvm)) {
+                LOG.error("YTJ:ssä on vanhempi nimitieto organsaatiolle " + organisaatio.getOid());
+                logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.vanha");
                 ytjErrorsDto.nimiValid = false;
                 ytjErrorsDto.nimiSvValid = false;
                 ytjErrorsDto.nimiHistory = false;
@@ -661,14 +650,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 || (ytjdto.getSvNimi() != null && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
                 || ((ytjdto.getNimi() != null || ytjdto.getSvNimi() != null) && forceUpdate)) {
             OrganisaatioNimi currentOrgNimi = null;
-            Date ytjAlkupvm = null;
-            try {
-                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                ytjAlkupvm = format.parse(ytjdto.getAloitusPvm());
-            }
-            catch(ParseException | NullPointerException e) {
-                LOG.error("Could not parse YTJ date.");
-            }
+            Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
 
             if(organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
                 for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
@@ -752,7 +734,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
         YtjVirhe virhe = new YtjVirhe();
         virhe.setOid(organisaatio.getOid());
-        virhe.setOrgNimi(organisaatio.getNimi().getString("fi"));
+        String nimiFi = organisaatio.getNimi().getString("fi");
+        if (nimiFi != null) {
+            virhe.setOrgNimi(nimiFi);
+        } else {
+            virhe.setOrgNimi(organisaatio.getNimi().getString("sv"));
+        }
         virhe.setVirhekohde(kohde);
         virhe.setVirheviesti(viesti);
         virhe.setYtjPaivitysLoki(ytjPaivitysLoki);
@@ -806,6 +793,17 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.error("Oid-generointi yhteystiedolle epäonnistui", e);
         }
         return null;
+    }
+
+    private Date parseDate(String pvm, Organisaatio organisaatio, YtjVirhe.YTJVirheKohde kohde, String virheviesti) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+            return format.parse(pvm);
+        } catch (ParseException pe) {
+            logYtjError(ytjPaivitysLoki, organisaatio, kohde, virheviesti);
+            LOG.error("virheellinen päivämäärä kentällä " + kohde + " organisaatiolle " + organisaatio.getOid());
+            return null;
+        }
     }
 
 }
