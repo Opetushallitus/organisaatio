@@ -481,13 +481,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjdto.getAloitusPvm() == null) {
             ytjErrorsDto.nimiHistory = false;
             logYtjError(ytjPaivitysLoki, organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.puuttuu");
-        }
-        Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
-        if(ytjAlkupvm == null) {
-            ytjErrorsDto.nimiHistory = false;
         } else {
-            // Nimi and nimihistory validation
-            checkNameHistoryForYtj(organisaatio, ytjErrorsDto, ytjAlkupvm);
+            Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
+            if (ytjAlkupvm == null) {
+                ytjErrorsDto.nimiHistory = false;
+            } else {
+                // Nimi and nimihistory validation
+                checkNameHistoryForYtj(organisaatio, ytjErrorsDto, ytjAlkupvm);
+            }
         }
     }
 
@@ -650,8 +651,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 || (ytjdto.getSvNimi() != null && !ytjdto.getSvNimi().equals(organisaatio.getNimi().getString("sv")))
                 || ((ytjdto.getNimi() != null || ytjdto.getSvNimi() != null) && forceUpdate)) {
             OrganisaatioNimi currentOrgNimi = null;
-            Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
-
             if(organisaatio.getNimi().getString("fi") != null || organisaatio.getNimi().getString("sv") != null) {
                 for(OrganisaatioNimi orgNimi : organisaatio.getNimet()) {
                     if(orgNimi.getNimi() == organisaatio.getNimi()) {
@@ -692,6 +691,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             // When updating nimi always update alkupvm from YTJ as toiminimen alkupvm.
             if(ytjdto.getAloitusPvm() != null && currentOrgNimi != null && updateNimiHistory) {
+                Date ytjAlkupvm = parseDate(ytjdto.getAloitusPvm(), organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.alkupvm.parse");
                 currentOrgNimi.setAlkuPvm(ytjAlkupvm);
             }
             update = true;
