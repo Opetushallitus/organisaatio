@@ -21,7 +21,7 @@ app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$fil
         $scope.openIndex = [true];
 
         $scope.$on('$routeChangeSuccess', function() {
-            YtjLoki.get({}, function (result) {
+            YtjLoki.get({alkupvm: (new Date()).setDate((new Date).getDate() - 14), loppupvm: (new Date()).getTime()}, function (result) {
                 $log.info("resuls", result);
                 $scope.logs.length = 0;
                 angular.forEach(result, function (loki) {

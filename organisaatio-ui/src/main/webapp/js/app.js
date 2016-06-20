@@ -542,7 +542,7 @@ app.factory('Historia', function($resource) {
 });
 
 app.factory('YtjLoki', function($resource) {
-    return $resource(SERVICE_URL_BASE + "ytjpaivitysloki/uusimmat", {limit: 5}, {
+    return $resource(SERVICE_URL_BASE + "ytjpaivitysloki/aikavali", {alkupvm: "@alkupvm", loppupvm: "@loppupvm"}, {
         get: {method: 'GET', withCredentials: true, isArray: true}
     });
 });

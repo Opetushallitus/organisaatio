@@ -42,19 +42,21 @@ public class YTJPaivitysLokiResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
 
-    @Autowired(required = true)
+    @Autowired
     private YtjPaivitysLokiDao ytjPaivitysLokiDao;
 
     @GET
     @Path("/aikavali")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee annetulta aikaväliltä", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle aikaväliltä.")
+    @ApiOperation(value = "Hakee annetulta aikaväliltä", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle aikaväliltä (syötteet millisekunteja).")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "alkupvm", required = true) @QueryParam("alkupvm") Date alkupvm,
-                                                 @ApiParam(value = "loppupvm", required = true) @QueryParam("loppupvm") Date loppupvm) {
-        List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
-        if (alkupvm != null && loppupvm != null) {
-            ytjLoki = ytjPaivitysLokiDao.findByDateRange(alkupvm, loppupvm);
+    public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "alkupvm", required = true) @QueryParam("alkupvm") long alkupvm,
+                                                 @ApiParam(value = "loppupvm", required = true) @QueryParam("loppupvm") long loppupvm) {
+        List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
+        Date alkupvmDate = new Date(alkupvm);
+        Date loppupvmDate = new Date(loppupvm);
+        if (alkupvm != 0 && loppupvm != 0) {
+            ytjLoki = ytjPaivitysLokiDao.findByDateRange(alkupvmDate, loppupvmDate);
         }
         return ytjLoki;
     }
