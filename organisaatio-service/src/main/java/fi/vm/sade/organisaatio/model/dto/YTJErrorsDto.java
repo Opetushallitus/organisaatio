@@ -24,6 +24,7 @@ public class YTJErrorsDto {
     public boolean wwwValid;
     public boolean puhelinnumeroValid;
     public boolean ytunnusPvmValid;
+    public boolean kieliValid;
 
     public YTJErrorsDto() {
         organisaatioValid = true;
@@ -34,5 +35,6 @@ public class YTJErrorsDto {
         wwwValid = true;
         puhelinnumeroValid = true;
         ytunnusPvmValid = true;
+        kieliValid = true;
     }
 }

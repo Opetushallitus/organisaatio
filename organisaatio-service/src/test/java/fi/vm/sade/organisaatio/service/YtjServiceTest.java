@@ -46,32 +46,29 @@ public class YtjServiceTest {
     @Test
     public void fetchLessThan1000() {
         final int amount = 500;
-        List<YTJDTO> ytjdtoList = new ArrayList<>();
-        invokeFetchDataFromYtj(amount, ytjdtoList);
+        List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
         Assert.assertEquals(amount, ytjdtoList.size());
     }
 
     @Test
     public void fetch1000Test() {
         final int amount = 1000;
-        List<YTJDTO> ytjdtoList = new ArrayList<>();
-        invokeFetchDataFromYtj(amount, ytjdtoList);
+        List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
         Assert.assertEquals(amount, ytjdtoList.size());
     }
 
     @Test
     public void fetchMoreThan1000Test() {
         final int amount = 1500;
-        List<YTJDTO> ytjdtoList = new ArrayList<>();
-        invokeFetchDataFromYtj(amount, ytjdtoList);
+        List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
         Assert.assertEquals(amount, ytjdtoList.size());
     }
 
-    private void invokeFetchDataFromYtj(int amount, List<YTJDTO> ytjdtoList) {
+    private List<YTJDTO> invokeFetchDataFromYtj(int amount) {
         List<String> ytunnusMock = new ArrayList<>();
         for(int i = 0; i < amount; i++) {
             ytunnusMock.add(null);
         }
-        ReflectionTestUtils.invokeMethod(organisaatioYtjService, "fetchDataFromYtj", ytunnusMock, ytjdtoList);
+        return ReflectionTestUtils.invokeMethod(organisaatioYtjService, "fetchDataFromYtj", ytunnusMock);
     }
 }
