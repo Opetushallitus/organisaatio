@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.OptimisticLockException;
 import javax.validation.*;
 import java.text.ParseException;
@@ -141,7 +140,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             YTJErrorsDto ytjErrorsDto = new YTJErrorsDto();
             // some basic validation first (null checks, corner cases etc)
             validateOrganisaatioDataForYTJ(organisaatio, ytjdto, ytjErrorsDto);
-            validateYTJData(organisaatio, ytjdto, ytjErrorsDto, ytjPaivitysLoki);
+            validateYTJData(organisaatio, ytjdto, ytjErrorsDto);
             // don't proceed to update if there's something wrong
             // collect info to some map structure
             if (ytjErrorsDto.organisaatioValid) {
@@ -326,6 +325,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     www = new Www();
                     www.setYhteystietoOid(oid);
                     www.setOrganisaatio(organisaatio);
+                    // to avoid NPE in comparisons
+                    www.setWwwOsoite("");
                     if (YTJLangIsSwedish(ytjdto)) {
                         www.setKieli(KIELI_KOODI_SV);
                     } else {
@@ -351,8 +352,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Validates data coming from ytj so that update() does not need to worry about getting stuck on hibernate validation.
-    private void validateYTJData(final Organisaatio organisaatio, final YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto, YtjPaivitysLoki loki) {
-        List<YtjVirhe> validointiVirheet = new ArrayList<>();
+    private void validateYTJData(final Organisaatio organisaatio, final YTJDTO ytjdto, YTJErrorsDto ytjErrorsDto) {
         if(ytjdto == null) {
             //is this even possible?
             ytjErrorsDto.organisaatioValid = false;
@@ -514,7 +514,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Find the www from organisaatio
         Www www = parseWwwFromYhteystieto(organisaatio);
         // Update www from YTJ if it missmatches the current one.
-        if((!ytjdto.getWww().equals(www.getWwwOsoite()))
+        if(www.getWwwOsoite() != null && (!ytjdto.getWww().equals(www.getWwwOsoite()))
                 || forceUpdate) {
             www.setWwwOsoite(ytjdto.getWww());
             update = true;
