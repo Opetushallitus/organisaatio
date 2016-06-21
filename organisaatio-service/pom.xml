@@ -22,7 +22,6 @@
     </properties>
 
     <build>
-
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
@@ -426,6 +425,29 @@
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-jaxrs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.viestintapalvelu</groupId>
+            <artifactId>ryhmasahkoposti-api</artifactId>
+            <version>${viestinta.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.wordnik</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>jackson-module-jsonSchema</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-joda</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.wordnik</groupId>
+                    <artifactId>swagger-jersey2-jaxrs_2.10</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

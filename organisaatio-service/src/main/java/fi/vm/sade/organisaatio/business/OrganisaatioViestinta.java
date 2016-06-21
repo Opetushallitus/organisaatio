@@ -15,17 +15,14 @@
 
 package fi.vm.sade.organisaatio.business;
 
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 
 import java.util.List;
 
-public interface OrganisaatioYtjService {
+public interface OrganisaatioViestinta {
+    void sendStringViestintaEmail(String message);
 
-    /**
-    * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
-    */
+    void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
 
-    YtjPaivitysLoki updateYTJData(final boolean forceUpdate);
-
+    void generateAndSendEmail(String content, List<String> receiverEmails);
 }

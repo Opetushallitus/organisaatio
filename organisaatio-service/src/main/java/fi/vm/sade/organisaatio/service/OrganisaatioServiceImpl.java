@@ -374,7 +374,7 @@ public class OrganisaatioServiceImpl implements fi.vm.sade.organisaatio.api.mode
         //long t = System.currentTimeMillis();
         Organisaatio orgE = organisaatioDAO.findByOid(oid);
         if (orgE == null) {
-            //LOG.info("findByOId({}) no result in {} ms", oid, System.currentTimeMillis()-t);
+            //LOG.info("findByOId({}) no result in {} ms", oid, System.currentTimeMillis()-t);
             return null;
         }
 
@@ -391,7 +391,7 @@ public class OrganisaatioServiceImpl implements fi.vm.sade.organisaatio.api.mode
         }
 
 
-        //LOG.info("findByOId({}) took {} ms", oid, System.currentTimeMillis()-t);
+        //LOG.info("findByOId({}) took {} ms", oid, System.currentTimeMillis()-t);
         return dto;
     }
 
