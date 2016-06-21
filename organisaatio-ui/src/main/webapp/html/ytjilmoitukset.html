@@ -64,7 +64,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                         (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="::$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::t(virhe.virheviesti)}}" tooltip-append-to-body="true">{{::t('ilmoitukset.log.virhe.' + virhe.virhekohde)}}</a></span>)
                                     </li>
                                 </ul>
-                                <div ng-style="{'height': log.ytjVirheet.length*26 + 'px'}" ng-if="!(openIndex[$index])"></div>
+                                <div ng-style="::{'height': log.ytjVirheet.length*26 + 'px'}" ng-if="!(openIndex[$index])"></div>
                             </uib-accordion-group>
                         </uib-accordion>
                     </div>
