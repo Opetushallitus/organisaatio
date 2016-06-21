@@ -51,7 +51,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                     </div>
                                 </uib-accordion-heading>
                                 <ul class="fa-ul" style="list-style-position: outside; text-indent: -30px;"
-                                    ng-if="openIndex[$index] && log.paivitysTila !== 'EPAONNISTUNUT'">
+                                    ng-if="openIndex[$index]">
                                     <li ng-repeat="ytjVirhe in log.ytjVirheet | orderBy: 'orgNimi'">
                                         <span class="fa-stack fa-li" style="position: relative; left: 15px;">
                                             <i class="fa fa-circle fa-lg fa-stack-1x" style="color: #ededed;"></i>
@@ -64,11 +64,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                         (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::t(virhe.virheviesti)}}" tooltip-append-to-body="true">{{::t('ilmoitukset.log.virhe.' + virhe.virhekohde)}}</a></span>)
                                     </li>
                                 </ul>
-                                <ul style="list-style-type: none" ng-if="!(openIndex[$index] && log.paivitysTila !== 'EPAONNISTUNUT')">
-                                    <li ng-repeat="ytjVirhe in log.ytjVirheet">
-                                        &nbsp;
-                                    </li>
-                                </ul>
+                                <div ng-style="{'height': log.ytjVirheet.length*26 + 'px'}" ng-if="!(openIndex[$index])">
+                                    &nbsp;
+                                </div>
                             </uib-accordion-group>
                         </uib-accordion>
                     </div>
