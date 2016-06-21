@@ -27,7 +27,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="offset1 well" style="background-color: rgba(230, 230, 230, 0.16);"
          auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA">
         <div ng-repeat="log in logs | orderBy: '-paivitysaika'">
-            <hr ng-if="$index > 0">
+            <hr ng-if="::$index > 0">
             <div class="container" >
                 <div class="row">
                     <div class="span2">
@@ -37,16 +37,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                         <uib-accordion>
                             <uib-accordion-group is-open="openIndex[$index]" ng-click="closeOthers($index)">
                                 <uib-accordion-heading>
-                                    <div ng-if="log.paivitysTila === 'ONNISTUNUT'">
+                                    <div ng-if="::log.paivitysTila === 'ONNISTUNUT'">
                                         {{::t('ilmoitukset.log.ONNISTUNUT')}}
                                     </div>
-                                    <div ng-if="log.paivitysTila === 'ONNISTUNUT_VIRHEITA'">
+                                    <div ng-if="::log.paivitysTila === 'ONNISTUNUT_VIRHEITA'">
                                         {{::t('ilmoitukset.log.ONNISTUNUT')}},
                                         <span class="text-error">
                                             {{::t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length])}}
                                         </span>
                                     </div>
-                                    <div ng-if="log.paivitysTila === 'EPAONNISTUNUT'" class="text-error">
+                                    <div ng-if="::log.paivitysTila === 'EPAONNISTUNUT'" class="text-error">
                                         {{::t('ilmoitukset.log.EPAONNISTUNUT', [log.paivitysTilaSelite])}}
                                     </div>
                                 </uib-accordion-heading>
@@ -61,7 +61,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                             {{::ytjVirhe.orgNimi}}
                                         </a>
                                         <!-- Put this all together to avoid white spaces between elements -->
-                                        (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::t(virhe.virheviesti)}}" tooltip-append-to-body="true">{{::t('ilmoitukset.log.virhe.' + virhe.virhekohde)}}</a></span>)
+                                        (<span ng-repeat="virhe in ytjVirhe.virheet"><span ng-if="::$index > 0">, </span><a tooltip-placement="right" uib-tooltip="{{::t(virhe.virheviesti)}}" tooltip-append-to-body="true">{{::t('ilmoitukset.log.virhe.' + virhe.virhekohde)}}</a></span>)
                                     </li>
                                 </ul>
                                 <div ng-style="{'height': log.ytjVirheet.length*26 + 'px'}" ng-if="!(openIndex[$index])"></div>
