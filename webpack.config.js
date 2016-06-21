@@ -8,8 +8,9 @@ module.exports = {
     },
     entry: {
         vendors: ["jquery", "angular", "angular-cookies", "angular-mocks", "angular-resource", "angular-route",
-            "angular-sanitize", "script!./node_modules/tinymce/tinymce.js", "angular-ui-tinymce", "angular-ui-bootstrap",
-            "angular-idle", "ui-select", "moment", "jquery.ui.widget", "jquery.iframe-transport", "jquery.fileupload"
+            "angular-animate", "angular-sanitize", "script!./node_modules/tinymce/tinymce.js", "angular-ui-tinymce",
+            "angular-ui-bootstrap", "angular-idle", "ui-select", "moment", "jquery.ui.widget", "jquery.iframe-transport",
+            "jquery.fileupload"
         ]
     },
     resolve: {

@@ -14,8 +14,8 @@
  European Union Public Licence for more details.
  */
 
-app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$filter', 'YtjLoki', 'LocalisationService',
-    function YtjIlmoituksetController($scope, $log, $location, $filter, YtjLoki, LocalisationService) {
+app.controller('YtjIlmoituksetController', ['$scope', '$log', '$location', '$filter', 'YtjLoki',
+    function YtjIlmoituksetController($scope, $log, $location, $filter, YtjLoki) {
         $log = $log.getInstance("YtjIlmoituksetController");
         $scope.logs = [];
         $scope.openIndex = [true];

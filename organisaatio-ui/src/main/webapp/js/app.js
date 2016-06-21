@@ -25,7 +25,8 @@ var app = angular.module('organisaatio',
     'ui.tinymce',
     'ui.select',
     'ngCookies',
-    'ngIdle']);
+    'ngIdle',
+    'ngAnimate']);
 
 app.config(function() {
     tinyMCE.baseURL = '../jslib';
