@@ -49,6 +49,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     private OrganisaatioViestintaClient viestintaClient;
 
+    private boolean reauthorize;
+
     @Autowired
     public OrganisaatioViestintaImpl(OrganisaatioViestintaClient viestintaClient) {
         this.viestintaClient = viestintaClient;
@@ -59,16 +61,17 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         if (viestintaClient == null) {
             viestintaClient = new OrganisaatioViestintaClient();
         }
-//        viestintaClient.setReauthorize(reauthorize);
+        viestintaClient.setReauthorize(reauthorize);
         return viestintaClient;
     }
 
     @Override
-    public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki) {
+    public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize) {
+        this.reauthorize = reauthorize;
         if(ytjPaivitysLoki != null) {
             String msgContent = generateMessageFromPaivitysloki(ytjPaivitysLoki);
 
-            sendStringViestintaEmail(msgContent);
+            sendStringViestintaEmail(msgContent, reauthorize);
         }
         else {
             LOG.error("Null ytjPaivitysLoki. Could not send email.");
@@ -118,17 +121,19 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     }
 
     @Override
-    public void sendStringViestintaEmail(String msgContent) {
+    public void sendStringViestintaEmail(String msgContent, boolean reauthorize) {
+        this.reauthorize = reauthorize;
         if(msgContent == null || msgContent.isEmpty()) {
             LOG.error("Null or empty string. Could not send email.");
         }
         else {
-            generateAndSendEmail(msgContent, new ArrayList<String>(){{add(email);}});
+            generateAndSendEmail(msgContent, new ArrayList<String>(){{add(email);}}, reauthorize);
         }
     }
 
     @Override
-    public void generateAndSendEmail(String msgContent, List<String> receiverEmails) {
+    public void generateAndSendEmail(String msgContent, List<String> receiverEmails, boolean reauthorize) {
+        this.reauthorize = reauthorize;
         List<EmailRecipient> receiverList = new ArrayList<>();
         for(String receiverEmail : receiverEmails) {
             EmailRecipient receiver = new EmailRecipient(null, receiverEmail);
