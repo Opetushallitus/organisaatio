@@ -126,7 +126,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KIELI, "ilmoitukset.log.virhe.kieli.puuttuu");
             return false;
         }
-        boolean kieliAddedFromYTJ = updateLangFromYTJ(organisaatio, getOrgKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli()));
+        boolean kieliAddedFromYTJ = updateLangFromYTJ(ytjOrg, organisaatio);
         String ytjKielikoodi = getKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli());
         organisaatio.setYtjKieli(ytjKielikoodi);
         // validate and update YTJ alkupvm
@@ -252,14 +252,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             return KIELI_KOODI_SV;
         } else {
             return KIELI_KOODI_FI;
-        }
-    }
-
-    private String getOrgKielikoodiFromYTJlang(String yrityksenKieli) {
-        if(yrityksenKieli.equals(YtjDtoMapperHelper.KIELI_SV)) {
-            return ORG_KIELI_KOODI_SV;
-        } else {
-            return ORG_KIELI_KOODI_FI;
         }
     }
 
@@ -472,8 +464,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         }
         // Check which organisations need to be updated. YtjPaivitysPvm is the date when info is fetched from YTJ.
         // TODO replace old method with new when tests pass...
-        List <Organisaatio> updateOrganisaatioList = doOldUglyUpdate(forceUpdate, organisaatiosByYtunnus, ytjdtoList);
-        //List<Organisaatio> updateOrganisaatioList = doUpdate(ytjdtoList, organisaatiosByYtunnus, forceUpdate);
+        //List <Organisaatio> updateOrganisaatioList = doOldUglyUpdate(forceUpdate, organisaatiosByYtunnus, ytjdtoList);
+        List<Organisaatio> updateOrganisaatioList = doUpdate(ytjdtoList, organisaatiosByYtunnus, forceUpdate);
         // Update listed organisations to db and koodisto service.
         for(Iterator<Organisaatio> iterator = updateOrganisaatioList.iterator(); iterator.hasNext();) {
             Organisaatio organisaatio = iterator.next();
@@ -951,6 +943,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Adds the missing language information to Organisaatio according to the YTJ language.
+    // XXX why does this not work compared to the other one??
     private boolean updateLangFromYTJ(Organisaatio organisaatio, String ytjkielikoodi) {
             boolean YTJkieliExists = false;
             for (String kieli : organisaatio.getKielet()) {

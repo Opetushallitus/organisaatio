@@ -107,8 +107,8 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("Ruotsalainen & koulutustoimija", orgSortedNimet.get(0).getNimi().getString("sv"));
         Assert.assertEquals("root2 test2 koulutustoimija2", orgSortedNimet.get(0).getNimi().getString("fi"));
         Assert.assertEquals(921103200000L, org.getNimet().get(0).getAlkuPvm().getTime());
-        // TODO with old implementation this assert fails, there is a bug (updates fi address for sv org if sv address doesn't exist)!
-        //Assert.assertEquals("Svenska gatan 1", org.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV).getOsoite());
+        // new sv address added
+        Assert.assertEquals("Svenska gatan 1", org.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite) orgSortedYhteystiedot.get(0)).getPostinumero());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_SV, org.getKielet().get(0));
         Assert.assertEquals("0100000210", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
