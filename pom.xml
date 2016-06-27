@@ -178,12 +178,6 @@
         <module>organisaatio-ui</module>
     </modules>
 
-    <scm>
-        <connection>scm:git:git@github.com:Opetushallitus/build-parent.git</connection>
-        <developerConnection>scm:git:git@github.com:Opetushallitus/build-parent.git</developerConnection>
-        <url>http://github.com/Opetushallitus/build-parent</url>
-    </scm>
-
     <distributionManagement>
         <repository>
             <id>oph-sade-artifactory</id>
@@ -271,15 +265,6 @@
             <name>cpdetector</name>
             <url>https://artifactory.oph.ware.fi/artifactory/cpdetector</url>
         </repository>
-
-
-        <!--
-<repository>
-    <id>mysema</id>
-    <name>Mysema source</name>
-    <url>http://penaali.hard.ware.fi/artifactory/mysema/</url>
-</repository>-->
-
     </repositories>
 
     <pluginRepositories>
@@ -293,21 +278,6 @@
             <name>libs-3rd-party</name>
             <url>https://artifactory.oph.ware.fi/artifactory/libs-3rd-party</url>
         </pluginRepository>
-        <!--<pluginRepository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://penaali.hard.ware.fi/artifactory/springsource-ebr/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://penaali.hard.ware.fi/artifactory/spring-ebr/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>com.springsource.repository.bundles.milestone</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Milestones</name>
-            <url>http://penaali.hard.ware.fi/artifactory/com.springs    ource.repository.bundles.milestone/</url>
-        </pluginRepository>-->
     </pluginRepositories>
 
     <build>
@@ -333,6 +303,7 @@
                 </includes>
             </resource>
         </resources>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -1003,31 +974,6 @@
                             <artifactId>ant</artifactId>
                         </exclusion>
                     </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>sonar</id>
-            <properties>
-                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-                <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
-                <sonar.core.codeCoveragePlugin>clover</sonar.core.codeCoveragePlugin>
-                <sonar.clover.reportPath>${clover.outputDirectory}/clover.xml</sonar.clover.reportPath>
-
-                <sonar.exclusions>**/*generated*/**,com/**,org/**,net/**,**/*Mock.java</sonar.exclusions>
-
-                <sonar.jdbc.url>jdbc:mysql://pulpetti.hard.ware.fi:3306/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
-                <sonar.jdbc.driverClassName>com.mysql.jdbc.Driver</sonar.jdbc.driverClassName>
-                <sonar.jdbc.username>sonar</sonar.jdbc.username>
-                <sonar.jdbc.password>${sonar.jdbc.password}</sonar.jdbc.password>
-                <sonar.host.url>https://sonar.oph.ware.fi/sonar</sonar.host.url>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.codehaus.sonar-plugins</groupId>
-                    <artifactId>sonar-clover-plugin</artifactId>
-                    <version>3.0</version>
                 </dependency>
             </dependencies>
         </profile>
