@@ -100,7 +100,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         validator = factory.getValidator();
     }
 
-
     // Returns a list uf updated organisations. Cumulates errors to ytjPaivitysLoki field.
     public List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String,Organisaatio> organisaatiosByYtunnus, boolean forceUpdate) {
         List<Organisaatio> updatedOrganisaatios = new ArrayList<>();
@@ -127,7 +126,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KIELI, "ilmoitukset.log.virhe.kieli.puuttuu");
             return false;
         }
-        boolean updateKieli = updateLangFromYTJ(ytjOrg, organisaatio);
+        boolean kieliAddedFromYTJ = updateLangFromYTJ(ytjOrg, organisaatio);
         // validate and update YTJ alkupvm
         Date ytjAlkupvm = validateandParseYtjAlkupvm(ytjOrg, organisaatio);
         if (ytjAlkupvm != null && (!ytjAlkupvm.equals(organisaatio.getAlkuPvm()) || forceUpdate)) {
@@ -165,17 +164,54 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
             }
         }
+        String ytjKielikoodi = getKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli());
+        // validate osoite
         if(validateYtjOsoite(ytjOrg)) {
-            updateOsoite = true;
+            // Find osoite with right language (finnish or swedish)
+            Osoite osoite = organisaatio.getPostiosoiteByKieli(ytjKielikoodi);
+            if (osoite == null) {
+                // No matching osoite found from organisation so we will create an empty one to be fetched from YTJ.
+                osoite = (Osoite)generateYhteystietoforOrg(organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.OSOITE, "ilmoitukset.log.virhe.oid.osoite");
+            }
+            // copy values from YTJ
+            updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjOrg, osoite, forceUpdate);
         }
+        // validate phone
         if(validateYtjPuhelin(ytjOrg)) {
-            updatePuhelin = true;
+            Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN);
+            if(puhelinnumero == null) {
+                puhelinnumero = (Puhelinnumero)generateYhteystietoforOrg(organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.PUHELIN, "ilmoitukset.log.virhe.oid.puhelin");
+            }
+            updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(ytjOrg, puhelinnumero, forceUpdate);
         }
         if(validateYtjWww(ytjOrg)) {
-            updateWww = true;
+            Www www = organisaatio.getWww();
+            if(www == null) {
+                www = (Www)generateYhteystietoforOrg(organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.WWW, "ilmoitukset.log.virhe.oid.www");
+            }
+            updateWww = updateWwwFromYTJToOrganisation(ytjOrg, www, forceUpdate);
         }
         // validate and update contact info according to YTJ lang
-        return (updateKieli || updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm);
+        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm);
+    }
+
+    private boolean updatePuhelinFromYTJtoOrganisaatio(YTJDTO ytjOrg, Puhelinnumero puhelinnumero, boolean forceUpdate) {
+        boolean update = false;
+        puhelinnumero.setTyyppi(Puhelinnumero.TYYPPI_PUHELIN);
+        // Update puhelinnumero from YTJ if it missmatches the current one.
+        if (!ytjOrg.getPuhelin().equals(puhelinnumero.getPuhelinnumero()) || forceUpdate) {
+            puhelinnumero.setPuhelinnumero(ytjOrg.getPuhelin());
+            update = true;
+        }
+        return update;
+    }
+
+    private String getKielikoodiFromYTJlang(String yrityksenKieli) {
+        if(yrityksenKieli.equals(YtjDtoMapperHelper.KIELI_SV)) {
+            return KIELI_KOODI_SV;
+        } else {
+            return KIELI_KOODI_FI;
+        }
     }
 
     private boolean validateYtjOsoite(YTJDTO ytjOrg) {
@@ -336,6 +372,22 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return ytunnusAlkupvm;
     }
 
+    private Yhteystieto generateYhteystietoforOrg(Organisaatio organisaatio, String kielikoodi, YtjVirhe.YTJVirheKohde virhekohde, String virheviesti) {
+        String oid = generateOid();
+        if(oid != null) {
+            Yhteystieto yhteystieto = new Yhteystieto();
+            yhteystieto.setKieli(kielikoodi);
+            yhteystieto.setOrganisaatio(organisaatio);
+            yhteystieto.setYhteystietoOid(oid);
+            organisaatio.addYhteystieto(yhteystieto);
+            return yhteystieto;
+        } else {
+            logYtjError(organisaatio, virhekohde, virheviesti);
+            LOG.error("Could not generate oid for yhteystieto, skipping the field for " + organisaatio.getOid());
+            return null;
+        }
+    }
+
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
     public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
@@ -438,7 +490,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
                 // Update Osoite
                 if(ytjErrorsDto.osoiteValid) {
-                    updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjdto, organisaatio, forceUpdate);
+                    Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
+                    updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjdto, osoite, forceUpdate);
                 }
 
                 // Update puhelin
@@ -448,7 +501,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
                 // Update www
                 if(ytjErrorsDto.wwwValid) {
-                    updateWww = updateWwwFromYTJToOrganisation(forceUpdate, ytjdto, organisaatio);
+                    updateWww = updateWwwFromYTJToOrganisation(ytjdto, organisaatio.getWww(), forceUpdate);
                 }
 
                 // Update alkupvm
@@ -741,13 +794,13 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         }
     }
 
-    private boolean updateWwwFromYTJToOrganisation(boolean forceUpdate, YTJDTO ytjdto, Organisaatio organisaatio) {
+    private boolean updateWwwFromYTJToOrganisation(YTJDTO ytjdto, Www www, boolean forceUpdate) {
         boolean update = false;
-        // Find the www from organisaatio
-        Www www = organisaatio.getWww();
+        if(www == null) {
+            return false;
+        }
         // Update www from YTJ if it missmatches the current one.
-        if(www.getWwwOsoite() != null && (!ytjdto.getWww().equals(www.getWwwOsoite()))
-                || forceUpdate) {
+        if(!ytjdto.getWww().equals(www.getWwwOsoite()) || forceUpdate) {
             www.setWwwOsoite(ytjdto.getWww());
             update = true;
         }
@@ -799,10 +852,13 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return false;
     }
 
-    private boolean updateOsoiteFromYTJToOrganisaatio(YTJDTO ytjdto, Organisaatio organisaatio, final boolean forceUpdate) {
+    private boolean  updateOsoiteFromYTJToOrganisaatio(YTJDTO ytjdto, Osoite osoite, final boolean forceUpdate) {
+        if(osoite == null) {
+            return false;
+        }
         boolean update = false;
+        osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
         // Find osoite with right language (finnish or swedish)
-        Osoite osoite = findOsoiteByLangAndTypeFromYhteystiedot(ytjdto, organisaatio);
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
                 && (!(POSTIOSOITE_PREFIX + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
                 || forceUpdate)) {
