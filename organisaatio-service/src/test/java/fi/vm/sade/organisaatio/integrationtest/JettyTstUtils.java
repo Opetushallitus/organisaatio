@@ -2,11 +2,11 @@ package fi.vm.sade.organisaatio.integrationtest;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.ServletMapping;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.ServletMapping;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -42,7 +42,7 @@ public final class JettyTstUtils {
         servletMapping.setServletName("cxfServlet");
         servletMapping.setPathSpec("/cxf/*");
         servletHandler.setServletMappings(new ServletMapping[]{servletMapping});
-        context.addHandler(servletHandler);
+        context.setHandler(servletHandler);
 
         // start jetty
         server.start();
