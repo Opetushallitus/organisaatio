@@ -8,6 +8,26 @@
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+
+        <!-- OPH Versions -->
+        <generic.version>9.2-SNAPSHOT</generic.version>
+        <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
+        <log.client.version>8.0</log.client.version>
+        <oid.api.version>8.0</oid.api.version>
+        <rajapinnat.ytj.version>10.0-SNAPSHOT</rajapinnat.ytj.version>
+        <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
+        <auditlogger.version>5.0.0-SNAPSHOT</auditlogger.version>
+        <viestinta.version>14.7</viestinta.version>
+        <!--Java utils-->
+        <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
+
+        <!--Default properties-->
+        <jmeter.username>xxx</jmeter.username>
+        <jmeter.password>xxx</jmeter.password>
+        <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
+
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -21,24 +41,26 @@
         <!-- UI libraries -->
         <vaadin.version>6.8.12</vaadin.version>
         <gwt.version>2.3.0</gwt.version>
-        <gwt.plugin.version>2.2.0</gwt.plugin.version>
         <servlet.version>3.0.1</servlet.version>
         <vaadin.formbinder.version>2.1.1</vaadin.formbinder.version>
         <portlet.api.version>2.0</portlet.api.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
+        <swagger.version>1.3.13</swagger.version>
+        <frontend-plugin.version>0.0.29</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>2.5.1</cxf.version>
+        <cxf.version>2.7.18</cxf.version>
         <cxf.codegen.version>2.4.6</cxf.codegen.version>
         <wss4j.version>1.6.4</wss4j.version>
         <camel.version>2.8.3</camel.version>
-        <spring.version>3.1.3.RELEASE</spring.version>
-        <spring.security.version>${spring.version}</spring.security.version>
         <activemq.version>5.5.1</activemq.version>
+        <spring.version>3.2.16.RELEASE</spring.version>
+        <spring.security.version>3.2.9.RELEASE</spring.security.version>
 
         <!-- Logging -->
         <slf4j.version>1.6.1</slf4j.version>
         <slf4j-api.scope>compile</slf4j-api.scope>
+        <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
         <jpa-api.version>2.0.0</jpa-api.version>
@@ -46,24 +68,34 @@
         <jta.version>1.1</jta.version>
         <postgresql.version>9.3-1100.jdbc4</postgresql.version>
         <hsqldb.version>2.0.0</hsqldb.version>
-        <hibernate.version>4.1.0.Final</hibernate.version>
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
         <querydsl.version>2.6.0</querydsl.version>
+        <hibernate.version>4.2.21.Final</hibernate.version>
+        <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
+        <solr.version>4.5.1</solr.version>
+        <ehcache.version>2.5.0</ehcache.version>
+        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
 
         <!-- Utils -->
         <commons-codec.version>1.6</commons-codec.version>
         <jodatime.version>2.1</jodatime.version>
-        <log4j.version>1.2.14</log4j.version>
         <aopalliance.version>1.0</aopalliance.version>
-        <aspectj.version>1.6.3</aspectj.version>
         <antisamy.version>1.4.5</antisamy.version>
+        <java.version>1.7</java.version>
+        <aspectj.version>1.7.0</aspectj.version>
+        <jgroups.version>2.10.0.GA</jgroups.version>
+        <modelmapper.version>0.6.3</modelmapper.version>
+        <jackson.version>2.7.2</jackson.version>
 
         <!-- Testing -->
-        <junit.version>4.10</junit.version>
         <selenium.version>2.37.0</selenium.version>
         <dbunit.version>2.4.8</dbunit.version>
         <mockito.version>1.9.0</mockito.version>
+        <springockito.version>1.0.9</springockito.version>
+        <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
+        <junit.version>4.12</junit.version>
+        <jmeter.version>1.10.1</jmeter.version>
 
         <!-- Plugins versions -->
         <compiler.plugin.version>2.3.2</compiler.plugin.version>
@@ -76,9 +108,10 @@
         <checkstyle.plugin.version>2.9.1</checkstyle.plugin.version>
         <jar.plugin.version>2.4</jar.plugin.version>
         <resources.plugin.version>2.5</resources.plugin.version>
-        <findbugs.plugin.version>2.3.3</findbugs.plugin.version>
         <jrebel.plugin.version>1.1.3</jrebel.plugin.version>
         <xml.plugin.version>1.0</xml.plugin.version>
+        <gwt.plugin.version>2.2.0</gwt.plugin.version>
+        <maven.war.plugin.version>2.4</maven.war.plugin.version>
 
         <project.svn.base>https://penaali.hard.ware.fi/svn/generic/${project.artifactId}</project.svn.base>
 
@@ -101,16 +134,9 @@
         <jsch.version>0.1.48</jsch.version>
 
         <!-- common clover properties -->
-        <!-- OLD
-        <clover.base>/data00/atlassian/application-data/bamboo/clover</clover.base>
-		<clover.outputDirectory>${clover.base}/output/${project.groupId}-${project.artifactId}</clover.outputDirectory>
-		-->
         <clover.version>3.3.0</clover.version>
         <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
         <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
-
-        <!--<ehcache.version>2.6.3</ehcache.version>-->
-        <ehcache.version>2.4.8</ehcache.version> <!-- sallii monta samannimista cachemanageria -->
 
         <tomcat.version>7.0.26</tomcat.version>
         <webapp.port>8180</webapp.port>
@@ -124,51 +150,6 @@
         <gson.version>2.2.2</gson.version>
         <jetty.embed.version>6.1.26</jetty.embed.version>
         <jersey.version>1.17.1</jersey.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
-
-        <!-- OPH Versions -->
-        <generic.version>9.2-SNAPSHOT</generic.version>
-        <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
-        <log.client.version>8.0</log.client.version>
-        <oid.api.version>8.0</oid.api.version>
-        <rajapinnat.ytj.version>10.0-SNAPSHOT</rajapinnat.ytj.version>
-        <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
-        <auditlogger.version>5.0.0-SNAPSHOT</auditlogger.version>
-        <viestinta.version>14.7</viestinta.version>
-        <!--Java utils-->
-        <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
-
-        <!-- Versions -->
-        <java.version>1.7</java.version>
-        <aspectj.version>1.7.0</aspectj.version>
-        <maven.war.plugin.version>2.4</maven.war.plugin.version>
-        <swagger.version>1.3.13</swagger.version>
-        <solr.version>4.5.1</solr.version>
-        <!--<solr.version>4.3.0</solr.version>-->
-        <modelmapper.version>0.6.3</modelmapper.version>
-        <ehcache.version>2.5.0</ehcache.version>
-        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
-        <jgroups.version>2.10.0.GA</jgroups.version>
-        <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
-        <springockito.version>1.0.9</springockito.version>
-        <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
-        <spring.version>3.2.16.RELEASE</spring.version>
-        <spring.security.version>3.2.9.RELEASE</spring.security.version>
-        <!--<hibernate.version>4.1.0.Final</hibernate.version>-->
-        <hibernate.version>4.2.21.Final</hibernate.version>
-        <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
-        <jmeter.version>1.10.1</jmeter.version>
-        <frontend-plugin.version>0.0.29</frontend-plugin.version>
-        <cxf.version>2.7.18</cxf.version>
-        <jackson.version>2.7.2</jackson.version>
-
-        <!--Default properties-->
-        <jmeter.username>xxx</jmeter.username>
-        <jmeter.password>xxx</jmeter.password>
-        <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
     </properties>
 
     <modules>
@@ -713,6 +694,7 @@
             </dependencies>
         </profile>
 
+        <!-- Currently Graddle is used for debployment. Legacy stuff. -->
         <profile><!-- Set default ant file for -Pdeploy.remote if -Dant.file=xxx is not spesified. -->
             <id>default-ant-file</id>
             <activation>
@@ -857,25 +839,6 @@
             </dependencies>
         </profile>
         <profile>
-            <!--
-           How-to build with Clover and Sonar:
-
-           1. clean:
-               $ mvn clean -N -Pclover-clean-pre -Dbamboo.data.home=/my/path/to/bamboo
-           2. test ja clover:
-               $ mvn clean install -Pclover -Dbamboo.data.home=/my/path/to/bamboo
-           3. deploy and test WITHOUT clover:
-               $ mvn clean deploy -DscreenshotMode=true -Pjavadoc -DskipITs
-           4. Sonar reports:
-               $ mvn sonar:sonar -Psonar -Dsonar.jdbc.password=XXXxxxXxx -Dbamboo.data.home=/my/path/to/bamboo
-           5. cleanup after successfully build:
-               $ mvn clean -N -Pclover-clean-pre -Dbamboo.data.home=/my/path/to/bamboo
-
-           On windows machine you must user following syntax on bamboo.data.home property
-               -Dbamboo.data.home=c:\\\\my\\path\\to\\bamboo
-           and in linux
-               -Dbamboo.data.home=/my/path/to/bamboo
-           -->
             <id>clover</id>
             <build>
                 <plugins>
