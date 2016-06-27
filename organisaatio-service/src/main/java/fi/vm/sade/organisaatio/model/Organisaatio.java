@@ -268,15 +268,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return getOsoite(ModelConstants.TYYPPI_KAYNTIOSOITE);
     }
 
-    public Object getPuhelin() {
-        for (Yhteystieto yhteystieto : yhteystiedot) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                return yhteystieto;
-            }
-        }
-        return null;
-    }
-
     private Osoite getOsoite(String osoiteTyyppi) {
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Osoite) {
@@ -286,6 +277,16 @@ public class Organisaatio extends OrganisaatioBaseEntity {
                 }
             }
         }
+        return null;
+    }
+
+    public Osoite getPostiosoiteByKieli(String kielikoodi) {
+        for (Yhteystieto yhteystieto : getYhteystiedot()) {
+            if (yhteystieto instanceof Osoite && yhteystieto.getKieli().equals(kielikoodi)
+                    && ((Osoite) yhteystieto).getOsoiteTyyppi().equals(Osoite.TYYPPI_POSTIOSOITE)){
+                    return (Osoite) yhteystieto;
+                }
+            }
         return null;
     }
 
@@ -701,6 +702,16 @@ public class Organisaatio extends OrganisaatioBaseEntity {
                 if (tyyppi.equals(((Puhelinnumero) yhteystieto).getTyyppi())) {
                     return (Puhelinnumero) yhteystieto;
                 }
+            }
+        }
+        return null;
+    }
+
+
+    public Www getWww() {
+        for(Yhteystieto yhteystieto : getYhteystiedot()) {
+            if(yhteystieto instanceof Www) {
+                return (Www)yhteystieto;
             }
         }
         return null;
