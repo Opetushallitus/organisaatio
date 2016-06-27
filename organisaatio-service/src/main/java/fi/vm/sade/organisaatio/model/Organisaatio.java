@@ -758,4 +758,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public void addNimi(OrganisaatioNimi organisaatioNimi) {
         this.nimet.add(organisaatioNimi);
     }
+
+    public OrganisaatioNimi getCurrentNimi() {
+        OrganisaatioNimi currentOrgNimi = null;
+        for (OrganisaatioNimi orgNimi : getNimet()) {
+            if (orgNimi.getNimi().equals(getNimi())) {
+                currentOrgNimi = orgNimi;
+            }
+        }
+        return currentOrgNimi;
+    }
 }
