@@ -20,9 +20,9 @@ import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import java.util.List;
 
 public interface OrganisaatioViestinta {
-    void sendStringViestintaEmail(String message);
+    void sendStringViestintaEmail(String message, boolean reauthorize);
 
-    void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
+    void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize);
 
-    void generateAndSendEmail(String content, List<String> receiverEmails);
+    void generateAndSendEmail(String content, List<String> receiverEmails, boolean reauthorize);
 }
