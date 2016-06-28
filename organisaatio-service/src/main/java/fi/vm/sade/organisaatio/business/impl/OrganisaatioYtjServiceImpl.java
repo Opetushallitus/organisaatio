@@ -329,7 +329,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private boolean validateYtjOsoite(YTJDTO ytjOrg) {
-        if(ytjOrg.getPostiOsoite() == null) {
+        if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
             return false;
         }
         else if(ytjOrg.getPostiOsoite().getKatu() != null
@@ -383,7 +383,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             if(organisaatioNimi.getAlkuPvm().equals(ytjNameAlkupvm)) {
                 return false;
             } else if (organisaatioNimi.getAlkuPvm().after(ytjNameAlkupvm)) {
-                LOG.error("YTJ:ssä on vanhempi nimitieto organisaatiolle " + organisaatio.getOid());
+                LOG.info("YTJ:ssä on vanhempi nimitieto organisaatiolle " + organisaatio.getOid());
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.vanha");
                 return false;
             }
@@ -474,12 +474,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     }});
         } catch (OrganisaatioDateException de) {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.tarkistukset");
-            LOG.error("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
+            LOG.info("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
             return null;
         } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
             // this can't actually happend because we don't import end date, so no ytj error logging
             // but we still have to process the error that the validation method throws
-            LOG.error("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
+            LOG.info("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
                     organisaatio.getOid() + " jolla on alkavia koulutuksia");
             return null;
         }
