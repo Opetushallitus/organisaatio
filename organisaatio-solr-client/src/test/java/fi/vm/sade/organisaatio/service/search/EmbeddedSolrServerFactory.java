@@ -55,8 +55,8 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
             log.info("NEW SOLR SERVER AND CONTAINER CREATED");
             System.setProperty("solr.solr.home", solrHome);
             System.setProperty("solr.data.dir", solrData);
-            CoreContainer.Initializer initializer = new CoreContainer.Initializer();
-            CoreContainer coreContainer = initializer.initialize();
+            CoreContainer coreContainer = new CoreContainer(solrHome);
+            coreContainer.load();
             server = new EmbeddedSolrServer(coreContainer, "organisaatiot");
             System.clearProperty("solr.solr.home");
             System.clearProperty("solr.data.dir");
