@@ -265,59 +265,51 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // work in progress, trying to find a way to write this name hassle in a more clear way
     private boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
         boolean updateNimi = false;
-        // TODO refactor to submethod and give lang specific stuff as parameter
         if(YTJLangIsSwedish(ytjOrg)) {
             if(organisaatio.getNimi().getString("sv") == null) {
                 // just add new name, don't add entry to name history
-                organisaatio.getNimi().addString("sv", ytjOrg.getSvNimi());
-                organisaatio.setNimihaku(ytjOrg.getSvNimi());
-                organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                updateNimiWithNewKieli(ytjOrg.getSvNimi(), "sv", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             } else if (!(organisaatio.getNimi().getString("sv").equals(ytjOrg.getSvNimi())) || forceUpdate) {
                 // it has already been validated that dates are different
-                OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
-                organisaatioNimi.setOrganisaatio(organisaatio);
-                MonikielinenTeksti newNimi = new MonikielinenTeksti();
-                newNimi.setValues(new HashMap<String, String>() {{put("sv", ytjOrg.getSvNimi());}});
-                if(organisaatio.getNimi().getString("fi") != null) {
-                    // keep the existing name in the other lang
-                    newNimi.addString("fi", organisaatio.getNimi().getValues().get("fi"));
-                }
-                organisaatio.setNimihaku(ytjOrg.getSvNimi());
-                organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
-                organisaatioNimi.setNimi(newNimi);
-                organisaatio.setNimi(newNimi);
-                // add to name history
-                organisaatio.addNimi(organisaatioNimi);
+                addNameToOrg(ytjOrg.getSvNimi(), "sv", "fi", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             }
         } else {
             if(organisaatio.getNimi().getString("fi") == null) {
                 // just add new name, don't add entry to name history
-                organisaatio.getNimi().addString("fi", ytjOrg.getNimi());
-                organisaatio.setNimihaku(ytjOrg.getNimi());
-                organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                updateNimiWithNewKieli(ytjOrg.getNimi(), "fi", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             } else if (!(organisaatio.getNimi().getString("fi").equals(ytjOrg.getNimi())) || forceUpdate) {
                 // it has already been validated that dates are different
-                OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
-                organisaatioNimi.setOrganisaatio(organisaatio);
-                MonikielinenTeksti newNimi = new MonikielinenTeksti();
-                newNimi.setValues(new HashMap<String, String>() {{put("fi", ytjOrg.getNimi());}});
-                if(organisaatio.getNimi().getString("sv") != null) {
-                    // keep the existing name in the other lang
-                    newNimi.addString("sv", organisaatio.getNimi().getValues().get("sv"));
-                }
-                organisaatio.setNimihaku(ytjOrg.getSvNimi());
-                organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
-                organisaatioNimi.setNimi(newNimi);
-                organisaatio.setNimi(newNimi);
-                // add to name history
-                organisaatio.addNimi(organisaatioNimi);
+                addNameToOrg(ytjOrg.getNimi(), "fi", "sv", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             }
         }
         return updateNimi;
+    }
+
+    private void addNameToOrg(final String name, final String lang, String anotherlang, Organisaatio organisaatio, Date ytjNameAlkupvm) {
+        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
+        organisaatioNimi.setOrganisaatio(organisaatio);
+        final MonikielinenTeksti newNimi = new MonikielinenTeksti();
+        newNimi.setValues(new HashMap<String, String>() {{put(lang, name);}});
+        if(organisaatio.getNimi().getString(anotherlang) != null) {
+            // keep the existing name in the other lang
+            newNimi.addString(anotherlang, organisaatio.getNimi().getValues().get(anotherlang));
+        }
+        organisaatio.setNimihaku(name);
+        organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
+        organisaatioNimi.setNimi(newNimi);
+        organisaatio.setNimi(newNimi);
+        // add to name history
+        organisaatio.addNimi(organisaatioNimi);
+    }
+
+    private void updateNimiWithNewKieli(String nimi, String kieli, Organisaatio organisaatio, Date ytjNameAlkupvm) {
+        organisaatio.getNimi().addString(kieli, nimi);
+        organisaatio.setNimihaku(nimi);
+        organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
     }
 
     private String getKielikoodiFromYTJlang(String yrityksenKieli) {
@@ -330,6 +322,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private boolean validateYtjOsoite(YTJDTO ytjOrg) {
         if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
+            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + ytjOrg.getNimi() + " / " + ytjOrg.getSvNimi());
             return false;
         }
         else if(ytjOrg.getPostiOsoite().getKatu() != null
