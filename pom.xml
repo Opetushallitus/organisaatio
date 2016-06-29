@@ -266,19 +266,6 @@
                     <include>**/*</include>
                 </includes>
             </resource>
-            <!-- profiilikohtaiset resurssit tassa etta ne ylikirjoittavat oletusresurssit -->
-            <resource>
-                <directory>src/main/profile/${env}</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/profile/${profileEnv}</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
         </resources>
 
         <pluginManagement>
@@ -904,107 +891,6 @@
             </dependencies>
         </profile>
 
-        <profile><!-- profile to embed service dependency inside war in app module -->
-            <id>embedService</id>
-            <properties>
-                <profileEnv>embedService</profileEnv>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>${embedService.serviceArtifactId}</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>development</id>
-            <properties>
-                <env>development</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>ui-development</id>
-            <properties>
-                <env>ui-development</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>integration-test</id>
-            <properties>
-                <env>integration-test</env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <property>
-                                    <name>ophServerUrl</name>
-                                    <!-- TODO: lue build propseista -->
-                                    <value>http://luokka.hard.ware.fi</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>system-test</id>
-            <properties>
-                <env>system-test</env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <property>
-                                    <name>ophServerUrl</name>
-                                    <!-- TODO: lue build propseista -->
-                                    <value>http://reppu.hard.ware.fi</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>QA</id>
-            <properties>
-                <env>QA</env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <property>
-                                    <name>ophServerUrl</name>
-                                    <!-- TODO: lue build propseista -->
-                                    <value>https://testi.virkailija.opintopolku.fi</value>
-                                </property>
-                                <property>
-                                    <name>ophServerPort</name>
-                                    <value>443</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>PRODUCTION</id>
-            <properties>
-                <env>PRODUCTION</env>
-            </properties>
-        </profile>
         <profile>
             <id>attach-schema-artifact</id>
             <activation>
