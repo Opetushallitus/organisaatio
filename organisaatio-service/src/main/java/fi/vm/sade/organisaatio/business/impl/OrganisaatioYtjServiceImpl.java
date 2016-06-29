@@ -87,12 +87,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String POSTIOSOITE_PREFIX = "posti_";
-    protected static final String KIELI_KOODI_FI = "kieli_fi#1";
-    protected static final String KIELI_KOODI_SV = "kieli_sv#1";
-    protected static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
-    protected static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
-    protected static final int SEARCH_LIMIT = 10000;
-    private static final int PARTITION_SIZE = 1000;
+    public static final String KIELI_KOODI_FI = "kieli_fi#1";
+    public static final String KIELI_KOODI_SV = "kieli_sv#1";
+    public static final String ORG_KIELI_KOODI_FI = "oppilaitoksenopetuskieli_1#1";
+    public static final String ORG_KIELI_KOODI_SV = "oppilaitoksenopetuskieli_2#1";
+    public static final int SEARCH_LIMIT = 10000;
+    public static final int PARTITION_SIZE = 1000;
 
     public OrganisaatioYtjServiceImpl() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -192,7 +192,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // validates, updates if needed and returns info if org was updated or not
     private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
-        // TODO maybe put these still in some status object (inner class)
         boolean updateNimi = false;
         boolean updateOsoite = false;
         boolean updatePuhelin = false;
@@ -496,28 +495,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.error("Could not generate oid for yhteystieto, skipping the field for " + organisaatio.getOid());
             return false;
         }
-    }
-
-    // Adds the missing language information to Organisaatio according to the YTJ language.
-    // XXX why does this not work compared to the other one??
-    private boolean updateLangFromYTJ(Organisaatio organisaatio, String ytjkielikoodi) {
-        boolean YTJkieliExists = false;
-        for (String kieli : organisaatio.getKielet()) {
-            if(kieli.trim().equals(ytjkielikoodi)) {
-                YTJkieliExists = true;
-            }
-            if (!YTJkieliExists) {
-                String newKieli;
-                // have to generate a new list because organisaatio.getKielet is unmodifiable
-                List<String> newKieliList = new ArrayList<>();
-                newKieli = ytjkielikoodi;
-                newKieliList.addAll(organisaatio.getKielet());
-                newKieliList.add(newKieli);
-                organisaatio.setKielet(newKieliList);
-                return true;
-            }
-        }
-        return false;
     }
 
     // Adds the missing language information to Organisaatio according to the YTJ language.
