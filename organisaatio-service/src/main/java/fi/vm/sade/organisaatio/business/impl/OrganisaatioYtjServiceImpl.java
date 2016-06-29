@@ -224,7 +224,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
         }
         // validate osoite
-        if(validateYtjOsoite(ytjOrg)) {
+        if(validateYtjOsoite(ytjOrg, organisaatio)) {
             // Find osoite with right language (finnish or swedish)
             Osoite osoite = organisaatio.getPostiosoiteByKieli(ytjKielikoodi);
             if (osoite == null) {
@@ -320,21 +320,24 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         }
     }
 
-    private boolean validateYtjOsoite(YTJDTO ytjOrg) {
+    private boolean validateYtjOsoite(YTJDTO ytjOrg, Organisaatio organisaatio) {
         if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
-            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + ytjOrg.getNimi() + " / " + ytjOrg.getSvNimi());
+            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
         else if(ytjOrg.getPostiOsoite().getKatu() != null
                 && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) {
+            LOG.error("YTJ:ssä liian pitkä katuosoite organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
         else if(ytjOrg.getPostiOsoite().getToimipaikka() != null
                 && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) {
+            LOG.error("YTJ:ssä liian pitkä postitoimipaikka organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
         else if(ytjOrg.getPostiOsoite().getPostinumero() != null
                 && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX) {
+            LOG.error("YTJ:ssä liian pitkä postinumero organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
         return true;
