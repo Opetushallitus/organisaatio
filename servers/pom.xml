@@ -30,10 +30,11 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.2.1.v20140609</version>
+                <version>${jetty.version}</version>
 
                 <configuration>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <systemPropertiesFile>${user.home}/oph-configuration/common.properties</systemPropertiesFile>
                     <systemProperties>
                         <systemProperty>
                             <name>log4j.configuration</name>
@@ -174,7 +175,7 @@
                     <dependency>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-servlets</artifactId>
-                        <version>9.2.1.v20140609</version>
+                        <version>${jetty.version}</version>
                         <exclusions>
                             <exclusion>
                                 <groupId>org.javassist</groupId>
@@ -185,12 +186,12 @@
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
-                        <version>5.0.2</version>
+                        <version>${asm.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm-commons</artifactId>
-                        <version>5.0.2</version>
+                        <version>${asm.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

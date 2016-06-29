@@ -7,14 +7,6 @@
     <version>2015-13</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
-
-
-    <parent>
-        <groupId>fi.vm.sade.generic</groupId>
-        <artifactId>build-parent</artifactId>
-        <version>13.0-SNAPSHOT</version>
-    </parent>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
@@ -31,35 +23,127 @@
         <!--Java utils-->
         <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
 
-        <!-- Versions -->
-        <java.version>1.7</java.version>
-        <aspectj.version>1.7.0</aspectj.version>
-        <maven.war.plugin.version>2.4</maven.war.plugin.version>
-        <swagger.version>1.3.13</swagger.version>
-        <solr.version>4.5.1</solr.version>
-        <!--<solr.version>4.3.0</solr.version>-->
-        <modelmapper.version>0.6.3</modelmapper.version>
-        <ehcache.version>2.5.0</ehcache.version>
-        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
-        <jgroups.version>2.10.0.GA</jgroups.version>
-        <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
-        <springockito.version>1.0.9</springockito.version>
-        <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
-        <spring.version>3.2.16.RELEASE</spring.version>
-        <spring.security.version>3.2.9.RELEASE</spring.security.version>
-        <!--<hibernate.version>4.1.0.Final</hibernate.version>-->
-        <hibernate.version>4.2.21.Final</hibernate.version>
-        <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
-        <jmeter.version>1.10.1</jmeter.version>
-        <frontend-plugin.version>0.0.29</frontend-plugin.version>
-        <cxf.version>2.7.18</cxf.version>
-        <jackson.version>2.7.2</jackson.version>
-
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
+
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <jetty.module>${project.artifactId}</jetty.module>
+        <jetty.webApp>../${jetty.module}/target/${jetty.module}.war</jetty.webApp>
+        <jetty.version>9.2.17.v20160517</jetty.version>
+        <daemon>false</daemon>
+        <daemon>false</daemon>
+
+        <!-- UI libraries -->
+        <servlet.version>3.0.1</servlet.version>
+        <google.map.widget.version>0.9.13</google.map.widget.version>
+        <swagger.version>1.3.13</swagger.version>
+        <frontend-plugin.version>0.0.29</frontend-plugin.version>
+
+        <!-- ServiceMix components / frameworks -->
+        <cxf.version>2.7.18</cxf.version>
+        <cxf.codegen.version>2.4.6</cxf.codegen.version>
+        <wss4j.version>1.6.4</wss4j.version>
+        <spring.version>3.2.16.RELEASE</spring.version>
+        <spring.security.version>3.2.9.RELEASE</spring.security.version>
+
+        <!-- Logging -->
+        <slf4j.version>1.6.1</slf4j.version>
+        <slf4j-api.scope>compile</slf4j-api.scope>
+        <log4j.version>1.2.17</log4j.version>
+
+        <!-- Database -->
+        <jpa-api.version>2.0.0</jpa-api.version>
+        <atomikos.version>3.6.6</atomikos.version>
+        <jta.version>1.1</jta.version>
+        <postgresql.version>9.3-1100.jdbc4</postgresql.version>
+        <hsqldb.version>2.0.0</hsqldb.version>
+        <commons-dbcp.version>1.4_1</commons-dbcp.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <querydsl.version>2.6.0</querydsl.version>
+        <hibernate.version>4.2.21.Final</hibernate.version>
+        <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
+        <solr.version>4.5.1</solr.version>
+        <ehcache.version>2.5.0</ehcache.version>
+        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
+
+        <!-- Utils -->
+        <commons-codec.version>1.6</commons-codec.version>
+        <jodatime.version>2.1</jodatime.version>
+        <aopalliance.version>1.0</aopalliance.version>
+        <antisamy.version>1.4.5</antisamy.version>
+        <java.version>1.7</java.version>
+        <aspectj.version>1.7.0</aspectj.version>
+        <jgroups.version>2.10.0.GA</jgroups.version>
+        <modelmapper.version>0.6.3</modelmapper.version>
+        <jackson.version>2.7.2</jackson.version>
+        <asm.version>5.0.2</asm.version>
+
+        <!-- Testing -->
+        <selenium.version>2.37.0</selenium.version>
+        <dbunit.version>2.4.8</dbunit.version>
+        <mockito.version>1.9.0</mockito.version>
+        <springockito.version>1.0.9</springockito.version>
+        <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
+        <junit.version>4.12</junit.version>
+        <jmeter.version>1.10.1</jmeter.version>
+
+        <!-- Plugins versions -->
+        <compiler.plugin.version>2.3.2</compiler.plugin.version>
+        <enforcer.plugin.version>1.0.1</enforcer.plugin.version>
+        <surefire.plugin.version>2.12</surefire.plugin.version>
+        <failsafe.plugin.version>2.12</failsafe.plugin.version>
+        <deploy.plugin.version>2.7</deploy.plugin.version>
+        <release.plugin.version>2.2.1</release.plugin.version>
+        <source.plugin.version>2.1.2</source.plugin.version>
+        <checkstyle.plugin.version>2.9.1</checkstyle.plugin.version>
+        <jar.plugin.version>2.4</jar.plugin.version>
+        <resources.plugin.version>2.5</resources.plugin.version>
+        <jrebel.plugin.version>1.1.3</jrebel.plugin.version>
+        <xml.plugin.version>1.0</xml.plugin.version>
+        <gwt.plugin.version>2.2.0</gwt.plugin.version>
+        <maven.war.plugin.version>2.6</maven.war.plugin.version>
+        <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
+
+        <embedService.serviceArtifactId>${project.parent.artifactId}-service</embedService.serviceArtifactId>
+
+        <checkstyle.excludes>**/generated/**/*,**/com/**/*,**/org/**/*,**/net/**/*,**/*Mock.java</checkstyle.excludes>
+        <checkstyle.skip>false</checkstyle.skip>
+        <checkstyle.failsOnError>true</checkstyle.failsOnError>
+        <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
+        <checkstyle.configLocation><![CDATA[https://sonar.oph.ware.fi/sonar/profiles/export?format=checkstyle&amp;language=java&amp;name=SonarWayWithFindbugsAndOPHCheckstyle]]></checkstyle.configLocation>
+
+        <surefire.reportsDirectory>${project.build.directory}/surefire-reports</surefire.reportsDirectory>
+        <surefire.testFailureIgnore>false</surefire.testFailureIgnore>
+        <compiler.debug>false</compiler.debug>
+
+        <mongo.version>2.7.1</mongo.version>
+
+        <ant-contrib.version>1.0b3</ant-contrib.version>
+        <ant-jsch.version>1.8.1</ant-jsch.version>
+        <jsch.version>0.1.48</jsch.version>
+
+        <!-- common clover properties -->
+        <clover.version>3.3.0</clover.version>
+        <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
+        <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
+
+        <tomcat.version>7.0.26</tomcat.version>
+        <webapp.port>8180</webapp.port>
+        <portlet.scope>provided</portlet.scope>
+
+        <blackboard.version>2.1.1</blackboard.version>
+
+        <buildversion_prefix />
+
+        <httpcomponents.version>4.2.5</httpcomponents.version>
+        <gson.version>2.2.2</gson.version>
+        <jetty.embed.version>8.1.0.RC5</jetty.embed.version>
+        <jersey.version>1.17.1</jersey.version>
     </properties>
 
     <modules>
@@ -69,11 +153,134 @@
         <module>organisaatio-ui</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>oph-sade-artifactory</id>
+            <name>oph-sade-artifactory-releases</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>oph-sade-artifactory</id>
+            <name>oph-sade-artifactory-snapshots</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>oph-sade-artifactory-snapshots</id>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>oph-sade-artifactory-releases</id>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+        </repository>
+        <repository>
+            <id>vaadin-addons</id>
+            <name>Vaadin addons</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>com.springsource.repository.bundles.release</id>
+            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/springsource-ebr/</url>
+        </repository>
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/spring-ebr/</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>com.springsource.repository.maven.snapshot</id>
+            <name>SpringSource Enterprise Bundle Maven Repository - SpringSource Snapshot Releases</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/com.springsource.repository.maven.snapshot/</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>com.springsource.repository.maven.milestone</id>
+            <name>Spring Framework Maven Milestone Releases (Maven Central Format)</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/com.springsource.repository.maven.milestone/</url>
+        </repository>
+        <repository>
+            <id>atomikos</id>
+            <name>Atomikos repository</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/atomikos/</url>
+        </repository>
+        <repository>
+            <id>shibboleth</id>
+            <name>Shibboleth</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/shibboleth/</url>
+        </repository>
+        <repository>
+            <id>libs-3rd-party</id>
+            <name>libs-3rd-party</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/libs-3rd-party</url>
+        </repository>
+        <repository>
+            <id>bedatadriven</id>
+            <name>bedatadriven</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/bedatadriven/</url>
+        </repository>
+        <repository>
+            <id>cpdetector</id>
+            <name>cpdetector</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/cpdetector</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>plugin-local-release</id>
+            <name>Plugin local release</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/plugins-release-local</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>libs-3rd-party</id>
+            <name>libs-3rd-party</name>
+            <url>https://artifactory.oph.ware.fi/artifactory/libs-3rd-party</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -103,6 +310,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.plugin.version}</version>
                 <configuration>
                     <webResources>
                         <resource>
@@ -154,6 +362,21 @@
         </dependencies>
     </dependencyManagement>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <reportsDirectory>${surefire.reportsDirectory}</reportsDirectory>
+                    <alwaysGenerateFailsafeReport>true</alwaysGenerateFailsafeReport>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+
     <profiles>
         <profile>
             <id>jmeter</id>
@@ -202,5 +425,506 @@
                 <jmeter.resultDir>${project.build}</jmeter.resultDir>
             </properties>
         </profile>
+        <profile>
+            <id>jrebel</id>
+            <activation>
+                <property>
+                    <name>!skipJrebel</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.zeroturnaround</groupId>
+                        <artifactId>jrebel-maven-plugin</artifactId>
+                        <version>${jrebel.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-rebel-xml</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>checkstyle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <configuration>
+                            <excludes>${checkstyle.excludes}</excludes>
+                            <skip>${checkstyle.skip}</skip>
+                            <configLocation>${checkstyle.configLocation}</configLocation>
+                            <failsOnError>${checkstyle.failsOnError}</failsOnError>
+                            <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <excludes>${checkstyle.excludes}</excludes>
+                            <skip>${checkstyle.skip}</skip>
+                            <configLocation>${checkstyle.configLocation}</configLocation>
+                            <failsOnError>${checkstyle.failsOnError}</failsOnError>
+                            <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+        <profile>
+            <id>findbugs</id>
+            <properties>
+                <compiler.debug>true</compiler.debug>
+                <findbugs.version>1.3.2</findbugs.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>antrun-findbugs</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                        <if>
+                                            <available file="${project.build.directory}/classes/fi" />
+                                            <then>
+                                                <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="maven.plugin.classpath" />
+
+                                                <property name="findbugsclasspath" refid="maven.plugin.classpath" />
+                                                <property name="runtime_classpath" refid="maven.runtime.classpath" />
+                                                <property name="compile_classpath" refid="maven.compile.classpath" />
+
+                                                <mkdir dir="${project.build.directory}/findbugs" />
+                                                <echo>Using localRepository: ${settings.localRepository}</echo>
+                                                <findbugs output="html" outputFile="${project.build.directory}/findbugs/findbugs.html" classpath="${findbugsclasspath}" pluginlist="${settings.localRepository}/net/sourceforge/findbugs/coreplugin/${findbugs.version}/coreplugin-${findbugs.version}.jar" jvmargs="-Xmx256m" reportLevel="medium" effort="default" failOnError="true">
+                                                    <sourcePath location="${project.basedir}/src/main/java" />
+                                                    <class location="${project.build.directory}/classes" />
+                                                    <auxClasspath>
+                                                        <path refid="maven.compile.classpath" />
+                                                        <path refid="maven.runtime.classpath" />
+                                                        <path refid="maven.plugin.classpath" />
+                                                    </auxClasspath>
+                                                </findbugs>
+                                            </then>
+                                            <else>
+                                                <echo>Skip findbugs, because directory
+                                                    '${project.build.directory}/classes/fi' not found.</echo>
+                                            </else>
+                                        </if>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sourceforge.findbugs</groupId>
+                                <artifactId>coreplugin</artifactId>
+                                <version>${findbugs.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>net.sourceforge.findbugs</groupId>
+                                <artifactId>findbugs</artifactId>
+                                <version>${findbugs.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>jaxen</groupId>
+                                <artifactId>jaxen</artifactId>
+                                <version>1.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>${ant-contrib.version}</version>
+                                <exclusions>
+                                    <exclusion>
+                                        <groupId>ant</groupId>
+                                        <artifactId>ant</artifactId>
+                                    </exclusion>
+                                </exclusions>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>javadoc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.8.1</version>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>javadoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>clover-clean-post</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>clean-clover-post</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete includeemptydirs="true" failonerror="false">
+                                            <fileset dir="${clover.outputDirectory}_old">
+                                                <include name="**/**" />
+                                            </fileset>
+                                        </delete>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>ant-contrib</groupId>
+                    <artifactId>ant-contrib</artifactId>
+                    <version>1.0b3</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ant</groupId>
+                            <artifactId>ant</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>clover-clean-pre</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>clean-clover-pre</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Clean clover output directory from ${clover.base}.</echo>
+                                        <delete includeemptydirs="true" failonerror="false">
+                                            <fileset dir="${clover.base}">
+                                                <include name="**/**" />
+                                                <exclude name="history/**" />
+                                            </fileset>
+                                        </delete>
+                                        <move failonerror="false" file="${clover.outputDirectory}" tofile="${clover.outputDirectory}_old" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>ant-contrib</groupId>
+                    <artifactId>ant-contrib</artifactId>
+                    <version>1.0b3</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ant</groupId>
+                            <artifactId>ant</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>clover</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>${clover.version}</version>
+
+                        <configuration>
+                            <instrumentLambda>block</instrumentLambda>
+
+                            <licenseLocation>${bamboo.data.home}/clover/clover.license</licenseLocation>
+                            <outputDirectory>${clover.outputDirectory}</outputDirectory>
+                            <snapshot>${clover.base}/snapshot/clover.snapshot</snapshot>
+                            <cloverDatabase>${clover.base}/db/clover.db</cloverDatabase>
+                            <historyDir>${clover.base}/history</historyDir>
+
+                            <singleCloverDatabase>true</singleCloverDatabase>
+                            <generateHistorical>true</generateHistorical>
+                            <alwaysReport>true</alwaysReport>
+                            <generateXml>true</generateXml>
+                            <includesAllSourceRoots>true</includesAllSourceRoots>
+                            <!--<copyExcludedFiles>false</copyExcludedFiles>-->
+                            <!--<includes>
+                                  <include>**/api/**/*.java</include>
+                                  <include>some/path/MyFile.java</include>
+                                  [...]
+                              </includes>  -->
+                            <excludes>
+                                <exclude>**/*Mock.java</exclude>
+                                <exclude>**/*.scala</exclude>
+                                <!-- TODO, FIXME: exclude "**/*-api/**" modules. -->
+                            </excludes>
+                            <!--  <targetPercentage>50%</targetPercentage>  -->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <!--<goal>optimize</goal>-->
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>clover</goal>
+                                    <goal>log</goal>
+                                    <!-- <goal>check</goal> disable!-->
+                                    <goal>save-history</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>clean-scala-files</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Remove Scala files from target/clover directory.</echo>
+                                        <delete failonerror="false" verbose="true">
+                                            <fileset dir="target/clover">
+                                                <include name="**/*.scala" />
+                                            </fileset>
+                                        </delete>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.cenqua.clover</groupId>
+                    <artifactId>clover</artifactId>
+                    <version>${clover.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>ant-contrib</groupId>
+                    <artifactId>ant-contrib</artifactId>
+                    <version>1.0b3</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ant</groupId>
+                            <artifactId>ant</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>attach-schema-artifact</id>
+            <activation>
+                <file><exists>src/main/resources/META-INF/persistence.xml</exists></file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>attach-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>target/hibernate3/sql/schema.ddl</file>
+                                            <type>ddl</type>
+                                            <classifier>schema</classifier>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jetty</id>
+            <properties>
+                <slf4j-api.scope>test</slf4j-api.scope>
+            </properties>
+        </profile>
+
+        <profile><!-- Generate db diagram on Bamboo master branch builds -->
+            <id>generate-db-diagram</id>
+            <activation>
+                <property>
+                    <name>branch</name>
+                    <value>master</value>
+                </property>
+            </activation>
+            <properties>
+                <schema.file>${project.basedir}/target/hibernate3/sql/schema.ddl</schema.file>
+                <dbdiagram.generator>/usr/sbin/sql2diagram</dbdiagram.generator>
+                <dbdiagram.output>${project.basedir}/target/sql2diagram/</dbdiagram.output>
+                <dbdiagram.filename>${project.artifactId}-${project.version}</dbdiagram.filename>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                        <if>
+                                            <available file="${schema.file}" />
+                                            <then>
+                                                <echo>Generate DB Diagrams fom file '${schema.file}'.</echo>
+                                                <mkdir dir="${dbdiagram.output}" />
+
+                                                <!-- generate diagrams -->
+                                                <exec executable="${dbdiagram.generator}">
+                                                    <arg value="${schema.file}" />
+                                                    <arg value="${dbdiagram.output}/${dbdiagram.filename}" />
+                                                </exec>
+
+                                                <!-- copy diagrams with name *-LATEST.* -->
+                                                <copy file="${dbdiagram.output}/${dbdiagram.filename}.html"
+                                                      tofile="${dbdiagram.output}/${project.artifactId}-LATEST.html"/>
+
+                                                <copy file="${dbdiagram.output}/${dbdiagram.filename}.png"
+                                                      tofile="${dbdiagram.output}/${project.artifactId}-LATEST.png"/>
+
+                                                <!-- SCP files to pulpetti apache -->
+                                                <scp todir="bamboo@pulpetti:/var/www/html/db/" trust="true"
+                                                     keyfile="${user.home}/.ssh/id_rsa" passphrase="">
+                                                    <fileset dir="${dbdiagram.output}">
+                                                        <include name="**/*" />
+                                                    </fileset>
+                                                </scp>
+                                            </then>
+                                            <else>
+                                                <echo>Skip DBDiagramGenerator, because file '${schema.file}' not found.</echo>
+                                            </else>
+                                        </if>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>1.8.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.jcraft</groupId>
+                                <artifactId>jsch</artifactId>
+                                <version>0.1.50</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>${ant-contrib.version}</version>
+                                <exclusions>
+                                    <exclusion>
+                                        <groupId>ant</groupId>
+                                        <artifactId>ant</artifactId>
+                                    </exclusion>
+                                </exclusions>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
 </project>

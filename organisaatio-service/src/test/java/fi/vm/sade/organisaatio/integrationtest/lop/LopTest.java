@@ -97,7 +97,7 @@ public class LopTest {
         lop1.setNamedValue(KEY2, "sv", LOP_VALUE_SV1);
 
         MonikielinenTeksti mt = new MonikielinenTeksti();
-        mt.setId(111l);
+        mt.setId(111L);
 
         mt.addString(MetatietoAvainTyyppi.OPPIMISYMPARISTOT.value(), "metatieto");
         em.persist(mt);
@@ -105,7 +105,7 @@ public class LopTest {
         List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
         Yhteystieto y = new Yhteystieto();
-        y.setId(1l);
+        y.setId(1L);
         y.setYhteystietoOid("y-oid");
 
         em.persist(y);
