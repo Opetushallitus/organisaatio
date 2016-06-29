@@ -57,7 +57,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
-    private YtjPaivitysLokiDao ytjPaivitysLokiDao;
+    protected YtjPaivitysLokiDao ytjPaivitysLokiDao;
 
     @Autowired
     private OIDService oidService;
@@ -82,7 +82,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private OrganisaatioViestinta organisaatioViestinta;
 
-    private YtjPaivitysLoki ytjPaivitysLoki;
+    private YtjPaivitysLoki ytjPaivitysLoki = new YtjPaivitysLoki();;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -102,7 +102,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
     public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
-        ytjPaivitysLoki = new YtjPaivitysLoki();
         ytjPaivitysLoki.setPaivitysaika(new Date());
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT);
 
@@ -191,7 +190,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // validates, updates if needed and returns info if org was updated or not
-    private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
+    public boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
         boolean updateNimi = false;
         boolean updateOsoite = false;
         boolean updatePuhelin = false;
@@ -224,7 +223,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             // check that YTJ name passes name history criteria
             if(ytjNameAlkupvm != null && validateNameHistoryForYtjName(organisaatio, ytjNameAlkupvm)) {
                 updateNimi = updateNimiForOrg(ytjOrg, organisaatio, forceUpdate, ytjNameAlkupvm);
-                //updateNimi = updateNameFromYTJ(ytjOrg, organisaatio, forceUpdate, true);
             }
         }
         // validate osoite
@@ -267,7 +265,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // work in progress, trying to find a way to write this name hassle in a more clear way
-    private boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
+    public boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
         boolean updateNimi = false;
         if(YTJLangIsSwedish(ytjOrg)) {
             if(organisaatio.getNimi().getString("sv") == null) {
@@ -275,8 +273,15 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 updateNimiWithNewKieli(ytjOrg.getSvNimi(), "sv", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             } else if (!(organisaatio.getNimi().getString("sv").equals(ytjOrg.getSvNimi())) || forceUpdate) {
-                // it has already been validated that dates are different
-                addNameToOrg(ytjOrg.getSvNimi(), "sv", "fi", organisaatio, ytjNameAlkupvm);
+                if(organisaatio.getNimi().getString("sv").equalsIgnoreCase(ytjOrg.getSvNimi())) {
+                    // if only case changed, just update the name string and date
+                    organisaatio.getNimi().addString("sv", ytjOrg.getSvNimi());
+                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                }
+                else {
+                    // update name history too
+                    addNameToOrg(ytjOrg.getSvNimi(), "sv", "fi", organisaatio, ytjNameAlkupvm);
+                }
                 updateNimi = true;
             }
         } else {
@@ -285,8 +290,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 updateNimiWithNewKieli(ytjOrg.getNimi(), "fi", organisaatio, ytjNameAlkupvm);
                 updateNimi = true;
             } else if (!(organisaatio.getNimi().getString("fi").equals(ytjOrg.getNimi())) || forceUpdate) {
-                // it has already been validated that dates are different
-                addNameToOrg(ytjOrg.getNimi(), "fi", "sv", organisaatio, ytjNameAlkupvm);
+                if(organisaatio.getNimi().getString("fi").equalsIgnoreCase(ytjOrg.getNimi())) {
+                    // if only case changed, just update the name string and date
+                    organisaatio.getNimi().addString("fi", ytjOrg.getNimi());
+                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                } else {
+                    // update name history too
+                    addNameToOrg(ytjOrg.getNimi(), "fi", "sv", organisaatio, ytjNameAlkupvm);
+                }
                 updateNimi = true;
             }
         }

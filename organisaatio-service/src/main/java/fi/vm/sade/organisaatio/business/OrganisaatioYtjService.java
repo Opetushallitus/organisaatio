@@ -17,8 +17,10 @@ package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrganisaatioYtjService {
 
@@ -27,5 +29,9 @@ public interface OrganisaatioYtjService {
     */
 
     YtjPaivitysLoki updateYTJData(final boolean forceUpdate);
+
+    List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String,Organisaatio> organisaatiosByYtunnus, boolean forceUpdate);
+
+    boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate);
 
 }
