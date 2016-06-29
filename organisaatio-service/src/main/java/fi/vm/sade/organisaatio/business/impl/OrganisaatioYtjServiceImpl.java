@@ -198,6 +198,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         boolean updatePuhelin = false;
         boolean updateWww = false;
         boolean updateAlkupvm = false;
+        // notify if organisation is inactive in YTJ
+        if(ytjOrg.getYritysTunnus().getYritysLopetettu()) {
+            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.LOPPUPVM, "ilmoitukset.log.virhe.lopetettu");
+            return false;
+        }
         // validate YTJ language and add lang if needed
         if(ytjOrg.getYrityksenKieli() == null) {
             // don't update anything if YTJ lang is missing (shouldn't be possible)
@@ -325,19 +330,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
-        else if(ytjOrg.getPostiOsoite().getKatu() != null
-                && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) {
-            LOG.error("YTJ:ssä liian pitkä katuosoite organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
-            return false;
-        }
-        else if(ytjOrg.getPostiOsoite().getToimipaikka() != null
-                && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) {
-            LOG.error("YTJ:ssä liian pitkä postitoimipaikka organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
-            return false;
-        }
-        else if(ytjOrg.getPostiOsoite().getPostinumero() != null
-                && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX) {
-            LOG.error("YTJ:ssä liian pitkä postinumero organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
+        else if((ytjOrg.getPostiOsoite().getKatu() != null
+                && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) ||
+                (ytjOrg.getPostiOsoite().getToimipaikka() != null
+                && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) ||
+                (ytjOrg.getPostiOsoite().getPostinumero() != null
+                && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX)) {
+            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.OSOITE, "ilmoitukset.log.virhe.osoite.pitka");
+            LOG.error("YTJ:ssä liian pitkä osoite organisaatiolle " + organisaatio.getOid());
             return false;
         }
         return true;
