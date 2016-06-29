@@ -17,6 +17,7 @@
 var app = angular.module('organisaatio',
 ['ngResource',
     'Loading',
+    'Koodisto',
     'ngRoute',
     'Logging',
     'Localisation',
@@ -120,56 +121,6 @@ app.run(function($http, $cookies, OrganisaatioInitAuth) {
 // Services
 //
 ////////////
-app.service('KoodistoKoodi', function($locale, $window, $http, LocalisationService, $log) {
-    $log = $log.getInstance('KoodistoKoodi');
-    var language = LocalisationService.getLocale().toUpperCase();
-
-    this.getLocalizedName = function(koodi) {
-        var nimi = koodi.metadata[0].nimi;
-        koodi.metadata.forEach(function(metadata){
-            if(angular.isUndefined(language))
-                $log.warn('this.language called before defined.');
-            if(metadata.kieli === language) {
-                nimi = metadata.nimi;
-            }
-        });
-        return nimi;
-    };
-
-    // lang = FI tai SV
-    this.getLangName = function(koodi, lang) {
-        var nimi = koodi.metadata[0].nimi;
-        koodi.metadata.forEach(function(metadata){
-            if(metadata.kieli === lang) {
-                nimi = metadata.nimi;
-            }
-        });
-        return nimi;
-    };
-
-    this.getLanguage = function() {
-        if(angular.isUndefined(language))
-            $log.warn('this.language is undefined');
-        return language;
-     };
-
-    this.isValid = function(koodi) {
-        if (koodi.voimassaAlkuPvm) {
-            if (new Date() < new Date(koodi.voimassaAlkuPvm)) {
-                // Ei vielä voimassa
-                return false;
-            }
-        }
-        if (koodi.voimassaLoppuPvm) {
-            if (new Date() > new Date(koodi.voimassaLoppuPvm)) {
-                // Ei enää voimassa
-                return false;
-            }
-        }
-        return true;
-    };
-
-});
 
 // Esimerkki: Alert.add("warning", $filter('i18n')("YritysValinta.virheViesti", ""), true);
 app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
@@ -339,69 +290,6 @@ app.factory('OrganisaatioAuthGET', function($resource) {
     });
 });
 
-// Kuntien haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
-app.factory('KoodistoPaikkakunnat', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/kunta/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
-
-// Kuntien haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
-app.factory('KoodistoPaikkakunta', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/kunta/koodi/:uri", {uri: "@uri"}, {
-    get: {method: "GET", withCredentials : true}
-  });
-});
-
-// Organisaatiotyyppien haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/organisaatiotyyppi/koodi
-app.factory('KoodistoOrganisaatiotyypit', function($resource) {
-    return $resource(KOODISTO_URL_BASE + "json/organisaatiotyyppi/koodi", {}, {
-        get: {method: "GET", withCredentials : true, isArray: true}
-    });
-});
-
-// Oppilaitostyyppien haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitostyyppi/koodi
-app.factory('KoodistoOppilaitostyypit', function($resource) {
-    return $resource(KOODISTO_URL_BASE + "json/oppilaitostyyppi/koodi", {}, {
-        get: {method: "GET", withCredentials : true, isArray: true}
-    });
-});
-
-// Usean koodin haku koodistopalvelulta
-// Esim. http://localhost:8081/koodisto-service/rest/json/searchKoodis?koodiUris=posti_52200&koodiUris=maatjavaltiot1_fin
-app.factory('KoodistoSearchKoodis', function($resource) {
-    return $resource(KOODISTO_URL_BASE + "json/searchKoodis?:uris", {params: "@uris"}, {
-        get: {method: "GET", withCredentials : true, isArray: true}
-    });
-});
-
-// Maiden haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/maatjavaltiot1/koodi
-app.factory('KoodistoMaat', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
-
-// ISO-kielilistan haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/kieli/koodi
-app.factory('KoodistoKieli', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/kieli/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
-
-// Opetuskielten haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitoksenopetuskieli/koodi
-app.factory('KoodistoOpetuskielet', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyValidKoodis=true", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
 
 // YTJ tiedot yhden yrityksen osalta organisaatiopalvelun kautta
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
@@ -419,37 +307,6 @@ app.factory('YTJYritystenTiedot', function($resource) {
     });
 });
 
-// Postinumerokoodiston version haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/posti
-app.factory('KoodistoPostiVersio', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/posti", {}, {
-    get: {method: "GET", withCredentials : true}
-  });
-});
-
-// Postinumeroiden haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
-app.factory('KoodistoPosti', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
-
-// Postinumeroiden haku koodistopalvelulta tai selaimen cachesta
-// Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
-app.factory('KoodistoPostiCached', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
-
-// Vuosiluokkien haku koodistopalvelulta
-// Esim: https://localhost:8503/koodisto-service/rest/json/vuosiluokat/koodi
-app.factory('KoodistoVuosiluokat', function($resource) {
-return $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
-    get: {method: "GET", withCredentials : true, isArray: true}
-  });
-});
 
 // Muokattavien yhteystietojen haku organisaatiopalvelulta
 // Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
@@ -524,13 +381,6 @@ app.factory('Nimet', function($resource) {
 app.factory('Muokkaamonta', function($resource) {
     return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
         put: {method: 'PUT'}
-    });
-});
-
-// Koodiston haku koodistopalvelulta koodistoUrin perusteella
-app.factory('KoodistoArrayByUri', function($resource) {
-    return $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
-        get: {method: "GET", withCredentials : true, isArray: true}
     });
 });
 

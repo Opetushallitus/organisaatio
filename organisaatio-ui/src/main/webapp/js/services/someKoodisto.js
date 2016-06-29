@@ -14,7 +14,9 @@
  European Union Public Licence for more details.
  */
 
-app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
+var koodisto = angular.module('Koodisto');
+
+koodisto.factory('SomeKoodisto', function($q, $log, $filter, $injector,
                                      KoodistoArrayByUri, KoodistoKoodi, Alert) {
 
     $log = $log.getInstance("SomeKoodisto");
