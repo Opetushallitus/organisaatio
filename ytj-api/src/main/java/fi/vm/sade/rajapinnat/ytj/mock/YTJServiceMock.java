@@ -85,6 +85,9 @@ public class YTJServiceMock implements YTJService {
             dto.setYrityksenKieli("Suomi");
             dto.setAloitusPvm("10.02.1999");
             dto.setNimi(nimi);
+            dto.setYritysTunnus(new YTunnusDTO() {{
+                setAlkupvm("29.02.2011");
+            }});
         }
         else if(ytunnus.trim().equals("1492449-0")) {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
