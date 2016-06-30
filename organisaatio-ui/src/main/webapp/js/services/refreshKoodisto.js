@@ -16,7 +16,8 @@
 
 var koodisto = angular.module('Koodisto');
 
-koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injector, $log, KoodistoClient) {
+koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injector, $log, KoodistoClient,
+                                             Yhteystietojentyyppi, KoodistoKoodi) {
     var loadingService = $injector.get('LoadingService');
 
     // Näyttää käyttäjälle virheen Alert-servicen avulla ja loggaa responsen statuksen
@@ -32,7 +33,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
             model.koodisto.localizedKoulutustoimija = "";
             model.koodisto.localizedToimipiste = "";
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
-            KoodistoOrganisaatiotyypit.get({}, function(result) {
+            KoodistoClient.koodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
                     model.koodisto.ophOrganisaatiot.length = 0;
                     /* Organisaatiohierarkiasäännöt:
@@ -123,7 +124,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     // oppilaitostyyppejä ei löytynyt
                     showAndLogError("Organisaationtarkastelu.yhteystietojentyyppihakuvirhe", response);
                 });
-            KoodistoOppilaitostyypit.get({}, function(result) {
+            KoodistoClient.koodistoOppilaitostyypit.get({}, function(result) {
                     model.koodisto.oppilaitostyypit.length = 0;
                     result.forEach(function(olTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(olTyyppiKoodi)) {
@@ -147,7 +148,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     });
                     if (model.mode === 'edit' && !kotipaikkaVoimassa) {
                         // hae myös lakkautettu kotikunta
-                        KoodistoPaikkakunta.get({uri: model.organisaatio.kotipaikkaUri}, function(result) {
+                        KoodistoClient.koodistoPaikkakunta.get({uri: model.organisaatio.kotipaikkaUri}, function(result) {
                             model.koodisto.kotipaikat.push({uri: result.koodiUri, arvo: result.koodiArvo, nimi: KoodistoKoodi.getLocalizedName(result)});
                         }, function(response) {
                             // paikkakuntaa ei löytynyt
@@ -162,7 +163,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     // paikkakuntia ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-            KoodistoMaat.get({}, function(result) {
+            KoodistoClient.koodistoMaat.get({}, function(result) {
                     model.koodisto.maat.length = 0;
                     result.forEach(function(maaKoodi) {
                         model.koodisto.maat.push({uri: maaKoodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(maaKoodi)});
@@ -173,7 +174,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     // maita ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-            KoodistoKieli.get({}, function(result) {
+            KoodistoClient.koodistoKieli.get({}, function(result) {
                     model.koodisto.isokielet.length = 0;
                     result.forEach(function(kieliKoodi) {
                         // TODO: filter ?
@@ -187,7 +188,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     // kieliä ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-            KoodistoOpetuskielet.get({}, function(result) {
+            KoodistoClient.koodistoOpetuskielet.get({}, function(result) {
                     model.koodisto.opetuskielet.length = 0;
                     result.forEach(function(kieliKoodi) {
                         var uri = kieliKoodi.koodiUri + "#" + kieliKoodi.versio;
@@ -202,7 +203,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     // kieliä ei löytynyt
                     showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
                 });
-            KoodistoVuosiluokat.get({}, function(result) {
+            KoodistoClient.koodistoVuosiluokat.get({}, function(result) {
                     model.koodisto.vuosiluokat.length = 0;
                     result.forEach(function(vuosiluokka) {
                         if (KoodistoKoodi.isValid(vuosiluokka)) {
@@ -219,7 +220,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
 
             var getKoodistoPostiVersio = function() {
                 var deferred = $q.defer();
-                KoodistoPostiVersio.get({}, function(result) {
+                KoodistoClient.koodistoPostiVersio.get({}, function(result) {
                         deferred.resolve(result.versio);
                     },
                     // Error case
@@ -232,13 +233,13 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
             var getKoodistoPosti = function(cached) {
                 var deferred = $q.defer();
                 if (cached===true) {
-                    KoodistoPostiCached.get({}, function(result) {
+                    KoodistoClient.koodistoPostiCached.get({}, function(result) {
                         deferred.resolve(result);
                     }, function(response) {
                         deferred.reject();
                     });
                 } else {
-                    KoodistoPosti.get({}, function(result) {
+                    KoodistoClient.koodistoPosti.get({}, function(result) {
                         deferred.resolve(result);
                     }, function(response) {
                         deferred.reject();

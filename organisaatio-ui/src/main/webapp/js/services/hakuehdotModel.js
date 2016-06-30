@@ -16,10 +16,7 @@
 
 app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                                        AuthService, Alert,
-                                       KoodistoPaikkakunnat,
-                                       KoodistoOrganisaatiotyypit,
-                                       KoodistoOppilaitostyypit,
-                                       KoodistoKoodi) {
+                                       KoodistoClient, KoodistoKoodi) {
 
     $log = $log.getInstance("HakuehdotModel");
     var loadingService = $injector.get('LoadingService');
@@ -84,7 +81,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
             $log.log('refreshIfNeeded()');
             if (model.refreshed === false) {
                 model.refreshed = true;
-                KoodistoPaikkakunnat.get({onlyValidKoodis:true}, function(result) {
+                KoodistoClient.koodistoPaikkakunnat.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(kuntaKoodi) {
                         var paikkakunta = {"uri": kuntaKoodi.koodiUri,
                             "arvo":kuntaKoodi.koodiArvo};
@@ -102,7 +99,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                     model.refreshed = false;
                 });
 
-                KoodistoOrganisaatiotyypit.get({onlyValidKoodis:true}, function(result) {
+                KoodistoClient.koodistoOrganisaatiotyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(orgTyyppiKoodi) {
                         var organisaatioTyyppi = {"uri": orgTyyppiKoodi.koodiUri,
                             "arvo":orgTyyppiKoodi.koodiArvo};
@@ -121,7 +118,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                     model.refreshed = false;
                 });
 
-                KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(result) {
+                KoodistoClient.koodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(result) {
                     result.forEach(function(oplTyyppiKoodi) {
                         var oppilaitosTyyppi = {"uri": oplTyyppiKoodi.koodiUri,
                             "arvo":oplTyyppiKoodi.koodiArvo};

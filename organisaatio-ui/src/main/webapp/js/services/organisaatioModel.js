@@ -18,7 +18,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           $q, $cookieStore, $injector,
                                           Organisaatio, Organisaatiot,
                                           OrganisaatioHistoria,
-                                          KoodistoSearchKoodis, KoodistoKoodi,
+                                          KoodistoKoodi, KoodistoClient,
                                           UusiOrganisaatio, YTJYritysTiedot,
                                           Alert, HenkiloVirkailijat,
                                           Henkilo, HenkiloKayttooikeus,
@@ -568,7 +568,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 refreshParent(parentResult);
 
                 if (model.mode === 'edit') {
-                    RefreshKoodisto(oid, model);
+                    RefreshKoodisto(result.parentOid, model);
                     refreshHenkilo();
                 }
                 finishModel();
@@ -641,7 +641,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     searchParams += "&koodiUris=" + koodiUri.split("#")[0];
                 }
                 searchParams = searchParams.substring(1, searchParams.length);
-                KoodistoSearchKoodis.get({uris: searchParams}, function(koodiResult) {
+                KoodistoClient.koodistoSearchKoodis.get({uris: searchParams}, function(koodiResult) {
                     for (var i = 0; i < koodiResult.length; i++) {
                         // Lisää kaikki koodit myös #<versio> -päätteisenä, koska result.koodiUri:ssa #<versio>
                         // -päätettä ei ole vaikka olisi annettu hakuparametrina
