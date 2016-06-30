@@ -19,19 +19,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           Organisaatio, Organisaatiot,
                                           OrganisaatioHistoria,
                                           KoodistoSearchKoodis, KoodistoKoodi,
-                                          KoodistoOrganisaatiotyypit,
-                                          KoodistoOppilaitostyypit,
-                                          KoodistoPaikkakunnat, KoodistoMaat,
-                                          KoodistoPosti, KoodistoPostiCached,
-                                          KoodistoPostiVersio, KoodistoVuosiluokat,
                                           UusiOrganisaatio, YTJYritysTiedot,
-                                          Alert, KoodistoOpetuskielet,
-                                          KoodistoPaikkakunta, HenkiloVirkailijat,
+                                          Alert, HenkiloVirkailijat,
                                           Henkilo, HenkiloKayttooikeus,
-                                          KoodistoKieli, Yhteystietojentyyppi,
+                                          Yhteystietojentyyppi,
                                           Paivittaja, NimiHistoriaModel,
                                           LocalisationService, SomeKoodisto,
-                                          Koodi) {
+                                          RefreshKoodisto) {
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
@@ -574,7 +568,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 refreshParent(parentResult);
 
                 if (model.mode === 'edit') {
-                    Koodi.refreshKoodisto(oid, model);
+                    RefreshKoodisto(oid, model);
                     refreshHenkilo();
                 }
                 finishModel();
@@ -926,7 +920,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 model.uriLocalizedNames["parentnimi"] = getDecodedLocalizedValue(result.nimi, "", "", false);
                 refreshParent(result);
 
-                Koodi.refreshKoodisto(null, model);
+                RefreshKoodisto(null, model);
                 refreshHenkilo();
                 model.organisaatio.parentOid = parentoid;
                 finishModel();
