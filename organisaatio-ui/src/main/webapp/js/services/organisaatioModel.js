@@ -27,7 +27,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           Yhteystietojentyyppi,
                                           Paivittaja, NimiHistoriaModel,
                                           LocalisationService, SomeKoodisto,
-                                          RefreshKoodisto, RefreshOrganisaatio) {
+                                          RefreshKoodisto, RefreshOrganisaatio,
+                                          LisaYhteystiedot) {
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
@@ -512,13 +513,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             model.organisaatio.yhteystietoArvos = [];
             model.lisayhteystiedot = {};
-            RefreshOrganisaatio.updateLisayhteystiedot(model);
+            LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
         this.selectOppilaitosTyyppi = function() {
             model.organisaatio.yhteystietoArvos = [];
             model.lisayhteystiedot = {};
-            RefreshOrganisaatio.updateLisayhteystiedot(model);
+            LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
         this.toggleCheckVuosiluokka = function(vuosiluokka) {

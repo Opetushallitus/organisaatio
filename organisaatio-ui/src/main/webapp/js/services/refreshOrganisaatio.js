@@ -514,102 +514,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
             }
         },
 
-        updateLisayhteystietoArvos: function(lisatieto, model) {
-            model.uriLocalizedNames[lisatieto.oid] = $filter('i18n')("lisaakieli");
-            lisatieto.nimi.teksti.forEach(function(teksti) {
-                if (teksti.kieliKoodi === KoodistoKoodi.getLanguage().toLowerCase()) {
-                    model.uriLocalizedNames[lisatieto.oid] =
-                        teksti.value;
-                }
-            });
-            if (!model.organisaatio.yhteystietoArvos) {
-                model.organisaatio.yhteystietoArvos = [];
-            }
-
-
-            var ytlangs = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1'];
-            lisatieto.allLisatietokenttas.forEach(function(yt) {
-
-                model.uriLocalizedNames[yt.oid] =
-                    (KoodistoKoodi.getLanguage() === "SV" ? yt.nimiSv : (
-                        KoodistoKoodi.getLanguage() === "EN" ? yt.nimiEn : yt.nimi));
-
-                for (var i in ytlangs) {
-                    var ytlang = ytlangs[i];
-                    // Lisätään jos arvoa ei ole
-                    var arvo = null;
-                    for (var a in model.organisaatio.yhteystietoArvos) {
-
-                        if ((lisatieto.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietojenTyyppi.oid']) &&
-                            (yt.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietoElementti.oid']) &&
-                            (ytlang === model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.kieli'])) {
-                            if (yt.kaytossa === true )
-                            {
-                                arvo = model.organisaatio.yhteystietoArvos[a];
-                            }
-                            else if (model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.arvoText'] !== null )
-                            {
-                                arvo = model.organisaatio.yhteystietoArvos[a];
-                            }
-
-                        }
-                    }
-
-                    // Jos arvoa ei vielä ole, lisätään muokkaus/uudenluontinäkymään bindausta varten
-                    if (arvo === null) {
-                        var uusiyt = {};
-                        uusiyt["YhteystietoArvo.arvoText"] = null;
-                        uusiyt["YhteystietoArvo.kieli"] = ytlang;
-                        uusiyt["YhteystietojenTyyppi.oid"] = lisatieto.oid;
-                        uusiyt["YhteystietoElementti.oid"] = yt.oid;
-                        uusiyt["YhteystietoElementti.pakollinen"] = yt.pakollinen;
-                        uusiyt["YhteystietoElementti.kaytossa"] = yt.kaytossa;
-                        arvo = uusiyt;
-                        if (yt.kaytossa === true)
-                        {
-                            model.organisaatio.yhteystietoArvos.push(arvo);
-                        }
-                    } else {
-                        // jatketaan => mäpätään olemassaolevaan arvoon
-                    }
-                    // Mäpätään oidista nimeen. Mäppäys on oikeasti 1-1 vaikka nimi toistuu joka tietueessa.
-                    if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]]) {
-                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]] = {};
-                    }
-                    // Luodaan elementti kielelle, jos sitä ei ole
-                    if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang]) {
-                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
-                    }
-
-                    // Laitetaan yhteystietoarvo editoitavaksi jos se on käytössä tai
-                    // arvo on asetettu. Näin voidaan editoida vielä käytöstä poistettua
-                    // arvoa.
-                    // HUOM! Rajapinnan yli tulee "YhteystietoElementti.kaytossa" string muodossa!
-                    if ((arvo["YhteystietoElementti.kaytossa"] === true) ||
-                        (arvo["YhteystietoElementti.kaytossa"] === "true") ||
-                        (arvo["YhteystietoArvo.arvoText"] !== null))
-                    {
-                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang].push(arvo);
-                    }
-                }
-            });
-        },
-
-        updateLisayhteystiedot: function(model) {
-            model.lisayhteystiedot = {};
-            var kaikkiTyypit = model.organisaatio.tyypit;
-            if (model.organisaatio.oppilaitosTyyppiUri) {
-                kaikkiTyypit = kaikkiTyypit.concat(model.organisaatio.oppilaitosTyyppiUri);
-            }
-            for (var tyyppi in kaikkiTyypit) {
-                if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
-                    model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()].forEach(function(t) {
-                        refreshFunctions.updateLisayhteystietoArvos(t, model);
-                    });
-                }
-            }
-        },
-
         refreshHenkilo: function(model) {
             model.henkilot.virkailijatTooltip = "";
             HenkiloVirkailijat.get({oid: model.organisaatio.oid}, function(result) {
@@ -715,4 +619,106 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
         }
     };
     return refreshFunctions;
+});
+
+app.factory('LisaYhteystiedot', function () {
+    var lisaYhteystiedot = {
+        updateLisayhteystietoArvos: function(lisatieto, model) {
+            model.uriLocalizedNames[lisatieto.oid] = $filter('i18n')("lisaakieli");
+            lisatieto.nimi.teksti.forEach(function(teksti) {
+                if (teksti.kieliKoodi === KoodistoKoodi.getLanguage().toLowerCase()) {
+                    model.uriLocalizedNames[lisatieto.oid] =
+                        teksti.value;
+                }
+            });
+            if (!model.organisaatio.yhteystietoArvos) {
+                model.organisaatio.yhteystietoArvos = [];
+            }
+
+
+            var ytlangs = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1'];
+            lisatieto.allLisatietokenttas.forEach(function(yt) {
+
+                model.uriLocalizedNames[yt.oid] =
+                    (KoodistoKoodi.getLanguage() === "SV" ? yt.nimiSv : (
+                        KoodistoKoodi.getLanguage() === "EN" ? yt.nimiEn : yt.nimi));
+
+                for (var i in ytlangs) {
+                    var ytlang = ytlangs[i];
+                    // Lisätään jos arvoa ei ole
+                    var arvo = null;
+                    for (var a in model.organisaatio.yhteystietoArvos) {
+
+                        if ((lisatieto.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietojenTyyppi.oid']) &&
+                            (yt.oid === model.organisaatio.yhteystietoArvos[a]['YhteystietoElementti.oid']) &&
+                            (ytlang === model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.kieli'])) {
+                            if (yt.kaytossa === true )
+                            {
+                                arvo = model.organisaatio.yhteystietoArvos[a];
+                            }
+                            else if (model.organisaatio.yhteystietoArvos[a]['YhteystietoArvo.arvoText'] !== null )
+                            {
+                                arvo = model.organisaatio.yhteystietoArvos[a];
+                            }
+
+                        }
+                    }
+
+                    // Jos arvoa ei vielä ole, lisätään muokkaus/uudenluontinäkymään bindausta varten
+                    if (arvo === null) {
+                        var uusiyt = {};
+                        uusiyt["YhteystietoArvo.arvoText"] = null;
+                        uusiyt["YhteystietoArvo.kieli"] = ytlang;
+                        uusiyt["YhteystietojenTyyppi.oid"] = lisatieto.oid;
+                        uusiyt["YhteystietoElementti.oid"] = yt.oid;
+                        uusiyt["YhteystietoElementti.pakollinen"] = yt.pakollinen;
+                        uusiyt["YhteystietoElementti.kaytossa"] = yt.kaytossa;
+                        arvo = uusiyt;
+                        if (yt.kaytossa === true)
+                        {
+                            model.organisaatio.yhteystietoArvos.push(arvo);
+                        }
+                    } else {
+                        // jatketaan => mäpätään olemassaolevaan arvoon
+                    }
+                    // Mäpätään oidista nimeen. Mäppäys on oikeasti 1-1 vaikka nimi toistuu joka tietueessa.
+                    if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]]) {
+                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]] = {};
+                    }
+                    // Luodaan elementti kielelle, jos sitä ei ole
+                    if (!model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang]) {
+                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang] = [];
+                    }
+
+                    // Laitetaan yhteystietoarvo editoitavaksi jos se on käytössä tai
+                    // arvo on asetettu. Näin voidaan editoida vielä käytöstä poistettua
+                    // arvoa.
+                    // HUOM! Rajapinnan yli tulee "YhteystietoElementti.kaytossa" string muodossa!
+                    if ((arvo["YhteystietoElementti.kaytossa"] === true) ||
+                        (arvo["YhteystietoElementti.kaytossa"] === "true") ||
+                        (arvo["YhteystietoArvo.arvoText"] !== null))
+                    {
+                        model.lisayhteystiedot[arvo["YhteystietojenTyyppi.oid"]][ytlang].push(arvo);
+                    }
+                }
+            });
+        },
+
+        updateLisayhteystiedot: function(model) {
+            model.lisayhteystiedot = {};
+            var kaikkiTyypit = model.organisaatio.tyypit;
+            if (model.organisaatio.oppilaitosTyyppiUri) {
+                kaikkiTyypit = kaikkiTyypit.concat(model.organisaatio.oppilaitosTyyppiUri);
+            }
+            for (var tyyppi in kaikkiTyypit) {
+                if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
+                    model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()].forEach(function(t) {
+                        lisaYhteystiedot.updateLisayhteystietoArvos(t, model);
+                    });
+                }
+            }
+        }
+    };
+    
+    return lisaYhteystiedot;
 });
