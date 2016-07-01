@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.OptimisticLockException;
 import javax.validation.*;
 import java.text.ParseException;
@@ -177,7 +178,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Returns a list uf updated organisations. Cumulates errors to ytjPaivitysLoki field.
-    public List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String,Organisaatio> organisaatiosByYtunnus, boolean forceUpdate) {
+    private List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String,Organisaatio> organisaatiosByYtunnus, boolean forceUpdate) {
         List<Organisaatio> updatedOrganisaatios = new ArrayList<>();
         for(YTJDTO ytjOrg : ytjOrganisaatios) {
             Organisaatio organisaatio = organisaatiosByYtunnus.get(ytjOrg.getYtunnus().trim());
@@ -190,7 +191,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // validates, updates if needed and returns info if org was updated or not
-    public boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
+    private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
         boolean updateNimi = false;
         boolean updateOsoite = false;
         boolean updatePuhelin = false;
@@ -265,7 +266,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // work in progress, trying to find a way to write this name hassle in a more clear way
-    public boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
+    private boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
         boolean updateNimi = false;
         if(YTJLangIsSwedish(ytjOrg)) {
             if(organisaatio.getNimi().getString("sv") == null) {
