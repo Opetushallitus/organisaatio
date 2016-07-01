@@ -172,7 +172,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
         ytjPaivitysLokiDao.flush();
 
-        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
+        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki, true);
 
         return ytjPaivitysLoki;
     }
