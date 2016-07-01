@@ -24,6 +24,7 @@ import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -134,6 +135,26 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
             Assert.assertNotNull(e.getMessage());
             Assert.assertTrue(e.getMessage().equals("validation.Organisaatio.poistettu"));
         }
+    }
+
+    @Test
+    public void saveNewAndUpdateOrganisation() {
+        OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
+
+        Organisaatio organisaatio = organisaatioDAO.findByOid("1.2.2004.1");
+        OrganisaatioRDTO model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatio);
+
+        model.setOid("65432.1");
+        model.setOppilaitosKoodi(null);
+        model.setYTunnus(null);
+        OrganisaatioResult organisaatioResult = service.save(model, false, false);
+        Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
+
+        model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
+        model.setYTunnus("4567891-0");
+        organisaatioResult = service.save(model, true, false);
+        Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
+
     }
 
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
