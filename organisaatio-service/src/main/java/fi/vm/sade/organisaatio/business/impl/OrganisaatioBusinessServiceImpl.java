@@ -221,7 +221,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         boolean parentChanged = false;
         Organisaatio oldParent = null;
         if (updating) {
-            parentChanged = validateHierarchy(model, entity, oldParent);
+            oldParent = validateHierarchy(model, entity);
+            if(oldParent != null) {
+                parentChanged = true;
+            }
+
         } else {
             // Tarkistetaan organisaatio hierarkia
             checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
@@ -366,8 +370,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return new OrganisaatioResult(entity, info);
     }
 
-    private boolean validateHierarchy(OrganisaatioRDTO model, Organisaatio entity, Organisaatio oldParent) {
-        boolean parentChanged = false;
+    private Organisaatio validateHierarchy(OrganisaatioRDTO model, Organisaatio entity) {
+        Organisaatio oldParent = null;
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
         mergeAuxData(entity, orgEntity);
         entity.setId(orgEntity.getId());
@@ -377,7 +381,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
             LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
-            parentChanged = true;
             oldParent = orgEntity.getParent();
         }
 
@@ -393,7 +396,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
             checker.checkLakkautusAlkavatKoulutukset(entity);
         }
-        return parentChanged;
+        return oldParent;
     }
 
     private void validateOrganisation(OrganisaatioRDTO model, Organisaatio parentOrg) {
