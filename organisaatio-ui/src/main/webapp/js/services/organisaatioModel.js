@@ -32,8 +32,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
-
-    var model = new function() {
+    
+    function initOrganisaatioModelData() {
         this.organisaatio = {};
 
         // Koodistodata organisaation muokkausta varten
@@ -91,7 +91,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             'kieli_en#1': {}
         };
 
-         this.ectstiedot = {
+        this.ectstiedot = {
             'kieli_fi#1': {},
             'kieli_sv#1': {},
             'kieli_en#1': {}
@@ -130,18 +130,18 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         // Sosiaalinen media
         this.sometypes = SomeKoodisto.sometyypit;
-        this.some      = SomeKoodisto.some;
-        this.someurls  = SomeKoodisto.someurls;
+        this.some = SomeKoodisto.some;
+        this.someurls = SomeKoodisto.someurls;
 
         this.kttypes = ['YLEISKUVAUS', 'ESTEETOMYYS', 'OPPIMISYMPARISTO',
-                        'VUOSIKELLO', 'VASTUUHENKILOT', 'VALINTAMENETTELY',
-                        'AIEMMIN_HANKITTU_OSAAMINEN', 'KIELIOPINNOT',
-                        'TYOHARJOITTELU', 'OPISKELIJALIIKKUVUUS',
-                        'KANSAINVALISET_KOULUTUSOHJELMAT'];
+            'VUOSIKELLO', 'VASTUUHENKILOT', 'VALINTAMENETTELY',
+            'AIEMMIN_HANKITTU_OSAAMINEN', 'KIELIOPINNOT',
+            'TYOHARJOITTELU', 'OPISKELIJALIIKKUVUUS',
+            'KANSAINVALISET_KOULUTUSOHJELMAT'];
         this.oetypes = ['KUSTANNUKSET', 'TIETOA_ASUMISESTA', 'RAHOITUS',
-                        'OPISKELIJARUOKAILU', 'TERVEYDENHUOLTOPALVELUT',
-                        'VAKUUTUKSET', 'OPISKELIJALIIKUNTA', 'VAPAA_AIKA',
-                        'OPISKELIJA_JARJESTOT'];
+            'OPISKELIJARUOKAILU', 'TERVEYDENHUOLTOPALVELUT',
+            'VAKUUTUKSET', 'OPISKELIJALIIKUNTA', 'VAPAA_AIKA',
+            'OPISKELIJA_JARJESTOT'];
         this.ectstypes = ['NIMI', 'TEHTAVANIMIKE', 'PUHELINNUMERO', 'SAHKOPOSTIOSOITE'];
 
         // Monikielisen tekstin valinta
@@ -207,6 +207,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         // Invalidit yhteystiedot kielen mukaan
         this.ytinvalid = [];
+    }
+
+    var model = new function() {
+
+        initOrganisaatioModelData.call(this);
 
         // TODO: Add also parent needed possibly for moving organisaatio
 
@@ -261,7 +266,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             model.organisaatio.nimet = nimiHistoriaModel.getNimihistoria();
         };
-        
+
         this.refresh = function(organisaatio) {
             $log.info("refresh(): " + organisaatio.oid);
             RefreshOrganisaatio.refresh(organisaatio, model);
@@ -285,7 +290,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 });
             }
         };
-        
+
         this.createOrganisaatio = function(parentoid, yritystiedot) {
             // tyhjennetään mahdolliset vanhat ytj tiedot
             if (typeof yritystiedot !== "undefined") {
