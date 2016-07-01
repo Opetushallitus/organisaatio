@@ -268,15 +268,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return getOsoite(ModelConstants.TYYPPI_KAYNTIOSOITE);
     }
 
-    public Object getPuhelin() {
-        for (Yhteystieto yhteystieto : yhteystiedot) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                return yhteystieto;
-            }
-        }
-        return null;
-    }
-
     private Osoite getOsoite(String osoiteTyyppi) {
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Osoite) {
@@ -286,6 +277,16 @@ public class Organisaatio extends OrganisaatioBaseEntity {
                 }
             }
         }
+        return null;
+    }
+
+    public Osoite getPostiosoiteByKieli(String kielikoodi) {
+        for (Yhteystieto yhteystieto : getYhteystiedot()) {
+            if (yhteystieto instanceof Osoite && yhteystieto.getKieli().equals(kielikoodi)
+                    && ((Osoite) yhteystieto).getOsoiteTyyppi().equals(Osoite.TYYPPI_POSTIOSOITE)){
+                    return (Osoite) yhteystieto;
+                }
+            }
         return null;
     }
 
@@ -706,6 +707,16 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return null;
     }
 
+
+    public Www getWww() {
+        for(Yhteystieto yhteystieto : getYhteystiedot()) {
+            if(yhteystieto instanceof Www) {
+                return (Www)yhteystieto;
+            }
+        }
+        return null;
+    }
+
     public String getToimipisteKoodi() {
         return toimipisteKoodi;
     }
@@ -746,5 +757,15 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void addNimi(OrganisaatioNimi organisaatioNimi) {
         this.nimet.add(organisaatioNimi);
+    }
+
+    public OrganisaatioNimi getCurrentNimi() {
+        OrganisaatioNimi currentOrgNimi = null;
+        for (OrganisaatioNimi orgNimi : getNimet()) {
+            if (orgNimi.getNimi().equals(getNimi())) {
+                currentOrgNimi = orgNimi;
+            }
+        }
+        return currentOrgNimi;
     }
 }

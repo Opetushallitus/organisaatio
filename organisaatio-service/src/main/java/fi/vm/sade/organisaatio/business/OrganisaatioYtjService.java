@@ -15,10 +15,7 @@
 
 package fi.vm.sade.organisaatio.business;
 
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
-
-import java.util.List;
 
 public interface OrganisaatioYtjService {
 

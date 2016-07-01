@@ -38,7 +38,8 @@ public class YtjVirhe extends BaseEntity {
         KIELI,
         OSOITE,
         PUHELIN,
-        WWW
+        WWW,
+        LOPPUPVM
     }
 
     @JsonIgnore
