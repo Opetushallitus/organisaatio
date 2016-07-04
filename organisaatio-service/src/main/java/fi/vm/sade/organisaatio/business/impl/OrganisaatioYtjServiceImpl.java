@@ -132,8 +132,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             ytjPaivitysLoki.setPaivitetytLkm(0);
             return ytjPaivitysLoki;
         }
-        // Get list of updated organisations
+        // Update from YTJ data and get list of updated organisations
         List<Organisaatio> updateOrganisaatioList = doUpdate(ytjdtoList, organisaatiosByYtunnus, forceUpdate);
+
         // Update listed organisations to db and koodisto service.
         for(Iterator<Organisaatio> iterator = updateOrganisaatioList.iterator(); iterator.hasNext();) {
             Organisaatio organisaatio = iterator.next();
@@ -197,7 +198,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         boolean updatePuhelin = false;
         boolean updateWww = false;
         boolean updateAlkupvm = false;
-        // notify if organisation is inactive in YTJ
+        // don't update and notify if organisation is inactive in YTJ
         if(ytjOrg.getYritysTunnus().getYritysLopetettu()) {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.LOPPUPVM, "ilmoitukset.log.virhe.lopetettu");
             return false;
@@ -208,6 +209,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KIELI, "ilmoitukset.log.virhe.kieli.puuttuu");
             return false;
         }
+
         boolean kieliAddedFromYTJ = updateLangFromYTJ(ytjOrg, organisaatio);
         String ytjKielikoodi = getKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli());
         organisaatio.setYtjKieli(ytjKielikoodi);
@@ -217,7 +219,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             organisaatio.setAlkuPvm(ytjAlkupvm);
             updateAlkupvm = true;
         }
-        // validate organisaatio's name and name history
+        // validate and update organisaatio's name and name history
         if(validateOrgName(organisaatio)) {
             // general validations for YTJ name and date parsing
             Date ytjNameAlkupvm = validateYtjName(ytjOrg, organisaatio);
@@ -226,7 +228,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 updateNimi = updateNimiForOrg(ytjOrg, organisaatio, forceUpdate, ytjNameAlkupvm);
             }
         }
-        // validate osoite
         if(validateYtjOsoite(ytjOrg, organisaatio)) {
             // Find osoite with right language (finnish or swedish)
             Osoite osoite = organisaatio.getPostiosoiteByKieli(ytjKielikoodi);
@@ -237,10 +238,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                     osoite = null;
                 }
             }
-            // copy values from YTJ
             updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjOrg, osoite, forceUpdate);
         }
-        // validate phone
         if(validateYtjPuhelin(ytjOrg)) {
             Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN);
             if(puhelinnumero == null) {
@@ -265,122 +264,43 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return (kieliAddedFromYTJ || updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm);
     }
 
-    // work in progress, trying to find a way to write this name hassle in a more clear way
-    private boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
-        boolean updateNimi = false;
-        if(YTJLangIsSwedish(ytjOrg)) {
-            if(organisaatio.getNimi().getString("sv") == null) {
-                // just add new name, don't add entry to name history
-                updateNimiWithNewKieli(ytjOrg.getSvNimi(), "sv", organisaatio, ytjNameAlkupvm);
-                updateNimi = true;
-            } else if (!(organisaatio.getNimi().getString("sv").equals(ytjOrg.getSvNimi())) || forceUpdate) {
-                if(organisaatio.getNimi().getString("sv").equalsIgnoreCase(ytjOrg.getSvNimi())) {
-                    // if only case changed, just update the name string and date
-                    organisaatio.getNimi().addString("sv", ytjOrg.getSvNimi());
-                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
-                }
-                else {
-                    // update name history too
-                    addNameToOrg(ytjOrg.getSvNimi(), "sv", "fi", organisaatio, ytjNameAlkupvm);
-                }
-                updateNimi = true;
-            }
-        } else {
-            if(organisaatio.getNimi().getString("fi") == null) {
-                // just add new name, don't add entry to name history
-                updateNimiWithNewKieli(ytjOrg.getNimi(), "fi", organisaatio, ytjNameAlkupvm);
-                updateNimi = true;
-            } else if (!(organisaatio.getNimi().getString("fi").equals(ytjOrg.getNimi())) || forceUpdate) {
-                if(organisaatio.getNimi().getString("fi").equalsIgnoreCase(ytjOrg.getNimi())) {
-                    // if only case changed, just update the name string and date
-                    organisaatio.getNimi().addString("fi", ytjOrg.getNimi());
-                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
-                } else {
-                    // update name history too
-                    addNameToOrg(ytjOrg.getNimi(), "fi", "sv", organisaatio, ytjNameAlkupvm);
-                }
-                updateNimi = true;
-            }
+    /* Date related stuff */
+
+    private Date validateandParseYtjAlkupvm(YTJDTO ytjOrg, final Organisaatio organisaatio) {
+        if(ytjOrg.getYritysTunnus() == null || ytjOrg.getYritysTunnus().getAlkupvm() == null) {
+            return null;
         }
-        return updateNimi;
+        final Date ytunnusAlkupvm = parseDate(ytjOrg.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "Y-tunnus");
+        if(ytunnusAlkupvm == null) {
+            return null;
+        }
+        final OrganisaatioMuokkausTiedotDTO tiedotDTO = new OrganisaatioMuokkausTiedotDTO() {{
+            setAlkuPvm(ytunnusAlkupvm);
+            setOid(organisaatio.getOid());
+        }};
+        try {
+            businessService.batchValidatePvm(
+                    new HashMap<String, OrganisaatioMuokkausTiedotDTO>() {{
+                        put(tiedotDTO.getOid(), tiedotDTO);
+                    }},
+                    new HashMap<String, Organisaatio>() {{
+                        put(organisaatio.getOid(), organisaatio);
+                    }});
+        } catch (OrganisaatioDateException de) {
+            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.tarkistukset");
+            LOG.info("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
+            return null;
+        } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
+            // this can't actually happend because we don't import end date, so no ytj error logging
+            // but we still have to process the error that the validation method throws
+            LOG.info("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
+                    organisaatio.getOid() + " jolla on alkavia koulutuksia");
+            return null;
+        }
+        return ytunnusAlkupvm;
     }
 
-    private void addNameToOrg(final String name, final String lang, String anotherlang, Organisaatio organisaatio, Date ytjNameAlkupvm) {
-        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
-        organisaatioNimi.setOrganisaatio(organisaatio);
-        final MonikielinenTeksti newNimi = new MonikielinenTeksti();
-        newNimi.setValues(new HashMap<String, String>() {{put(lang, name);}});
-        if(organisaatio.getNimi().getString(anotherlang) != null) {
-            // keep the existing name in the other lang
-            newNimi.addString(anotherlang, organisaatio.getNimi().getValues().get(anotherlang));
-        }
-        organisaatio.setNimihaku(name);
-        organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
-        organisaatioNimi.setNimi(newNimi);
-        organisaatio.setNimi(newNimi);
-        // add to name history
-        organisaatio.addNimi(organisaatioNimi);
-    }
-
-    private void updateNimiWithNewKieli(String nimi, String kieli, Organisaatio organisaatio, Date ytjNameAlkupvm) {
-        organisaatio.getNimi().addString(kieli, nimi);
-        organisaatio.setNimihaku(nimi);
-        organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
-    }
-
-    private String getKielikoodiFromYTJlang(String yrityksenKieli) {
-        if(yrityksenKieli.equals(YtjDtoMapperHelper.KIELI_SV)) {
-            return KIELI_KOODI_SV;
-        } else {
-            return KIELI_KOODI_FI;
-        }
-    }
-
-    private boolean validateYtjOsoite(YTJDTO ytjOrg, Organisaatio organisaatio) {
-        if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
-            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
-            return false;
-        }
-        else if((ytjOrg.getPostiOsoite().getKatu() != null
-                && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) ||
-                (ytjOrg.getPostiOsoite().getToimipaikka() != null
-                && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) ||
-                (ytjOrg.getPostiOsoite().getPostinumero() != null
-                && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX)) {
-            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.OSOITE, "ilmoitukset.log.virhe.osoite.pitka");
-            LOG.error("YTJ:ssä liian pitkä osoite organisaatiolle " + organisaatio.getOid());
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validateYtjPuhelin(YTJDTO ytjOrg) {
-        if(ytjOrg.getPuhelin() == null) {
-            return false;
-        }
-        else if(ytjOrg.getPuhelin().length() > ValidationConstants.GENERIC_MAX) {
-            return false;
-        }
-        else {
-            // Parse extra stuff off.
-            ytjOrg.setPuhelin(ytjOrg.getPuhelin().split(",|; *")[0]);
-        }
-        return true;
-    }
-
-    private boolean validateYtjWww(YTJDTO ytjOrg) {
-        if(ytjOrg.getWww() == null) {
-            return false;
-        }
-        else if(ytjOrg.getWww().length() > ValidationConstants.GENERIC_MAX) {
-            return false;
-        }
-        else {
-            // http://-prefix check and fix.
-            ytjOrg.setWww(fixHttpPrefix(ytjOrg.getWww()));
-        }
-        return true;
-    }
+    /* Name related stuff*/
 
     private boolean validateNameHistoryForYtjName(Organisaatio organisaatio, Date ytjNameAlkupvm) {
         // In case updating from ytj would violate organisation service rule that current nimi must be the newest one,
@@ -459,55 +379,70 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return true;
     }
 
-    private Date validateandParseYtjAlkupvm(YTJDTO ytjOrg, final Organisaatio organisaatio) {
-        if(ytjOrg.getYritysTunnus() == null || ytjOrg.getYritysTunnus().getAlkupvm() == null) {
-            return null;
+    // update name and name history if needed
+    private boolean updateNimiForOrg(final YTJDTO ytjOrg, final Organisaatio organisaatio, boolean forceUpdate, Date ytjNameAlkupvm) {
+        boolean updateNimi = false;
+        if(YTJLangIsSwedish(ytjOrg)) {
+            if(organisaatio.getNimi().getString("sv") == null) {
+                // just add new name, don't add entry to name history
+                updateNimiWithNewKieli(ytjOrg.getSvNimi(), "sv", organisaatio, ytjNameAlkupvm);
+                updateNimi = true;
+            } else if (!(organisaatio.getNimi().getString("sv").equals(ytjOrg.getSvNimi())) || forceUpdate) {
+                if(organisaatio.getNimi().getString("sv").equalsIgnoreCase(ytjOrg.getSvNimi())) {
+                    // if only case changed, just update the name string and date
+                    organisaatio.getNimi().addString("sv", ytjOrg.getSvNimi());
+                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                }
+                else {
+                    // update name history too
+                    addNameToOrg(ytjOrg.getSvNimi(), "sv", "fi", organisaatio, ytjNameAlkupvm);
+                }
+                updateNimi = true;
+            }
+        } else {
+            if(organisaatio.getNimi().getString("fi") == null) {
+                // just add new name, don't add entry to name history
+                updateNimiWithNewKieli(ytjOrg.getNimi(), "fi", organisaatio, ytjNameAlkupvm);
+                updateNimi = true;
+            } else if (!(organisaatio.getNimi().getString("fi").equals(ytjOrg.getNimi())) || forceUpdate) {
+                if(organisaatio.getNimi().getString("fi").equalsIgnoreCase(ytjOrg.getNimi())) {
+                    // if only case changed, just update the name string and date
+                    organisaatio.getNimi().addString("fi", ytjOrg.getNimi());
+                    organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+                } else {
+                    // update name history too
+                    addNameToOrg(ytjOrg.getNimi(), "fi", "sv", organisaatio, ytjNameAlkupvm);
+                }
+                updateNimi = true;
+            }
         }
-        final Date ytunnusAlkupvm = parseDate(ytjOrg.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "Y-tunnus");
-        if(ytunnusAlkupvm == null) {
-            return null;
-        }
-                final OrganisaatioMuokkausTiedotDTO tiedotDTO = new OrganisaatioMuokkausTiedotDTO() {{
-                    setAlkuPvm(ytunnusAlkupvm);
-                    setOid(organisaatio.getOid());
-                }};
-        try {
-            businessService.batchValidatePvm(
-                    new HashMap<String, OrganisaatioMuokkausTiedotDTO>() {{
-                        put(tiedotDTO.getOid(), tiedotDTO);
-                    }},
-                    new HashMap<String, Organisaatio>() {{
-                        put(organisaatio.getOid(), organisaatio);
-                    }});
-        } catch (OrganisaatioDateException de) {
-            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.tarkistukset");
-            LOG.info("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
-            return null;
-        } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
-            // this can't actually happend because we don't import end date, so no ytj error logging
-            // but we still have to process the error that the validation method throws
-            LOG.info("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
-                    organisaatio.getOid() + " jolla on alkavia koulutuksia");
-            return null;
-        }
-        return ytunnusAlkupvm;
+        return updateNimi;
     }
 
-    // set the common fields for all Yhteystietos
-    private boolean initYhteystietoforOrg(Yhteystieto yhteystieto, Organisaatio organisaatio, String kielikoodi, YtjVirhe.YTJVirheKohde virhekohde, String virheviesti) {
-        String oid = generateOid();
-        if(oid != null) {
-            yhteystieto.setKieli(kielikoodi);
-            yhteystieto.setOrganisaatio(organisaatio);
-            yhteystieto.setYhteystietoOid(oid);
-            organisaatio.addYhteystieto(yhteystieto);
-            return true;
-        } else {
-            logYtjError(organisaatio, virhekohde, virheviesti);
-            LOG.error("Could not generate oid for yhteystieto, skipping the field for " + organisaatio.getOid());
-            return false;
+    private void addNameToOrg(final String name, final String lang, String anotherlang, Organisaatio organisaatio, Date ytjNameAlkupvm) {
+        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
+        organisaatioNimi.setOrganisaatio(organisaatio);
+        final MonikielinenTeksti newNimi = new MonikielinenTeksti();
+        newNimi.setValues(new HashMap<String, String>() {{put(lang, name);}});
+        if(organisaatio.getNimi().getString(anotherlang) != null) {
+            // keep the existing name in the other lang
+            newNimi.addString(anotherlang, organisaatio.getNimi().getValues().get(anotherlang));
         }
+        organisaatio.setNimihaku(name);
+        organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
+        organisaatioNimi.setNimi(newNimi);
+        organisaatio.setNimi(newNimi);
+        // add to name history
+        organisaatio.addNimi(organisaatioNimi);
     }
+
+    private void updateNimiWithNewKieli(String nimi, String kieli, Organisaatio organisaatio, Date ytjNameAlkupvm) {
+        organisaatio.getNimi().addString(kieli, nimi);
+        organisaatio.setNimihaku(nimi);
+        organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
+    }
+
+    /* Lang related stuff */
 
     // Adds the missing language information to Organisaatio according to the YTJ language.
     private boolean updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
@@ -542,13 +477,90 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return false;
     }
 
+    private String getKielikoodiFromYTJlang(String yrityksenKieli) {
+        if(yrityksenKieli.equals(YtjDtoMapperHelper.KIELI_SV)) {
+            return KIELI_KOODI_SV;
+        } else {
+            return KIELI_KOODI_FI;
+        }
+    }
+
+    private boolean YTJLangIsSwedish(YTJDTO ytjdto) {
+        return ytjdto.getYrityksenKieli() != null
+                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV);
+    }
+
+    /* Contact info related stuff */
+
+    private boolean validateYtjOsoite(YTJDTO ytjOrg, Organisaatio organisaatio) {
+        if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
+            // osoite can't be null but in YTJ there are organisations with only postinumero
+            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
+            return false;
+        }
+        else if((ytjOrg.getPostiOsoite().getKatu() != null
+                && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) ||
+                (ytjOrg.getPostiOsoite().getToimipaikka() != null
+                && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) ||
+                (ytjOrg.getPostiOsoite().getPostinumero() != null
+                && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX)) {
+            logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.OSOITE, "ilmoitukset.log.virhe.osoite.pitka");
+            LOG.error("YTJ:ssä liian pitkä osoite organisaatiolle " + organisaatio.getOid());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateYtjPuhelin(YTJDTO ytjOrg) {
+        if(ytjOrg.getPuhelin() == null) {
+            return false;
+        }
+        else if(ytjOrg.getPuhelin().length() > ValidationConstants.GENERIC_MAX) {
+            return false;
+        }
+        else {
+            // Parse extra stuff off.
+            ytjOrg.setPuhelin(ytjOrg.getPuhelin().split(",|; *")[0]);
+        }
+        return true;
+    }
+
+    private boolean validateYtjWww(YTJDTO ytjOrg) {
+        if(ytjOrg.getWww() == null) {
+            return false;
+        }
+        else if(ytjOrg.getWww().length() > ValidationConstants.GENERIC_MAX) {
+            return false;
+        }
+        else {
+            // http://-prefix check and fix.
+            ytjOrg.setWww(fixHttpPrefix(ytjOrg.getWww()));
+        }
+        return true;
+    }
+
+    // set the common fields for all Yhteystietos
+    private boolean initYhteystietoforOrg(Yhteystieto yhteystieto, Organisaatio organisaatio, String kielikoodi, YtjVirhe.YTJVirheKohde virhekohde, String virheviesti) {
+        String oid = generateOid();
+        if(oid != null) {
+            yhteystieto.setKieli(kielikoodi);
+            yhteystieto.setOrganisaatio(organisaatio);
+            yhteystieto.setYhteystietoOid(oid);
+            organisaatio.addYhteystieto(yhteystieto);
+            return true;
+        } else {
+            logYtjError(organisaatio, virhekohde, virheviesti);
+            LOG.error("Could not generate oid for yhteystieto, skipping the field for " + organisaatio.getOid());
+            return false;
+        }
+    }
+
     private boolean  updateOsoiteFromYTJToOrganisaatio(YTJDTO ytjdto, Osoite osoite, final boolean forceUpdate) {
         if(osoite == null) {
             return false;
         }
         boolean update = false;
         osoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
-        // Find osoite with right language (finnish or swedish)
         if (ytjdto.getPostiOsoite() != null && ytjdto.getPostiOsoite().getPostinumero() != null
                 && (!(POSTIOSOITE_PREFIX + ytjdto.getPostiOsoite().getPostinumero().trim()).equals(osoite.getPostinumero())
                 || forceUpdate)) {
@@ -597,6 +609,20 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         return update;
     }
 
+    /* Other help methods */
+
+    private List<YTJDTO> fetchDataFromYtj(List<String> ytunnusList) {
+        List <YTJDTO> ytjdtoList = new ArrayList<>();
+        for (int i = 0; i < ytunnusList.size(); i += PARTITION_SIZE) {
+            try {
+                // Fetch data from ytj for these organisations
+                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + PARTITION_SIZE, ytunnusList.size()))));
+            } catch (OrganisaatioResourceException ore) {
+                LOG.error("Virhe YTJ-tietojen haussa", ore);
+            }
+        }
+        return ytjdtoList;
+    }
 
     private void logYtjError(Organisaatio organisaatio, YtjVirhe.YTJVirheKohde kohde, String viesti) {
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
@@ -622,19 +648,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 organisaatioMap.put(organisaatio.getYtunnus().trim(), organisaatio);
             }
         }
-    }
-
-    private List<YTJDTO> fetchDataFromYtj(List<String> ytunnusList) {
-        List <YTJDTO> ytjdtoList = new ArrayList<>();
-        for (int i = 0; i < ytunnusList.size(); i += PARTITION_SIZE) {
-            try {
-                // Fetch data from ytj for these organisations
-                ytjdtoList.addAll(ytjResource.doYtjMassSearch(ytunnusList.subList(i, Math.min(i + PARTITION_SIZE, ytunnusList.size()))));
-            } catch (OrganisaatioResourceException ore) {
-                LOG.error("Virhe YTJ-tietojen haussa", ore);
-            }
-        }
-        return ytjdtoList;
     }
 
     private String fixHttpPrefix(String www) {
@@ -671,10 +684,5 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.error("virheellinen päivämäärä kentällä " + kohde + " organisaatiolle " + organisaatio.getOid());
             return null;
         }
-    }
-
-    private boolean YTJLangIsSwedish(YTJDTO ytjdto) {
-        return ytjdto.getYrityksenKieli() != null
-                && ytjdto.getYrityksenKieli().trim().equals(YtjDtoMapperHelper.KIELI_SV);
     }
 }
