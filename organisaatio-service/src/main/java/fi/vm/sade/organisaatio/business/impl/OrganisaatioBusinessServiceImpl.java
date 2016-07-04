@@ -258,6 +258,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // OVT-4765 do not validate start date against parent date when updating
         if (updating) {
             LOG.info("this is an update, not validating parent dates.");
+            // TODO skip always??
             skipParentDateValidation = true;
         }
 
