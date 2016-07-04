@@ -203,7 +203,8 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
                         treeItem.valittu = true;
                         treeItem.readonly = true;
                     }
-                    // Tarkista ettei aliorganisaation voimassaolo pääse jatkumaan yli lakkautuspäivän.
+                    // Tarkista ettei aliorganisaation alkupvm ole aiemmin kuin organisaation muutettu alkupvm.
+                    // TODO poistetaanko??
                     else if (treeItem.alkuPvm < alkuPvm) {
                         treeItem.valittu = true;
                         treeItem.readonly = true;
