@@ -24,6 +24,7 @@ import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -91,13 +92,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         // Make new organisaatiosuhde change
         Date time = new Date();
-        simpleJdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
-                childId, parentId, time);
-//        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
-//                new Object[] {childId, parentId, time});
+        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
+                new Object[] {childId, parentId, time});
         // End old organisaatiosuhde
-//        jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
-        simpleJdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", time, 3);
+        jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
 
         Assert.assertEquals("Row count should match!", 9, countRowsInTable("organisaatiosuhde"));
 
@@ -128,7 +126,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioRDTO model = new OrganisaatioRDTO();
         String removedOid = "1.2.2004.4";
         model.setOid(removedOid);
-        simpleJdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
+        jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
         OrganisaatioResult organisaatioResult;
         try {
             organisaatioResult = service.save(model, true, true);
@@ -137,6 +135,26 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
             Assert.assertNotNull(e.getMessage());
             Assert.assertTrue(e.getMessage().equals("validation.Organisaatio.poistettu"));
         }
+    }
+
+    @Test
+    public void saveNewAndUpdateOrganisation() {
+        OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
+
+        Organisaatio organisaatio = organisaatioDAO.findByOid("1.2.2004.1");
+        OrganisaatioRDTO model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatio);
+
+        model.setOid("65432.1");
+        model.setOppilaitosKoodi(null);
+        model.setYTunnus(null);
+        OrganisaatioResult organisaatioResult = service.save(model, false, false);
+        Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
+
+        model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
+        model.setYTunnus("4567891-0");
+        organisaatioResult = service.save(model, true, false);
+        Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
+
     }
 
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {

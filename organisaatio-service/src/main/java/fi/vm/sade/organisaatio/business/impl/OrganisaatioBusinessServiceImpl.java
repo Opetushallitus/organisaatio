@@ -183,39 +183,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
                 ? organisaatioDAO.findByOid(model.getParentOid()) : null;
 
-        // Validointi: Tarkistetaan, että parent ei ole ryhmä
-        if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
-            throw new ValidationException("Parent cannot be group");
-        }
-
-        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
-        if (OrganisaatioUtil.isRyhma(model) && model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) == false) {
-            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
-        }
-
-        // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
-        if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
-            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
-        }
-
-        // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getYTunnus() != null && model.getYTunnus().length() == 0) {
-            model.setYTunnus(null);
-        }
-        if (model.getYTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYTunnus())) {
-            throw new ValidationException("validation.Organisaatio.ytunnus");
-        }
-
-        // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
-            model.setVirastoTunnus(null);
-        }
-        if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
-            throw new ValidationException("validation.Organisaatio.virastotunnus");
-        }
-
-        // Validointi: koodistoureissa pitää olla versiotieto
-        checker.checkVersionInKoodistoUris(model);
+        // Validate (throws exception)
+        validateOrganisation(model, parentOrg);
 
         Map<String, String> oldName = null;
         if (updating) {
@@ -252,31 +221,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         boolean parentChanged = false;
         Organisaatio oldParent = null;
         if (updating) {
-            Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
-            mergeAuxData(entity, orgEntity);
-            entity.setId(orgEntity.getId());
-            entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
-
-            // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
-            if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
-                LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
-                checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+            oldParent = validateHierarchy(model, entity);
+            if(oldParent != null) {
                 parentChanged = true;
-                oldParent = orgEntity.getParent();
             }
 
-            // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
-            if (!entity.getTyypit().containsAll(orgEntity.getTyypit())
-                    || !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
-                LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
-                checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
-            }
-
-            // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
-            if (OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), orgEntity.getLakkautusPvm()) == false) {
-                LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
-                checker.checkLakkautusAlkavatKoulutukset(entity);
-            }
         } else {
             // Tarkistetaan organisaatio hierarkia
             checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
@@ -419,6 +368,71 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         String info = organisaatioKoodisto.paivitaKoodisto(entity, true);
 
         return new OrganisaatioResult(entity, info);
+    }
+
+    private Organisaatio validateHierarchy(OrganisaatioRDTO model, Organisaatio entity) {
+        Organisaatio oldParent = null;
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
+        mergeAuxData(entity, orgEntity);
+        entity.setId(orgEntity.getId());
+        entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
+
+        // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
+        if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
+            LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
+            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+            oldParent = orgEntity.getParent();
+        }
+
+        // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
+        if (!entity.getTyypit().containsAll(orgEntity.getTyypit())
+                || !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
+            LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
+            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+        }
+
+        // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
+        if (OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), orgEntity.getLakkautusPvm()) == false) {
+            LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
+            checker.checkLakkautusAlkavatKoulutukset(entity);
+        }
+        return oldParent;
+    }
+
+    private void validateOrganisation(OrganisaatioRDTO model, Organisaatio parentOrg) {
+        // Validointi: Tarkistetaan, että parent ei ole ryhmä
+        if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
+            throw new ValidationException("Parent cannot be group");
+        }
+
+        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
+        if (OrganisaatioUtil.isRyhma(model) && model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) == false) {
+            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
+        }
+
+        // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
+        if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
+            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
+        }
+
+        // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
+        if (model.getYTunnus() != null && model.getYTunnus().length() == 0) {
+            model.setYTunnus(null);
+        }
+        if (model.getYTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYTunnus())) {
+            throw new ValidationException("validation.Organisaatio.ytunnus");
+        }
+
+        // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
+        if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
+            model.setVirastoTunnus(null);
+        }
+        if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
+            throw new ValidationException("validation.Organisaatio.virastotunnus");
+        }
+
+        // Validointi: koodistoureissa pitää olla versiotieto
+        checker.checkVersionInKoodistoUris(model);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {

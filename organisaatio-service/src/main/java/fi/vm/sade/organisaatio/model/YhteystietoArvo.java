@@ -53,15 +53,14 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     private YhteystietoElementti kentta;
     @ManyToOne(optional = false)
     private Organisaatio organisaatio;
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @Cascade(value = org.hibernate.annotations.CascadeType.DELETE_ORPHAN) // TODO: kun JPA2: @OneToOne(..., orphanRemoval=true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
     private Yhteystieto arvoYhteystieto;
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
     @FilterXss
     private String arvoText;
     @FilterXss
     private String kieli;
-
+ 
     @NotNull
     private String yhteystietoArvoOid;
 
