@@ -15,7 +15,7 @@
  */
 
 app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
-                                      KoodistoArrayByUri, KoodistoKoodi, Alert) {
+                                      KoodistoKoodi, Alert, KoodistoClient) {
 
     $log = $log.getInstance("RyhmaKoodisto");
     var loadingService = $injector.get('LoadingService');
@@ -36,7 +36,7 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
      */
     var getKoodistoArray = function(uri, resultArray, defaultArray) {
         /* Poistetaan koodikommentti kun toteutetaan: https://jira.oph.ware.fi/jira/browse/OVT-8892
-        KoodistoArrayByUri.get({uri: uri}, function(result) {
+        KoodistoClient.koodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
                 resultArray.push({uri: rTyyppiKoodi.koodiUri + "#" + rTyyppiKoodi.versio,

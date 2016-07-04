@@ -16,10 +16,10 @@
 
 app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
                                                   Alert,
-                                                  KoodistoOppilaitostyypit,
                                                   KoodistoKoodi,
                                                   Yhteystietojentyyppi,
-                                                  YhteystietojentyypinPoisto)  {
+                                                  YhteystietojentyypinPoisto,
+                                                  KoodistoClient)  {
 
     $log = $log.getInstance("YhteystietojentyyppiModel");
     var loadingService = $injector.get('LoadingService');
@@ -44,7 +44,7 @@ app.factory('YhteystietojentyyppiModel', function($log, $injector, $filter,
         };
 
         var loadOppilaitostyypit =  function() {
-            KoodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(tyypit) {
+            KoodistoClient.koodistoOppilaitostyypit.get({onlyValidKoodis:true}, function(tyypit) {
                 tyypit.forEach(function(t) {
                     model.oppilaitostyypit.push({id: t.koodiUri + '#' + t.versio, nimi: KoodistoKoodi.getLocalizedName(t)});
                     model.oppilaitostyypitMap[t.koodiUri + '#' + t.versio] = KoodistoKoodi.getLocalizedName(t);

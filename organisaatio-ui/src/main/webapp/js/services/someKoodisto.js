@@ -14,8 +14,10 @@
  European Union Public Licence for more details.
  */
 
-app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
-                                     KoodistoArrayByUri, KoodistoKoodi, Alert) {
+var koodisto = angular.module('Koodisto');
+
+koodisto.factory('SomeKoodisto', function($q, $log, $filter, $injector,
+                                     KoodistoKoodi, Alert, KoodistoClient) {
 
     $log = $log.getInstance("SomeKoodisto");
     var loadingService = $injector.get('LoadingService');
@@ -38,7 +40,7 @@ app.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         $log.info("getKoodistoArray(): " + uri);
 
         var deferred = $q.defer();
-        KoodistoArrayByUri.get({uri: uri}, function(result) {
+        KoodistoClient.koodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
                 resultArray.push({type: rTyyppiKoodi.koodiUri + "#" + rTyyppiKoodi.versio,
