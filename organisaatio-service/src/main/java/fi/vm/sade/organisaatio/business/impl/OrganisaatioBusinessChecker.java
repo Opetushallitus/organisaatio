@@ -294,7 +294,7 @@ public class OrganisaatioBusinessChecker {
         }
         for (Organisaatio child : organisaatio.getChildren(true)) {
             LOG.debug("kysytään lapselta " + child.getOid());
-            String lapsenVirhe = checkPvmConstraints(child, actualStart, actualEnd, muokkausTiedot);
+            String lapsenVirhe = checkPvmConstraints(child, null, actualEnd, muokkausTiedot);
             if (!lapsenVirhe.equals("")) {
                 String virhe = String.format("lapsen %s virhe: %s", child.getOid(), lapsenVirhe);
                 LOG.error("lapsella ajat NOK: " + lapsenVirhe);

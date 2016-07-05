@@ -158,8 +158,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         // method validates modified info, so doesn't matter what value parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        // TODO this should change
-        Assert.assertFalse("".equals(checker.checkPvmConstraints(parent, null, null, data)));
+        Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));
     }
 
     @Test

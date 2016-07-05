@@ -93,6 +93,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("http://www.ytj.fi", org.getWww().getWwwOsoite());
         Assert.assertEquals("0100000211", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI, org.getKielet().get(0));
+        // original 2006-06-29, from YTJ 01.01.1999
         Assert.assertEquals(915141600000L, org.getAlkuPvm().getTime());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI, org.getYtjKieli());
 
@@ -113,7 +114,8 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("12345", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.oph.fi", org.getWww().getWwwOsoite());
         Assert.assertNotEquals(org.getNimet().get(0).getNimi(), org.getNimet().get(1).getNimi());
-        Assert.assertEquals(1091912400000L, org.getAlkuPvm().getTime());
+        // original 2004-08-08, from YTJ 2011-02-28
+        Assert.assertEquals(1298844000000L, org.getAlkuPvm().getTime());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI, org.getYtjKieli());
 
         org = organisaatioDAO.findByOid("1.2.2004.5");
@@ -131,7 +133,8 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("0100000210", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.ytj.sv", org.getWww().getWwwOsoite());
         Assert.assertEquals(2, org.getNimet().get(0).getNimi().getValues().size());
-        Assert.assertEquals(1151528400000L, org.getAlkuPvm().getTime());
+        // original 2006-06-29, from YTJ 2011-02-28
+        Assert.assertEquals(1298844000000L, org.getAlkuPvm().getTime());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV, org.getYtjKieli());
     }
 

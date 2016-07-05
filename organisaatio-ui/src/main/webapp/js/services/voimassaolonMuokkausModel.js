@@ -202,12 +202,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
                     if (!treeItem.alkuPvm) {
                         treeItem.valittu = true;
                         treeItem.readonly = true;
-                    }
-                    // Tarkista ettei aliorganisaation alkupvm ole aiemmin kuin organisaation muutettu alkupvm.
-                    // TODO poistetaanko??
-                    else if (treeItem.alkuPvm < alkuPvm) {
-                        treeItem.valittu = true;
-                        treeItem.readonly = true;
                     } else {
                         treeItem.readonly = false;
                     }

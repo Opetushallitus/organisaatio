@@ -71,7 +71,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
                 }});
     }
 
-    @Test(expected = OrganisaatioDateException.class)
+    @Test
     public void testBatchValidateWithOlderChild() {
         parent.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         child1.setAlkuPvm(new GregorianCalendar(2015, 0, 1).getTime());

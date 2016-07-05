@@ -79,7 +79,7 @@ public class OrganisationDateValidatorTest {
         child.setAlkuPvm(date(9));
         assertFalse(validator.apply(parentChild));
 
-        // alku < parent alku ok if validator skips start state validation
+        // alku < parent alku ok if validator skips start date validation
         assertTrue(validatorSkipStartDate.apply(parentChild));
 
         // alku > parent.alku

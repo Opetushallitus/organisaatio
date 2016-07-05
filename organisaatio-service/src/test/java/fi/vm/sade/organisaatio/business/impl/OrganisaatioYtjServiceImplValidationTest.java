@@ -86,7 +86,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
     }
 
     @Test
-    public void validationFailsIfYtjHasLaterStartThanOrgsChildren() {
+    public void ytjHasLaterStartThanOrgsChildren() {
         ytjdto.getYritysTunnus().setAlkupvm("01.02.2000");
         // just to pass name validations, we are not testing that now
         ytjdto.setAloitusPvm("01.01.2010");
@@ -100,8 +100,27 @@ public class OrganisaatioYtjServiceImplValidationTest {
         List<OrganisaatioSuhde> children = new ArrayList<>();
         children.add(os1);
         ReflectionTestUtils.setField(org, "childSuhteet", children);
+        Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
+        try {
+            Assert.assertEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
+        } catch (ParseException e) {
+            Assert.fail();
+        }
+        YtjPaivitysLoki loki = (YtjPaivitysLoki) ReflectionTestUtils.getField(organisaatioYtjService, "ytjPaivitysLoki");
+        Assert.assertTrue(loki.getYtjVirheet().isEmpty());
+        //Assert.assertTrue(loki.getYtjVirheet().size()==1);
+        //Assert.assertEquals(YtjVirhe.YTJVirheKohde.ALKUPVM, loki.getYtjVirheet().get(0).getVirhekohde());
+        //Assert.assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
+    }
+
+    @Test
+    public void validationFailsIfYtjHasStartDateBeforeMinDate() {
+        ytjdto.getYritysTunnus().setAlkupvm("01.02.1870");
+        // just to pass name validations, we are not testing that now
+        ytjdto.setAloitusPvm("01.01.2010");
         Assert.assertFalse((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
         try {
+            // date updated from YTJ
             Assert.assertNotEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
         } catch (ParseException e) {
             Assert.fail();
