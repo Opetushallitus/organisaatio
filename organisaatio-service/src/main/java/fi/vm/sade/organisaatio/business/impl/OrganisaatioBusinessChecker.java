@@ -249,7 +249,6 @@ public class OrganisaatioBusinessChecker {
             Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
-        //final Date MIN_DATE = new Date(0);
         final Date MIN_DATE = this.MIN_DATE.getTime();
         final Date MAX_DATE = this.MAX_DATE.toDate();
 
@@ -257,6 +256,7 @@ public class OrganisaatioBusinessChecker {
         Date actualEnd = organisaatio.getLakkautusPvm();
         OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
         if (ownData != null) {
+            // for modified data validate modification, not existing values
             LOG.debug("isPvmConstraintsOk(): omat tiedot löytyy listasta");
             actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm() : MIN_DATE;
             actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm() : MAX_DATE;
