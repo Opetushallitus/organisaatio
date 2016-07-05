@@ -36,11 +36,10 @@ public interface OrganisaatioBusinessService {
     /**
      * @param model
      * @param updating
-     * @param skipParentDateValidation
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException;
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException;
     /**
      * @param oid
      * @return

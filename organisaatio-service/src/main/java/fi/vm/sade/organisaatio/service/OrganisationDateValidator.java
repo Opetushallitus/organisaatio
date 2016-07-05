@@ -37,6 +37,7 @@ public class OrganisationDateValidator implements Predicate<Entry<Organisaatio, 
     /**
      * Validate start dates are ok
      */
+    // this is no longer used because moving/merging organisations often breaks this condition
     private Predicate<Entry<Organisaatio, Organisaatio>> startDateValidator = new Predicate<Entry<Organisaatio, Organisaatio>>() {
 
         @Override

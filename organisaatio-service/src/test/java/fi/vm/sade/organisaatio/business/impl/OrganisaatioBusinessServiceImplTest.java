@@ -129,7 +129,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
         OrganisaatioResult organisaatioResult;
         try {
-            organisaatioResult = service.save(model, true, true);
+            organisaatioResult = service.save(model, true);
             Assert.fail("should throw ValidationException");
         } catch (Throwable e) {
             Assert.assertNotNull(e.getMessage());
@@ -147,12 +147,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         model.setOid("65432.1");
         model.setOppilaitosKoodi(null);
         model.setYTunnus(null);
-        OrganisaatioResult organisaatioResult = service.save(model, false, false);
+        OrganisaatioResult organisaatioResult = service.save(model, false);
         Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
 
         model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
         model.setYTunnus("4567891-0");
-        organisaatioResult = service.save(model, true, false);
+        organisaatioResult = service.save(model, true);
         Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
     }
