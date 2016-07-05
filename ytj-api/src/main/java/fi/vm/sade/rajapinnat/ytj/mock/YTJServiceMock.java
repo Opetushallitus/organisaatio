@@ -86,7 +86,7 @@ public class YTJServiceMock implements YTJService {
             dto.setAloitusPvm("10.02.1999");
             dto.setNimi(nimi);
             dto.setYritysTunnus(new YTunnusDTO() {{
-                setAlkupvm("29.02.2011");
+                setAlkupvm("28.02.2011");
             }});
         }
         else if(ytunnus.trim().equals("1492449-0")) {
@@ -104,7 +104,7 @@ public class YTJServiceMock implements YTJService {
             dto.setAloitusPvm("11.03.1999");
             dto.setSvNimi(nimi);
             dto.setYritysTunnus(new YTunnusDTO() {{
-                setAlkupvm("29.02.2011");
+                setAlkupvm("28.02.2011");
             }});
         }
         else {
