@@ -163,7 +163,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, boolean skipParentDateValidation) throws ValidationException {
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
         // Tarkistetaan OID
         if (model.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
@@ -255,17 +255,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         entity.setOrganisaatioPoistettu(false);
 
-        // OVT-4765 do not validate start date against parent date when updating
-        if (updating) {
-            LOG.info("this is an update, not validating parent dates.");
-            // TODO skip always??
-            skipParentDateValidation = true;
-        }
-
         // OH-116
         if (parentOrg != null) {
             // Check if organization has parent and if it has check that passivation dates match to parent
-            OrganisationDateValidator dateValidator = new OrganisationDateValidator(skipParentDateValidation);
+            OrganisationDateValidator dateValidator = new OrganisationDateValidator(false);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
                 throw new OrganisaatioDateException();
             }
@@ -966,7 +959,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 processed.add(o.getOid());
 
                 // jos vanhempaa ei löyty annetusta oidlistasta, tämä on juuriorganisaatio
-                if (!givenData.keySet().contains(o.getParent().getOid())) {
+                if (o.getParent() == null || !givenData.keySet().contains(o.getParent().getOid())) {
                     roots.add(o);
                     break;
                 }
