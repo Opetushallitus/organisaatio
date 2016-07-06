@@ -43,8 +43,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                                     <div ng-if="::log.paivitysTila === 'ONNISTUNUT_VIRHEITA'">
                                         {{::t('ilmoitukset.log.ONNISTUNUT')}},
                                         <span class="text-error">
-                                            {{::t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length])}}, {{::t('ilmoitukset.log.paivitetytlkm', [log.paivitetytLkm])}}
+                                            {{::t('ilmoitukset.log.' + log.paivitysTila, [log.ytjVirheet.length])}}
                                         </span>
+                                        , {{::t('ilmoitukset.log.paivitetytlkm', [log.paivitetytLkm])}}
                                     </div>
                                     <div ng-if="::log.paivitysTila === 'EPAONNISTUNUT'" class="text-error">
                                         {{::t('ilmoitukset.log.EPAONNISTUNUT', [log.paivitysTilaSelite])}}
