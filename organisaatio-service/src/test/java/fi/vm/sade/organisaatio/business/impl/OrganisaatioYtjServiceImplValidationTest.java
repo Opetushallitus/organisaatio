@@ -45,6 +45,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         ReflectionTestUtils.setField(organisaatioBusinessService, "checker", checker);
         ReflectionTestUtils.setField(organisaatioYtjService, "businessService", organisaatioBusinessService);
         ReflectionTestUtils.setField(organisaatioYtjService, "oidService", oidService);
+        ReflectionTestUtils.setField(organisaatioYtjService, "ytjPaivitysLoki", new YtjPaivitysLoki());
         ytjdto = generateValidYtjdto();
         initGeneralOrgData();
         generateOrganisaatioNimi(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
