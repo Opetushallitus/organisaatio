@@ -83,7 +83,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private OrganisaatioViestinta organisaatioViestinta;
 
-    private YtjPaivitysLoki ytjPaivitysLoki = new YtjPaivitysLoki();;
+    private YtjPaivitysLoki ytjPaivitysLoki;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -103,6 +103,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
     public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
+        ytjPaivitysLoki = new YtjPaivitysLoki();
         ytjPaivitysLoki.setPaivitysaika(new Date());
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT);
 
