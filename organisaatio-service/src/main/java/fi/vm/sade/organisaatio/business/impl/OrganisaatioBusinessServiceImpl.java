@@ -257,12 +257,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // OH-116
         if (parentOrg != null) {
-            // Check if organization has parent and if it has check that passivation dates match to parent
+            // Check if organization has parent and if it has, check that passivation dates match to parent
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(true);
             if (!dateValidator.apply(Maps.immutableEntry(parentOrg, entity))) {
                 throw new OrganisaatioDateException();
             }
         }
+        // check min and max dates and validate against child organisations too
+        checker.checkPvmConstraints(entity, null, null, new HashMap<String, OrganisaatioMuokkausTiedotDTO>());
 
         // Asetetaan yhteystietoarvot
         entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));

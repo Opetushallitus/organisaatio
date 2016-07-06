@@ -245,6 +245,10 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
+    /*
+    Validate min and max dates. Check the suborganisation chain too.
+    Child is now supposed to end later than the parent organisation.
+     */
     public String checkPvmConstraints(Organisaatio organisaatio,
             Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
