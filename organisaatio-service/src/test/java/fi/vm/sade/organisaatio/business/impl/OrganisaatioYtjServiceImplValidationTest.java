@@ -32,12 +32,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class OrganisaatioYtjServiceImplValidationTest {
-    private OrganisaatioYtjServiceImpl organisaatioYtjService = new OrganisaatioYtjServiceImpl();
-    private OrganisaatioBusinessChecker checker = new OrganisaatioBusinessChecker();
-    private OrganisaatioBusinessService organisaatioBusinessService = new OrganisaatioBusinessServiceImpl();
-    private OIDService oidService = new OIDServiceSimpleImpl();
+    private final OrganisaatioYtjServiceImpl organisaatioYtjService = new OrganisaatioYtjServiceImpl();
+    private final OrganisaatioBusinessChecker checker = new OrganisaatioBusinessChecker();
+    private final OrganisaatioBusinessService organisaatioBusinessService = new OrganisaatioBusinessServiceImpl();
+    private final OIDService oidService = new OIDServiceSimpleImpl();
     private YTJDTO ytjdto;
-    private Organisaatio org = new Organisaatio();
+    private final Organisaatio org = new Organisaatio();
 
     @Before
     public void setUp() {
@@ -150,15 +150,15 @@ public class OrganisaatioYtjServiceImplValidationTest {
 
     private void initGeneralOrgData() {
         org.setOid("1234.5");
-        String kieli = organisaatioYtjService.ORG_KIELI_KOODI_FI;
-        List kielet = new ArrayList<>();
+        String kieli = OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI;
+        List<String> kielet = new ArrayList<>();
         kielet.add(kieli);
         org.setKielet(kielet);
         Osoite orgOsoite = new Osoite();
         orgOsoite.setOsoite("katu1");
-        orgOsoite.setKieli(organisaatioYtjService.KIELI_KOODI_FI);
+        orgOsoite.setKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI);
         orgOsoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
-        List yhteystiedot = new ArrayList<>();
+        List<Yhteystieto> yhteystiedot = new ArrayList<>();
         yhteystiedot.add(orgOsoite);
         org.setYhteystiedot(yhteystiedot);
         ReflectionTestUtils.setField(org, "parentSuhteet", new ArrayList());
