@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ */
+
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
@@ -33,14 +48,14 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioBusinessChecker checker;
 
-    String oid1 = "1.2.2004.1";
-    Organisaatio organisaatio = new Organisaatio();
-    OrganisaatioMuokkausTiedotDTO muokatutTiedot = new OrganisaatioMuokkausTiedotDTO(); // oid, alkupvm, loppupvm
-    HashMap<String, OrganisaatioMuokkausTiedotDTO> data = new HashMap<>();
+    private String oid1 = "1.2.2004.1";
+    private Organisaatio organisaatio = new Organisaatio();
+    private OrganisaatioMuokkausTiedotDTO muokatutTiedot = new OrganisaatioMuokkausTiedotDTO(); // oid, alkupvm, loppupvm
+    private HashMap<String, OrganisaatioMuokkausTiedotDTO> data = new HashMap<>();
 
-    Organisaatio parent = new Organisaatio();
-    Organisaatio child1 = new Organisaatio();
-    Organisaatio root = new Organisaatio();
+    private Organisaatio parent = new Organisaatio();
+    private Organisaatio child1 = new Organisaatio();
+    private Organisaatio root = new Organisaatio();
 
     @Before
     public void setUp() {

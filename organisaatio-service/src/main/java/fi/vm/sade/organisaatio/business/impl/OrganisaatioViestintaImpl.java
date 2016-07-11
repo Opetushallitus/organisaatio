@@ -28,11 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -50,6 +52,9 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     private OrganisaatioViestintaClient viestintaClient;
 
     private boolean reauthorize;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     public OrganisaatioViestintaImpl(OrganisaatioViestintaClient viestintaClient) {
@@ -109,7 +114,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
-                msgContent += separator + ytjVirhe.getVirheviesti();
+            msgContent += separator + getMessage(ytjVirhe.getVirheviesti());
                 separator = ", ";
             }
             msgContent += ")<br>";
@@ -147,5 +152,11 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         } catch (OrganisaatioViestintaException ve) {
             LOG.error("Could not send email.", ve);
         }
+    }
+
+    // pikaratkaisuna Messages.properties-tiedostosta.
+    // Jos halutaan hakea lokalisointipalvelusta, voi katsoa mallia toteutukselle esim e-perusteet LokalisointiService
+    protected String getMessage(String key) {
+        return messageSource.getMessage(key, null, new Locale("fi", "FI"));
     }
 }
