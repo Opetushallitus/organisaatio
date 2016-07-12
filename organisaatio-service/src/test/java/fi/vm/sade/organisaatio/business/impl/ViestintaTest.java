@@ -49,7 +49,6 @@ public class ViestintaTest {
     }
 
     @Test
-    //@Ignore
     public void messageFromLogTestWith1Error() {
         final YtjVirhe virhe = new YtjVirhe();
         YtjPaivitysLoki loki = new YtjPaivitysLoki();
