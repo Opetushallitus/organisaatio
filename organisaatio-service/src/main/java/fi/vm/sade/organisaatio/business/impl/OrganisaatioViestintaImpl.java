@@ -156,7 +156,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     // pikaratkaisuna Messages.properties-tiedostosta.
     // Jos halutaan hakea lokalisointipalvelusta, voi katsoa mallia toteutukselle esim e-perusteet LokalisointiService
-    protected String getMessage(String key) {
+    private String getMessage(String key) {
         return messageSource.getMessage(key, null, new Locale("fi", "FI"));
     }
 }
