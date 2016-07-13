@@ -11,7 +11,7 @@
     {"name": "organisaatio-soap",
       "uses": "organisaatio-postgres"},
     {"name": "organisaatio-rest",
-      "uses": "organisaatio-solr organisaatio-postgres authentication-rest koodisto-rest tarjonta-rest"},
+      "uses": "organisaatio-solr organisaatio-postgres authentication-rest koodisto-rest tarjonta-rest viestintapalvelu"},
     {"name": "organisaatio-ui",
       "uses": "cas ldap authentication-rest organisaatio-rest koodisto-rest lokalisointi-rest"},
     {"name": "koulutustarjoajaPublicService",
