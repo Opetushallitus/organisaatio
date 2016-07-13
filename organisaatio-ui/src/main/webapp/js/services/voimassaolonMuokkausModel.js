@@ -202,11 +202,6 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
                     if (!treeItem.alkuPvm) {
                         treeItem.valittu = true;
                         treeItem.readonly = true;
-                    }
-                    // Tarkista ettei aliorganisaation voimassaolo pääse jatkumaan yli lakkautuspäivän.
-                    else if (treeItem.alkuPvm < alkuPvm) {
-                        treeItem.valittu = true;
-                        treeItem.readonly = true;
                     } else {
                         treeItem.readonly = false;
                     }

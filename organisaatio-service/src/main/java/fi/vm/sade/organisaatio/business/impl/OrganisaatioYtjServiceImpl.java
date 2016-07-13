@@ -271,7 +271,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjOrg.getYritysTunnus() == null || ytjOrg.getYritysTunnus().getAlkupvm() == null) {
             return null;
         }
-        final Date ytunnusAlkupvm = parseDate(ytjOrg.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "Y-tunnus");
+        final Date ytunnusAlkupvm = parseDate(ytjOrg.getYritysTunnus().getAlkupvm(), organisaatio, YtjVirhe.YTJVirheKohde.ALKUPVM, "ilmoitukset.log.virhe.alkupvm.parse");
         if(ytunnusAlkupvm == null) {
             return null;
         }

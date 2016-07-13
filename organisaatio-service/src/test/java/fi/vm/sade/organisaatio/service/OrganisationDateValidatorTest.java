@@ -36,30 +36,32 @@ public class OrganisationDateValidatorTest {
 	private static Date date(int n) {
 		return new GregorianCalendar(2000+n, 0, 0).getTime();
 	}
+    private final OrganisationDateValidator validator = new OrganisationDateValidator(false);
+    private final OrganisationDateValidator validatorSkipStartDate = new OrganisationDateValidator(true);
+    private Organisaatio parent = new Organisaatio();
+    private Organisaatio child = new Organisaatio();
+    private final Entry<Organisaatio, Organisaatio> parentChild = Maps.immutableEntry(parent, child);
 	
     @Test
     public void testValidator() {
 
-        OrganisationDateValidator validator = new OrganisationDateValidator(false);
         // both parent and child null
         assertTrue(validator.apply(Maps.immutableEntry((Organisaatio) null, (Organisaatio) null)));
-
-        Organisaatio parent = new Organisaatio();
-        Organisaatio child = new Organisaatio();
 
         // parent or child null
         assertTrue(validator.apply(Maps.immutableEntry(parent, (Organisaatio) null)));
         assertTrue(validator.apply(Maps.immutableEntry((Organisaatio) null, child)));
 
-        final Entry<Organisaatio, Organisaatio> parentChild = Maps.immutableEntry(parent, child);
         // all dates null
         assertTrue(validator.apply(parentChild));
 
         // parent has end date, child does not
         parent.setLakkautusPvm(date(100));
+        assertNotEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
+        // side effect happends during validation
         assertTrue(validator.apply(parentChild));
 
-        // side effect
+        // side effect result
         assertEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
 
         // validates ok after side effect?
@@ -69,7 +71,7 @@ public class OrganisationDateValidatorTest {
         parent.setAlkuPvm(date(10));
         assertTrue(validator.apply(parentChild));
 
-        // both have start date
+        // both have same start date
         child.setAlkuPvm(date(10));
         assertTrue(validator.apply(parentChild));
 
@@ -77,8 +79,7 @@ public class OrganisationDateValidatorTest {
         child.setAlkuPvm(date(9));
         assertFalse(validator.apply(parentChild));
 
-        //validator that skips start state validation
-        final OrganisationDateValidator validatorSkipStartDate = new OrganisationDateValidator(true);
+        // alku < parent alku ok if validator skips start date validation
         assertTrue(validatorSkipStartDate.apply(parentChild));
 
         // alku > parent.alku
@@ -100,26 +101,21 @@ public class OrganisationDateValidatorTest {
         // parent has no start date, child has
         parent.setAlkuPvm(null);
         assertTrue(validator.apply(parentChild));
+    }
 
+    @Test(expected = OrganisaatioDateException.class)
+    public void childBeginningAfterParentEndFails() {
         // child start date after parent end date
         child.setAlkuPvm(date(5));
-        child.setLakkautusPvm(date(1));
+        parent.setLakkautusPvm(date(1));
+        validator.apply(parentChild);
+    }
 
-        try {
-            validator.apply(parentChild);
-            Assert.fail("No exception thrown");
-        } catch (OrganisaatioDateException ve) {
-            // expected
-        }
-
-        // not ok in update either
-        try {
-            validatorSkipStartDate.apply(parentChild);
-            Assert.fail("No exception thrown");
-        } catch (OrganisaatioDateException ve) {
-            // expected
-        }
-
+    @Test(expected = OrganisaatioDateException.class)
+    public void childBeginningAfterParentEndFailsWithoutStartDateValidation() {
+        child.setAlkuPvm(date(5));
+        parent.setLakkautusPvm(date(1));
+        validatorSkipStartDate.apply(parentChild);
     }
 
 }

@@ -36,6 +36,12 @@
         <aop:include name="auditLogAspect"/>
     </aop:aspectj-autoproxy>
 
+   <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:Messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+
     <bean id="organisaatioServiceExceptionWrapper"  class="fi.vm.sade.organisaatio.service.aspects.OrganisaatioServiceExceptionWrapperAspect"/>
 
     <bean id="auditLogAspect" class="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect"/>
