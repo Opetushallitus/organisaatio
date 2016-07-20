@@ -183,4 +183,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     void updateOrg(Organisaatio org) throws OptimisticLockException;
 
     void flush();
+
+    EntityManager getJpaEntityManager();
+
 }

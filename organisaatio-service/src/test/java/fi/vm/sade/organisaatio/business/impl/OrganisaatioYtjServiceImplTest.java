@@ -39,7 +39,7 @@ import java.util.*;
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles({"embedded-solr"})
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Transactional
 public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
     @Autowired
