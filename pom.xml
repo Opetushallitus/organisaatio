@@ -82,6 +82,9 @@
         <modelmapper.version>0.6.3</modelmapper.version>
         <jackson.version>2.7.2</jackson.version>
         <asm.version>5.0.2</asm.version>
+        <httpcomponents.version>4.2.6</httpcomponents.version>
+        <gson.version>2.2.2</gson.version>
+        <webapp.port>8180</webapp.port>
 
         <!-- Testing -->
         <selenium.version>2.37.0</selenium.version>
@@ -111,6 +114,15 @@
 
         <embedService.serviceArtifactId>${project.parent.artifactId}-service</embedService.serviceArtifactId>
 
+        <ant-contrib.version>1.0b3</ant-contrib.version>
+
+        <!-- common clover properties -->
+        <clover.version>3.3.0</clover.version>
+        <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
+        <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
+
+        <buildversion_prefix />
+
         <checkstyle.excludes>**/generated/**/*,**/com/**/*,**/org/**/*,**/net/**/*,**/*Mock.java</checkstyle.excludes>
         <checkstyle.skip>false</checkstyle.skip>
         <checkstyle.failsOnError>true</checkstyle.failsOnError>
@@ -121,29 +133,6 @@
         <surefire.testFailureIgnore>false</surefire.testFailureIgnore>
         <compiler.debug>false</compiler.debug>
 
-        <mongo.version>2.7.1</mongo.version>
-
-        <ant-contrib.version>1.0b3</ant-contrib.version>
-        <ant-jsch.version>1.8.1</ant-jsch.version>
-        <jsch.version>0.1.48</jsch.version>
-
-        <!-- common clover properties -->
-        <clover.version>3.3.0</clover.version>
-        <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
-        <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
-
-        <tomcat.version>7.0.26</tomcat.version>
-        <webapp.port>8180</webapp.port>
-        <portlet.scope>provided</portlet.scope>
-
-        <blackboard.version>2.1.1</blackboard.version>
-
-        <buildversion_prefix />
-
-        <httpcomponents.version>4.2.6</httpcomponents.version>
-        <gson.version>2.2.2</gson.version>
-        <jetty.embed.version>8.1.0.RC5</jetty.embed.version>
-        <jersey.version>1.17.1</jersey.version>
     </properties>
 
     <modules>
