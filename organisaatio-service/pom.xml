@@ -223,7 +223,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>1.6.2</version>
+            <version>${jodatime.version}</version>
         </dependency>
         <!--Provides javax.ws.rs-api:2.0-m10 if this is overwritten with newer version stops working!-->
         <dependency>
