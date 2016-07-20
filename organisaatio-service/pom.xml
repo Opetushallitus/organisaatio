@@ -97,6 +97,10 @@
                         <artifactId>hibernate-ehcache</artifactId>
                         <version>${hibernate.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId></groupId>
+                        <artifactId></artifactId>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>
@@ -223,7 +227,7 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <version>${beanvalidation.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
