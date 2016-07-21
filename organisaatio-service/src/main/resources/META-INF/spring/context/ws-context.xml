@@ -38,7 +38,7 @@
     <!--<bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>-->
 
     <!--swagger-->
-    <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.SwaggerFeature">
+    <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
         <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource" />
         <property name="version" value="1.0.0" />
         <!--<property name="schemes" value="" />-->

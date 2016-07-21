@@ -38,8 +38,8 @@ Union Public Licence for more details. -->
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.wordnik</groupId>
-            <artifactId>swagger-jaxrs_2.10</artifactId>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
             <version>${swagger.version}</version>
             <exclusions>
                 <exclusion>
