@@ -25,7 +25,7 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 
 //TODO combine permission service tests and make this a proper unit test
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader=AnnotationConfigContextLoader.class)
+@ContextConfiguration(locations = "/spring/test-context.xml")
 public class OrganisaatioPermissionServiceTest {
 
     public String rootOrgOid ="root";
