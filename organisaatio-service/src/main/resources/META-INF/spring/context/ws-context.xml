@@ -3,9 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-                           http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+                           http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+                           http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
 
     <!-- embed cxf into spring http://cxf.apache.org/docs/embedding-cxf-inside-spring.html -->
@@ -32,8 +34,8 @@
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi" />
 
     <!-- Filters to handle caller-id and ID chain -->
-    <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
-    <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
+    <!--<bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>-->
+    <!--<bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>-->
 
     <!--swagger-->
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.SwaggerFeature">
@@ -65,8 +67,8 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="organisaatioJsonProvider"/>
-            <ref bean="inputFilter"/>
-            <ref bean="outputFilter"/>
+            <!--<ref bean="inputFilter"/>-->
+            <!--<ref bean="outputFilter"/>-->
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />
