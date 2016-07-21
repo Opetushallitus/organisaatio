@@ -23,6 +23,6 @@ public class OrganisaatioSwaggerConfiguration {
 
     @PostConstruct
     public void init() {
-//        FilterFactory.setFilter(new AccessHiddenSpecFilter());
+        FilterFactory.setFilter(new AccessHiddenSpecFilter());
     }
 }

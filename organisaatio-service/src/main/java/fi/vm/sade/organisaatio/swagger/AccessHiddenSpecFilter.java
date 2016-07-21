@@ -23,18 +23,20 @@ public class AccessHiddenSpecFilter implements SwaggerSpecFilter {
 
     @Override
     public boolean isPropertyAllowed(Model model, Property property, String s, Map<String, List<String>> map, Map<String, String> map1, Map<String, List<String>> map2) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isParamAllowed(Parameter param, Operation operation, ApiDescription desc, Map<String, List<String>> arg3, Map<String, String> arg4, Map<String, List<String>> arg5) {
-        final String paramAccess = param.getAccess();
-
-        return !paramAccess.equalsIgnoreCase("Some(hidden)");
+        String paramAccess = param.getAccess();
+        if(paramAccess == null) {
+            paramAccess = "";
+        }
+        return !paramAccess.equalsIgnoreCase("hidden");
     }
 
     @Override
     public boolean isOperationAllowed(Operation operation, ApiDescription apiDescription, Map<String, List<String>> map, Map<String, String> map1, Map<String, List<String>> map2) {
-        return false;
+        return true;
     }
 }
