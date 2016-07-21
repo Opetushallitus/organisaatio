@@ -181,7 +181,7 @@
 
     <beans:bean id="ehCacheBasedTicketCache" class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
         <beans:property name="cache">
-                <beans:ref local="casTicketsCacheBean"/>
+                <beans:ref bean="casTicketsCacheBean"/>
         </beans:property>
     </beans:bean>
 
@@ -192,7 +192,7 @@
         <beans:property name="key" value="${cas_key}"/>
         <!-- enable proxy authentication (in backend) -->
         <beans:property name="statelessTicketCache">
-            <beans:ref local="ehCacheBasedTicketCache" />
+            <beans:ref bean="ehCacheBasedTicketCache" />
         </beans:property>
     </beans:bean>
 
