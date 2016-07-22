@@ -49,7 +49,7 @@
         <cxf.codegen.version>2.4.6</cxf.codegen.version>
         <wss4j.version>1.6.4</wss4j.version>
         <spring.version>4.3.1.RELEASE</spring.version>
-        <spring.security.version>4.0.4.RELEASE</spring.security.version>
+        <spring.security.version>4.1.1.RELEASE</spring.security.version>
 
         <!-- Logging -->
         <slf4j.version>1.6.1</slf4j.version>
