@@ -69,35 +69,28 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>de.smartics.maven.plugin</groupId>
-                <artifactId>hibernate4-maven-plugin</artifactId>
-                <version>0.2.0</version>
+                <groupId>net.ggtools.maven</groupId>
+                <artifactId>ddlgenerator-maven-plugin</artifactId>
+                <version>0.1</version>
                 <executions>
                     <execution>
-                        <id>export</id>
-                        <phase>compile</phase>
                         <goals>
-                            <goal>hbm2ddl</goal>
+                            <goal>generate</goal>
                         </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <ddlFile>${project.build.directory}/hibernate3/sql/schema.ddl</ddlFile>
+                            <!--<defaultSchema></defaultSchema>-->
+                            <dialect>org.hibernate.dialect.PostgreSQL82Dialect</dialect>
+                            <!--<namingStrategy></namingStrategy>-->
+                            <persistenceUnitName>test</persistenceUnitName>
+                            <persistenceXmlLocations>
+                                <param>classpath:/persistence.xml</param>
+                            </persistenceXmlLocations>
+                            <useNewGenerator>true</useNewGenerator>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <unitName>default</unitName>
-                    <createOutputFile>${project.build.directory}/hibernate3/sql/schema.ddl</createOutputFile>
-                    <dropOutputFile>${project.build.directory}/hibernate3/sql/drop.ddl</dropOutputFile>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-core</artifactId>
-                        <version>${hibernate.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-ehcache</artifactId>
-                        <version>${hibernate.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -197,8 +190,8 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>${hibernate.jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -213,12 +206,22 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.1.0.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -412,7 +415,13 @@
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <version>2.6.0</version>
+            <version>${querydsl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <artifactId>hibernate-jpa-2.0-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.organisaatio</groupId>
