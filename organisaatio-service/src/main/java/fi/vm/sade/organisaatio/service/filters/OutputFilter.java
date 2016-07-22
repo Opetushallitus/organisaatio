@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
@@ -19,7 +18,6 @@ import java.io.IOException;
 // (clientSubSystemCode) to every sent REST message.
 @Component
 @Provider
-@PreMatching
 public class OutputFilter implements ContainerResponseFilter {
     private static final Logger LOG = LoggerFactory.getLogger(OutputFilter.class);
 
