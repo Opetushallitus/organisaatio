@@ -76,7 +76,7 @@
         <jodatime.version>2.1</jodatime.version>
         <aopalliance.version>1.0</aopalliance.version>
         <antisamy.version>1.4.5</antisamy.version>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <aspectj.version>1.7.0</aspectj.version>
         <jgroups.version>2.10.0.GA</jgroups.version>
         <modelmapper.version>0.6.3</modelmapper.version>
