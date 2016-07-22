@@ -34,8 +34,8 @@
     <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi" />
 
     <!-- Filters to handle caller-id and ID chain -->
-    <!--<bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>-->
-    <!--<bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>-->
+    <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
+    <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
 
     <!--swagger-->
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
@@ -67,8 +67,8 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="organisaatioJsonProvider"/>
-            <!--<ref bean="inputFilter"/>-->
-            <!--<ref bean="outputFilter"/>-->
+            <ref bean="inputFilter"/>
+            <ref bean="outputFilter"/>
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />
