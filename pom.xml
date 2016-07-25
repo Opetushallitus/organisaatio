@@ -57,7 +57,6 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
-        <jpa-api.version>2.0.0</jpa-api.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <postgresql.version>9.3-1100.jdbc4</postgresql.version>
@@ -65,7 +64,7 @@
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
         <querydsl.version>2.6.0</querydsl.version>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.2.1.Final</hibernate.version>
         <hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
         <solr.version>4.5.1</solr.version>
