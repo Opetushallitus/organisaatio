@@ -161,7 +161,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-//    @Transactional
     public void saveNewAndUpdateOrganisation() {
         OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
         OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid);
@@ -172,11 +171,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioResult organisaatioResult = service.save(model, false);
         Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
 
-//        model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
-//        organisaatioDAO.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
-//        model.setYTunnus("4567891-0");
-//        organisaatioResult = service.save(model, true);
-//        Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
+        model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
+        organisaatioDAO.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
+        model.setYTunnus("4567891-0");
+        organisaatioResult = service.save(model, true);
+        Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
     }
 
