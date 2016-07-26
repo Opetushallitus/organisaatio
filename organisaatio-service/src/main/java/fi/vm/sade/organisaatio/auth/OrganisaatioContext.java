@@ -36,7 +36,7 @@ public class OrganisaatioContext {
     private final Set<OrganisaatioTyyppi> orgTypes;
 
     private static Set<OrganisaatioTyyppi> getTyypitFromStrings(List<String> tyypitStrs) {
-        Set<OrganisaatioTyyppi> tyypit = new HashSet<OrganisaatioTyyppi>();
+        Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
         for (String tyyppiStr : tyypitStrs) {
             tyypit.add(OrganisaatioTyyppi.fromValue(tyyppiStr));
         }
@@ -61,13 +61,13 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(OrganisaatioRDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.EMPTY_SET);
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdto = org;
     }
 
     private OrganisaatioContext(OrganisaatioDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? org.getTyypit() : Collections.EMPTY_SET);
+        this.orgTypes = new HashSet<>(org != null ? org.getTyypit() : Collections.emptySet());
         this.dto = org;
     }
 
@@ -78,13 +78,13 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? org.getOrganisaatiotyypit() : Collections.EMPTY_SET);
+        this.orgTypes = new HashSet<>(org != null ? org.getOrganisaatiotyypit() : Collections.emptySet());
         this.perus = org;
     }
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<OrganisaatioTyyppi>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.EMPTY_SET);
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
     }
 
     public static OrganisaatioContext get(OrganisaatioDTO organisaatio) {
