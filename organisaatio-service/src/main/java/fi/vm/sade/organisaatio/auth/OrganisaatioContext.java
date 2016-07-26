@@ -73,7 +73,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
-        this.orgTypes = Collections.EMPTY_SET;
+        this.orgTypes = Collections.emptySet();
     }
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {

@@ -14,7 +14,6 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import java.io.IOException;
@@ -30,7 +29,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -80,7 +79,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
         LOG.debug("GET " + url);
         String json = null;
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(url);
         get.addHeader("ID", IDContextMessageHelper.getIDChain());
         get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
@@ -122,7 +121,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         LOG.debug("PUT " + koodistoServiceUrl + uri);
         LOG.debug("PUT data=" + json);
         authorize();
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpPut put = new HttpPut(koodistoServiceUrl + uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
         put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
@@ -164,7 +163,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         LOG.debug("POST " + koodistoServiceUrl + path);
         LOG.debug("POST data=" + json);
             authorize();
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(koodistoServiceUrl + path);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
