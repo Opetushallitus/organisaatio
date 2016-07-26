@@ -68,7 +68,7 @@
         <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
         <solr.version>4.5.1</solr.version>
-        <ehcache.version>2.5.0</ehcache.version>
+        <ehcache.version>2.6.11</ehcache.version>
         <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
 
         <!-- Utils -->
