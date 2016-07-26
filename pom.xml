@@ -91,7 +91,7 @@
         <!-- Testing -->
         <selenium.version>2.37.0</selenium.version>
         <dbunit.version>2.4.8</dbunit.version>
-        <mockito.version>1.9.0</mockito.version>
+        <mockito.version>1.10.19</mockito.version>
         <springockito.version>1.0.9</springockito.version>
         <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
         <junit.version>4.12</junit.version>
