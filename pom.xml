@@ -70,6 +70,7 @@
         <solr.version>4.5.1</solr.version>
         <ehcache.version>2.6.11</ehcache.version>
         <ehcache-jgroupsreplication.version>1.6</ehcache-jgroupsreplication.version>
+        <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
 
         <!-- Utils -->
         <commons-codec.version>1.6</commons-codec.version>
@@ -78,7 +79,7 @@
         <antisamy.version>1.4.5</antisamy.version>
         <java.version>1.8</java.version>
         <aspectj.version>1.7.0</aspectj.version>
-        <jgroups.version>2.10.0.GA</jgroups.version>
+        <jgroups.version>2.12.3.Final</jgroups.version>
         <modelmapper.version>0.6.3</modelmapper.version>
         <jackson.version>2.8.1</jackson.version>
         <asm.version>5.0.2</asm.version>
@@ -350,7 +351,7 @@ buildTtime=${maven.build.timestamp}
             <dependency>
                 <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-support-distributed-ehcache</artifactId>
-                <version>3.1.12</version>
+                <version>${cas-client-support-distributed-ehcache.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>net.sf.ehcache</groupId>
