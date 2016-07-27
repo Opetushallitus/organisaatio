@@ -118,6 +118,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParent(modified, "1.2.2004.4");
         checkParent(modified, "1.2.2005.4");
         checkParent(org, "1.2.2005.5");
+        checkParentOidPath(org, "1.2.2005.5");
 
         assertChildCountFromIndex(oldParentOid, 1);
         assertChildCountFromIndex(newParentOid, 1);
@@ -146,9 +147,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String removedOid = "1.2.2004.4";
         model.setOid(removedOid);
         jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
-        OrganisaatioResult organisaatioResult;
         try {
-            organisaatioResult = service.save(model, true);
+            service.save(model, true);
             Assert.fail("should throw ValidationException");
         } catch (Throwable e) {
             Assert.assertNotNull(e.getMessage());
