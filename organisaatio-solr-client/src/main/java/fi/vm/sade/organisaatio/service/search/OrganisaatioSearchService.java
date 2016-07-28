@@ -354,7 +354,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     public List<OrganisaatioPerustieto> findByOidSet(Set<String> organisationOids) {
 
         if (organisationOids.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":(%s)", Joiner.on(" ").join(escapeAll(organisationOids))));

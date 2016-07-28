@@ -11,8 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-        <!-- OPH Versions -->
-        <generic.version>9.2-SNAPSHOT</generic.version>
+        <!-- OPH service versions -->
+        <generic.version>9.4-SNAPSHOT</generic.version>
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
         <log.client.version>8.0</log.client.version>
         <oid.api.version>8.0</oid.api.version>
@@ -34,22 +34,22 @@
 
         <jetty.module>${project.artifactId}</jetty.module>
         <jetty.webApp>../${jetty.module}/target/${jetty.module}.war</jetty.webApp>
-        <jetty.version>9.2.17.v20160517</jetty.version>
+        <jetty.version>9.3.10.v20160621</jetty.version>
         <daemon>false</daemon>
         <daemon>false</daemon>
 
         <!-- UI libraries -->
         <servlet.version>3.0.1</servlet.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
-        <swagger.version>1.3.13</swagger.version>
+        <swagger.version>1.5.9</swagger.version>
         <frontend-plugin.version>0.0.29</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>2.7.18</cxf.version>
+        <cxf.version>3.1.6</cxf.version>
         <cxf.codegen.version>2.4.6</cxf.codegen.version>
         <wss4j.version>1.6.4</wss4j.version>
-        <spring.version>3.2.16.RELEASE</spring.version>
-        <spring.security.version>3.2.9.RELEASE</spring.security.version>
+        <spring.version>4.3.1.RELEASE</spring.version>
+        <spring.security.version>4.1.1.RELEASE</spring.security.version>
 
         <!-- Logging -->
         <slf4j.version>1.6.1</slf4j.version>
@@ -57,7 +57,6 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
-        <jpa-api.version>2.0.0</jpa-api.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <postgresql.version>9.3-1100.jdbc4</postgresql.version>
@@ -65,28 +64,36 @@
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
         <querydsl.version>2.6.0</querydsl.version>
-        <hibernate.version>4.2.21.Final</hibernate.version>
-        <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
+        <hibernate.version>5.2.1.Final</hibernate.version>
+        <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
+        <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
         <solr.version>4.5.1</solr.version>
-        <ehcache.version>2.5.0</ehcache.version>
-        <ehcache-jgroupsreplication.version>1.5</ehcache-jgroupsreplication.version>
+        <ehcache.version>2.5.2</ehcache.version>
+        <jgroups.version>3.1.0.Final</jgroups.version>
+        <ehcache-jgroupsreplication.version>1.7</ehcache-jgroupsreplication.version>
+        <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
+
 
         <!-- Utils -->
         <commons-codec.version>1.6</commons-codec.version>
-        <jodatime.version>2.1</jodatime.version>
+        <jodatime.version>2.9.4</jodatime.version>
         <aopalliance.version>1.0</aopalliance.version>
         <antisamy.version>1.4.5</antisamy.version>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <aspectj.version>1.7.0</aspectj.version>
-        <jgroups.version>2.10.0.GA</jgroups.version>
         <modelmapper.version>0.6.3</modelmapper.version>
-        <jackson.version>2.7.2</jackson.version>
+        <jackson.version>2.8.1</jackson.version>
         <asm.version>5.0.2</asm.version>
+        <httpcomponents.version>4.4.5</httpcomponents.version>
+        <httpcomponents.client.version>4.5.2</httpcomponents.client.version>
+        <gson.version>2.2.2</gson.version>
+        <webapp.port>8180</webapp.port>
+        <beanvalidation.version>1.1.0.Final</beanvalidation.version>
 
         <!-- Testing -->
         <selenium.version>2.37.0</selenium.version>
         <dbunit.version>2.4.8</dbunit.version>
-        <mockito.version>1.9.0</mockito.version>
+        <mockito.version>1.10.19</mockito.version>
         <springockito.version>1.0.9</springockito.version>
         <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
         <junit.version>4.12</junit.version>
@@ -111,6 +118,15 @@
 
         <embedService.serviceArtifactId>${project.parent.artifactId}-service</embedService.serviceArtifactId>
 
+        <ant-contrib.version>1.0b3</ant-contrib.version>
+
+        <!-- common clover properties -->
+        <clover.version>3.3.0</clover.version>
+        <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
+        <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
+
+        <buildversion_prefix />
+
         <checkstyle.excludes>**/generated/**/*,**/com/**/*,**/org/**/*,**/net/**/*,**/*Mock.java</checkstyle.excludes>
         <checkstyle.skip>false</checkstyle.skip>
         <checkstyle.failsOnError>true</checkstyle.failsOnError>
@@ -121,29 +137,6 @@
         <surefire.testFailureIgnore>false</surefire.testFailureIgnore>
         <compiler.debug>false</compiler.debug>
 
-        <mongo.version>2.7.1</mongo.version>
-
-        <ant-contrib.version>1.0b3</ant-contrib.version>
-        <ant-jsch.version>1.8.1</ant-jsch.version>
-        <jsch.version>0.1.48</jsch.version>
-
-        <!-- common clover properties -->
-        <clover.version>3.3.0</clover.version>
-        <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
-        <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
-
-        <tomcat.version>7.0.26</tomcat.version>
-        <webapp.port>8180</webapp.port>
-        <portlet.scope>provided</portlet.scope>
-
-        <blackboard.version>2.1.1</blackboard.version>
-
-        <buildversion_prefix />
-
-        <httpcomponents.version>4.2.5</httpcomponents.version>
-        <gson.version>2.2.2</gson.version>
-        <jetty.embed.version>8.1.0.RC5</jetty.embed.version>
-        <jersey.version>1.17.1</jersey.version>
     </properties>
 
     <modules>
@@ -294,7 +287,7 @@
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
-buildNumber=${build}
+buildNumber=${project.build}
 branchName=${branch}
 vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
@@ -359,7 +352,7 @@ buildTtime=${maven.build.timestamp}
             <dependency>
                 <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-support-distributed-ehcache</artifactId>
-                <version>3.1.12</version>
+                <version>${cas-client-support-distributed-ehcache.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>net.sf.ehcache</groupId>

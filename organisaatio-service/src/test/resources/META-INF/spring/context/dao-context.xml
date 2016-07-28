@@ -31,8 +31,12 @@
                 <property name="databasePlatform" value="org.hibernate.dialect.H2Dialect"/>
             </bean>
         </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.id.new_generator_mappings">false</prop>
+            </props>
+        </property>
     </bean>
-
     <!-- Add Transaction support -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="emf" />

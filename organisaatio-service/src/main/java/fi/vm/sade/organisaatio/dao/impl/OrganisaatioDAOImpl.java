@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
@@ -129,8 +130,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Override
     public boolean isYtunnusAvailable(String ytunnus) {
         return ((Number) getEntityManager()
-                .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=? AND organisaatiopoistettu = FALSE")
-                .setParameter(1, ytunnus.trim())
+                .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=:ytunnus AND organisaatiopoistettu = FALSE")
+                .setParameter("ytunnus", ytunnus.trim())
                 .getSingleResult()).intValue() == 0;
     }
 
@@ -995,5 +996,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Override
     public void flush() {
         getEntityManager().flush();
+    }
+
+    @Override
+    public EntityManager getJpaEntityManager() {
+        return getEntityManager();
     }
 }

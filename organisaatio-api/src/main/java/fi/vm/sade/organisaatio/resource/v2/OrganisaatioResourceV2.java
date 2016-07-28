@@ -15,11 +15,11 @@
 
 package fi.vm.sade.organisaatio.resource.v2;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiImplicitParam;
-import com.wordnik.swagger.annotations.ApiImplicitParams;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
@@ -57,11 +57,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -83,11 +83,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -110,11 +110,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -137,11 +137,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -159,11 +159,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -182,11 +182,11 @@ public interface OrganisaatioResourceV2 {
         @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kieli", value = "Haettavan organisaation kieli tai lista kielistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(

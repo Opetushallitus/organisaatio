@@ -31,7 +31,8 @@ public class YtjServiceTest {
                 .thenAnswer(new Answer<List<YTJDTO>>() {
                     @Override
                     public List<YTJDTO> answer(InvocationOnMock invocation) throws Throwable {
-                        List<YTJDTO> ytjdtoList = new ArrayList<YTJDTO>();
+                        List<YTJDTO> ytjdtoList = new ArrayList<>();
+                        @SuppressWarnings("unchecked")
                         List<String> args = (List<String>) invocation.getArguments()[0];
                         for(int i = 0; i < args.size(); i++) {
                             ytjdtoList.add(null);

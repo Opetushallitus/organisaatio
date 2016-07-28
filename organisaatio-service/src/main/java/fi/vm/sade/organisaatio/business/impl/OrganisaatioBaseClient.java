@@ -9,7 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public abstract class OrganisaatioBaseClient {
             postParameters.add(new BasicNameValuePair("service_url", serviceUrl));
             try {
                 post.setEntity(new UrlEncodedFormEntity(postParameters));
-                HttpClient client = new DefaultHttpClient();
+                HttpClient client = HttpClientBuilder.create().build();
                 HttpResponse resp = client.execute(post);
                 Header header = resp.getFirstHeader("ID");
                 if(header != null) {

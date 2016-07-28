@@ -29,11 +29,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiImplicitParam;
-import com.wordnik.swagger.annotations.ApiImplicitParams;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import javax.ws.rs.DELETE;
@@ -59,10 +59,10 @@ public interface OrganisaatioResource {
         @ApiImplicitParam(dataType = "boolean", name = "vainAktiiviset", value = "Palautetaanko vain aktiiviset organisaatiot", paramType = "query", required = true),
         @ApiImplicitParam(dataType = "boolean", name = "vainLakkautetut", value = "Palautetaanko vain lakkautetut organisaatiot", paramType = "query", required = true, defaultValue = "false"),
         @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true, name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "Set<String>",  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
-        @ApiImplicitParam(dataType = "List<String>",  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query", required = false),
+        @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oidResctrictionList", value = "Lista sallituista organisaatioiden oid:stä", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "String",  name = "oid", value = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "skipParents", value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", paramType = "query", required = false)})
     @ApiOperation(
@@ -173,7 +173,7 @@ public interface OrganisaatioResource {
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams(@ApiImplicitParam(dataType = "file", name = "organisaatio",
+    @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(
             value = "Päivittää oid:n määrittämän organisaation tiedot",
@@ -197,7 +197,7 @@ public interface OrganisaatioResource {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams(@ApiImplicitParam(dataType = "file", name = "organisaatio",
+    @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Luotavan organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(
             value = "Luo uuden organisaation",

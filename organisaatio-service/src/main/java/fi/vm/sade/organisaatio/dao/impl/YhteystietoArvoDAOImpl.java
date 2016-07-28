@@ -45,8 +45,8 @@ public class YhteystietoArvoDAOImpl extends AbstractJpaDAOImpl<YhteystietoArvo, 
     	if (org.getId()==null) {
     		return Collections.emptyList();
     	}
-    	return getEntityManager().createQuery("FROM "+YhteystietoArvo.class.getName()+" WHERE organisaatio=?")
-    		.setParameter(1, org)
+    	return getEntityManager().createQuery("FROM "+YhteystietoArvo.class.getName()+" WHERE organisaatio=:organisaatio")
+    		.setParameter("organisaatio", org)
     		.getResultList();
     }
     

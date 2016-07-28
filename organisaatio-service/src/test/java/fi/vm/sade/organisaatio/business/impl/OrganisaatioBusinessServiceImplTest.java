@@ -25,12 +25,9 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
+import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,9 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Tests for {@link fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessServiceImpl} class.
@@ -108,17 +103,42 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         Assert.assertEquals("Parent oid path should match!", "|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
 
-        Organisaatio org = checkParentOidPath(modified, "1.2.2004.4");
-        checkParentOidPath(modified, "1.2.2005.4");
-        checkParentOidPath(org, "1.2.2005.5");
+        String oid = "1.2.2004.4";
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org.getParentOidPath());
+
+        oid = "1.2.2005.4";
+        Organisaatio org2 = organisaatioDAO.findByOid(oid);
+        Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org2.getParentOidPath());
+
+        oid = "1.2.2005.5";
+        org2 = organisaatioDAO.findByOid(oid);
+        Assert.assertEquals("Parent oid path should match for oid: " + oid, org.getParentOidPath() + org.getOid() + "|", org2.getParentOidPath());
 
         checkParent(modified, "1.2.2004.4");
         checkParent(modified, "1.2.2005.4");
         checkParent(org, "1.2.2005.5");
-
+        checkParentOidPath(org, "1.2.2005.5");
 
         assertChildCountFromIndex(oldParentOid, 1);
         assertChildCountFromIndex(newParentOid, 1);
+    }
+
+
+    private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
+        return org;
+    }
+
+    private Organisaatio checkParent(Organisaatio parent, String oid) {
+        Organisaatio org = organisaatioDAO.findByOid(oid);
+        String pop = org.getParentOidPath();
+        String[] list = pop.split("[|]+");
+        String parentOid = list[list.length-1];
+        Organisaatio orgParent = organisaatioDAO.findByOid(parentOid);
+        Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), orgParent.getOid());
+        return org;
     }
 
     @Test
@@ -127,9 +147,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String removedOid = "1.2.2004.4";
         model.setOid(removedOid);
         jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
-        OrganisaatioResult organisaatioResult;
         try {
-            organisaatioResult = service.save(model, true);
+            service.save(model, true);
             Assert.fail("should throw ValidationException");
         } catch (Throwable e) {
             Assert.assertNotNull(e.getMessage());
@@ -140,33 +159,20 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Test
     public void saveNewAndUpdateOrganisation() {
         OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
-
-        Organisaatio organisaatio = organisaatioDAO.findByOid("1.2.2004.1");
-        OrganisaatioRDTO model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatio);
-
-        model.setOid("65432.1");
-        model.setOppilaitosKoodi(null);
-        model.setYTunnus(null);
+        OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid);
+        model.setKayntiosoite(null);
+        model.setYhteystiedot(null);
+        model.setKieletUris(null);
+        model.setAlkuPvm(new Date());
         OrganisaatioResult organisaatioResult = service.save(model, false);
         Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
 
         model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
+        organisaatioDAO.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
         model.setYTunnus("4567891-0");
         organisaatioResult = service.save(model, true);
         Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
-    }
-
-    private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioDAO.findByOid(oid);
-        Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
-        return org;
-    }
-
-    private Organisaatio checkParent(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioDAO.findByOid(oid);
-        Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), org.getParent().getOid());
-        return org;
     }
 
 }
