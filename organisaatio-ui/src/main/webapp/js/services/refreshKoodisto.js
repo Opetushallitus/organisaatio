@@ -114,7 +114,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     for (var tyyppi in kaikkiTyypit) {
                         if (model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()]) {
                             model.yhteystietojentyyppi[kaikkiTyypit[tyyppi].toUpperCase()].forEach(function(t) {
-                                LisaYhteystiedot.updateLisayhteystietoArvos(t);
+                                LisaYhteystiedot.updateLisayhteystietoArvos(t, model);
                             });
                         }
                     }

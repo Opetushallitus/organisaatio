@@ -621,7 +621,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
     return refreshFunctions;
 });
 
-app.factory('LisaYhteystiedot', function () {
+app.factory('LisaYhteystiedot', function ($filter, KoodistoKoodi) {
     var lisaYhteystiedot = {
         updateLisayhteystietoArvos: function(lisatieto, model) {
             model.uriLocalizedNames[lisatieto.oid] = $filter('i18n')("lisaakieli");
