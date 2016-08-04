@@ -4,7 +4,15 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <non-jta-data-source>java:comp/env/jdbc/organisaatio</non-jta-data-source>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
+            <property name="hibernate.jdbc.batch_size" value="20"/>
+            <!-- Default size for Hibernate batch fetching of associations (== 1).
+                 Tried to use 8 for performance tuning. -->
+            <property name="hibernate.default_batch_fetch_size" value="8"/>
+        </properties>
     </persistence-unit>
 </persistence>

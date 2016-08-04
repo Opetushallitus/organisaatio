@@ -25,6 +25,7 @@
                 <entry key="hibernate.show_sql" value="${jpa.showSql}" />
             </map>
         </property>
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml" />
     </bean>
     <!-- transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

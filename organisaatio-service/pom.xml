@@ -69,34 +69,55 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>net.ggtools.maven</groupId>
-                <artifactId>ddlgenerator-maven-plugin</artifactId>
-                <version>0.1</version>
+                <groupId>io.github.divinespear</groupId>
+                <artifactId>jpa-schema-maven-plugin</artifactId>
+                <version>0.2.0</version>
+                <configuration>
+                    <scriptAction>create</scriptAction>
+                    <createOutputFileName>schema.ddl</createOutputFileName>
+                    <databaseProductName>PostgreSQL</databaseProductName>
+                    <databaseMajorVersion>9</databaseMajorVersion>
+                    <databaseMinorVersion>1</databaseMinorVersion>
+                    <!--<createSourceMode>script</createSourceMode>-->
+                    <!--<createSourceFile>${project.build.directory}/hibernate3/sql/</createSourceFile>-->
+                    <!--<properties>-->
+                        <!--<org.hibernate>org.hibernate.dialect.PostgreSQL9Dialect</org.hibernate>-->
+                    <!--</properties>-->
+                    <packageToScan>
+                        <scan>fi.vm.sade.organisaatio.model</scan>
+                    </packageToScan>
+                    <vendor>hibernate</vendor>
+                </configuration>
                 <executions>
                     <execution>
+                        <phase>process-classes</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <ddlFile>${project.build.directory}/hibernate3/sql/schema.ddl</ddlFile>
-                            <!--<defaultSchema></defaultSchema>-->
-                            <dialect>org.hibernate.dialect.PostgreSQL82Dialect</dialect>
-                            <!--<namingStrategy></namingStrategy>-->
-                            <persistenceUnitName>test</persistenceUnitName>
-                            <persistenceXmlLocations>
-                                <param>classpath:/persistence.xml</param>
-                            </persistenceXmlLocations>
-                            <useNewGenerator>true</useNewGenerator>
-                        </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.persistence</groupId>
+                        <artifactId>org.eclipse.persistence.jpa</artifactId>
+                        <version>2.6.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-entitymanager</artifactId>
+                        <version>5.0.7.Final</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
-
+        <dependency>
+            <groupId>io.github.divinespear</groupId>
+            <artifactId>jpa-schema-maven-plugin</artifactId>
+            <version>0.2.0</version>
+        </dependency>
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-distributed-ehcache</artifactId>
