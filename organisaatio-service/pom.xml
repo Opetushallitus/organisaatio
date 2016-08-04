@@ -75,10 +75,11 @@
                 <configuration>
                     <scriptAction>create</scriptAction>
                     <createOutputFileName>schema.ddl</createOutputFileName>
-                    <databaseProductName>MySQL</databaseProductName>
-                    <!--<databaseMajorVersion>9</databaseMajorVersion>-->
-                    <!--<databaseMinorVersion>1</databaseMinorVersion>-->
-                    <!--<createSourceMode>script</createSourceMode>-->
+                    <databaseProductName>PostgreSQL</databaseProductName>
+
+                    <databaseMajorVersion>8</databaseMajorVersion>
+                    <databaseMinorVersion>2</databaseMinorVersion>
+                    <!--<createSourceMode>metadata_2</createSourceMode>-->
                     <!--<createSourceFile>${project.build.directory}/hibernate3/sql/</createSourceFile>-->
                     <!--<properties>-->
                         <!--<org.hibernate>org.hibernate.dialect.PostgreSQL9Dialect</org.hibernate>-->
