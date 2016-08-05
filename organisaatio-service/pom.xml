@@ -77,8 +77,10 @@
                     <createOutputFileName>schema.ddl</createOutputFileName>
                     <databaseProductName>PostgreSQL</databaseProductName>
 
-                    <databaseMajorVersion>8</databaseMajorVersion>
-                    <databaseMinorVersion>2</databaseMinorVersion>
+                    <databaseMajorVersion>9</databaseMajorVersion>
+                    <databaseMinorVersion>3</databaseMinorVersion>
+                    <format>true</format>
+                    <lineSeparator>LF</lineSeparator>
                     <!--<createSourceMode>metadata_2</createSourceMode>-->
                     <!--<createSourceFile>${project.build.directory}/hibernate3/sql/</createSourceFile>-->
                     <!--<properties>-->
