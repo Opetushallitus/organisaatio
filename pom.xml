@@ -867,7 +867,7 @@ buildTtime=${maven.build.timestamp}
                 </property>
             </activation>
             <properties>
-                <schema.file>${project.basedir}/target/hibernate3/sql/schema.ddl</schema.file>
+                <schema.file>${project.basedir}/target/generated-schema/schema.ddl</schema.file>
                 <dbdiagram.generator>/usr/sbin/sql2diagram</dbdiagram.generator>
                 <dbdiagram.output>${project.basedir}/target/sql2diagram/</dbdiagram.output>
                 <dbdiagram.filename>${project.artifactId}-${project.version}</dbdiagram.filename>
