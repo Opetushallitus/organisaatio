@@ -121,6 +121,21 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage) throws Exception;
 
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+//    @Path("/{oid}/childrenTerminated")
+//    @ApiOperation(
+//            value = "Hakee organisaation alla olevat lakkautetut organisaatiot",
+//            notes = "Operaatio palauttaa organisaation alla olevat lakkautetut organisaatiot.",
+//            response = OrganisaatioRDTO.class,
+//            responseContainer = "List")
+//    List<OrganisaatioRDTO> terminatedChildren(
+//            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+//            @ApiParam(value = "Lakkautettu ennen (yyyy-mm-dd, inclusive)", required = false, defaultValue = "false") @PathParam("terminatedBefore") String terminatedBefore,
+//            @ApiParam(value = "Lakkautettu jälkeen (yyyy-mm-dd, exclusive)", required = false, defaultValue = "false") @PathParam("terminatedAfter") String terminatedAfter,
+//            @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+//                    required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage) throws Exception;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/{oid}/ryhmat")

@@ -40,6 +40,7 @@ import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioPerustietoUtil;
+import io.swagger.annotations.ApiParam;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,12 +52,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.validation.ValidationException;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -146,6 +152,44 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
         return childList;
     }
+
+//    @Override
+//    public List<OrganisaatioRDTO> terminatedChildren(String oid, String terminatedBefore, String terminatedAfter, boolean includeImage) throws Exception {
+//        Preconditions.checkNotNull(oid);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Date terminatedBeforeDate = sdf.parse(terminatedBefore);
+//        Date terminatedAfterDate = sdf.parse(terminatedAfter);
+//
+//        Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
+//        List<OrganisaatioRDTO> childList = new LinkedList<>();
+//        if (parentOrg != null) {
+//            for (Organisaatio child : parentOrg.getChildren(true)) {
+//                // Jätetään kuva pois, jos sitä ei haluta
+//                if (child.getMetadata() != null) {
+//                    child.getMetadata().setIncludeImage(includeImage);
+//                }
+//
+//                Date lakkautusPvm = child.getLakkautusPvm();
+//                if(lakkautusPvm != null && checkTerminatedBetween(lakkautusPvm, terminatedBeforeDate, terminatedAfterDate)) {
+//                    childList.add(conversionService.convert(child, OrganisaatioRDTO.class));
+//                }
+//            }
+//        }
+//        return childList;
+//    }
+//
+//    private boolean checkTerminatedBetween(Date lakkautusPvm, Date terminatedBeforeDate, Date terminatedAfterDate) {
+//        if (terminatedBeforeDate != null && terminatedAfterDate != null) {
+//            return lakkautusPvm.compareTo(terminatedBeforeDate) >= 0 && lakkautusPvm.compareTo(terminatedAfterDate) < 0;
+//        }
+//        else if (terminatedBeforeDate != null) {
+//            return lakkautusPvm.compareTo(terminatedBeforeDate) >= 0;
+//        }
+//        else if (terminatedAfterDate != null) {
+//            return lakkautusPvm.compareTo(terminatedAfterDate) < 0;
+//        }
+//        return true;
+//    }
 
     // GET /organisaatio/{oid}/childoids
     @Override
