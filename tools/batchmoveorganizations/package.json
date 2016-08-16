@@ -1,0 +1,16 @@
+{
+  "name": "batchmoveorganizations",
+  "version": "1.0.0",
+  "description": "Script to batch move a set of organizations from one parent organization to another",
+  "main": "move.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "move-orgs": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "request": "^2.74.0"
+  }
+}
