@@ -1,4 +1,4 @@
-let argv = require('minimist')(process.argv.slice(2))
+const argv = require('minimist')(process.argv.slice(2))
 const request = require('request')
 const conditions = require('./conditions')
 
@@ -6,19 +6,19 @@ require('./validateArgs')(argv)
 moveOrgs()
 
 function moveOrgs() {
-  getChildOrgs(argv.sourceParentOid)
+  getChildOrgs()
   .then(childOrgs => {
     if (Array.isArray(childOrgs) && childOrgs.length > 0) {
-      console.log('Children:')
-      childOrgs.forEach(({ oid, nimi }) => {
-        console.log({ oid, nimi })
-      })
+      console.log('Found children:')
+      childOrgs.forEach(({ oid, nimi }) => { console.log({ oid, nimi }) })
+    } else {
+      console.log('No children found')
     }
 
     return Promise.all(moveOrgsPassingConditions(childOrgs))
   })
   .then(success => {
-    console.log('Done')
+    console.log(success)
   })
   .catch(err => {
     console.error(err)
@@ -26,13 +26,13 @@ function moveOrgs() {
   })
 }
 
-function getChildOrgs(sourceParentOid) {
+function getChildOrgs() {
   return new Promise((resolve, reject) => {
     request({
       method: 'GET',
-      uri: `${argv.baseUri}/${argv.sourceParentOid}/children`,
+      uri: `${argv.baseUri}/${argv.source}/children`,
       headers: {
-        Cookie: argv.authCookie,
+        Cookie: argv.auth,
       },
       json: true,
     }, (error, response, body) => {
@@ -48,23 +48,24 @@ function getChildOrgs(sourceParentOid) {
 function moveOrgsPassingConditions(orgs) {
   let moves = orgs.reduce((acc, org) => {
     if (conditions.length === 0 || conditions.every(fn => fn(org))) {
-      acc.push(moveOrg(org.oid))
+      acc.push(argv.dry ? null : moveOrg(org.oid))
     }
 
     return acc
   }, [])
 
   console.log('**', 'About to move', moves.length, 'out of', orgs.length,
-    'child organizations from', argv.sourceParentOid, 'to',
-    argv.targetParentOid, '**')
+    'child organizations from', argv.source, 'to',
+    argv.target, '**')
 
-  return moves
+  return argv.dry ? [Promise.resolve('dry run, stopping')] : moves
 }
 
 let delay = 0
 function moveOrg(orgOid) {
-  delay += argv.delayBetweenRequests
-  return scheduleMoveRequest(delay, orgOid)
+  const scheduledMove = scheduleMoveRequest(delay, orgOid)
+  delay += argv.delay
+  return scheduledMove
 }
 
 function scheduleMoveRequest(delay, orgOid) {
@@ -73,9 +74,9 @@ function scheduleMoveRequest(delay, orgOid) {
       request({
         method: 'POST',
         uri: `${argv.baseUri}/v2/${orgOid}/organisaatiosuhde?merge=false`,
-        body: argv.targetParentOid,
+        body: argv.target,
         headers: {
-          Cookie: argv.authCookie,
+          Cookie: argv.auth,
           ['Content-Type']: 'application/json',
         },
         followAllRedirects: true,
@@ -84,12 +85,10 @@ function scheduleMoveRequest(delay, orgOid) {
           console.error(`Unable to move ${orgOid}`)
           reject(error)
         } else {
-          if (response.statusCode > 199 && response.statusCode < 300) {
-            console.log(`${response.statusCode}: successfully moved ${orgOid}`)
-            resolve(response)
+          if (response.statusCode == 204) {
+            resolve(`${response.statusCode}: successfully moved ${orgOid}`)
           } else {
-            console.error(`${response.statusCode}: problem moving ${orgOid}`)
-            reject(response)
+            reject(`${response.statusCode}: problem moving ${orgOid}`)
           }
         }
       })
