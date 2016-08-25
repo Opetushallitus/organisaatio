@@ -802,11 +802,6 @@
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
     </dependencies>
 
     <profiles>
