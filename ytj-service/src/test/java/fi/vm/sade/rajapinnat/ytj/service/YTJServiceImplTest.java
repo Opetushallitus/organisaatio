@@ -77,8 +77,8 @@ public class YTJServiceImplTest {
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("oPHallitusOPH");
-        instance.setSalainenavain("39769FB6-465D-43B7-AB26-4D891428BB42");
+        instance.setAsiakastunnus("XX");
+        instance.setSalainenavain("XX");
         try {
             List<YTJDTO> results = instance.findByYNimi(nimi,naytaPassiiviset,kieli);
             log.info("Got {} results", results.size());
@@ -108,8 +108,8 @@ public class YTJServiceImplTest {
         List<String> ytunnus = new ArrayList<String>(){{add("0313471-7");add("0201256-6");add("2189312-7");}};
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("oPHallitusOPH");
-        instance.setSalainenavain("39769FB6-465D-43B7-AB26-4D891428BB42");
+        instance.setAsiakastunnus("XX");
+        instance.setSalainenavain("XX");
         try {
             List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.get(0).getNimi().trim().toLowerCase());
@@ -144,8 +144,8 @@ public class YTJServiceImplTest {
         String ytunnus = "0313471-7"; // Helsingin yliopisto
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("oPHallitusOPH");
-        instance.setSalainenavain("39769FB6-465D-43B7-AB26-4D891428BB42");
+        instance.setAsiakastunnus("XX");
+        instance.setSalainenavain("XX");
         try {
             YTJDTO result = instance.findByYTunnus(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.getNimi().trim().toLowerCase());
