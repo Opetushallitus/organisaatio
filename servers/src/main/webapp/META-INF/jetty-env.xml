@@ -1,17 +1,4 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-    <New id="jndi" class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg></Arg>
-        <Arg>jdbc/organisaatio</Arg>
-        <Arg>
-            <New class="org.postgresql.ds.PGSimpleDataSource">
-                <Set name="User"><SystemProperty name="host.postgresql.organisaatio.user"/></Set>
-                <Set name="Password"><SystemProperty name="host.postgresql.organisaatio.password"/></Set>
-                <Set name="DatabaseName">organisaatio</Set>
-                <Set name="ServerName"><SystemProperty name="host.postgresql.organisaatio"/></Set>
-                <Set name="PortNumber"><SystemProperty name="port.postgresql"/></Set>
-            </New>
-        </Arg>
-    </New>
 </Configure>

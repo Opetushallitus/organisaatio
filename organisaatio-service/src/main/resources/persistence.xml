@@ -6,7 +6,7 @@
              version="2.1">
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <non-jta-data-source>java:comp/env/jdbc/organisaatio</non-jta-data-source>
+        <non-jta-data-source>dbDataSource</non-jta-data-source>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
             <property name="hibernate.jdbc.batch_size" value="20"/>
