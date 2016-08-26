@@ -159,14 +159,6 @@
                 <beans:property name="timeToLive" value="7200" />
                 <beans:property name="timeToIdle" value="7200" />
                 <beans:property name="eternal" value="false" />
-                <beans:property name="cacheEventListeners">
-                    <beans:bean class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicator">
-                        <beans:constructor-arg name="replicatePuts" value="true"/> <!-- replicatePuts -->
-                        <beans:constructor-arg name="replicateUpdates" value="true"/> <!-- replicateUpdates -->
-                        <beans:constructor-arg name="replicateUpdatesViaCopy" value="true"/> <!-- replicateUpdatesViaCopy -->
-                        <beans:constructor-arg name="replicateRemovals" value="true"/> <!-- replicateRemovals -->
-                    </beans:bean>
-                </beans:property>
             </beans:bean>
         </beans:constructor-arg>
     </beans:bean>
@@ -194,7 +186,6 @@
         <beans:property name="timeToLive" value="7200" />
         <beans:property name="timeToIdle" value="7200" />
         <beans:property name="eternal" value="false" />
-        <beans:property name="cacheEventListeners" ref="jgroupsEventListener"/>
     </beans:bean>
 
     <beans:bean id="ehCacheBasedTicketCache" class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
@@ -212,13 +203,6 @@
         <beans:property name="statelessTicketCache">
             <beans:ref bean="ehCacheBasedTicketCache" />
         </beans:property>
-    </beans:bean>
-
-    <beans:bean id="jgroupsEventListener" class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicator">
-        <beans:constructor-arg name="replicatePuts" value="true"/> <!-- replicatePuts -->
-        <beans:constructor-arg name="replicateUpdates" value="true"/> <!-- replicateUpdates -->
-        <beans:constructor-arg name="replicateUpdatesViaCopy" value="true"/> <!-- replicateUpdatesViaCopy -->
-        <beans:constructor-arg name="replicateRemovals" value="true"/> <!-- replicateRemovals -->
     </beans:bean>
 
     <beans:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">

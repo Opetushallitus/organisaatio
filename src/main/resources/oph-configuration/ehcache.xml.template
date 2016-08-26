@@ -6,24 +6,5 @@
 
         <diskStore path="java.io.tmpdir/cas/casTickets"/>
 
-        <!--<cacheManagerPeerProviderFactory
-        class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-        properties="peerDiscovery=automatic, multicastGroupAddress=239.42.40.87, multicastGroupPort=4443, timeToLive=255"
-        propertySeparator="," />-->
-
-        <cacheManagerPeerProviderFactory
-          class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
-          properties="connect=UDP(mcast_addr={{casTickets_multicast_address}};mcast_port={{casTickets_multicast_port}};):PING:
-          MERGE2:FD_SOCK:VERIFY_SUSPECT:pbcast.NAKACK:UNICAST:pbcast.STABLE:FRAG:pbcast.GMS::syncMode=GET_ALL"
-          propertySeparator="::"/>
-
-	<!--<cacheManagerPeerProviderFactory
-          class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-          properties="peerDiscovery=manual,rmiUrls=//locahost:41099/casTickets"/>-->
-
-    <!--<cacheManagerPeerListenerFactory
-          class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory" 
-          properties="hostName=localhost,port=41098,remoteObjectPort=41050" />-->
-
 </ehcache>
 
