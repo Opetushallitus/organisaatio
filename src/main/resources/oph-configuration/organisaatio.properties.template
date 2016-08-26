@@ -13,9 +13,6 @@ env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
 host.ilb={{host_ilb}}
 host.ldap={{host_ldap}}
-host.postgresql.organisaatio={{host_postgresql_organisaatio}}
-host.postgresql.organisaatio.password={{host_postgresql_organisaatio_password}}
-host.postgresql.organisaatio.user={{host_postgresql_organisaatio_user}}
 host.virkailija={{host_virkailija}}
 ldap.manager.password={{ldap_manager_password}}
 ldap.manager-password={{ldap_manager_password}}
@@ -34,6 +31,14 @@ organisaatio-service.scheduled.update.cron.expression=0 0 1 * * ?
 organisaatio.service.username.to.viestinta={{organisaatio_service_username_to_viestinta | default("username")}}
 organisaatio.service.password.to.viestinta={{organisaatio_service_password_to_viestinta | default("password")}}
 ryhmasahkoposti.service.email={{ryhmasahkoposti_service_email | default("jatkuvatpalvelut@oph.fi")}}
+organisaatio-service.postgresql.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
+organisaatio-service.postgresql.user={{host_postgresql_organisaatio_user}}
+organisaatio-service.postgresql.password={{host_postgresql_organisaatio_password}}
+organisaatio-service.postgresql.maxactive={{host_postgresql_default_max_active}}
+organisaatio-service.postgresql.maxwait={{host_postgresql_default_max_wait}}
+organisaatio-service.postgresql.minimumidle=2
+organisaatio-service.postgresql.idletimeoutmillis=30000
+organisaatio-service.postgresql.maxlifetimemillis=60000
 
 # Oletusarvoja
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService

@@ -30,20 +30,7 @@ Palvelun deployment
          docBase="/Users/mlyly/work/OPH/svn/organisaatio/trunk/organisaatio-service/target/organisaatio-service-1.0-SNAPSHOT"
          reloadable="true"/>
 
-3. muuta default portit ja luo datasourcet
-
-./conf/context.xml:
-
-    <Resource auth="Container" 
-              name="jdbc/organisaatio" 
-              type="javax.sql.DataSource" 
-              username="oph" 
-              password="oph" 
-              driverClassName="org.postgresql.Driver" 
-              url="jdbc:postgresql://localhost:5432/organisaatio" 
-              maxActive="150"
-              maxIdle="4"/>
-
+3. muuta default portit
 
 ./conf/server.xml:
 

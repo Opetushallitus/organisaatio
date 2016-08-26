@@ -19,6 +19,7 @@
         <property name="loadTimeWeaver">
             <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
         </property>
+        <property name="dataSource" ref="dbDataSource"/>
         <property name="jpaPropertyMap">
             <map>
                 <entry key="hibernate.hbm2ddl.auto" value="${jpa.schemaUpdate}" />
@@ -37,10 +38,35 @@
     <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
         <property name="initOnMigrate" value="${flyway.initOnMigrate}"/>
         <property name="dataSource">
-            <bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-                <property name="jndiName" value="java:comp/env/jdbc/organisaatio"/>
+            <bean id="dbDataSource"
+                  class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+                <property name="targetDataSource" ref="dbDataSource" />
             </bean>
         </property>
+    </bean>
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="springHikariCP" />
+        <property name="connectionTestQuery" value="SELECT 1" />
+        <property name="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
+        <property name="maximumPoolSize" value="${organisaatio-service.postgresql.maxactive}" />
+        <property name="minimumIdle" value="${organisaatio-service.postgresql.minimumidle}" />
+        <property name="idleTimeout" value="${organisaatio-service.postgresql.idletimeoutmillis}" />
+        <property name="connectionTimeout" value="${organisaatio-service.postgresql.maxwait}" />
+        <property name="maxLifetime" value="${organisaatio-service.postgresql.maxlifetimemillis}"/>
+
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">${organisaatio-service.postgresql.url}</prop>
+                <prop key="user">${organisaatio-service.postgresql.user}</prop>
+                <prop key="password">${organisaatio-service.postgresql.password}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- HikariCP configuration -->
+    <bean id="dbDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig" />
     </bean>
 
 </beans>

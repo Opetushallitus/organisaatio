@@ -11,19 +11,6 @@
     <name>Organisaatio :: Servers</name>
     <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp</artifactId>
-            <version>0.8.0.RELEASE</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <finalName>Servers</finalName>
         <plugins>

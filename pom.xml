@@ -59,7 +59,6 @@
         <!-- Database -->
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
-        <postgresql.version>9.3-1100.jdbc4</postgresql.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -382,6 +381,12 @@ buildTtime=${maven.build.timestamp}
                 <groupId>fi.vm.sade</groupId>
                 <artifactId>auditlogger</artifactId>
                 <version>${auditlogger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>2.4.7</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
