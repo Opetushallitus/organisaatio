@@ -496,7 +496,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private boolean validateYtjOsoite(YTJDTO ytjOrg, Organisaatio organisaatio) {
         if(ytjOrg.getPostiOsoite() == null || ytjOrg.getPostiOsoite().getKatu() == null) {
             // osoite can't be null but in YTJ there are organisations with only postinumero
-            LOG.error("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
+            LOG.warn("YTJ:ssä ei osoitetta organisaatiolle " + organisaatio.getOid() + " / " + ytjOrg.getYtunnus());
             return false;
         }
         else if((ytjOrg.getPostiOsoite().getKatu() != null
