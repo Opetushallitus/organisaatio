@@ -36,8 +36,6 @@ organisaatio-service.postgresql.user={{host_postgresql_organisaatio_user}}
 organisaatio-service.postgresql.password={{host_postgresql_organisaatio_password}}
 organisaatio-service.postgresql.maxactive={{host_postgresql_default_max_active}}
 organisaatio-service.postgresql.maxwait={{host_postgresql_default_max_wait}}
-organisaatio-service.postgresql.minimumidle=2
-organisaatio-service.postgresql.idletimeoutmillis=30000
 organisaatio-service.postgresql.maxlifetimemillis=60000
 
 # Oletusarvoja
