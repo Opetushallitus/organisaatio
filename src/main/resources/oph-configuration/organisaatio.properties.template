@@ -34,8 +34,8 @@ ryhmasahkoposti.service.email={{ryhmasahkoposti_service_email | default("jatkuva
 organisaatio-service.postgresql.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
 organisaatio-service.postgresql.user={{host_postgresql_organisaatio_user}}
 organisaatio-service.postgresql.password={{host_postgresql_organisaatio_password}}
-organisaatio-service.postgresql.maxactive={{host_postgresql_default_max_active}}
-organisaatio-service.postgresql.maxwait={{host_postgresql_default_max_wait}}
+organisaatio-service.postgresql.maxactive={{host_postgresql_organisaatio_max_active}}
+organisaatio-service.postgresql.maxwait={{host_postgresql_organisaatio_max_wait}}
 organisaatio-service.postgresql.maxlifetimemillis=60000
 
 # Oletusarvoja
