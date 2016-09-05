@@ -29,9 +29,9 @@
           class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
         <property name="converters">
             <list>
-                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter" />
-		<bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter" />
-                <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter" />
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
             </list>
         </property>
     </bean>
