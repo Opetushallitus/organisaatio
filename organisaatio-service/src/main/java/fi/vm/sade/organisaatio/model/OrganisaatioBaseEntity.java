@@ -16,19 +16,17 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.MappedSuperclass;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import fi.vm.sade.generic.model.BaseEntity;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author tommiha
@@ -37,43 +35,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @XmlRootElement(name = "BaseEntity")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrganisaatioBaseEntity extends BaseEntity {
-
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioBaseEntity.class);
-
-    /**
-     * This method is used to find the correct DTO class for given entity.
-     *
-     * For example: fi.vm.sade.organisaatio.model.Organisaatio has converter fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO.
-     *
-     * @return
-     */
-    public Class getDTOClass() {
-        try {
-            return Class.forName(this.getClass().getName().replace("model", "api.model.types") + "DTO");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getTekija() {
-        if (SecurityContextHolder.getContext() != null
-                && SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
-            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        } else {
-            return null;
-        }
-    }
-    private transient Map<String, String> _onLoadValues;
-
-//    @PostLoad
-//    public void onPostLoad() {
-//        try {
-//            LOG.debug("@PostLoad - onPostLoad(): {}", this);
-//        } catch (Throwable ex) {
-//            LOG.error("onPostLoad() - logging failed.", ex);
-//        }
-//    }
 
     @PostUpdate
     public void onPostUpdate() {

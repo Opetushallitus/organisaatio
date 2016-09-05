@@ -22,12 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -95,7 +91,6 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanEditName(authContext));
     }
 
-
     public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
 
@@ -130,58 +125,6 @@ public class PermissionChecker {
             List<String> stringTyypit = organisaatio.getTyypit();
 
             if (!(stringTyypit.size()==current.getTyypit().size() && stringTyypit.containsAll(current.getTyypit()))){
-                ///XXX what then?
-            }
-            checkPermission(permissionService.userCanUpdateOrganisation(authContext));
-        } else {
-            checkPermission(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(organisaatio.getParentOid())));
-            //TODO types
-        }
-    }
-
-    public void checkSaveOrganisation(OrganisaatioDTO organisaatio,
-            boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-
-        if (update) {
-            final Organisaatio current = organisaatioDAO.findByOid(organisaatio.getOid());
-
-            if (!Objects.equal(current.getNimi(), mkt2entity.apply(organisaatio.getNimi()))) {
-                LOG.info("Nimi muuttunut");
-
-                // name changed
-                checkPermission(permissionService.userCanEditName(authContext));
-            }
-            if (OrganisaatioUtil.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
-                LOG.info("Alkupäivämäärä muuttunut: " +
-                        current.getAlkuPvm() + " -> " + organisaatio.getAlkuPvm());
-
-                // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
-            }
-            if (OrganisaatioUtil.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
-                LOG.info("Lakkautuspäivämäärä muuttunut: " +
-                        current.getLakkautusPvm() + " -> " + organisaatio.getLakkautusPvm());
-
-                // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
-            }
-            if(!(Objects.equal(organisaatio.getAlkuPvm(), current.getAlkuPvm()) &&
-                    Objects.equal(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()))) {
-                // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
-            }
-            // TODO organisation type
-            List<String> stringTyypit = Lists.newArrayList(Iterables.transform(
-                    organisaatio.getTyypit(),
-
-                    new Function<OrganisaatioTyyppi, String>() {
-                        public String apply(OrganisaatioTyyppi input) {
-                            return input.value();
-
-                        }
-                    }));
-            if(!(stringTyypit.size()==current.getTyypit().size() && stringTyypit.containsAll(current.getTyypit()))){
                 ///XXX what then?
             }
             checkPermission(permissionService.userCanUpdateOrganisation(authContext));

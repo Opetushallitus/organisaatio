@@ -1,39 +1,34 @@
 package fi.vm.sade.organisaatio.auth;
 
-import org.junit.Assert;
-
-import org.junit.Test;
-
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrganisaatioContextTest {
 
     @Test
     public void test() {
         // with fat
-        OrganisaatioDTO org = new OrganisaatioDTO();
+        OrganisaatioRDTO org = new OrganisaatioRDTO();
         org.setOid("1");
-        org.getTyypit().add(OrganisaatioTyyppi.MUU_ORGANISAATIO);
+        org.getTyypit().add(OrganisaatioTyyppi.MUU_ORGANISAATIO.value());
 
-        MonikielinenTekstiTyyppi mktt = new MonikielinenTekstiTyyppi();
-        Teksti teksti = new Teksti();
-        teksti.setKieliKoodi("fi");
-        teksti.setValue("nimi");
-        mktt.getTeksti().add(teksti);
-        org.setNimi(mktt);
+        Map<String,String> teksti = new HashMap<>();
+        teksti.put("fi", "nimi");
+        org.setNimi(teksti);
         OrganisaatioContext context = OrganisaatioContext.get(org);
         Assert.assertEquals("1", context.getOrgOid());
         Assert.assertTrue(context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO));
         Assert.assertEquals(1, context.getOrgTypes().size());
         Assert.assertNotNull(context.toString());
 
-        context = OrganisaatioContext.get((OrganisaatioDTO)null);
+        context = OrganisaatioContext.get((OrganisaatioRDTO)null);
         Assert.assertNotNull(context.toString());
-
 
         // with perus
         OrganisaatioPerustieto perus = new OrganisaatioPerustieto();
@@ -48,7 +43,6 @@ public class OrganisaatioContextTest {
 
         context = OrganisaatioContext.get((OrganisaatioPerustieto)null);
         Assert.assertNotNull(context.toString());
-
     }
 
 }

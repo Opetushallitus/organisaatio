@@ -29,10 +29,7 @@
             </bean>
         </property>
     </bean>
-
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/organisaatioService" implementor="#organisaatioWs"  serviceName="tns:OrganisaatioService" xmlns:tns="http://model.api.organisaatio.sade.vm.fi" />
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" address="/services/koulutustarjoajaPublicService" implementor="#koulutustarjoajaPublicService" serviceName="tns:KoulutustarjoajaPublicService" xmlns:tns="http://service.tarjoaja.sade.vm.fi" />
-
+    
     <!-- Filters to handle caller-id and ID chain -->
     <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
     <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>

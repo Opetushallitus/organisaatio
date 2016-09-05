@@ -11,10 +11,6 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio"/>
 
-      <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl">
-        <property name="ophOid" value="${root.organisaatio.oid:1.2.246.562.10.00000000001}"/>
-    </bean>
-
     <!--<bean id="yhteystietojenTyyppiServiceImplBean" class="fi.vm.sade.organisaatio.service.YhteystietojenTyyppiServiceImpl" />-->
    <!--<bean id="yhteystietoServiceImplBean" class="fi.vm.sade.organisaatio.service.YhteystietoServiceImpl" />-->
 

@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.service.search.it;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
@@ -86,8 +85,6 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
     final Random r = new Random(0);
     @Autowired
     OrganisaatioResource res;
-    @Autowired
-    OrganisaatioService organisaatioService;
     @Autowired
     OrganisaatioSearchService searchService;
     @Autowired

@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2016-1-SNAPSHOT</version>
+        <version>2016-2-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-service</artifactId>
@@ -714,7 +714,8 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-            <scope>${slf4j-api.scope}</scope>
+            <!-- ei käytännössä kuitenkaan ollut pelkällä test-scopella, koska ei käänny ilman (tullut api-moduulin xml-riippuvuuden kautta)-->
+            <!--<scope>${slf4j-api.scope}</scope>-->
         </dependency>
 
         <!-- Rajapinnat :: YTJ :: API -->

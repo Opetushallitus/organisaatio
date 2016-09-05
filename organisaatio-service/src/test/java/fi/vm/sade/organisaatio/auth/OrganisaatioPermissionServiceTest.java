@@ -1,13 +1,11 @@
 package fi.vm.sade.organisaatio.auth;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.junit.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,10 +16,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //TODO combine permission service tests and make this a proper unit test
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,7 +52,7 @@ public class OrganisaatioPermissionServiceTest {
         //non oph user, outside own hierarchy
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(
                 permissionService.ROLE_CRUD, userOrgOid)));
-        OrganisaatioDTO org = getOrganisaatio(userOid, otherOrgOid, OrganisaatioTyyppi.KOULUTUSTOIMIJA);
+        OrganisaatioRDTO org = getOrganisaatio(userOid, otherOrgOid, OrganisaatioTyyppi.KOULUTUSTOIMIJA);
         Assert.assertFalse(permissionService.userCanCreateRootOrganisation());
         Assert.assertFalse(permissionService.userCanUpdateYTJ());
         Assert.assertFalse(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
@@ -172,14 +170,16 @@ public class OrganisaatioPermissionServiceTest {
     }
 
     private void assertEditOrganisation(OrganisaatioTyyppi tyyppi, boolean expectedResult) {
-        OrganisaatioDTO org = getOrganisaatio(userOid, userOrgOid, tyyppi);
+        OrganisaatioRDTO org = getOrganisaatio(userOid, userOrgOid, tyyppi);
         Assert.assertEquals(expectedResult, permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
     }
 
-    private OrganisaatioDTO getOrganisaatio(String nimi, String oid, OrganisaatioTyyppi tyyppi) {
-        OrganisaatioDTO org = new OrganisaatioDTO();
-        org.setNimi(fi.vm.sade.organisaatio.helper.Util.getMonikielinenTekstiTyyppi("fi",nimi));
-        org.getTyypit().add(tyyppi);
+    private OrganisaatioRDTO getOrganisaatio(String nimi, String oid, OrganisaatioTyyppi tyyppi) {
+        OrganisaatioRDTO org = new OrganisaatioRDTO();
+        Map<String,String> nimiMap =new HashMap<>();
+        nimiMap.put("fi", nimi);
+        org.setNimi(nimiMap);
+        org.getTyypit().add(tyyppi.value());
         org.setOid(oid);
         return org;
     }
@@ -191,11 +191,8 @@ public class OrganisaatioPermissionServiceTest {
     }
 
     static void setCurrentUser(final String oid, final List<GrantedAuthority> grantedAuthorities) {
-
         Authentication auth = new TestingAuthenticationToken(oid, null, grantedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
-
-
-
+    
 }

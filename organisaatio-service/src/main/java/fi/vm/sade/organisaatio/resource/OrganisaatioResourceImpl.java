@@ -115,7 +115,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             @Override
             public Comparable<String> apply(OrganisaatioPerustieto input) {
                 return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
-
             }
         });
 

@@ -12,10 +12,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
     <context:component-scan base-package="fi.vm.sade.security" />
-
-    <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
-
-
+    
     <bean id="organisaatioConverter" class="fi.vm.sade.organisaatio.service.converter.ConverterFactory"/>
 
     <bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper">
@@ -24,9 +21,6 @@
                 <value>dozer-mapping.xml</value>
             </list>
         </property>
-    </bean>
-
-    <bean id="koulutustarjoajaPublicService" class="fi.vm.sade.tarjoaja.service.KoulutustarjoajaPublicServiceImpl">
     </bean>
 
 
