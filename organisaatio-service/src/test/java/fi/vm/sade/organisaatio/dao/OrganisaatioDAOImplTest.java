@@ -1,12 +1,11 @@
 package fi.vm.sade.organisaatio.dao;
 
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import org.junit.Assert;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,9 +33,6 @@ public class OrganisaatioDAOImplTest {
 
     @Autowired
     OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
-
-    @Autowired
-    OrganisaatioService organisaatioService;
 
     @Test
     public void doTest() {

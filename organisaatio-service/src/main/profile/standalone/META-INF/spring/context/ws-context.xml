@@ -20,12 +20,6 @@
     <!-- TULEE: cxf-rt-transports-http-2.4.6 jarrista? -->
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" id="organisaatioEndpoint"
-                    address="/organisaatio" implementor="#organisaatioWs"/>
-
-    <jaxws:endpoint xmlns="http://cxf.apache.org/jaxws" id="learningOpportunityProviderPublicWSEndpoint"
-                    address="/learningOpportunityProviderPublicWS" implementor="#koulutustarjoajaPublicService" />
-
 <!--
     <bean class="org.apache.cxf.jaxrs.JAXRSServerFactoryBean" init-method="create">
       <property name="address" value="/uiapi/v1"/>

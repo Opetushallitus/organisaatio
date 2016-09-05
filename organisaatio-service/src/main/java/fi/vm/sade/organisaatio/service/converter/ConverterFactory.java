@@ -17,58 +17,47 @@
 
 package fi.vm.sade.organisaatio.service.converter;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import fi.vm.sade.organisaatio.api.model.types.*;
+import fi.vm.sade.organisaatio.dao.*;
+import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import org.dozer.DozerBeanMapper;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.vm.sade.organisaatio.api.model.types.EmailDTO;
-import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.OsoiteDTO;
-import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.PuhelinnumeroDTO;
-import fi.vm.sade.organisaatio.api.model.types.WwwDTO;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietoDTO;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
-import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioBaseEntity;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietoElementti;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Antti Salonen
  */
 public class ConverterFactory {
-
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
+    // Entity classes should not be aware of their DTOs (and there might/should be many per entity)
+    // Refactored OrganisaatioBaseEntity.getDTOClass():
+    private static final Map<Class<?>, Class<?>> DTO_CLASSES_BY_ENTITY = new HashMap<Class<?>, Class<?>>() {{
+        put(Yhteystieto.class, YhteystietoDTO.class);
+        put(Osoite.class, OsoiteDTO.class);
+        put(Email.class, EmailDTO.class);
+        put(Puhelinnumero.class, PuhelinnumeroDTO.class);
+        put(Www.class, WwwDTO.class);
+        put(YhteystietoArvo.class, YhteystietoArvoDTO.class);
+        put(YhteystietoElementti.class, YhteystietoElementtiDTO.class);
+        put(YhteystietojenTyyppi.class, YhteystietojenTyyppiDTO.class);
+    }};
+    protected static<T extends OrganisaatioBaseEntity> Class<?> getDtoClass(T entity) {
+        return DTO_CLASSES_BY_ENTITY.get(Hibernate.getClass(entity));
+    }
+
 
     @Autowired
     private DozerBeanMapper mapper;
@@ -90,12 +79,9 @@ public class ConverterFactory {
 
     @Autowired
     private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
-
-
+    
     @PostConstruct
     public void initConverters() {
-        registerConverter(new OrganisaatioConverter(this, entityManager));
-        registerConverter(new OrganisaatioFatConverter(this, entityManager));
         //registerConverter(new OrganisaatiotyypinYhteystiedotConverter(this, entityManager));
         registerConverter(new YhteystietoArvoConverter(this, entityManager));
         registerConverter(new YhteystietojenTyyppiConverter(this, entityManager));
@@ -116,7 +102,7 @@ public class ConverterFactory {
     }
 
     public <DTO> DTO convertToDTO(OrganisaatioBaseEntity entity) {
-        return (DTO) convertToDTO(entity, entity.getDTOClass());
+        return (DTO) convertToDTO(entity, getDtoClass(entity));
     }
 
     public <DTO> DTO convertToDTO(OrganisaatioBaseEntity entity, Class<? extends DTO> resultClass) {
@@ -124,10 +110,10 @@ public class ConverterFactory {
 
         // if resultClass is abstractclass, get resultclass from entity, but ensure it is resultclass' subclass
         if (Modifier.isAbstract(resultClass.getModifiers())) {
-            Class temp = entity.getDTOClass();
+            Class temp = getDtoClass(entity);
             if (!resultClass.isAssignableFrom(temp)) {
                 throw new IllegalArgumentException("cannot convert, resultClass is abstract and not not assignable from entity's dtoclass, resultClass: " +
-                        resultClass + ", entity.dtoclass: " + entity.getDTOClass());
+                        resultClass + ", entity.dtoclass: " + getDtoClass(entity));
             }
             resultClass = temp;
         }
@@ -201,136 +187,7 @@ public class ConverterFactory {
 
         return jpaClass;
     }
-
-    /**
-     * converts dto to jpa entity
-     * @param dto
-     * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
-     * @return
-     */
-//    public <JPACLASS extends OrganisaatioBaseEntity> JPACLASS convertToJPA(Object dto, Class <? extends JPACLASS> resultClass, boolean merge) {
-//        JPACLASS entity = null;
-//        if (dto != null) {
-//
-//            Class jpaClass = getJPAClass(dto);
-//            // reload if !merge and entity exists in db already
-//            if (dto.getId() != null && !merge) {
-//                entity = (JPACLASS) entityManager.find(jpaClass, dto.getId());
-//DEBUGSAWAY://                log.debug("convertToJPA reloaded object: "+entity);
-//            } else if (dto.getId() != null && merge) {
-//                // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
-//                /*
-//                entity = (JPACLASS) mapper.map(dto, jpaClass);
-//                entity = entityManager.merge(entity);
-//                */
-//                entity = (JPACLASS) entityManager.find(jpaClass, dto.getId());
-//                mapper.map(dto, entity);
-//            } else {
-//                // or convert fields from dto
-//                entity = (JPACLASS) mapper.map(dto, jpaClass);
-//            }
-//            // organisaatio parent
-//
-//            Converter converter = getConverterForDto(dto.getClass());
-//            if (converter != null) {
-//                converter.setValuesToJPA(dto, entity, merge);
-//            }
-//
-//        }
-//DEBUGSAWAY://        log.debug("convertToJPA: " + dto + " -> " + entity);
-//        return entity;
-//    }
-
-    /*
-
-    TKATVA, testing more simpler merging. Just retrieve map dto to entity and set the id of the entity
-
-     */
-
-    public Organisaatio convertOrganisaatioToEntity(OrganisaatioDTO dto, boolean merge) {
-        Organisaatio entity = null;
-        try {
-           entity = new Organisaatio();
-           if (merge) {
-               Organisaatio orgEntity = this.organisaatioDAO.findByOid(dto.getOid());
-               entity.setId(orgEntity.getId());
-           }
-
-           mapper.map(dto,entity);
-
-
-           entity.setTyypit(getTyypitStr(dto.getTyypit()));
-
-           entity.setVuosiluokat(dto.getVuosiluokat());
-           entity.setRyhmatyypit(dto.getRyhmatyypit());
-           entity.setKayttoryhmat(dto.getKayttoryhmat());
-           entity.setKielet(dto.getKielet());
-           convertNimiToEntity(dto, entity);
-
-        } catch (Exception exp) {
-            throw new RuntimeException(exp);
-        }
-
-        return entity;
-    }
-
-
-    private void convertNimiToEntity(OrganisaatioDTO dto, Organisaatio entity) {
-        if (dto.getNimi() == null) {
-            return;
-        }
-        MonikielinenTeksti nimiE = new MonikielinenTeksti();
-        String nimihaku = "";
-        for (MonikielinenTekstiTyyppi.Teksti curTeksti : dto.getNimi().getTeksti()) {
-            nimiE.addString(curTeksti.getKieliKoodi(), curTeksti.getValue());
-            nimihaku += "," + curTeksti.getValue();
-        }
-        entity.setNimihaku(nimihaku);
-        entity.setNimi(nimiE);
-    }
-
-    /**
-     * Converts dto to jpa entity
-     *
-     * @param dto
-     * @param merge Applicable only for objects that already exist in db (has id). If true, merge changes, otherhwise will reload from db instead converting.
-     * @return
-     */
-    public Organisaatio convertOrganisaatioToJPA(OrganisaatioDTO dto, boolean merge) {
-        Organisaatio entity = null;
-        if (dto != null) {
-
-            Class jpaClass = Organisaatio.class;
-            // reload if !merge and entity exists in db already
-            if (dto.getOid() != null && this.organisaatioDAO.findByOid(dto.getOid()) != null && !merge) {
-                entity = this.organisaatioDAO.findByOid(dto.getOid());//entityManager.find(jpaClass, dto.getOid());
-                //DEBUGSAWAY:log.debug("convertToJPA reloaded object: "+entity);
-            } else if (dto.getOid() != null && this.organisaatioDAO.findByOid(dto.getOid()) != null && merge) {
-                // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
-                /*
-                entity = (JPACLASS) mapper.map(dto, jpaClass);
-                entity = entityManager.merge(entity);
-                */
-                entity = this.organisaatioDAO.findByOid(dto.getOid());
-                mapper.map(dto, entity);
-                entity.setTyypit(getTyypitStr(dto.getTyypit()));
-            } else {
-                // or convert fields from dto
-                entity = (Organisaatio) mapper.map(dto, jpaClass);
-                entity.setTyypit(getTyypitStr(dto.getTyypit()));
-            }
-            // organisaatio parent
-
-            Converter converter = getConverterForDto(dto.getClass());
-            if (converter != null) {
-                converter.setValuesToJPA(dto, entity, merge, this.organisaatioDAO);
-            }
-
-        }
-        //DEBUGSAWAY:log.debug("convertToJPA: " + dto + " -> " + entity);
-        return entity;
-    }
-
+    
     private List<String> getTyypitStr(List<OrganisaatioTyyppi> tyypit) {
         List<String> tyypitStr = new ArrayList<>();
         for (OrganisaatioTyyppi curT : tyypit) {
@@ -499,7 +356,6 @@ public class ConverterFactory {
 
              Converter converter = getConverterForDto(dto.getClass());
              if (converter != null) {
-
                  converter.setValuesToJPA(dto, entity, merge);
              }
          }
@@ -589,24 +445,6 @@ public class ConverterFactory {
             }
         }
         return jpas;
-    }
-
-    /*
-    public <JPACLASS extends OrganisaatioBaseEntity> List<JPACLASS> convertToJPA(List<? extends  BaseDTO> dtos, Class<? extends JPACLASS> resultClass, boolean merge) {
-        List jpas = new ArrayList();
-        if (dtos != null) {
-            for (BaseDTO dto : dtos) {
-                JPACLASS jpa = convertToJPA(dto, resultClass, merge);
-                jpas.add(jpa);
-            }
-        }
-        return jpas;
-    }*/
-
-    public OrganisaatioDTO convertToFatDTO(Organisaatio entity) {
-        OrganisaatioDTO dto = convertToDTO(entity, OrganisaatioDTO.class);
-        LOG.info("convertToFatDTO: " + entity + " -> " + dto);
-        return dto;
     }
 
 }

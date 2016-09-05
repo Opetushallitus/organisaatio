@@ -12,10 +12,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
     <context:component-scan base-package="fi.vm.sade.security" />
-
-    <bean id="organisaatioWs" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceImpl"/>
-
-
+    
     <bean id="organisaatioConverter" class="fi.vm.sade.organisaatio.service.converter.ConverterFactory"/>
 
     <bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper">
@@ -26,18 +23,15 @@
         </property>
     </bean>
 
-    <bean id="koulutustarjoajaPublicService" class="fi.vm.sade.tarjoaja.service.KoulutustarjoajaPublicServiceImpl">
-    </bean>
-
 
     <!-- Conversion service, note: Old converters are not using spring conversion framework -->
     <bean id="conversionService"
           class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
         <property name="converters">
             <list>
-                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter" />
-		<bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter" />
-                <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter" />
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
             </list>
         </property>
     </bean>

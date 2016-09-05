@@ -17,7 +17,7 @@ Union Public Licence for more details. -->
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2016-1-SNAPSHOT</version>
+        <version>2016-9-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-api</artifactId>
@@ -58,6 +58,10 @@ Union Public Licence for more details. -->
                     <groupId>com.fasterxml.jackson.jaxrs</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-xml</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -73,11 +77,6 @@ Union Public Licence for more details. -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
@@ -108,54 +107,6 @@ Union Public Licence for more details. -->
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>${cxf.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-value-constructor</artifactId>
-                        <version>3.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics</artifactId>
-                        <version>0.6.2</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>generate-organisaatio-api</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
-                            <defaultOptions>
-                                <bindingFiles>
-                                    <bindingFile>${basedir}/src/main/resources/wsdl/binding.xjb</bindingFile>
-                                </bindingFiles>
-                                <!--<extraargs>-->
-                                    <!--<extraarg>-frontend</extraarg>-->
-                                    <!--<extraarg>jaxws21</extraarg>-->
-                                    <!--<extraarg>-xjc-Xvalue-constructor</extraarg>-->
-                                <!--</extraargs>-->
-                            </defaultOptions>
-                            <!--Duplicated options?-->
-                            <wsdlOptions>
-                                <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/organisaatioService.wsdl</wsdl>
-                                </wsdlOption>
-                                <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/wsdl/koulutustarjoajaPublicService.wsdl</wsdl>
-                                </wsdlOption>
-                            </wsdlOptions>
-                        </configuration>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
