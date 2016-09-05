@@ -58,6 +58,10 @@ Union Public Licence for more details. -->
                     <groupId>com.fasterxml.jackson.jaxrs</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-xml</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
