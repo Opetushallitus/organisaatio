@@ -21,3 +21,5 @@ https://virkailija.opintopolku.fi/organisaatio-service/swagger/index.html
 ## Sovelluksen pystyttäminen ja ajaminen omalla koneella
 Ohje: https://confluence.csc.fi/pages/viewpage.action?pageId=61410939
 
+## Opetushallituksen palvelukokonaisuus
+https://confluence.csc.fi/display/OPHPALV/Opetushallituksen+palvelukokonaisuus
