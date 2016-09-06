@@ -115,7 +115,7 @@ app.run(function($http, $cookies, OrganisaatioInitAuth, $routeParams) {
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
 
-    console.log($routeParams.urlHash);
+    console.log($("input", "urlHash").val());
 });
 
 ////////////
