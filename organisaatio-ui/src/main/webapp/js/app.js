@@ -69,10 +69,7 @@ var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider, $httpProvider, $cookies, $location) {
-    console.log($cookies.get('urlHash'));
-    $location.hash($cookies.get('urlHash'));
-
+app.config(function($routeProvider, $httpProvider) {
     $httpProvider.interceptors.push('NoCacheInterceptor');
 
     $routeProvider.
@@ -117,6 +114,12 @@ app.run(function($http, $cookies, OrganisaatioInitAuth) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
+
+    var urlHash = $cookies.get('urlHash');
+    console.log(urlHash);
+    if(urlHash) {
+        $location.hash(urlHash);
+    }
 });
 
 ////////////
