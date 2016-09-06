@@ -69,7 +69,10 @@ var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider, $httpProvider) {
+app.config(function($routeProvider, $httpProvider, $cookies, $location) {
+    console.log($cookies.get('urlHash'));
+    $location.hash($cookies.get('urlHash'));
+
     $httpProvider.interceptors.push('NoCacheInterceptor');
 
     $routeProvider.
@@ -104,7 +107,7 @@ app.config(function(uibDatepickerConfig) {
     uibDatepickerConfig.startingDay = 1;
 });
 
-app.run(function($http, $cookies, OrganisaatioInitAuth, $routeParams) {
+app.run(function($http, $cookies, OrganisaatioInitAuth) {
     // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
     $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
     if($cookies.get('CSRF')) {
@@ -114,8 +117,6 @@ app.run(function($http, $cookies, OrganisaatioInitAuth, $routeParams) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
-
-    console.log($("input", "urlHash").val());
 });
 
 ////////////
