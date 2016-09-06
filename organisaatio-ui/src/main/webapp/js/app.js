@@ -104,7 +104,7 @@ app.config(function(uibDatepickerConfig) {
     uibDatepickerConfig.startingDay = 1;
 });
 
-app.run(function($http, $cookies, OrganisaatioInitAuth) {
+app.run(function($http, $cookies, OrganisaatioInitAuth, $location) {
     // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
     $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
     if($cookies.get('CSRF')) {
