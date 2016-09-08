@@ -8,15 +8,14 @@
         <from>^/html/(.*)$</from>
         <to>index.html</to>
     </rule>
-    <rule match-type="regex" enabled="true">
-        <condition type="request-uri">^((?!index\.html).)*$</condition>
+    <rule match-type="wildcard" enabled="true">
         <note>todo</note>
-        <from>.*\/organisaatiot.*</from>
+        <from>*/*/organisaatiot</from>
         <to>index.html</to>
     </rule>
     <rule match-type="wildcard" enabled="true">
         <note>todo</note>
-        <from>*/*/yhteystietotyypit**</from>
+        <from>*/*/yhteystietotyypit</from>
         <to>index.html</to>
     </rule>
     <rule>
