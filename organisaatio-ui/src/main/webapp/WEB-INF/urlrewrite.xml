@@ -1,0 +1,28 @@
+<!--
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+-->
+<urlrewrite>
+    <rule match-type="regex" enabled="false">
+        <condition type="request-uri">^((?!index\.html).)*$</condition>
+        <from>^/html/(.*)$</from>
+        <to>index.html</to>
+    </rule>
+    <rule match-type="wildcard" enabled="true">
+        <note>todo</note>
+        <from>*/*/organisaatiot**</from>
+        <to>index.html</to>
+    </rule>
+    <rule match-type="wildcard" enabled="true">
+        <note>todo</note>
+        <from>*/*/yhteystietotyypit**</from>
+        <to>index.html</to>
+    </rule>
+    <rule>
+        <note>
+            The rule means that requests to /test/status/ will be redirected to /rewrite-status the url will be rewritten.
+        </note>
+        <from>/test/status/</from>
+        <to type="redirect">%{context-path}/rewrite-status</to>
+    </rule>
+</urlrewrite>

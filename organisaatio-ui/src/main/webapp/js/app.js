@@ -69,8 +69,14 @@ var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider, $httpProvider) {
+app.config(function($routeProvider, $httpProvider, $locationProvider) {
     $httpProvider.interceptors.push('NoCacheInterceptor');
+
+    $locationProvider.html5Mode({
+        enabled: true
+    });
+    // $locationProvider.hashPrefix('!');
+
 
     $routeProvider.
 
