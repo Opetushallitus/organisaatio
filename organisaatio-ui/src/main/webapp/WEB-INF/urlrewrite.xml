@@ -8,9 +8,10 @@
         <from>^/html/(.*)$</from>
         <to>index.html</to>
     </rule>
-    <rule match-type="wildcard" enabled="true">
+    <rule match-type="regex" enabled="true">
+        <condition type="request-uri">^((?!index\.html).)*$</condition>
         <note>todo</note>
-        <from>*/*/organisaatiot**</from>
+        <from>.*\/organisaatiot.*</from>
         <to>index.html</to>
     </rule>
     <rule match-type="wildcard" enabled="true">
