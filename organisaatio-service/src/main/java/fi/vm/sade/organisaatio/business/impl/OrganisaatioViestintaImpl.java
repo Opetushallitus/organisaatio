@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
@@ -46,8 +47,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Value("${ryhmasahkoposti.service.email}")
     private String email;
 
-    @Value("${host.virkailija}")
-    private String hostUri;
+    @Autowired
+    private UrlConfiguration urlConfiguration;
 
     private OrganisaatioViestintaClient viestintaClient;
 
@@ -106,6 +107,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
         }
 
+        String hostUri = urlConfiguration.getProperty("host.virkailija");
         for(Map.Entry<String, List<YtjVirhe>> entry : virheMap.entrySet()) {
             String oid = entry.getKey();
             List<YtjVirhe> ytjVirheList = entry.getValue();

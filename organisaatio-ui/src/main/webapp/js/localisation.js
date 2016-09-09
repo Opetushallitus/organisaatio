@@ -37,7 +37,7 @@ app.factory('Localisations', function($log, $resource, $window) {
 
     $log = $log.getInstance("Localisations");
 
-    var uri = $window.LOKALISAATIO_URL_BASE + 'v1/localisation';
+    var uri = $window.LOKALISAATIO_URL_BASE;
     $log.debug("uri = ", uri);
 
     return $resource(uri + "/:id", {

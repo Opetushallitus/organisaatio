@@ -106,7 +106,9 @@
         $idleProvider.idleDuration(MAX_SESSION_IDLE_TIME_IN_SECONDS - warningDuration);
         $idleProvider.warningDuration(warningDuration);
         $keepaliveProvider.interval(SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
-        $keepaliveProvider.http(SERVICE_URL_BASE + "session/maxinactiveinterval");
+
+        var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || SERVICE_URL_BASE + "session/maxinactiveinterval";
+        $keepaliveProvider.http(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL);
     }])
     .run(['$idle', function($idle){
         $idle.watch();

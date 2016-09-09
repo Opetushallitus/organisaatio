@@ -9,7 +9,7 @@
          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:property-placeholder
-            location="classpath:organisaatio-ui.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/organisaatio-ui.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            location="classpath:organisaatio-ui.properties, classpath:organisaatio-ui-oph.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/organisaatio-ui.properties, file:///${user.home:''}/oph-configuration/override.properties"
             ignore-resource-not-found="true"
             properties-ref="defaultProps"/>
 

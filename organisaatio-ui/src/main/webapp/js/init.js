@@ -33,7 +33,7 @@ function organisaatioInitialize() {
     //
     // Ladataan organisaatioiden lokalisoinnit ja käyttäjän kieli
     //
-    var localisationUrl = LOKALISAATIO_URL_BASE + 'v1/localisation?category=organisaatio';
+    var localisationUrl = V1_LOKALISAATIO_URL + '?category=organisaatio';
     console.log("** Loading localisation info; from: ", localisationUrl);
 
     var promiseLocalisationData = $http.get(localisationUrl, {responseType: 'json'}).then(
