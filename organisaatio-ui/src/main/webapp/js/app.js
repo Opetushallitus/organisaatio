@@ -77,7 +77,6 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     });
     // $locationProvider.hashPrefix('!');
 
-
     $routeProvider.
 
     // front page

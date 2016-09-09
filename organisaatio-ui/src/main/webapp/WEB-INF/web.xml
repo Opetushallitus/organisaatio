@@ -60,7 +60,7 @@
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
         <init-param>
             <param-name>logLevel</param-name>
-            <param-value>DEBUG</param-value>
+            <param-value>ERROR</param-value>
         </init-param>
     </filter>
     <filter-mapping>
