@@ -94,10 +94,6 @@ public class OrganisaatioTarjonta {
         gson = gsonBuilder.create();
     }
 
-    private String buildSearchKoulutusUri(String oid) {
-        return "/koulutus/search?" + "organisationOid=" + oid;
-    }
-
     private List<KoulutusHakutulosV1RDTO> getOrganisaatioKoulutukset(JsonElement organisaatioTulos) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
 
@@ -123,9 +119,8 @@ public class OrganisaatioTarjonta {
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         JsonElement json;
-
-        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.url");
-        String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
+        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "koulutus");
+        String url = tarjontaServiceWebappUrl + "?organisationOid=" + oid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
@@ -267,8 +262,8 @@ public class OrganisaatioTarjonta {
         List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
         JsonElement json;
 
-        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku");
-        String url = tarjontaServiceWebappUrl + "?" + "organisaatioRyhmaOid=" + ryhmaOid;
+        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "hakukohde");
+        String url = tarjontaServiceWebappUrl + "?organisaatioRyhmaOid=" + ryhmaOid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
