@@ -57,7 +57,7 @@
                                 </configurationClass>
                             </configurationClasses>
                         </contextHandler>
-
+                        <!-- Has to be war or blocks rewritefilter if html/ folders is explicitly defined -->
                         <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
                             <contextPath>/organisaatio-ui</contextPath>
                             <war>${project.basedir}/../organisaatio-ui/target/organisaatio-ui.war</war>

@@ -75,7 +75,6 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     $locationProvider.html5Mode({
         enabled: true
     });
-    // $locationProvider.hashPrefix('!');
 
     $routeProvider.
 
