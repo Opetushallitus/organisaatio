@@ -118,12 +118,6 @@ app.run(function($http, $cookies, OrganisaatioInitAuth, $location) {
     // Tehdään autentikoitu get servicelle
     // Näin kierretään ongelma: "CAS + ensimmäinen autentikoitia vaativa POST kutsu"
     OrganisaatioInitAuth.init();
-
-    var urlHash = $cookies.get('urlHash');
-    console.log(urlHash);
-    if(urlHash) {
-        $location.hash(urlHash);
-    }
 });
 
 ////////////
