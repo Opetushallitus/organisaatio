@@ -30,13 +30,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <a href="" class="icon-list" uib-dropdown-toggle role="button" ng-click="setCurrentOid(data.oid)"></a>
                 <ul ng-if="isCurrentOid(data.oid)" uib-dropdown-menu style="text-decoration: none">
                     <li>
-                        <a href='#/organisaatiot/{{data.oid}}' tt="Organisaatiot.tarkastele">Organisaatiot.tarkastele</a>
+                        <a href='organisaatiot/{{data.oid}}' tt="Organisaatiot.tarkastele">Organisaatiot.tarkastele</a>
                     </li>
                     <li auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-                        <a href='#/organisaatiot/{{data.oid}}/edit' tt="Organisaatiot.muokkaa">Organisaatiot.muokkaa</a>
+                        <a href='organisaatiot/{{data.oid}}/edit' tt="Organisaatiot.muokkaa">Organisaatiot.muokkaa</a>
                     </li>
                     <li ng-if="isCreateSubAllowed(data)" auth="crudOrg" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
-                        <a href='#/organisaatiot/{{data.oid}}/new' tt="Organisaatiot.luoAliorganisaatio">Organisaatiot.luoAliorganisaatio</a>
+                        <a href='organisaatiot/{{data.oid}}/new' tt="Organisaatiot.luoAliorganisaatio">Organisaatiot.luoAliorganisaatio</a>
                     </li>
                     <li ng-if="isDeleteAllowed(data)" auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-org="{{data.oid}}">
                         <a ng-click="deleteOrganisaatio(data)" tt="Organisaatiot.poista">Organisaatiot.poista</a>
@@ -46,7 +46,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </li>
                 </ul>
             </span>
-            <a style="display: inline-block; width: 400px; vertical-align: top;" href='#/organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
+            <a style="display: inline-block; width: 400px; vertical-align: top;" href='organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
         </div>
         <div class="span2">
            {{data.tila}}

@@ -102,34 +102,38 @@ var AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID = AUTHENTICATION_REST_RYHMA_BY_HENK
 // Route configuration
 //
 ////////////
-app.config(function($routeProvider, $httpProvider) {
-        $httpProvider.interceptors.push('NoCacheInterceptor');
+app.config(function($routeProvider, $httpProvider, $locationProvider) {
+    $httpProvider.interceptors.push('NoCacheInterceptor');
 
-        $routeProvider.
+    $locationProvider.html5Mode({
+        enabled: true
+    });
 
-        // front page
-        when('/organisaatiot', {controller: 'OrganisaatioTreeController', templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
+    $routeProvider.
 
-        // view notifications
-        when('/organisaatiot/ilmoitukset', {controller: 'YtjIlmoituksetController', templateUrl:TEMPLATE_URL_BASE + 'ytjilmoitukset.html'}).
+    // front page
+    when('/organisaatiot', {controller: 'OrganisaatioTreeController', templateUrl:TEMPLATE_URL_BASE + 'organisaatiot.html'}).
 
-        // read one
-        when('/organisaatiot/:oid', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
+    // view notifications
+    when('/organisaatiot/ilmoitukset', {controller: 'YtjIlmoituksetController', templateUrl:TEMPLATE_URL_BASE + 'ytjilmoitukset.html'}).
 
-        // edit one
-        when('/organisaatiot/:oid/edit', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
+    // read one
+    when('/organisaatiot/:oid', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationtarkastelu.html'}).
 
-        // create new
-        when('/organisaatiot/:parentoid/new', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
+    // edit one
+    when('/organisaatiot/:oid/edit', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
-        // yhteystietojen tyypit
-        when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
+    // create new
+    when('/organisaatiot/:parentoid/new', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
-        // manage groups
-        when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+    // yhteystietojen tyypit
+    when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
 
-            //else
-        otherwise({redirectTo:'/organisaatiot'});
+    // manage groups
+    when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+
+        //else
+    otherwise({redirectTo:'/organisaatiot'});
 });
 
 // Konfiguroidaan DatePicker alkamaan viikon maanantaista (defaul = sunnuntai)
@@ -137,7 +141,7 @@ app.config(function(uibDatepickerConfig) {
     uibDatepickerConfig.startingDay = 1;
 });
 
-app.run(function($http, $cookies, OrganisaatioInitAuth) {
+app.run(function($http, $cookies, OrganisaatioInitAuth, $location) {
     // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
     $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
     if($cookies.get('CSRF')) {

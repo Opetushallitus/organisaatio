@@ -1,4 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
-<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+<Configure class="org.eclipse.jetty.server.Server">
+    <New id="Rewrite" class="org.eclipse.jetty.rewrite.handler.RewriteHandler">
+        <Set name="rewriteRequestURI">true</Set>
+        <Set name="rewritePathInfo">false</Set>
+        <Set name="originalPathAttribute">requestedPath</Set>
+
+        <!-- redirect the response. This is a redirect which is visible to the browser.
+             After the redirect, the browser address bar will show / -->
+        <Call name="addRule">
+            <Arg>
+                <New class="org.eclipse.jetty.rewrite.handler.RedirectPatternRule">
+                    <Set name="pattern">/organisaatio-ui/*</Set>
+                    <Set name="location">./index.html</Set>
+                </New>
+            </Arg>
+        </Call>
+
+        <!-- This rewrites the base URL; supports Regex. This is visible to the browser. -->
+        <!--<Call name="addRule">-->
+            <!--<Arg>-->
+                <!--<New class="org.eclipse.jetty.rewrite.handler.RedirectRegexRule">-->
+                    <!--<Set name="regex">(^(?!/base/path/).*)</Set>-->
+                    <!--<Set name="replacement">/base/path/</Set>-->
+                <!--</New>-->
+            <!--</Arg>-->
+        <!--</Call>-->
+    </New>
 </Configure>

@@ -50,6 +50,12 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Autowired
     private UrlConfiguration urlConfiguration;
 
+    @Value("${organisaatio.ui.url}")
+    private String uiUri;
+
+    @Value("${organisaatio.ui.ilmoitukset.url}")
+    private String uiIlmoituksetUri;
+
     private OrganisaatioViestintaClient viestintaClient;
 
     private boolean reauthorize;
@@ -112,7 +118,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             String oid = entry.getKey();
             List<YtjVirhe> ytjVirheList = entry.getValue();
 
-            msgContent += "<a href=\"https://" + hostUri + "/organisaatio-ui/html/index.html#/organisaatiot/"
+            msgContent += "<a href=\"https://" + hostUri + uiUri + "/"
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
@@ -123,7 +129,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         }
 
         msgContent += "<br><a href=\"https://" + hostUri
-                + "/organisaatio-ui/html/index.html#/organisaatiot/ilmoitukset\">YTJ-päivitykset</a>";
+                + uiIlmoituksetUri + "\">YTJ-päivitykset</a>";
         return msgContent;
     }
 
