@@ -25,7 +25,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.googlecode.flyway.core.util.logging.Log;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakukohdeHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
@@ -57,8 +59,8 @@ public class OrganisaatioTarjonta {
     @Autowired
     private OrganisaatioRestToStream restToStream;
 
-    @Value("${organisaatio-service.tarjonta-service.rest.url}")
-    private String tarjontaServiceWebappUrl;
+    @Autowired
+    private UrlConfiguration urlConfiguration;
 
     private Gson gson;
 
@@ -92,10 +94,6 @@ public class OrganisaatioTarjonta {
         gson = gsonBuilder.create();
     }
 
-    private String buildSearchKoulutusUri(String oid) {
-        return "/koulutus/search?" + "organisationOid=" + oid;
-    }
-
     private List<KoulutusHakutulosV1RDTO> getOrganisaatioKoulutukset(JsonElement organisaatioTulos) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
 
@@ -121,8 +119,8 @@ public class OrganisaatioTarjonta {
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         JsonElement json;
-
-        String url = tarjontaServiceWebappUrl + "/v1" + buildSearchKoulutusUri(oid);
+        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "koulutus");
+        String url = tarjontaServiceWebappUrl + "?organisationOid=" + oid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
@@ -260,15 +258,12 @@ public class OrganisaatioTarjonta {
         return true;
     }
 
-    private String buildSearchHakukohteetUri(String ryhmaOid) {
-        return "/hakukohde/search?" + "organisaatioRyhmaOid=" + ryhmaOid;
-    }
-
     private List<HakukohdeHakutulosV1RDTO> haeHakukohteet(String ryhmaOid) {
         List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
         JsonElement json;
 
-        String url = tarjontaServiceWebappUrl + "/v1" + buildSearchHakukohteetUri(ryhmaOid);
+        String tarjontaServiceWebappUrl = urlConfiguration.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "hakukohde");
+        String url = tarjontaServiceWebappUrl + "?organisaatioRyhmaOid=" + ryhmaOid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);

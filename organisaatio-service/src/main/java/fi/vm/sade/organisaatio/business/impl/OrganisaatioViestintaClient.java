@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.Exception;
 
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +42,8 @@ import java.util.List;
 public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    @Value("${organisaatio-service.ryhmasahkoposti-service.rest.url}")
-    protected String viestintaServiceUrl;
+    @Autowired
+    private UrlConfiguration urlConfiguration;
 
     @Value("${organisaatio.service.username.to.viestinta}")
     private String viestintaClientUsername;
@@ -51,6 +53,7 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
 
     protected void authorize() throws OrganisaatioViestintaException {
         try {
+            String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.url");
             authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
         } catch (Exception e) {
             throw new OrganisaatioViestintaException(e.getMessage());
@@ -58,12 +61,13 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     }
 
     public void post(String json, String uri) throws OrganisaatioViestintaException {
-        String path = "/email" + uri;
-        LOG.debug("POST " + viestintaServiceUrl + path);
+        String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri);
+        LOG.debug("POST " + viestintaServiceUrl );
         LOG.debug("POST data=" + json);
         authorize();
+
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(viestintaServiceUrl + path);
+        HttpPost post = new HttpPost(viestintaServiceUrl );
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         post.addHeader("CasSecurityTicket", ticket);
@@ -77,16 +81,16 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST "
-                        + viestintaServiceUrl + path;
+                        + viestintaServiceUrl;
                 LOG.error(err);
                 LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
                 throw new OrganisaatioViestintaException(err);
             } else {
-                LOG.info("Code " + viestintaServiceUrl + path + " succesfully posted: return code "
+                LOG.info("Code " + viestintaServiceUrl  + " succesfully posted: return code "
                         + resp.getStatusLine().getStatusCode());
             }
         } catch (IOException e) {
-            String err = "Failed to POST " + viestintaServiceUrl + path + ": " + e.getMessage();
+            String err = "Failed to POST " + viestintaServiceUrl  + ": " + e.getMessage();
             LOG.error(err);
             throw new OrganisaatioViestintaException(err);
         }

@@ -53,16 +53,49 @@ app.filter('decodeAmp',function () {
 // Configuration from config/properties files
 //
 ////////////
-var UI_URL_BASE = UI_URL_BASE || "http://localhost:8180/organisaatio-ui/";
 var SERVICE_URL_BASE = SERVICE_URL_BASE || "";
 var TEMPLATE_URL_BASE = TEMPLATE_URL_BASE || "";
+
 var KOODISTO_URL_BASE = KOODISTO_URL_BASE || "";
-var LOKALISAATIO_URL_BASE = LOKALISAATIO_URL_BASE || "";
-var AUTHENTICATION_URL_BASE = AUTHENTICATION_URL_BASE || "";
-var ROOT_ORGANISAATIO_OID = ROOT_ORGANISAATIO_OID || "";
-var CAS_ME_URL = CAS_ME_URL || "/cas/me";
+var KOODISTO_ORGANISAATIOTYYPPI_KOODI = KOODISTO_ORGANISAATIOTYYPPI_KOODI  || "";
+var KOODISTO_OPPILAITOSTYYPPI_KOODI = KOODISTO_OPPILAITOSTYYPPI_KOODI  || "";
+var KOODISTO_MAAT_JA_VALTIOT = KOODISTO_MAAT_JA_VALTIOT  || "";
+var KOODISTO_KIELI_KOODI = KOODISTO_KIELI_KOODI  || "";
+var KOODISTO_VUOSILUOKAT = KOODISTO_VUOSILUOKAT  || "";
+var KOODISTO_URI_KOODI = KOODISTO_URI_KOODI  || "";
+var KOODISTO_POSTI_KOODI = KOODISTO_POSTI_KOODI  || "";
+var KOODISTO_KUNTA_KOODI = KOODISTO_KUNTA_KOODI || "";
+var KOODISTO_KOODI_HAE = KOODISTO_KOODI_HAE || "";
+var KOODISTO_POSTI = KOODISTO_POSTI || "";
+var KOODISTO_OPPILAITOKSENOPETUSKIELI = KOODISTO_OPPILAITOKSENOPETUSKIELI || "";
+
 var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECONDS || 30;
 var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
+var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || "";
+
+var ORGANISAATIO_REST = ORGANISAATIO_REST || "";
+var ORGANISAATIO_REST_HAE = ORGANISAATIO_REST_HAE || "";
+var ORGANISAATIO_REST_BY_OID = ORGANISAATIO_REST_BY_OID || "";
+
+var ORGANISAATIO_REST_V2_HAE = ORGANISAATIO_REST_V2_HAE || "";
+var ORGANISAATIO_REST_V2_RYHMAT = ORGANISAATIO_REST_V2_RYHMAT || "";
+var ORGANISAATIO_REST_V2_MUOKKAAMONTA = ORGANISAATIO_REST_V2_MUOKKAAMONTA || "";
+var ORGANISAATIO_REST_V2_OID_HISTORIA = ORGANISAATIO_REST_V2_OID_HISTORIA || "";
+var ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE = ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE || "";
+var ORGANISAATIO_REST_V2_HIERARKIA_HAE = ORGANISAATIO_REST_V2_HIERARKIA_HAE || "";
+var ORGANISAATIO_REST_V2_PAIVITTAJA_HAE = ORGANISAATIO_REST_V2_PAIVITTAJA_HAE || "";
+var ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE = ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE || "";
+
+var ORGANISAATIO_REST_AUTH = ORGANISAATIO_REST_AUTH || "http://localhost:8180/organisaatio-service/rest/organisaatio/auth";
+var ORGANISAATIO_REST_YTJ_YTUNNUS = ORGANISAATIO_REST_YTJ_YTUNNUS || "";
+var ORGANISAATIO_REST_YTJ_HAE = ORGANISAATIO_REST_YTJ_HAE || "";
+var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI || "";
+var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID || "";
+var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
+
+var AUTHENTICATION_REST_HENKILO = AUTHENTICATION_REST_HENKILO || "";
+var AUTHENTICATION_REST_HENKILO_BY_OID = AUTHENTICATION_REST_HENKILO_BY_OID || "";
+var AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID = AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID || "";
 
 ////////////
 //
@@ -230,43 +263,43 @@ app.factory('NoCacheInterceptor', function() {
 
 // Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
-app.factory('Organisaatio', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/:oid?includeImage=true", {oid: "@oid"}, {
-        get: {method:   "GET"},
-        post:{method:   "POST"},
-        delete:{method: "DELETE"}
+app.factory('Organisaatio', function ($resource) {
+    return $resource(ORGANISAATIO_REST_BY_OID + "?includeImage=true", {oid: "@oid"}, {
+        get: {method: "GET"},
+        post: {method: "POST"},
+        delete: {method: "DELETE"}
     });
 });
 
 // Organisaation historian haku
 // Esim: https://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.68986346941/historia
-app.factory('OrganisaatioHistoria', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
-        get: {method:   "GET"}
+app.factory('OrganisaatioHistoria', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_OID_HISTORIA, {oid: "@oid"}, {
+        get: {method: "GET"}
     });
 });
 
 
 // Organisaation siiro puussa
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932/organisaatiosuhde
-app.factory('OrganisaatioSiirto', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/organisaatiosuhde", {oid: "@oid"}, {
-        post:{method:   "POST"}
+app.factory('OrganisaatioSiirto', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE, {oid: "@oid"}, {
+        post: {method: "POST"}
     });
 });
 
 // Organisaation luonti organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
-app.factory('UusiOrganisaatio', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio", {}, {
-        put: {method:   "PUT"}
+app.factory('UusiOrganisaatio', function ($resource) {
+    return $resource(ORGANISAATIO_REST, {}, {
+        put: {method: "PUT"}
     });
 });
 
 // Aliorganisaatioiden haku organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
-app.factory('Aliorganisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/hae?oidRestrictionList=:oid", {oid: "@oid"}, {
+app.factory('Aliorganisaatiot', function ($resource) {
+    return $resource(ORGANISAATIO_REST_HAE + "?oidRestrictionList=:oid", {oid: "@oid"}, {
         get: {method: "GET"}
     });
 });
@@ -274,22 +307,22 @@ app.factory('Aliorganisaatiot', function($resource) {
 // Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hierarkia/hae", {}, {
+    return $resource(ORGANISAATIO_REST_V2_HIERARKIA_HAE, {}, {
         get: {method: 'GET'}
     });
 });
 
 // Organisaatioiden haku ilman hierrarkiaa
-app.factory('OrganisaatiotFlat', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/hae", {}, {
+app.factory('OrganisaatiotFlat', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_HAE, {}, {
         get: {method: 'GET'}
     });
 });
 
 // Autentikoitu get kutsu organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/auth
-app.factory('OrganisaatioAuthGET', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/auth", {}, {
+app.factory('OrganisaatioAuthGET', function ($resource) {
+    return $resource(ORGANISAATIO_REST_AUTH, {}, {
         get: {method: "GET"}
     });
 });
@@ -297,74 +330,80 @@ app.factory('OrganisaatioAuthGET', function($resource) {
 
 // YTJ tiedot yhden yrityksen osalta organisaatiopalvelun kautta
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/2397998-7
-app.factory('YTJYritysTiedot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "ytj/:ytunnus", {ytunnus: "@ytunnus"}, {}, {
-        get: {method: 'GET', withCredentials : true}
+app.factory('YTJYritysTiedot', function ($resource) {
+    return $resource(ORGANISAATIO_REST_YTJ_YTUNNUS, {ytunnus: "@ytunnus"}, {}, {
+        get: {method: 'GET', withCredentials: true}
     });
 });
 
 // YTJ tietojen haku nimen perusteella
 // Esim: http://localhost:8180/organisaatio-service/rest/ytj/hae?nimi=yliopiston
-app.factory('YTJYritystenTiedot', function($resource) {
-    return $resource(SERVICE_URL_BASE + "ytj/hae", {}, {
-        get: {method: 'GET', withCredentials : true, isArray: true}
+app.factory('YTJYritystenTiedot', function ($resource) {
+    return $resource(ORGANISAATIO_REST_YTJ_HAE, {}, {
+        get: {method: 'GET', withCredentials: true, isArray: true}
     });
 });
 
 
 // Muokattavien yhteystietojen haku organisaatiopalvelulta
 // Esim. https://localhost:8180/organisaatio-service/rest/yhteystietojentyyppi
-app.factory('Yhteystietojentyyppi', function($resource) {
-    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi", {}, {
-        get: {method: 'GET',isArray: true},
+app.factory('Yhteystietojentyyppi', function ($resource) {
+    return $resource(ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI, {}, {
+        get: {method: 'GET', isArray: true},
         post: {method: 'POST'},
         put: {method: 'PUT'}
     });
 });
 
 // Yhteystietotyypin poisto organisaatiopalvelulta
-app.factory('YhteystietojentyypinPoisto', function($resource) {
-    return $resource(SERVICE_URL_BASE + "yhteystietojentyyppi/:oid?force=:force", { oid: "@oid", force: "@force" }, {
+app.factory('YhteystietojentyypinPoisto', function ($resource) {
+    return $resource(ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID + "?force=:force", {
+        oid: "@oid",
+        force: "@force"
+    }, {
         delete: {method: 'DELETE'}
     });
 });
 
 // Virkailijoiden haku organisaatiolle käyttäjähallinnasta
 // Esim. https://localhost:8508/authentication-service/resources/henkilo?count=200&ht=VIRKAILIJA&index=0&org=1.2.246.562.10.67019405611
-app.factory('HenkiloVirkailijat', function($resource) {
-    return $resource(AUTHENTICATION_URL_BASE + "henkilo?count=200&ht=VIRKAILIJA&index=0&org=:oid", { oid: "@oid"}, {
-        get: {method: 'GET', withCredentials : true}
+app.factory('HenkiloVirkailijat', function ($resource) {
+    return $resource(AUTHENTICATION_REST_HENKILO + "?count=200&ht=VIRKAILIJA&index=0&org=:oid", {oid: "@oid"}, {
+        get: {method: 'GET', withCredentials: true}
     });
 });
 
 // Henkilön haku käyttäjähallinnasta
 // Esim. https://localhost:8508/authentication-service/resources/henkilo/1.2.246.562.24.91121139885
-app.factory('Henkilo', function($resource) {
-    return $resource(AUTHENTICATION_URL_BASE + "henkilo/:hlooid", { hlooid: "@hlooid"}, {
-        get: {method: 'GET', withCredentials : true}
+app.factory('Henkilo', function ($resource) {
+    return $resource(AUTHENTICATION_REST_HENKILO_BY_OID, {hlooid: "@hlooid"}, {
+        get: {method: 'GET', withCredentials: true}
     });
 });
 
 // Käyttöoikeuden haku henkilölle organisaatiossa
 // Esim. https://localhost:8508/authentication-service/resources/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
-app.factory('HenkiloKayttooikeus', function($resource) {
-    return $resource(AUTHENTICATION_URL_BASE + "kayttooikeusryhma/henkilo/:hlooid?ooid=:orgoid", { hlooid: "@hlooid", orgoid: "@orgoid"}, {
-        get: {method: 'GET', withCredentials : true, isArray: true}
+app.factory('HenkiloKayttooikeus', function ($resource) {
+    return $resource(AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID + "?ooid=:orgoid", {
+        hlooid: "@hlooid",
+        orgoid: "@orgoid"
+    }, {
+        get: {method: 'GET', withCredentials: true, isArray: true}
     });
 });
 
 // Ryhmien haku organisaatioplavelulta
 // Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/1.2.246.562.10.00000000001/ryhmat
 app.factory('Ryhmat', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/ryhmat", {}, {
+    return $resource(ORGANISAATIO_REST_V2_RYHMAT, {}, {
         get: {method: 'GET', isArray: true}
     });
 });
 
 // Viimeisimman päivityksen tietojen haku organisaatioplavelulta
 // Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/paivittaja
-app.factory('Paivittaja', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/paivittaja", {oid: "@oid"}, {
+app.factory('Paivittaja', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_PAIVITTAJA_HAE, {oid: "@oid"}, {
         get: {method: 'GET'}
     });
 });
@@ -372,8 +411,8 @@ app.factory('Paivittaja', function($resource) {
 // Nimihistorian haku organisaatioplavelulta
 // Lisäksi operaatiot: uuden nimen luonti, vanhan päivitys ja ajastetun nimen poistaminen
 // Esim. http://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/nimet
-app.factory('Nimet', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/nimet/:alkuPvm", {oid: "@oid", alkuPvm: "@alkuPvm"}, {
+app.factory('Nimet', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE, {oid: "@oid", alkuPvm: "@alkuPvm"}, {
         get: {method: 'GET', isArray: true},
         post: {method: 'POST'},
         put: {method: 'PUT'},
@@ -382,21 +421,21 @@ app.factory('Nimet', function($resource) {
 });
 
 // Usean organisaation voimassaolon muokkaus yhdellä kertaa
-app.factory('Muokkaamonta', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/muokkaamonta", {}, {
+app.factory('Muokkaamonta', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_MUOKKAAMONTA, {}, {
         put: {method: 'PUT'}
     });
 });
 
 // Organisaation historiatietojen haku
-app.factory('Historia', function($resource) {
-    return $resource(SERVICE_URL_BASE + "organisaatio/v2/:oid/historia", {oid: "@oid"}, {
+app.factory('Historia', function ($resource) {
+    return $resource(ORGANISAATIO_REST_V2_OID_HISTORIA, {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
     });
 });
 
-app.factory('YtjLoki', function($resource) {
-    return $resource(SERVICE_URL_BASE + "ytjpaivitysloki/aikavali", {alkupvm: "@alkupvm", loppupvm: "@loppupvm"}, {
+app.factory('YtjLoki', function ($resource) {
+    return $resource(ORGANISAATIO_REST_YTJ_LOKI, {alkupvm: "@alkupvm", loppupvm: "@loppupvm"}, {
         get: {method: 'GET', withCredentials: true, isArray: true}
     });
 });

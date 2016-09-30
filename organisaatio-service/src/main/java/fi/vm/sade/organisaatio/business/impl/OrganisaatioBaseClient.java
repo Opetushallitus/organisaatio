@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
-import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,9 +23,11 @@ public abstract class OrganisaatioBaseClient {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
     protected String ticket;
-    @Value("${organisaatio-service.service-access.url}")
-    private String serviceAccessUrl;
+
     private boolean reauthorize;
+
+    @Autowired
+    private UrlConfiguration urlConfiguration;
 
     protected abstract void authorize() throws Exception;
 
@@ -54,8 +56,9 @@ public abstract class OrganisaatioBaseClient {
             LOG.error(err);
             throw new Exception(err);
         } else {
+            String serviceAccessUrl = urlConfiguration.getProperty("organisaatio-service.service-access.ticket");
             ArrayList<NameValuePair> postParameters = new ArrayList<>();
-            HttpPost post = new HttpPost(serviceAccessUrl + "/accessTicket");
+            HttpPost post = new HttpPost(serviceAccessUrl);
             post.addHeader("ID", IDContextMessageHelper.getIDChain());
             post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));

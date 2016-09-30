@@ -20,66 +20,66 @@ koodisto.factory('KoodistoClient', function ($resource) {
     return {
         // Kuntien haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
-        koodistoPaikkakunnat: $resource(KOODISTO_URL_BASE + "json/kunta/koodi?onlyValidKoodis=true", {}, {
+        koodistoPaikkakunnat: $resource(KOODISTO_KUNTA_KOODI + "?onlyValidKoodis=true", {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Kuntien haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/kunta/koodi
-        koodistoPaikkakunta: $resource(KOODISTO_URL_BASE + "json/kunta/koodi/:uri", {uri: "@uri"}, {
+        koodistoPaikkakunta: $resource(KOODISTO_KUNTA_KOODI + "/:uri", {uri: "@uri"}, {
             get: {method: "GET", withCredentials : true}
         }),
         // Organisaatiotyyppien haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/organisaatiotyyppi/koodi
-        koodistoOrganisaatiotyypit: $resource(KOODISTO_URL_BASE + "json/organisaatiotyyppi/koodi", {}, {
+        koodistoOrganisaatiotyypit: $resource(KOODISTO_ORGANISAATIOTYYPPI_KOODI, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Oppilaitostyyppien haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitostyyppi/koodi
-        koodistoOppilaitostyypit: $resource(KOODISTO_URL_BASE + "json/oppilaitostyyppi/koodi", {}, {
+        koodistoOppilaitostyypit: $resource(KOODISTO_OPPILAITOSTYYPPI_KOODI, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Usean koodin haku koodistopalvelulta
         // Esim. http://localhost:8081/koodisto-service/rest/json/searchKoodis?koodiUris=posti_52200&koodiUris=maatjavaltiot1_fin
-        koodistoSearchKoodis: $resource(KOODISTO_URL_BASE + "json/searchKoodis?:uris", {params: "@uris"}, {
+        koodistoSearchKoodis: $resource(KOODISTO_KOODI_HAE + "?:uris", {params: "@uris"}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Maiden haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/maatjavaltiot1/koodi
-        koodistoMaat: $resource(KOODISTO_URL_BASE + "json/maatjavaltiot1/koodi?onlyValidKoodis=true", {}, {
+        koodistoMaat: $resource(KOODISTO_MAAT_JA_VALTIOT + "?onlyValidKoodis=true", {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // ISO-kielilistan haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/kieli/koodi
-        koodistoKieli: $resource(KOODISTO_URL_BASE + "json/kieli/koodi?onlyValidKoodis=true", {}, {
+        koodistoKieli: $resource(KOODISTO_KIELI_KOODI + "?onlyValidKoodis=true", {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Opetuskielten haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/oppilaitoksenopetuskieli/koodi
-        koodistoOpetuskielet: $resource(KOODISTO_URL_BASE + "json/oppilaitoksenopetuskieli/koodi?onlyValidKoodis=true", {}, {
+        koodistoOpetuskielet: $resource(KOODISTO_OPPILAITOKSENOPETUSKIELI + "?onlyValidKoodis=true", {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Postinumerokoodiston version haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/posti
-        koodistoPostiVersio: $resource(KOODISTO_URL_BASE + "json/posti", {}, {
+        koodistoPostiVersio: $resource(KOODISTO_POSTI, {}, {
             get: {method: "GET", withCredentials : true}
         }),
         // Postinumeroiden haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
-        koodistoPosti: $resource(KOODISTO_URL_BASE + "json/posti/koodi", {}, {
+        koodistoPosti: $resource(KOODISTO_POSTI_KOODI, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Postinumeroiden haku koodistopalvelulta tai selaimen cachesta
         // Esim: https://localhost:8503/koodisto-service/rest/json/posti/koodi
-        koodistoPostiCached: $resource(KOODISTO_URL_BASE + "json/posti/koodi?allowCache=true", {}, {
+        koodistoPostiCached: $resource(KOODISTO_POSTI_KOODI + "?allowCache=true", {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Vuosiluokkien haku koodistopalvelulta
         // Esim: https://localhost:8503/koodisto-service/rest/json/vuosiluokat/koodi
-        koodistoVuosiluokat: $resource(KOODISTO_URL_BASE + "json/vuosiluokat/koodi", {}, {
+        koodistoVuosiluokat: $resource(KOODISTO_VUOSILUOKAT, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
         // Koodiston haku koodistopalvelulta koodistoUrin perusteella
-        koodistoArrayByUri: $resource(KOODISTO_URL_BASE + "json/:uri/koodi", {params: "@uri"}, {
+        koodistoArrayByUri: $resource(KOODISTO_URI_KOODI, {params: "@uri"}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         })
     }

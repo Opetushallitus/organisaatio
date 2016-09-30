@@ -16,11 +16,8 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
-import java.io.IOException;
-import java.util.Date;
-
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
-import java.lang.Exception;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -33,18 +30,18 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
 public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
-    @Value("${organisaatio-service.koodisto-service.rest.url}")
-    protected String koodistoServiceUrl;
 
     @Value("${organisaatio.service.username.to.koodisto}")
     private String koodistoClientUsername;
@@ -52,8 +49,12 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.koodisto}")
     private String koodistoClientPassword;
 
+    @Autowired
+    private UrlConfiguration urlConfiguration;
+
     protected void authorize() throws OrganisaatioKoodistoException {
         try {
+            String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
             authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
         } catch (Exception e) {
             throw new OrganisaatioKoodistoException(e.getMessage());
@@ -76,6 +77,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
+        String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
         String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
         LOG.debug("GET " + url);
         String json = null;
@@ -117,12 +119,13 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      */
     public void put(String json) throws OrganisaatioKoodistoException {
         HttpContext localContext = new BasicHttpContext();
-        String uri = "/rest/codeelement/save";
-        LOG.debug("PUT " + koodistoServiceUrl + uri);
+        String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
+
+        LOG.debug("PUT " + uri);
         LOG.debug("PUT data=" + json);
         authorize();
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPut put = new HttpPut(koodistoServiceUrl + uri);
+        HttpPut put = new HttpPut(uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
         put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         put.addHeader("CasSecurityTicket", ticket);
@@ -136,15 +139,15 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
                 IDContextMessageHelper.setReceivedIDChain(header.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + koodistoServiceUrl + uri;
+                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + uri;
                 LOG.error(err);
                 LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
                 throw new OrganisaatioKoodistoException(err);
             } else {
-                LOG.info("Code " + koodistoServiceUrl + uri + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
+                LOG.info("Code " + uri + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
             }
         } catch (IOException e) {
-            String err = "Failed to PUT " + koodistoServiceUrl + uri + ": " + e.getMessage();
+            String err = "Failed to PUT " + uri + ": " + e.getMessage();
             LOG.error(err);
             throw new OrganisaatioKoodistoException(err);
         }
@@ -159,12 +162,13 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
-        String path = "/rest/codeelement/" + uri;
-        LOG.debug("POST " + koodistoServiceUrl + path);
+        String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
+
+        LOG.debug("POST " + url);
         LOG.debug("POST data=" + json);
-            authorize();
+        authorize();
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(koodistoServiceUrl + path);
+        HttpPost post = new HttpPost(url);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         post.addHeader("CasSecurityTicket", ticket);
@@ -177,15 +181,15 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
                 IDContextMessageHelper.setReceivedIDChain(header.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + koodistoServiceUrl + path;
+                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + url;
                 LOG.error(err);
                 LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
                 throw new OrganisaatioKoodistoException(err);
             } else {
-                LOG.info("Code " + koodistoServiceUrl + path + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
+                LOG.info("Code " + url + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
             }
         } catch (IOException e) {
-            String err = "Failed to POST " + koodistoServiceUrl + path + ": " + e.getMessage();
+            String err = "Failed to POST " + url + ": " + e.getMessage();
             LOG.error(err);
             throw new OrganisaatioKoodistoException(err);
         }

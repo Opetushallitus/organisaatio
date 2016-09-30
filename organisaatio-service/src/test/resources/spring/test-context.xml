@@ -25,6 +25,7 @@
         <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
 
+    <bean class="fi.vm.sade.organisaatio.config.UrlConfiguration"/>
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
 </beans>

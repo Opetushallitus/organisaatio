@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
@@ -46,14 +47,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Value("${ryhmasahkoposti.service.email}")
     private String email;
 
-    @Value("${host.virkailija}")
-    private String hostUri;
-
-    @Value("${organisaatio.ui.url}")
-    private String uiUri;
-
-    @Value("${organisaatio.ui.ilmoitukset.url}")
-    private String uiIlmoituksetUri;
+    @Autowired
+    private UrlConfiguration urlConfiguration;
 
     private OrganisaatioViestintaClient viestintaClient;
 
@@ -116,7 +111,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             String oid = entry.getKey();
             List<YtjVirhe> ytjVirheList = entry.getValue();
 
-            msgContent += "<a href=\"https://" + hostUri + uiUri + "/"
+            msgContent += "<a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.url") + "/"
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
@@ -126,8 +121,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             msgContent += ")<br>";
         }
 
-        msgContent += "<br><a href=\"https://" + hostUri
-                + uiIlmoituksetUri + "\">YTJ-päivitykset</a>";
+        msgContent += "<br><a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.ilmoitukset.url")
+                 + "\">YTJ-päivitykset</a>";
         return msgContent;
     }
 
