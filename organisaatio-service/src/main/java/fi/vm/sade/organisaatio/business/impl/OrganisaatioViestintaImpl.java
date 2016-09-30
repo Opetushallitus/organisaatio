@@ -50,12 +50,6 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     @Autowired
     private UrlConfiguration urlConfiguration;
 
-    @Value("${organisaatio.ui.url}")
-    private String uiUri;
-
-    @Value("${organisaatio.ui.ilmoitukset.url}")
-    private String uiIlmoituksetUri;
-
     private OrganisaatioViestintaClient viestintaClient;
 
     private boolean reauthorize;
@@ -113,12 +107,11 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
         }
 
-        String hostUri = urlConfiguration.getProperty("host.virkailija");
         for(Map.Entry<String, List<YtjVirhe>> entry : virheMap.entrySet()) {
             String oid = entry.getKey();
             List<YtjVirhe> ytjVirheList = entry.getValue();
 
-            msgContent += "<a href=\"https://" + hostUri + uiUri + "/"
+            msgContent += "<a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.url") + "/"
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
@@ -128,8 +121,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             msgContent += ")<br>";
         }
 
-        msgContent += "<br><a href=\"https://" + hostUri
-                + uiIlmoituksetUri + "\">YTJ-päivitykset</a>";
+        msgContent += "<br><a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.ilmoitukset.url")
+                 + "\">YTJ-päivitykset</a>";
         return msgContent;
     }
 
