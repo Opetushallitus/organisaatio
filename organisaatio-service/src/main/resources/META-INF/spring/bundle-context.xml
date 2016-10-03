@@ -9,7 +9,7 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:property-placeholder
-        location="classpath:organisaatio-service.properties, classpath:organisaatio-service-oph.properties file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/organisaatio-service.properties, file:///${user.home:''}/oph-configuration/override.properties"
+        location="classpath:organisaatio-service.properties, classpath:organisaatio-service-oph.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/organisaatio-service.properties, file:///${user.home:''}/oph-configuration/override.properties"
         ignore-resource-not-found="true" properties-ref="defaultProps"/>
     <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
