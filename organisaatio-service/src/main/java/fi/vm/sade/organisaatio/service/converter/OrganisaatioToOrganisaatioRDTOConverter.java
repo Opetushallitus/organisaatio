@@ -82,6 +82,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
+        t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
