@@ -60,7 +60,9 @@ public class ConfigController {
 
         append(b, "ORGANISAATIO_REST_AUTH", ophProperties.getProperty("organization-service.rest.organisaatio.param", "auth"));
         append(b, "ORGANISAATIO_REST_YTJ_YTUNNUS", ophProperties.getProperty("organization-service.rest.organisaatio.ytj", ":ytunnus"));
-        append(b, "ORGANISAATIO_REST_YTJ_HAE", ophProperties.getProperty("organization-service.rest.organisaatio.ytj", "hae"));
+//        append(b, "ORGANISAATIO_REST_YTJ_HAE", ophProperties.getProperty("organization-service.rest.organisaatio.ytj", "hae"));
+        append(b, "ORGANISAATIO_REST_YTJ_HAE", ophProperties.getProperty("organization-service.rest.organisaatio.ytjHae"));
+
         append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI", ophProperties.getProperty("organization-service.rest.organisaatio.yhteystietojentyyppi"));
         append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID", ophProperties.getProperty("organization-service.rest.organisaatio.yhteystietojentyyppiByOid", ":oid"));
         append(b, "ORGANISAATIO_REST_YTJ_LOKI", ophProperties.getProperty("organization-service.rest.organisaatio.ytjloki"));
