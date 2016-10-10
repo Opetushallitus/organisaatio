@@ -55,6 +55,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     protected void authorize() throws OrganisaatioKoodistoException {
         try {
             String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
+            LOG.info("authorize url " + koodistoServiceUrl);
             authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
         } catch (Exception e) {
             throw new OrganisaatioKoodistoException(e.getMessage());
@@ -80,6 +81,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
         String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
         LOG.debug("GET " + url);
+        LOG.info("GET " + url);
         String json = null;
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(url);
@@ -122,6 +124,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
 
         LOG.debug("PUT " + uri);
+        LOG.info("PUT " + uri);
         LOG.debug("PUT data=" + json);
         authorize();
         HttpClient client = HttpClientBuilder.create().build();
@@ -165,6 +168,7 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
 
         LOG.debug("POST " + url);
+        LOG.info("POST " + url);
         LOG.debug("POST data=" + json);
         authorize();
         HttpClient client = HttpClientBuilder.create().build();

@@ -59,6 +59,7 @@ public abstract class OrganisaatioBaseClient {
             String serviceAccessUrl = urlConfiguration.getProperty("organisaatio-service.service-access.ticket");
             ArrayList<NameValuePair> postParameters = new ArrayList<>();
             HttpPost post = new HttpPost(serviceAccessUrl);
+            LOG.info("serviceAccessUrl " + serviceAccessUrl);
             post.addHeader("ID", IDContextMessageHelper.getIDChain());
             post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
