@@ -26,7 +26,7 @@ public class ConfigController {
         append(b, "UI_URL_BASE", ophProperties.getProperty("organisaatio-ui.organisaatio-ui-url"));
         append(b, "SERVICE_URL_BASE", ophProperties.getProperty("organisaatio-service.url.rest"));
         append(b, "KOODISTO_URL_BASE", ophProperties.getProperty("koodisto-service.url.rest"));
-        append(b, "LOKALISAATIO_URL_BASE", ophProperties.getProperty("lokalisaatio-service.url.rest"));
+        append(b, "LOKALISAATIO_URL_BASE", ophProperties.getProperty("lokalisointi.url.rest"));
         append(b, "V1_LOKALISAATIO_URL", ophProperties.getProperty("lokalisaatio-service.url.lokalisointi.v1"));
 
         append(b, "AUTHENTICATION_URL_BASE", ophProperties.getProperty("authentication-service-url.rest"));
