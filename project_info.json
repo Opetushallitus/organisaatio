@@ -10,9 +10,9 @@
     {
       "name": "OrganisaatioSearchService",
       "type": "library",
-      "uses": [
-        "solr"
-      ]
+      "properties": {
+        "solr.url": "/solr/from/template"
+      }
     }
   ]
 }
