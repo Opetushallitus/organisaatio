@@ -5,5 +5,14 @@
 
   "velka": "js-riipuvuudet git-repossa (packages.json käyttöön)",
 
-  "csrf": "organisaatio-ui ok, backend ?"
+  "csrf": "organisaatio-ui ok, backend ?",
+  "projects": [
+    {
+      "name": "OrganisaatioSearchService",
+      "type": "library",
+      "uses": [
+        "solr"
+      ]
+    }
+  ]
 }
