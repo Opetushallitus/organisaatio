@@ -8,10 +8,10 @@
   "csrf": "organisaatio-ui ok, backend ?",
   "projects": [
     {
-      "name": "OrganisaatioSearchService",
+      "name": "organisaatio-solr-client",
       "type": "library",
       "properties": {
-        "solr.url": "/solr/from/template"
+        "solr.url": "/solr/organisaatio"
       }
     }
   ]
