@@ -340,6 +340,7 @@ app.directive("ophDecodeName", function($log) {
                 if (viewValue) {
                     return viewValue.replace(/&amp;/g, '&');
                 }
+                return viewValue;
             };
             ctrl.$formatters.unshift(formatterValidator);
             ctrl.$parsers.unshift(formatterValidator);
