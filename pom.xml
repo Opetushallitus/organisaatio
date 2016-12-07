@@ -284,7 +284,7 @@
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
-buildNumber=${project.build}
+buildNumber=${buildNumber}
 branchName=${branch}
 vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
