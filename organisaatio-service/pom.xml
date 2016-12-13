@@ -734,18 +734,6 @@
             <version>${rajapinnat.ytj.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>fi.vm.sade.rajapinnat</groupId>
-            <artifactId>kela-opti</artifactId>
-            <version>${rajapinnat.ytj.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aspects</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- Koodisto -->
         <dependency>
             <groupId>fi.vm.sade.koodisto</groupId>
