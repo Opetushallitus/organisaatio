@@ -6,6 +6,11 @@
   "velka": "js-riipuvuudet git-repossa (packages.json käyttöön)",
 
   "csrf": "organisaatio-ui ok, backend ?",
+
+  "uses": [
+    "ytj-service"
+  ],
+
   "projects": [
     {
       "name": "organisaatio-solr-client",
