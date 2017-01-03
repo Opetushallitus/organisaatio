@@ -711,21 +711,30 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             for (Organisaatio child : children) {
                 MonikielinenTeksti childnimi = child.getNimi();
                 boolean childChanged = false;
-                for (String key : oldName.keySet()) {
+                for (Map.Entry<String, String> newParentNameEntry : newParentNames.getValues().entrySet()) {
+                    String key = newParentNameEntry.getKey();
                     String oldParentName = oldName.get(key);
                     String oldChildName = childnimi.getString(key);
-                    String newParentName = newParentNames.getString(key);
+                    String newParentName = newParentNameEntry.getValue();
                     if (oldChildName == null) {
                         // toimipisteellä ei ole oppilaitosta vastaavaa tämänkielistä nimeä
                         // Pitää lisätä manuaalisesti
                         LOG.debug("Name[" + key + "] does not exist.");
                         childChanged = true;
-                    } else if (newParentName == null) {
-                        // oppilaitoksen nimi poistettu, ei muuteta toimipisteen nimeä
-                    } else if (oldChildName.startsWith(oldParentName)) {
-                        // päivitetään toimipisteen nimen alkuosa
-                        childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
-
+                    } else if (oldParentName == null && !oldChildName.startsWith(newParentName)
+                            || oldParentName != null && oldChildName.startsWith(oldParentName)) {
+                        if (oldParentName == null) {
+                            // oppilaitoksen nimi lisätty, muutetaan toimipisteen nimeä
+                            StringBuilder builder = new StringBuilder();
+                            builder.append(newParentName);
+                            builder.append(", ");
+                            builder.append(oldChildName);
+                            String newChildName = builder.toString();
+                            childnimi.addString(key, newChildName);
+                        } else {
+                            // päivitetään toimipisteen nimen alkuosa
+                            childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
+                        }
                         // Päivitetään organisaation päivittäjän tiedot
                         if (updatePaivittaja) {
                             try {

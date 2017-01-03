@@ -229,8 +229,8 @@ app.factory('NimenMuokkausModel', function($log, $location,
                 if (model.parentNimi && nimi) {
                     ['fi', 'sv', 'en'].forEach(function(key) {
                         if (nimi.nimi[key] && model.parentNimi[key]) {
-                            if (!nimi.nimi[key].match("^" + model.parentNimi[key] + ", ") &&
-                                    !nimi.nimi[key].match("^" + model.parentNimi[key] + "$")) {
+                            if (!nimi.nimi[key].startsWith(model.parentNimi[key] + ", ") &&
+                                    nimi.nimi[key] !== model.parentNimi[key]) {
                                 nimi.nimi[key] = model.parentNimi[key] + ", " + nimi.nimi[key];
                             }
                         }
