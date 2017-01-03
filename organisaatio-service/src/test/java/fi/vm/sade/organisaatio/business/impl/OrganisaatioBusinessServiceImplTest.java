@@ -19,6 +19,7 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.*;
@@ -36,6 +37,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
 
 /**
  * Tests for {@link fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessServiceImpl} class.
@@ -56,6 +59,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     private IndexerResource indexer;
     @Autowired
     SearchCriteriaModelMapper searchCriteriaModelMapper;
+    @Autowired
+    private OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
     @Before
     public void setUp() {
@@ -173,6 +178,33 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         organisaatioResult = service.save(model, true);
         Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
+    }
+
+    @Test
+    public void updateOppilaitosShouldUpdateToimipisteNames() {
+        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
+        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija, false);
+        String koulutustoimijaOid = koulutustoimijaResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO oppilaitos = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi)", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimijaOid);
+        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos, false);
+        String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO toimipiste = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi), toimipiste1 (fi)", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        toimipiste.getNimi().put("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)");
+        toimipiste.getNimi().put("sv", "toimipiste1 (sv)");
+        OrganisaatioResult toimipisteResult1 = service.save(toimipiste, false);
+
+        oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
+        oppilaitos.getNimi().put("en", "oppilaitos1-päivitetty (en)");
+        oppilaitos.getNimi().put("dk", "oppilaitos1-päivitetty (dk)");
+        service.save(oppilaitos, true);
+
+        Organisaatio organisaatio = organisaatioFindBusinessService.findById(toimipisteResult1.getOrganisaatio().getOid());
+        Map<String, String> nimet = organisaatio.getNimi().getValues();
+        assertThat(nimet).containsOnly(
+                entry("fi", "oppilaitos1-päivitetty (fi), toimipiste1 (fi)"),
+                entry("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)"),
+                entry("sv", "toimipiste1 (sv)")
+        );
     }
 
 }
