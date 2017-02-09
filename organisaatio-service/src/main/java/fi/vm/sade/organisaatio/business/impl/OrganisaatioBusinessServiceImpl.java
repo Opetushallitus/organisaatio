@@ -37,7 +37,6 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,7 +240,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
-        if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
+        if (!updating) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
