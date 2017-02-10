@@ -207,4 +207,67 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         );
     }
 
+    @Test
+    public void saveToimipisteShouldGenerateOpetuspisteenJarjNroAndToimipistekoodiWhenEmpty() {
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
+        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
+        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
+
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
+
+        jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null, toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
+        toimipisteResult1 = service.save(toimipiste1, true);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("02");
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi02");
+    }
+
+    @Test
+    public void saveToimipisteShouldMaintainToimipistekoodiWhenOpetuspisteenJarjNroEmpty() {
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
+        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
+        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
+
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
+
+        jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
+        toimipisteResult1 = service.save(toimipiste1, true);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isNull();
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
+    }
+
+    @Test
+    public void saveToimipisteShouldGenerateToimipistekoodiWhenEmpty() {
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
+        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
+        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
+
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
+
+        jdbcTemplate.update("update organisaatio set toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
+        toimipisteResult1 = service.save(toimipiste1, true);
+        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
+        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
+    }
+
 }

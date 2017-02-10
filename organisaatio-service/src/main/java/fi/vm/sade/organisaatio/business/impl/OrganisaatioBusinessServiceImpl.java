@@ -185,9 +185,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Validate (throws exception)
         validateOrganisation(model, parentOrg);
 
+        Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
         if (updating) {
-            Organisaatio oldOrg = organisaatioDAO.findByOid(model.getOid());
+            oldOrg = organisaatioDAO.findByOid(model.getOid());
             if(oldOrg.isOrganisaatioPoistettu()) {
                 throw new ValidationException("validation.Organisaatio.poistettu");
             }
@@ -240,7 +241,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
-        if (!updating) {
+        if (!updating || (oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi()))) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
@@ -311,7 +312,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
         // "Jos toimipiste, palautetaan oppilaitosnro+toimipisteenjärjestysnumero(konkatenoituna)sekä yhkoulukoodi."
-        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
+        if (oldOrg == null || isEmpty(oldOrg.getToimipisteKoodi())) {
+            entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
+        } else {
+            entity.setToimipisteKoodi(oldOrg.getToimipisteKoodi());
+        }
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
