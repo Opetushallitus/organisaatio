@@ -37,7 +37,6 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,9 +185,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Validate (throws exception)
         validateOrganisation(model, parentOrg);
 
+        Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
         if (updating) {
-            Organisaatio oldOrg = organisaatioDAO.findByOid(model.getOid());
+            oldOrg = organisaatioDAO.findByOid(model.getOid());
             if(oldOrg.isOrganisaatioPoistettu()) {
                 throw new ValidationException("validation.Organisaatio.poistettu");
             }
@@ -241,7 +241,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
-        if (!updating && StringUtils.isEmpty(model.getOpetuspisteenJarjNro())) {
+        if (!updating || (oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi()))) {
             opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
@@ -312,7 +312,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
         // "Jos toimipiste, palautetaan oppilaitosnro+toimipisteenjärjestysnumero(konkatenoituna)sekä yhkoulukoodi."
-        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
+        if (oldOrg == null || isEmpty(oldOrg.getToimipisteKoodi())) {
+            entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
+        } else {
+            entity.setToimipisteKoodi(oldOrg.getToimipisteKoodi());
+        }
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
