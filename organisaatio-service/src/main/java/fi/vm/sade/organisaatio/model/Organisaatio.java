@@ -717,6 +717,15 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return null;
     }
 
+    public Email getEmail() {
+        for (Yhteystieto yhteystieto : getYhteystiedot()) {
+            if (yhteystieto instanceof Email) {
+                return (Email) yhteystieto;
+            }
+        }
+        return null;
+    }
+
     public String getToimipisteKoodi() {
         return toimipisteKoodi;
     }

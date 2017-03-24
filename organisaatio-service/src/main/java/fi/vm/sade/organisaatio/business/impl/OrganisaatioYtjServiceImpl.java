@@ -196,6 +196,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
         boolean updateNimi = false;
         boolean updateOsoite = false;
+        boolean updateSahkoposti = false;
         boolean updatePuhelin = false;
         boolean updateWww = false;
         boolean updateAlkupvm = false;
@@ -241,6 +242,16 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjOrg, osoite, forceUpdate);
         }
+        if (ytjOrg.getSahkoposti() != null) {
+            Email email = organisaatio.getEmail();
+            if (email == null) {
+                email = new Email();
+                if (!initYhteystietoforOrg(email, organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.SAHKOPOSTI, "ilmoitukset.log.virhe.oid.sahkoposti")) {
+                    email = null;
+                }
+            }
+            updateSahkoposti = updateSahkopostiFromYTJToOrganisation(ytjOrg, email, forceUpdate);
+        }
         if(validateYtjPuhelin(ytjOrg)) {
             Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN);
             if(puhelinnumero == null) {
@@ -262,7 +273,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updateWww = updateWwwFromYTJToOrganisation(ytjOrg, www, forceUpdate);
         }
         // validate and update contact info according to YTJ lang
-        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updatePuhelin || updateWww || updateAlkupvm);
+        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm);
     }
 
     /* Date related stuff */
@@ -605,6 +616,18 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Update www from YTJ if it missmatches the current one.
         if(!ytjdto.getWww().equals(www.getWwwOsoite()) || forceUpdate) {
             www.setWwwOsoite(ytjdto.getWww());
+            update = true;
+        }
+        return update;
+    }
+
+    private boolean updateSahkopostiFromYTJToOrganisation(YTJDTO ytjdto, Email email, boolean forceUpdate) {
+        boolean update = false;
+        if (email == null) {
+            return false;
+        }
+        if (!ytjdto.getSahkoposti().equals(email.getEmail()) || forceUpdate) {
+            email.setEmail(ytjdto.getSahkoposti());
             update = true;
         }
         return update;
