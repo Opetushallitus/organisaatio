@@ -242,7 +242,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjOrg, osoite, forceUpdate);
         }
-        if (ytjOrg.getSahkoposti() != null) {
+        if (validateYtjSahkoposti(ytjOrg)) {
             Email email = organisaatio.getEmail();
             if (email == null) {
                 email = new Email();
@@ -521,6 +521,17 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             return false;
         }
         return true;
+    }
+
+    private boolean validateYtjSahkoposti(YTJDTO ytjdto) {
+        if (ytjdto.getSahkoposti() == null) {
+            return false;
+        }
+        boolean valid = Email.isValid(ytjdto.getSahkoposti());
+        if (!valid) {
+            LOG.warn("YTJ:ssä organisaatiolla " + ytjdto.getYtunnus() +" virheellinen sähköpostiosoite '" + ytjdto.getSahkoposti() + "'");
+        }
+        return valid;
     }
 
     private boolean validateYtjPuhelin(YTJDTO ytjOrg) {
