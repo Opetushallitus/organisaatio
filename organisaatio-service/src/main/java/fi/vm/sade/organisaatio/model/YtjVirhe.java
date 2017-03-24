@@ -37,6 +37,7 @@ public class YtjVirhe extends BaseEntity {
         NIMI,
         KIELI,
         OSOITE,
+        SAHKOPOSTI,
         PUHELIN,
         WWW,
         LOPPUPVM
