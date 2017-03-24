@@ -83,6 +83,7 @@ public class YTJServiceMock implements YTJService {
             osoite.setKieli(1);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setSahkoposti("example@example.com");
             dto.setAloitusPvm("10.02.1999");
             dto.setNimi(nimi);
             dto.setYritysTunnus(new YTunnusDTO() {{
@@ -99,6 +100,7 @@ public class YTJServiceMock implements YTJService {
             osoite.setKieli(2);
             dto.setPostiOsoite(osoite);
             dto.setYrityksenKieli("Svenska");
+            dto.setSahkoposti("example@example.com");
             dto.setWww("http://www.ytj.sv");
             dto.setPuhelin("0100000210");
             dto.setAloitusPvm("11.03.1999");
@@ -118,6 +120,7 @@ public class YTJServiceMock implements YTJService {
             dto.setPostiOsoite(osoite);
             dto.setKayntiOsoite(osoite);
             dto.setYrityksenKieli("Suomi");
+            dto.setSahkoposti("example@example.com");
             dto.setWww("http://www.ytj.fi");
             dto.setPuhelin("0100000211");
             dto.setAloitusPvm("12.04.1999");
