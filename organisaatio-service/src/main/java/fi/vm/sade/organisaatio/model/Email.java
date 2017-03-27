@@ -58,4 +58,9 @@ public class Email extends Yhteystieto {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public static boolean isValid(String email) {
+        return email.matches(EMAIL_PATTERN);
+    }
+
 }
