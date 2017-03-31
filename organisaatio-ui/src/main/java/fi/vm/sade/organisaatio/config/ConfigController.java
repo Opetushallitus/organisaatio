@@ -30,6 +30,7 @@ public class ConfigController {
         append(b, "V1_LOKALISAATIO_URL", ophProperties.getProperty("lokalisointi.url.lokalisointi.v1"));
 
         append(b, "AUTHENTICATION_URL_BASE", ophProperties.getProperty("authentication-service-url.rest"));
+        append(b, "OPPIJANUMEROREKISTERI_URL_BASE", ophProperties.getProperty("oppijanumerorekisteri-service-url.rest"));
         append(b, "ROOT_ORGANISAATIO_OID", ophProperties.getProperty("root.organisaatio.oid"));
 
         append(b, "TEMPLATE_URL_BASE", "");
@@ -73,6 +74,7 @@ public class ConfigController {
         append(b, "AUTHENTICATION_REST_HENKILO_BY_OID", ophProperties.getProperty("authentication-service.henkilo.byOid"));
         append(b, "AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID", ophProperties.getProperty("authentication-service.henkilo.ryhma"));
 
+        append(b, "OPPIJANUMEROREKISTERI_REST_HENKILO", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo"));
 
         append(b, "KOODISTO_ORGANISAATIOTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "organisaatiotyyppi", "koodi"));
         append(b, "KOODISTO_OPPILAITOSTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "oppilaitostyyppi", "koodi"));
