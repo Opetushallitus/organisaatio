@@ -368,9 +368,9 @@ app.factory('YhteystietojentyypinPoisto', function ($resource) {
 });
 
 // Virkailijoiden haku organisaatiolle oppijanumerorekisteristä
-// Esim. https://localhost:8509/oppijanumerorekisteri-service/henkilo?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOid=1.2.246.562.10.67019405611
+// Esim. https://localhost:8509/oppijanumerorekisteri-service/henkilo?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOids=1.2.246.562.10.67019405611
 app.factory('HenkiloVirkailijat', function ($resource) {
-    return $resource(OPPIJANUMEROREKISTERI_REST_HENKILO + "?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOid=:oid", {oid: "@oid"}, {
+    return $resource(OPPIJANUMEROREKISTERI_REST_HENKILO + "?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOids=:oid", {oid: "@oid"}, {
         get: {method: 'GET', withCredentials: true}
     });
 });
