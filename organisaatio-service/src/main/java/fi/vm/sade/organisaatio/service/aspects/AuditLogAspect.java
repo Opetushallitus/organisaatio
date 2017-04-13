@@ -44,7 +44,7 @@ public class AuditLogAspect {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
-    public static final String serviceName = "Organisaatio-Service";
+    public static final String serviceName = "organisaatio";
     public Audit audit = new Audit(serviceName, ApplicationType.VIRKAILIJA);
 
     // POST /organisaatio/{oid}
