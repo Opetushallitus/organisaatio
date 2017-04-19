@@ -960,11 +960,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystiedot.length; i++) {
                         if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
 
-                            model.organisaatio.metadata.hakutoimistoEctsPuhelin = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
                         }
                         if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
 
-                            model.organisaatio.metadata.hakutoimistoEctsEmail = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
                         }
                     }
                 }
@@ -974,7 +974,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             });
             HenkiloKayttooikeus.get({hlooid: henkilo.tiedot.oidHenkilo, orgoid: model.organisaatio.oid}, function(result2) {
                 if (result2.length > 0) {
-                    model.organisaatio.metadata.hakutoimistoEctsTehtavanimike = result2[0].tehtavanimike;
+                    model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang] = result2[0].tehtavanimike;
                     // TODO: tarjoa käyttäjälle valintalista nimikkeistä (result[i].tehtavanimike) ?
                 }
             }, function(response) {

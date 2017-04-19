@@ -97,6 +97,8 @@ var AUTHENTICATION_REST_HENKILO = AUTHENTICATION_REST_HENKILO || "";
 var AUTHENTICATION_REST_HENKILO_BY_OID = AUTHENTICATION_REST_HENKILO_BY_OID || "";
 var AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID = AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID || "";
 
+var OPPIJANUMEROREKISTERI_REST_HENKILO = OPPIJANUMEROREKISTERI_REST_HENKILO || "";
+
 ////////////
 //
 // Route configuration
@@ -365,10 +367,10 @@ app.factory('YhteystietojentyypinPoisto', function ($resource) {
     });
 });
 
-// Virkailijoiden haku organisaatiolle käyttäjähallinnasta
-// Esim. https://localhost:8508/authentication-service/resources/henkilo?count=200&ht=VIRKAILIJA&index=0&org=1.2.246.562.10.67019405611
+// Virkailijoiden haku organisaatiolle oppijanumerorekisteristä
+// Esim. https://localhost:8509/oppijanumerorekisteri-service/henkilo?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOids=1.2.246.562.10.67019405611
 app.factory('HenkiloVirkailijat', function ($resource) {
-    return $resource(AUTHENTICATION_REST_HENKILO + "?count=200&ht=VIRKAILIJA&index=0&org=:oid", {oid: "@oid"}, {
+    return $resource(OPPIJANUMEROREKISTERI_REST_HENKILO + "?tyyppi=VIRKAILIJA&passivoitu=false&duplikaatti=false&count=200&organisaatioOids=:oid", {oid: "@oid"}, {
         get: {method: 'GET', withCredentials: true}
     });
 });

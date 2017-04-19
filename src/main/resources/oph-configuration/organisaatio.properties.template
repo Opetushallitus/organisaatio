@@ -88,6 +88,7 @@ oid.webservice.url.backend=${host.ilb}/services/oidService
 organisaatio.rest.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/hae
 organisaatio.webservice.url.backend=https\://${host.virkailija}/organisaatio-service/services/organisaatioService
 authentication-service-url.rest=https://${host.virkailija}/authentication-service/resources/
+oppijanumerorekisteri-service-url.rest=https://${host.virkailija}/oppijanumerorekisteri-service/
 organisaatio-ui.cas.url=https://${host.virkailija}/cas/myroles
 koodisto-service.url.rest=https://${host.virkailija}/koodisto-service/rest/
 lokalisointi.url.rest=https://${host.virkailija}/lokalisointi/cxf/rest
