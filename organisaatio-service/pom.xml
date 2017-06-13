@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2016-9-SNAPSHOT</version>
+        <version>2017-6-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-service</artifactId>
@@ -81,11 +81,6 @@
                     <databaseMinorVersion>3</databaseMinorVersion>
                     <format>true</format>
                     <lineSeparator>LF</lineSeparator>
-                    <!--<createSourceMode>metadata_2</createSourceMode>-->
-                    <!--<createSourceFile>${project.build.directory}/hibernate3/sql/</createSourceFile>-->
-                    <!--<properties>-->
-                        <!--<org.hibernate>org.hibernate.dialect.PostgreSQL9Dialect</org.hibernate>-->
-                    <!--</properties>-->
                     <packageToScan>
                         <scan>fi.vm.sade.organisaatio.model</scan>
                     </packageToScan>
@@ -204,7 +199,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>13.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
@@ -615,7 +610,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.182</version>
+            <version>1.4.196</version>
             <scope>test</scope>
         </dependency>
 

@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2016-9-SNAPSHOT</version>
+        <version>2017-6-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-solr-client</artifactId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0.1</version>
+            <version>${guava.version}</version>
             <type>jar</type>
         </dependency>
 
@@ -133,7 +133,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.5</version>
+                <version>${jar.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
