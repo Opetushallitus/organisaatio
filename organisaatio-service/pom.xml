@@ -809,11 +809,6 @@
             <artifactId>java-properties</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-          <groupId>com.amazonaws</groupId>
-          <artifactId>aws-java-sdk</artifactId>
-          <version>1.11.174</version>
-        </dependency>
     </dependencies>
 
     <profiles>
