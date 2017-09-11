@@ -17,6 +17,7 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import java.util.*;
 
 import javax.persistence.CascadeType;
@@ -41,6 +42,7 @@ import org.apache.commons.lang.time.DateUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -429,6 +431,25 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     /**
+     * Palauttaa ryhmätyypit V1-rajapinnan muodossa.
+     *
+     * @return ryhmatyypit
+     */
+    public List<String> getRyhmatyypitV1() {
+        return getRyhmatyypit().stream().map(KoodistoUtil::getRyhmatyyppiV1).collect(toList());
+    }
+
+    /**
+     * Asettaa ryhmätyypit V1-rajapinnan muodosta.
+     *
+     * @param ryhmatyypit ryhmatyypit to set
+     */
+    public void setRyhmatyypitV1(List<String> ryhmatyypit) {
+        this.ryhmatyypit.clear();
+        this.ryhmatyypit.addAll(ryhmatyypit.stream().map(KoodistoUtil::getRyhmatyyppiV3).collect(toList()));
+    }
+
+    /**
      * @return kayttoryhmat
      */
     public List<String> getKayttoryhmat() {
@@ -441,6 +462,25 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public void setKayttoryhmat(List<String> kayttoryhmat) {
         this.kayttoryhmat.clear();
         this.kayttoryhmat.addAll(kayttoryhmat);
+    }
+
+    /**
+     * Palauttaa käyttöryhmät V1-rajapinnan muodossa.
+     *
+     * @return kayttoryhmat
+     */
+    public List<String> getKayttoryhmatV1() {
+        return getKayttoryhmat().stream().map(KoodistoUtil::getKayttoryhmaV1).collect(toList());
+    }
+
+    /**
+     * Asettaa käyttöryhmät V1-rajapinnan muodosta.
+     *
+     * @param kayttoryhmat kayttoryhmat to set
+     */
+    public void setKayttoryhmatV1(List<String> kayttoryhmat) {
+        this.kayttoryhmat.clear();
+        this.kayttoryhmat.addAll(kayttoryhmat.stream().map(KoodistoUtil::getKayttoryhmaV3).collect(toList()));
     }
 
     /**

@@ -318,6 +318,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setToimipisteKoodi(oldOrg.getToimipisteKoodi());
         }
 
+        validateOrganisation(entity);
+
         // call super.insert OR update which saves & validates jpa
         if (updating) {
             LOG.info("updating " + entity);
@@ -433,6 +435,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Validointi: koodistoureissa pitää olla versiotieto
         checker.checkVersionInKoodistoUris(model);
+    }
+
+    private void validateOrganisation(Organisaatio entity) {
+        // Validointi: koodistoureissa pitää olla versiotieto
+        checker.checkVersionInKoodistoUris(entity);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {

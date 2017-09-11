@@ -32,6 +32,8 @@
                 <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisaatioConverter"/>
             </list>
         </property>
     </bean>
@@ -41,7 +43,8 @@
     <bean id="searchCriteriaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper"/>
     <bean id="organisaatioSuhdeModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper"/>
     <bean id="organisaatioLiitosModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper"/>
-    <bean id="groupModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.GroupModelMapper"/>
+    <bean id="groupModelMapperV2" class="fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2"/>
+    <bean id="groupModelMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3"/>
 
     <!--
         Enable @Scheduled annotations

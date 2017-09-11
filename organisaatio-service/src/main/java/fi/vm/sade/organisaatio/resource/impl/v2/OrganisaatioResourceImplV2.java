@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
+import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
@@ -83,7 +84,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     private OrganisaatioLiitosModelMapper organisaatioLiitosModelMapper;
 
     @Autowired
-    private GroupModelMapper groupModelMapper;
+    private GroupModelMapperV2 groupModelMapper;
 
     @Autowired
     private ConversionService conversionService;

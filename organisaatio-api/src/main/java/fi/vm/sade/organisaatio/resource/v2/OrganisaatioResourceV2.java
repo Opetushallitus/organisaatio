@@ -287,6 +287,7 @@ public interface OrganisaatioResourceV2 {
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioRDTO.class,
             responseContainer = "List")
+    @Deprecated // käytä OrganisaatioResourceV3#haeMuutetut
     public List<OrganisaatioRDTO> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
@@ -329,6 +330,7 @@ public interface OrganisaatioResourceV2 {
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
             response = OrganisaatioGroupDTOV2.class)
+    @Deprecated // käytä OrganisaatioResourceV3#groups
     public List<OrganisaatioGroupDTOV2> groups() throws Exception;
 
     @GET

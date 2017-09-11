@@ -73,12 +73,12 @@ var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECOND
 var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || "";
 
-var ORGANISAATIO_REST = ORGANISAATIO_REST || "";
+var ORGANISAATIO_REST_V3 = ORGANISAATIO_REST_V3 || "";
 var ORGANISAATIO_REST_HAE = ORGANISAATIO_REST_HAE || "";
-var ORGANISAATIO_REST_BY_OID = ORGANISAATIO_REST_BY_OID || "";
+var ORGANISAATIO_REST_V3_BY_OID = ORGANISAATIO_REST_V3_BY_OID || "";
 
 var ORGANISAATIO_REST_V2_HAE = ORGANISAATIO_REST_V2_HAE || "";
-var ORGANISAATIO_REST_V2_RYHMAT = ORGANISAATIO_REST_V2_RYHMAT || "";
+var ORGANISAATIO_REST_V3_RYHMAT = ORGANISAATIO_REST_V3_RYHMAT || "";
 var ORGANISAATIO_REST_V2_MUOKKAAMONTA = ORGANISAATIO_REST_V2_MUOKKAAMONTA || "";
 var ORGANISAATIO_REST_V2_OID_HISTORIA = ORGANISAATIO_REST_V2_OID_HISTORIA || "";
 var ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE = ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE || "";
@@ -264,11 +264,11 @@ app.factory('NoCacheInterceptor', function() {
 ////////////
 
 // Organisaation haku / päivitys organisaatiopalveluun
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v3/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function ($resource) {
-    return $resource(ORGANISAATIO_REST_BY_OID + "?includeImage=true", {oid: "@oid"}, {
+    return $resource(ORGANISAATIO_REST_V3_BY_OID + "?includeImage=true", {oid: "@oid"}, {
         get: {method: "GET"},
-        post: {method: "POST"},
+        update: {method: "PUT"},
         delete: {method: "DELETE"}
     });
 });
@@ -291,10 +291,10 @@ app.factory('OrganisaatioSiirto', function ($resource) {
 });
 
 // Organisaation luonti organisaatiopalveluun
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v3
 app.factory('UusiOrganisaatio', function ($resource) {
-    return $resource(ORGANISAATIO_REST, {}, {
-        put: {method: "PUT"}
+    return $resource(ORGANISAATIO_REST_V3, {}, {
+        create: {method: "POST"}
     });
 });
 
@@ -395,9 +395,9 @@ app.factory('HenkiloKayttooikeus', function ($resource) {
 });
 
 // Ryhmien haku organisaatioplavelulta
-// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/1.2.246.562.10.00000000001/ryhmat
+// Esim. https://itest-virkailija.oph.ware.fi/organisaatio-service/rest/organisaatio/v3/ryhmat
 app.factory('Ryhmat', function($resource) {
-    return $resource(ORGANISAATIO_REST_V2_RYHMAT, {}, {
+    return $resource(ORGANISAATIO_REST_V3_RYHMAT, {}, {
         get: {method: 'GET', isArray: true}
     });
 });

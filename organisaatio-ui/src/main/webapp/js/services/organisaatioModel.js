@@ -468,7 +468,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             RefreshOrganisaatio.selectAddressType(true, model);
             RefreshOrganisaatio.checkLisayhteystiedot(model);
             if (model.mode==="edit") {
-                Organisaatio.post(model.organisaatio, function(result) {
+                Organisaatio.update(model.organisaatio, function(result) {
                     //console.log(result);
                     if (orgForm) {
                         orgForm.$setPristine();
@@ -488,7 +488,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 // Asetetaan organisaation nimen alkupäiväksi organisaation alkupäivä
                 model.organisaatio.nimet[0].alkuPvm = model.organisaatio.alkuPvm;
 
-                UusiOrganisaatio.put(model.organisaatio, function(result) {
+                UusiOrganisaatio.create(model.organisaatio, function(result) {
                     //console.log(result);
                     if (orgForm) {
                         orgForm.$setPristine();

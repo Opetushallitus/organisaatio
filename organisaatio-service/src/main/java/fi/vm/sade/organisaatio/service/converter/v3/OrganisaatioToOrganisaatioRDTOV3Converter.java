@@ -12,14 +12,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
-package fi.vm.sade.organisaatio.service.converter;
+package fi.vm.sade.organisaatio.service.converter.v3;
 
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -30,29 +29,30 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 
 /**
  *
  * @author mlyly, simok
  */
-public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTO> {
+public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV3> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOV3Converter.class);
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOConverter() {
+    public OrganisaatioToOrganisaatioRDTOV3Converter() {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
     }
 
 
     @Override
-    public OrganisaatioRDTO convert(Organisaatio s) {
+    public OrganisaatioRDTOV3 convert(Organisaatio s) {
         long qstarted = System.currentTimeMillis();
 
-        OrganisaatioRDTO t = new OrganisaatioRDTO();
+        OrganisaatioRDTOV3 t = new OrganisaatioRDTOV3();
 
         t.setOid(s.getOid());
         t.setVersion(s.getVersion() != null ? s.getVersion().intValue() : 0);
@@ -86,9 +86,8 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
-        // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
-        t.setRyhmatyypit(convertListToList(s.getRyhmatyypitV1()));
-        t.setKayttoryhmat(convertListToList(s.getKayttoryhmatV1()));
+        t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
+        t.setKayttoryhmat(convertListToList(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
         t.setYritysmuoto(s.getYritysmuoto());
         t.setYTJKieli(s.getYtjKieli());

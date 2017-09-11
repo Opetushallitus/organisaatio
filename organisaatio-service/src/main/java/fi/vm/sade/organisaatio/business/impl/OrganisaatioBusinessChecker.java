@@ -32,6 +32,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
 import java.util.*;
+import static java.util.stream.Collectors.toList;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
@@ -206,6 +207,26 @@ public class OrganisaatioBusinessChecker {
                     LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + model.getYhteystiedot().get(i).get("kieli"));
                     throw new NoVersionInKoodistoUriException();
                 }
+            }
+        }
+    }
+
+    public void checkVersionInKoodistoUris(Organisaatio entity) {
+        // ryhmätyypit
+        if (entity.getRyhmatyypit() != null) {
+            List<String> errors = entity.getRyhmatyypit().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            if (!errors.isEmpty()) {
+                LOG.warn("Version missing from koodistouri! Organisaation ryhmätyypit: {}", errors);
+                throw new NoVersionInKoodistoUriException();
+            }
+        }
+
+        // käyttöryhmät
+        if (entity.getKayttoryhmat() != null) {
+            List<String> errors = entity.getKayttoryhmat().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            if (!errors.isEmpty()) {
+                LOG.warn("Version missing from koodistouri! Organisaation käyttöryhmät: {}", errors);
+                throw new NoVersionInKoodistoUriException();
             }
         }
     }

@@ -105,9 +105,9 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
         save : function(ryhma, callback, virheCallback) {
             var fn;
             if (ryhma.oid === null) {
-                fn = UusiOrganisaatio.put;
+                fn = UusiOrganisaatio.create;
             } else {
-                fn = Organisaatio.post;
+                fn = Organisaatio.update;
             }
             fn(ryhma, function(result) {
                 var ind = model.ryhmat.indexOf(ryhma);
