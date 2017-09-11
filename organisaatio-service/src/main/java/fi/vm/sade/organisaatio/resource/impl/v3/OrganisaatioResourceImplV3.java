@@ -5,6 +5,7 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
+import fi.vm.sade.organisaatio.dto.mapping.v3.OrganisaatioRDTOMapperV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
@@ -20,7 +21,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +51,9 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
+
+    @Autowired
+    private OrganisaatioRDTOMapperV3 organisaatioRDTOMapperV3;
 
     // GET /organisaatio/v3/{oid}/children
     @Override
@@ -117,10 +120,9 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV3 updateOrganisaatio(String oid, OrganisaatioRDTOV3 ordto) {
-        ModelMapper modelMapper = new ModelMapper();
-        OrganisaatioRDTO dtov1 = modelMapper.map(ordto, OrganisaatioRDTO.class);
+        OrganisaatioRDTO dtov1 = organisaatioRDTOMapperV3.map(ordto, OrganisaatioRDTO.class);
         ResultRDTO result = organisaatioResource.updateOrganisaatio(oid, dtov1);
-        OrganisaatioRDTOV3 dtov3 = modelMapper.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
+        OrganisaatioRDTOV3 dtov3 = organisaatioRDTOMapperV3.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
         return new ResultRDTOV3(dtov3, result.getInfo());
     }
 
@@ -128,10 +130,9 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto) {
-        ModelMapper modelMapper = new ModelMapper();
-        OrganisaatioRDTO dtov1 = modelMapper.map(ordto, OrganisaatioRDTO.class);
+        OrganisaatioRDTO dtov1 = organisaatioRDTOMapperV3.map(ordto, OrganisaatioRDTO.class);
         ResultRDTO result = organisaatioResource.newOrganisaatio(dtov1);
-        OrganisaatioRDTOV3 dtov3 = modelMapper.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
+        OrganisaatioRDTOV3 dtov3 = organisaatioRDTOMapperV3.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
         return new ResultRDTOV3(dtov3, result.getInfo());
     }
 
