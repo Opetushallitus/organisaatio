@@ -31,7 +31,7 @@ public class ResultRDTOV3 implements Serializable {
     }
 
     public ResultStatus getStatus() {
-        return getInfo() != null ? ResultRDTOV3.ResultStatus.OK : ResultRDTOV3.ResultStatus.WARNING;
+        return getInfo() == null ? ResultRDTOV3.ResultStatus.OK : ResultRDTOV3.ResultStatus.WARNING;
     }
 
     public OrganisaatioRDTOV3 getOrganisaatio() {
