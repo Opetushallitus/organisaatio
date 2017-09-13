@@ -163,43 +163,46 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
+        // Luodaan tallennettava entity objekti
+        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        return save(entity, model.getParentOid(), updating);
+    }
+
+    private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating) {
         // Tarkistetaan OID
-        if (model.getOid() == null && updating) {
+        if (entity.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
         } else if (!updating) {
-            if ((model.getOid() != null) && (organisaatioDAO.findByOid(model.getOid()) != null)) {
-                throw new OrganisaatioExistsException(model.getOid());
+            if ((entity.getOid() != null) && (organisaatioDAO.findByOid(entity.getOid()) != null)) {
+                throw new OrganisaatioExistsException(entity.getOid());
             }
 
-            if (model.getOppilaitosKoodi() != null && model.getOppilaitosKoodi().length() > 0) {
-                if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(model)) {
+            if (entity.getOppilaitosKoodi() != null && entity.getOppilaitosKoodi().length() > 0) {
+                if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(entity)) {
                     throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
                 }
             }
         }
 
         // Haetaan parent organisaatio
-        Organisaatio parentOrg = (model.getParentOid() != null && !model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid))
-                ? organisaatioDAO.findByOid(model.getParentOid()) : null;
+        Organisaatio parentOrg = (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid))
+                ? organisaatioDAO.findByOid(parentOid) : null;
 
         // Validate (throws exception)
-        validateOrganisation(model, parentOrg);
+        validateOrganisation(entity, parentOid, parentOrg);
 
         Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
         if (updating) {
-            oldOrg = organisaatioDAO.findByOid(model.getOid());
+            oldOrg = organisaatioDAO.findByOid(entity.getOid());
             if(oldOrg.isOrganisaatioPoistettu()) {
                 throw new ValidationException("validation.Organisaatio.poistettu");
             }
             oldName = new HashMap<>(oldOrg.getNimi().getValues());
         }
 
-        // Luodaan tallennettava entity objekti
-        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-
         // Asetetaan parent path
-        setParentPath(entity, model.getParentOid());
+        setParentPath(entity, parentOid);
 
         // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
         if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE)
@@ -221,14 +224,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         boolean parentChanged = false;
         Organisaatio oldParent = null;
         if (updating) {
-            oldParent = validateHierarchy(model, entity);
+            oldParent = validateHierarchy(parentOid, entity);
             if(oldParent != null) {
                 parentChanged = true;
             }
 
         } else {
             // Tarkistetaan organisaatio hierarkia
-            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+            checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
         // Generoidaan oidit
@@ -242,7 +245,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Generoidaan opetuspiteenJarjNro
         String opJarjNro = null;
         if (!updating || (oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi()))) {
-            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, model.getTyypit());
+            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
             opJarjNro = entity.getOpetuspisteenJarjNro();
@@ -303,7 +306,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Asetetaan tyypit "organisaatio" taulun kenttään
         String tyypitStr = "";
-        for (String curTyyppi : model.getTyypit()) {
+        for (String curTyyppi : entity.getTyypit()) {
             tyypitStr += curTyyppi + "|";
         }
         entity.setOrganisaatiotyypitStr(tyypitStr);
@@ -317,8 +320,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         } else {
             entity.setToimipisteKoodi(oldOrg.getToimipisteKoodi());
         }
-
-        validateOrganisation(entity);
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
@@ -372,17 +373,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return new OrganisaatioResult(entity, info);
     }
 
-    private Organisaatio validateHierarchy(OrganisaatioRDTO model, Organisaatio entity) {
+    private Organisaatio validateHierarchy(String parentOid, Organisaatio entity) {
         Organisaatio oldParent = null;
-        Organisaatio orgEntity = this.organisaatioDAO.findByOid(model.getOid());
+        Organisaatio orgEntity = this.organisaatioDAO.findByOid(entity.getOid());
         mergeAuxData(entity, orgEntity);
         entity.setId(orgEntity.getId());
         entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
 
         // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
-        if (model.getParentOid().equals(orgEntity.getParent().getOid()) == false) {
+        if (parentOid.equals(orgEntity.getParent().getOid()) == false) {
             LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
-            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+            checker.checkOrganisaatioHierarchy(entity, parentOid);
             oldParent = orgEntity.getParent();
         }
 
@@ -390,7 +391,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (!entity.getTyypit().containsAll(orgEntity.getTyypit())
                 || !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
             LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
-            checker.checkOrganisaatioHierarchy(entity, model.getParentOid());
+            checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
         // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
@@ -401,14 +402,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return oldParent;
     }
 
-    private void validateOrganisation(OrganisaatioRDTO model, Organisaatio parentOrg) {
+    private void validateOrganisation(Organisaatio model, String parentOid, Organisaatio parentOrg) {
         // Validointi: Tarkistetaan, että parent ei ole ryhmä
         if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
             throw new ValidationException("Parent cannot be group");
         }
 
         // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
-        if (OrganisaatioUtil.isRyhma(model) && model.getParentOid().equalsIgnoreCase(rootOrganisaatioOid) == false) {
+        if (OrganisaatioUtil.isRyhma(model) && parentOid.equalsIgnoreCase(rootOrganisaatioOid) == false) {
             throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
         }
 
@@ -418,10 +419,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getYTunnus() != null && model.getYTunnus().length() == 0) {
-            model.setYTunnus(null);
+        if (model.getYtunnus() != null && model.getYtunnus().length() == 0) {
+            model.setYtunnus(null);
         }
-        if (model.getYTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYTunnus())) {
+        if (model.getYtunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYtunnus())) {
             throw new ValidationException("validation.Organisaatio.ytunnus");
         }
 
@@ -435,11 +436,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Validointi: koodistoureissa pitää olla versiotieto
         checker.checkVersionInKoodistoUris(model);
-    }
-
-    private void validateOrganisation(Organisaatio entity) {
-        // Validointi: koodistoureissa pitää olla versiotieto
-        checker.checkVersionInKoodistoUris(entity);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
