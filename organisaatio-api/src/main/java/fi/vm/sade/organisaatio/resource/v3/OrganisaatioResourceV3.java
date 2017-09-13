@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -84,6 +85,16 @@ public interface OrganisaatioResourceV3 {
     public ResultRDTOV3 updateOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
             @ApiParam(access = "hidden") OrganisaatioRDTOV3 ordto);
+
+    @DELETE
+    @Path("/{oid}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Poistaa oid:n määrittämän organisaation",
+            notes = "Operaatio poistaa organisaation annetulla oid:llä.",
+            response = String.class)
+    public String deleteOrganisaatio(
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
 
     @POST
     @Path("/")

@@ -194,6 +194,7 @@ public interface OrganisaatioResource {
             value = "Poistaa oid:n määrittämän organisaation",
             notes = "Operaatio poistaa organisaation annetulla oid:llä.",
             response = String.class)
+    @Deprecated // käytä OrganisaatioResourceV3#deleteOrganisaatio
     public String deleteOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
 

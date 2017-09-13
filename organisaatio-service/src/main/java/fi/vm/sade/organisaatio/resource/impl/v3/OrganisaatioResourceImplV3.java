@@ -5,6 +5,7 @@ import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
@@ -42,6 +43,9 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
+
+    @Autowired
+    private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
 
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
@@ -149,6 +153,28 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
+    }
+
+    // DELETE /organisaatio/v3/{oid}
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String deleteOrganisaatio(String oid) {
+        try {
+            permissionChecker.checkRemoveOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to delete organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
+        try {
+            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
+            LOG.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error deleting org", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        }
+
+        return "{\"message\": \"deleted\"}";
     }
 
     // POST /organisaatio/v3/
