@@ -436,7 +436,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return ryhmatyypit
      */
     public List<String> getRyhmatyypitV1() {
-        return getRyhmatyypit().stream().map(KoodistoUtil::getRyhmatyyppiV1).collect(toList());
+        return getRyhmatyypit().stream()
+                .map(KoodistoUtil::getRyhmatyyppiV1)
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
     /**
@@ -470,7 +473,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return kayttoryhmat
      */
     public List<String> getKayttoryhmatV1() {
-        return getKayttoryhmat().stream().map(KoodistoUtil::getKayttoryhmaV1).collect(toList());
+        return getKayttoryhmat().stream()
+                .map(KoodistoUtil::getKayttoryhmaV1)
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
     /**
