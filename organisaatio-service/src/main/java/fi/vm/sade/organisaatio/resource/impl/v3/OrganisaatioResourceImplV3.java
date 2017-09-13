@@ -1,25 +1,28 @@
 package fi.vm.sade.organisaatio.resource.impl.v3;
 
 import com.google.common.base.Preconditions;
+import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
-import fi.vm.sade.organisaatio.dto.mapping.v3.OrganisaatioRDTOMapperV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.validation.ValidationException;
+import javax.ws.rs.core.Response;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -38,7 +41,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV3.class);
 
     @Autowired
-    private OrganisaatioResource organisaatioResource;
+    private OrganisaatioBusinessService organisaatioBusinessService;
 
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
@@ -53,7 +56,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     private OrganisaatioDAO organisaatioDAO;
 
     @Autowired
-    private OrganisaatioRDTOMapperV3 organisaatioRDTOMapperV3;
+    private PermissionChecker permissionChecker;
 
     // GET /organisaatio/v3/{oid}/children
     @Override
@@ -120,20 +123,59 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV3 updateOrganisaatio(String oid, OrganisaatioRDTOV3 ordto) {
-        OrganisaatioRDTO dtov1 = organisaatioRDTOMapperV3.map(ordto, OrganisaatioRDTO.class);
-        ResultRDTO result = organisaatioResource.updateOrganisaatio(oid, dtov1);
-        OrganisaatioRDTOV3 dtov3 = organisaatioRDTOMapperV3.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
-        return new ResultRDTOV3(dtov3, result.getInfo());
+        LOG.info("Saving " + oid);
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, true);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to update organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
+        try {
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
+            return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
+        } catch (ValidationException ex) {
+            LOG.warn("Error saving " + oid, ex);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving " + oid, sbe);
+            throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            LOG.warn("Error saving " + oid, ore);
+            throw ore;
+        } catch (Throwable t) {
+            LOG.error("Error saving " + oid, t);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 
     // POST /organisaatio/v3/
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto) {
-        OrganisaatioRDTO dtov1 = organisaatioRDTOMapperV3.map(ordto, OrganisaatioRDTO.class);
-        ResultRDTO result = organisaatioResource.newOrganisaatio(dtov1);
-        OrganisaatioRDTOV3 dtov3 = organisaatioRDTOMapperV3.map(result.getOrganisaatio(), OrganisaatioRDTOV3.class);
-        return new ResultRDTOV3(dtov3, result.getInfo());
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, false);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
+            throw new OrganisaatioResourceException(nae);
+        }
+        try {
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
+            return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
+        } catch (ValidationException ex) {
+            LOG.warn("Error saving new org", ex);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving new org", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        } catch (Throwable t) {
+            LOG.warn("Error saving new org", t);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 
     // GET /organisaatio/v3/muutetut

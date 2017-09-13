@@ -30,6 +30,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import java.util.Date;
@@ -92,6 +93,12 @@ public class PermissionChecker {
     }
 
     public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
+        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+    }
+
+    public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
                 organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());

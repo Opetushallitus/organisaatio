@@ -45,7 +45,6 @@
     <bean id="organisaatioLiitosModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper"/>
     <bean id="groupModelMapperV2" class="fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2"/>
     <bean id="groupModelMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3"/>
-    <bean id="organisaatioRDTOMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.OrganisaatioRDTOMapperV3"/>
 
     <!--
         Enable @Scheduled annotations
