@@ -30,12 +30,13 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
+import java.util.Date;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,44 +94,49 @@ public class PermissionChecker {
 
     public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
+        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+    }
 
+    public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
+        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+    }
+
+    private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
+            String oid, Map<String, String> nimi,
+            Date alkuPvm, Date lakkautusPvm, String parentOid) {
         if (checkCRUDRyhma(authContext)) {
             return;
         }
 
         if (update) {
-            final Organisaatio current = organisaatioDAO.findByOid(organisaatio.getOid());
+            final Organisaatio current = organisaatioDAO.findByOid(oid);
 
-            if (!Objects.equal(current.getNimi(), convertMapToMonikielinenTeksti(organisaatio.getNimi()))) {
+            if (!Objects.equal(current.getNimi(), convertMapToMonikielinenTeksti(nimi))) {
                 LOG.info("Nimi muuttunut");
 
                 // name changed
                 checkPermission(permissionService.userCanEditName(authContext));
             }
-            if (OrganisaatioUtil.isSameDay(organisaatio.getAlkuPvm(), current.getAlkuPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(alkuPvm, current.getAlkuPvm()) == false) {
                 LOG.info("Alkupäivämäärä muuttunut: " +
-                        current.getAlkuPvm() + " -> " + organisaatio.getAlkuPvm());
+                        current.getAlkuPvm() + " -> " + alkuPvm);
 
                 // date(s) changed
                 checkPermission(permissionService.userCanEditDates(authContext));
             }
-            if (OrganisaatioUtil.isSameDay(organisaatio.getLakkautusPvm(), current.getLakkautusPvm()) == false) {
+            if (OrganisaatioUtil.isSameDay(lakkautusPvm, current.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut: " +
-                        current.getLakkautusPvm() + " -> " + organisaatio.getLakkautusPvm());
+                        current.getLakkautusPvm() + " -> " + lakkautusPvm);
 
                 // date(s) changed
                 checkPermission(permissionService.userCanEditDates(authContext));
-            }
-            // TODO organisation type
-            List<String> stringTyypit = organisaatio.getTyypit();
-
-            if (!(stringTyypit.size()==current.getTyypit().size() && stringTyypit.containsAll(current.getTyypit()))){
-                ///XXX what then?
             }
             checkPermission(permissionService.userCanUpdateOrganisation(authContext));
         } else {
-            checkPermission(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(organisaatio.getParentOid())));
-            //TODO types
+            checkPermission(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(parentOid)));
         }
     }
 

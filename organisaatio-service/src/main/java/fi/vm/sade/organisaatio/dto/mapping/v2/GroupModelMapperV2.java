@@ -13,16 +13,16 @@
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 */
 
-package fi.vm.sade.organisaatio.dto.mapping;
+package fi.vm.sade.organisaatio.dto.mapping.v2;
 
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioGroupDTOV2;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
-public class GroupModelMapper extends ModelMapper {
+public class GroupModelMapperV2 extends ModelMapper {
 
-    public GroupModelMapper() {
+    public GroupModelMapperV2() {
         super();
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioGroupDTOV2>() {
             @Override
@@ -31,7 +31,12 @@ public class GroupModelMapper extends ModelMapper {
                 map().setNimi(source.getNimi().getValues());
                 map().setKuvaus(source.getKuvaus2().getValues());
                 map().setParentOid(source.getParent().getOid());
+
+                // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
+                map().setRyhmatyypit(source.getRyhmatyypitV1());
+                map().setKayttoryhmat(source.getKayttoryhmatV1());;
             }
         });
     }
+
 }

@@ -31,11 +31,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
      * Parametrit:
      *   uri: koodistoUri
      *   resultArray: Array johon koodi-itemit tallennetaan
-     *   defaultArray: jos tyyppiä Array, palautetaan virhetilanteessa eikä näytetä virheilmoitusta.
-     *                 Jos muu kuin Array, näytetään virheilmoitus.
      */
-    var getKoodistoArray = function(uri, resultArray, defaultArray) {
-        /* Poistetaan koodikommentti kun toteutetaan: https://jira.oph.ware.fi/jira/browse/OVT-8892
+    var getKoodistoArray = function(uri, resultArray) {
         KoodistoClient.koodistoArrayByUri.get({uri: uri}, function(result) {
             resultArray.length = 0;
             result.forEach(function(rTyyppiKoodi) {
@@ -44,23 +41,8 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
             });
         }, function(response) {
             // koodeja ei löytynyt
-            if (defaultArray instanceof Array) {
-                defaultArray.forEach(function(rTyyppiKoodi) {
-                    resultArray.push(rTyyppiKoodi);
-                });
-            } else {
-                showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
-            }
+            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response);
         });
-        **/
-        // Käytetään default arvoja, kunnes koodistossa tarvittava koodistot: ks. OVT-8892
-        if (defaultArray instanceof Array) {
-            defaultArray.forEach(function(rTyyppiKoodi) {
-                resultArray.push(rTyyppiKoodi);
-            });
-        } else {
-            showAndLogError("Organisaationtarkastelu.koodistohakuvirhe");
-        }
     };
 
     var model = new function() {
@@ -71,28 +53,10 @@ app.factory('RyhmaKoodisto', function($q, $log, $filter, $injector,
             {
                 uri: 'ryhmatyypit',
                 resultArray: this.ryhmatyypit,
-                defaultArray: [
-                    // Default-arvoja käytetään kunnes koodistoon lisätään 'ryhmatyyppi'-koodisto
-                    // Default-arvojen lähde: Confluence / Ryhmien määrittely
-                    {uri: 'organisaatio', nimi: $filter('i18n')("Ryhmienhallinta.organisaatio", "")},
-                    {uri: 'hakukohde', nimi: $filter('i18n')("Ryhmienhallinta.hakukohde", "")},
-                    {uri: 'perustetyoryhma', nimi: $filter('i18n')("Ryhmienhallinta.perustetyoryhma", "")},
-                    {uri: 'koulutus', nimi: $filter('i18n')("Ryhmienhallinta.koulutus", "")}
-                ]
             },
             {
                 uri: 'kayttoryhmat',
                 resultArray: this.kayttoryhmat,
-                // Default-arvoja käytetään kunnes koodistoon lisätään 'kayttoryhma'-koodisto
-                // Default-arvojen lähde: Confluence / Ryhmien määrittely
-                defaultArray: [
-                    {uri: 'yleinen', nimi: $filter('i18n')("Ryhmienhallinta.yleinen", "")},
-                    {uri: 'hakukohde_rajaava', nimi: $filter('i18n')("Ryhmienhallinta.rajaava", "")},
-                    {uri: 'hakukohde_priorisoiva', nimi: $filter('i18n')("Ryhmienhallinta.priorisoiva", "")},
-                    {uri: 'hakukohde_liiteosoite', nimi: $filter('i18n')("Ryhmienhallinta.liiteosoite", "")},
-                    {uri: 'perusteiden_laadinta', nimi: $filter('i18n')("Ryhmienhallinta.perusteidenlaadinta", "")},
-                    {uri: 'kayttooikeus', nimi: $filter('i18n')("Ryhmienhallinta.kayttooikeus", "")}
-                ]
             }
         ];
 

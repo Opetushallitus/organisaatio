@@ -18,7 +18,6 @@ package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
@@ -29,10 +28,6 @@ import org.apache.commons.lang.time.DateUtils;
  */
 public abstract class OrganisaatioUtil {
     public static boolean isRyhma(Organisaatio organisaatio) {
-        return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
-    }
-
-    public static boolean isRyhma(OrganisaatioRDTO organisaatio) {
         return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
     }
 

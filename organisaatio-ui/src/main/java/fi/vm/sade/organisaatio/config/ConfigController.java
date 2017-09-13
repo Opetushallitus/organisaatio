@@ -40,16 +40,16 @@ public class ConfigController {
         append(b, "SESSION_KEEPALIVE_INTERVAL_IN_SECONDS", ophProperties.getOrElse("organisaatio-ui.session-keepalive-interval.seconds", "30"));
         append(b, "MAX_SESSION_IDLE_TIME_IN_SECONDS", ophProperties.getOrElse("organisaatio-ui.max-session-idle-time.seconds", "1800"));
 
-        append(b, "ORGANISAATIO_REST", ophProperties.getProperty("organisaatio-service.rest.organisaatio"));
+        append(b, "ORGANISAATIO_REST_V3", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3"));
         append(b, "ORGANISAATIO_REST_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.param", "hae"));
-        append(b, "ORGANISAATIO_REST_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.param", ":oid"));
+        append(b, "ORGANISAATIO_REST_V3_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3.param", ":oid"));
 
         append(b, "ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL", ophProperties.getProperty("organisaatio-service.rest.organisaatio.session.maxinactiveinterval"));
         append(b, "ORGANISAATIO_REST_YTJ_LOKI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytjloki"));
 
 
         append(b, "ORGANISAATIO_REST_V2_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.param", "hae"));
-        append(b, "ORGANISAATIO_REST_V2_RYHMAT", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.param", "ryhmat"));
+        append(b, "ORGANISAATIO_REST_V3_RYHMAT", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3.param", "ryhmat"));
         append(b, "ORGANISAATIO_REST_V2_MUOKKAAMONTA", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.param", "muokkaamonta"));
 
 

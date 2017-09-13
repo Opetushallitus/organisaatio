@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
@@ -40,6 +41,15 @@ public interface OrganisaatioBusinessService {
      * @throws ValidationException
      */
     public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException;
+
+    /**
+     * @param model
+     * @param updating
+     * @return
+     * @throws ValidationException
+     */
+    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException;
+
     /**
      * @param oid
      * @return

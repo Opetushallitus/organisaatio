@@ -116,6 +116,7 @@ public interface OrganisaatioResource {
             notes = "Operaatio palauttaa organisaation alla olevat organisaatiot.",
             response = OrganisaatioRDTO.class,
             responseContainer = "List")
+    @Deprecated // käytä OrganisaatioResourceV3#children
     public List<OrganisaatioRDTO> children(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
@@ -129,6 +130,7 @@ public interface OrganisaatioResource {
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
             response = OrganisaatioRDTO.class,
             responseContainer = "List")
+    @Deprecated // käytä OrganisaatioResourceV3#groups
     public List<OrganisaatioRDTO> groups(
             @ApiParam(value = "Organisaation oid", required = true,
                     defaultValue = "1.2.246.562.24.00000000001") @PathParam("oid") String oid,
@@ -163,6 +165,7 @@ public interface OrganisaatioResource {
             value = "Hakee yhden organisaation annetulla id:llä (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi).",
             notes = "Operaatio palauttaa id:n määrittämän organisaation tiedot.",
             response = OrganisaatioRDTO.class)
+    @Deprecated // käytä OrganisaatioResourceV3#getOrganisaatioByOID
     public OrganisaatioRDTO getOrganisaatioByOID(
             @ApiParam(value = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.",
                     required = true) @PathParam("id") String oid,
@@ -179,6 +182,7 @@ public interface OrganisaatioResource {
             value = "Päivittää oid:n määrittämän organisaation tiedot",
             notes = "Operaatio päivittää oid:n määrittämän organisaation tiedot.",
             response = ResultRDTO.class)
+    @Deprecated // käytä OrganisaatioResourceV3#updateOrganisaatio
     public ResultRDTO updateOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
             @ApiParam(access = "hidden") OrganisaatioRDTO ordto);
@@ -190,6 +194,7 @@ public interface OrganisaatioResource {
             value = "Poistaa oid:n määrittämän organisaation",
             notes = "Operaatio poistaa organisaation annetulla oid:llä.",
             response = String.class)
+    @Deprecated // käytä OrganisaatioResourceV3#deleteOrganisaatio
     public String deleteOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
 
@@ -203,6 +208,7 @@ public interface OrganisaatioResource {
             value = "Luo uuden organisaation",
             notes = "Operaatio luo uuden organisaation annetusta JSON:sta.",
             response = ResultRDTO.class)
+    @Deprecated // käytä OrganisaatioResourceV3#newOrganisaatio
     public ResultRDTO newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTO ordto);
 
     @GET

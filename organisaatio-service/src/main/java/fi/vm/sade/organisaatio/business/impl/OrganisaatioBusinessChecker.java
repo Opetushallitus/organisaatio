@@ -28,10 +28,10 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 
 import java.util.*;
+import static java.util.stream.Collectors.toList;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
@@ -102,7 +102,7 @@ public class OrganisaatioBusinessChecker {
      * @param org
      * @return
      */
-    public boolean checkLearningInstitutionCodeIsUniqueAndNotUsed(OrganisaatioRDTO org) {
+    public boolean checkLearningInstitutionCodeIsUniqueAndNotUsed(Organisaatio org) {
         List<Organisaatio> orgs = organisaatioDAO.findBy("oppilaitosKoodi", org.getOppilaitosKoodi().trim());
         if (orgs != null && orgs.size() > 0) {
             return true;
@@ -176,36 +176,54 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
-    public void checkVersionInKoodistoUris(OrganisaatioRDTO model) {
+    public void checkVersionInKoodistoUris(Organisaatio entity) {
         // kotipaikka
 
         // maa
         // metadata.hakutoimistonNimi
         // metadata.data
         // kielet
-        for (int i = 0; i < model.getKieletUris().size(); ++i) {
-            if (model.getKieletUris().get(i).matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + model.getKieletUris().get(i));
+        for (int i = 0; i < entity.getKielet().size(); ++i) {
+            if (entity.getKielet().get(i).matches(uriWithVersionRegExp) == false) {
+                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + entity.getKielet().get(i));
                 throw new NoVersionInKoodistoUriException();
             }
         }
 
         // oppilaitostyyppi
-        if (isEmpty(model.getOppilaitosTyyppiUri()) == false) {
-            if (model.getOppilaitosTyyppiUri().matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + model.getOppilaitosTyyppiUri());
+        if (isEmpty(entity.getOppilaitosTyyppi()) == false) {
+            if (entity.getOppilaitosTyyppi().matches(uriWithVersionRegExp) == false) {
+                LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + entity.getOppilaitosTyyppi());
                 throw new NoVersionInKoodistoUriException();
             }
         }
 
         // yhteystieto.postinumero
         // yhteystieto.kieli
-        for (int i = 0; i < model.getYhteystiedot().size(); ++i) {
-            if (model.getYhteystiedot().get(i).containsKey("kieli")) {
-                if (model.getYhteystiedot().get(i).get("kieli").matches(uriWithVersionRegExp) == false) {
-                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + model.getYhteystiedot().get(i).get("kieli"));
+        for (int i = 0; i < entity.getYhteystiedot().size(); ++i) {
+            if (entity.getYhteystiedot().get(i).getKieli() != null) {
+                if (entity.getYhteystiedot().get(i).getKieli().matches(uriWithVersionRegExp) == false) {
+                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + entity.getYhteystiedot().get(i).getKieli());
                     throw new NoVersionInKoodistoUriException();
                 }
+            }
+        }
+
+        // ryhmätyypit
+        if (entity.getRyhmatyypit() != null) {
+            List<String> errors = entity.getRyhmatyypit().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            if (!errors.isEmpty()) {
+                LOG.warn("Version missing from koodistouri! Organisaation ryhmätyypit: {}", errors);
+                throw new NoVersionInKoodistoUriException();
+            }
+        }
+
+        // käyttöryhmät
+        if (entity.getKayttoryhmat() != null) {
+            List<String> errors = entity.getKayttoryhmat().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            if (!errors.isEmpty()) {
+                LOG.warn("Version missing from koodistouri! Organisaation käyttöryhmät: {}", errors);
+                throw new NoVersionInKoodistoUriException();
             }
         }
     }

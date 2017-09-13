@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.service.converter;
+package fi.vm.sade.organisaatio.service.converter.v3;
 
 import fi.vm.sade.generic.service.conversion.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -32,7 +33,6 @@ import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -51,12 +51,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author rsal
  */
-public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
+public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOToOrganisaatioConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOV3ToOrganisaatioConverter.class);
 
     @Override
-    public Organisaatio convert(OrganisaatioRDTO t) {
+    public Organisaatio convert(OrganisaatioRDTOV3 t) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         List<Yhteystieto> yhteystietos = new ArrayList<Yhteystieto>();
         Organisaatio s = new Organisaatio();
@@ -106,9 +106,8 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
-        // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
-        s.setRyhmatyypitV1(convertListToList(t.getRyhmatyypit()));
-        s.setKayttoryhmatV1(convertListToList(t.getKayttoryhmat()));
+        s.setRyhmatyypit(convertListToList(t.getRyhmatyypit()));
+        s.setKayttoryhmat(convertListToList(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
         // t.set(s.getYhteystiedot());
         // t.set(s.getYhteystietoArvos());
