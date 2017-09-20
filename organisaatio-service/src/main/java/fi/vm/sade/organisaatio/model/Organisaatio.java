@@ -17,6 +17,7 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import java.util.*;
 
@@ -58,16 +59,6 @@ import static java.util.stream.Collectors.toList;
 public class Organisaatio extends OrganisaatioBaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Organisaation status.
-     */
-    public enum OrganisaatioStatus {
-        AKTIIVINEN,
-        SUUNNITELTU,
-        PASSIIVINEN,
-        POISTETTU
-    };
 
     @ElementCollection(fetch= FetchType.EAGER)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))

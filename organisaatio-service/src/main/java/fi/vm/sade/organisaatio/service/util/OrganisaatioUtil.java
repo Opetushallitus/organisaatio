@@ -89,7 +89,7 @@ public abstract class OrganisaatioUtil {
      * @return true jos organisaatio on passiivinen, false muuten
      */
     public static boolean isPassive(Organisaatio o) {
-        return o.getLakkautusPvm()==null ? false : o.getLakkautusPvm().before(new Date());
+        return o.getLakkautusPvm() != null && o.getLakkautusPvm().before(new Date());
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class OrganisaatioUtil {
      * @return true jos organisaatio on suunniteltu, false muuten
      */
     public static boolean isSuunniteltu(Organisaatio o) {
-        return o.getAlkuPvm()==null ? false : o.getAlkuPvm().after(new Date());
+        return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
     }
 
 }

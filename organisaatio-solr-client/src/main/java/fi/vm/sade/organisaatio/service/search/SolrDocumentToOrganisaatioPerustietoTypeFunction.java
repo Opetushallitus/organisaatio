@@ -79,6 +79,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
         result.setOppilaitostyyppi(sGet(doc, OPPILAITOSTYYPPI));
         result.setToimipistekoodi(sGet(doc, TOIMIPISTEKOODI));
         result.setAliOrganisaatioMaara(iGet(doc, ALIORGANISAATIOIDEN_LKM));
+        result.setStatus(result.getStatus());
 
         return result;
     }

@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
+import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -67,6 +69,9 @@ public class OrganisaatioPerustieto implements Serializable {
 
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
     private List<OrganisaatioPerustieto> children = new ArrayList<OrganisaatioPerustieto>();
+
+    @ApiModelProperty(value = "Organisaation tila", required = true)
+    private OrganisaatioStatus status;
 
     public List<OrganisaatioPerustieto> getChildren() {
         return children;
@@ -367,4 +372,18 @@ public class OrganisaatioPerustieto implements Serializable {
         return this.nimi.get(language);
     }
 
+    // Since all OrganisaatioStatus.POISTETTU are straight up removed from sorl index it's not possible case here
+    public OrganisaatioStatus getStatus() {
+        if(OrganisaatioPerustietoUtil.isPassive(this)) {
+            return OrganisaatioStatus.PASSIIVINEN;
+        }
+        if(OrganisaatioPerustietoUtil.isSuunniteltu(this)) {
+            return OrganisaatioStatus.SUUNNITELTU;
+        }
+        return OrganisaatioStatus.AKTIIVINEN;
+    }
+
+    public void setStatus(OrganisaatioStatus status) {
+        this.status = status;
+    }
 }
