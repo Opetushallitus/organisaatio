@@ -14,13 +14,11 @@
 */
 
 
-package fi.vm.sade.organisaatio.service.util;
+package fi.vm.sade.organisaatio.api.util;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  *
@@ -56,5 +54,22 @@ public abstract class OrganisaatioPerustietoUtil {
         }
 
         return rootOrgs;
+    }
+    /**
+     * Tarkistaa onko organisaatio passivoitu eli lakkautettu
+     * @param o Organisaatio
+     * @return true jos organisaatio on passiivinen, false muuten
+     */
+    public static boolean isPassive(OrganisaatioPerustieto o) {
+        return o.getLakkautusPvm() != null && o.getLakkautusPvm().before(new Date());
+    }
+
+    /**
+     * Tarkistaa onko organisaatio suunniteltu, eli alkupvm tulevaisuudessa
+     * @param o Organisaatio
+     * @return true jos organisaatio on suunniteltu, false muuten
+     */
+    public static boolean isSuunniteltu(OrganisaatioPerustieto o) {
+        return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
     }
 }

@@ -20,6 +20,7 @@ import fi.vm.sade.generic.common.validation.ValidationConstants;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
@@ -678,8 +679,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private void mapOrgsByYtunnusAndRemovePassiveOrgs(List<String> oidList, Map<String, Organisaatio> organisaatioMap) {
         List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList, SEARCH_LIMIT);
         for(Organisaatio organisaatio : organisaatioList) {
-            if(organisaatio.getStatus() == Organisaatio.OrganisaatioStatus.AKTIIVINEN
-                    || organisaatio.getStatus() == Organisaatio.OrganisaatioStatus.SUUNNITELTU) {
+            if(organisaatio.getStatus() == OrganisaatioStatus.AKTIIVINEN
+                    || organisaatio.getStatus() == OrganisaatioStatus.SUUNNITELTU) {
                 organisaatioMap.put(organisaatio.getYtunnus().trim(), organisaatio);
             }
         }

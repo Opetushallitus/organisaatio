@@ -108,7 +108,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         q.set("fl", OID, PATH);
         // max rows to return
-        q.setRows(10000);
+        q.setRows(20000);
         try {
             QueryResponse response = solr.query(q, METHOD.POST);
 
@@ -167,7 +167,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                                 Joiner.on(" ").join(escapeAll(paths)));
             }
             q.setQuery(query);
-            q.setRows(10000);
+            q.setRows(20000);
 
             response = solr.query(q, METHOD.POST);
 
