@@ -70,9 +70,6 @@ public class OrganisaatioPerustieto implements Serializable {
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
     private List<OrganisaatioPerustieto> children = new ArrayList<OrganisaatioPerustieto>();
 
-    @ApiModelProperty(value = "Organisaation tila", required = true)
-    private OrganisaatioStatus status;
-
     public List<OrganisaatioPerustieto> getChildren() {
         return children;
     }
@@ -381,9 +378,5 @@ public class OrganisaatioPerustieto implements Serializable {
             return OrganisaatioStatus.SUUNNITELTU;
         }
         return OrganisaatioStatus.AKTIIVINEN;
-    }
-
-    public void setStatus(OrganisaatioStatus status) {
-        this.status = status;
     }
 }
