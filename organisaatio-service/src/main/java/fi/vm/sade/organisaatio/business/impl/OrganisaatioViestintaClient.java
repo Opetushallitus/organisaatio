@@ -35,8 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
@@ -70,14 +68,19 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
         HttpPost post = new HttpPost(viestintaServiceUrl );
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        post.addHeader("CSRF", IDContextMessageHelper.getCsrfHeader());
         post.addHeader("CasSecurityTicket", ticket);
         post.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
             post.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(post);
             Header idHeader = resp.getFirstHeader("ID");
-            if(idHeader != null) {
+            if (idHeader != null) {
                 IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
+            }
+            Header csrfHeader = resp.getFirstHeader("CSRF");
+            if (csrfHeader != null) {
+                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST "

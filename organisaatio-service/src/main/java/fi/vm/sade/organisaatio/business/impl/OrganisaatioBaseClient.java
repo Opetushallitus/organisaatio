@@ -62,6 +62,7 @@ public abstract class OrganisaatioBaseClient {
             LOG.info("serviceAccessUrl " + serviceAccessUrl);
             post.addHeader("ID", IDContextMessageHelper.getIDChain());
             post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+            post.addHeader("CSRF", IDContextMessageHelper.getCsrfHeader());
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
             postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
             postParameters.add(new BasicNameValuePair("service_url", serviceUrl));
@@ -69,9 +70,13 @@ public abstract class OrganisaatioBaseClient {
                 post.setEntity(new UrlEncodedFormEntity(postParameters));
                 HttpClient client = HttpClientBuilder.create().build();
                 HttpResponse resp = client.execute(post);
-                Header header = resp.getFirstHeader("ID");
-                if(header != null) {
-                    IDContextMessageHelper.setReceivedIDChain(header.getValue());
+                Header idHeader = resp.getFirstHeader("ID");
+                if (idHeader != null) {
+                    IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
+                }
+                Header csrfHeader = resp.getFirstHeader("CSRF");
+                if (csrfHeader != null) {
+                    IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
                 }
                 ticket = EntityUtils.toString(resp.getEntity()).trim();
                 if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED || ticket.isEmpty()) {
