@@ -6,9 +6,12 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -21,6 +24,8 @@ import java.util.ArrayList;
 
 public abstract class OrganisaatioBaseClient {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private final String CSRF_HEADER_NAME = "CSRF";
 
     protected String ticket;
 
@@ -62,6 +67,17 @@ public abstract class OrganisaatioBaseClient {
             LOG.info("serviceAccessUrl " + serviceAccessUrl);
             post.addHeader("ID", IDContextMessageHelper.getIDChain());
             post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+
+            CookieStore cookieStore = HttpClientContext.create().getCookieStore();
+            if (cookieStore != null && cookieStore.getCookies() != null) {
+                for (Cookie cookie : cookieStore.getCookies()) {
+                    if (cookie.getName().equals(CSRF_HEADER_NAME)) {
+                        post.addHeader(CSRF_HEADER_NAME, cookie.getValue());
+                        break;
+                    }
+                }
+            }
+
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
             postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
             postParameters.add(new BasicNameValuePair("service_url", serviceUrl));
