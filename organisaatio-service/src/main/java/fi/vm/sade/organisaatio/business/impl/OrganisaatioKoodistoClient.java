@@ -52,11 +52,11 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     @Autowired
     private UrlConfiguration urlConfiguration;
 
-    protected void authorize() throws OrganisaatioKoodistoException {
+    protected void authorize(final String csrfCookie) throws OrganisaatioKoodistoException {
         try {
             String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
             LOG.info("authorize url " + koodistoServiceUrl);
-            authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
+            authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword, csrfCookie);
         } catch (Exception e) {
             throw new OrganisaatioKoodistoException(e.getMessage());
         }
@@ -71,13 +71,13 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     /**
      * Hae koodi URIn mukaan
      *
-     * @param uri koodiston uri, esim.
-     * "/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
+     * @param uri koodiston uri, esim. "/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
+     * @param csrfCookie CSRF-keksin arvo
      * @return koodi json-muodossa, tai null jos koodia ei löydy
      * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
-    public String get(String uri) throws OrganisaatioKoodistoException {
+    public String get(String uri, final String csrfCookie) throws OrganisaatioKoodistoException {
         String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
         String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
         LOG.debug("GET " + url);
@@ -87,6 +87,9 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         HttpGet get = new HttpGet(url);
         get.addHeader("ID", IDContextMessageHelper.getIDChain());
         get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        if (csrfCookie != null) {
+            get.addHeader("CSRF", csrfCookie);
+        }
         try {
             HttpResponse resp = client.execute(get);
             Header header = resp.getFirstHeader("ID");
@@ -116,21 +119,25 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      * Päivittää koodin koodistoon
      *
      * @param json Päivitettävä koodi json-muodossa
+     * @param csrfCookie CSRF-keksin arvo
      * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
-    public void put(String json) throws OrganisaatioKoodistoException {
+    public void put(String json, final String csrfCookie) throws OrganisaatioKoodistoException {
         HttpContext localContext = new BasicHttpContext();
         String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
 
         LOG.debug("PUT " + uri);
         LOG.info("PUT " + uri);
         LOG.debug("PUT data=" + json);
-        authorize();
+        authorize(csrfCookie);
         HttpClient client = HttpClientBuilder.create().build();
         HttpPut put = new HttpPut(uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
         put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        if (csrfCookie != null) {
+            put.addHeader("CSRF", csrfCookie);
+        }
         put.addHeader("CasSecurityTicket", ticket);
         put.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
@@ -161,20 +168,24 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      *
      * @param json Lisättävä koodi json-muodossa
      * @param uri Lisättävän koodin uri, esim. 'opetuspisteet'
+     * @param csrfCookie CSRF-keksin arvo
      * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
-    public void post(String json, String uri) throws OrganisaatioKoodistoException {
+    public void post(String json, String uri, final String csrfCookie) throws OrganisaatioKoodistoException {
         String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
 
         LOG.debug("POST " + url);
         LOG.info("POST " + url);
         LOG.debug("POST data=" + json);
-        authorize();
+        authorize(csrfCookie);
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        if (csrfCookie != null) {
+            post.addHeader("CSRF", csrfCookie);
+        }
         post.addHeader("CasSecurityTicket", ticket);
         post.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {

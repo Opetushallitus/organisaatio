@@ -29,7 +29,7 @@ public abstract class OrganisaatioBaseClient {
     @Autowired
     private UrlConfiguration urlConfiguration;
 
-    protected abstract void authorize() throws Exception;
+    protected abstract void authorize(final String csrfCookie) throws Exception;
 
     /**
      * Configure authorization
@@ -43,7 +43,7 @@ public abstract class OrganisaatioBaseClient {
         this.reauthorize = reauthorize;
     }
 
-    protected void authorize(String serviceUrl, String clientUsername, String clientPassword)
+    protected void authorize(String serviceUrl, String clientUsername, String clientPassword, final String csrfToken)
             throws Exception {
         if (ticket != null && !reauthorize) {
             LOG.debug("Using existing ticket.");
@@ -62,6 +62,9 @@ public abstract class OrganisaatioBaseClient {
             LOG.info("serviceAccessUrl " + serviceAccessUrl);
             post.addHeader("ID", IDContextMessageHelper.getIDChain());
             post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+            if (csrfToken != null) {
+                post.addHeader("CSRF", csrfToken);
+            }
             postParameters.add(new BasicNameValuePair("client_id", clientUsername));
             postParameters.add(new BasicNameValuePair("client_secret", clientPassword));
             postParameters.add(new BasicNameValuePair("service_url", serviceUrl));

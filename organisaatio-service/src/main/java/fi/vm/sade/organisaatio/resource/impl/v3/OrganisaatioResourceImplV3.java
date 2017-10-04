@@ -126,7 +126,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     // PUT /organisaatio/v3/{oid}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTOV3 updateOrganisaatio(String oid, OrganisaatioRDTOV3 ordto) {
+    public ResultRDTOV3 updateOrganisaatio(String oid, OrganisaatioRDTOV3 ordto, final String csrfCookie) {
         LOG.info("Saving " + oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
@@ -136,7 +136,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, csrfCookie);
             return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving " + oid, ex);
@@ -180,7 +180,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     // POST /organisaatio/v3/
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto) {
+    public ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto, final String csrfCookie) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
@@ -188,7 +188,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, csrfCookie);
             return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving new org", ex);

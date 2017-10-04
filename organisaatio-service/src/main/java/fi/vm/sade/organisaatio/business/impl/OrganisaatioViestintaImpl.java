@@ -72,12 +72,12 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     }
 
     @Override
-    public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize) {
+    public void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize, final String csrfCookie) {
         this.reauthorize = reauthorize;
         if(ytjPaivitysLoki != null) {
             String msgContent = generateMessageFromPaivitysloki(ytjPaivitysLoki);
 
-            sendStringViestintaEmail(msgContent, reauthorize);
+            sendStringViestintaEmail(msgContent, reauthorize, csrfCookie);
         }
         else {
             LOG.error("Null ytjPaivitysLoki. Could not send email.");
@@ -127,18 +127,18 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     }
 
     @Override
-    public void sendStringViestintaEmail(String msgContent, boolean reauthorize) {
+    public void sendStringViestintaEmail(String msgContent, boolean reauthorize, final String csrfCookie) {
         this.reauthorize = reauthorize;
         if(msgContent == null || msgContent.isEmpty()) {
             LOG.error("Null or empty string. Could not send email.");
         }
         else {
-            generateAndSendEmail(msgContent, new ArrayList<String>(){{add(email);}}, reauthorize);
+            generateAndSendEmail(msgContent, new ArrayList<String>(){{add(email);}}, reauthorize, csrfCookie);
         }
     }
 
     @Override
-    public void generateAndSendEmail(String msgContent, List<String> receiverEmails, boolean reauthorize) {
+    public void generateAndSendEmail(String msgContent, List<String> receiverEmails, boolean reauthorize, final String csrfCookie) {
         this.reauthorize = reauthorize;
         List<EmailRecipient> receiverList = new ArrayList<>();
         for(String receiverEmail : receiverEmails) {
@@ -149,7 +149,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         EmailData messageData = new EmailData(receiverList, emailMessage);
         String json = gson.toJson(messageData);
         try {
-            getClient().post(json, "");
+            getClient().post(json, "", csrfCookie);
         } catch (OrganisaatioViestintaException ve) {
             LOG.error("Could not send email.", ve);
         }

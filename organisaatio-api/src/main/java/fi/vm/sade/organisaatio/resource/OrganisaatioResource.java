@@ -27,6 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.Api;
@@ -185,7 +186,8 @@ public interface OrganisaatioResource {
     @Deprecated // käytä OrganisaatioResourceV3#updateOrganisaatio
     public ResultRDTO updateOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
-            @ApiParam(access = "hidden") OrganisaatioRDTO ordto);
+            @ApiParam(access = "hidden") OrganisaatioRDTO ordto,
+            @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie);
 
     @DELETE
     @Path("/{oid}")
@@ -209,7 +211,8 @@ public interface OrganisaatioResource {
             notes = "Operaatio luo uuden organisaation annetusta JSON:sta.",
             response = ResultRDTO.class)
     @Deprecated // käytä OrganisaatioResourceV3#newOrganisaatio
-    public ResultRDTO newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTO ordto);
+    public ResultRDTO newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTO ordto,
+                                      @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie);
 
     @GET
     @Path("/yhteystietometadata")

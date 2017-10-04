@@ -5,9 +5,9 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import java.util.Date;
 
 public interface OrganisaatioKoodisto {
-    String paivitaKoodisto(Organisaatio entity, boolean reauthorize);
+    String paivitaKoodisto(Organisaatio entity, boolean reauthorize, final String csrfCookie);
 
-    String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize);
+    String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize, final String csrfCookie);
 
     public enum KoodistoUri {
         TOIMIPISTE("opetuspisteet"),

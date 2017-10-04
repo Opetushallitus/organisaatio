@@ -405,11 +405,11 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // PUT /organisaatio/v2/muokkaamonta
     @Override
-    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot, final String csrfCookie) {
         LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
 
         try {
-            OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
+            OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot, csrfCookie);
             return tulos;
         } catch (ValidationException ex) {
             LOG.warn("Error saving multiple organizations", ex);
@@ -483,7 +483,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     // POST /organisaatio/v2/{oid}/organisaatiosuhde
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
+    public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid, final String csrfCookie) {
 
         Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(newParentOid);
@@ -510,10 +510,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             if (merge) {
                 // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
-                organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
+                organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date, csrfCookie);
             } else {
                 // Oppilaitos siirtyy toisen organisaation alle
-                organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
+                organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date, csrfCookie);
             }
         } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving multiple organizations", sbe);

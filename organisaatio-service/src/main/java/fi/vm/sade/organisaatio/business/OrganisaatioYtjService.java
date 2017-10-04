@@ -23,6 +23,6 @@ public interface OrganisaatioYtjService {
     * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
     */
 
-    YtjPaivitysLoki updateYTJData(final boolean forceUpdate);
+    YtjPaivitysLoki updateYTJData(final boolean forceUpdate, final String csrfCookie);
 
 }

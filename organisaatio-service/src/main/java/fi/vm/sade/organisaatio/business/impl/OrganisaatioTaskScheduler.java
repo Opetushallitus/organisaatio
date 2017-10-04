@@ -53,9 +53,9 @@ public class OrganisaatioTaskScheduler {
     {
         LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: " + new Date(), nameUpdateCronExpression);
 
-        organisaatioBusinessService.updateCurrentOrganisaatioNimet();
+        organisaatioBusinessService.updateCurrentOrganisaatioNimet("csrfOrganisaatioTaskSchedulerToken");
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
-        organisaatioYtjService.updateYTJData(false);
+        organisaatioYtjService.updateYTJData(false, "csrfOrganisaatioTaskSchedulerToken");
 
     }
  }
