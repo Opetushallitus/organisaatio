@@ -4,6 +4,8 @@ import org.apache.cxf.phase.PhaseInterceptorChain;
 
 // Static class to provide ID chain in current message context or constant "caller-id" (clientsubsystemcode).
 public final class IDContextMessageHelper {
+    public final static String CSRF_HEADER_NAME = "CSRF";
+
     // Provides the "caller-id" (clientSubSystemCode) to be provided on header when sending messages.
     private static final String localClientSubSystemCode = "organisaatio.organisaatio-service.backend";
 
@@ -33,6 +35,21 @@ public final class IDContextMessageHelper {
         // Put new or replace the old callerid.
         else {
             PhaseInterceptorChain.getCurrentMessage().getExchange().put("ID", callerid);
+        }
+    }
+
+    static public String getCsrfHeader() {
+        if (PhaseInterceptorChain.getCurrentMessage() == null ||
+                PhaseInterceptorChain.getCurrentMessage().getExchange().get(CSRF_HEADER_NAME) == null) {
+            return null;
+        }
+
+        return (String) PhaseInterceptorChain.getCurrentMessage().getExchange().get(CSRF_HEADER_NAME);
+    }
+
+    static public void setCsrfHeader(String csrfHeader) {
+        if (csrfHeader != null && !csrfHeader.isEmpty()) {
+            PhaseInterceptorChain.getCurrentMessage().getExchange().put(CSRF_HEADER_NAME, csrfHeader);
         }
     }
 }
