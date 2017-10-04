@@ -163,20 +163,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, final String csrfCookie) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        return save(entity, model.getParentOid(), updating);
+        return save(entity, model.getParentOid(), updating, csrfCookie);
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException {
+    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating, final String csrfCookie) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        return save(entity, model.getParentOid(), updating);
+        return save(entity, model.getParentOid(), updating, csrfCookie);
     }
 
-    private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating) {
+    private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating, final String csrfCookie) {
         // Tarkistetaan OID
         if (entity.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
@@ -366,7 +366,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
         if (updating && parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
-            updateOrganisaatioNameHierarchy(entity, oldName);
+            updateOrganisaatioNameHierarchy(entity, oldName, csrfCookie);
         }
 
         // Parent changed update children and reindex old parent.
@@ -376,7 +376,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitä tiedot koodistoon.
-        String info = organisaatioKoodisto.paivitaKoodisto(entity, true);
+        String info = organisaatioKoodisto.paivitaKoodisto(entity, true, csrfCookie);
 
         return new OrganisaatioResult(entity, info);
     }
@@ -712,11 +712,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         solrIndexer.index(children);
     }
 
-    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
-        updateOrganisaatioNameHierarchy(oppilaitos, oldName, true);
+    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, final String csrfCookie) {
+        updateOrganisaatioNameHierarchy(oppilaitos, oldName, true, csrfCookie);
     }
 
-    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, boolean updatePaivittaja) {
+    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, boolean updatePaivittaja, final String csrfCookie) {
         LOG.debug("updateOrganisaatioNameHierarchy()");
 
         if (oppilaitos.getId() != null) {
@@ -771,7 +771,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                 }
                 if (childChanged == true) {
-                    organisaatioKoodisto.paivitaKoodisto(child, false);
+                    organisaatioKoodisto.paivitaKoodisto(child, false, csrfCookie);
                 }
             }
             if (childrenChanged == true) {
@@ -906,7 +906,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
+    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot, final String csrfCookie) {
         LOG.debug("bulkUpdatePvm():" + tiedot);
         OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
 
@@ -947,7 +947,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
-                    organisaatioKoodisto.paivitaKoodisto(org, false);
+                    organisaatioKoodisto.paivitaKoodisto(org, false, csrfCookie);
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);
@@ -1051,7 +1051,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date) {
+    public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date, final String csrfCookie) {
         // Organisaatiota ei saa liittää itseensä
         if (organisaatio.getOid().equals(newParent.getOid())) {
             throw new OrganisaatioMoveException("organisation.move.merge.self");
@@ -1085,16 +1085,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (OrganisaatioUtil.isPassive(child) == false) {
-                changeOrganisaatioParent(child, newParent, date);
+                changeOrganisaatioParent(child, newParent, date, csrfCookie);
             }
         }
 
         // Päivitetään tiedot koodistoon.
-        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+        organisaatioKoodisto.paivitaKoodisto(organisaatio, true, csrfCookie);
     }
 
     @Override
-    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
+    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date, final String csrfCookie) {
         // Organisaatiota ei saa siirtää nykyisen parentin alle
         if (organisaatio.getParent().getOid().equals(newParent.getOid())) {
             throw new OrganisaatioMoveException("organisation.move.parent.invalid");
@@ -1141,10 +1141,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             previousDay.add(Calendar.DAY_OF_MONTH, -1);
 
             // Lakkautetaan vanha opetuspistekoodi (opetuspiste pistetään lakkaamaan päivää ennen)
-            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime(), true);
+            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime(), true, csrfCookie);
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+            organisaatioKoodisto.paivitaKoodisto(organisaatio, true, csrfCookie);
         }
 
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
@@ -1182,7 +1182,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public void updateCurrentOrganisaatioNimet() {
+    public void updateCurrentOrganisaatioNimet(final String csrfCookie) {
         // Haetaan organisaatiot, joiden nimi ei ole nimihistorian current nimi
         List<Organisaatio> organisaatiot = this.organisaatioNimiDAO.findNimiNotCurrentOrganisaatiot();
 
@@ -1205,11 +1205,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
             if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
                 // Ei päivitetä organisaation päivittäjää nimenmuutoksen yhteydessä
-                updateOrganisaatioNameHierarchy(organisaatio, oldName, false);
+                updateOrganisaatioNameHierarchy(organisaatio, oldName, false, csrfCookie);
             }
 
             // Päivitetään tiedot koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+            organisaatioKoodisto.paivitaKoodisto(organisaatio, true, csrfCookie);
         }
     }
 }

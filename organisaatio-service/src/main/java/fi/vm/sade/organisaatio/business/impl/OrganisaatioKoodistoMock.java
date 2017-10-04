@@ -9,12 +9,12 @@ import java.util.Date;
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
-    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize, final String csrfCookie) {
         return null;
     }
 
     @Override
-    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
+    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize, final String csrfCookie) {
         return null;
     }
 }

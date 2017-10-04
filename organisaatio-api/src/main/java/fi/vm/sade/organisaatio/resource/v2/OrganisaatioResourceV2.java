@@ -270,7 +270,8 @@ public interface OrganisaatioResourceV2 {
             value = "Muokkaa monta organisaatiota kerralla",
             notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
             response = OrganisaatioNimiDTOV2.class)
-    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot,
+                                                                        @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie);
 
     @GET
     @Path("/muutetut/oid")
@@ -311,7 +312,8 @@ public interface OrganisaatioResourceV2 {
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
             @ApiParam(value = "Sulautus", required = true) @QueryParam("merge") boolean merge,
             @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = false) @QueryParam("moveDate") DateParam date,
-            @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid
+            @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid,
+            @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie
     );
 
     @GET

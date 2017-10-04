@@ -86,7 +86,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         // Change parent from root -> root2
         OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
         node2foo.setParentOid(parentOid);
-        ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
+        ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo, null);
         Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
         LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
 

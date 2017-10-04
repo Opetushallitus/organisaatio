@@ -119,7 +119,7 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
 
         OrganisaatioRDTO o = OrganisaatioRDTOTestUtil.createOrganisaatio(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), parent);
 
-        return res.newOrganisaatio(o).getOrganisaatio();
+        return res.newOrganisaatio(o, null).getOrganisaatio();
     }
 
 }

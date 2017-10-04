@@ -232,7 +232,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     // POST /organisaatio/{oid}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
+    public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto, final String csrfCookie) {
         LOG.info("Saving " + oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
@@ -242,7 +242,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true, csrfCookie);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
@@ -287,7 +287,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     // PUT /organisaatio/
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
+    public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto, final String csrfCookie) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
@@ -295,7 +295,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
+            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false, csrfCookie);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {

@@ -37,18 +37,20 @@ public interface OrganisaatioBusinessService {
     /**
      * @param model
      * @param updating
+     * @param csrfCookie
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException;
+    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating, final String csrfCookie) throws ValidationException;
 
     /**
      * @param model
      * @param updating
+     * @param csrfCookie
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException;
+    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating, final String csrfCookie) throws ValidationException;
 
     /**
      * @param oid
@@ -79,14 +81,16 @@ public interface OrganisaatioBusinessService {
 
     /**
      * Päivitetään organisaatioiden nimet niiltä organisaatioilta, joilla ajastettu nimenmuutos.
+     * @param csrfCookie CSRF-keksin arvo
      */
-    public void updateCurrentOrganisaatioNimet();
+    public void updateCurrentOrganisaatioNimet(final String csrfCookie);
 
     /**
      * @param tiedot
+     * @param csrfCookie
      * @return
      */
-    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
+    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot, final String csrfCookie);
 
     /**
      * Checks all new organisation relations and updates necessarry changes to tree hierarchy.
@@ -100,16 +104,18 @@ public interface OrganisaatioBusinessService {
      * @param organisaatio Siirrettävä organisaatio
      * @param newParent Kohde organisaatio
      * @param date Siirto pvm
+     * @param csrfCookie CSRF-keksin arvo
      */
-    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date);
+    public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date, final String csrfCookie);
 
     /**
      * Yhdistää kaksi organisaatiota
      * @param self Siirrettävän organisaatio
      * @param newParent Kohde organisaatio
      * @param date Siirto pvm
+     * @param csrfCookie
      */
-    public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+    public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date, final String csrfCookie);
 
     /**
      *

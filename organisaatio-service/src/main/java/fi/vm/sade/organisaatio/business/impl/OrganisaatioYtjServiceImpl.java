@@ -103,7 +103,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
-    public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
+    public YtjPaivitysLoki updateYTJData(final boolean forceUpdate, final String csrfCookie) {
         ytjPaivitysLoki = new YtjPaivitysLoki();
         ytjPaivitysLoki.setPaivitysaika(new Date());
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT);
@@ -147,7 +147,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
                 organisaatioDAO.updateOrg(organisaatio);
                 // update koodisto (When name has changed)
-                if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
+                if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false, csrfCookie) != null) {
                     LOG.error("Organisaation " + organisaatio.getOid() + " päivitys koodistoon epäonnistui");
                     logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KOODISTO, "ilmoitukset.log.virhe.koodisto");
                 }
@@ -175,7 +175,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
         ytjPaivitysLokiDao.flush();
 
-        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki, true);
+        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki, true, csrfCookie);
 
         return ytjPaivitysLoki;
     }
