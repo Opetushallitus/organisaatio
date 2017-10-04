@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -84,7 +85,8 @@ public interface OrganisaatioResourceV3 {
             response = ResultRDTOV3.class)
     public ResultRDTOV3 updateOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
-            @ApiParam(access = "hidden") OrganisaatioRDTOV3 ordto);
+            @ApiParam(access = "hidden") OrganisaatioRDTOV3 ordto,
+            @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie);
 
     @DELETE
     @Path("/{oid}")
@@ -107,7 +109,8 @@ public interface OrganisaatioResourceV3 {
             value = "Luo uuden organisaation",
             notes = "Operaatio luo uuden organisaation annetusta JSON:sta.",
             response = ResultRDTOV3.class)
-    public ResultRDTOV3 newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTOV3 ordto);
+    public ResultRDTOV3 newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTOV3 ordto,
+                                        @ApiParam(value = "CSRF-keksin arvo", required = true) @CookieParam("CSRF") String csrfCookie);
 
     @GET
     @Path("/muutetut")

@@ -69,19 +69,20 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @param koodistoUri Koodisto URI
      * @param tunniste URI-spesifinen tunniste (toimipistekoodi,
      * oppilaitosnumero tai y-tunnus ilman väliviivaa)
+     * @param csrfCookie CSRF-keksin arvo
      * @return Koodiobjekti tai null jos ei löytynyt
      */
-    private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
+    private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste, final String csrfCookie) {
         tunniste = tunniste.replace("-", "");
-        String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1");
+        String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1", csrfCookie);
         LOG.debug("Haettiin koodi: " + (json == null ? null : json));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
     }
 
     // Päivittää koodistoon olemassaolevan koodin (PUT)
-    private boolean paivitaKoodi(OrganisaatioKoodistoKoodi koodi) {
+    private boolean paivitaKoodi(OrganisaatioKoodistoKoodi koodi, final String csrfCookie) {
         try {
-            getClient().put(gson.toJson(koodi));
+            getClient().put(gson.toJson(koodi), csrfCookie);
         } catch (OrganisaatioKoodistoException e) {
             LOG.debug("Koodi update failed. Reason: " + e.getMessage());
             return false;
@@ -93,13 +94,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * Lisää koodistoon uuden koodin (POST)
      *
      * @param koodi Lisättävä koodi
-     * @param uri Koodisto URI ("opetuspisteet", "oppilaitosnumero",
-     * "koulutustoimija" tai "yhteishaunkoulukoodi")
+     * @param uri Koodisto URI ("opetuspisteet", "oppilaitosnumero", "koulutustoimija" tai "yhteishaunkoulukoodi")
+     * @param csrfCookie CSRF-keksin arvo
      * @return true jos lisääminen onnistui, false muuten
      */
-    private boolean lisaaKoodi(OrganisaatioKoodistoKoodi koodi, String uri) {
+    private boolean lisaaKoodi(OrganisaatioKoodistoKoodi koodi, String uri, final String csrfCookie) {
         try {
-            getClient().post(gson.toJson(koodi), uri);
+            getClient().post(gson.toJson(koodi), uri, csrfCookie);
         } catch (OrganisaatioKoodistoException e) {
             LOG.warn("Koodi insert failed. Reason: " + e.getMessage());
             return false;
@@ -113,9 +114,10 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @param uri KoodiURI
      * @param tunniste Uri-kohtainen tunniste
      * @param entity Organisaatio jolle koodi lisätään
+     * @param csrfCookie CSRF-keksin arvo
      * @return Luotu koodi jos onnistui, null jos lisääminen ei onnistunut
      */
-    private OrganisaatioKoodistoKoodi luoKoodi(String uri, String tunniste, Organisaatio entity) {
+    private OrganisaatioKoodistoKoodi luoKoodi(String uri, String tunniste, Organisaatio entity, final String csrfCookie) {
         // Lisätään koodi
         OrganisaatioKoodistoKoodi uk = new OrganisaatioKoodistoKoodi();
 
@@ -130,9 +132,9 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             umt.setNimi(entity.getNimi().getString(lang));
             uk.getMetadata().add(umt);
         }
-        if (lisaaKoodi(uk, uri)) {
+        if (lisaaKoodi(uk, uri, csrfCookie)) {
             try {
-                uk = haeKoodi(uri, tunniste);
+                uk = haeKoodi(uri, tunniste, csrfCookie);
             } catch (OrganisaatioKoodistoException e) {
                 LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
                 return null;
@@ -256,11 +258,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      *
      * @param entity Organisaatio
      * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
-     *
+     * @param csrfCookie CSRF-keksin arvo
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize, final String csrfCookie) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return null;
@@ -290,7 +292,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             if (tunniste != null && !tunniste.isEmpty()) {
                 // Tunniste on olemassa, haetaan koodistosta
                 try {
-                    koodi = haeKoodi(uri, tunniste);
+                    koodi = haeKoodi(uri, tunniste, csrfCookie);
                 } catch (OrganisaatioKoodistoException e) {
                     LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
                     return INFO_CODE_SAVE_FAILED;
@@ -298,7 +300,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 boolean muuttunut = false;
                 if (koodi == null) {
                     // Ei löytynyt, luodaan uusi
-                    koodi = luoKoodi(uri, tunniste, entity);
+                    koodi = luoKoodi(uri, tunniste, entity, csrfCookie);
                     if (koodi != null) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " lisättiin");
                         muuttunut = true;
@@ -380,7 +382,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 muuttunut |= paivitaWithinCodeElements(entity, koodi);
 
                 if (muuttunut == true) {
-                    if (paivitaKoodi(koodi) == true) {
+                    if (paivitaKoodi(koodi, csrfCookie) == true) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
                     } else {
                         LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
@@ -402,11 +404,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @param tunniste Koodin tunniste, esim. opetuspiste koodille toimipistekoodi
      * @param lakkautusPvm Lakkautuspäivämäärä
      * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
-     *
+     * @param csrfCookie CSRF-keksin arvo
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
+    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize, final String csrfCookie) {
         this.reauthorize = reauthorize;
 
         if (uri == null || uri.isEmpty()) {
@@ -428,7 +430,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         LOG.debug("KOODI uri: " + uri + ", tunniste: '" + tunniste + "'");
         // Tunniste on olemassa, haetaan koodistosta
         try {
-            koodi = haeKoodi(uri, tunniste);
+            koodi = haeKoodi(uri, tunniste, csrfCookie);
         } catch (OrganisaatioKoodistoException e) {
             LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
             return INFO_CODE_SAVE_FAILED;
@@ -451,7 +453,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         }
 
         if (muuttunut == true) {
-            if (paivitaKoodi(koodi) == true) {
+            if (paivitaKoodi(koodi, csrfCookie) == true) {
                 LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
             } else {
                 LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");

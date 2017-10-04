@@ -28,17 +28,19 @@
  *
  * @author mlyly
  */
-var app = angular.module('Localisation', ['ngResource', 'Logging', 'ngLocale']);
+var app = angular.module('Localisation', ['ngResource', 'Logging', 'ngLocale', 'ngCookies', 'ng']);
 
 /**
  * "Localisations" factory, returns resource for operating on localisations.
  */
-app.factory('Localisations', function($log, $resource, $window) {
+app.factory('Localisations', function($log, $resource, $window, $cookies, $http) {
 
     $log = $log.getInstance("Localisations");
 
     var uri = $window.V1_LOKALISAATIO_URL;
     $log.debug("uri = ", uri);
+    $log.debug("CSRF cookie = ", $cookies.get('CSRF'));
+    $log.debug("CSRF header = ", $http.defaults.headers.common['CSRF']);
 
     return $resource(uri + "/:id", {
         id: '@id'

@@ -35,8 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
@@ -51,25 +49,28 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     @Value("${organisaatio.service.password.to.viestinta}")
     private String viestintaClientPassword;
 
-    protected void authorize() throws OrganisaatioViestintaException {
+    protected void authorize(final String csrfCookie) throws OrganisaatioViestintaException {
         try {
             String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.url");
-            authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
+            authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword, csrfCookie);
         } catch (Exception e) {
             throw new OrganisaatioViestintaException(e.getMessage());
         }
     }
 
-    public void post(String json, String uri) throws OrganisaatioViestintaException {
+    public void post(String json, String uri, final String csrfCookie) throws OrganisaatioViestintaException {
         String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri);
         LOG.debug("POST " + viestintaServiceUrl );
         LOG.debug("POST data=" + json);
-        authorize();
+        authorize(csrfCookie);
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(viestintaServiceUrl );
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        if (csrfCookie != null) {
+            post.addHeader("CSRF", csrfCookie);
+        }
         post.addHeader("CasSecurityTicket", ticket);
         post.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {

@@ -63,7 +63,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void updateYTJDataTest() {
-        service.updateYTJData(false);
+        service.updateYTJData(false, null);
         // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();
         oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
