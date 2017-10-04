@@ -35,4 +35,20 @@ public final class IDContextMessageHelper {
             PhaseInterceptorChain.getCurrentMessage().getExchange().put("ID", callerid);
         }
     }
+
+    static public String getCsrfHeader() {
+        if (PhaseInterceptorChain.getCurrentMessage() == null || PhaseInterceptorChain.getCurrentMessage().getExchange().get("CSRF") == null) {
+            return null;
+        }
+
+        return (String) PhaseInterceptorChain.getCurrentMessage().getExchange().get("CSRF");
+    }
+
+    static public void setCsrfHeader(String csrfHeader) {
+        if (csrfHeader == null || csrfHeader.isEmpty()) {
+            return;
+        }
+
+        PhaseInterceptorChain.getCurrentMessage().getExchange().put("CSRF", csrfHeader);
+    }
 }

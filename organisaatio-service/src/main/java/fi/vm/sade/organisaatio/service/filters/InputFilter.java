@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.service.filters;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.ext.Provider;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 
@@ -26,6 +27,11 @@ public class InputFilter implements ContainerRequestFilter {
         // Save the ID chain to cxf exchange.
         if(IDChain != null) {
             PhaseInterceptorChain.getCurrentMessage().getExchange().put("ID", IDChain);
+        }
+
+        Cookie csrfCookie = requestContext.getCookies().get("CSRF");
+        if (csrfCookie != null) {
+            PhaseInterceptorChain.getCurrentMessage().getExchange().put("CSRF", csrfCookie.getValue());
         }
     }
 }

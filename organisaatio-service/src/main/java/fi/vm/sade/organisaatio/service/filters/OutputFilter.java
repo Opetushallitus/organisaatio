@@ -24,12 +24,14 @@ public class OutputFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
         String IDChain = (String)PhaseInterceptorChain.getCurrentMessage().getExchange().get("ID");
+        String csrfCookie = (String) PhaseInterceptorChain.getCurrentMessage().getExchange().get("CSRF");
 
         // Add callerid and ID chain headers to the output message.
         if(responseContext != null && responseContext.getHeaders() != null) {
             MultivaluedMap<String, Object> responseHeaders = responseContext.getHeaders();
             responseHeaders.add("ID", IDChain);
             responseHeaders.add("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+            responseHeaders.add("CSRF", csrfCookie);
         }
     }
 }
