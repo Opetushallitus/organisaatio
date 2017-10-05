@@ -8,24 +8,24 @@
     "url": "https://github.com/Opetushallitus/organisaatio.git"
   },
   "dependencies": {
-    "webpack": "^1.12.14",
-    "expose-loader": "^0.7.1",
-    "imports-loader": "^0.6.5",
-    "script-loader": "^0.6.1",
-    "copy-webpack-plugin": "^1.1.1",
-    "jquery": "2.1.1",
-    "blueimp-file-upload": "9.12.1",
     "angular": "1.5.8",
+    "angular-cookies": "1.5.8",
+    "angular-idle": "git://github.com/HackedByChinese/ng-idle.git#0.3.2",
     "angular-mocks": "1.5.8",
     "angular-resource": "1.5.8",
     "angular-route": "1.5.8",
     "angular-sanitize": "1.5.8",
-    "angular-cookies": "1.5.8",
-    "tinymce": "4.3.8",
-    "angular-ui-tinymce": "0.0.15",
     "angular-ui-bootstrap": "0.14.3",
-    "angular-idle": "git://github.com/HackedByChinese/ng-idle.git#0.3.2",
+    "angular-ui-tinymce": "0.0.15",
+    "blueimp-file-upload": "9.12.1",
+    "copy-webpack-plugin": "^1.1.1",
+    "expose-loader": "^0.7.1",
+    "imports-loader": "^0.6.5",
+    "jquery": "2.1.1",
+    "moment": "2.11.2",
+    "script-loader": "^0.6.1",
+    "tinymce": "4.3.8",
     "ui-select": "0.16.1",
-    "moment": "2.11.2"
+    "webpack": "^1.12.14"
   }
 }
