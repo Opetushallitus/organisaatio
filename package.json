@@ -10,7 +10,6 @@
   "dependencies": {
     "angular": "1.5.8",
     "angular-cookies": "1.5.8",
-    "angular-idle": "git://github.com/HackedByChinese/ng-idle.git#0.3.2",
     "angular-mocks": "1.5.8",
     "angular-resource": "1.5.8",
     "angular-route": "1.5.8",
@@ -23,6 +22,7 @@
     "imports-loader": "^0.6.5",
     "jquery": "2.1.1",
     "moment": "2.11.2",
+    "ng-idle": "1.3.2",
     "script-loader": "^0.6.1",
     "tinymce": "4.3.8",
     "ui-select": "0.16.1",
