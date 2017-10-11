@@ -18,7 +18,7 @@
 
     var app = angular.module('organisaatio');
 
-    app.directive('idle', ['$idle', '$timeout', '$interval', function($idle, $timeout, $interval){
+    app.directive('idle', ['Idle', '$timeout', '$interval', function(Idle, $timeout, $interval){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs) {
@@ -27,8 +27,8 @@
 
                 // Watch for the events set in ng-idle's options
                 // If any of them fire (considering 500ms debounce), update localStorage.lastEventTime with a current timestamp
-                elem.on($idle._options().events, function(){
-                    if($idle.running()) {
+                elem.on(Idle._options().interrupt, function(){
+                    if(Idle.running()) {
                         if (timeout) { $timeout.cancel(timeout); }
                         timeout = $timeout(function(){
                             localStorage.setItem('lastEventTime', new Date().getTime());
@@ -46,7 +46,7 @@
                                 element.click();
                             }, 500, false);
                         }
-                        $idle.watch();
+                        Idle.watch();
                         timestamp = localStorage.lastEventTime;
                     }
                 }, 5000, false);
@@ -54,8 +54,8 @@
         };
     }]);
 
-    app.controller('SessionExpiresCtrl', ['$idle', '$scope', '$uibModalInstance', '$window', 'LocalisationService',
-        function( $idle, $scope, $uibModalInstance, $window, LocalisationService) {
+    app.controller('SessionExpiresCtrl', ['Idle', '$scope', '$uibModalInstance', '$window', 'LocalisationService',
+        function( Idle, $scope, $uibModalInstance, $window, LocalisationService) {
         $scope.timeoutMessage = function() {
             var duration = Math.floor(MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
             return LocalisationService.t('session.expired.text1.part1') + " " + duration +  " " + LocalisationService.t('session.expired.text1.part2');
@@ -67,7 +67,7 @@
         };
 
         $scope.okConfirm = function() {
-            $idle.watch();
+            Idle.watch();
             $uibModalInstance.close();
         };
         $scope.redirectToLogin = function() {
@@ -75,8 +75,8 @@
         };
     }]);
 
-    app.controller('EventsCtrl', ['$scope','$idle', '$uibModal', '$http',
-        function($scope, $idle, $uibModal, $http) {
+    app.controller('EventsCtrl', ['$scope','Idle', '$uibModal', '$http',
+        function($scope, Idle, $uibModal, $http) {
         var openModal = function(template) {
             return $uibModal.open({
                     templateUrl: TEMPLATE_URL_BASE + template,
@@ -88,30 +88,30 @@
                 });
         };
 
-        $scope.$on('$idleWarn', function(e, countdown) {
+        $scope.$on('IdleWarn', function(e, countdown) {
             if (!$scope.sessionWarning || angular.element('#sessionWarning').length < 1) {
                 $scope.sessionWarning = openModal('sessionWarning.html');
             }
         });
 
-        $scope.$on('$idleTimeout', function() {
+        $scope.$on('IdleTimeout', function() {
             $scope.sessionWarning.close();
             $scope.sessionWarning = openModal('sessionExpired.html');
-            $idle.unwatch();
+            Idle.unwatch();
         });
 
     }])
-    .config(['$idleProvider', '$keepaliveProvider', function($idleProvider, $keepaliveProvider) {
+    .config(['IdleProvider', 'KeepaliveProvider', function(IdleProvider, KeepaliveProvider) {
         var warningDuration = 300;
-        $idleProvider.idleDuration(MAX_SESSION_IDLE_TIME_IN_SECONDS - warningDuration);
-        $idleProvider.warningDuration(warningDuration);
-        $keepaliveProvider.interval(SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
+        IdleProvider.idle(MAX_SESSION_IDLE_TIME_IN_SECONDS - warningDuration);
+        IdleProvider.timeout(warningDuration);
+        KeepaliveProvider.interval(SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
 
         var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || SERVICE_URL_BASE + "session/maxinactiveinterval";
-        $keepaliveProvider.http(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL);
+        KeepaliveProvider.http(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL);
     }])
-    .run(['$idle', function($idle){
-        $idle.watch();
+    .run(['Idle', function(Idle){
+        Idle.watch();
     }]);
 
 })(window, window.angular);
