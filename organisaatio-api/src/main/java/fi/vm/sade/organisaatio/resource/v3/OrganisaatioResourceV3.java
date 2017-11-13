@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "/organisaatio/v3", description = "Organisaation operaatiot (rajapintaversio 3)")
 public interface OrganisaatioResourceV3 {
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/find-by-oids")
