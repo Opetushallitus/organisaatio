@@ -64,6 +64,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         return organisaatioDAO.findGroups();
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organisaatio> findByOids(Collection<String> oids) {
+        return organisaatioDAO.findByOids(oids);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Organisaatio findById(String id) {

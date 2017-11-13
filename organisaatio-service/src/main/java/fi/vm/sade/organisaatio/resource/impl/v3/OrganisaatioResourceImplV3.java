@@ -62,6 +62,17 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     @Autowired
     private PermissionChecker permissionChecker;
 
+    @Override
+    public List<OrganisaatioRDTOV3> findByOids(List<String> oids){
+        Preconditions.checkNotNull(oids);
+        Preconditions.checkArgument(!oids.isEmpty());
+        List<Organisaatio> byOids = organisaatioFindBusinessService.findByOids(oids);
+        List<OrganisaatioRDTOV3> result= new LinkedList<>();
+        for(Organisaatio org : byOids) {
+            result.add(conversionService.convert(org, OrganisaatioRDTOV3.class));
+        }
+        return result;
+    }
     // GET /organisaatio/v3/{oid}/children
     @Override
     public List<OrganisaatioRDTOV3> children(String oid, boolean includeImage) throws Exception {

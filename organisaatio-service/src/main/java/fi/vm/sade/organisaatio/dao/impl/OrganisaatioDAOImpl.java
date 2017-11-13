@@ -429,6 +429,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return null;
     }
 
+    public List<Organisaatio> findByOids(Collection<String> oids) {
+        LOG.debug("findByOids(Number of OIDs = {})", oids.size());
+        QOrganisaatio org = QOrganisaatio.organisaatio;
+        return new JPAQuery(getEntityManager()).from(org).where(org.oid.in(oids).and(org.organisaatioPoistettu.isFalse())).list(org);
+    }
+
     /**
      *
      * @param oidList
