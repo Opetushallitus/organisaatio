@@ -38,6 +38,7 @@ public interface OrganisaatioResourceV3 {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/find-by-oids")
     @ApiOperation(
             value = "Hakee monta organisaatiota kerralla syötetyille OIDeille",
