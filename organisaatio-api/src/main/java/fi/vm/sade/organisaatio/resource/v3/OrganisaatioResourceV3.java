@@ -44,7 +44,8 @@ public interface OrganisaatioResourceV3 {
             value = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille",
             response = OrganisaatioRDTOV3.class,
             responseContainer = "List")
-    public List<OrganisaatioRDTOV3> findByOids(List<String> oids);
+    public List<OrganisaatioRDTOV3> findByOids(@ApiParam(value = "JSON-taulukko organisaatio OIDeja: [\"oid1\", \"oid2\", ...]",
+            required = true) List<String> oids);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
