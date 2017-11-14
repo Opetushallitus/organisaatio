@@ -39,7 +39,7 @@ public interface OrganisaatioResourceV3 {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @Path("/find-by-oids")
+    @Path("/findbyoids")
     @ApiOperation(
             value = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille",
             response = OrganisaatioRDTOV3.class,
