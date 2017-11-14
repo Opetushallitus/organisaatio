@@ -41,7 +41,7 @@ public interface OrganisaatioResourceV3 {
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/find-by-oids")
     @ApiOperation(
-            value = "Hakee monta organisaatiota kerralla syötetyille OIDeille",
+            value = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille",
             response = OrganisaatioRDTOV3.class,
             responseContainer = "List")
     public List<OrganisaatioRDTOV3> findByOids(List<String> oids);
