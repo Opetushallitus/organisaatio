@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 
@@ -45,7 +46,7 @@ public interface OrganisaatioFindBusinessService {
      */
     public Organisaatio findById(String id);
 
-    public List<Organisaatio> findByOids(Collection<String> oids);
+    public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids);
 
     /**
      * @param kieliList kielirajaus kielivalikoima-koodiston koodiUreja: ["kielivalikoima_en", "kielivalikoima_sv"]

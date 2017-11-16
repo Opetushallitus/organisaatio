@@ -17,13 +17,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -33,6 +26,14 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.ValidationException;
+import javax.ws.rs.core.Response;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 @Component
 @Transactional(readOnly = true)
@@ -67,12 +68,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         Preconditions.checkNotNull(oids);
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
-        List<Organisaatio> byOids = organisaatioFindBusinessService.findByOids(oids);
-        List<OrganisaatioRDTOV3> result= new LinkedList<>();
-        for(Organisaatio org : byOids) {
-            result.add(conversionService.convert(org, OrganisaatioRDTOV3.class));
-        }
-        return result;
+        return organisaatioFindBusinessService.findByOids(oids);
     }
     // GET /organisaatio/v3/{oid}/children
     @Override
