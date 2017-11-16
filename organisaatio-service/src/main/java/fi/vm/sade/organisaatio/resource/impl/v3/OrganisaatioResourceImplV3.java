@@ -66,6 +66,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     public List<OrganisaatioRDTOV3> findByOids(List<String> oids){
         Preconditions.checkNotNull(oids);
         Preconditions.checkArgument(!oids.isEmpty());
+        Preconditions.checkArgument(oids.size() <= 1000);
         List<Organisaatio> byOids = organisaatioFindBusinessService.findByOids(oids);
         List<OrganisaatioRDTOV3> result= new LinkedList<>();
         for(Organisaatio org : byOids) {
