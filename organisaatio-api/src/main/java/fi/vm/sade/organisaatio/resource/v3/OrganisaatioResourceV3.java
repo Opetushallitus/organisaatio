@@ -36,6 +36,17 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "/organisaatio/v3", description = "Organisaation operaatiot (rajapintaversio 3)")
 public interface OrganisaatioResourceV3 {
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Path("/findbyoids")
+    @ApiOperation(
+            value = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille (maksimissaan 1000)",
+            response = OrganisaatioRDTOV3.class,
+            responseContainer = "List")
+    public List<OrganisaatioRDTOV3> findByOids(@ApiParam(value = "JSON-taulukko organisaatio OIDeja: [\"oid1\", \"oid2\", ...]",
+            required = true) List<String> oids);
+
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Path("/{oid}/children")

@@ -24,21 +24,22 @@ import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.StringPath;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
@@ -427,6 +428,17 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             LOG.info(ex.getMessage());
         }
         return null;
+    }
+
+    public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
+        LOG.debug("findByOids(Number of OIDs = {})", oids.size());
+        QOrganisaatio org = QOrganisaatio.organisaatio;
+
+        return new JPAQuery(getEntityManager())
+                .from(org)
+                .where(org.oid.in(oids)
+                        .and(org.organisaatioPoistettu.isFalse()))
+                .list(new OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(org));
     }
 
     /**

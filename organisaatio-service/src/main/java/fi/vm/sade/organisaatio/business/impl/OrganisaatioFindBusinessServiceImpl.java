@@ -18,15 +18,19 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -43,6 +47,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
+
+    @Autowired
+    private ConversionService conversionService;
 
     @Override
     @Transactional(readOnly = true)
@@ -62,6 +69,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<Organisaatio> findGroups() {
         return organisaatioDAO.findGroups();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
+        return organisaatioDAO.findByOids(oids);
     }
 
     @Override

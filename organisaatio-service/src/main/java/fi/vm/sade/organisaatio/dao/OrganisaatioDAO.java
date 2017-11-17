@@ -16,6 +16,7 @@ package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
@@ -60,6 +61,8 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     Organisaatio findByOid(String oid);
+
+    List<OrganisaatioRDTOV3> findByOids(Collection<String> oids);
 
     /**
      * Haetaan organisaatioita oidlistan perusteella.
