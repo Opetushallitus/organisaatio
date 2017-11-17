@@ -37,6 +37,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Date;
 
+import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
+
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
@@ -87,11 +89,16 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         HttpGet get = new HttpGet(url);
         get.addHeader("ID", IDContextMessageHelper.getIDChain());
         get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        get.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
         try {
             HttpResponse resp = client.execute(get);
-            Header header = resp.getFirstHeader("ID");
-            if(header != null) {
-                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            Header idHeader = resp.getFirstHeader("ID");
+            if (idHeader != null) {
+                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
+            }
+            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
+            if (csrfHeader != null) {
+                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
             }
             json = EntityUtils.toString(resp.getEntity(), "UTF-8");
             if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
@@ -131,15 +138,20 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         HttpPut put = new HttpPut(uri);
         put.addHeader("ID", IDContextMessageHelper.getIDChain());
         put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        put.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
         put.addHeader("CasSecurityTicket", ticket);
         put.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
             LOG.debug("NOW json   =" + json);
             put.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(put, localContext);
-            Header header = resp.getFirstHeader("ID");
-            if(header != null) {
-                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            Header idHeader = resp.getFirstHeader("ID");
+            if (idHeader != null) {
+                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
+            }
+            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
+            if (csrfHeader != null) {
+                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + uri;
@@ -175,14 +187,19 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
         HttpPost post = new HttpPost(url);
         post.addHeader("ID", IDContextMessageHelper.getIDChain());
         post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+        post.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
         post.addHeader("CasSecurityTicket", ticket);
         post.addHeader("Content-Type", "application/json; charset=UTF-8");
         try {
             post.setEntity(new StringEntity(json, "UTF-8"));
             HttpResponse resp = client.execute(post);
-            Header header = resp.getFirstHeader("ID");
-            if(header != null) {
-                IDContextMessageHelper.setReceivedIDChain(header.getValue());
+            Header idHeader = resp.getFirstHeader("ID");
+            if (idHeader != null) {
+                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
+            }
+            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
+            if (csrfHeader != null) {
+                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
             }
             if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
                 String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + url;
