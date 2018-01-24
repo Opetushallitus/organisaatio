@@ -957,14 +957,14 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             Henkilo.get({hlooid: henkilo.tiedot.oidHenkilo}, function(result) {
                 if (result.yhteystiedotRyhma.length > 0) {
-                    for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystiedot.length; i++) {
-                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
+                    for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystieto.length; i++) {
+                        if (result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
 
-                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoArvo;
                         }
-                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
+                        if (result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
 
-                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoArvo;
                         }
                     }
                 }
