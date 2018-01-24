@@ -94,7 +94,7 @@ var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIET
 var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
 
 var OPPIJANUMEROREKISTERI_HENKILO_BY_OID = OPPIJANUMEROREKISTERI_HENKILO_BY_OID || "";
-var AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID = AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID || "";
+var KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID = KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID || "";
 
 var OPPIJANUMEROREKISTERI_REST_HENKILO = OPPIJANUMEROREKISTERI_REST_HENKILO || "";
 
@@ -374,8 +374,8 @@ app.factory('HenkiloVirkailijat', function ($resource) {
     });
 });
 
-// Henkilön haku käyttäjähallinnasta
-// Esim. https://localhost:8508/authentication-service/resources/henkilo/1.2.246.562.24.91121139885
+// Henkilön haku oppijanumerorekisteristä
+// Esim. https://localhost:8509/oppijanumerorekisteri-service/henkilo/1.2.246.562.24.91121139885
 app.factory('Henkilo', function ($resource) {
     return $resource(OPPIJANUMEROREKISTERI_HENKILO_BY_OID, {hlooid: "@hlooid"}, {
         get: {method: 'GET', withCredentials: true}
@@ -383,9 +383,9 @@ app.factory('Henkilo', function ($resource) {
 });
 
 // Käyttöoikeuden haku henkilölle organisaatiossa
-// Esim. https://localhost:8508/authentication-service/resources/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
+// Esim. https://localhost:8510/kayttooikeus-service/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
 app.factory('HenkiloKayttooikeus', function ($resource) {
-    return $resource(AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID + "?ooid=:orgoid", {
+    return $resource(KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID + "?ooid=:orgoid", {
         hlooid: "@hlooid",
         orgoid: "@orgoid"
     }, {

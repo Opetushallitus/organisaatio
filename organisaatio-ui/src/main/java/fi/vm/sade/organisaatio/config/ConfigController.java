@@ -63,10 +63,10 @@ public class ConfigController {
         append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.yhteystietojentyyppiByOid", ":oid"));
         append(b, "ORGANISAATIO_REST_YTJ_LOKI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytjloki"));
 
-        append(b, "OPPIJANUMEROREKISTERI_HENKILO_BY_OID", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo.byOid"));
-        append(b, "AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID", ophProperties.getProperty("authentication-service.henkilo.ryhma"));
+        append(b, "KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID", ophProperties.getProperty("kayttooikeus-service.henkilo.ryhma"));
 
         append(b, "OPPIJANUMEROREKISTERI_REST_HENKILO", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo"));
+        append(b, "OPPIJANUMEROREKISTERI_HENKILO_BY_OID", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo.byOid"));
 
         append(b, "KOODISTO_ORGANISAATIOTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "organisaatiotyyppi", "koodi"));
         append(b, "KOODISTO_OPPILAITOSTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "oppilaitostyyppi", "koodi"));
