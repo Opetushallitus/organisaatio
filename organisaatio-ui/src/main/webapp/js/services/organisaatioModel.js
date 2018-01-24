@@ -973,7 +973,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             });
             HenkiloKayttooikeus.get({hlooid: henkilo.tiedot.oidHenkilo, orgoid: model.organisaatio.oid}, function(result2) {
                 if (result2.length > 0) {
-                    model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang] = result2[0].tehtavanimike;
+                    // Tehtavanimike is not required information so find first.
+                    for (var i = 0; i < result2.length; i++) {
+                        if (result2[i].tehtavanimike && result2[i].tehtavanimike !== '') {
+                            model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang] = result2[i].tehtavanimike;
+                            break;
+                        }
+                    }
                     // TODO: tarjoa käyttäjälle valintalista nimikkeistä (result[i].tehtavanimike) ?
                 }
             }, function(response) {
