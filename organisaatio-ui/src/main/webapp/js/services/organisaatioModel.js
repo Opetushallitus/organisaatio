@@ -958,13 +958,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             Henkilo.get({hlooid: henkilo.tiedot.oidHenkilo}, function(result) {
                 if (result.yhteystiedotRyhma.length > 0) {
                     for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystieto.length; i++) {
-                        if (result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
-
-                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoArvo;
+                        var yhteystieto = result.yhteystiedotRyhma[0].yhteystieto[i];
+                        if (yhteystieto && yhteystieto.yhteystietoArvo && yhteystieto.yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
+                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = yhteystieto.yhteystietoArvo;
                         }
-                        if (result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
-
-                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = result.yhteystiedotRyhma[0].yhteystieto[i].yhteystietoArvo;
+                        if (yhteystieto && yhteystieto.yhteystietoArvo && yhteystieto.yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
+                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = yhteystieto.yhteystietoArvo;
                         }
                     }
                 }
