@@ -41,9 +41,6 @@ organisaatio-service.postgresql.maxwait={{host_postgresql_organisaatio_max_wait}
 organisaatio-service.postgresql.maxlifetimemillis=60000
 
 # Oletusarvoja
-accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
-accessRightAdmin.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightAdminService
-accessRightHistory.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightHistoryService
 activemq.queue.name.log.error=Sade.Log_Error
 activemq.queue.name.log=Sade.Log
 activemq.queue.name.mail=Sade.Email
@@ -68,7 +65,6 @@ cas.callback.tarjonta-service=http://{{ cluster_tarjonta_host | default("${serve
 cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-ui
 cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
-customAttribute.webservice.url.backend=https://${host.virkailija}/authentication-service/services/customAttributeService
 flyway.initOnMigrate=true
 koodi.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodiService
 koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodistoService
@@ -96,7 +92,6 @@ organisaatio-service.url.rest=https://${host.virkailija}/organisaatio-service/re
 organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio-ui/
 root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
-user.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/userService
 web.url.cas=https\://${host.cas}/cas
 
 organisaatio-service.tarjonta-service.rest.url=https://${host.virkailija}:${port.tarjonta-service}/tarjonta-service/rest
