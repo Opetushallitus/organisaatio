@@ -71,7 +71,7 @@ var KOODISTO_OPPILAITOKSENOPETUSKIELI = KOODISTO_OPPILAITOKSENOPETUSKIELI || "";
 
 var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECONDS || 30;
 var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
-var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || "";
+var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || "";
 
 var ORGANISAATIO_REST_V3 = ORGANISAATIO_REST_V3 || "";
 var ORGANISAATIO_REST_HAE = ORGANISAATIO_REST_HAE || "";
@@ -93,9 +93,8 @@ var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI = ORGANISAATIO_REST_YHTEYSTIETOJENTYY
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID || "";
 var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
 
-var AUTHENTICATION_REST_HENKILO = AUTHENTICATION_REST_HENKILO || "";
-var AUTHENTICATION_REST_HENKILO_BY_OID = AUTHENTICATION_REST_HENKILO_BY_OID || "";
-var AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID = AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID || "";
+var OPPIJANUMEROREKISTERI_HENKILO_BY_OID = OPPIJANUMEROREKISTERI_HENKILO_BY_OID || "";
+var KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID = KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID || "";
 
 var OPPIJANUMEROREKISTERI_REST_HENKILO = OPPIJANUMEROREKISTERI_REST_HENKILO || "";
 
@@ -375,18 +374,18 @@ app.factory('HenkiloVirkailijat', function ($resource) {
     });
 });
 
-// Henkilön haku käyttäjähallinnasta
-// Esim. https://localhost:8508/authentication-service/resources/henkilo/1.2.246.562.24.91121139885
+// Henkilön haku oppijanumerorekisteristä
+// Esim. https://localhost:8509/oppijanumerorekisteri-service/henkilo/1.2.246.562.24.91121139885
 app.factory('Henkilo', function ($resource) {
-    return $resource(AUTHENTICATION_REST_HENKILO_BY_OID, {hlooid: "@hlooid"}, {
+    return $resource(OPPIJANUMEROREKISTERI_HENKILO_BY_OID, {hlooid: "@hlooid"}, {
         get: {method: 'GET', withCredentials: true}
     });
 });
 
 // Käyttöoikeuden haku henkilölle organisaatiossa
-// Esim. https://localhost:8508/authentication-service/resources/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
+// Esim. https://localhost:8510/kayttooikeus-service/kayttooikeusryhma/henkilo/1.2.246.562.24.91121139885?ooid=1.2.246.562.10.82388989657
 app.factory('HenkiloKayttooikeus', function ($resource) {
-    return $resource(AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID + "?ooid=:orgoid", {
+    return $resource(KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID + "?ooid=:orgoid", {
         hlooid: "@hlooid",
         orgoid: "@orgoid"
     }, {

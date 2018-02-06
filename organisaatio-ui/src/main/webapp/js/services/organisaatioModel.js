@@ -957,14 +957,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             Henkilo.get({hlooid: henkilo.tiedot.oidHenkilo}, function(result) {
                 if (result.yhteystiedotRyhma.length > 0) {
-                    for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystiedot.length; i++) {
-                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
-
-                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                    for (var i = 0; i < result.yhteystiedotRyhma[0].yhteystieto.length; i++) {
+                        var yhteystieto = result.yhteystiedotRyhma[0].yhteystieto[i];
+                        if (yhteystieto && yhteystieto.yhteystietoArvo && yhteystieto.yhteystietoTyyppi === 'YHTEYSTIETO_PUHELINNUMERO') {
+                            model.organisaatio.metadata.hakutoimistoEctsPuhelin[model.ectslang] = yhteystieto.yhteystietoArvo;
                         }
-                        if (result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
-
-                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = result.yhteystiedotRyhma[0].yhteystiedot[i].yhteystietoArvo;
+                        if (yhteystieto && yhteystieto.yhteystietoArvo && yhteystieto.yhteystietoTyyppi === 'YHTEYSTIETO_SAHKOPOSTI') {
+                            model.organisaatio.metadata.hakutoimistoEctsEmail[model.ectslang] = yhteystieto.yhteystietoArvo;
                         }
                     }
                 }
@@ -974,7 +973,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             });
             HenkiloKayttooikeus.get({hlooid: henkilo.tiedot.oidHenkilo, orgoid: model.organisaatio.oid}, function(result2) {
                 if (result2.length > 0) {
-                    model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang] = result2[0].tehtavanimike;
+                    // Tehtavanimike is not required information so find first.
+                    for (var i = 0; i < result2.length; i++) {
+                        if (result2[i].tehtavanimike && result2[i].tehtavanimike !== '') {
+                            model.organisaatio.metadata.hakutoimistoEctsTehtavanimike[model.ectslang] = result2[i].tehtavanimike;
+                            break;
+                        }
+                    }
                     // TODO: tarjoa käyttäjälle valintalista nimikkeistä (result[i].tehtavanimike) ?
                 }
             }, function(response) {

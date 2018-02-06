@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * @author simok
- */
 @Controller
 public class ConfigController {
 
@@ -29,8 +26,6 @@ public class ConfigController {
         append(b, "LOKALISAATIO_URL_BASE", ophProperties.getProperty("lokalisointi.url.rest"));
         append(b, "V1_LOKALISAATIO_URL", ophProperties.getProperty("lokalisointi.url.lokalisointi.v1"));
 
-        append(b, "AUTHENTICATION_URL_BASE", ophProperties.getProperty("authentication-service-url.rest"));
-        append(b, "OPPIJANUMEROREKISTERI_URL_BASE", ophProperties.getProperty("oppijanumerorekisteri-service-url.rest"));
         append(b, "ROOT_ORGANISAATIO_OID", ophProperties.getProperty("root.organisaatio.oid"));
 
         append(b, "TEMPLATE_URL_BASE", "");
@@ -61,20 +56,17 @@ public class ConfigController {
 
         append(b, "ORGANISAATIO_REST_AUTH", ophProperties.getProperty("organisaatio-service.rest.organisaatio.param", "auth"));
         append(b, "ORGANISAATIO_REST_YTJ_YTUNNUS", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytj", ":ytunnus"));
-//        append(b, "ORGANISAATIO_REST_YTJ_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytj", "hae"));
         append(b, "ORGANISAATIO_REST_YTJ_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytjHae"));
 
-//        append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.yhteystietojentyyppi"));
         append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.yhteystietojentyyppi"));
 
         append(b, "ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.yhteystietojentyyppiByOid", ":oid"));
         append(b, "ORGANISAATIO_REST_YTJ_LOKI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytjloki"));
 
-        append(b, "AUTHENTICATION_REST_HENKILO", ophProperties.getProperty("authentication-service.henkilo"));
-        append(b, "AUTHENTICATION_REST_HENKILO_BY_OID", ophProperties.getProperty("authentication-service.henkilo.byOid"));
-        append(b, "AUTHENTICATION_REST_RYHMA_BY_HENKILO_OID", ophProperties.getProperty("authentication-service.henkilo.ryhma"));
+        append(b, "KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID", ophProperties.getProperty("kayttooikeus-service.henkilo.ryhma"));
 
         append(b, "OPPIJANUMEROREKISTERI_REST_HENKILO", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo"));
+        append(b, "OPPIJANUMEROREKISTERI_HENKILO_BY_OID", ophProperties.getProperty("oppijanumerorekisteri-service.henkilo.byOid"));
 
         append(b, "KOODISTO_ORGANISAATIOTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "organisaatiotyyppi", "koodi"));
         append(b, "KOODISTO_OPPILAITOSTYYPPI_KOODI", ophProperties.getProperty("koodisto-service.url.rest.json", "oppilaitostyyppi", "koodi"));
