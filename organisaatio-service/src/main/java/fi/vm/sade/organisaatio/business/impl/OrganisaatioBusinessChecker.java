@@ -29,6 +29,9 @@ import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 import java.util.*;
 import static java.util.stream.Collectors.toList;
@@ -84,15 +87,16 @@ public class OrganisaatioBusinessChecker {
      * @param nimet
      */
     public void checkNimihistoriaAlkupvm(List<OrganisaatioNimi> nimet) {
-        Set alkuPvms = new HashSet();
+        Set<LocalDate> alkuPvms = new HashSet<>();
         for (OrganisaatioNimi nimi : nimet) {
             if (nimi.getAlkuPvm() == null) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
-            if (alkuPvms.contains(nimi.getAlkuPvm())) {
+            LocalDate alkuPvm = LocalDate.from(Instant.ofEpochMilli(nimi.getAlkuPvm().getTime()).atZone(ZoneId.systemDefault()));
+            if (alkuPvms.contains(alkuPvm)) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
-            alkuPvms.add(nimi.getAlkuPvm());
+            alkuPvms.add(alkuPvm);
         }
     }
 
