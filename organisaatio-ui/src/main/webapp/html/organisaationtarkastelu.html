@@ -30,6 +30,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <img class="absolute offset8 span4" ng-src="data:image/jpeg;base64, {{model.organisaatio.metadata.kuvaEncoded}}">
     </div>
 
+    <div class="control-group" ng-show="model.organisaatio.oid">
+        <label class="control-label">
+            OID
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                {{model.organisaatio.oid}}
+            </label>
+        </div>
+    </div>
+
     <div class="control-group" ng-show="model.organisaatio.tyypit">
         <label class="control-label" tt="Organisaationtarkastelu.organisaatiotyyppi">
             Organisaationtarkastelu.organisaatiotyyppi
