@@ -31,6 +31,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <hr>
 
     <div ng-show="currentGroup" ng-form="form">
+        <div ng-show="currentGroup.oid">
+            <h3>OID</h3>
+            <div class="control-group">
+                <div class="controls">
+                    {{currentGroup.oid}}
+                </div>
+            </div>
+        </div>
+
         <h3 tt="RyhmienHallinta.nimi">RyhmienHallinta.nimi</h3>
         <div class="control-group">
             <div class="controls">
