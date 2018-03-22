@@ -9,6 +9,11 @@ import java.util.Date;
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
+    public void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
+        // nop
+    }
+
+    @Override
     public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         return null;
     }

@@ -376,7 +376,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitä tiedot koodistoon.
-        String info = organisaatioKoodisto.paivitaKoodisto(entity, true);
+        // organisaation päivittäminen koodistoon tehdään taustalla
+        // jotta organisaation muokkaus olisi nopeampaa
+        String info = null;
+        organisaatioKoodisto.paivitaKoodistoAsync(entity, true);
 
         return new OrganisaatioResult(entity, info);
     }
@@ -771,7 +774,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     }
                 }
                 if (childChanged == true) {
-                    organisaatioKoodisto.paivitaKoodisto(child, false);
+                    organisaatioKoodisto.paivitaKoodistoAsync(child, false);
                 }
             }
             if (childrenChanged == true) {

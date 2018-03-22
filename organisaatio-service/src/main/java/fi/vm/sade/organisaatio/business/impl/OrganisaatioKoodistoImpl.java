@@ -28,6 +28,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -235,6 +236,22 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             }
         }
         return paivitaCodeElements(entityRelaatiot, koodi.getWithinCodeElements());
+    }
+
+    /**
+     * Päivittää koodiston vastaamaan muokattua organisaatiota. (kts.
+     * {@link #paivitaKoodisto(fi.vm.sade.organisaatio.model.Organisaatio, boolean)}.
+     *
+     * @param entity organisaatio
+     * @param reauthorize jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     */
+    @Override
+    @Async
+    public void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
+        String virheviesti = paivitaKoodisto(entity, reauthorize);
+        if (virheviesti != null) {
+            LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
+        }
     }
 
     /**
