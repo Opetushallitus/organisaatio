@@ -28,6 +28,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -238,6 +239,22 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     /**
+     * Päivittää koodiston vastaamaan muokattua organisaatiota. (kts.
+     * {@link #paivitaKoodisto(fi.vm.sade.organisaatio.model.Organisaatio, boolean)}.
+     *
+     * @param entity organisaatio
+     * @param reauthorize jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
+     */
+    @Override
+    @Async
+    public void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
+        String virheviesti = paivitaKoodisto(entity, reauthorize);
+        if (virheviesti != null) {
+            LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
+        }
+    }
+
+    /**
      * Päivittää koodiston vastaamaan muokattua organisaatiota.
      * 1. Jos organisaatio on uusi ja koodia ei löydy
      *    => Luodaan uusi koodi
@@ -260,7 +277,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public synchronized String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return null;

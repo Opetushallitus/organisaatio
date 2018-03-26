@@ -5,6 +5,9 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import java.util.Date;
 
 public interface OrganisaatioKoodisto {
+
+    void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize);
+
     String paivitaKoodisto(Organisaatio entity, boolean reauthorize);
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize);
