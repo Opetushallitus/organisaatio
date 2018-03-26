@@ -277,7 +277,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public synchronized String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return null;
