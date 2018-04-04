@@ -1079,6 +1079,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
         };
 
+
+        /*
+         * palauttaa true/false jos postiosoite (pätee myös sähköpostiin) on pakollinen annetulle kielelle
+         */
         this.isPostiOsoiteRequired = function(lang) {
             //$log.info("lang:" + model.ytlang + ", uris:" + model.organisaatio.kieletUris);
             //switch (model.ytlang) {

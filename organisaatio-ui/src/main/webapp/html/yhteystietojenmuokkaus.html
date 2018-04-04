@@ -169,19 +169,28 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 </div>
 
+
 <div class="control-group">
-    <label class="control-label" tt="Organisaationtarkastelu.sahkopostiosoite">
-        Organisaationtarkastelu.sahkopostiosoite
+    <label class="control-label">
+        {{t('Organisaationtarkastelu.sahkopostiosoite')}}
+        <span ng-if="model.isPostiOsoiteRequired(model.ytlang)">*</span>
     </label>
     <div class="controls">
         <input id="sahkopostiosoite" type="email" name="sahkopostiosoite" class="span6" maxlength="255"
                ng-model="model.yhteystiedot[model.ytlang].email.email" oph-null-if-zero-length oph-enter
                ie-placeholder placeholder="{{t('Organisaationtarkastelu.sahkopostiosoite')}}"
-               ng-disabled="isFromYtj(model.ytlang)"/>
+               ng-disabled="isFromYtj(model.ytlang)"
+                required ng-required="model.isPostiOsoiteRequired(model.ytlang)" />
         <div>
             <span class="text-error" ng-show="yhteystiedot.sahkopostiosoite.$error.email">
                 {{t('Organisaationtarkastelu.sahkopostiosoite')}}
                 {{t('Organisaationmuokkaus.validointi.virheellinen')}}
+            </span>
+        </div>
+
+        <div>
+            <span class="text-error" ng-if="yhteystiedot.sahkopostiosoite.$error.required">
+                {{t('Organisaationtarkastelu.sahkopostiosoite')}} {{t('Organisaationmuokkaus.validointi.pakollinen')}}
             </span>
         </div>
     </div>
