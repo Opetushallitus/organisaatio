@@ -994,6 +994,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findGroups()");
 
         String s = "SELECT org FROM Organisaatio org "
+                + "JOIN FETCH org.nimi n "
+                + "JOIN FETCH n.values "
+                + "JOIN FETCH org.kuvaus2 k "
+                + "JOIN FETCH k.values "
+                + "JOIN FETCH org.tyypit t "
                 + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
                 + "AND org.organisaatioPoistettu = FALSE "
                 + "AND org.organisaatiotyypitStr = 'Ryhma|'";
