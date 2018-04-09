@@ -38,6 +38,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +48,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.time.DateUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -459,7 +459,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
             organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
         }
-        child.setParentSuhteet(organisaatioSuhdeDAO.findBy("child", child));
+        child.setParentSuhteet(new HashSet<>(organisaatioSuhdeDAO.findBy("child", child)));
         return this.organisaatioDAO.findByOid(child.getOid());
     }
 

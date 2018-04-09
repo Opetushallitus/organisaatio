@@ -86,7 +86,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
-        t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
+        t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
         t.setYritysmuoto(s.getYritysmuoto());

@@ -1000,6 +1000,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 + "JOIN FETCH k.values "
                 + "JOIN FETCH org.tyypit t "
                 + "JOIN FETCH org.kayttoryhmat kr "
+                + "JOIN FETCH org.parentSuhteet ps "
+                + "JOIN FETCH org.ryhmatyypit rt "
                 + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
                 + "AND org.organisaatioPoistettu = FALSE "
                 + "AND org.organisaatiotyypitStr = 'Ryhma|'";

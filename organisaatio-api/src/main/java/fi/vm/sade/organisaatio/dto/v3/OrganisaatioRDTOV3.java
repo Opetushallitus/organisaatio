@@ -46,7 +46,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private List<String> _vuosiluokat;
 
-    private List<String> _ryhmatyypit;
+    private Set<String> _ryhmatyypit;
 
     private Set<String> _kayttoryhmat;
 
@@ -289,14 +289,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Ryhmatyypit", required = true)
-    public List<String> getRyhmatyypit() {
+    public Set<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
-            _ryhmatyypit = new ArrayList<String>();
+            _ryhmatyypit = new HashSet<String>();
         }
         return _ryhmatyypit;
     }
 
-    public void setRyhmatyypit(List<String> _ryhmatyypit) {
+    public void setRyhmatyypit(Set<String> _ryhmatyypit) {
         this._ryhmatyypit = _ryhmatyypit;
     }
 

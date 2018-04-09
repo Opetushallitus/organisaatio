@@ -90,7 +90,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
-        s.setRyhmatyypit(convertListToList(t.getRyhmatyypit()));
+        s.setRyhmatyypit(convertSetToSet(t.getRyhmatyypit()));
         s.setKayttoryhmat(convertSetToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
         // t.set(s.getYhteystiedot());
