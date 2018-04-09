@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.dto.v3;
 
-import fi.vm.sade.organisaatio.resource.dto.*;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -47,7 +48,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private List<String> _ryhmatyypit;
 
-    private List<String> _kayttoryhmat;
+    private Set<String> _kayttoryhmat;
 
     private Map<String, String> _nimi;
 
@@ -300,14 +301,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Kayttoryhmat", required = true)
-    public List<String> getKayttoryhmat() {
+    public Set<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
-            _kayttoryhmat = new ArrayList<String>();
+            _kayttoryhmat = new HashSet<String>();
         }
         return _kayttoryhmat;
     }
 
-    public void setKayttoryhmat(List<String> _kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> _kayttoryhmat) {
         this._kayttoryhmat = _kayttoryhmat;
     }
 

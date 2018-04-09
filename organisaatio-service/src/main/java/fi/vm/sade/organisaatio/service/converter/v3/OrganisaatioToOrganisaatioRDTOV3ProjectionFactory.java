@@ -90,7 +90,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setTyypit(convertListToList(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
-        t.setKayttoryhmat(convertListToList(s.getKayttoryhmat()));
+        t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
         t.setYritysmuoto(s.getYritysmuoto());
         t.setYTJKieli(s.getYtjKieli());
@@ -160,11 +160,11 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
     }
 
     private List<String> convertListToList(List<String> s) {
-        List<String> result = new ArrayList<>();
-        for (String v : s) {
-            result.add(v);
-        }
-        return result;
+        return new ArrayList<>(s);
+    }
+
+    private Set<String> convertSetToSet(Set<String> s) {
+        return new HashSet<>(s);
     }
 
     private String formatDate(Date dt) {

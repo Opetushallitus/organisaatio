@@ -18,34 +18,18 @@ package fi.vm.sade.organisaatio.service.converter.v3;
 import fi.vm.sade.generic.service.conversion.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietoElementti;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.model.BinaryData;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *
@@ -107,7 +91,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
         s.setRyhmatyypit(convertListToList(t.getRyhmatyypit()));
-        s.setKayttoryhmat(convertListToList(t.getKayttoryhmat()));
+        s.setKayttoryhmat(convertSetToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
         // t.set(s.getYhteystiedot());
         // t.set(s.getYhteystietoArvos());
@@ -263,8 +247,12 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         return email;
     }
 
-    private List<String> convertListToList(List<String> a) {
-        return new ArrayList<String>(a);
+    private List<String> convertListToList(List<String> s) {
+        return new ArrayList<>(s);
+    }
+
+    private Set<String> convertSetToSet(Set<String> s) {
+        return new HashSet<>(s);
     }
 
     private BinaryData decodeFromUUENCODED(String kuva) {

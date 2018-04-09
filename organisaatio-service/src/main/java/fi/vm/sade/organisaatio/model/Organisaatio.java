@@ -19,30 +19,15 @@ package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
-import java.util.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang.time.DateUtils;
-
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import org.apache.commons.lang.time.DateUtils;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+
 import static java.util.stream.Collectors.toList;
 
 
@@ -74,7 +59,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kayttoryhmat = new ArrayList<String>();
+    private Set<String> kayttoryhmat = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nimi_mkt")
@@ -446,14 +431,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * @return kayttoryhmat
      */
-    public List<String> getKayttoryhmat() {
-        return Collections.unmodifiableList(kayttoryhmat);
+    public Set<String> getKayttoryhmat() {
+        return Collections.unmodifiableSet(kayttoryhmat);
     }
 
     /**
      * @param kayttoryhmat kayttoryhmat to set
      */
-    public void setKayttoryhmat(List<String> kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> kayttoryhmat) {
         this.kayttoryhmat.clear();
         this.kayttoryhmat.addAll(kayttoryhmat);
     }
