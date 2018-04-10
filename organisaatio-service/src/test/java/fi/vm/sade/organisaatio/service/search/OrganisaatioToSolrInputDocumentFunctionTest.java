@@ -16,21 +16,22 @@
 package fi.vm.sade.organisaatio.service.search;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioToSolrInputDocumentUtil;
+import org.apache.solr.common.SolrInputDocument;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.apache.solr.common.SolrInputDocument;
 
 import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 
 public class OrganisaatioToSolrInputDocumentFunctionTest {
 
@@ -56,7 +57,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         suhde.setChild(org);
         suhde.setAlkuPvm(new Date());
         org.getParentSuhteet().add(suhde);
-        org.setParentSuhteet(Lists.newArrayList(suhde));
+        org.setParentSuhteet(Sets.newHashSet(suhde));
         parent.setOid("1.1.1.1.1.1");
         org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
         org.setYtunnus("123456-7");
@@ -78,7 +79,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         assertEquals(org.getOid(), doc.getFieldValue(OID));
         assertEquals(org.getOppilaitosKoodi(), doc.getFieldValue(OPPILAITOSKOODI));
         assertEquals(org.getToimipisteKoodi(), doc.getFieldValue(TOIMIPISTEKOODI));
-        assertEquals(org.getParentSuhteet().get(0).getParent().getOid(), doc.getFieldValue(PARENTOID));
+        assertEquals(new ArrayList<>(org.getParentSuhteet()).get(0).getParent().getOid(), doc.getFieldValue(PARENTOID));
         assertEquals(org.getTyypit().size(), doc.getFieldValues(ORGANISAATIOTYYPPI).size());
         assertEquals(2, doc.getFieldValues(PATH).size());
         assertEquals(org.getYtunnus(), doc.getFieldValue(YTUNNUS));

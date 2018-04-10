@@ -16,6 +16,7 @@ package fi.vm.sade.organisaatio.service.converter.v3;
 
 import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
@@ -29,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 
 /**
  *
@@ -86,8 +86,8 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
-        t.setRyhmatyypit(convertListToList(s.getRyhmatyypit()));
-        t.setKayttoryhmat(convertListToList(s.getKayttoryhmat()));
+        t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
+        t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
         t.setYritysmuoto(s.getYritysmuoto());
         t.setYTJKieli(s.getYtjKieli());
@@ -157,11 +157,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
     }
 
     private List<String> convertListToList(List<String> s) {
-        List<String> result = new ArrayList<>();
-        for (String v : s) {
-            result.add(v);
-        }
-        return result;
+        return new ArrayList<>(s);
+    }
+
+    private Set<String> convertSetToSet(Set<String> s) {
+        return new HashSet<>(s);
     }
 
     private String formatDate(Date dt) {

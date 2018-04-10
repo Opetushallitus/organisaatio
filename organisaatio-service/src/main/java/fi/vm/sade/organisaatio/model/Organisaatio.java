@@ -19,30 +19,15 @@ package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
-import java.util.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang.time.DateUtils;
-
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
+import org.apache.commons.lang.time.DateUtils;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+
 import static java.util.stream.Collectors.toList;
 
 
@@ -70,11 +55,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> ryhmatyypit = new ArrayList<String>();
+    private Set<String> ryhmatyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kayttoryhmat = new ArrayList<String>();
+    private Set<String> kayttoryhmat = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nimi_mkt")
@@ -102,7 +87,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    private List<OrganisaatioSuhde> parentSuhteet = new ArrayList<OrganisaatioSuhde>();
+    private Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>();
 
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
     private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
@@ -409,14 +394,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * @return ryhmatyypit
      */
-    public List<String> getRyhmatyypit() {
-        return Collections.unmodifiableList(ryhmatyypit);
+    public Set<String> getRyhmatyypit() {
+        return Collections.unmodifiableSet(ryhmatyypit);
     }
 
     /**
      * @param ryhmatyypit ryhmatyypit to set
      */
-    public void setRyhmatyypit(List<String> ryhmatyypit) {
+    public void setRyhmatyypit(Set<String> ryhmatyypit) {
         this.ryhmatyypit.clear();
         this.ryhmatyypit.addAll(ryhmatyypit);
     }
@@ -446,14 +431,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * @return kayttoryhmat
      */
-    public List<String> getKayttoryhmat() {
-        return Collections.unmodifiableList(kayttoryhmat);
+    public Set<String> getKayttoryhmat() {
+        return Collections.unmodifiableSet(kayttoryhmat);
     }
 
     /**
      * @param kayttoryhmat kayttoryhmat to set
      */
-    public void setKayttoryhmat(List<String> kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> kayttoryhmat) {
         this.kayttoryhmat.clear();
         this.kayttoryhmat.addAll(kayttoryhmat);
     }
@@ -578,14 +563,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return null;
     }
 
-    public List<OrganisaatioSuhde> getParentSuhteet() {
+    public Set<OrganisaatioSuhde> getParentSuhteet() {
         return parentSuhteet;
     }
 
     public List<OrganisaatioSuhde> getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
         List<OrganisaatioSuhde> result = new ArrayList<>();
 
-        Date now = new Date();
         for (OrganisaatioSuhde os : parentSuhteet) {
             if (os.getSuhdeTyyppi() == tyyppi) {
                 result.add(os);
@@ -662,7 +646,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return ret;
     }
 
-    public void setParentSuhteet(List<OrganisaatioSuhde> parentSuhteet) {
+    public void setParentSuhteet(Set<OrganisaatioSuhde> parentSuhteet) {
         this.parentSuhteet = parentSuhteet;
     }
 
