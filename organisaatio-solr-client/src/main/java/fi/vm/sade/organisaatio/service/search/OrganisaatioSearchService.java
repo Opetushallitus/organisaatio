@@ -46,6 +46,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     private final SolrServer solr;
     private final Logger LOG = LoggerFactory.getLogger(OrganisaatioSearchService.class);
     private Map<String, Set<String>> orgTypeLimit = Maps.newHashMap();
+    private final int MAX_RESULTS = 20000;
 
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
@@ -74,7 +75,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, kieli, searchStr, oid);
 
         // max rows to return
-        q.setRows(10000);
+        q.setRows(MAX_RESULTS);
 
         try {
             QueryResponse response = solr.query(q, METHOD.POST);
@@ -108,7 +109,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
         q.set("fl", OID, PATH);
         // max rows to return
-        q.setRows(20000);
+        q.setRows(MAX_RESULTS);
         try {
             QueryResponse response = solr.query(q, METHOD.POST);
 
@@ -167,7 +168,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                                 Joiner.on(" ").join(escapeAll(paths)));
             }
             q.setQuery(query);
-            q.setRows(20000);
+            q.setRows(MAX_RESULTS);
 
             response = solr.query(q, METHOD.POST);
 
