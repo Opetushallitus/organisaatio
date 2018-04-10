@@ -16,19 +16,14 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class OrganisaatioBusinessServiceBatchValidationTest {
 
@@ -60,7 +55,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
         os3.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         os3.setChild(parent);
         os3.setParent(root);
-        List<OrganisaatioSuhde> parentSuhde = new ArrayList<>();
+        Set<OrganisaatioSuhde> parentSuhde = new HashSet<>();
         parentSuhde.add(os3);
         ReflectionTestUtils.setField(parent, "childSuhteet", children);
         ReflectionTestUtils.setField(parent, "parentSuhteet", parentSuhde);

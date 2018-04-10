@@ -161,7 +161,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         List<Yhteystieto> yhteystiedot = new ArrayList<>();
         yhteystiedot.add(orgOsoite);
         org.setYhteystiedot(yhteystiedot);
-        ReflectionTestUtils.setField(org, "parentSuhteet", new ArrayList());
+        ReflectionTestUtils.setField(org, "parentSuhteet", new HashSet<>());
     }
 
     private void generateOrganisaatioNimi(Date alkupvm) {
