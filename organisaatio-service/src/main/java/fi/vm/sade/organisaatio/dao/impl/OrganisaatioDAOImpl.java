@@ -995,9 +995,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         String s = "SELECT org FROM Organisaatio org "
                 + "JOIN FETCH org.nimi n "
-                + "JOIN FETCH n.values "
                 + "JOIN FETCH org.kuvaus2 k "
-                + "JOIN FETCH k.values "
                 + "JOIN FETCH org.tyypit t "
                 + "JOIN FETCH org.kayttoryhmat kr "
                 + "JOIN FETCH org.parentSuhteet ps "

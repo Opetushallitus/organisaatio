@@ -15,21 +15,14 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import fi.vm.sade.security.xssfilter.XssFilter;
 import com.google.common.base.Objects;
 import fi.vm.sade.generic.model.BaseEntity;
+import fi.vm.sade.security.xssfilter.XssFilter;
+import org.hibernate.annotations.BatchSize;
+
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generic translatable text.
@@ -46,7 +39,8 @@ public class MonikielinenTeksti extends BaseEntity {
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
     @CollectionTable(joinColumns=@JoinColumn(name="id"))
-    private Map<String, String> values = new HashMap<String, String>();
+    @BatchSize(size = 1000)
+    private Map<String, String> values = new HashMap<>();
 
 
     @PrePersist
