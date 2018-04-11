@@ -54,7 +54,6 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
 
     $scope.valitseRyhma = function(group) {
         $scope.currentGroup = group;
-        console.log(group);
         $scope.updateUpdateInfo();
     };
 
