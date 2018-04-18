@@ -159,10 +159,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <button class="btn" ng-disabled="!currentGroup" ng-click="poista()" tt="RyhmienHallinta.poista">
                 RyhmienHallinta.poista
             </button>
-            <button class="btn" ng-if="currentGroup.status === 'AKTIIVINEN'" ng-disabled="!currentGroup" tt="RyhmienHallinta.disabloi" ng-click="disabloi()">
+            <button class="btn" ng-if="currentGroup.status === 'AKTIIVINEN'" tt="RyhmienHallinta.disabloi" ng-click="disabloi()">
                 RyhmienHallinta.disabloi
             </button>
-            <button class="btn" ng-if="currentGroup.status === 'PASSIIVINEN'" ng-disabled="!currentGroup" tt="RyhmienHallinta.enabloi" ng-click="enabloi()">
+            <button class="btn" ng-if="currentGroup.status === 'PASSIIVINEN'" tt="RyhmienHallinta.enabloi" ng-click="enabloi()">
                 RyhmienHallinta.enabloi
             </button>
 
