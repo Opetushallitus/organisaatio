@@ -109,13 +109,7 @@
         KeepaliveProvider.interval(SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
 
         var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || SERVICE_URL_BASE + "session/maxinactiveinterval";
-        var headers = {};
-        headers[ORGANISAATIO_NO_LOADING_HEADER] = true;
-        KeepaliveProvider.http({
-            url: ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL,
-            method: 'GET',
-            headers: headers,
-        });
+        KeepaliveProvider.http(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL);
     }]);
 
     app.run(['Idle', function(Idle){

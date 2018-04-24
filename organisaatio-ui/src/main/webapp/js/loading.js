@@ -110,23 +110,22 @@ angular.module('Loading', ['Localisation'])
   return service;
 })
 
-.factory('onStartInterceptor', function(LoadingService) {
-    return function (data, headersGetter, status) {
-        if (!headersGetter(ORGANISAATIO_NO_LOADING_HEADER)) {
-            LoadingService.beforeRequest();
-        }
-        return data;
-    };
-})
-
 // Intercept http responses.
 .factory('onCompleteInterceptor', function(LoadingService, $q, $log) {
     $log = $log.getInstance('onCompleteInterceptor');
     return {
+        // "incrementRequestCountSuccess"
+        request: function(config) {
+            if (!config.url || config.url.indexOf(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL) === -1) {
+                LoadingService.beforeRequest();
+            }
+            return config;
+        },
         // Just call afterRequest() to clear timeout and pass the response to the orginal caller.
         // "decrementRequestCountSuccess"
         response: function(response) {
-            if (!response.config || !response.config.headers || !response.config.headers[ORGANISAATIO_NO_LOADING_HEADER]) {
+            if (!response.config || !response.config.url
+                || response.config.url.indexOf(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL) === -1) {
                 LoadingService.afterRequest(true, response);
             }
             return response;
@@ -142,10 +141,6 @@ angular.module('Loading', ['Localisation'])
 
 .config(function($httpProvider) {
     $httpProvider.interceptors.push('onCompleteInterceptor');
-})
-
-.run(function($http, onStartInterceptor) {
-    $http.defaults.transformRequest.push(onStartInterceptor);
 })
 
 .controller('LoadingCtrl', function($scope, $rootElement, $uibModal, LoadingService) {
