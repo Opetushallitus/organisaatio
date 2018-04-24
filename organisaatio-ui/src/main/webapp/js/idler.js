@@ -56,29 +56,29 @@
 
     app.controller('SessionExpiresCtrl', ['Idle', '$scope', '$uibModalInstance', '$window', 'LocalisationService',
         function( Idle, $scope, $uibModalInstance, $window, LocalisationService) {
-        $scope.timeoutMessage = function() {
-            var duration = Math.floor(MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
-            return LocalisationService.t('session.expired.text1.part1') + " " + duration +  " " + LocalisationService.t('session.expired.text1.part2');
-        };
+            $scope.timeoutMessage = function() {
+                var duration = Math.floor(MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
+                return LocalisationService.t('session.expired.text1.part1') + " " + duration +  " " + LocalisationService.t('session.expired.text1.part2');
+            };
 
-        // This is loaded before localisationCtrl so this needs to be done manually here.
-        $scope.t = function(key) {
-            return LocalisationService.t(key);
-        };
+            // This is loaded before localisationCtrl so this needs to be done manually here.
+            $scope.t = function(key) {
+                return LocalisationService.t(key);
+            };
 
-        $scope.okConfirm = function() {
-            Idle.watch();
-            $uibModalInstance.close();
-        };
-        $scope.redirectToLogin = function() {
-            $window.location.reload();
-        };
-    }]);
+            $scope.okConfirm = function() {
+                Idle.watch();
+                $uibModalInstance.close();
+            };
+            $scope.redirectToLogin = function() {
+                $window.location.reload();
+            };
+        }]);
 
     app.controller('EventsCtrl', ['$scope','Idle', '$uibModal', '$http',
         function($scope, Idle, $uibModal, $http) {
-        var openModal = function(template) {
-            return $uibModal.open({
+            var openModal = function(template) {
+                return $uibModal.open({
                     templateUrl: TEMPLATE_URL_BASE + template,
                     controller: 'SessionExpiresCtrl',
                     keyboard: false,
@@ -86,31 +86,39 @@
                     windowClass: 'modal-warning',
                     scope: $scope
                 });
-        };
+            };
 
-        $scope.$on('IdleWarn', function(e, countdown) {
-            if (!$scope.sessionWarning || angular.element('#sessionWarning').length < 1) {
-                $scope.sessionWarning = openModal('sessionWarning.html');
-            }
-        });
+            $scope.$on('IdleWarn', function(e, countdown) {
+                if (!$scope.sessionWarning || angular.element('#sessionWarning').length < 1) {
+                    $scope.sessionWarning = openModal('sessionWarning.html');
+                }
+            });
 
-        $scope.$on('IdleTimeout', function() {
-            $scope.sessionWarning.close();
-            $scope.sessionWarning = openModal('sessionExpired.html');
-            Idle.unwatch();
-        });
+            $scope.$on('IdleTimeout', function() {
+                $scope.sessionWarning.close();
+                $scope.sessionWarning = openModal('sessionExpired.html');
+                Idle.unwatch();
+            });
 
-    }])
-    .config(['IdleProvider', 'KeepaliveProvider', function(IdleProvider, KeepaliveProvider) {
+        }]);
+
+    app.config(['IdleProvider', 'KeepaliveProvider', function(IdleProvider, KeepaliveProvider) {
         var warningDuration = 300;
         IdleProvider.idle(MAX_SESSION_IDLE_TIME_IN_SECONDS - warningDuration);
         IdleProvider.timeout(warningDuration);
         KeepaliveProvider.interval(SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
 
         var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || SERVICE_URL_BASE + "session/maxinactiveinterval";
-        KeepaliveProvider.http(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL);
-    }])
-    .run(['Idle', function(Idle){
+        var headers = {};
+        headers[ORGANISAATIO_NO_LOADING_HEADER] = true;
+        KeepaliveProvider.http({
+            url: ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL,
+            method: 'GET',
+            headers: headers,
+        });
+    }]);
+
+    app.run(['Idle', function(Idle){
         Idle.watch();
     }]);
 

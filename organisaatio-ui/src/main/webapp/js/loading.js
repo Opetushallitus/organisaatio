@@ -45,10 +45,11 @@ angular.module('Loading', ['Localisation'])
         afterRequest: function(success, req) {
             //$log.log("LOADING afterRequest "+success, service);
             if (success) {
-        	service.requestCount--;
-            } else {
+                service.requestCount--;
+            }
+            else {
                 $log.warn("Error afterRequest ", req);
-    		service.errors++;
+                service.errors++;
             }
             service.clearTimeout();
             service.errorHandlingRequested = null;
@@ -110,8 +111,10 @@ angular.module('Loading', ['Localisation'])
 })
 
 .factory('onStartInterceptor', function(LoadingService) {
-    return function (data, headersGetter) {
-        LoadingService.beforeRequest();
+    return function (data, headersGetter, status) {
+        if (!headersGetter(ORGANISAATIO_NO_LOADING_HEADER)) {
+            LoadingService.beforeRequest();
+        }
         return data;
     };
 })
@@ -123,7 +126,9 @@ angular.module('Loading', ['Localisation'])
         // Just call afterRequest() to clear timeout and pass the response to the orginal caller.
         // "decrementRequestCountSuccess"
         response: function(response) {
-            LoadingService.afterRequest(true, response);
+            if (!response.config || !response.config.headers || !response.config.headers[ORGANISAATIO_NO_LOADING_HEADER]) {
+                LoadingService.afterRequest(true, response);
+            }
             return response;
         },
         // "decrementRequestCountError"
