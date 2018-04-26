@@ -974,6 +974,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * FROM organisaatio
      * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
      * AND organisaatiopoistettu = FALSE
+     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND organisaatiotyypitstr = 'Ryhma|'
      *
      *
@@ -985,6 +986,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * ON org.id = tp.organisaatio_id
      * WHERE tp.tyypit = 'Ryhma'
      * AND org.organisaatiopoistettu = FALSE
+     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND org.parentoidpath = '|1.2.246.562.10.00000000001|'
      *
      * @return
@@ -1002,6 +1004,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 + "JOIN FETCH org.ryhmatyypit rt "
                 + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
                 + "AND org.organisaatioPoistettu = FALSE "
+                + "AND (org.lakkautusPvm is null OR org.lakkautusPvm >= current_date) "
                 + "AND org.organisaatiotyypitStr = 'Ryhma|'";
 
         Query q = getEntityManager().createQuery(s);

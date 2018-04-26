@@ -45,6 +45,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="nimifi" type="text" name="nimifi" class="span6"
                        ng-model="currentGroup.nimi.fi"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.nimisuomeksi')}}" ng-required="false" names-combined-field/>
                 <div>
                     <span class="text-error" ng-show="form.nimifi.$error.namescombinedrequired" tt="RyhmienHallinta.ohje.nimet">
@@ -58,6 +59,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="nimisv" type="text" name="nimisv" class="span6"
                        ng-model="currentGroup.nimi.sv"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.nimiruotsiksi')}}" ng-required="false" names-combined-field/>
             </div>
         </div>
@@ -65,6 +67,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="nimise" type="text" name="nimien" class="span6"
                        ng-model="currentGroup.nimi.en"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.nimienglanniksi')}}" ng-required="false" names-combined-field/>
             </div>
         </div>
@@ -75,6 +78,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="kuvausfi" type="text" name="kuvausfi" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_fi#1']"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.kuvaussuomeksi')}}" ng-required="false" />
             </div>
         </div>
@@ -83,6 +87,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="kuvaussv" type="text" name="kuvaussv" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_sv#1']"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.kuvausruotsiksi')}}" ng-required="false" />
             </div>
         </div>
@@ -90,6 +95,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <input id="kuvausen" type="text" name="kuvausen" class="span6"
                        ng-model="currentGroup.kuvaus2['kieli_en#1']"
+                       ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                        ie-placeholder placeholder="{{t('RyhmienHallinta.kuvausenglanniksi')}}" ng-required="false" />
             </div>
         </div>
@@ -100,6 +106,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <select id="ryhmatyyppi" ng-model="currentGroup.ryhmatyypit[0]" class="span6"
                     ng-options="rTyyppi.uri as rTyyppi.nimi for rTyyppi in koodisto.ryhmatyypit | orderBy:'nimi'"
+                    ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                     ng-change="form.$dirty = true" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Organisaationmuokkaus.valitse</option>
                 </select>
@@ -119,6 +126,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <select id="kayttoryhma" ng-model="currentGroup.kayttoryhmat[0]" class="span6"
                     ng-options="kTyyppi.uri as kTyyppi.nimi for kTyyppi in koodisto.kayttoryhmat | orderBy:'nimi'"
+                    ng-disabled="currentGroup.status === 'PASSIIVINEN'"
                     ng-change="form.$dirty = true" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Organisaationmuokkaus.valitse</option>
                 </select>
@@ -151,6 +159,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <button class="btn" ng-disabled="!currentGroup" ng-click="poista()" tt="RyhmienHallinta.poista">
                 RyhmienHallinta.poista
             </button>
+            <button class="btn" ng-if="currentGroup.status === 'AKTIIVINEN'" tt="RyhmienHallinta.disabloi" ng-click="disabloi()">
+                RyhmienHallinta.disabloi
+            </button>
+            <button class="btn" ng-if="currentGroup.status === 'PASSIIVINEN'" tt="RyhmienHallinta.enabloi" ng-click="enabloi()">
+                RyhmienHallinta.enabloi
+            </button>
+
         </div>
         <div class="offset7">
             <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">

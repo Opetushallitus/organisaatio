@@ -104,6 +104,55 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
         }
     };
 
+    $scope.disabloi = function() {
+        $log.info("disabloi(): ", $scope.currentGroup);
+        var previousDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
+        $scope.currentGroup.lakkautusPvm = previousDate;
+
+        var deferred = $q.defer();
+
+        if ($scope.currentGroup !== null) {
+            $scope.model.save($scope.currentGroup, function(savedGroup) {
+                $scope.currentGroup = savedGroup;
+                $scope.updateUpdateInfo();
+                $scope.currentGroupSelection = {};
+                $scope.currentGroupSelection.selected = savedGroup;
+                $scope.form.$setPristine();
+                deferred.resolve();
+            }, function(error) {
+                loadingService.onErrorHandled(error);
+                $log.warn("Failed to save group: ", $scope.currentGroup);
+                Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
+                deferred.reject();
+            });
+        }
+        return deferred.promise;
+    };
+
+    $scope.enabloi = function() {
+        $log.info("enabloi(): ", $scope.currentGroup);
+        $scope.currentGroup.lakkautusPvm = null;
+
+        var deferred = $q.defer();
+
+        if ($scope.currentGroup !== null) {
+            $scope.model.save($scope.currentGroup, function(savedGroup) {
+                $scope.currentGroup = savedGroup;
+                $scope.updateUpdateInfo();
+                $scope.currentGroupSelection = {};
+                $scope.currentGroupSelection.selected = savedGroup;
+                $scope.form.$setPristine();
+                deferred.resolve();
+            }, function(error) {
+                loadingService.onErrorHandled(error);
+                $log.warn("Failed to save group: ", $scope.currentGroup);
+                Alert.add("error", $filter('i18n')(error.data.errorKey || 'generic.error'), false);
+                deferred.reject();
+            });
+        }
+        return deferred.promise;
+    };
+
     $scope.tallenna = function() {
         $log.info("tallenna(): ", $scope.currentGroup);
 
@@ -199,4 +248,5 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
             });
         }
     });
+
 });
