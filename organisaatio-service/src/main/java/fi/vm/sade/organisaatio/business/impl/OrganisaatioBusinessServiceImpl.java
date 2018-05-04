@@ -1148,6 +1148,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
             organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+
+            // Jos toimipisteen nimi alkaa sen parent oppilaitoksen nimellä, niin siivotaan tuo osa pois toimipisteen nimestä
+            MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio);
+            organisaatio.setNimi(updatedToimipisteNimi);
         }
 
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
@@ -1159,6 +1163,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             updateChildrenRecursive(organisaatio);
         }
+    }
+
+    // Poistetaan parent oppilaitoksen nimeä vastaava prefix toimispisteen nimestä
+    private MonikielinenTeksti getUpdatedToimipisteNimi(Organisaatio organisaatio) {
+        Organisaatio oldParent = organisaatio.getParent();
+        MonikielinenTeksti oldParentNimi = oldParent.getNimi();
+        MonikielinenTeksti nimi = organisaatio.getNimi();
+        Map<String, String> oldNimiValues = oldParentNimi.getValues();
+        Map<String, String> nimiValues = nimi.getValues();
+
+        updateNimiValues(oldNimiValues, nimiValues);
+        nimi.setValues(nimiValues);
+        return nimi;
+    }
+
+    private void updateNimiValues(Map<String, String> oldNimiValues, Map<String, String> nimiValues) {
+        oldNimiValues.forEach((oldParentNimikey, oldParentNimivalue) -> {
+            String nimiValue = nimiValues.get(oldParentNimikey);
+            if(nimiValue != null && nimiValue.startsWith(oldParentNimivalue)) {
+                String[] organisaatioNimiParts = nimiValue.split(oldParentNimivalue);
+                String newNimivalue = organisaatioNimiParts[organisaatioNimiParts.length - 1];
+                newNimivalue = newNimivalue.startsWith(", ") ? newNimivalue.substring(2) : newNimivalue;
+                nimiValues.put(oldParentNimikey, newNimivalue);
+            }
+        });
     }
 
     private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {
