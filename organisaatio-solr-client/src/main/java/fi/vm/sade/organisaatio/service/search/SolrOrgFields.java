@@ -35,6 +35,7 @@ public class SolrOrgFields {
     protected static final String OPPILAITOSTYYPPI = "oppilaitostyyppi_s";
     protected static final String TOIMIPISTEKOODI = "toimipistekoodi_s";
     protected static final String YTUNNUS = "ytunnus_s";
+    protected static final String VIRASTOTUNNUS = "virastotunnus_s";
     protected static final String ALKUPVM = "alkupvm_dt";
     protected static final String LAKKAUTUSPVM = "lakkautuspvm_dt";
     protected static final String ALIORGANISAATIOIDEN_LKM = "aliorganisaatioiden_lkm_i";
