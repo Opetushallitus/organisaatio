@@ -15,18 +15,16 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-
-import org.apache.solr.common.SolrDocument;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import org.apache.solr.common.SolrDocument;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * Convert {@link SolrDocument} from solr to {@link OrganisaatioPerustieto}
@@ -74,6 +72,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
         }
 
         result.setYtunnus(sGet(doc, YTUNNUS));
+        result.setVirastoTunnus(sGet(doc, VIRASTOTUNNUS));
         result.setAlkuPvm(dGet(doc, ALKUPVM));
         result.setLakkautusPvm(dGet(doc, LAKKAUTUSPVM));
         result.setOppilaitostyyppi(sGet(doc, OPPILAITOSTYYPPI));
