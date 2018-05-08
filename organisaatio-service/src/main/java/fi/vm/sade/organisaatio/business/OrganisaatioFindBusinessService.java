@@ -17,6 +17,7 @@ package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 
@@ -90,5 +91,11 @@ public interface OrganisaatioFindBusinessService {
      * @return Organisaatioiden liitokset.
      */
     public List<OrganisaatioSuhde> findLiitokset(Date date);
+
+    /**
+     * Metodi kaikkien organisaation lisätietotyyppien hakemiseen
+     * @return Kaikki lisätiedot
+     */
+    List<Lisatietotyyppi> getLisatietotyypit();
 
 }

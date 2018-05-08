@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -85,6 +86,9 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
         t.setTyypit(convertListToList(s.getTyypit()));
+        t.setLisatiedot(convertSetToSet(s.getOrganisaatioLisatiedot().stream()
+                .map(OrganisaatioLisatieto::getArvo)
+                .collect(Collectors.toSet())));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));

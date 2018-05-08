@@ -86,6 +86,8 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private List<Map<String, String>> _yhteystiedot;
 
+    private Set<String> _lisatiedot;
+
     private String _kuvaus;
 
     private Map<String, String> _kuvaus2;
@@ -523,5 +525,13 @@ public class OrganisaatioRDTOV3 implements Serializable {
      */
     public void setStatus(String _status) {
         this._status = _status;
+    }
+
+    public Set<String> getLisatiedot() {
+        return _lisatiedot;
+    }
+
+    public void setLisatiedot(Set<String> _lisatiedot) {
+        this._lisatiedot = _lisatiedot;
     }
 }

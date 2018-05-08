@@ -16,9 +16,11 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.dao.LisatietoTyyppiDao;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.slf4j.Logger;
@@ -50,6 +52,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private ConversionService conversionService;
+
+    @Autowired
+    private LisatietoTyyppiDao lisatietoTyyppiDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -107,6 +112,11 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
         return organisaatioSuhdeDAO.findLiitokset(date);
+    }
+
+    @Override
+    public List<Lisatietotyyppi> getLisatietotyypit() {
+        return this.lisatietoTyyppiDao.findAll();
     }
 
 }
