@@ -23,15 +23,16 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneOffset;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,7 +41,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.data.MapEntry.entry;
@@ -192,16 +201,18 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String koulutustoimijaOid = koulutustoimijaResult1.getOrganisaatio().getOid();
         OrganisaatioRDTO oppilaitos = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi)", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimijaOid);
         OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos, false);
+        Date oppilaitosModifiedDateBeforeNameSave = oppilaitosResult1.getOrganisaatio().getPaivitysPvm();
         String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
         OrganisaatioRDTO toimipiste = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi), toimipiste1 (fi)", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
         toimipiste.getNimi().put("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)");
         toimipiste.getNimi().put("sv", "toimipiste1 (sv)");
         OrganisaatioResult toimipisteResult1 = service.save(toimipiste, false);
+        Date toimipisteModifiedDateBeforeOppilaitosSave = toimipisteResult1.getOrganisaatio().getPaivitysPvm();
 
         oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
         oppilaitos.getNimi().put("en", "oppilaitos1-päivitetty (en)");
         oppilaitos.getNimi().put("dk", "oppilaitos1-päivitetty (dk)");
-        service.save(oppilaitos, true);
+        OrganisaatioResult oppilaitosAfterNameSave = service.save(oppilaitos, true);
 
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(toimipisteResult1.getOrganisaatio().getOid());
         Map<String, String> nimet = organisaatio.getNimi().getValues();
@@ -210,6 +221,9 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
                 entry("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)"),
                 entry("sv", "toimipiste1 (sv)")
         );
+        assertThat(oppilaitosAfterNameSave.getOrganisaatio().getPaivitysPvm()).isAfter(oppilaitosModifiedDateBeforeNameSave);
+        // Oppilaitos save also updates toimipiste paivitysPvm
+        assertThat(organisaatio.getPaivitysPvm()).isAfter(toimipisteModifiedDateBeforeOppilaitosSave);
     }
 
     @Test
@@ -269,6 +283,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
+
         jdbcTemplate.update("update organisaatio set toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
         toimipisteResult1 = service.save(toimipiste1, true);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
@@ -287,6 +302,22 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Throwable throwable = catchThrowable(() -> service.save(koulutustoimija, false));
 
         assertThat(throwable).isExactlyInstanceOf(OrganisaatioNameHistoryNotValidException.class);
+    }
+
+    @Test
+    public void updateCurrentOrganisaatioNimet() {
+        OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid);
+        oppilaitosRdto.getNimet().forEach(nimi -> nimi.setAlkuPvm(Date.from(LocalDate.now().minus(2, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant())));
+        oppilaitosRdto.getNimet().add(OrganisaatioRDTOTestUtil.createNimi("toinen nimi", Date.from(LocalDate.now().plus(2, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant())));
+        OrganisaatioResult organisaatioResult = this.service.save(oppilaitosRdto, false);
+        Date paivitysPvmOnCreate = organisaatioResult.getOrganisaatio().getPaivitysPvm();
+
+        // Muutetaan tuleva alkupvm voimassa olevaksi tästä hetkestä eteen päin
+        this.jdbcTemplate.update("UPDATE organisaatio_nimi SET alkupvm = CURRENT_TIMESTAMP WHERE alkupvm > CURRENT_TIMESTAMP ");
+        this.service.updateCurrentOrganisaatioNimet();
+        Organisaatio oppilaitos = this.organisaatioFindBusinessService.findById(organisaatioResult.getOrganisaatio().getOid());
+        assertThat(oppilaitos.getNimi().getString("fi")).isEqualTo("toinen nimi");
+        assertThat(oppilaitos.getPaivitysPvm()).isAfter(paivitysPvmOnCreate);
     }
 
 }
