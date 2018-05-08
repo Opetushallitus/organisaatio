@@ -47,11 +47,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection(fetch= FetchType.EAGER)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> tyypit = new ArrayList<String>();
+    private List<String> tyypit = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> vuosiluokat = new ArrayList<String>();
+    private List<String> vuosiluokat = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
@@ -84,17 +84,20 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
+    private List<Yhteystieto> yhteystiedot = new ArrayList<>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>();
 
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
-    private List<OrganisaatioSuhde> childSuhteet = new ArrayList<OrganisaatioSuhde>();
+    private List<OrganisaatioSuhde> childSuhteet = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
-    private List<OrganisaatioNimi> nimet = new ArrayList<OrganisaatioNimi>();
+    private List<OrganisaatioNimi> nimet = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organisaatio", fetch = FetchType.LAZY)
+    private Set<OrganisaatioLisatieto> organisaatioLisatiedot = new HashSet<>();
 
     private String yritysmuoto;
 
@@ -110,12 +113,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     // @NotNull
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kielet = new ArrayList<String>();
+    private List<String> kielet = new ArrayList<>();
 
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<YhteystietoArvo> yhteystietoArvos = new ArrayList<YhteystietoArvo>();
+    private List<YhteystietoArvo> yhteystietoArvos = new ArrayList<>();
 
     @Column(unique = true)
     private String oppilaitosKoodi;
@@ -797,5 +800,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             }
         }
         return currentOrgNimi;
+    }
+
+    public Set<OrganisaatioLisatieto> getOrganisaatioLisatiedot() {
+        return organisaatioLisatiedot;
+    }
+
+    public void setOrganisaatioLisatiedot(Set<OrganisaatioLisatieto> organisaatioLisatiedot) {
+        this.organisaatioLisatiedot = organisaatioLisatiedot;
     }
 }

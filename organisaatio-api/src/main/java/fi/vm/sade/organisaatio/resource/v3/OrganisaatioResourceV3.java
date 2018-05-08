@@ -4,23 +4,12 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import io.swagger.annotations.*;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.Set;
 
 /**
  * V3 REST services for Organisaatio.
@@ -131,4 +120,12 @@ public interface OrganisaatioResourceV3 {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
 
+
+    @GET
+    @Path("/lisatietotyypit")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee kaikki mahdolliset lisätiedot organisaatioille",
+            response = String.class,
+            responseContainer = "Set")
+    Set<String> haeLisatietotyypit();
 }
