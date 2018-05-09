@@ -9,7 +9,6 @@ import io.swagger.annotations.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.Set;
 
 /**
  * V3 REST services for Organisaatio.
@@ -120,12 +119,4 @@ public interface OrganisaatioResourceV3 {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
 
-
-    @GET
-    @Path("/lisatietotyypit")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee kaikki mahdolliset lisätiedot organisaatioille",
-            response = String.class,
-            responseContainer = "Set")
-    Set<String> haeLisatietotyypit();
 }

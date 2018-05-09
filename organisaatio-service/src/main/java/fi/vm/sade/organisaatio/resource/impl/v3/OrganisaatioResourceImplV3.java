@@ -13,7 +13,6 @@ import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
-import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -31,8 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 @Component
 @Transactional(readOnly = true)
@@ -243,13 +244,5 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         LOG.debug("Muutettujen convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
 
         return results;
-    }
-
-    // GET /organisaatio/v3/lisatietotyypit
-    @Override
-    public Set<String> haeLisatietotyypit()  {
-        return this.organisaatioFindBusinessService.getLisatietotyypit().stream()
-                .map(Lisatietotyyppi::getNimi)
-                .collect(Collectors.toSet());
     }
 }
