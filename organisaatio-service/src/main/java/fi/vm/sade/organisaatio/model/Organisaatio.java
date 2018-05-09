@@ -96,8 +96,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("alkuPvm")
     private List<OrganisaatioNimi> nimet = new ArrayList<>();
 
-    @OneToMany(mappedBy = "organisaatio", fetch = FetchType.LAZY)
-    private Set<OrganisaatioLisatieto> organisaatioLisatiedot = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "organisaatio_lisatieto",
+            joinColumns = @JoinColumn(name = "organisaatio_id"),
+            inverseJoinColumns = @JoinColumn(name = "lisatietotyyppi_id"))
+    private Set<Lisatietotyyppi> lisatietotyypit = new HashSet<>();
 
     private String yritysmuoto;
 
@@ -110,7 +113,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String kotipaikka;
     private String maa;
 
-    // @NotNull
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private List<String> kielet = new ArrayList<>();
@@ -802,11 +804,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return currentOrgNimi;
     }
 
-    public Set<OrganisaatioLisatieto> getOrganisaatioLisatiedot() {
-        return organisaatioLisatiedot;
+    public Set<Lisatietotyyppi> getLisatietotyypit() {
+        return lisatietotyypit;
     }
 
-    public void setOrganisaatioLisatiedot(Set<OrganisaatioLisatieto> organisaatioLisatiedot) {
-        this.organisaatioLisatiedot = organisaatioLisatiedot;
+    public void setLisatietotyypit(Set<Lisatietotyyppi> lisatietotyypit) {
+        this.lisatietotyypit = lisatietotyypit;
     }
 }

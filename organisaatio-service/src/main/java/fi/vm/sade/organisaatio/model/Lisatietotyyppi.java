@@ -34,5 +34,4 @@ public class Lisatietotyyppi extends BaseEntity {
     public void setRajoitteet(Set<Rajoite> rajoitteet) {
         this.rajoitteet = rajoitteet;
     }
-
 }
