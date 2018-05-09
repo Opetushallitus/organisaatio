@@ -4,22 +4,20 @@ import fi.vm.sade.generic.model.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "lisatietotyyppi")
 public class Lisatietotyyppi extends BaseEntity {
     // Lokalisointipalvelun avain
-    @Column(name = "nimi")
+    @Column(name = "nimi", unique = true)
     private String nimi;
 
-    @Column(name = "organisaatiotyyppi_rajoite")
-    private String organisaatioTyyppiRajoite;
-
-    // oppilaitostyyppi-koodisto
-    @Column(name = "oppilaitostyyppi_rajoite")
-    private String oppilaitosTyyppiRajoite;
-
+    @OneToMany(mappedBy = "lisatietotyyppi")
+    private Set<Rajoite> rajoitteet = new HashSet<>();
 
     public String getNimi() {
         return nimi;
@@ -29,19 +27,12 @@ public class Lisatietotyyppi extends BaseEntity {
         this.nimi = koodiUri;
     }
 
-    public String getOrganisaatioTyyppiRajoite() {
-        return organisaatioTyyppiRajoite;
+    public Set<Rajoite> getRajoitteet() {
+        return rajoitteet;
     }
 
-    public void setOrganisaatioTyyppiRajoite(String organisaatioTyyppiRajoite) {
-        this.organisaatioTyyppiRajoite = organisaatioTyyppiRajoite;
+    public void setRajoitteet(Set<Rajoite> rajoitteet) {
+        this.rajoitteet = rajoitteet;
     }
 
-    public String getOppilaitosTyyppiRajoite() {
-        return oppilaitosTyyppiRajoite;
-    }
-
-    public void setOppilaitosTyyppiRajoite(String oppilaitosTyyppiRajoite) {
-        this.oppilaitosTyyppiRajoite = oppilaitosTyyppiRajoite;
-    }
 }
