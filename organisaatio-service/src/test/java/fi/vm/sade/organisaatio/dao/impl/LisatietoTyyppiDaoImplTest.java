@@ -17,6 +17,8 @@ import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,10 +35,14 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
 
     @Before
     public void setup() {
+        this.createAndPersistOrganisation("oid", "Oppilaitos", "oppilaitoskoodi_12#1");
+    }
+
+    private void createAndPersistOrganisation(String oid, String organisaatiotyyppi, String oppilaitostyyppi) {
         Organisaatio organisaatio = new Organisaatio();
-        organisaatio.setOid("oid");
-        organisaatio.setTyypit(Collections.singletonList("Oppilaitos"));
-        organisaatio.setOppilaitosTyyppi("oppilaitoskoodi_12#1");
+        organisaatio.setOid(oid);
+        organisaatio.setTyypit(Collections.singletonList(organisaatiotyyppi));
+        organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
         this.entityManager.persist(organisaatio);
     }
 
@@ -116,6 +122,56 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
         Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
                 .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("wrong oid");
         assertThat(lisatietotyyppiNimiList).isEmpty();
+    }
+
+    @Test
+    public void findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoite() {
+        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+        lisatietotyyppi.setNimi("lisatieto.nimi");
+
+        OrganisaatiotyyppiRajoite rajoiteOrganisaatiotyyppi = new OrganisaatiotyyppiRajoite();
+        rajoiteOrganisaatiotyyppi.setArvo("Oppilaitos");
+        rajoiteOrganisaatiotyyppi.setLisatietotyyppi(lisatietotyyppi);
+
+        OppilaitostyyppiRajoite rajoiteOppilaitostyyppi = new OppilaitostyyppiRajoite();
+        rajoiteOppilaitostyyppi.setArvo("oppilaitoskoodi_12#1");
+        rajoiteOppilaitostyyppi.setLisatietotyyppi(lisatietotyyppi);
+
+        lisatietotyyppi.setRajoitteet(Stream.of(rajoiteOppilaitostyyppi, rajoiteOrganisaatiotyyppi).collect(Collectors.toSet()));
+        this.lisatietoTyyppiDao.getEntityManager().persist(lisatietotyyppi);
+        this.lisatietoTyyppiDao.getEntityManager().persist(rajoiteOppilaitostyyppi);
+        this.lisatietoTyyppiDao.getEntityManager().persist(rajoiteOrganisaatiotyyppi);
+
+        Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
+                .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("oid");
+        assertThat(lisatietotyyppiNimiList)
+                .containsExactly("lisatieto.nimi");
+    }
+
+    @Test
+    public void findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoiteWhileOnlyOneConstraintIsTrue() {
+        this.createAndPersistOrganisation("oid2", "Koulutustoimija", null);
+
+        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+        lisatietotyyppi.setNimi("lisatieto.nimi");
+
+        OrganisaatiotyyppiRajoite rajoiteOrganisaatiotyyppi = new OrganisaatiotyyppiRajoite();
+        rajoiteOrganisaatiotyyppi.setArvo("Koulutustoimija");
+        rajoiteOrganisaatiotyyppi.setLisatietotyyppi(lisatietotyyppi);
+
+        OppilaitostyyppiRajoite rajoiteOppilaitostyyppi = new OppilaitostyyppiRajoite();
+        rajoiteOppilaitostyyppi.setArvo("oppilaitoskoodi_12#1");
+        rajoiteOppilaitostyyppi.setLisatietotyyppi(lisatietotyyppi);
+
+        lisatietotyyppi.setRajoitteet(Stream.of(rajoiteOppilaitostyyppi, rajoiteOrganisaatiotyyppi).collect(Collectors.toSet()));
+        this.lisatietoTyyppiDao.getEntityManager().persist(lisatietotyyppi);
+        this.lisatietoTyyppiDao.getEntityManager().persist(rajoiteOppilaitostyyppi);
+        this.lisatietoTyyppiDao.getEntityManager().persist(rajoiteOrganisaatiotyyppi);
+
+        Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
+                .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("oid2");
+        assertThat(lisatietotyyppiNimiList)
+                .containsExactly("lisatieto.nimi");
     }
 
 
