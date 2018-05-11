@@ -92,6 +92,7 @@ var ORGANISAATIO_REST_YTJ_HAE = ORGANISAATIO_REST_YTJ_HAE || "";
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI || "";
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID || "";
 var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
+var ORGANISAATIO_REST_LISATIEDOT_BY_OID = ORGANISAATIO_REST_LISATIEDOT_BY_OID || "";
 
 var OPPIJANUMEROREKISTERI_HENKILO_BY_OID = OPPIJANUMEROREKISTERI_HENKILO_BY_OID || "";
 var KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID = KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID || "";
@@ -438,5 +439,11 @@ app.factory('Historia', function ($resource) {
 app.factory('YtjLoki', function ($resource) {
     return $resource(ORGANISAATIO_REST_YTJ_LOKI, {alkupvm: "@alkupvm", loppupvm: "@loppupvm"}, {
         get: {method: 'GET', withCredentials: true, isArray: true}
+    });
+});
+
+app.factory('MahdollisetLisatiedot', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIEDOT_BY_OID, {oid: "@oid"}, {
+        get: {method: 'GET', isArray: true}
     });
 });
