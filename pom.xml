@@ -57,12 +57,14 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
+        <postgresql.version>42.2.1</postgresql.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <querydsl.version>2.6.0</querydsl.version>
+        <querydsl.version>4.2.1</querydsl.version>
+        <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
         <hibernate.version>5.2.1.Final</hibernate.version>
         <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
@@ -385,6 +387,11 @@ buildTtime=${maven.build.timestamp}
                 <version>${auditlogger.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>

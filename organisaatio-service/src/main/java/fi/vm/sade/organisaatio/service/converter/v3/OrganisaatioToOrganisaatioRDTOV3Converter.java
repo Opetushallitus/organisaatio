@@ -14,12 +14,12 @@
  */
 package fi.vm.sade.organisaatio.service.converter.v3;
 
-import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
+import fi.vm.sade.organisaatio.service.converter.AbstractFromDomainConverter;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -32,10 +32,6 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-/**
- *
- * @author mlyly, simok
- */
 public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV3> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOV3Converter.class);

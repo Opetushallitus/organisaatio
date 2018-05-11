@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.model.dto;
 
-import java.util.Date;
-import com.mysema.query.annotations.QueryProjection;
-
+import com.querydsl.core.annotations.QueryProjection;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+
+import java.util.Date;
 
 /**
  * 
