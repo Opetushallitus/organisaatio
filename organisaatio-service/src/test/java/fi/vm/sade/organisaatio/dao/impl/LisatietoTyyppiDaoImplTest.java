@@ -174,5 +174,4 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
                 .containsExactly("lisatieto.nimi");
     }
 
-
 }
