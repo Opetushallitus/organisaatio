@@ -22,30 +22,23 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
         QOrganisaatiotyyppiRajoite organisaatiotyyppiRajoite = QOrganisaatiotyyppiRajoite.organisaatiotyyppiRajoite;
         QOppilaitostyyppiRajoite oppilaitostyyppiRajoite = QOppilaitostyyppiRajoite.oppilaitostyyppiRajoite;
 
-        List<String> organisaatioLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
+        List<String> rajoiteLisatietotyyppiNimiList = new JPAQuery<>(this.getEntityManager())
                 .select(lisatietotyyppi.nimi)
                 .distinct()
-                .from(organisaatiotyyppiRajoite)
-                .innerJoin(organisaatiotyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
-                .innerJoin(organisaatio).on(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit))
-                .where(organisaatio.oid.eq(organisaatioOid))
+                .from(lisatietotyyppi)
+                .innerJoin(organisaatio).on(organisaatio.oid.eq(organisaatioOid))
+                .innerJoin(organisaatiotyyppiRajoite).on(organisaatiotyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
+                .innerJoin(oppilaitostyyppiRajoite).on(oppilaitostyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
+                .where(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit)
+                        .or(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi)))
                 .fetch();
 
-        List<String> oppilaitosLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
-                .select(lisatietotyyppi.nimi)
-                .distinct()
-                .from(oppilaitostyyppiRajoite)
-                .innerJoin(oppilaitostyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
-                .innerJoin(organisaatio).on(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi))
-                .where(organisaatio.oid.eq(organisaatioOid))
-                .fetch();
-
-        List<String> notConstrainedTypesList = new JPAQuery<>(this.getEntityManager())
+        List<String> eiRajoiteLisatietoTyyppiNimiList = new JPAQuery<>(this.getEntityManager())
                 .select(lisatietotyyppi.nimi)
                 .from(lisatietotyyppi)
                 .where(lisatietotyyppi.rajoitteet.isEmpty())
                 .fetch();
-        return Stream.of(oppilaitosLisatietotyyppiList, organisaatioLisatietotyyppiList, notConstrainedTypesList)
+        return Stream.of(rajoiteLisatietotyyppiNimiList, eiRajoiteLisatietoTyyppiNimiList)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toSet());

@@ -93,7 +93,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
     }
 
     @Test
-    public void findByOrganisationWithOppilaitosyyppiRajoite() {
+    public void findByOrganisationWithOppilaitostyyppiRajoite() {
         Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         lisatietotyyppi.setNimi("lisatieto.nimi");
         OppilaitostyyppiRajoite rajoite = new OppilaitostyyppiRajoite();
