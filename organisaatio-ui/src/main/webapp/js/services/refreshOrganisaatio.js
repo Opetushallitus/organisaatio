@@ -22,7 +22,8 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                                              KoodistoKoodi, KoodistoClient,
                                              Alert, HenkiloVirkailijat,
                                              Henkilo, Paivittaja, NimiHistoriaModel,
-                                             LocalisationService, RefreshKoodisto) {
+                                             LocalisationService, RefreshKoodisto,
+                                             MahdollisetLisatiedot) {
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
     var refreshFunctions = {
@@ -434,6 +435,11 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                     // parenttia ei löytynyt
                     refreshFunctions.showAndLogError("Organisaationtarkastelu.organisaatiohakuvirhe", response, model, loadingService);
                 });
+            model.mahdollisetLisatiedot = [];
+            MahdollisetLisatiedot.get({oid: result.oid}, function (mahdollisetLisatiedot) {
+                model.mahdollisetLisatiedot = mahdollisetLisatiedot;
+            });
+
             var hakuParametrit = {};
             hakuParametrit.aktiiviset   = true;
             hakuParametrit.suunnitellut = true;
