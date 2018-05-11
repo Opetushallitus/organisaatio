@@ -9,9 +9,10 @@ import fi.vm.sade.organisaatio.model.QOppilaitostyyppiRajoite;
 import fi.vm.sade.organisaatio.model.QOrganisaatiotyyppiRajoite;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.querydsl.core.types.ExpressionUtils.anyOf;
 
@@ -26,18 +27,25 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
         QOrganisaatiotyyppiRajoite organisaatiotyyppiRajoite = QOrganisaatiotyyppiRajoite.organisaatiotyyppiRajoite;
         QOppilaitostyyppiRajoite oppilaitostyyppiRajoite = QOppilaitostyyppiRajoite.oppilaitostyyppiRajoite;
 
-        List<String> lisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
-                .from(lisatietotyyppi)
-//                .leftJoin(lisatietotyyppi.rajoitteet, organisaatiotyyppiRajoite)
-//                .leftJoin(lisatietotyyppi.rajoitteet, oppilaitostyyppiRajoite)
+        List<String> organisaatioLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
+                .from(organisaatiotyyppiRajoite)
+                .innerJoin(organisaatiotyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
                 .where(anyOf(
-                        organisaatiotyyppiRajoite.isNull(),//.and(oppilaitostyyppiRajoite.isNull()),
+                        organisaatiotyyppiRajoite.isNull(),
                         organisaatiotyyppiRajoite.arvo.in(organisaatiotyyppis)
-//                                .and(oppilaitostyyppiRajoite.arvo.eq(oppilaitostyyppi))
                         )
-//                        .or(oppilaitostyyppiRajoite.arvo.eq(oppilaitostyyppi))
                 )
                 .select(lisatietotyyppi.nimi).fetch();
-        return new HashSet<>(lisatietotyyppiList);
+        List<String> oppilaitosLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
+                .from(oppilaitostyyppiRajoite)
+                .innerJoin(oppilaitostyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
+                .where(anyOf(
+                        oppilaitostyyppiRajoite.isNull(),
+                        oppilaitostyyppiRajoite.arvo.eq(oppilaitostyyppi)
+                        )
+                )
+                .select(lisatietotyyppi.nimi).fetch();
+        return Stream.concat(oppilaitosLisatietotyyppiList.stream(), organisaatioLisatietotyyppiList.stream())
+                .collect(Collectors.toSet());
     }
 }
