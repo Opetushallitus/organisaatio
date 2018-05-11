@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
-
 import javax.persistence.*;
 
 @Entity

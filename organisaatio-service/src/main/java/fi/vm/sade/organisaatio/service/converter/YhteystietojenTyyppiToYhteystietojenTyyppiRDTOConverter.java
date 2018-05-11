@@ -15,11 +15,11 @@
 
 package fi.vm.sade.organisaatio.service.converter;
 
-import fi.vm.sade.generic.service.conversion.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

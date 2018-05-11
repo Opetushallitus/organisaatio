@@ -17,9 +17,6 @@ package fi.vm.sade.organisaatio.model;
 
 import javax.persistence.*;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-
 /**
  * Store images and other binary data.
  *

@@ -15,21 +15,19 @@
 
 package fi.vm.sade.organisaatio.dao.impl;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.model.QOrganisaatio;
 import fi.vm.sade.organisaatio.model.QOrganisaatioSuhde;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.expr.BooleanExpression;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,11 +103,12 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
-        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
-                .join(qSuhde.parent, qOrganisaatio).fetch()
+        List<OrganisaatioSuhde> suhteet = new JPAQuery<>(getEntityManager()).from(qSuhde)
+                .join(qSuhde.parent, qOrganisaatio)
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
-                .list(qSuhde);
+                .select(qSuhde)
+                .fetch();
 
         if (suhteet != null && !suhteet.isEmpty()) {
             return suhteet.get(0);
@@ -144,11 +143,12 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
-        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
-                .join(qSuhde.child, qOrganisaatio).fetch()
+        List<OrganisaatioSuhde> suhteet = new JPAQuery<>(getEntityManager()).from(qSuhde)
+                .join(qSuhde.child, qOrganisaatio)
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
-                .list(qSuhde);
+                .select(qSuhde)
+                .fetch();
 
         List<Long> foundChildIds = new ArrayList<>();
         List<OrganisaatioSuhde> result = new ArrayList<>();
@@ -263,11 +263,12 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         }
 
         QOrganisaatioSuhde organisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
-        JPAQuery query = new JPAQuery(getEntityManager())
+        JPAQuery<OrganisaatioSuhde> query = new JPAQuery<>(getEntityManager())
                 .from(organisaatioSuhde)
                 .where(organisaatioSuhde.alkuPvm.eq(day))
-                .orderBy(organisaatioSuhde.alkuPvm.asc());
-        return query.list(organisaatioSuhde);
+                .orderBy(organisaatioSuhde.alkuPvm.asc())
+                .select(organisaatioSuhde);
+        return query.fetch();
     }
 
     @Override
@@ -280,12 +281,10 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
             expression = expression.and(qSuhde.alkuPvm.eq(date).or(qSuhde.alkuPvm.after(date)));
         }
 
-        List<OrganisaatioSuhde> suhteet = new JPAQuery(getEntityManager()).from(qSuhde)
+        return new JPAQuery<>(getEntityManager()).from(qSuhde)
                 .where(expression)
                 .orderBy(qSuhde.alkuPvm.desc())
-                .list(qSuhde);
-
-        return suhteet;
+                .select(qSuhde).fetch();
     }
 
     private void logRelation(String message, OrganisaatioSuhde relation) {

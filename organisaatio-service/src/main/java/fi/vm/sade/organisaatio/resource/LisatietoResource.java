@@ -3,10 +3,12 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.Set;
@@ -30,5 +32,16 @@ public class LisatietoResource {
     public Set<String> haeLisatietotyypit() {
         return this.lisatietoService.getLisatietotyypit();
     }
+
+    @GET
+    @Path("/{oid}/lisatietotyypit")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Hakee sallitut lisätietotyypit organisaatiolle",
+            response = String.class,
+            responseContainer = "Set")
+    public Set<String> haeLisatietotyypit(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) {
+        return this.lisatietoService.getSallitutByOid(oid);
+    }
+
 
 }

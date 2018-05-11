@@ -14,9 +14,9 @@
  */
 package fi.vm.sade.organisaatio.service.converter.v3;
 
-import com.mysema.query.Tuple;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.MappingProjection;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.MappingProjection;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;

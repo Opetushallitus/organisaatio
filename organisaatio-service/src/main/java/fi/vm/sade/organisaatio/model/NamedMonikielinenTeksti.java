@@ -19,9 +19,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import fi.vm.sade.generic.model.BaseEntity;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-
 /**
  * This class represents a "keyed" translatable text with name and value - both translatable.
  *
