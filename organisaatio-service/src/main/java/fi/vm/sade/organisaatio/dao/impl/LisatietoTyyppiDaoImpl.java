@@ -23,17 +23,21 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
         QOppilaitostyyppiRajoite oppilaitostyyppiRajoite = QOppilaitostyyppiRajoite.oppilaitostyyppiRajoite;
 
         List<String> organisaatioLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
+                .select(lisatietotyyppi.nimi)
+                .distinct()
                 .from(organisaatiotyyppiRajoite)
                 .innerJoin(organisaatiotyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
                 .innerJoin(organisaatio).on(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit))
-                .select(lisatietotyyppi.nimi)
+                .where(organisaatio.oid.eq(organisaatioOid))
                 .fetch();
 
         List<String> oppilaitosLisatietotyyppiList = new JPAQuery<>(this.getEntityManager())
+                .select(lisatietotyyppi.nimi)
+                .distinct()
                 .from(oppilaitostyyppiRajoite)
                 .innerJoin(oppilaitostyyppiRajoite.lisatietotyyppi, lisatietotyyppi)
                 .innerJoin(organisaatio).on(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi))
-                .select(lisatietotyyppi.nimi)
+                .where(organisaatio.oid.eq(organisaatioOid))
                 .fetch();
 
         List<String> notConstrainedTypesList = new JPAQuery<>(this.getEntityManager())
