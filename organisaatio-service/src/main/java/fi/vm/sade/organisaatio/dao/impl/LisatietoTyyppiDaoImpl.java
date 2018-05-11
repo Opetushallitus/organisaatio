@@ -6,11 +6,9 @@ import fi.vm.sade.organisaatio.dao.LisatietoTyyppiDao;
 import fi.vm.sade.organisaatio.model.*;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, Long> implements LisatietoTyyppiDao {
@@ -22,7 +20,7 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
         QOrganisaatiotyyppiRajoite organisaatiotyyppiRajoite = QOrganisaatiotyyppiRajoite.organisaatiotyyppiRajoite;
         QOppilaitostyyppiRajoite oppilaitostyyppiRajoite = QOppilaitostyyppiRajoite.oppilaitostyyppiRajoite;
 
-        List<String> rajoiteLisatietotyyppiNimiList = new JPAQuery<>(this.getEntityManager())
+        List<String> lisatietotyyppiNimiList = new JPAQuery<>(this.getEntityManager())
                 .select(lisatietotyyppi.nimi)
                 .distinct()
                 .from(lisatietotyyppi)
@@ -30,17 +28,10 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
                 .innerJoin(organisaatiotyyppiRajoite).on(organisaatiotyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
                 .innerJoin(oppilaitostyyppiRajoite).on(oppilaitostyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
                 .where(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit)
-                        .or(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi)))
+                        .or(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi))
+                        .or(lisatietotyyppi.rajoitteet.isEmpty()))
                 .fetch();
 
-        List<String> eiRajoiteLisatietoTyyppiNimiList = new JPAQuery<>(this.getEntityManager())
-                .select(lisatietotyyppi.nimi)
-                .from(lisatietotyyppi)
-                .where(lisatietotyyppi.rajoitteet.isEmpty())
-                .fetch();
-        return Stream.of(rajoiteLisatietotyyppiNimiList, eiRajoiteLisatietoTyyppiNimiList)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toSet());
+        return new HashSet<>(lisatietotyyppiNimiList);
     }
 }
