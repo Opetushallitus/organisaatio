@@ -55,6 +55,7 @@ import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -104,6 +105,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
+
+    @Autowired
+    private LisatietoTyyppiDao lisatietoTyyppiDao;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -179,7 +183,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating) {
         // Tarkistetaan OID
         if (entity.getOid() == null && updating) {
-            throw new ValidationException("Oid cannot be null");//trying to update organisaatio that doesn't exist (is is null)");
+            throw new ValidationException("Oid cannot be null"); //trying to update organisaatio that doesn't exist (is is null)");
         } else if (!updating) {
             if ((entity.getOid() != null) && (organisaatioDAO.findByOid(entity.getOid()) != null)) {
                 throw new OrganisaatioExistsException(entity.getOid());
@@ -443,6 +447,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
             throw new ValidationException("validation.Organisaatio.virastotunnus");
+        }
+
+        // Validate and persis lisatietotyypit
+        if (!CollectionUtils.isEmpty(model.getLisatietotyypit())) {
+            Set<Lisatietotyyppi> persistedLisatieotyypit = model.getLisatietotyypit().stream().map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getNimi())
+                    .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getNimi()))))
+                    .collect(Collectors.toSet());
+            model.setLisatietotyypit(persistedLisatieotyypit);
         }
 
         // Validointi: koodistoureissa pitää olla versiotieto

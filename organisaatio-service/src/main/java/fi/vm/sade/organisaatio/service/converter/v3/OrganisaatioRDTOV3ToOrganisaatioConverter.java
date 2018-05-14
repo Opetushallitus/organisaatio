@@ -30,6 +30,7 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
 
@@ -86,6 +87,13 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
+        s.setLisatietotyypit(t.getLisatiedot().stream()
+                .map(lisatietoNimi -> {
+                    Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+                    lisatietotyyppi.setNimi(lisatietoNimi);
+                    return lisatietotyyppi;
+                })
+                .collect(Collectors.toSet()));
         s.setRyhmatyypit(convertSetToSet(t.getRyhmatyypit()));
         s.setKayttoryhmat(convertSetToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
@@ -113,7 +121,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
     }
 
     private List<YhteystietoArvo> convertYhteystietoArvos(List<Map<String, String>> arvoMaps) {
-        ArrayList<YhteystietoArvo> arvos = new ArrayList<YhteystietoArvo>(arvoMaps.size());
+        ArrayList<YhteystietoArvo> arvos = new ArrayList<>(arvoMaps.size());
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
             arvo.setKentta(new YhteystietoElementti());
