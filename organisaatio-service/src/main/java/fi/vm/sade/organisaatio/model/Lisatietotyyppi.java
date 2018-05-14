@@ -14,6 +14,7 @@ public class Lisatietotyyppi extends BaseEntity {
     @Column(name = "nimi", unique = true)
     private String nimi;
 
+    // Jos on rajoitteita organisaation täytyy täyttää niistä vähintään yksi
     @OneToMany(mappedBy = "lisatietotyyppi")
     private Set<Rajoite> rajoitteet = new HashSet<>();
 

@@ -20,14 +20,16 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
         QLisatietotyyppi lisatietotyyppi = QLisatietotyyppi.lisatietotyyppi;
         QOrganisaatiotyyppiRajoite organisaatiotyyppiRajoite = QOrganisaatiotyyppiRajoite.organisaatiotyyppiRajoite;
         QOppilaitostyyppiRajoite oppilaitostyyppiRajoite = QOppilaitostyyppiRajoite.oppilaitostyyppiRajoite;
+        QRajoite rajoite = QRajoite.rajoite;
 
         List<String> lisatietotyyppiNimiList = new JPAQuery<>(this.getEntityManager())
                 .select(lisatietotyyppi.nimi)
                 .distinct()
                 .from(lisatietotyyppi)
                 .innerJoin(organisaatio).on(organisaatio.oid.eq(organisaatioOid))
-                .innerJoin(organisaatiotyyppiRajoite).on(organisaatiotyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
-                .innerJoin(oppilaitostyyppiRajoite).on(oppilaitostyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
+                .leftJoin(organisaatiotyyppiRajoite).on(organisaatiotyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
+                .leftJoin(oppilaitostyyppiRajoite).on(oppilaitostyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
+                .leftJoin(rajoite).on(lisatietotyyppi.rajoitteet.isEmpty())
                 .where(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit)
                         .or(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi))
                         .or(lisatietotyyppi.rajoitteet.isEmpty()))
