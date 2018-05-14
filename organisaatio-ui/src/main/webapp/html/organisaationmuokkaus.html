@@ -194,7 +194,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <div>
                     <input type="checkbox"
                            name="lisatieto"
-                           ng-checked="model.lisatiedot.indexOf(lisatieto) !== -1"
+                           ng-checked="model.organisaatio.lisatiedot.indexOf(lisatieto) !== -1"
                            ng-click="model.toggleLisatieto(lisatieto); form.$dirty = true;"
                     >{{::lisatieto | i18n}}
                 </div>
