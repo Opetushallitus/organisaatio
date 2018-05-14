@@ -208,6 +208,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
+    <div class="control-group" ng-if="model.organisaatio.lisatiedot && model.organisaatio.lisatiedot.length">
+        <label class="control-label" tt="Organisaationtarkastelu.lisatiedot">
+            Organisaationtarkastelu.lisatiedot
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="lisatieto in model.organisaatio.lisatiedot">
+                    {{::lisatieto | i18n}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
     <hr>
 
     <div class="row">

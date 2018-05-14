@@ -93,6 +93,17 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
     }
 
     @Test
+    public void findByOrganisationWhenRajoitteetonLisatietotyyppi() {
+        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+        lisatietotyyppi.setNimi("lisatieto.rajoitteeton");
+        this.lisatietoTyyppiDao.getEntityManager().persist(lisatietotyyppi);
+
+        Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
+                .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("oid");
+        assertThat(lisatietotyyppiNimiList).containsExactly("lisatieto.rajoitteeton");
+    }
+
+    @Test
     public void findByOrganisationWithOppilaitostyyppiRajoite() {
         Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         lisatietotyyppi.setNimi("lisatieto.nimi");
