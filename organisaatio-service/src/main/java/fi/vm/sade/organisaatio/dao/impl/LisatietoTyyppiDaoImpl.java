@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -33,5 +34,17 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
                 .fetch();
 
         return new HashSet<>(lisatietotyyppiNimiList);
+    }
+
+    @Override
+    public Optional<Lisatietotyyppi> findByNimi(String nimi) {
+        QLisatietotyyppi lisatietotyyppi = QLisatietotyyppi.lisatietotyyppi;
+
+        Lisatietotyyppi lisatietotyyppiResult = new JPAQuery<Lisatietotyyppi>(this.getEntityManager())
+                .select(lisatietotyyppi)
+                .from(lisatietotyyppi)
+                .where(lisatietotyyppi.nimi.eq(nimi))
+                .fetchFirst();
+        return Optional.ofNullable(lisatietotyyppiResult);
     }
 }
