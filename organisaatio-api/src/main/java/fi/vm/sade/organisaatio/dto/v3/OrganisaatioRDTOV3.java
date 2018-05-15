@@ -530,7 +530,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Lisatiedot", required = true)
     public Set<String> getLisatiedot() {
         if (_lisatiedot == null) {
-            return new HashSet<String>();
+            return new HashSet<>();
         }
         return _lisatiedot;
     }

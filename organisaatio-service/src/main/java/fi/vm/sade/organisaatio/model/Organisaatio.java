@@ -31,9 +31,6 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 
-/**
- * @author tuomaskatva
- */
 @Entity
 @Table(uniqueConstraints = {
     @UniqueConstraint(columnNames = {"oid"}),
@@ -96,11 +93,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderBy("alkuPvm")
     private List<OrganisaatioNimi> nimet = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "organisaatio_lisatieto",
-            joinColumns = @JoinColumn(name = "organisaatio_id"),
-            inverseJoinColumns = @JoinColumn(name = "lisatietotyyppi_id"))
-    private Set<Lisatietotyyppi> lisatietotyypit = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
+    private Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit = new HashSet<>();
 
     private String yritysmuoto;
 
@@ -804,11 +798,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return currentOrgNimi;
     }
 
-    public Set<Lisatietotyyppi> getLisatietotyypit() {
-        return lisatietotyypit;
+    public Set<OrganisaatioLisatietotyyppi> getOrganisaatioLisatietotyypit() {
+        return organisaatioLisatietotyypit;
     }
 
-    public void setLisatietotyypit(Set<Lisatietotyyppi> lisatietotyypit) {
-        this.lisatietotyypit = lisatietotyypit;
+    public void setOrganisaatioLisatietotyypit(Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit) {
+        this.organisaatioLisatietotyypit = organisaatioLisatietotyypit;
     }
 }
