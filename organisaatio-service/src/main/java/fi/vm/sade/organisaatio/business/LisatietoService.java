@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
+
 import java.util.Set;
 
 public interface LisatietoService {
@@ -15,4 +17,17 @@ public interface LisatietoService {
      * @return sallittujen lisätietojen lokalisointipalvelun avaimet
      */
     Set<String> getSallitutByOid(String oid);
+
+    /**
+     * Luo uuden lisätietotyypin vapaaehtoisine rajoitteineen
+     * @param lisatietotyyppiCreateDto lisätietotyypin nimi rajoitteineen
+     * @return Luodun lisätietotyypin nimi
+     */
+    String create(LisatietotyyppiCreateDto lisatietotyyppiCreateDto);
+
+    /**
+     * Poistaa lisätietotyypin nimen perusteella.
+     * @param nimi Poistettavan lisätietotyypin nimi
+     */
+    void delete(String nimi);
 }

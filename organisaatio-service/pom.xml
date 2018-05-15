@@ -199,7 +199,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>13.0.1</version>
+            <version>20.0</version>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
@@ -320,6 +320,11 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-service-description</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-java2swagger-plugin</artifactId>
             <version>${cxf.version}</version>
         </dependency>
 

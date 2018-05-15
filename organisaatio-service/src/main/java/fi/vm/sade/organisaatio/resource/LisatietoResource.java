@@ -1,15 +1,14 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.business.LisatietoService;
+import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Set;
 
@@ -43,5 +42,21 @@ public class LisatietoResource {
         return this.lisatietoService.getSallitutByOid(oid);
     }
 
+    @POST
+    @Path("/lisatietotyyppi")
+    @Produces(MediaType.TEXT_PLAIN + ";charset=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Luo uuden lisätietotyypin")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public String createLisatietotyyppi(LisatietotyyppiCreateDto lisatietotyyppiCreateDto) {
+        return this.lisatietoService.create(lisatietotyyppiCreateDto);
+    }
 
+    @DELETE
+    @Path("/lisatietotyyppi/{nimi}")
+    @ApiOperation(value = "Poistaa lisätietotyypin")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public void poistaLisatietotyyppi(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathParam("nimi") String nimi) {
+        this.lisatietoService.delete(nimi);
+    }
 }
