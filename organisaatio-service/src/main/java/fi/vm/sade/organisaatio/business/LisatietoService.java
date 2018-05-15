@@ -38,4 +38,5 @@ public interface LisatietoService {
      * @return Lisätietotyypin tiedot
      */
     LisatietotyyppiDto findByName(String nimi);
+
 }
