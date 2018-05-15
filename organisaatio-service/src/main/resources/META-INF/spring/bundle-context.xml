@@ -24,7 +24,6 @@
         </property>
     </bean>
 
-    <bean class="fi.vm.sade.organisaatio.config.UrlConfiguration"/>
     <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/>
 
     <context:annotation-config />

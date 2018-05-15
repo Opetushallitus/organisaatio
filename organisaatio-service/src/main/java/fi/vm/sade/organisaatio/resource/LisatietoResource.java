@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
+import fi.vm.sade.organisaatio.dto.LisatietotyyppiDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,5 +59,12 @@ public class LisatietoResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public void poistaLisatietotyyppi(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathParam("nimi") String nimi) {
         this.lisatietoService.delete(nimi);
+    }
+
+    @GET
+    @Path("/{nimi}")
+    @ApiOperation(value = "Hakee lisätietotyypin tiedot nimellä")
+    public LisatietotyyppiDto lisatietotyyppiNimella(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathParam("nimi") String nimi) {
+        return this.lisatietoService.findByName(nimi);
     }
 }
