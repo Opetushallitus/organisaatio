@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
+import fi.vm.sade.organisaatio.dto.LisatietotyyppiDto;
 
 import java.util.Set;
 
@@ -30,4 +31,11 @@ public interface LisatietoService {
      * @param nimi Poistettavan lisätietotyypin nimi
      */
     void delete(String nimi);
+
+    /**
+     * Hakee lisätietotyypin tiedot nimen perusteella
+     * @param nimi lisätietotyypin nimi
+     * @return Lisätietotyypin tiedot
+     */
+    LisatietotyyppiDto findByName(String nimi);
 }
