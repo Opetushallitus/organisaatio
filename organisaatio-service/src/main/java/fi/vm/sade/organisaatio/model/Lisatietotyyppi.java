@@ -18,6 +18,9 @@ public class Lisatietotyyppi extends BaseEntity {
     @OneToMany(mappedBy = "lisatietotyyppi")
     private Set<Rajoite> rajoitteet = new HashSet<>();
 
+    @OneToMany(mappedBy = "lisatietotyyppi", orphanRemoval = true)
+    private Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyyppis = new HashSet<>();
+
     public String getNimi() {
         return nimi;
     }
@@ -32,5 +35,13 @@ public class Lisatietotyyppi extends BaseEntity {
 
     public void setRajoitteet(Set<Rajoite> rajoitteet) {
         this.rajoitteet = rajoitteet;
+    }
+
+    public Set<OrganisaatioLisatietotyyppi> getOrganisaatioLisatietotyyppis() {
+        return organisaatioLisatietotyyppis;
+    }
+
+    public void setOrganisaatioLisatietotyyppis(Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyyppis) {
+        this.organisaatioLisatietotyyppis = organisaatioLisatietotyyppis;
     }
 }

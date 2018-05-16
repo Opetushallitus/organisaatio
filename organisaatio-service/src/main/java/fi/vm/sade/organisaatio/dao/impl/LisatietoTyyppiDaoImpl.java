@@ -49,4 +49,5 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
                 .fetchFirst();
         return Optional.ofNullable(lisatietotyyppiResult);
     }
+
 }

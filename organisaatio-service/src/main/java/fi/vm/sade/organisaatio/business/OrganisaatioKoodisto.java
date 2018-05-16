@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Date;
+import java.util.Set;
 
 public interface OrganisaatioKoodisto {
 
@@ -12,7 +13,13 @@ public interface OrganisaatioKoodisto {
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize);
 
-    public enum KoodistoUri {
+    /**
+     * Hakee kaikki oppilaitoskoodit
+     * @return Setti oppilaitoskoodeja
+     */
+    Set<String> haeOppilaitoskoodit();
+
+    enum KoodistoUri {
         TOIMIPISTE("opetuspisteet"),
         OPPILAITOS("oppilaitosnumero"),
         KOULUTUSTOIMIJA("koulutustoimija"),

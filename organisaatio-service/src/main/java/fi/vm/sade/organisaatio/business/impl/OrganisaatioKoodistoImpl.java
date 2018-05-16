@@ -14,22 +14,27 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fi.vm.sade.koodisto.service.types.common.KoodiType;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
+import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Päivittää organisaatiopalvelussa lisätyn tai muokatun organisaation tiedot
@@ -37,13 +42,17 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@Primary
 public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private OrganisaatioKoodistoClient client;
+    private final OrganisaatioKoodistoClient client;
 
     private final Gson gson;
+
+    private final ObjectMapper objectMapper;
+
+    private final UrlConfiguration urlConfiguration;
 
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
@@ -52,14 +61,17 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     /**
      * Luo instanssin ja alustaa gson:in
      */
-    public OrganisaatioKoodistoImpl() {
+    @Autowired
+    public OrganisaatioKoodistoImpl(OrganisaatioKoodistoClient client,
+                                    UrlConfiguration urlConfiguration,
+                                    ObjectMapper objectMapper) {
+        this.client = client;
+        this.urlConfiguration = urlConfiguration;
+        this.objectMapper = objectMapper;
         gson = new GsonBuilder().create();
     }
 
     private OrganisaatioKoodistoClient getClient() {
-        if (client == null) {
-            client = new OrganisaatioKoodistoClient();
-        }
         client.setReauthorize(reauthorize);
         return client;
     }
@@ -74,8 +86,9 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      */
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
         tunniste = tunniste.replace("-", "");
-        String json = getClient().get("/rest/codeelement/" + koodistoUri + "_" + tunniste + "/1");
-        LOG.debug("Haettiin koodi: " + (json == null ? null : json));
+        String url = this.urlConfiguration.url("organisaatio-service.koodisto-service.koodi.v1", koodistoUri, tunniste);
+        String json = getClient().get(url);
+        LOG.debug("Haettiin koodi: " + (json));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
     }
 
@@ -478,5 +491,29 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             LOG.debug("Ei muutoksia");
         }
         return null;
+    }
+
+    @Override
+    public Set<String> haeOppilaitoskoodit() {
+        return this.haeKoodistonKoodit("oppilaitostyyppi");
+    }
+
+    private Set<String> haeKoodistonKoodit(String koodistoUri) {
+        String url = this.urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodistoUri);
+        String json = this.client.get(url);
+        CollectionType listType = objectMapper.getTypeFactory().
+                constructCollectionType(List.class, KoodiType.class);
+        List<KoodiType> koodiCollectionType;
+        try {
+            koodiCollectionType = this.objectMapper
+                    .readerFor(listType)
+                    .readValue(json);
+        }
+        catch (IOException ioe) {
+            throw new RestClientException("Error while parsing koodisto return value for " + koodistoUri, ioe);
+        }
+        return koodiCollectionType.stream()
+                .map(KoodiType::getKoodiUri)
+                .collect(Collectors.toSet());
     }
 }

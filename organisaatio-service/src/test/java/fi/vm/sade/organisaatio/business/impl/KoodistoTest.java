@@ -15,24 +15,21 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 
-/**
- *
- * @author markus
- */
 public class KoodistoTest {
 @Test
     public void test() {
-        List<OrganisaatioKoodistoKoodiCodeElements> elements = new LinkedList<OrganisaatioKoodistoKoodiCodeElements>();
+        List<OrganisaatioKoodistoKoodiCodeElements> elements = new LinkedList<>();
 
         // Koodistossa olevat relaatiot
-        List<String> koodistoRelaatiot = new LinkedList<String>();
+        List<String> koodistoRelaatiot = new LinkedList<>();
         koodistoRelaatiot.add("aaa_101");
         koodistoRelaatiot.add("aaa_103");
         koodistoRelaatiot.add("ccc_101");
@@ -40,7 +37,7 @@ public class KoodistoTest {
         koodistoRelaatiot.add("fff_101");
 
         // Uuudet organisaation tiedoista kaivettavat relaatiot
-        List<String> entityRelaatiot = new LinkedList<String>();
+        List<String> entityRelaatiot = new LinkedList<>();
         entityRelaatiot.add("aaa_101");
         entityRelaatiot.add("aaa_102");
         entityRelaatiot.add("bbb_101");
@@ -49,7 +46,7 @@ public class KoodistoTest {
         entityRelaatiot.add("eee_101");
         
         // Lopputuloksena koodistoon pitäisi mennä nämä relaatiot
-        List<String> koodistoTulosRelaatiot = new LinkedList<String>();
+        List<String> koodistoTulosRelaatiot = new LinkedList<>();
         // aaa-relaatio 103 poistuu, 101 säilyy, 102 lisätään
         koodistoTulosRelaatiot.add("aaa_101");
         koodistoTulosRelaatiot.add("aaa_102");
@@ -73,7 +70,7 @@ public class KoodistoTest {
             elements.add(e);
         }
         
-        OrganisaatioKoodistoImpl k = new OrganisaatioKoodistoImpl();
+        OrganisaatioKoodistoImpl k = new OrganisaatioKoodistoImpl(null, null, null);
         boolean result = k.paivitaCodeElements(entityRelaatiot, elements);
         Map<String, Object> elementsResult = new HashMap<String, Object>();
         for (OrganisaatioKoodistoKoodiCodeElements e: elements) {

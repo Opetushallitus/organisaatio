@@ -10,4 +10,5 @@ public interface LisatietoTyyppiDao extends JpaDAO<Lisatietotyyppi, Long> {
     Set<String> findValidByOrganisaatiotyyppiAndOppilaitostyyppi(String organisaatioOid);
 
     Optional<Lisatietotyyppi> findByNimi(String nimi);
+
 }

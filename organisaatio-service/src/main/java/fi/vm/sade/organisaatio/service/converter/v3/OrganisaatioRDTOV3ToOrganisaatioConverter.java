@@ -87,11 +87,14 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
-        s.setLisatietotyypit(t.getLisatiedot().stream()
+        s.setOrganisaatioLisatietotyypit(t.getLisatiedot().stream()
                 .map(lisatietoNimi -> {
+                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
                     Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
                     lisatietotyyppi.setNimi(lisatietoNimi);
-                    return lisatietotyyppi;
+                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                    organisaatioLisatietotyyppi.setOrganisaatio(s);
+                    return organisaatioLisatietotyyppi;
                 })
                 .collect(Collectors.toSet()));
         s.setRyhmatyypit(convertSetToSet(t.getRyhmatyypit()));

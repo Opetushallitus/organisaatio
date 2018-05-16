@@ -57,10 +57,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author simok
- */
 @Transactional
 @Service("organisaatioBusinessService")
 public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessService {
@@ -108,6 +104,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private LisatietoTyyppiDao lisatietoTyyppiDao;
+
+    @Autowired
+    private OrganisaatioLisatietoTyyppiDao organisaatioLisatietoTyyppiDao;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -450,11 +449,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Validate and persis lisatietotyypit
-        if (!CollectionUtils.isEmpty(model.getLisatietotyypit())) {
-            Set<Lisatietotyyppi> persistedLisatieotyypit = model.getLisatietotyypit().stream().map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getNimi())
-                    .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getNimi()))))
+        if (!CollectionUtils.isEmpty(model.getOrganisaatioLisatietotyypit())) {
+            Set<OrganisaatioLisatietotyyppi> persistedLisatieotyypit = model.getOrganisaatioLisatietotyypit().stream()
+                    .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
+                    .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
+                    .map(lisatietotyyppi -> {
+                        OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+                        organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                        organisaatioLisatietotyyppi.setOrganisaatio(model);
+                        return organisaatioLisatietotyyppi;
+                    })
                     .collect(Collectors.toSet());
-            model.setLisatietotyypit(persistedLisatieotyypit);
+            model.setOrganisaatioLisatietotyypit(persistedLisatieotyypit);
         }
 
         // Validointi: koodistoureissa pitää olla versiotieto
