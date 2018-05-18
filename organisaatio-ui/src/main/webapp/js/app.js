@@ -93,6 +93,9 @@ var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI = ORGANISAATIO_REST_YHTEYSTIETOJENTYY
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID || "";
 var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
 var ORGANISAATIO_REST_LISATIEDOT_BY_OID = ORGANISAATIO_REST_LISATIEDOT_BY_OID || "";
+var ORGANISAATIO_REST_LISATIETOTYYPIT = ORGANISAATIO_REST_LISATIETOTYYPIT || "";
+var ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI = ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI || "";
+var ORGANISAATIO_REST_LISATIETOTYYPPI = ORGANISAATIO_REST_LISATIETOTYYPPI || "";
 
 var OPPIJANUMEROREKISTERI_HENKILO_BY_OID = OPPIJANUMEROREKISTERI_HENKILO_BY_OID || "";
 var KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID = KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID || "";
@@ -131,10 +134,13 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     // yhteystietojen tyypit
     when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
 
+    // lisatietojen tyypit
+    when('/lisatietotyypit', {controller: 'LisatietotyyppiController', templateUrl:TEMPLATE_URL_BASE + 'lisatietotyyppi.html'}).
+
     // manage groups
     when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
 
-        //else
+    //else
     otherwise({redirectTo:'/organisaatiot'});
 });
 
@@ -445,5 +451,24 @@ app.factory('YtjLoki', function ($resource) {
 app.factory('MahdollisetLisatiedot', function ($resource) {
     return $resource(ORGANISAATIO_REST_LISATIEDOT_BY_OID, {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
+    });
+});
+
+app.factory('Lisatietotyypit', function ($resource) {
+   return $resource(ORGANISAATIO_REST_LISATIETOTYYPIT, {}, {
+       get: {method: 'GET', isArray: true}
+   });
+});
+
+app.factory('LisatietotyyppiNimi', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI, {nimi: '@nimi'}, {
+        delete: {method: 'DELETE', withCredentials: true},
+        get: {method: 'GET'}
+    });
+});
+
+app.factory('Lisatietotyyppi', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIETOTYYPPI, {}, {
+        post: {method: 'POST', withCredentials: true}
     });
 });
