@@ -56,11 +56,12 @@ public class LisatietoServiceImpl implements LisatietoService {
     public String create(LisatietotyyppiCreateDto lisatietotyyppiCreateDto) {
         this.lisatietoTyyppiDao.findByNimi(lisatietotyyppiCreateDto.getNimi())
                 .ifPresent((value) -> {throw new IllegalArgumentException(String.format("Lisatietotyyppi with nimi %s already exists", lisatietotyyppiCreateDto.getNimi()));});
+        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         Set<Rajoite> rajoitteet = lisatietotyyppiCreateDto.getRajoitteet().stream()
                 .map(this::mapAndValidateRajoite)
+                .map(rajoite -> rajoite.setLisatietotyyppi(lisatietotyyppi))
                 .collect(Collectors.toSet());
 
-        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         lisatietotyyppi.setNimi(lisatietotyyppiCreateDto.getNimi());
         lisatietotyyppi.setRajoitteet(rajoitteet);
 

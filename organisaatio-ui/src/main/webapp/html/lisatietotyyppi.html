@@ -1,0 +1,99 @@
+<form>
+    <h1 tt="LisatietotyyppiForm.otsikko">LisatietotyyppiForm.otsikko</h1>
+
+    <select class="span4"
+            ng-model="valittuLisatietotyyppi"
+            ng-change="fetchValittuLisatietotyyppi()"
+            ng-options="lisatietotyyppi for lisatietotyyppi in model.lisatietotyypit">
+        <option value="" tt="LisatietotyyppiForm.valitseTyyppi">LisatietotyyppiForm.valitseTyyppi</option>
+    </select>
+    <hr>
+
+    <div ng-if="valittuLisatietotyyppi">
+        <!-- Nimi -->
+        <h3 tt="LisatietotyyppiForm.nimi">LisatietotyyppiForm.nimi</h3>
+        <label class="control-label" tt="LisatietotyyppiForm.nimiLabel">LisatietotyyppiForm.nimiLabel</label>
+        <div class="controls">
+            <input class="span4"
+                   type="text"
+                   name="nimi"
+                   ng-model="lisatietoDto.nimi"
+                   placeholder="{{lisatietoDto.nimi}}"
+                   ng-disabled="isLisatietotyyppiNotNew()"
+            />
+            <div>
+                <span class="text-error" ng-show="form.nimi.$error.unique" tt="LisatietotyyppiForm.nimiValidation.notUnique">
+                    LisatietotyyppiForm.nimiValidation.notUnique
+                </span>
+            </div>
+        </div>
+
+        <!-- Rajoitteet -->
+        <h3 tt="LisatietotyyppiForm.rajoitteetOtsikko">LisatietotyyppiForm.rajoitteetOtsikko</h3>
+        <div class="control-group">
+            <label class="control-label" tt="LisatietotyyppiForm.organisaatiotyyppi">LisatietotyyppiForm.organisaatiotyyppi</label>
+            <div class="controls">
+                <div ng-repeat="organisaatiotyyppiKoodi in model.organisaatioTyypit | orderBy:'koodiArvo'">
+                    <input type="checkbox"
+                           ng-checked="isOrganisaatiotyyppiSelected(organisaatiotyyppiKoodi)"
+                           ng-click="toggleOrganisaatiotyyppi(organisaatiotyyppiKoodi)"
+                           ng-disabled="isLisatietotyyppiNotNew()">
+                    {{lokalisoiKoodi(organisaatiotyyppiKoodi)}}
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" tt="LisatietotyyppiForm.oppilaitostyyppi">LisatietotyyppiForm.oppilaitostyyppi</label>
+            <div class="controls">
+                <select ng-model="valittuOppilaitostyyppi"
+                        ng-disabled="isLisatietotyyppiNotNew()"
+                        ng-change="toggleOppilaitostyyppi(valittuOppilaitostyyppi)"
+                        ng-options="oppilaitostyyppiKoodi as lokalisoiKoodi(oppilaitostyyppiKoodi) for oppilaitostyyppiKoodi in model.oppilaitostyypit"
+                >
+                    <option value="" tt="LisatietotyyppiForm.lisaaOppilaitostyyppi">LisatietotyyppiForm.lisaaOppilaitostyyppi</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <div ng-if="lisatietoDto.rajoitteet">
+                    <div class="input-append"
+                         ng-repeat="rajoite in getLokalisoidutRajoitteet() | filter : {rajoitetyyppi: 'OPPILAITOSTYYPPI'}">
+                        <input type="text" ng-model="rajoite.lokalitointi" ng-disabled="true">
+                        <button type="button" class="btn" ng-click="poistaRajoite(rajoite.arvo)" ng-disabled="isLisatietotyyppiNotNew()">
+                            &nbsp;<i class="icon-remove"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<!-- Napit -->
+<div class="row">
+    <div class="span6">
+        <button class="btn" ng-click="poistaLisatietotyyppi()" ng-if="valittuLisatietotyyppi" tt="LisatietotyyppiForm.poistaTyyppi">
+            LisatietotyyppiForm.poistaTyyppi
+        </button>
+        <button class="btn" ng-click="uusiLisatietotyyppi()" tt="LisatietotyyppiForm.luoUusi">
+            LisatietotyyppiForm.luoUusi
+        </button>
+    </div>
+    <div class="offset7" ng-if="valittuLisatietotyyppi">
+        <button class="btn"
+                ng-disabled="isLisatietotyyppiNotNew()"
+                ng-click="tyhjennaLisatietotyyppi()"
+                tt="YhteystietojenTyyppiForm.peruuta">
+            YhteystietojenTyyppiForm.peruuta
+        </button>
+        <button class="btn btn-primary"
+                ng-disabled="isLisatietotyyppiNotNew()"
+                ng-click="luoLisatietotyyppi()"
+                tt="YhteystietojenTyyppiForm.tallenna">
+            YhteystietojenTyyppiForm.tallenna
+        </button>
+    </div>
+    <div>&nbsp;</div>
+</div>
