@@ -24,7 +24,8 @@ public class Rajoite extends BaseEntity {
         return lisatietotyyppi;
     }
 
-    public void setLisatietotyyppi(Lisatietotyyppi lisatietotyyppi) {
+    public Rajoite setLisatietotyyppi(Lisatietotyyppi lisatietotyyppi) {
         this.lisatietotyyppi = lisatietotyyppi;
+        return this;
     }
 }

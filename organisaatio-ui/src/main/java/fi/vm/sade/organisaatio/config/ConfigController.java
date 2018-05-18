@@ -81,6 +81,9 @@ public class ConfigController {
         append(b, "KOODISTO_OPPILAITOKSENOPETUSKIELI", ophProperties.getProperty("koodisto-service.url.rest.oppilaitoksenopetuskieli.koodi"));
 
         append(b, "ORGANISAATIO_REST_LISATIEDOT_BY_OID", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit.byoid"));
+        append(b, "ORGANISAATIO_REST_LISATIETOTYYPIT", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit"));
+        append(b, "ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyyppi.nimi"));
+        append(b, "ORGANISAATIO_REST_LISATIETOTYYPPI", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyyppi"));
 
         if (ophProperties.getProperty("auth.mode") != null && !ophProperties.getProperty("auth.mode").isEmpty()) {
             append(b, "AUTH_MODE", ophProperties.getProperty("auth.mode"));

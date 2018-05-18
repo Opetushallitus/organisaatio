@@ -62,7 +62,7 @@ public class LisatietoResource {
     }
 
     @GET
-    @Path("/{nimi}")
+    @Path("/lisatietotyyppi/{nimi}")
     @ApiOperation(value = "Hakee lisätietotyypin tiedot nimellä")
     public LisatietotyyppiDto lisatietotyyppiNimella(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathParam("nimi") String nimi) {
         return this.lisatietoService.findByName(nimi);

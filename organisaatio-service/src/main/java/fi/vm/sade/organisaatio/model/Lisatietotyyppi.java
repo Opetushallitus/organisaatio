@@ -1,9 +1,6 @@
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +12,7 @@ public class Lisatietotyyppi extends BaseEntity {
     private String nimi;
 
     // Jos on rajoitteita organisaation täytyy täyttää niistä vähintään yksi
-    @OneToMany(mappedBy = "lisatietotyyppi")
+    @OneToMany(mappedBy = "lisatietotyyppi", cascade = CascadeType.ALL)
     private Set<Rajoite> rajoitteet = new HashSet<>();
 
     @OneToMany(mappedBy = "lisatietotyyppi", orphanRemoval = true)
