@@ -1,0 +1,7 @@
+<div ng-controller="TyyppienHallintaController">
+    <div ng-repeat="template in templates">
+        <button class="btn" ng-click="setTemplate(template)" >{{:: template.nimi | i18n}}</button>
+    </div>
+
+    <div ng-include="template.url"></div>
+</div>

@@ -131,11 +131,8 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     // create new
     when('/organisaatiot/:parentoid/new', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
-    // yhteystietojen tyypit
-    when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
-
-    // lisatietojen tyypit
-    when('/lisatietotyypit', {controller: 'LisatietotyyppiController', templateUrl:TEMPLATE_URL_BASE + 'lisatietotyyppi.html'}).
+    // lisatietojen tyypit ja yhteystietojen tyypit
+    when('/yhteystietotyypit', {templateUrl: TEMPLATE_URL_BASE + 'tyyppienhallinta.html'}).
 
     // manage groups
     when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
