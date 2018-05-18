@@ -20,11 +20,7 @@
 
     <!-- object to json -->
     <bean id="organisaatioJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" >
-        <property name="mapper">
-            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                <property name="serializationInclusion" value="NON_NULL" />
-            </bean>
-        </property>
+        <property name="mapper" ref="objectMapper"/>
     </bean>
     
     <!-- Filters to handle caller-id and ID chain -->
