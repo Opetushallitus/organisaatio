@@ -14,20 +14,12 @@
  */
 package fi.vm.sade.organisaatio.resource.dto;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-/**
- *
- * @author mlyly
- */
+import java.io.Serializable;
+import java.util.*;
+
 @ApiModel(value = "Organisaation metatiedot")
 public class OrganisaatioMetaDataRDTO implements Serializable {
 
