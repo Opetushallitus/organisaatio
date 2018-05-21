@@ -12,7 +12,7 @@
 
         <div ng-if="valittuLisatietotyyppi">
             <!-- Nimi -->
-            <h3 tt="LisatietotyyppiForm.nimi">LisatietotyyppiForm.nimi</h3>
+            <h3 tt="LisatietotyyppiForm.nimi.otsikko">LisatietotyyppiForm.nimi.otsikko</h3>
             <label class="control-label" tt="LisatietotyyppiForm.nimiLabel">LisatietotyyppiForm.nimiLabel</label>
             <div class="controls">
                 <input class="span4"
@@ -30,7 +30,7 @@
             </div>
 
             <!-- Rajoitteet -->
-            <h3 tt="LisatietotyyppiForm.rajoitteetOtsikko">LisatietotyyppiForm.rajoitteetOtsikko</h3>
+            <h3 tt="LisatietotyyppiForm.rajoitteet.otsikko">LisatietotyyppiForm.rajoitteet.otsikko</h3>
             <div class="control-group">
                 <label class="control-label" tt="LisatietotyyppiForm.organisaatiotyyppi">LisatietotyyppiForm.organisaatiotyyppi</label>
                 <div class="controls">
@@ -86,14 +86,14 @@
             <button class="btn"
                     ng-disabled="isLisatietotyyppiNotNew()"
                     ng-click="tyhjennaLisatietotyyppi()"
-                    tt="YhteystietojenTyyppiForm.peruuta">
-                YhteystietojenTyyppiForm.peruuta
+                    tt="LisatietotyyppiForm.peruuta">
+                LisatietotyyppiForm.peruuta
             </button>
             <button class="btn btn-primary"
                     ng-disabled="isLisatietotyyppiNotNew()"
                     ng-click="luoLisatietotyyppi()"
-                    tt="YhteystietojenTyyppiForm.tallenna">
-                YhteystietojenTyyppiForm.tallenna
+                    tt="LisatietotyyppiForm.tallenna">
+                LisatietotyyppiForm.tallenna
             </button>
         </div>
         <div>&nbsp;</div>
