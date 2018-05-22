@@ -825,7 +825,11 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                     if (tyyppi) {
                         return (tyyppi === "oppilaitostyyppi_11#1" ||
                                 tyyppi === "oppilaitostyyppi_12#1" ||
-                                tyyppi === "oppilaitostyyppi_19#1");
+                                tyyppi === "oppilaitostyyppi_15#1" ||
+                                tyyppi === "oppilaitostyyppi_19#1" ||
+                                tyyppi === "oppilaitostyyppi_21#1" ||
+                                tyyppi === "oppilaitostyyppi_63#1" ||
+                                tyyppi === "oppilaitostyyppi_64#1");
                     }
                 }
             }
