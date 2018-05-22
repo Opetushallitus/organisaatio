@@ -1,20 +1,15 @@
 package fi.vm.sade.organisaatio.api.search;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.*;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation perustiedot")
@@ -26,9 +21,11 @@ public class OrganisaatioPerustieto implements Serializable {
     private String oid;
 
     @ApiModelProperty(value = "Aloituspäivämäärä", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date alkuPvm;
 
     @ApiModelProperty(value = "Lakkautuspäivämäärä", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date lakkautusPvm;
 
     @ApiModelProperty(value = "Yläorganisaation oid", required = true)
