@@ -25,7 +25,8 @@
 
 
     <!-- Conversion service, note: Old converters are not using spring conversion framework -->
-    <bean id="conversionService"
+    <!-- If this was called id=conversionService spring-session injects this and won't work! -->
+    <bean id="sadeConversionService"
           class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
         <property name="converters">
             <list>
