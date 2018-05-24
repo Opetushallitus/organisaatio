@@ -63,6 +63,7 @@ public class LisatietoResource {
 
     @GET
     @Path("/lisatietotyyppi/{nimi}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee lisätietotyypin tiedot nimellä")
     public LisatietotyyppiDto lisatietotyyppiNimella(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathParam("nimi") String nimi) {
         return this.lisatietoService.findByName(nimi);
