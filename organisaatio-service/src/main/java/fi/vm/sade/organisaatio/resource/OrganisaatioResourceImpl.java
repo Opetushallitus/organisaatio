@@ -51,6 +51,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -343,7 +344,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         Preconditions.checkNotNull(oid);
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
+        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(new RyhmaCriteriaDto());
         if (entitys == null) {
             return null;
         }
