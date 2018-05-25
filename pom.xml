@@ -398,6 +398,11 @@ buildTtime=${maven.build.timestamp}
                 <artifactId>HikariCP</artifactId>
                 <version>2.4.7</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.kagkarlsson</groupId>
+                <artifactId>db-scheduler</artifactId>
+                <version>3.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
