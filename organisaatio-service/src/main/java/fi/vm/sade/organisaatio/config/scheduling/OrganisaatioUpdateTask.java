@@ -20,7 +20,7 @@ import java.util.Date;
  * Laukaisee organisaatioiden ajastetut päivitys operaatiot
  */
 @Component
-public class OrganisaatioUpdateTask extends RecurringTask {
+public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private String nameUpdateCronExpression;
