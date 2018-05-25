@@ -22,6 +22,7 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
         if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
-            criteria.setLakkautusPvm(new Date());
+            criteria.setLakkautusPvm(LocalDate.now());
         }
         return organisaatioDAO.findGroups(criteria);
     }

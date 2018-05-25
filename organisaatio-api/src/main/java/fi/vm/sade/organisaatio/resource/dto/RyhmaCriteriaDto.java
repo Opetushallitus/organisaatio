@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 import javax.ws.rs.QueryParam;
 
 public class RyhmaCriteriaDto {
@@ -10,7 +10,7 @@ public class RyhmaCriteriaDto {
     @QueryParam("aktiivinen")
     private Boolean aktiivinen;
     @QueryParam("lakkautusPvm")
-    private Date lakkautusPvm;
+    private LocalDate lakkautusPvm;
     @QueryParam("tyyppi")
     private String tyyppi;
     @QueryParam("kayttoryhma")
@@ -32,11 +32,11 @@ public class RyhmaCriteriaDto {
         this.aktiivinen = aktiivinen;
     }
 
-    public Date getLakkautusPvm() {
+    public LocalDate getLakkautusPvm() {
         return lakkautusPvm;
     }
 
-    public void setLakkautusPvm(Date lakkautusPvm) {
+    public void setLakkautusPvm(LocalDate lakkautusPvm) {
         this.lakkautusPvm = lakkautusPvm;
     }
 

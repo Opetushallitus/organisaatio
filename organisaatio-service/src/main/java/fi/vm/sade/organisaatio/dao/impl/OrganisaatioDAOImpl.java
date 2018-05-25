@@ -1030,13 +1030,16 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .where(qNimiArvo.containsIgnoreCase(criteria.getNimi()));
             query.where(qNimi.in(subquery));
         }
+        java.sql.Date lakkautusPvm = criteria.getLakkautusPvm() != null
+                ? java.sql.Date.valueOf(criteria.getLakkautusPvm())
+                : null;
         if (Boolean.TRUE.equals(criteria.getAktiivinen())) {
             query.where(anyOf(qOrganisaatio.lakkautusPvm.isNull(),
-                    qOrganisaatio.lakkautusPvm.goe(criteria.getLakkautusPvm())));
+                    qOrganisaatio.lakkautusPvm.goe(lakkautusPvm)));
         } else if (Boolean.FALSE.equals(criteria.getAktiivinen())) {
-            query.where(qOrganisaatio.lakkautusPvm.lt(criteria.getLakkautusPvm()));
-        } else if (criteria.getLakkautusPvm() != null) {
-            query.where(qOrganisaatio.lakkautusPvm.eq(criteria.getLakkautusPvm()));
+            query.where(qOrganisaatio.lakkautusPvm.lt(lakkautusPvm));
+        } else if (lakkautusPvm != null) {
+            query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
         }
         if (criteria.getTyyppi() != null) {
             QOrganisaatio qRyhma = new QOrganisaatio("ryhmaTyyppiSub");
