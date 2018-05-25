@@ -1021,44 +1021,42 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .where(qOrganisaatio.organisaatioPoistettu.isFalse())
                 .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
 
-        if (criteria.getQ() != null) {
+        Optional.ofNullable(criteria.getQ()).ifPresent(q -> {
             QMonikielinenTeksti qNimiHaku = new QMonikielinenTeksti("nimiHaku");
             StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
             JPQLQuery<MonikielinenTeksti> subquery = JPAExpressions.select(qNimiHaku)
                     .from(qNimiHaku)
                     .join(qNimiHaku.values, qNimiArvo)
                     .where(qNimiArvo.containsIgnoreCase(criteria.getQ()));
-            query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(criteria.getQ())));
-        }
-        java.sql.Date lakkautusPvm = criteria.getLakkautusPvm() != null
-                ? java.sql.Date.valueOf(criteria.getLakkautusPvm())
-                : null;
-        if (Boolean.TRUE.equals(criteria.getAktiivinen())) {
-            query.where(anyOf(qOrganisaatio.lakkautusPvm.isNull(),
-                    qOrganisaatio.lakkautusPvm.goe(lakkautusPvm)));
-        } else if (Boolean.FALSE.equals(criteria.getAktiivinen())) {
-            query.where(qOrganisaatio.lakkautusPvm.lt(lakkautusPvm));
-        } else if (lakkautusPvm != null) {
-            query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
-        }
-        if (criteria.getTyyppi() != null) {
+            query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(q)));
+        });
+        Optional.ofNullable(criteria.getLakkautusPvm()).map(java.sql.Date::valueOf).ifPresent(lakkautusPvm -> {
+            if (Boolean.TRUE.equals(criteria.getAktiivinen())) {
+                query.where(anyOf(qOrganisaatio.lakkautusPvm.isNull(), qOrganisaatio.lakkautusPvm.goe(lakkautusPvm)));
+            } else if (Boolean.FALSE.equals(criteria.getAktiivinen())) {
+                query.where(qOrganisaatio.lakkautusPvm.lt(lakkautusPvm));
+            } else {
+                query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
+            }
+        });
+        Optional.ofNullable(criteria.getTyyppi()).ifPresent(tyyppi -> {
             QOrganisaatio qRyhma = new QOrganisaatio("ryhmaTyyppiSub");
             StringPath qTyyppi = Expressions.stringPath("tyyppi");
             JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
                     .from(qRyhma)
                     .join(qRyhma.ryhmatyypit, qTyyppi)
-                    .where(qTyyppi.eq(criteria.getTyyppi()));
+                    .where(qTyyppi.eq(tyyppi));
             query.where(qOrganisaatio.in(subquery));
-        }
-        if (criteria.getKayttoryhma() != null) {
+        });
+        Optional.ofNullable(criteria.getKayttoryhma()).ifPresent(kayttoryhma -> {
             QOrganisaatio qRyhma = new QOrganisaatio("ryhmaKayttoryhmaSub");
             StringPath qKayttoryhma = Expressions.stringPath("kayttoryhma");
             JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
                     .from(qRyhma)
                     .join(qRyhma.kayttoryhmat, qKayttoryhma)
-                    .where(qKayttoryhma.eq(criteria.getKayttoryhma()));
+                    .where(qKayttoryhma.eq(kayttoryhma));
             query.where(qOrganisaatio.in(subquery));
-        }
+        });
 
         return query.fetch();
     }
