@@ -1021,14 +1021,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .where(qOrganisaatio.organisaatioPoistettu.isFalse())
                 .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
 
-        if (criteria.getNimi() != null) {
+        if (criteria.getQ() != null) {
             QMonikielinenTeksti qNimiHaku = new QMonikielinenTeksti("nimiHaku");
             StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
             JPQLQuery<MonikielinenTeksti> subquery = JPAExpressions.select(qNimiHaku)
                     .from(qNimiHaku)
                     .join(qNimiHaku.values, qNimiArvo)
-                    .where(qNimiArvo.containsIgnoreCase(criteria.getNimi()));
-            query.where(qNimi.in(subquery));
+                    .where(qNimiArvo.containsIgnoreCase(criteria.getQ()));
+            query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(criteria.getQ())));
         }
         java.sql.Date lakkautusPvm = criteria.getLakkautusPvm() != null
                 ? java.sql.Date.valueOf(criteria.getLakkautusPvm())

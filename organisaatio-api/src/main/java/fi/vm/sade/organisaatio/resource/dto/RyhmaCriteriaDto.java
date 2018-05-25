@@ -5,8 +5,8 @@ import javax.ws.rs.QueryParam;
 
 public class RyhmaCriteriaDto {
 
-    @QueryParam("nimi")
-    private String nimi;
+    @QueryParam("q")
+    private String q;
     @QueryParam("aktiivinen")
     private Boolean aktiivinen;
     @QueryParam("lakkautusPvm")
@@ -16,12 +16,12 @@ public class RyhmaCriteriaDto {
     @QueryParam("kayttoryhma")
     private String kayttoryhma;
 
-    public String getNimi() {
-        return nimi;
+    public String getQ() {
+        return q;
     }
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
+    public void setQ(String q) {
+        this.q = q;
     }
 
     public Boolean getAktiivinen() {
