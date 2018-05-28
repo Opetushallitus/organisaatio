@@ -21,6 +21,10 @@
     <listener>
         <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
     </listener>
+    <!-- For spring-session to allow handling of CAS session timeout -->
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
 
     <filter>
         <filter-name>springSessionRepositoryFilter</filter-name>
