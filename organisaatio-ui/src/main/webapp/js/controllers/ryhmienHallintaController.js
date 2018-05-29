@@ -14,10 +14,10 @@
  European Union Public Licence for more details.
  */
 
-app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $routeParams,
+app.controller('RyhmienHallintaController', function RyhmienHallintaController($scope, $location, $filter, $route,
                                    $uibModal, $log, $injector, $q,
                                    RyhmienHallintaModel, Alert, LocalisationService,
-                                   RyhmaKoodisto) {
+                                   RyhmaKoodisto, ryhma) {
     "use strict";
 
     $log = $log.getInstance("RyhmienHallintaController");
@@ -64,12 +64,6 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
                     ryhma.nimi[vaihtoehtoisetKielikoodit[language][1]];
         }
         return '';
-    };
-
-    $scope.luoUusi = function() {
-        $scope.currentGroup = $scope.model.create($routeParams.parentoid);
-        $scope.updateUpdateInfo();
-        $scope.currentGroupSelection = {};
     };
 
     $scope.poista = function() {
@@ -177,27 +171,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
     };
 
     $scope.peruuta = function() {
-        $scope.currentGroup = null;
-        $scope.updateUpdateInfo();
-        $scope.currentGroupSelection = {};
-        $scope.model.reload($routeParams.parentoid, function(result) {
-            $scope.form.$setPristine();
-        }, function(error) {
-            loadingService.onErrorHandled(error);
-            $log.warn("Failed to reloud groups: ", $routeParams.parentoid);
-            Alert.add("error", error, false);
-        });
-    };
-
-    $scope.model.reload($routeParams.parentoid, function(result) {
-    }, function(error) {
-        loadingService.onErrorHandled(error);
-        Alert.add("error", error, false);
-    });
-
-    // Siirtyminen organisaatioiden pääsivulle organisaatiopuu näkymään
-    $scope.cancel = function() {
-        $location.path("/");
+        $location.path('/organisaatiot/' + $scope.currentGroup.parentOid + '/groups').search({});
     };
 
     // Käsitellään muokkausnäkymästä poistuminen
@@ -248,5 +222,7 @@ app.controller('RyhmienHallintaController', function RyhmienHallintaController($
             });
         }
     });
+
+    $scope.valitseRyhma(ryhma);
 
 });

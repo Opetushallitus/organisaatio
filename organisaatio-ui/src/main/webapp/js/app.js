@@ -135,7 +135,21 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     when('/yhteystietotyypit', {templateUrl: TEMPLATE_URL_BASE + 'tyyppienhallinta.html'}).
 
     // manage groups
-    when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+    when('/organisaatiot/:parentoid/groups', {controller: 'RyhmatController', controllerAs: 'vm', templateUrl:TEMPLATE_URL_BASE + 'ryhmat.html'}).
+
+    // add group
+    when('/ryhmat/uusi', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html', resolve: {
+        ryhma: function ($route) {
+            return {oid: null, parentOid: $route.current.params.parentOid, tyypit: ['Ryhma'], ryhmatyypit: [''], kayttoryhmat: ['']};
+        }
+    }}).
+
+    // edit group
+    when('/ryhmat/:oid', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html', resolve: {
+        ryhma: function (Organisaatio, $route) {
+            return Organisaatio.get({oid: $route.current.params.oid}).$promise;
+        }
+    }}).
 
     //else
     otherwise({redirectTo:'/organisaatiot'});
