@@ -15,11 +15,11 @@
   -->
 
 <!--
-    spring security context for front/backend applications/services, uses cas+ldap
+    spring security context for front/backend applications/services, uses cas+kayttooikeus
 
     NOTE!
 
-    * needs global cas* and ldap* -properties (exist eg in file common.properties)
+    * needs global cas* -properties (exist eg in file common.properties)
     * needs app specific cas_key and cas_service properties
 
 -->
@@ -194,8 +194,13 @@
         </beans:property>
     </beans:bean>
 
+    <beans:bean id="userDetailsService" class="fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl">
+        <beans:constructor-arg index="0" value="${host.alb}" />
+        <beans:constructor-arg index="1" value="organisaatio" />
+    </beans:bean>
+
     <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
-        <beans:property name="userDetailsService" ref="ldapUserService"/>
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
         <beans:property name="serviceProperties" ref="casServiceProperties"/>
         <beans:property name="ticketValidator" ref="casTicketValidator"/>
         <beans:property name="key" value="${cas_key}"/>
@@ -222,23 +227,6 @@
     </beans:bean>
 
     <!--p:configLocation="classpath:ehcacheClearPass.xml"-->
-
-    <!-- NOTE! role-prefix means that every role fetched from ldap will be prefixed with the prefix. so role 'X' in ldap will be 'ROLE_X' in code eg when used in @Secured-annotation -->
-    <!-- todo: ldap-user-servicen cache -->
-    <ldap-user-service id="ldapUserService"
-                       role-prefix="ROLE_"
-                       server-ref="ldapServer"
-                       user-search-base="${cas.user-search-base}"
-                       user-search-filter="${cas.user-search-filter}"
-                       group-search-base="${cas.group-search-base}"
-                       group-search-filter="${cas.group-search-filter}"
-                       group-role-attribute="${cas.group-role-attribute}"
-                       user-context-mapper-ref="customUserContextMapper"
-            />
-    <!--user-details-class="fi.vm.sade.security.CustomUserDetails"-->
-    <beans:bean id="customUserContextMapper" class="fi.vm.sade.security.CustomUserDetailsMapper"/>
-
-    <ldap-server id="ldapServer" url="${ldap.url.with.base}" manager-dn="${ldap.manager-dn}" manager-password="${ldap.manager-password}"/>
 
     <beans:bean id="casServiceProperties" class="org.springframework.security.cas.ServiceProperties">
         <beans:property name="service" value="${cas_service}/j_spring_cas_security_check"/>
