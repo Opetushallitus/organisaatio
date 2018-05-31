@@ -45,10 +45,11 @@ angular.module('Loading', ['Localisation'])
         afterRequest: function(success, req) {
             //$log.log("LOADING afterRequest "+success, service);
             if (success) {
-        	service.requestCount--;
-            } else {
+                service.requestCount--;
+            }
+            else {
                 $log.warn("Error afterRequest ", req);
-    		service.errors++;
+                service.errors++;
             }
             service.clearTimeout();
             service.errorHandlingRequested = null;
@@ -109,21 +110,24 @@ angular.module('Loading', ['Localisation'])
   return service;
 })
 
-.factory('onStartInterceptor', function(LoadingService) {
-    return function (data, headersGetter) {
-        LoadingService.beforeRequest();
-        return data;
-    };
-})
-
 // Intercept http responses.
 .factory('onCompleteInterceptor', function(LoadingService, $q, $log) {
     $log = $log.getInstance('onCompleteInterceptor');
     return {
+        // "incrementRequestCountSuccess"
+        request: function(config) {
+            if (!config.url || config.url.indexOf(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL) === -1) {
+                LoadingService.beforeRequest();
+            }
+            return config;
+        },
         // Just call afterRequest() to clear timeout and pass the response to the orginal caller.
         // "decrementRequestCountSuccess"
         response: function(response) {
-            LoadingService.afterRequest(true, response);
+            if (!response.config || !response.config.url
+                || response.config.url.indexOf(ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL) === -1) {
+                LoadingService.afterRequest(true, response);
+            }
             return response;
         },
         // "decrementRequestCountError"
@@ -137,10 +141,6 @@ angular.module('Loading', ['Localisation'])
 
 .config(function($httpProvider) {
     $httpProvider.interceptors.push('onCompleteInterceptor');
-})
-
-.run(function($http, onStartInterceptor) {
-    $http.defaults.transformRequest.push(onStartInterceptor);
 })
 
 .controller('LoadingCtrl', function($scope, $rootElement, $uibModal, LoadingService) {
