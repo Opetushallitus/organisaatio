@@ -59,22 +59,23 @@ public class OrganisaatioDAOImplTest {
 
     @Test
     public void findGroupsTest() {
-        Organisaatio root = createOrganisaatio("1.2.246.562.24.00000000001", "root", null, false, null, null);
+        Organisaatio parent1 = createOrganisaatio(generateOid(), "parent1", null, false, null, null);
+        Organisaatio parent2 = createOrganisaatio(generateOid(), "parent2", null, false, null, null);
         Organisaatio ryhma1 = organisaatioDAO.insert(new RyhmaBuilder(generateOid())
-                .parent(root)
+                .parent(parent1)
                 .nimi("FI", "ryhma1")
                 .ryhmatyyppi("ryhmatyyppi1", "ryhmatyyppi2")
                 .kayttoryhma("kayttoryhma1", "kayttoryhma2")
                 .build());
         Organisaatio ryhma2 = organisaatioDAO.insert(new RyhmaBuilder(generateOid())
-                .parent(root)
+                .parent(parent1)
                 .nimi("FI", "ryhma2-poistettu")
                 .ryhmatyyppi("ryhmatyyppi2", "ryhmatyyppi3")
                 .kayttoryhma("kayttoryhma2", "kayttoryhma3")
                 .poistettu()
                 .build());
         Organisaatio ryhma3 = organisaatioDAO.insert(new RyhmaBuilder(generateOid())
-                .parent(root)
+                .parent(parent2)
                 .nimi("FI", "ryhma3-lakkautettu")
                 .ryhmatyyppi("ryhmatyyppi1", "ryhmatyyppi3")
                 .kayttoryhma("kayttoryhma1", "kayttoryhma3")
@@ -82,25 +83,25 @@ public class OrganisaatioDAOImplTest {
                 .build());
 
         RyhmaCriteriaDto criteria = new RyhmaCriteriaDto();
-        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma3);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2, ryhma3);
 
         criteria = new RyhmaCriteriaDto();
         criteria.setQ("ma1");
         assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
 
         criteria = new RyhmaCriteriaDto();
-        criteria.setQ("2");
+        criteria.setQ("olematon");
         assertThat(organisaatioDAO.findGroups(criteria)).isEmpty();
 
         criteria = new RyhmaCriteriaDto();
         criteria.setAktiivinen(true);
         criteria.setLakkautusPvm(LocalDate.of(2018, 6, 1));
-        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2);
 
         criteria = new RyhmaCriteriaDto();
         criteria.setAktiivinen(true);
         criteria.setLakkautusPvm(LocalDate.of(2018, 5, 30));
-        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma3);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2, ryhma3);
 
         criteria = new RyhmaCriteriaDto();
         criteria.setAktiivinen(false);
@@ -113,7 +114,7 @@ public class OrganisaatioDAOImplTest {
 
         criteria = new RyhmaCriteriaDto();
         criteria.setRyhmatyyppi("ryhmatyyppi2");
-        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2);
 
         criteria = new RyhmaCriteriaDto();
         criteria.setKayttoryhma("kayttoryhma1");
@@ -121,7 +122,19 @@ public class OrganisaatioDAOImplTest {
 
         criteria = new RyhmaCriteriaDto();
         criteria.setKayttoryhma("kayttoryhma2");
-        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2);
+
+        criteria = new RyhmaCriteriaDto();
+        criteria.setParentOidPath("|" + parent2.getOid() + "|");
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma3);
+
+        criteria = new RyhmaCriteriaDto();
+        criteria.setPoistettu(true);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma2);
+
+        criteria = new RyhmaCriteriaDto();
+        criteria.setPoistettu(false);
+        assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma3);
 
         criteria = new RyhmaCriteriaDto();
         criteria.setQ("ryhma");
@@ -129,6 +142,8 @@ public class OrganisaatioDAOImplTest {
         criteria.setLakkautusPvm(LocalDate.of(2018, 6, 1));
         criteria.setRyhmatyyppi("ryhmatyyppi1");
         criteria.setKayttoryhma("kayttoryhma1");
+        criteria.setParentOidPath("|" + parent1.getOid() + "|");
+        criteria.setPoistettu(false);
         assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
     }
 

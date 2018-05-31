@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -53,6 +54,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private ConversionService conversionService;
+
+    @Value("${root.organisaatio.oid}")
+    private String rootOid;
 
     @Override
     @Transactional(readOnly = true)
@@ -78,6 +82,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
             criteria.setLakkautusPvm(LocalDate.now());
         }
+        criteria.setParentOidPath("|" + rootOid + "|");
+        criteria.setPoistettu(false);
         return organisaatioDAO.findGroups(criteria);
     }
 

@@ -1017,8 +1017,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager()).from(qOrganisaatio).select(qOrganisaatio)
                 .join(qOrganisaatio.nimi, qNimi).fetchJoin()
                 .join(qOrganisaatio.kuvaus2, qKuvaus).fetchJoin()
-                .where(qOrganisaatio.parentOidPath.eq("|" + ophOid + "|"))
-                .where(qOrganisaatio.organisaatioPoistettu.isFalse())
                 .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
 
         Optional.ofNullable(criteria.getQ()).ifPresent(q -> {
@@ -1056,6 +1054,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .join(qRyhma.kayttoryhmat, qKayttoryhma)
                     .where(qKayttoryhma.eq(kayttoryhma));
             query.where(qOrganisaatio.in(subquery));
+        });
+        Optional.ofNullable(criteria.getParentOidPath()).ifPresent(parentOidPath -> {
+            query.where(qOrganisaatio.parentOidPath.eq(parentOidPath));
+        });
+        Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu -> {
+            query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu));
         });
 
         return query.fetch();
