@@ -99,7 +99,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     /**
      * Palautetaan oph organisaation alla olevat Ryhmä tyyppiset organisaatiot
      *
-     * @param dto hakukriteerit
+     * @param criteria hakukriteerit
      * @return
      */
     List<Organisaatio> findGroups(RyhmaCriteriaDto criteria);

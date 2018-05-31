@@ -576,7 +576,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDto criteria) throws Exception {
         long qstarted = System.currentTimeMillis();
 
-        Optional.ofNullable(criteria.getTyyppi()).map(KoodistoUtil::getRyhmatyyppiV3).ifPresent(criteria::setTyyppi);
+        Optional.ofNullable(criteria.getRyhmatyyppi()).map(KoodistoUtil::getRyhmatyyppiV3).ifPresent(criteria::setRyhmatyyppi);
         Optional.ofNullable(criteria.getKayttoryhma()).map(KoodistoUtil::getKayttoryhmaV3).ifPresent(criteria::setKayttoryhma);
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(criteria);

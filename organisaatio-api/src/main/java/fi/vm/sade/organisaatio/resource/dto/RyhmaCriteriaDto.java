@@ -12,7 +12,7 @@ public class RyhmaCriteriaDto {
     @QueryParam("lakkautusPvm")
     private LocalDate lakkautusPvm;
     @QueryParam("tyyppi")
-    private String tyyppi;
+    private String ryhmatyyppi;
     @QueryParam("kayttoryhma")
     private String kayttoryhma;
 
@@ -40,12 +40,12 @@ public class RyhmaCriteriaDto {
         this.lakkautusPvm = lakkautusPvm;
     }
 
-    public String getTyyppi() {
-        return tyyppi;
+    public String getRyhmatyyppi() {
+        return ryhmatyyppi;
     }
 
-    public void setTyyppi(String tyyppi) {
-        this.tyyppi = tyyppi;
+    public void setRyhmatyyppi(String ryhmatyyppi) {
+        this.ryhmatyyppi = ryhmatyyppi;
     }
 
     public String getKayttoryhma() {

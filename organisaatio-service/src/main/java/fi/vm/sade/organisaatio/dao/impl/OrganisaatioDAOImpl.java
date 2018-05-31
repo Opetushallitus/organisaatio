@@ -1027,7 +1027,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             JPQLQuery<MonikielinenTeksti> subquery = JPAExpressions.select(qNimiHaku)
                     .from(qNimiHaku)
                     .join(qNimiHaku.values, qNimiArvo)
-                    .where(qNimiArvo.containsIgnoreCase(criteria.getQ()));
+                    .where(qNimiArvo.containsIgnoreCase(q));
             query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(q)));
         });
         Optional.ofNullable(criteria.getLakkautusPvm()).map(java.sql.Date::valueOf).ifPresent(lakkautusPvm -> {
@@ -1039,17 +1039,17 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
             }
         });
-        Optional.ofNullable(criteria.getTyyppi()).ifPresent(tyyppi -> {
-            QOrganisaatio qRyhma = new QOrganisaatio("ryhmaTyyppiSub");
-            StringPath qTyyppi = Expressions.stringPath("tyyppi");
+        Optional.ofNullable(criteria.getRyhmatyyppi()).ifPresent(ryhmatyyppi -> {
+            QOrganisaatio qRyhma = new QOrganisaatio("ryhmatyyppiSub");
+            StringPath qRyhmatyyppi = Expressions.stringPath("ryhmatyyppi");
             JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
                     .from(qRyhma)
-                    .join(qRyhma.ryhmatyypit, qTyyppi)
-                    .where(qTyyppi.eq(tyyppi));
+                    .join(qRyhma.ryhmatyypit, qRyhmatyyppi)
+                    .where(qRyhmatyyppi.eq(ryhmatyyppi));
             query.where(qOrganisaatio.in(subquery));
         });
         Optional.ofNullable(criteria.getKayttoryhma()).ifPresent(kayttoryhma -> {
-            QOrganisaatio qRyhma = new QOrganisaatio("ryhmaKayttoryhmaSub");
+            QOrganisaatio qRyhma = new QOrganisaatio("kayttoryhmaSub");
             StringPath qKayttoryhma = Expressions.stringPath("kayttoryhma");
             JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
                     .from(qRyhma)
