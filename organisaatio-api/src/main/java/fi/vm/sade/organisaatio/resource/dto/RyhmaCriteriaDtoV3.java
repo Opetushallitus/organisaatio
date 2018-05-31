@@ -1,9 +1,10 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
+import io.swagger.annotations.ApiParam;
 import java.time.LocalDate;
 import javax.ws.rs.QueryParam;
 
-public class RyhmaCriteriaDto {
+public class RyhmaCriteriaDtoV3 {
 
     @QueryParam("q")
     private String q;
@@ -12,8 +13,10 @@ public class RyhmaCriteriaDto {
     @QueryParam("lakkautusPvm")
     private LocalDate lakkautusPvm;
     @QueryParam("tyyppi")
+    @ApiParam("Koodisto 'ryhmatyypit'")
     private String ryhmatyyppi;
     @QueryParam("kayttoryhma")
+    @ApiParam("Koodisto 'kayttoryhmat'")
     private String kayttoryhma;
 
     public String getQ() {

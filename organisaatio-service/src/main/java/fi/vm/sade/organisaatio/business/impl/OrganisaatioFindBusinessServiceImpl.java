@@ -21,7 +21,8 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.springframework.core.convert.ConversionService;
 
 /**
  *
@@ -49,6 +51,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Autowired
     private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
+    @Autowired
+    private ConversionService conversionService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Organisaatio> findBySearchCriteria(
@@ -65,13 +70,16 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
+    public List<Organisaatio> findGroups(RyhmaCriteriaDtoV3 criteria) {
+        return findGroups(conversionService.convert(criteria, RyhmaCriteriaDto.class));
+    }
+
+    private List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
         if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
             criteria.setLakkautusPvm(LocalDate.now());
         }
         return organisaatioDAO.findGroups(criteria);
     }
-
 
     @Override
     @Transactional(readOnly = true)

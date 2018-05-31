@@ -5,7 +5,7 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import java.time.LocalDate;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;

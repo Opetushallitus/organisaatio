@@ -20,7 +20,7 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;

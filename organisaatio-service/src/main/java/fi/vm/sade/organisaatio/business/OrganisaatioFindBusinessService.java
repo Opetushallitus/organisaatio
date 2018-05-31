@@ -19,7 +19,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 
 import java.util.Collection;
 import java.util.Date;
@@ -73,7 +74,7 @@ public interface OrganisaatioFindBusinessService {
      * @param criteria hakukriteerit
      * @return Ryhmät
      */
-    public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria);
+    public List<Organisaatio> findGroups(RyhmaCriteriaDtoV3 criteria);
 
     /**
      * Haetaan kannasta organiasaatioiden oidit listana.
