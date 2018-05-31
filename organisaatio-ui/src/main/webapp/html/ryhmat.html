@@ -14,8 +14,8 @@
                    placeholder="{{t('RyhmienHallinta.hakutermi')}}"/>
         </div>
         <div class="controls controls-row">
-            <select id="ryhmatyyppi" ng-model="vm.filters.tyyppi" class="span4"
-                    ng-options="tyyppi.uri as tyyppi.nimi for tyyppi in vm.koodisto.ryhmatyypit | orderBy:'nimi'">
+            <select id="ryhmatyyppi" ng-model="vm.filters.ryhmatyyppi" class="span4"
+                    ng-options="ryhmatyyppi.uri as ryhmatyyppi.nimi for ryhmatyyppi in vm.koodisto.ryhmatyypit | orderBy:'nimi'">
                 <option value="" tt="RyhmienHallinta.ryhmatyyppi">RyhmienHallinta.ryhmatyyppi</option>
             </select>
             <select id="kayttoryhma" ng-model="vm.filters.kayttoryhma" class="span4"
@@ -53,7 +53,7 @@
             <tr ng-repeat="ryhma in vm.ryhmat | orderBy: 'lokalisoituNimi'">
                 <td><a href="ryhmat/{{ ryhma.oid }}">{{ ryhma.lokalisoituNimi }}</a></td>
                 <td>{{ ryhma.oid }}</td>
-                <td>{{ ryhma.lokalisoituTyyppi }}</td>
+                <td>{{ ryhma.lokalisoituRyhmatyyppi }}</td>
                 <td>{{ ryhma.lokalisoituKayttoryhma }}</td>
                 <td>{{ ryhma.status }}</td>
             </tr>

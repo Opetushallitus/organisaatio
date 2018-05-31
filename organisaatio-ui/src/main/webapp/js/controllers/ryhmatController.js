@@ -16,7 +16,7 @@ app.controller('RyhmatController', function RyhmatController(Ryhmat, RyhmaKoodis
         Ryhmat.get(vm.filters, function (ryhmat) {
             ryhmat.forEach(function (ryhma) {
                 ryhma.lokalisoituNimi = lokalisoiNimi(ryhma);
-                ryhma.lokalisoituTyyppi = lokalisoiKoodit(RyhmaKoodisto.ryhmatyypit, ryhma.ryhmatyypit);
+                ryhma.lokalisoituRyhmatyyppi = lokalisoiKoodit(RyhmaKoodisto.ryhmatyypit, ryhma.ryhmatyypit);
                 ryhma.lokalisoituKayttoryhma = lokalisoiKoodit(RyhmaKoodisto.kayttoryhmat, ryhma.kayttoryhmat);
             });
             vm.ryhmat = ryhmat;

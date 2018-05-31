@@ -12,7 +12,7 @@ public class RyhmaCriteriaDtoV3 {
     private Boolean aktiivinen;
     @QueryParam("lakkautusPvm")
     private LocalDate lakkautusPvm;
-    @QueryParam("tyyppi")
+    @QueryParam("ryhmatyyppi")
     @ApiParam("Koodisto 'ryhmatyypit'")
     private String ryhmatyyppi;
     @QueryParam("kayttoryhma")
