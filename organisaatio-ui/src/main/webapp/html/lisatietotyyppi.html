@@ -47,7 +47,7 @@
                 <label class="control-label" tt="LisatietotyyppiForm.oppilaitostyyppi">LisatietotyyppiForm.oppilaitostyyppi</label>
                 <div class="controls">
                     <select ng-model="lisatieto.valittuOppilaitostyyppi"
-                            ng-disabled="lisatieto.isLisatietotyyppiNotNew()"
+                            ng-disabled="lisatieto.isLisatietotyyppiNotNew() || lisatieto.isOppilaitosSelected()"
                             ng-change="lisatieto.toggleOppilaitostyyppi(lisatieto.valittuOppilaitostyyppi)"
                             ng-options="oppilaitostyyppiKoodi as lisatieto.lokalisoiKoodi(oppilaitostyyppiKoodi) for oppilaitostyyppiKoodi in lisatieto.model.oppilaitostyypit"
                     >

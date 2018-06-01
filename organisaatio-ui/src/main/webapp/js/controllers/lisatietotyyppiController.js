@@ -125,7 +125,7 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
     };
 
     vm.isOppilaitosAndOppilaitostyyppirajoiteSelected = function (organisaatiotyyppi) {
-        return organisaatiotyyppi === ORGANISAATIOTYYPPI_OPPILAITOS_FI && !!getOppilaitostyyppiRajoitteet()[0];
+        return organisaatiotyyppi === ORGANISAATIOTYYPPI_OPPILAITOS_FI && vm.isOppilaitosRajoiteSelected();
     };
 
     function getLisatietotyypit() {
@@ -173,4 +173,16 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
             return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
         })
     }
+
+    vm.isOppilaitosRajoiteSelected = function () {
+        return vm.lisatietoDto.rajoitteet.some(function (rajoite) {
+            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
+        });
+    };
+
+    vm.isOppilaitosSelected = function () {
+        return vm.lisatietoDto.rajoitteet.some(function (rajoite) {
+            return rajoite.arvo === ORGANISAATIOTYYPPI_OPPILAITOS_FI;
+        });
+    };
 });
