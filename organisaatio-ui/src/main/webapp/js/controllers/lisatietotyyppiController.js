@@ -1,6 +1,7 @@
 
-app.controller('LisatietotyyppiController', function ($scope, $filter, KoodistoClient, Lisatietotyypit, KoodistoKoodi, 
+app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, Lisatietotyypit, KoodistoKoodi, 
                                                       LisatietotyyppiNimi, Lisatietotyyppi) {
+    var vm = this;
     var initialLisatietoDto = {
         nimi: 'lisatieto.',
         rajoitteet: []
@@ -9,101 +10,107 @@ app.controller('LisatietotyyppiController', function ($scope, $filter, KoodistoC
     var OPPILAITOSTYYPPI = 'OPPILAITOSTYYPPI';
     var ORGANISAATIOTYYPPI = 'ORGANISAATIOTYYPPI';
 
+    var ORGANISAATIOTYYPPI_OPPILAITOS_FI = 'Oppilaitos';
+
     var lokalisoidutRajoitteet = [];
 
-    $scope.lisatietoDto = angular.copy(initialLisatietoDto);
+    vm.lisatietoDto = angular.copy(initialLisatietoDto);
 
-    $scope.model = {
+    vm.model = {
         lisatietotyypit: getLisatietotyypit(),
         organisaatioTyypit: getOrganisaatioTyypit(),
         oppilaitostyypit: getOppilaitostyypit()
     };
 
-    $scope.valittuLisatietotyyppi = null;
+    vm.valittuLisatietotyyppi = null;
 
-    $scope.valittuOppilaitostyyppi = null;
+    vm.valittuOppilaitostyyppi = null;
 
-    $scope.poistaRajoite = function(koodiUri) {
-        $scope.lisatietoDto.rajoitteet = $scope.lisatietoDto.rajoitteet.filter(function (rajoite) {
+    vm.poistaRajoite = function(koodiUri) {
+        vm.lisatietoDto.rajoitteet = vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
             return rajoite.arvo !== koodiUri;
         });
     };
 
-    $scope.poistaLisatietotyyppi = function () {
-        var lisatietotyyppiExists = $scope.model.lisatietotyypit.filter(function (lisatietotyyppi) {
-            return lisatietotyyppi === $scope.valittuLisatietotyyppi;
+    vm.poistaLisatietotyyppi = function () {
+        var lisatietotyyppiExists = vm.model.lisatietotyypit.filter(function (lisatietotyyppi) {
+            return lisatietotyyppi === vm.valittuLisatietotyyppi;
         })[0];
         if (lisatietotyyppiExists) {
             LisatietotyyppiNimi.delete({nimi: lisatietotyyppiExists}, function () {
-                $scope.model.lisatietotyypit = getLisatietotyypit();
+                vm.model.lisatietotyypit = getLisatietotyypit();
             });
         }
         clearModel();
     };
 
-    $scope.luoLisatietotyyppi = function () {
-        Lisatietotyyppi.post($scope.lisatietoDto,
+    vm.luoLisatietotyyppi = function () {
+        Lisatietotyyppi.post(vm.lisatietoDto,
             function (lisatietotyyppi) {
-                $scope.model.lisatietotyypit = getLisatietotyypit();
-                $scope.valittuLisatietotyyppi = $scope.lisatietoDto.nimi;
-                $scope.fetchValittuLisatietotyyppi();
+                vm.model.lisatietotyypit = getLisatietotyypit();
+                vm.valittuLisatietotyyppi = vm.lisatietoDto.nimi;
+                vm.fetchValittuLisatietotyyppi();
             });
     };
 
-    $scope.tyhjennaLisatietotyyppi = function() {
+    vm.tyhjennaLisatietotyyppi = function() {
         clearModel();
     };
 
-    $scope.fetchValittuLisatietotyyppi = function () {
-        LisatietotyyppiNimi.get({nimi: $scope.valittuLisatietotyyppi}, function (lisatietotyyppi) {
-            $scope.lisatietoDto.rajoitteet = lisatietotyyppi.rajoitteet;
+    vm.fetchValittuLisatietotyyppi = function () {
+        LisatietotyyppiNimi.get({nimi: vm.valittuLisatietotyyppi}, function (lisatietotyyppi) {
+            vm.lisatietoDto.rajoitteet = lisatietotyyppi.rajoitteet;
         });
     };
 
     function clearModel() {
-        $scope.lisatietoDto = angular.copy(initialLisatietoDto);
-        $scope.lisatietoDto.rajoitteet = [];
-        $scope.valittuLisatietotyyppi = null;
-        $scope.valittuOppilaitostyyppi = null;
+        vm.lisatietoDto = angular.copy(initialLisatietoDto);
+        vm.lisatietoDto.rajoitteet = [];
+        vm.valittuLisatietotyyppi = null;
+        vm.valittuOppilaitostyyppi = null;
         lokalisoidutRajoitteet = [];
     }
 
-    $scope.uusiLisatietotyyppi = function () {
-        $scope.valittuLisatietotyyppi = 'lisatieto.';
-        $scope.lisatietoDto = angular.copy(initialLisatietoDto);
+    vm.uusiLisatietotyyppi = function () {
+        vm.valittuLisatietotyyppi = 'vm.';
+        vm.lisatietoDto = angular.copy(initialLisatietoDto);
     };
 
-    $scope.toggleOrganisaatiotyyppi = function(organisaatiotyyppiKoodi) {
+    vm.toggleOrganisaatiotyyppi = function(organisaatiotyyppiKoodi) {
         var organisaatiotyyppiNimiFi = KoodistoKoodi.getLangName(organisaatiotyyppiKoodi, 'FI');
         var rajoiteIndex = filterRajoiteByTyyppi(ORGANISAATIOTYYPPI, organisaatiotyyppiNimiFi);
         if (rajoiteIndex === -1) {
-            $scope.lisatietoDto.rajoitteet.push({rajoitetyyppi: ORGANISAATIOTYYPPI, arvo: organisaatiotyyppiNimiFi});
+            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: ORGANISAATIOTYYPPI, arvo: organisaatiotyyppiNimiFi});
         }
         else {
-            $scope.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
+            vm.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
         }
     };
 
-    $scope.isOrganisaatiotyyppiSelected = function(organisaatiotyyppiKoodi) {
+    vm.isOrganisaatiotyyppiSelected = function(organisaatiotyyppiKoodi) {
         var organisaatiotyyppiNimiFi = KoodistoKoodi.getLangName(organisaatiotyyppiKoodi, 'FI');
-        return !!$scope.lisatietoDto.rajoitteet.filter(function (rajoite) {
+        return !!vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
             return rajoite.arvo === organisaatiotyyppiNimiFi;
         })[0];
     };
 
-    $scope.toggleOppilaitostyyppi = function(valittuOppilaitostyyppi) {
+    vm.toggleOppilaitostyyppi = function(valittuOppilaitostyyppi) {
         var rajoiteIndex = filterRajoiteByTyyppi(OPPILAITOSTYYPPI, valittuOppilaitostyyppi.koodiUri);
         if (rajoiteIndex === -1) {
-            $scope.lisatietoDto.rajoitteet.push({rajoitetyyppi: OPPILAITOSTYYPPI, arvo:valittuOppilaitostyyppi.koodiUri});
+            // There is no point selecting oppilaitostyyppi rajoite if oppilaitos organisaatiotyyppi is allowed as a whole
+            vm.lisatietoDto.rajoitteet = vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
+                return rajoite.arvo !== ORGANISAATIOTYYPPI_OPPILAITOS_FI;
+            });
+            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: OPPILAITOSTYYPPI, arvo:valittuOppilaitostyyppi.koodiUri});
         }
         else {
-            $scope.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
+            vm.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
         }
     };
 
     function filterRajoiteByTyyppi(rajoitetyyppi, tyyppiValue) {
         var rajoiteIndex = -1;
-        $filter('filter')($scope.lisatietoDto.rajoitteet, function (value, index) {
+        $filter('filter')(vm.lisatietoDto.rajoitteet, function (value, index) {
             if (value.rajoitetyyppi === rajoitetyyppi && value.arvo ===  tyyppiValue) {
                 rajoiteIndex = index;
                 return true;
@@ -113,45 +120,47 @@ app.controller('LisatietotyyppiController', function ($scope, $filter, KoodistoC
         return rajoiteIndex;
     }
 
-    $scope.isLisatietotyyppiNotNew = function () {
-        return $scope.model.lisatietotyypit.indexOf($scope.valittuLisatietotyyppi) !== -1;
+    vm.isLisatietotyyppiNotNew = function () {
+        return vm.model.lisatietotyypit.indexOf(vm.valittuLisatietotyyppi) !== -1;
+    };
+
+    vm.isOppilaitosAndOppilaitostyyppirajoiteSelected = function (organisaatiotyyppi) {
+        return organisaatiotyyppi === ORGANISAATIOTYYPPI_OPPILAITOS_FI && vm.isOppilaitosRajoiteSelected();
     };
 
     function getLisatietotyypit() {
         Lisatietotyypit.get({}, function (lisatietotyypit) {
-            $scope.model.lisatietotyypit = lisatietotyypit;
+            vm.model.lisatietotyypit = lisatietotyypit;
         });
         return [];
     }
 
     function getOrganisaatioTyypit() {
         KoodistoClient.koodistoOrganisaatiotyypit.get({onlyValidKoodis: true}, function (organisaatiotyypit) {
-            $scope.model.organisaatioTyypit = organisaatiotyypit;
+            vm.model.organisaatioTyypit = organisaatiotyypit;
         });
         return [];
     }
 
     function getOppilaitostyypit() {
         KoodistoClient.koodistoOppilaitostyypit.get({onlyValidKoodis: true}, function (oppilaitostyypit) {
-            $scope.model.oppilaitostyypit = oppilaitostyypit;
+            vm.model.oppilaitostyypit = oppilaitostyypit;
         });
         return [];
     }
 
-    $scope.lokalisoiKoodi = function(koodi) {
+    vm.lokalisoiKoodi = function(koodi) {
         return KoodistoKoodi.getLocalizedName(koodi);
     };
 
-    $scope.getLokalisoidutRajoitteet = function () {
-        var oppilaitostyyppiRajoitteet = $scope.lisatietoDto.rajoitteet.filter(function (rajoite) {
-            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
-        });
+    vm.getLokalisoidutRajoitteet = function () {
+        var oppilaitostyyppiRajoitteet = getOppilaitostyyppiRajoitteet();
         if (lokalisoidutRajoitteet.length === oppilaitostyyppiRajoitteet.length) {
             return lokalisoidutRajoitteet;
         }
         lokalisoidutRajoitteet = oppilaitostyyppiRajoitteet.map(function (rajoite) {
             var koodiUri = rajoite.arvo;
-            var koodi = $scope.model.oppilaitostyypit.filter(function (oppilaitosKoodi) {
+            var koodi = vm.model.oppilaitostyypit.filter(function (oppilaitosKoodi) {
                 return oppilaitosKoodi.koodiUri === koodiUri;
             })[0];
             return Object.assign({}, rajoite, {lokalitointi: KoodistoKoodi.getLocalizedName(koodi)});
@@ -159,4 +168,27 @@ app.controller('LisatietotyyppiController', function ($scope, $filter, KoodistoC
         return lokalisoidutRajoitteet;
     };
 
+    function getOppilaitostyyppiRajoitteet() {
+        return vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
+            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
+        })
+    }
+
+    vm.isOppilaitosRajoiteSelected = function () {
+        return vm.lisatietoDto.rajoitteet.some(function (rajoite) {
+            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
+        });
+    };
+
+    vm.isOppilaitosSelected = function () {
+        return vm.lisatietoDto.rajoitteet.some(function (rajoite) {
+            return rajoite.arvo === ORGANISAATIOTYYPPI_OPPILAITOS_FI;
+        });
+    };
+
+    vm.isLisatietotyyppiNotUnique = function (uusiLisatietotyyppi) {
+        return vm.model.lisatietotyypit.some(function (lisatietotyyppi) {
+            return uusiLisatietotyyppi === lisatietotyyppi;
+        });
+    };
 });

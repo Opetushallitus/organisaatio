@@ -1,12 +1,12 @@
 
-app.controller('TyyppienHallintaController', function ($scope) {
-    $scope.templates = [
+app.controller('TyyppienHallintaController', function () {
+    this.templates = [
         {nimi: 'tyyppienhallinta.yhteystietotyyppi', url: TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'},
         {nimi: 'tyyppienhallinta.lisatietotyyppi', url: TEMPLATE_URL_BASE + 'lisatietotyyppi.html'}
     ];
-    $scope.template = $scope.templates[0];
+    this.template = this.templates[0];
 
-    $scope.setTemplate = function (template) {
-        $scope.template = template;
+    this.setTemplate = function (template) {
+        this.template = template;
     }
 });
