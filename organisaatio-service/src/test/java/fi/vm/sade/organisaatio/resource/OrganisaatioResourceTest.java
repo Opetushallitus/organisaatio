@@ -76,6 +76,24 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    public void testParentOidsWithRoot() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid});
+
+        String s = res.parentoids(rootOrganisaatioOid);
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
+    public void testParentOidsWithoutOrg() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid, "does_not_exist"});
+
+        String s = res.parentoids("does_not_exist");
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
     public void testChangeParentOid() throws Exception {
         String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
