@@ -1,5 +1,5 @@
 <div ng-controller="LisatietotyyppiController as lisatieto">
-    <form>
+    <form name="form">
         <h1 tt="LisatietotyyppiForm.otsikko">LisatietotyyppiForm.otsikko</h1>
 
         <select class="span4"
@@ -8,7 +8,7 @@
                 ng-options="lisatietotyyppi for lisatietotyyppi in lisatieto.model.lisatietotyypit">
             <option value="" tt="LisatietotyyppiForm.valitseTyyppi">LisatietotyyppiForm.valitseTyyppi</option>
         </select>
-        <hr>
+
 
         <div ng-if="lisatieto.valittuLisatietotyyppi">
             <!-- Nimi -->
@@ -21,11 +21,19 @@
                            name="nimi"
                            ng-model="lisatieto.lisatietoDto.nimi"
                            placeholder="{{lisatieto.lisatietoDto.nimi}}"
+                           required
+                           ng-pattern="/^lisatieto\.[a-zA-Z0-9\.]{3,}$/"
+                           unique-lisatietotyyppi-field callback="lisatieto.isLisatietotyyppiNotUnique"
                     />
                     <div>
-                <span class="text-error" ng-show="form.nimi.$error.unique" tt="LisatietotyyppiForm.nimiValidation.notUnique">
-                    LisatietotyyppiForm.nimiValidation.notUnique
-                </span>
+                        <span class="text-error" ng-show="form.nimi.$error.unique" tt="LisatietotyyppiForm.nimiValidation.notUnique">
+                            LisatietotyyppiForm.nimiValidation.notUnique
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-error" ng-show="form.nimi.$error.pattern" tt="LisatietotyyppiForm.nimiValidation.pattern">
+                            LisatietotyyppiForm.nimiValidation.pattern
+                        </span>
                     </div>
                 </div>
             </div>
@@ -71,32 +79,33 @@
             </div>
 
         </div>
-    </form>
 
-    <!-- Napit -->
-    <div class="row">
-        <div class="span6">
-            <button class="btn" ng-click="lisatieto.poistaLisatietotyyppi()" ng-if="lisatieto.valittuLisatietotyyppi" tt="LisatietotyyppiForm.poistaTyyppi">
-                LisatietotyyppiForm.poistaTyyppi
-            </button>
-            <button class="btn" ng-click="lisatieto.uusiLisatietotyyppi()" tt="LisatietotyyppiForm.luoUusi">
-                LisatietotyyppiForm.luoUusi
-            </button>
+        <!-- Napit -->
+        <div class="row">
+            <div class="span6">
+                <button class="btn" ng-click="lisatieto.poistaLisatietotyyppi()" ng-if="lisatieto.valittuLisatietotyyppi" tt="LisatietotyyppiForm.poistaTyyppi">
+                    LisatietotyyppiForm.poistaTyyppi
+                </button>
+                <button class="btn" ng-click="lisatieto.uusiLisatietotyyppi()" tt="LisatietotyyppiForm.luoUusi">
+                    LisatietotyyppiForm.luoUusi
+                </button>
+            </div>
+            <div class="offset7" ng-if="lisatieto.valittuLisatietotyyppi">
+                <button class="btn"
+                        ng-disabled="lisatieto.isLisatietotyyppiNotNew()"
+                        ng-click="lisatieto.tyhjennaLisatietotyyppi()"
+                        tt="LisatietotyyppiForm.peruuta">
+                    LisatietotyyppiForm.peruuta
+                </button>
+                <button class="btn btn-primary"
+                        type="submit"
+                        ng-disabled="lisatieto.isLisatietotyyppiNotNew() || form.nimi.$invalid"
+                        ng-click="lisatieto.luoLisatietotyyppi()"
+                        tt="LisatietotyyppiForm.tallenna">
+                    LisatietotyyppiForm.tallenna
+                </button>
+            </div>
+            <div>&nbsp;</div>
         </div>
-        <div class="offset7" ng-if="lisatieto.valittuLisatietotyyppi">
-            <button class="btn"
-                    ng-disabled="lisatieto.isLisatietotyyppiNotNew()"
-                    ng-click="lisatieto.tyhjennaLisatietotyyppi()"
-                    tt="LisatietotyyppiForm.peruuta">
-                LisatietotyyppiForm.peruuta
-            </button>
-            <button class="btn btn-primary"
-                    ng-disabled="lisatieto.isLisatietotyyppiNotNew()"
-                    ng-click="lisatieto.luoLisatietotyyppi()"
-                    tt="LisatietotyyppiForm.tallenna">
-                LisatietotyyppiForm.tallenna
-            </button>
-        </div>
-        <div>&nbsp;</div>
-    </div>
+    </form>
 </div>

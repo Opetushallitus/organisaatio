@@ -185,4 +185,10 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
             return rajoite.arvo === ORGANISAATIOTYYPPI_OPPILAITOS_FI;
         });
     };
+
+    vm.isLisatietotyyppiNotUnique = function (uusiLisatietotyyppi) {
+        return vm.model.lisatietotyypit.some(function (lisatietotyyppi) {
+            return uusiLisatietotyyppi === lisatietotyyppi;
+        });
+    };
 });
