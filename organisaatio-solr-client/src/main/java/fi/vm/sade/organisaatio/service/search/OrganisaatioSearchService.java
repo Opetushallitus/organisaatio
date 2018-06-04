@@ -24,7 +24,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -371,30 +370,6 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             throw new RuntimeException(e);
         }
 
-    }
-
-    public List<String> findParentOids(String organisationOid) {
-        final SolrQuery q = new SolrQuery(String.format(SolrOrgFields.OID + ":%s", escape(organisationOid)));
-        q.setFields(SolrOrgFields.PATH);
-        final List<String> oids = Lists.newArrayList();
-
-        SolrDocumentList docList;
-        try {
-            docList = solr.query(q).getResults();
-            if (docList.getNumFound() == 1) {
-                SolrDocument doc = docList.get(0);
-                for (Object field : doc.getFieldValues(SolrOrgFields.PATH)) {
-                    if (!rootOrganisaatioOid.equals(field)) {
-                        oids.add((String) field);
-                    }
-                }
-            }
-
-        } catch (SolrServerException e) {
-            throw new RuntimeException(e);
-        }
-
-        return oids;
     }
 
 }
