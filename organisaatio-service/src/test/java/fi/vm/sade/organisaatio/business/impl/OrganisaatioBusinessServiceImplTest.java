@@ -106,12 +106,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         // Make new organisaatiosuhde change
         Date time = new Date();
-        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
+        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (10, 1, 'HISTORIA', ?, ?, ?)",
                 new Object[] {childId, parentId, time});
         // End old organisaatiosuhde
         jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
 
-        Assert.assertEquals("Row count should match!", 9, countRowsInTable("organisaatiosuhde"));
+        Assert.assertEquals("Row count should match!", 10, countRowsInTable("organisaatiosuhde"));
 
         List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);

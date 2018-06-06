@@ -37,7 +37,6 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
@@ -52,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -82,8 +82,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
-    private OrganisaatioSearchService organisaatioSearchService;
-    @Autowired
     private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
     @Autowired
     private ConversionService conversionService;
@@ -110,10 +108,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             s.setOrganisaatioTyyppi(null);
         }
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(!s.getSkipParents(), true);
 
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {

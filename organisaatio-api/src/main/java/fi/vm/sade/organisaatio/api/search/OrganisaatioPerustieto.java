@@ -39,7 +39,7 @@ public class OrganisaatioPerustieto implements Serializable {
 
     private String virastotunnus;
 
-    private int aliorganisaatioMaara;
+    private long aliorganisaatioMaara;
 
     @ApiModelProperty(value = "Oppilaitoksen koodi", required = true)
     private String oppilaitosKoodi;
@@ -248,7 +248,7 @@ public class OrganisaatioPerustieto implements Serializable {
      * 
      */
     @ApiModelProperty(value = "Aliorganisaatioiden määrä", required = true)
-    public int getAliOrganisaatioMaara() {
+    public long getAliOrganisaatioMaara() {
         return aliorganisaatioMaara;
     }
 
@@ -256,7 +256,7 @@ public class OrganisaatioPerustieto implements Serializable {
      * Sets the value of the aliOrganisaatioMaara property.
      * 
      */
-    public void setAliOrganisaatioMaara(int value) {
+    public void setAliOrganisaatioMaara(long value) {
         this.aliorganisaatioMaara = value;
     }
 

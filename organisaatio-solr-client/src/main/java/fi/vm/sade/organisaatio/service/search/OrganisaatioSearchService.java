@@ -65,11 +65,11 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
         long time = System.currentTimeMillis();
         final List<String> kunta = searchCriteria.getKunta();
-        final List<String> restrictionList = searchCriteria.getOidRestrictionList();
-        final String organisaatioTyyppi = searchCriteria.getOrganisaatioTyyppi();
+        final Collection<String> restrictionList = searchCriteria.getOidRestrictionList();
+        final String organisaatioTyyppi = searchCriteria.getOrganisaatioTyyppi().isEmpty() ? null : searchCriteria.getOrganisaatioTyyppi().get(0);
         final List<String> kieli = searchCriteria.getKieli();
         String searchStr = searchCriteria.getSearchStr();
-        String oid = searchCriteria.getOid();
+        String oid = searchCriteria.getOid().isEmpty() ? null : searchCriteria.getOid().iterator().next();
 
         SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, kieli, searchStr, oid);
 
@@ -95,14 +95,14 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     }
 
-    public List<OrganisaatioPerustieto> searchHierarchy(final SearchCriteria searchCriteria) {
+    public List<OrganisaatioPerustieto> searchHierarchy(final SearchCriteria searchCriteria, boolean includeParents) {
         long time = System.currentTimeMillis();
         final List<String> kunta = searchCriteria.getKunta();
-        final List<String> restrictionList = searchCriteria.getOidRestrictionList();
-        final String organisaatioTyyppi    = searchCriteria.getOrganisaatioTyyppi();
+        final Collection<String> restrictionList = searchCriteria.getOidRestrictionList();
+        final String organisaatioTyyppi    = searchCriteria.getOrganisaatioTyyppi().isEmpty() ? null : searchCriteria.getOrganisaatioTyyppi().get(0);
         final List<String> kieli    = searchCriteria.getKieli();
         String searchStr = searchCriteria.getSearchStr();
-        String oid = searchCriteria.getOid();
+        String oid = searchCriteria.getOid().isEmpty() ? null : searchCriteria.getOid().iterator().next();
 
         SolrQuery q = createOrgQuery(searchCriteria, kunta, restrictionList, organisaatioTyyppi, kieli, searchStr, oid);
 
@@ -127,7 +127,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                     paths.add((String) doc.getFieldValue(OID));
                 }
 
-                if (!searchCriteria.getSkipParents()) {
+                if (includeParents) {
                     for (Object path : doc.getFieldValues(PATH)) {
                         if (!rootOrganisaatioOid.equals(path)) {
                             oids.add((String) path);
@@ -189,7 +189,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
 
     private SolrQuery createOrgQuery(
             final SearchCriteria searchCriteria,
-            final List<String> kunta, final List<String> restrictionList,
+            final List<String> kunta, final Collection<String> restrictionList,
             final String organisaatioTyyppi, final List<String> kieli, String searchStr,
             String oid) {
         SolrQuery q = new SolrQuery("*:*");
@@ -249,7 +249,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         return q;
     }
 
-    private void removeEmptyEntries(List<String> queryParams) {
+    private void removeEmptyEntries(Collection<String> queryParams) {
         if(null != queryParams) {
             queryParams.removeAll(Arrays.asList(null, ""));
         }
@@ -259,7 +259,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         addFilterQuery(query, template, paramName, queryParams, false);
     }
 
-    private void addFilterQuery(SolrQuery query, String template, String paramName, List<String> queryParams, boolean allowWildcards) {
+    private void addFilterQuery(SolrQuery query, String template, String paramName, Collection<String> queryParams, boolean allowWildcards) {
         query.addFilterQuery(String.format(template, paramName, Joiner.on(" ")
                 .join(escapeAll(queryParams, allowWildcards))));
     }

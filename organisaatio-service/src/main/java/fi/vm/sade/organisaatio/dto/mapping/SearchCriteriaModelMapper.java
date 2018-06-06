@@ -19,6 +19,12 @@ package fi.vm.sade.organisaatio.dto.mapping;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import static java.util.Arrays.asList;
+import java.util.Collection;
+import static java.util.Collections.emptyList;
+import java.util.List;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.Stream;
 import org.modelmapper.Converter;
 
 import org.modelmapper.PropertyMap;
@@ -58,11 +64,39 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
             }
         };
 
-        
+        // Organisaatiotyyppi
+        final Converter<OrganisaatioSearchCriteria, List<String>> organisaatiotyyppiConverter = new Converter<OrganisaatioSearchCriteria, List<String>>() {
+            @Override
+            public List<String> convert(MappingContext<OrganisaatioSearchCriteria, List<String>> context) {
+                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(context.getSource().getOrganisaatioTyyppi()) : null;
+            }
+        };
+        final Converter<OrganisaatioSearchCriteriaDTOV2, List<String>> organisaatiotyyppiConverterV2 = new Converter<OrganisaatioSearchCriteriaDTOV2, List<String>>() {
+            @Override
+            public List<String> convert(MappingContext<OrganisaatioSearchCriteriaDTOV2, List<String>> context) {
+                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(context.getSource().getOrganisaatioTyyppi()) : null;
+            }
+        };
+
+        // OID
+        final Converter<OrganisaatioSearchCriteria, Collection<String>> oidConverter = new Converter<OrganisaatioSearchCriteria, Collection<String>>() {
+            @Override
+            public List<String> convert(MappingContext<OrganisaatioSearchCriteria, Collection<String>> context) {
+                return context.getSource().getOid() != null ? asList(context.getSource().getOid()) : null;
+            }
+        };
+        final Converter<OrganisaatioSearchCriteriaDTOV2, Collection<String>> oidConverterV2 = new Converter<OrganisaatioSearchCriteriaDTOV2, Collection<String>>() {
+            @Override
+            public List<String> convert(MappingContext<OrganisaatioSearchCriteriaDTOV2, Collection<String>> context) {
+                return context.getSource().getOid() != null ? asList(context.getSource().getOid()) : null;
+            }
+        };
+
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV2, SearchCriteria>() {
             @Override
             protected void configure() {    
-                // Mappays menee suoraan ilman säätöjä
+                using(organisaatiotyyppiConverterV2).map(source).setOrganisaatioTyyppi(emptyList());
+                using(oidConverterV2).map(source).setOid(emptyList());
             }
         });
 
@@ -74,8 +108,15 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
                 using(suunnitellutConverter).map(source).setSuunnitellut(false);
                 using(aktiivisetConverter).map(source).setAktiiviset(false);
                 using(lakkautetutConverter).map(source).setLakkautetut(false);
+                using(organisaatiotyyppiConverter).map(source).setOrganisaatioTyyppi(emptyList());
+                using(oidConverter).map(source).setOid(emptyList());
             }
         });
 
     }
+
+    private static List<String> filterRyhma(String organisaatiotyyppi) {
+        return Stream.of(organisaatiotyyppi).filter(tyyppi -> !"Ryhma".equals(tyyppi)).collect(toList());
+    }
+
 }
