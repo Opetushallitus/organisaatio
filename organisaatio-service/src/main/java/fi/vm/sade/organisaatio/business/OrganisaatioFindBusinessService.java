@@ -16,9 +16,12 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.service.search.SearchConfig;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +32,15 @@ import java.util.List;
  * @author simok
  */
 public interface OrganisaatioFindBusinessService {
+
+    /**
+     * Yleiskäyttöinen hakutoiminto.
+     *
+     * @param criteria hakukriteerit
+     * @param config haun asetukset
+     * @return organisaatioiden perustiedot
+     */
+    List<OrganisaatioPerustieto> findBy(SearchCriteria criteria, SearchConfig config);
 
     /**
      * Idllä haku (Id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi, toimipistekoodi)

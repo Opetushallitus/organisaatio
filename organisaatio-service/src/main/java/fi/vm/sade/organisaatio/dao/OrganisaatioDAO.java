@@ -20,18 +20,38 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author simok
  */
 public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
+
+    /**
+     * Palauttaa hakukriteerien mukaiset organisaatiot (ei ryhmiä).
+     *
+     * @param criteria hakukriteerit
+     * @param now nykyhetki
+     * @return organisaatiot
+     */
+    List<Organisaatio> findBy(SearchCriteria criteria, Date now);
+
+    /**
+     * Palauttaa organisaatioiden aktiivisten aliorganisaatioiden lukumäärät.
+     *
+     * @param oids organisaation oid
+     * @param now nykyhetki
+     * @return aliorganisaatioiden lukumäärät
+     */
+    Map<String, Long> countActiveChildrenByOid(Collection<String> oids, Date now);
 
     /**
      * Haetaan organisaatioita annetuilla hakukriteereillä

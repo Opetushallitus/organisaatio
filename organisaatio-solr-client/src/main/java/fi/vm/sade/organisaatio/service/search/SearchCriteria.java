@@ -17,6 +17,7 @@ package fi.vm.sade.organisaatio.service.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class SearchCriteria {
@@ -24,19 +25,19 @@ public class SearchCriteria {
     private boolean aktiiviset;
     private boolean suunnitellut;
     private boolean lakkautetut;
+    private Boolean poistettu;
 
     private List<String> kunta = new ArrayList<String>();
-    private String organisaatiotyyppi;
+    private List<String> organisaatiotyyppi = new ArrayList<String>();
     private List<String> oppilaitostyyppi = new ArrayList<String>();
     private List<String> kieli = new ArrayList<String>();
 
-    private List<String> oidRestrictionList = new ArrayList<String>();
+    private Collection<String> oidRestrictionList = new ArrayList<String>();
 
     private String searchStr;
 
-    private String oid;
-
-    private boolean skipParents;
+    private Collection<String> oid = new ArrayList<>();
+    private Collection<String> parentOidPaths = new ArrayList<String>();
 
     /**
      * Default no-arg constructor
@@ -70,6 +71,14 @@ public class SearchCriteria {
         this.lakkautetut = lakkautetut;
     }
 
+    public Boolean getPoistettu() {
+        return poistettu;
+    }
+
+    public void setPoistettu(Boolean poistettu) {
+        this.poistettu = poistettu;
+    }
+
     public List<String> getKunta() {
         return kunta;
     }
@@ -81,14 +90,17 @@ public class SearchCriteria {
         }
     }
 
-    public String getOrganisaatioTyyppi() {
+    public List<String> getOrganisaatioTyyppi() {
         return organisaatiotyyppi;
     }
 
-    public void setOrganisaatioTyyppi(String value) {
-        this.organisaatiotyyppi = value;
+    public void setOrganisaatioTyyppi(List<String> organisaatiotyyppi) {
+        this.organisaatiotyyppi.clear();
+        if (organisaatiotyyppi != null) {
+            this.organisaatiotyyppi.addAll(organisaatiotyyppi);
+        }
     }
-    
+
     public List<String> getKieli() {
         return kieli;
     }
@@ -111,11 +123,11 @@ public class SearchCriteria {
         }
     }
 
-    public List<String> getOidRestrictionList() {
+    public Collection<String> getOidRestrictionList() {
         return this.oidRestrictionList;
     }
 
-    public void setOidRestrictionList(List<String> oidRestrictionList) {
+    public void setOidRestrictionList(Collection<String> oidRestrictionList) {
         this.oidRestrictionList.clear();
         this.oidRestrictionList.addAll(oidRestrictionList);
     }
@@ -128,20 +140,26 @@ public class SearchCriteria {
         this.searchStr = searchStr;
     }
 
-    public boolean getSkipParents() {
-        return skipParents;
-    }
-
-    public void setSkipParents(boolean skipParents) {
-        this.skipParents = skipParents;
-    }
-
-    public String getOid() {
+    public Collection<String> getOid() {
         return oid;
     }
 
-    public void setOid(String oid) {
-        this.oid = oid;
+    public void setOid(Collection oid) {
+        this.oid.clear();
+        if (oid != null) {
+            this.oid.addAll(oid);
+        }
+    }
+
+    public Collection<String> getParentOidPaths() {
+        return parentOidPaths;
+    }
+
+    public void setParentOidPaths(Collection<String> parentOidPaths) {
+        this.parentOidPaths.clear();
+        if (parentOidPaths != null) {
+            this.parentOidPaths.addAll(parentOidPaths);
+        }
     }
 
 }

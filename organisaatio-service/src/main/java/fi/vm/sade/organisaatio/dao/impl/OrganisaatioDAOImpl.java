@@ -19,8 +19,14 @@ package fi.vm.sade.organisaatio.dao.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
+import static com.querydsl.core.group.GroupBy.groupBy;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import static com.querydsl.core.types.dsl.Expressions.allOf;
+import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -34,6 +40,9 @@ import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import static fi.vm.sade.organisaatio.service.util.CollectionUtil.ofNullableAndNotEmpty;
+import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +74,133 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
+
+    @Override
+    public List<Organisaatio> findBy(SearchCriteria criteria, Date now) {
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager()).from(qOrganisaatio).select(qOrganisaatio);
+
+        Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
+
+        Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu
+                -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
+
+        ofNullableAndNotEmpty(criteria.getKunta()).ifPresent(kunnat
+                -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
+
+        {
+            QOrganisaatio qOrganisaatioSub = new QOrganisaatio("tyyppiSub");
+            StringPath qTyyppi = Expressions.stringPath("tyyppi");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qOrganisaatioSub)
+                    .from(qOrganisaatioSub)
+                    .join(qOrganisaatioSub.tyypit, qTyyppi);
+            ifPresentOrElse(ofNullableAndNotEmpty(criteria.getOrganisaatioTyyppi()),
+                    organisaatiotyypit -> subquery.where(qTyyppi.in(organisaatiotyypit)),
+                    () -> subquery.where(qTyyppi.notIn("Ryhma")));
+            query.where(qOrganisaatio.in(subquery));
+        }
+
+        ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit
+                -> query.where(qOrganisaatio.oppilaitosTyyppi.in(oppilaitostyypit)));
+
+        ofNullableAndNotEmpty(criteria.getKieli()).ifPresent(kielet -> {
+            QOrganisaatio qOrganisaatioSub = new QOrganisaatio("kieliSub");
+            StringPath qKieli = Expressions.stringPath("kieli");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qOrganisaatioSub)
+                    .from(qOrganisaatioSub)
+                    .join(qOrganisaatioSub.kielet, qKieli)
+                    .where(qKieli.in(kielet));
+            query.where(qOrganisaatio.in(subquery));
+        });
+
+        ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids
+                -> query.where(oids.stream().map(oid -> qOrganisaatio.parentOidPath.contains(oid))
+                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
+
+        Optional.ofNullable(criteria.getSearchStr()).ifPresent(searchStr -> {
+            query.where(anyOf(
+                    qOrganisaatio.nimihaku.containsIgnoreCase(searchStr),
+                    qOrganisaatio.ytunnus.contains(searchStr),
+                    qOrganisaatio.oppilaitosKoodi.contains(searchStr)
+            ));
+        });
+
+        ofNullableAndNotEmpty(criteria.getOid()).ifPresent(oids
+                -> query.where(qOrganisaatio.oid.in(oids)));
+
+        ofNullableAndNotEmpty(criteria.getParentOidPaths()).ifPresent(parentOidPaths
+                -> query.where(parentOidPaths.stream().map(parentOidPath -> qOrganisaatio.parentOidPath.startsWith(parentOidPath))
+                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
+
+        return query.fetch();
+    }
+
+    private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio, Date now) {
+        // Ei aktiivisia, suunniteltuja eikä lakkautettuja - tätä ei pitäisi tapahtua
+        if (!criteria.getAktiiviset() && !criteria.getSuunnitellut() && !criteria.getLakkautetut()) {
+            return allOf(
+                    qOrganisaatio.alkuPvm.before(now),
+                    qOrganisaatio.alkuPvm.after(now),
+                    qOrganisaatio.lakkautusPvm.before(now)
+            );
+        }
+
+        // Aktiiviset, Suunnitellut, Lakkautetut
+        if (criteria.getAktiiviset() && criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Ei päivämääräfiltteröintiä
+            return null;
+        }
+
+        // Suunnitellut, Lakkautetut
+        if (!criteria.getAktiiviset() && criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Alkupvm tulevaisuudessa tai lakkautuspvm menneisyydessä
+            return anyOf(qOrganisaatio.alkuPvm.after(now), qOrganisaatio.lakkautusPvm.before(now));
+        }
+
+        // Lakkautetut
+        if (!criteria.getAktiiviset() && !criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Haetaan mukaan kaikki lakkautetut - lakkautuspäivämäärä menneisyydessä
+            return qOrganisaatio.lakkautusPvm.before(now);
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        // Alkupäivämäärän käsittely -otetaanko mukaan suunnitellut vai filtteröidäänkö ne ulos
+        if (criteria.getSuunnitellut() && !criteria.getAktiiviset()) {
+            // Filtteröidään pois aktiiviset - joiden alkupvm menneisyydessä
+            booleanBuilder.and(qOrganisaatio.alkuPvm.after(now));
+        } else if (!criteria.getSuunnitellut() && criteria.getAktiiviset()) {
+            // Filtteröidään pois suunnitellut - joiden alkupvm tulevaisuudessa
+            booleanBuilder.and(anyOf(qOrganisaatio.alkuPvm.isNull(), qOrganisaatio.alkuPvm.loe(now)));
+        }
+
+        // Loppupäivämäärän käsittely - otetaanko mukaan lakkautetut vai filtteröidäänkö ne ulos
+        if (!criteria.getLakkautetut()) {
+            // Filteröidään pois lakkautetut.
+            booleanBuilder.and(anyOf(qOrganisaatio.lakkautusPvm.isNull(), qOrganisaatio.lakkautusPvm.goe(now)));
+        }
+
+        return booleanBuilder;
+    }
+
+    @Override
+    public Map<String, Long> countActiveChildrenByOid(Collection<String> oids, Date now) {
+        QOrganisaatio qParent = new QOrganisaatio("parent");
+        QOrganisaatioSuhde qOrganisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+        QOrganisaatio qChild = new QOrganisaatio("child");
+
+        JPAQuery<Object> query = new JPAQuery<>(getEntityManager())
+                .from(qParent)
+                .join(qParent.childSuhteet, qOrganisaatioSuhde)
+                .join(qOrganisaatioSuhde.child, qChild)
+                .where(qOrganisaatioSuhde.suhdeTyyppi.ne(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS))
+                .where(anyOf(qOrganisaatioSuhde.loppuPvm.isNull(), qOrganisaatioSuhde.loppuPvm.after(now)))
+                .where(qChild.organisaatioPoistettu.isFalse())
+                .where(anyOf(qChild.lakkautusPvm.isNull(), qChild.lakkautusPvm.after(now)))
+                .where(qParent.oid.in(oids));
+
+        return query.groupBy(qParent.oid).transform(groupBy(qParent.oid).as(qChild.count()));
+    }
 
     /**
      * Find the children of given parent organisation.

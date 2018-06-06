@@ -34,6 +34,7 @@
                 <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisaatioConverter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.LisatietoConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter"/>
             </list>
         </property>
     </bean>

@@ -321,7 +321,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
         // Map api search criteria to solr search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(apiSearchCriteria, SearchCriteria.class);
 
-        final List<OrganisaatioPerustieto> search = searchService.searchHierarchy(searchCriteria);
+        final List<OrganisaatioPerustieto> search = searchService.searchHierarchy(searchCriteria, !apiSearchCriteria.getSkipParents());
         final List<String> wantedResultsList = Lists.newArrayList(wantedResults);
 
         Assert.assertEquals(createAssertMessage(searchCriteria, search, wantedResults), count, search.size());
