@@ -228,7 +228,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public Map<String, Long> countActiveChildrenByOid(Collection<String> oids, Date now) {
+    public Map<String, Long> countActiveChildrenByOid(Date now) {
         QOrganisaatio qParent = new QOrganisaatio("parent");
         QOrganisaatioSuhde qOrganisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qChild = new QOrganisaatio("child");
@@ -240,8 +240,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .where(qOrganisaatioSuhde.suhdeTyyppi.ne(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS))
                 .where(anyOf(qOrganisaatioSuhde.loppuPvm.isNull(), qOrganisaatioSuhde.loppuPvm.after(now)))
                 .where(qChild.organisaatioPoistettu.isFalse())
-                .where(anyOf(qChild.lakkautusPvm.isNull(), qChild.lakkautusPvm.after(now)))
-                .where(qParent.oid.in(oids));
+                .where(anyOf(qChild.lakkautusPvm.isNull(), qChild.lakkautusPvm.after(now)));
 
         return query.groupBy(qParent.oid).transform(groupBy(qParent.oid).as(qChild.count()));
     }

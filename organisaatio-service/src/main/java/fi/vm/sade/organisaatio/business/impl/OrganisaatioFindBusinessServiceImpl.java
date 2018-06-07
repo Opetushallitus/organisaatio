@@ -42,7 +42,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 
@@ -105,8 +104,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         }
 
         // haetaan aliorganisaatioiden lukumäärät (myös hakukriteerien ulkopuolella olevat)
-        Set<String> oids = entities.stream().map(Organisaatio::getOid).collect(toSet());
-        Map<String, Long> childCount = organisaatioDAO.countActiveChildrenByOid(oids, now);
+        Map<String, Long> childCount = organisaatioDAO.countActiveChildrenByOid(now);
 
         return entities.stream()
                 .filter(entity -> !rootOrganisaatioOid.equals(entity.getOid()))
