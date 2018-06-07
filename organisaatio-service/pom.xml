@@ -32,19 +32,19 @@
                 </configuration>
             </plugin>
 
+            <!-- Generate querydsl metadata -->
             <plugin>
                 <groupId>com.mysema.maven</groupId>
-                <artifactId>maven-apt-plugin</artifactId>
-                <version>1.0.4</version>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.1.3</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>process</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                         <configuration>
-                            <outputDirectory>target/generated-sources</outputDirectory>
-                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                            <outputDirectory>target/generated-sources/java</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                         </configuration>
                     </execution>
                 </executions>
@@ -81,11 +81,6 @@
                     <databaseMinorVersion>3</databaseMinorVersion>
                     <format>true</format>
                     <lineSeparator>LF</lineSeparator>
-                    <!--<createSourceMode>metadata_2</createSourceMode>-->
-                    <!--<createSourceFile>${project.build.directory}/hibernate3/sql/</createSourceFile>-->
-                    <!--<properties>-->
-                        <!--<org.hibernate>org.hibernate.dialect.PostgreSQL9Dialect</org.hibernate>-->
-                    <!--</properties>-->
                     <packageToScan>
                         <scan>fi.vm.sade.organisaatio.model</scan>
                     </packageToScan>
@@ -204,12 +199,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>13.0.1</version>
+            <version>20.0</version>
         </dependency>
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
+            <groupId>com.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
-            <version>2.6.0</version>
+            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -269,6 +264,20 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>${el-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>${el-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
         </dependency>
@@ -311,6 +320,11 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-service-description</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-java2swagger-plugin</artifactId>
             <version>${cxf.version}</version>
         </dependency>
 
@@ -360,6 +374,14 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -488,7 +510,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
+            <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <version>${querydsl.version}</version>
             <exclusions>
@@ -514,42 +536,6 @@
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-common</artifactId>
             <version>${generic.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <artifactId>dependencies-service</artifactId>
-            <version>${generic.version}</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.sf.ehcache</groupId>
-                    <artifactId>ehcache-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-orm</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-jaxrs</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.viestintapalvelu</groupId>
@@ -709,9 +695,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
+            <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <version>${querydsl.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -727,17 +714,42 @@
             <!-- ei käytännössä kuitenkaan ollut pelkällä test-scopella, koska ei käänny ilman (tullut api-moduulin xml-riippuvuuden kautta)-->
             <!--<scope>${slf4j-api.scope}</scope>-->
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
         <!-- Rajapinnat :: YTJ :: API -->
         <dependency>
             <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
             <artifactId>ytj-api</artifactId>
             <version>${rajapinnat.ytj.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.rajapinnat</groupId>
             <artifactId>ytj-service</artifactId>
             <version>${rajapinnat.ytj.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Koodisto -->

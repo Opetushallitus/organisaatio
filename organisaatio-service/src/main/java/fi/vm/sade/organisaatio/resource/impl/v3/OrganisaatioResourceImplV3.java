@@ -245,5 +245,4 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
         return results;
     }
-
 }

@@ -15,11 +15,11 @@
  */
 package fi.vm.sade.organisaatio.service.converter.v3;
 
-import fi.vm.sade.generic.service.conversion.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
+import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
@@ -30,11 +30,8 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- *
- * @author rsal
- */
 public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOV3ToOrganisaatioConverter.class);
@@ -90,6 +87,16 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setTyypit(convertListToList(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
+        s.setOrganisaatioLisatietotyypit(t.getLisatiedot().stream()
+                .map(lisatietoNimi -> {
+                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+                    Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+                    lisatietotyyppi.setNimi(lisatietoNimi);
+                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                    organisaatioLisatietotyyppi.setOrganisaatio(s);
+                    return organisaatioLisatietotyyppi;
+                })
+                .collect(Collectors.toSet()));
         s.setRyhmatyypit(convertSetToSet(t.getRyhmatyypit()));
         s.setKayttoryhmat(convertSetToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
@@ -117,7 +124,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
     }
 
     private List<YhteystietoArvo> convertYhteystietoArvos(List<Map<String, String>> arvoMaps) {
-        ArrayList<YhteystietoArvo> arvos = new ArrayList<YhteystietoArvo>(arvoMaps.size());
+        ArrayList<YhteystietoArvo> arvos = new ArrayList<>(arvoMaps.size());
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
             arvo.setKentta(new YhteystietoElementti());

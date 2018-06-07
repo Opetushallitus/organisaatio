@@ -2,11 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd
-        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- NON SERVICE VERSION -->
     <bean id="oidService" class="fi.vm.sade.oid.service.mock.OIDServiceMock"/>
@@ -25,7 +23,6 @@
         <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
 
-    <bean class="fi.vm.sade.organisaatio.config.UrlConfiguration"/>
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
 </beans>

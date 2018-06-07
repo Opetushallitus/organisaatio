@@ -15,8 +15,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;

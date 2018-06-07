@@ -15,37 +15,20 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
-import fi.vm.sade.generic.service.conversion.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietoElementti;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.model.BinaryData;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *

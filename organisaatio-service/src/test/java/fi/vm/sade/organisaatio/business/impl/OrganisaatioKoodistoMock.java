@@ -5,6 +5,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Date;
+import java.util.Set;
 
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
@@ -20,6 +21,11 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
     public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
+        return null;
+    }
+
+    @Override
+    public Set<String> haeOppilaitoskoodit() {
         return null;
     }
 }

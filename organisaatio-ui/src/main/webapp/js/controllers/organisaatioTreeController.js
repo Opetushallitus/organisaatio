@@ -239,7 +239,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
 
     $scope.organisaatiotyyppiChanged = function() {
         if ($scope.hakuehdot.organisaatiotyyppi !== 'Oppilaitos') {
-            $scope.hakuehdot.oppilaitostyyppi = '';
+            $scope.hakuehdot.oppilaitostyyppiKoodi = '';
         }
     };
 

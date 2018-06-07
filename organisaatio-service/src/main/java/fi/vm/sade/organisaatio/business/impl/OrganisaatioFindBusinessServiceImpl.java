@@ -24,7 +24,6 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +46,6 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
-
-    @Autowired
-    private ConversionService conversionService;
 
     @Override
     @Transactional(readOnly = true)
@@ -108,5 +104,4 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
         return organisaatioSuhdeDAO.findLiitokset(date);
     }
-
 }

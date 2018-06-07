@@ -37,9 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Antti Salonen
- */
 public class ConverterFactory {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
     // Entity classes should not be aware of their DTOs (and there might/should be many per entity)
