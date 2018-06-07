@@ -307,7 +307,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return Collections.unmodifiableList(tyypit);
     }
 
-    public void setTyypit(List<String> tyypit) {
+    public void setTyypit(Collection<String> tyypit) {
         this.tyypit.clear();
         this.tyypit.addAll(tyypit);
     }
@@ -316,7 +316,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return Collections.unmodifiableList(kielet);
     }
 
-    public void setKielet(List<String> kielet) {
+    public void setKielet(Collection<String> kielet) {
         this.kielet.clear();
         this.kielet.addAll(kielet);
     }
