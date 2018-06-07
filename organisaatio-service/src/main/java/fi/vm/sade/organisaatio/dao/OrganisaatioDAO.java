@@ -42,7 +42,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param now nykyhetki
      * @return organisaatiot
      */
-    List<Organisaatio> findBy(SearchCriteria criteria, Date now);
+    Collection<Organisaatio> findBy(SearchCriteria criteria, Date now);
 
     /**
      * Palauttaa organisaatioiden aktiivisten aliorganisaatioiden lukumäärät.
