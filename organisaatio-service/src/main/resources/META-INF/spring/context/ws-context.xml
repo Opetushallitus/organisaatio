@@ -27,6 +27,8 @@
     <bean id="inputFilter" class="fi.vm.sade.organisaatio.service.filters.InputFilter"/>
     <bean id="outputFilter" class="fi.vm.sade.organisaatio.service.filters.OutputFilter"/>
 
+    <bean id="paramConverterProviders" class="fi.vm.sade.organisaatio.resource.provider.ParamConverterProviders"/>
+
     <!--swagger-->
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
         <property name="resourcePackage" value="fi.vm.sade.organisaatio.resource" />
@@ -60,6 +62,7 @@
             <ref bean="organisaatioJsonProvider"/>
             <ref bean="inputFilter"/>
             <ref bean="outputFilter"/>
+            <ref bean="paramConverterProviders"/>
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />

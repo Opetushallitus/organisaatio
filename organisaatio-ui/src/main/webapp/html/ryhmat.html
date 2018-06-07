@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<form name="mainform" class="form-inline" novalidate>
+    <h1 tt="RyhmienHallinta.otsikko">RyhmienHallinta.otsikko</h1>
+
+    <div class="row">
+        <div class="controls">
+            <button class="btn" ng-click="vm.luoUusi()" tt="RyhmienHallinta.luoUusi">
+                RyhmienHallinta.luoUusi
+            </button>
+        </div>
+        <div class="controls">
+            <input id="q" type="text" name="q" class="span12"
+                   ng-model="vm.filters.q"
+                   placeholder="{{t('RyhmienHallinta.hakutermi')}}"/>
+        </div>
+        <div class="controls controls-row">
+            <select id="ryhmatyyppi" ng-model="vm.filters.ryhmatyyppi" class="span4"
+                    ng-options="ryhmatyyppi.uri as ryhmatyyppi.nimi for ryhmatyyppi in vm.koodisto.ryhmatyypit | orderBy:'nimi'">
+                <option value="" tt="RyhmienHallinta.ryhmatyyppi">RyhmienHallinta.ryhmatyyppi</option>
+            </select>
+            <select id="kayttoryhma" ng-model="vm.filters.kayttoryhma" class="span4"
+                    ng-options="kayttoryhma.uri as kayttoryhma.nimi for kayttoryhma in vm.koodisto.kayttoryhmat | orderBy:'nimi'">
+                <option value="" tt="RyhmienHallinta.kayttoryhma">RyhmienHallinta.kayttoryhma</option>
+            </select>
+            <select id="kayttoryhma" ng-model="vm.filters.aktiivinen" class="span4">
+                <option value="" tt="RyhmienHallinta.kaikki">RyhmienHallinta.kaikki</option>
+                <option value="true" tt="RyhmienHallinta.aktiivinen">RyhmienHallinta.aktiivinen</option>
+                <option value="false" tt="RyhmienHallinta.passiivinen">RyhmienHallinta.passiivinen</option>
+            </select>
+        </div>
+        <div class="controls">
+            <button class="btn btn-primary" ng-click="vm.hae()"
+                    tt="RyhmienHallinta.hae">
+                RyhmienHallinta.hae
+            </button>
+        </div>
+    </div>
+
+    <table class="table table-striped" ng-if="vm.ryhmatMaara !== undefined">
+        <caption ng-if="vm.ryhmatMaara === 0" tt="RyhmienHallinta.eiloytynyt">
+            RyhmienHallinta.eiloytynyt
+        </caption>
+        <thead>
+            <tr>
+                <th tt="RyhmienHallinta.nimi">RyhmienHallinta.nimi</th>
+                <th>OID</th>
+                <th tt="RyhmienHallinta.ryhmatyyppi">RyhmienHallinta.ryhmatyyppi</th>
+                <th tt="RyhmienHallinta.kayttoryhma">RyhmienHallinta.kayttoryhma</th>
+                <th tt="RyhmienHallinta.tila">RyhmienHallinta.tila</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="ryhma in vm.ryhmat | orderBy: 'lokalisoituNimi'">
+                <td><a href="ryhmat/{{ ryhma.oid }}">{{ ryhma.lokalisoituNimi }}</a></td>
+                <td>{{ ryhma.oid }}</td>
+                <td>{{ ryhma.lokalisoituRyhmatyyppi }}</td>
+                <td>{{ ryhma.lokalisoituKayttoryhma }}</td>
+                <td>{{ ryhma.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+</form>

@@ -4,6 +4,7 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import io.swagger.annotations.*;
 
 import javax.ws.rs.*;
@@ -55,7 +56,7 @@ public interface OrganisaatioResourceV3 {
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
             response = OrganisaatioGroupDTOV3.class)
-    public List<OrganisaatioGroupDTOV3> groups() throws Exception;
+    public List<OrganisaatioGroupDTOV3> groups(@BeanParam RyhmaCriteriaDtoV3 criteria) throws Exception;
 
     @GET
     @Path("/{id}")

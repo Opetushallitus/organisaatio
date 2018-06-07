@@ -23,34 +23,7 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
     var loadingService = $injector.get('LoadingService');
 
     var model = {
-        ryhmat : [],
-        groups : [],
         paivitys : {},
-
-        reload : function(parentOid, callback, virheCallback) {
-            model.ryhmat.length = 0;
-            Ryhmat.get({oid: parentOid}, function(result) {
-                result.forEach(function(ryhma) {
-                    if (!ryhma.kuvaus) {
-                        ryhma.kuvaus2 = {};
-                    }
-                    else {
-                        ryhma.kuvaus2 = angular.copy(ryhma.kuvaus);
-                        delete ryhma.kuvaus;
-                    }
-                    ryhma.tyypit = ['Ryhma'];
-                    if (ryhma.ryhmatyypit.length===0) {
-                        ryhma.ryhmatyypit = [''];
-                    }
-                    if (ryhma.kayttoryhmat.length===0) {
-                        ryhma.kayttoryhmat = [''];
-                    }
-                    model.ryhmat.push(ryhma);
-                });
-                model.groups = model.ryhmat;
-                callback();
-            }, virheCallback);
-        },
 
         clearUpdateInfo : function() {
             $log.debug("clearUpdateInfo()");
@@ -79,29 +52,6 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
             }, virheCallback);
         },
 
-        create : function(parentOid) {
-            var ryhma = {
-                version: 0,
-                parentOid: parentOid,
-                oid: null,
-                tyypit: ['Ryhma'],
-                ryhmatyypit: [''],
-                kayttoryhmat: [''],
-                "nimi": {
-                    "fi": null,
-                    "sv": null,
-                    "en": null
-                },
-                "kuvaus2": {
-                    "kieli_fi#1": null,
-                    "kieli_sv#1": null,
-                    "kieli_en#1": null
-                }
-            };
-            model.ryhmat.push(ryhma);
-            return ryhma;
-        },
-
         save : function(ryhma, callback, virheCallback) {
             var fn;
             if (ryhma.oid === null) {
@@ -110,30 +60,14 @@ app.factory('RyhmienHallintaModel', function($log, $injector,
                 fn = Organisaatio.update;
             }
             fn(ryhma, function(result) {
-                var ind = model.ryhmat.indexOf(ryhma);
-                if (ind !== -1) {
-                    model.ryhmat.splice(ind, 1);
-                }
-                model.ryhmat.push(result.organisaatio);
                 callback(result.organisaatio);
             }, virheCallback);
         },
 
         delete : function(ryhma, callback, virheCallback) {
-            var ind = model.ryhmat.indexOf(ryhma);
-            if (ryhma.oid !== null) {
-                Organisaatio.delete(ryhma, function(result) {
-                    if (ind !== -1) {
-                        model.ryhmat.splice(ind, 1);
-                    }
-                    callback();
-                }, virheCallback);
-            } else {
-                if (ind !== -1) {
-                    model.ryhmat.splice(ind, 1);
-                }
+            Organisaatio.delete(ryhma, function(result) {
                 callback();
-            }
+            }, virheCallback);
         }
 
     };
