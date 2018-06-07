@@ -101,7 +101,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             }
             if (config.isChildrenIncluded() && !parentOidPaths.isEmpty()) {
                 SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-                childrenCriteria.setParentOidPaths(parentOidPaths);
+                // optimoidaan parentOidPath: poistetaan organisaatiot joiden yläorganisaatio on myös mukana listassa
+                List<String> optimizedParentOidPaths = parentOidPaths.stream().filter(parentOidPath1
+                        -> parentOidPaths.stream().noneMatch(parentOidPath2
+                                -> !parentOidPath1.equals(parentOidPath2)
+                                        && parentOidPath1.startsWith(parentOidPath2))).collect(toList());
+                childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
                 entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
             }
         }
