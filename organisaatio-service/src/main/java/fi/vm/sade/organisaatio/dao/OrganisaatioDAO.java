@@ -48,11 +48,10 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     /**
      * Palauttaa organisaatioiden aktiivisten aliorganisaatioiden lukumäärät.
      *
-     * @param oids organisaation oid
      * @param now nykyhetki
      * @return aliorganisaatioiden lukumäärät
      */
-    Map<String, Long> countActiveChildrenByOid(Collection<String> oids, Date now);
+    Map<String, Long> countActiveChildrenByOid(Date now);
 
     /**
      * Haetaan organisaatioita annetuilla hakukriteereillä
