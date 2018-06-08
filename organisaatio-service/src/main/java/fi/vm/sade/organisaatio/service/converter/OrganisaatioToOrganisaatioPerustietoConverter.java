@@ -36,7 +36,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
         destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
         destination.setOppilaitostyyppi(source.getOppilaitosTyyppi());
         destination.setToimipistekoodi(source.getToimipisteKoodi());
-        destination.setMatch(true);
+        //destination.setMatch asetetaan muualla
         destination.setNimi(source.getNimi().getValues());
         source.getTyypit().stream()
                 .map(OrganisaatioTyyppi::fromValue)

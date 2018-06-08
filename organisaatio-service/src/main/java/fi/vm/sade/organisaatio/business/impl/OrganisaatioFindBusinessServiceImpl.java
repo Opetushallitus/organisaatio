@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 
@@ -82,6 +83,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Date now = timeService.getNow();
         Set<Organisaatio> entities = new TreeSet<>((o1, o2) -> o1.getOid().compareTo(o2.getOid()));
         entities.addAll(organisaatioDAO.findBy(criteria, now));
+        Set<String> oids = entities.stream().map(Organisaatio::getOid).collect(toSet());
 
         // haetaan ylä- ja aliorganisaatiot
         if (config.isParentsIncluded() || config.isChildrenIncluded()) {
@@ -122,6 +124,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 .map(entity -> conversionService.convert(entity, OrganisaatioPerustieto.class))
                 .map(dto -> {
                     dto.setAliOrganisaatioMaara(childCount.getOrDefault(dto.getOid(), 0L));
+                    dto.setMatch(oids.contains(dto.getOid()));
                     return dto;
                 })
                 .collect(toList());
