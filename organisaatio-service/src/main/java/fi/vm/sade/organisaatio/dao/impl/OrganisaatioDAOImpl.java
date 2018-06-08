@@ -125,9 +125,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         ofNullableAndNotEmpty(criteria.getKieli()).ifPresent(kielet
                 -> query.where(qKieli.in(kielet)));
 
-        ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids
-                -> query.where(oids.stream().map(oid -> qOrganisaatio.parentOidPath.contains(oid))
-                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
+        ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids -> {
+            BooleanBuilder parentOidPathPredicate = new BooleanBuilder();
+            oids.stream().map(oid -> qOrganisaatio.parentOidPath.contains(oid)).forEach(parentOidPathPredicate::or);
+            query.where(qOrganisaatio.oid.in(oids).or(parentOidPathPredicate));
+        });
 
         Optional.ofNullable(criteria.getSearchStr()).ifPresent(searchStr -> {
             query.where(anyOf(
