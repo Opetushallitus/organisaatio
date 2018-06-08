@@ -98,9 +98,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
 
-        assertChildCountFromIndex(oldParentOid, 2);
-        assertChildCountFromIndex(parentOid, 0);
-
         // Change parent from root -> root2
         OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
         node2foo.setParentOid(parentOid);
@@ -115,9 +112,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             Assert.assertEquals("Child parent oid path should match!",
                     updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
         }
-
-        assertChildCountFromIndex(oldParentOid, 1);
-        assertChildCountFromIndex(parentOid, 1);
     }
 
     @Test
