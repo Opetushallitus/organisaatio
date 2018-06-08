@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
@@ -54,6 +55,7 @@ import org.springframework.core.convert.ConversionService;
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final int MAX_PARENT_OID_PATHS = 500;
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -99,12 +101,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             if (config.isChildrenIncluded() && !parentOidPaths.isEmpty()) {
                 SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
                 // optimoidaan parentOidPath: poistetaan organisaatiot joiden yläorganisaatio on myös mukana listassa
-                List<String> optimizedParentOidPaths = parentOidPaths.stream().filter(parentOidPath1
+                Lists.partition(parentOidPaths.stream().filter(parentOidPath1
                         -> parentOidPaths.stream().noneMatch(parentOidPath2
-                                -> !parentOidPath1.equals(parentOidPath2)
-                                        && parentOidPath1.startsWith(parentOidPath2))).collect(toList());
-                childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
-                entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
+                                -> !parentOidPath1.equals(parentOidPath2) && parentOidPath1.startsWith(parentOidPath2)))
+                        .collect(toList()), MAX_PARENT_OID_PATHS).forEach(optimizedParentOidPaths -> {
+                            childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
+                            entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
+                        });
             }
         }
 
