@@ -136,7 +136,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(8, result.getNumHits());
+        assertEquals(7, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
