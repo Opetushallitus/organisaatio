@@ -14,7 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterables;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
@@ -37,10 +37,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -85,16 +87,18 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         // haetaan ylä- ja aliorganisaatiot
         if (config.isParentsIncluded() || config.isChildrenIncluded()) {
             Set<String> parentOids = new HashSet<>();
-            Set<String> parentOidPaths = new HashSet<>();
+            SortedSet<String> parentOidPaths = new TreeSet<>((path1, path2) -> path1.compareTo(path2));
             entities.forEach(entity -> {
                 Optional.ofNullable(entity.getParentOidPath()).ifPresent(parentOidPath -> {
                     Arrays.stream(parentOidPath.split("\\|"))
                             .filter(oid -> !oid.isEmpty() && !oid.equals(rootOrganisaatioOid))
-                            .filter(oid -> entities.stream().map(Organisaatio::getOid).noneMatch(oid::equals))
                             .forEach(parentOids::add);
                     parentOidPaths.add(parentOidPath + entity.getOid() + "|");
                 });
             });
+            parentOids.removeAll(oids);
+            optimizeParentOidPaths(parentOidPaths);
+
             if (config.isParentsIncluded() && !parentOids.isEmpty()) {
                 SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
                 parentsCriteria.setOid(parentOids);
@@ -102,14 +106,10 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             }
             if (config.isChildrenIncluded() && !parentOidPaths.isEmpty()) {
                 SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-                // optimoidaan parentOidPath: poistetaan organisaatiot joiden yläorganisaatio on myös mukana listassa
-                Lists.partition(parentOidPaths.stream().filter(parentOidPath1
-                        -> parentOidPaths.stream().noneMatch(parentOidPath2
-                                -> !parentOidPath1.equals(parentOidPath2) && parentOidPath1.startsWith(parentOidPath2)))
-                        .collect(toList()), MAX_PARENT_OID_PATHS).forEach(optimizedParentOidPaths -> {
-                            childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
-                            entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
-                        });
+                Iterables.partition(parentOidPaths, MAX_PARENT_OID_PATHS).forEach(optimizedParentOidPaths -> {
+                    childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
+                    entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
+                });
             }
         }
 
@@ -125,6 +125,20 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     return dto;
                 })
                 .collect(toList());
+    }
+
+    private static void optimizeParentOidPaths(SortedSet<String> parentOidPaths) {
+        // optimoidaan parentOidPath: poistetaan organisaatiot joiden yläorganisaatio on myös mukana listassa
+        Iterator<String> iterator = parentOidPaths.iterator();
+        String prev = null;
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (prev != null && next.startsWith(prev)) {
+                iterator.remove();
+            } else {
+                prev = next;
+            }
+        }
     }
 
     private static SearchCriteria constructRelativeCriteria(SearchCriteria from) {
