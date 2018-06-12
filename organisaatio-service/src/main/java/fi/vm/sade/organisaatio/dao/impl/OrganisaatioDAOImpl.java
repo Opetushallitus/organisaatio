@@ -19,18 +19,23 @@ package fi.vm.sade.organisaatio.dao.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import static com.querydsl.core.types.dsl.Expressions.anyOf;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
+import static com.querydsl.core.types.dsl.Expressions.allOf;
+import static com.querydsl.core.types.dsl.Expressions.anyOf;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPQLOps;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dto.OrganisaatioPerustietoRivi;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
@@ -39,6 +44,9 @@ import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import static fi.vm.sade.organisaatio.service.util.CollectionUtil.ofNullableAndNotEmpty;
+import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +61,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
+import static java.util.Arrays.asList;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toCollection;
+import java.util.stream.Stream;
 
 /**
  * @author tommiha
@@ -70,6 +84,171 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
 
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
+
+    @Override
+    public Collection<Organisaatio> findBy(SearchCriteria criteria, Date now) {
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        StringPath qOrganisaatiotyyppi = Expressions.stringPath("tyyppi");
+        QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
+        StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
+        StringPath qKieli = Expressions.stringPath("kieli");
+
+        JPAQuery<OrganisaatioPerustietoRivi> query = new JPAQuery<>(getEntityManager())
+                .from(qOrganisaatio)
+                .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi)
+                .leftJoin(qOrganisaatio.nimi, qNimi)
+                .leftJoin(qNimi.values, qNimiArvo)
+                .leftJoin(qOrganisaatio.kielet, qKieli)
+                .select(Projections.constructor(OrganisaatioPerustietoRivi.class,
+                        qOrganisaatio.oid, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
+                        qOrganisaatio.parentOidPath, qOrganisaatio.ytunnus, qOrganisaatio.virastoTunnus,
+                        qOrganisaatio.oppilaitosKoodi, qOrganisaatio.oppilaitosTyyppi, qOrganisaatio.toimipisteKoodi,
+                        Expressions.stringOperation(JPQLOps.KEY, qNimiArvo), qNimiArvo, qOrganisaatiotyyppi, qKieli,
+                        qOrganisaatio.kotipaikka
+                ));
+
+        Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
+
+        Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu
+                -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
+
+        ofNullableAndNotEmpty(criteria.getKunta()).ifPresent(kunnat
+                -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
+
+        ifPresentOrElse(ofNullableAndNotEmpty(criteria.getOrganisaatioTyyppi()),
+                organisaatiotyypit -> query.where(qOrganisaatiotyyppi.in(organisaatiotyypit)),
+                () -> query.where(qOrganisaatiotyyppi.notIn("Ryhma")));
+
+        ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit
+                -> query.where(qOrganisaatio.oppilaitosTyyppi.in(oppilaitostyypit)));
+
+        ofNullableAndNotEmpty(criteria.getKieli()).ifPresent(kielet
+                -> query.where(qKieli.in(kielet)));
+
+        ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids -> {
+            BooleanBuilder parentOidPathPredicate = new BooleanBuilder();
+            oids.stream().map(oid -> qOrganisaatio.parentOidPath.contains(oid)).forEach(parentOidPathPredicate::or);
+            query.where(qOrganisaatio.oid.in(oids).or(parentOidPathPredicate));
+        });
+
+        Optional.ofNullable(criteria.getSearchStr()).ifPresent(searchStr -> {
+            query.where(anyOf(
+                    qOrganisaatio.nimihaku.containsIgnoreCase(searchStr),
+                    qOrganisaatio.ytunnus.contains(searchStr),
+                    qOrganisaatio.oppilaitosKoodi.contains(searchStr)
+            ));
+        });
+
+        ofNullableAndNotEmpty(criteria.getOid()).ifPresent(oids
+                -> query.where(qOrganisaatio.oid.in(oids)));
+
+        ofNullableAndNotEmpty(criteria.getParentOidPaths()).ifPresent(parentOidPaths
+                -> query.where(parentOidPaths.stream().map(parentOidPath -> qOrganisaatio.parentOidPath.startsWith(parentOidPath))
+                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
+
+        return query.fetch().stream()
+                .collect(groupingBy(OrganisaatioPerustietoRivi::getOid,
+                        reducing(new Organisaatio(), OrganisaatioDAOImpl::map, OrganisaatioDAOImpl::merge)))
+                .values();
+    }
+
+    private static Organisaatio map(OrganisaatioPerustietoRivi source) {
+        Organisaatio destination = new Organisaatio();
+        destination.setOid(source.getOid());
+        destination.setAlkuPvm(source.getAlkuPvm());
+        destination.setLakkautusPvm(source.getLakkautusPvm());
+        destination.setParentOidPath(source.getParentOidPath());
+        destination.setYtunnus(source.getYtunnus());
+        destination.setVirastoTunnus(source.getVirastotunnus());
+        destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
+        destination.setOppilaitosTyyppi(source.getOppilaitostyyppi());
+        destination.setToimipisteKoodi(source.getToimipistekoodi());
+        destination.setNimi(new MonikielinenTeksti());
+        Optional.ofNullable(source.getNimiArvo()).ifPresent(nimiArvo -> destination.getNimi().addString(source.getNimiKieli(), nimiArvo));
+        destination.setTyypit(asList(source.getTyyppi()));
+        Optional.ofNullable(source.getKieli()).ifPresent(kieli -> destination.setKielet(asList(kieli)));
+        destination.setKotipaikka(source.getKotipaikka());
+        return destination;
+    }
+
+    private static Organisaatio merge(Organisaatio o1, Organisaatio o2) {
+        Optional.ofNullable(o1.getTyypit()).ifPresent(tyypit
+                -> o2.setTyypit(Stream.concat(o2.getTyypit().stream(), tyypit.stream())
+                        .collect(toCollection(LinkedHashSet::new))));
+        Optional.ofNullable(o1.getNimi()).ifPresent(nimi
+                -> nimi.getValues().forEach((kieli, arvo)
+                        -> o2.getNimi().addString(kieli, arvo)));
+        Optional.ofNullable(o1.getKielet()).ifPresent(kielet
+                -> o2.setKielet(Stream.concat(o2.getKielet().stream(), kielet.stream())
+                        .collect(toCollection(LinkedHashSet::new))));
+        return o2;
+    }
+
+    private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio, Date now) {
+        // Ei aktiivisia, suunniteltuja eikä lakkautettuja - tätä ei pitäisi tapahtua
+        if (!criteria.getAktiiviset() && !criteria.getSuunnitellut() && !criteria.getLakkautetut()) {
+            return allOf(
+                    qOrganisaatio.alkuPvm.before(now),
+                    qOrganisaatio.alkuPvm.after(now),
+                    qOrganisaatio.lakkautusPvm.before(now)
+            );
+        }
+
+        // Aktiiviset, Suunnitellut, Lakkautetut
+        if (criteria.getAktiiviset() && criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Ei päivämääräfiltteröintiä
+            return null;
+        }
+
+        // Suunnitellut, Lakkautetut
+        if (!criteria.getAktiiviset() && criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Alkupvm tulevaisuudessa tai lakkautuspvm menneisyydessä
+            return anyOf(qOrganisaatio.alkuPvm.after(now), qOrganisaatio.lakkautusPvm.before(now));
+        }
+
+        // Lakkautetut
+        if (!criteria.getAktiiviset() && !criteria.getSuunnitellut() && criteria.getLakkautetut()) {
+            // Haetaan mukaan kaikki lakkautetut - lakkautuspäivämäärä menneisyydessä
+            return qOrganisaatio.lakkautusPvm.before(now);
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        // Alkupäivämäärän käsittely -otetaanko mukaan suunnitellut vai filtteröidäänkö ne ulos
+        if (criteria.getSuunnitellut() && !criteria.getAktiiviset()) {
+            // Filtteröidään pois aktiiviset - joiden alkupvm menneisyydessä
+            booleanBuilder.and(qOrganisaatio.alkuPvm.after(now));
+        } else if (!criteria.getSuunnitellut() && criteria.getAktiiviset()) {
+            // Filtteröidään pois suunnitellut - joiden alkupvm tulevaisuudessa
+            booleanBuilder.and(anyOf(qOrganisaatio.alkuPvm.isNull(), qOrganisaatio.alkuPvm.loe(now)));
+        }
+
+        // Loppupäivämäärän käsittely - otetaanko mukaan lakkautetut vai filtteröidäänkö ne ulos
+        if (!criteria.getLakkautetut()) {
+            // Filteröidään pois lakkautetut.
+            booleanBuilder.and(anyOf(qOrganisaatio.lakkautusPvm.isNull(), qOrganisaatio.lakkautusPvm.goe(now)));
+        }
+
+        return booleanBuilder;
+    }
+
+    @Override
+    public Map<String, Long> countActiveChildrenByOid(Date now) {
+        QOrganisaatio qParent = new QOrganisaatio("parent");
+        QOrganisaatioSuhde qOrganisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+        QOrganisaatio qChild = new QOrganisaatio("child");
+
+        JPAQuery<Object> query = new JPAQuery<>(getEntityManager())
+                .from(qParent)
+                .join(qParent.childSuhteet, qOrganisaatioSuhde)
+                .join(qOrganisaatioSuhde.child, qChild)
+                .where(qOrganisaatioSuhde.suhdeTyyppi.ne(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS))
+                .where(anyOf(qOrganisaatioSuhde.loppuPvm.isNull(), qOrganisaatioSuhde.loppuPvm.after(now)))
+                .where(qChild.organisaatioPoistettu.isFalse())
+                .where(anyOf(qChild.lakkautusPvm.isNull(), qChild.lakkautusPvm.after(now)));
+
+        return query.groupBy(qParent.oid).transform(groupBy(qParent.oid).as(qChild.count()));
+    }
 
     /**
      * Find the children of given parent organisation.

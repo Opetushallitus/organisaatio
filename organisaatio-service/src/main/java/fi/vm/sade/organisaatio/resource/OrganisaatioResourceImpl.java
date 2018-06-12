@@ -37,7 +37,6 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
@@ -52,13 +51,18 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import static java.util.stream.Collectors.joining;
+import java.util.stream.Stream;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Antti Salonen
@@ -77,8 +81,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
-    @Autowired
-    private OrganisaatioSearchService organisaatioSearchService;
     @Autowired
     private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
     @Autowired
@@ -106,10 +108,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             s.setOrganisaatioTyyppi(null);
         }
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(!s.getSkipParents(), true, true);
 
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
@@ -166,17 +170,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public String parentoids(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
         // find parents
-        final List<String> parentOidList = organisaatioSearchService.findParentOids(oid);
-        Collections.reverse(parentOidList);
-
-        // NOTE - this assumes everything is under one "root", ie. "OPH"
-        if (!parentOidList.contains(rootOrganisaatioOid)) {
-            parentOidList.add(0, rootOrganisaatioOid); // add root organisaatio if needed
-        }
-        if (!parentOidList.contains(oid)) {
-            parentOidList.add(oid); // add self if needed
-        }
-        return Joiner.on(OID_SEPARATOR).join(parentOidList);
+        return Optional.ofNullable(organisaatioFindBusinessService.findById(oid))
+                .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOidPath())
+                        .map(parentOidPath -> Stream.concat(Arrays.stream(parentOidPath.split("\\|")), Stream.of(organisaatio.getOid())))
+                        .orElseGet(() -> Stream.of(organisaatio.getOid())))
+                .orElseGet(() -> Stream.of(rootOrganisaatioOid, oid))
+                .filter(StringUtils::hasLength)
+                .collect(joining(OID_SEPARATOR));
     }
 
     // GET /organisaatio/hello

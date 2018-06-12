@@ -76,12 +76,27 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    public void testParentOidsWithRoot() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid});
+
+        String s = res.parentoids(rootOrganisaatioOid);
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
+    public void testParentOidsWithoutOrg() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid, "does_not_exist"});
+
+        String s = res.parentoids("does_not_exist");
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
     public void testChangeParentOid() throws Exception {
         String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
-
-        assertChildCountFromIndex(oldParentOid, 2);
-        assertChildCountFromIndex(parentOid, 0);
 
         // Change parent from root -> root2
         OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
@@ -97,9 +112,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             Assert.assertEquals("Child parent oid path should match!",
                     updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
         }
-
-        assertChildCountFromIndex(oldParentOid, 1);
-        assertChildCountFromIndex(parentOid, 1);
     }
 
     @Test
@@ -118,7 +130,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(8, result.getNumHits());
+        assertEquals(7, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);

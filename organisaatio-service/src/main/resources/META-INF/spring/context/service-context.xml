@@ -45,6 +45,7 @@
                 <bean class="fi.vm.sade.organisaatio.service.converter.LisatietoConverter"/>
                 <ref bean="ryhmaCriteriaV2ToV3Converter"/>
                 <ref bean="ryhmaCriteriaV3Converter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter"/>
             </list>
         </property>
     </bean>
@@ -56,7 +57,5 @@
     <bean id="organisaatioLiitosModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper"/>
     <bean id="groupModelMapperV2" class="fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2"/>
     <bean id="groupModelMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3"/>
-
-    <bean class="fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService"/>
 
 </beans>

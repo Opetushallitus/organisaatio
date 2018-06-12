@@ -101,17 +101,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String oldParentOid = "1.2.2004.1";
         String newParentOid = "1.2.2004.5";
 
-        assertChildCountFromIndex(oldParentOid, 2);
-        assertChildCountFromIndex(newParentOid, 0);
-
         // Make new organisaatiosuhde change
         Date time = new Date();
-        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (9, 1, 'HISTORIA', ?, ?, ?)",
+        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (10, 1, 'HISTORIA', ?, ?, ?)",
                 new Object[] {childId, parentId, time});
         // End old organisaatiosuhde
         jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
 
-        Assert.assertEquals("Row count should match!", 9, countRowsInTable("organisaatiosuhde"));
+        Assert.assertEquals("Row count should match!", 10, countRowsInTable("organisaatiosuhde"));
 
         List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);
@@ -138,9 +135,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParent(modified, "1.2.2005.4");
         checkParent(org, "1.2.2005.5");
         checkParentOidPath(org, "1.2.2005.5");
-
-        assertChildCountFromIndex(oldParentOid, 1);
-        assertChildCountFromIndex(newParentOid, 1);
     }
 
 
