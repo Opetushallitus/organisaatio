@@ -61,7 +61,13 @@
                 <td>{{ ryhma.oid }}</td>
                 <td>{{ ryhma.lokalisoituRyhmatyyppi }}</td>
                 <td>{{ ryhma.lokalisoituKayttoryhma }}</td>
-                <td>{{ ryhma.status }}</td>
+                <td ng-switch on="ryhma.status">
+                    <span ng-switch-when="AKTIIVINEN" tt="Organisaatiot.aktiivinen"></span>
+                    <span ng-switch-when="SUUNNITELTU" tt="Organisaatiot.suunniteltu"></span>
+                    <span ng-switch-when="PASSIIVINEN" tt="Organisaatiot.passivoitu"></span>
+                    <span ng-switch-when="POISTETTU" tt="Organisaatiot.poistettu"></span>
+                    <span ng-switch-default>{{ ryhma.status }}</span>
+                </td>
             </tr>
         </tbody>
     </table>
