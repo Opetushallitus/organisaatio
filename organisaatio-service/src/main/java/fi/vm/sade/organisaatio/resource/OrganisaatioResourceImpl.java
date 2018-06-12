@@ -110,7 +110,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
-        SearchConfig searchConfig = new SearchConfig(!s.getSkipParents(), true);
+        SearchConfig searchConfig = new SearchConfig(!s.getSkipParents(), true, true);
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 

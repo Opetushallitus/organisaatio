@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import static java.util.Collections.emptyMap;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -114,7 +115,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         }
 
         // haetaan aliorganisaatioiden lukumäärät (myös hakukriteerien ulkopuolella olevat)
-        Map<String, Long> childCount = organisaatioDAO.countActiveChildrenByOid(now);
+        Map<String, Long> childCount = config.isCountChildren() ? organisaatioDAO.countActiveChildrenByOid(now) : emptyMap();
 
         return entities.stream()
                 .filter(entity -> !rootOrganisaatioOid.equals(entity.getOid()))

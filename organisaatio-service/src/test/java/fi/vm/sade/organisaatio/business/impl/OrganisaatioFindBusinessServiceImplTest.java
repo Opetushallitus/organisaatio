@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,7 +59,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     @Test
     public void findBy() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchConfig config = new SearchConfig(true, false);
+        SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
@@ -72,12 +73,13 @@ public class OrganisaatioFindBusinessServiceImplTest {
         verify(organisaatioDaoMock).findBy(searchCriteriaCaptor.capture(), any());
         SearchCriteria searchCriteria = searchCriteriaCaptor.getValue();
         assertThat(searchCriteria).isSameAs(criteria);
+        verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
     }
 
     @Test
     public void findByIncludeParents() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchConfig config = new SearchConfig(true, false);
+        SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(rootOrganisaatio).build();
@@ -92,12 +94,13 @@ public class OrganisaatioFindBusinessServiceImplTest {
         List<SearchCriteria> searchCriterias = searchCriteriaCaptor.getAllValues();
         assertThat(searchCriterias.get(0)).isSameAs(criteria);
         assertThat(searchCriterias.get(1).getOid()).containsExactlyInAnyOrder("oid2");
+        verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
     }
 
     @Test
     public void findByIncludeChildren() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchConfig config = new SearchConfig(false, true);
+        SearchConfig config = new SearchConfig(false, true, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
@@ -114,6 +117,27 @@ public class OrganisaatioFindBusinessServiceImplTest {
         List<SearchCriteria> searchCriterias = searchCriteriaCaptor.getAllValues();
         assertThat(searchCriterias.get(0)).isSameAs(criteria);
         assertThat(searchCriterias.get(1).getParentOidPaths()).containsExactlyInAnyOrder("|rootOid|oid1|", "|rootOid|oid4|");
+        verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
+    }
+
+    @Test
+    public void findByCountChildren() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchConfig config = new SearchConfig(true, false, true);
+        Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
+        Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
+        Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
+        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(rootOrganisaatio, organisaatio1, organisaatio2, organisaatio3));
+
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
+
+        assertThat(organisaatiot).extracting(OrganisaatioPerustieto::getOid).containsExactlyInAnyOrder("oid1", "oid2", "oid3");
+        ArgumentCaptor<SearchCriteria> searchCriteriaCaptor = ArgumentCaptor.forClass(SearchCriteria.class);
+        verify(organisaatioDaoMock).findBy(searchCriteriaCaptor.capture(), any());
+        SearchCriteria searchCriteria = searchCriteriaCaptor.getValue();
+        assertThat(searchCriteria).isSameAs(criteria);
+        verify(organisaatioDaoMock).countActiveChildrenByOid(any());
     }
 
 }

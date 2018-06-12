@@ -142,7 +142,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
-        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true);
+        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, true);
 
         // Hae organisaatiot
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
@@ -182,7 +182,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
-        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true);
+        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, false);
 
         // Hae organisaatiot
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
@@ -218,7 +218,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
-        SearchConfig searchConfig = new SearchConfig(false, false);
+        SearchConfig searchConfig = new SearchConfig(false, false, true);
 
         // Hae organisaatiot
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
@@ -238,7 +238,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
-        SearchConfig searchConfig = new SearchConfig(false, false);
+        SearchConfig searchConfig = new SearchConfig(false, false, false);
 
         // Hae organisaatiot
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
