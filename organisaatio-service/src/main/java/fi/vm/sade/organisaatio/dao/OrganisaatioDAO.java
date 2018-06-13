@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
@@ -98,9 +99,10 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     /**
      * Palautetaan oph organisaation alla olevat Ryhmä tyyppiset organisaatiot
      *
+     * @param criteria hakukriteerit
      * @return
      */
-    List<Organisaatio> findGroups();
+    List<Organisaatio> findGroups(RyhmaCriteriaDto criteria);
 
     /**
      * Tarkistetaan onko annetulle ytunnukselle olemassa jo aktiivinen organisaatio.

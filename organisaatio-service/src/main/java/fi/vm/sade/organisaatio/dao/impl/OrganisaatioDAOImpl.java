@@ -20,7 +20,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -33,6 +37,7 @@ import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -985,7 +990,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * FROM organisaatio
      * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
      * AND organisaatiopoistettu = FALSE
-     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND organisaatiotyypitstr = 'Ryhma|'
      *
      *
@@ -997,32 +1001,68 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * ON org.id = tp.organisaatio_id
      * WHERE tp.tyypit = 'Ryhma'
      * AND org.organisaatiopoistettu = FALSE
-     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND org.parentoidpath = '|1.2.246.562.10.00000000001|'
      *
+     * @param criteria hakukriteerit
      * @return
      **/
     @Override
-    public List<Organisaatio> findGroups() {
+    public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
         LOG.debug("findGroups()");
 
-        String s = "SELECT org FROM Organisaatio org "
-                + "JOIN FETCH org.nimi n "
-                + "JOIN FETCH org.kuvaus2 k "
-                + "JOIN FETCH org.tyypit t "
-                + "JOIN FETCH org.kayttoryhmat kr "
-                + "JOIN FETCH org.parentSuhteet ps "
-                + "JOIN FETCH org.ryhmatyypit rt "
-                + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
-                + "AND org.organisaatioPoistettu = FALSE "
-                + "AND (org.lakkautusPvm is null OR org.lakkautusPvm >= current_date) "
-                + "AND org.organisaatiotyypitStr = 'Ryhma|'";
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
+        QMonikielinenTeksti qKuvaus = new QMonikielinenTeksti("kuvaus");
 
-        Query q = getEntityManager().createQuery(s);
+        JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager()).from(qOrganisaatio).select(qOrganisaatio)
+                .join(qOrganisaatio.nimi, qNimi).fetchJoin()
+                .join(qOrganisaatio.kuvaus2, qKuvaus).fetchJoin()
+                .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
 
-        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
+        Optional.ofNullable(criteria.getQ()).ifPresent(q -> {
+            QMonikielinenTeksti qNimiHaku = new QMonikielinenTeksti("nimiHaku");
+            StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
+            JPQLQuery<MonikielinenTeksti> subquery = JPAExpressions.select(qNimiHaku)
+                    .from(qNimiHaku)
+                    .join(qNimiHaku.values, qNimiArvo)
+                    .where(qNimiArvo.containsIgnoreCase(q));
+            query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(q)));
+        });
+        Optional.ofNullable(criteria.getLakkautusPvm()).map(java.sql.Date::valueOf).ifPresent(lakkautusPvm -> {
+            if (Boolean.TRUE.equals(criteria.getAktiivinen())) {
+                query.where(anyOf(qOrganisaatio.lakkautusPvm.isNull(), qOrganisaatio.lakkautusPvm.goe(lakkautusPvm)));
+            } else if (Boolean.FALSE.equals(criteria.getAktiivinen())) {
+                query.where(qOrganisaatio.lakkautusPvm.lt(lakkautusPvm));
+            } else {
+                query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
+            }
+        });
+        Optional.ofNullable(criteria.getRyhmatyyppi()).ifPresent(ryhmatyyppi -> {
+            QOrganisaatio qRyhma = new QOrganisaatio("ryhmatyyppiSub");
+            StringPath qRyhmatyyppi = Expressions.stringPath("ryhmatyyppi");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
+                    .from(qRyhma)
+                    .join(qRyhma.ryhmatyypit, qRyhmatyyppi)
+                    .where(qRyhmatyyppi.eq(ryhmatyyppi));
+            query.where(qOrganisaatio.in(subquery));
+        });
+        Optional.ofNullable(criteria.getKayttoryhma()).ifPresent(kayttoryhma -> {
+            QOrganisaatio qRyhma = new QOrganisaatio("kayttoryhmaSub");
+            StringPath qKayttoryhma = Expressions.stringPath("kayttoryhma");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
+                    .from(qRyhma)
+                    .join(qRyhma.kayttoryhmat, qKayttoryhma)
+                    .where(qKayttoryhma.eq(kayttoryhma));
+            query.where(qOrganisaatio.in(subquery));
+        });
+        Optional.ofNullable(criteria.getParentOidPath()).ifPresent(parentOidPath -> {
+            query.where(qOrganisaatio.parentOidPath.eq(parentOidPath));
+        });
+        Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu -> {
+            query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu));
+        });
 
-        return organisaatiot;
+        return query.fetch();
     }
 
     @Override

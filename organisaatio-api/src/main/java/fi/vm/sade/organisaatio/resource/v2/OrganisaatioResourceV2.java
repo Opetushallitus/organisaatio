@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -331,7 +332,7 @@ public interface OrganisaatioResourceV2 {
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
             response = OrganisaatioGroupDTOV2.class)
     @Deprecated // käytä OrganisaatioResourceV3#groups
-    public List<OrganisaatioGroupDTOV2> groups() throws Exception;
+    public List<OrganisaatioGroupDTOV2> groups(@BeanParam RyhmaCriteriaDtoV2 criteria) throws Exception;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF8")
