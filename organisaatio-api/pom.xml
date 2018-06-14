@@ -17,7 +17,7 @@ Union Public Licence for more details. -->
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2016-9-SNAPSHOT</version>
+        <version>2018-5-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-api</artifactId>
@@ -104,8 +104,8 @@ Union Public Licence for more details. -->
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

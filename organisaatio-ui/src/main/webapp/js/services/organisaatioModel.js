@@ -309,6 +309,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             model.organisaatio.kieletUris = [];
             model.organisaatio.yhteystiedot = [];
             model.organisaatio.vuosiluokat = [];
+            model.organisaatio.lisatiedot = [];
             model.yhteystiedot = {};
             model.mdyhteystiedot = {};
             model.organisaationTulevaNimi = {};
@@ -532,6 +533,16 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 model.organisaatio.vuosiluokat.push(vuosiluokka);
             } else {
                 model.organisaatio.vuosiluokat.splice(model.organisaatio.vuosiluokat.indexOf(vuosiluokka), 1);
+            }
+        };
+
+        this.toggleLisatieto = function (lisatieto) {
+            var index = model.organisaatio.lisatiedot.indexOf(lisatieto);
+            if (index === -1) {
+                model.organisaatio.lisatiedot.push(lisatieto);
+            }
+            else {
+                model.organisaatio.lisatiedot.splice(index);
             }
         };
 

@@ -18,10 +18,14 @@ package fi.vm.sade.organisaatio.dao.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.expr.BooleanExpression;
-import com.mysema.query.types.path.StringPath;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import static com.querydsl.core.types.dsl.Expressions.anyOf;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
@@ -33,6 +37,7 @@ import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,11 +85,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         BooleanExpression whereExpression = qOrganisaatio.parentIdPath.endsWith("|" + parentId + "|");
 
-        return new JPAQuery(getEntityManager())
+        return new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
+                .select(qOrganisaatio)
                 .where(whereExpression)
                 .distinct()
-                .list(qOrganisaatio);
+                .fetch();
     }
 
     /**
@@ -144,11 +150,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
 
-        return new JPAQuery(getEntityManager())
+        return new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
                 .distinct()
-                .list(qOrganisaatio);
+                .select(qOrganisaatio)
+                .fetch();
     }
 
     public List<Organisaatio> findOrganisaatioByNimiLike(String organisaatioNimi, int firstResult, int maxResults) {
@@ -205,13 +212,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         long qstarted = System.currentTimeMillis();
 
-        List<OrgPerustieto> organisaatiot = new JPAQuery(getEntityManager())
+        List<OrgPerustieto> organisaatiot = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
                 .distinct()
                         //.orderBy(qOrganisaatio1.nimihaku.asc())
                 .limit(maxResults + 1)
-                .list(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr));
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .fetch();
 
         LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
@@ -232,10 +240,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.eq(false));
         }
 
-        OrgPerustieto po = new JPAQuery(getEntityManager())
+        OrgPerustieto po = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
-                .uniqueResult(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr));
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .fetchFirst();
 
         if (po != null) {
             ret.add(po);
@@ -252,10 +261,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.eq(false));
         }
 
-        List<OrgPerustieto> pos = new JPAQuery(getEntityManager())
+        List<OrgPerustieto> pos = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
-                .list(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr));
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .fetch();
 
         for (OrgPerustieto pt : pos) {
             if (procOids.add(pt.getOid())) {
@@ -354,14 +364,15 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         BooleanExpression restrictedMatches = getRestrictedMatches(qOrganisaatio, oids);
         whereExpression = (restrictedMatches != null) ? whereExpression.and(restrictedMatches) : whereExpression;
 
-        List<OrgPerustieto> organisaatiot = new JPAQuery(getEntityManager())
+        List<OrgPerustieto> organisaatiot = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
                 .distinct()
                 .limit(maxResults + 1)
-                .list(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
                         qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath,
-                        qOrganisaatio.organisaatiotyypitStr));
+                        qOrganisaatio.organisaatiotyypitStr))
+                .fetch();
         return organisaatiot;
     }
 
@@ -434,11 +445,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
 
-        return new JPAQuery(getEntityManager())
+        return new JPAQuery<>(getEntityManager())
                 .from(org)
                 .where(org.oid.in(oids)
                         .and(org.organisaatioPoistettu.isFalse()))
-                .list(new OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(org));
+                .select(new OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(org))
+                .fetch();
     }
 
     /**
@@ -463,12 +475,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         List<Organisaatio> result = new ArrayList<>();
 
         for (String curOid : oidListFiltered) {
-            result.addAll(new JPAQuery(getEntityManager()).from(qOrganisaatio)
+            result.addAll(new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
                     .where((qOrganisaatio.oid.eq(curOid).or(qOrganisaatio.parentOidPath.like("%|" + curOid + "|%")))
                             .and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                     .distinct()
                     .orderBy(qOrganisaatio.nimihaku.asc())
-                    .list(qOrganisaatio));
+                    .select(qOrganisaatio).fetch());
         }
 
         return result;
@@ -490,14 +502,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         List<OrgPerustieto> result = new ArrayList<>();
 
         for (String curOid : oidListFiltered) {
-            result.addAll(new JPAQuery(getEntityManager()).from(qOrganisaatio)
+            result.addAll(new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
                     .where((qOrganisaatio.oid.eq(curOid).or(qOrganisaatio.parentOidPath.like("%|" + curOid + "|%")))
                             .and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                     .distinct()
                             //.orderBy(qOrganisaatio.nimihaku.asc())
-                    .list(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
+                    .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
                             qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath,
-                            qOrganisaatio.organisaatiotyypitStr)));
+                            qOrganisaatio.organisaatiotyypitStr)).fetch());
         }
 
         return result;
@@ -516,7 +528,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QMonikielinenTeksti nimi = QMonikielinenTeksti.monikielinenTeksti;
 
-        JPAQuery q = new JPAQuery(getEntityManager());
+        JPAQuery<OrgStructure> q = new JPAQuery<>(getEntityManager());
         BooleanBuilder where = new BooleanBuilder();
 
         for (String oid : oids) {
@@ -524,13 +536,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             where.or(qOrganisaatio.oid.eq(oid));
         }
 
-        JPAQuery query = q.from(qOrganisaatio)
+        JPAQuery<OrgStructure> query = q.from(qOrganisaatio)
                 .leftJoin(qOrganisaatio.nimi, nimi)
                 .leftJoin(nimi.values)
                 .where(where);
 
-        return query.distinct().list(new QOrgStructure(qOrganisaatio.oid, qOrganisaatio.parentOidPath,
-                nimi, qOrganisaatio.organisaatioPoistettu, qOrganisaatio.lakkautusPvm));
+        return query.distinct().select(new QOrgStructure(qOrganisaatio.oid, qOrganisaatio.parentOidPath,
+                nimi, qOrganisaatio.organisaatioPoistettu, qOrganisaatio.lakkautusPvm))
+                .fetch();
     }
 
     @Override
@@ -593,10 +606,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
 
-        return new JPAQuery(getEntityManager()).from(qOrganisaatio)
+        return new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
                 .where(qOrganisaatio.parentOidPath.like(parentOidStr).and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .distinct()
-                .list(qOrganisaatio.oid);
+                .select(qOrganisaatio.oid)
+                .fetch();
     }
 
     /**
@@ -616,10 +630,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
-        return new JPAQuery(getEntityManager()).from(qOrganisaatio)
+        return new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
+                .select(qOrganisaatio)
                 .where(qOrganisaatio.parentOidPath.like(parentOidStr).and(qOrganisaatio.organisaatioPoistettu.eq(vainPoistetut)))
                 .distinct()
-                .list(qOrganisaatio);
+                .fetch();
 
     }
 
@@ -732,7 +747,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             whereExpr.and(org.ytunnus.isNotNull());
         }
 
-        JPAQuery q = new JPAQuery(getEntityManager());
+        JPAQuery<String> q = new JPAQuery<>(getEntityManager());
         q = q.from(org);
 
         if (whereExpr != null) {
@@ -749,7 +764,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         LOG.debug("  q = {}", q);
 
-        return q.list(org.oid);
+        return q.select(org.oid).fetch();
     }
 
     /**
@@ -762,7 +777,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public Organisaatio findByYTunnus(String oid) {
         LOG.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
+        return new JPAQuery<>(getEntityManager()).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -775,7 +790,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public Organisaatio findByVirastoTunnus(String oid) {
         LOG.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
+        return new JPAQuery<>(getEntityManager()).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -788,7 +803,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public Organisaatio findByOppilaitoskoodi(String oid) {
         LOG.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
+        return new JPAQuery<>(getEntityManager()).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -801,7 +816,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public Organisaatio findByToimipistekoodi(String oid) {
         LOG.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).singleResult(org);
+        return new JPAQuery<>(getEntityManager()).from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     @Override
@@ -854,12 +869,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = new JPAQuery(getEntityManager())
+        List<Organisaatio> organisaatiot = new JPAQuery<>(getEntityManager())
                 .from(org)
+                .select(org)
+                .limit(limit + 1)
                 .where(whereExpression)
                 //.distinct()
-                .limit(limit + 1)
-                .list(org);
+                .fetch();
 
         LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
@@ -974,7 +990,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * FROM organisaatio
      * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
      * AND organisaatiopoistettu = FALSE
-     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND organisaatiotyypitstr = 'Ryhma|'
      *
      *
@@ -986,32 +1001,68 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * ON org.id = tp.organisaatio_id
      * WHERE tp.tyypit = 'Ryhma'
      * AND org.organisaatiopoistettu = FALSE
-     * AND (org.lakkautuspvm is null OR org.lakkautuspvm >= current_date)
      * AND org.parentoidpath = '|1.2.246.562.10.00000000001|'
      *
+     * @param criteria hakukriteerit
      * @return
      **/
     @Override
-    public List<Organisaatio> findGroups() {
+    public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
         LOG.debug("findGroups()");
 
-        String s = "SELECT org FROM Organisaatio org "
-                + "JOIN FETCH org.nimi n "
-                + "JOIN FETCH org.kuvaus2 k "
-                + "JOIN FETCH org.tyypit t "
-                + "JOIN FETCH org.kayttoryhmat kr "
-                + "JOIN FETCH org.parentSuhteet ps "
-                + "JOIN FETCH org.ryhmatyypit rt "
-                + "WHERE org.parentOidPath = " + "'|" + ophOid + "|' "
-                + "AND org.organisaatioPoistettu = FALSE "
-                + "AND (org.lakkautusPvm is null OR org.lakkautusPvm >= current_date) "
-                + "AND org.organisaatiotyypitStr = 'Ryhma|'";
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
+        QMonikielinenTeksti qKuvaus = new QMonikielinenTeksti("kuvaus");
 
-        Query q = getEntityManager().createQuery(s);
+        JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager()).from(qOrganisaatio).select(qOrganisaatio)
+                .join(qOrganisaatio.nimi, qNimi).fetchJoin()
+                .join(qOrganisaatio.kuvaus2, qKuvaus).fetchJoin()
+                .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
 
-        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
+        Optional.ofNullable(criteria.getQ()).ifPresent(q -> {
+            QMonikielinenTeksti qNimiHaku = new QMonikielinenTeksti("nimiHaku");
+            StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
+            JPQLQuery<MonikielinenTeksti> subquery = JPAExpressions.select(qNimiHaku)
+                    .from(qNimiHaku)
+                    .join(qNimiHaku.values, qNimiArvo)
+                    .where(qNimiArvo.containsIgnoreCase(q));
+            query.where(anyOf(qNimi.in(subquery), qOrganisaatio.oid.eq(q)));
+        });
+        Optional.ofNullable(criteria.getLakkautusPvm()).map(java.sql.Date::valueOf).ifPresent(lakkautusPvm -> {
+            if (Boolean.TRUE.equals(criteria.getAktiivinen())) {
+                query.where(anyOf(qOrganisaatio.lakkautusPvm.isNull(), qOrganisaatio.lakkautusPvm.goe(lakkautusPvm)));
+            } else if (Boolean.FALSE.equals(criteria.getAktiivinen())) {
+                query.where(qOrganisaatio.lakkautusPvm.lt(lakkautusPvm));
+            } else {
+                query.where(qOrganisaatio.lakkautusPvm.eq(lakkautusPvm));
+            }
+        });
+        Optional.ofNullable(criteria.getRyhmatyyppi()).ifPresent(ryhmatyyppi -> {
+            QOrganisaatio qRyhma = new QOrganisaatio("ryhmatyyppiSub");
+            StringPath qRyhmatyyppi = Expressions.stringPath("ryhmatyyppi");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
+                    .from(qRyhma)
+                    .join(qRyhma.ryhmatyypit, qRyhmatyyppi)
+                    .where(qRyhmatyyppi.eq(ryhmatyyppi));
+            query.where(qOrganisaatio.in(subquery));
+        });
+        Optional.ofNullable(criteria.getKayttoryhma()).ifPresent(kayttoryhma -> {
+            QOrganisaatio qRyhma = new QOrganisaatio("kayttoryhmaSub");
+            StringPath qKayttoryhma = Expressions.stringPath("kayttoryhma");
+            JPQLQuery<Organisaatio> subquery = JPAExpressions.select(qRyhma)
+                    .from(qRyhma)
+                    .join(qRyhma.kayttoryhmat, qKayttoryhma)
+                    .where(qKayttoryhma.eq(kayttoryhma));
+            query.where(qOrganisaatio.in(subquery));
+        });
+        Optional.ofNullable(criteria.getParentOidPath()).ifPresent(parentOidPath -> {
+            query.where(qOrganisaatio.parentOidPath.eq(parentOidPath));
+        });
+        Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu -> {
+            query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu));
+        });
 
-        return organisaatiot;
+        return query.fetch();
     }
 
     @Override

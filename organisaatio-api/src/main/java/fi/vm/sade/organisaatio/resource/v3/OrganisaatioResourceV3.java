@@ -4,23 +4,12 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import io.swagger.annotations.*;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * V3 REST services for Organisaatio.
@@ -67,7 +56,7 @@ public interface OrganisaatioResourceV3 {
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
             response = OrganisaatioGroupDTOV3.class)
-    public List<OrganisaatioGroupDTOV3> groups() throws Exception;
+    public List<OrganisaatioGroupDTOV3> groups(@BeanParam RyhmaCriteriaDtoV3 criteria) throws Exception;
 
     @GET
     @Path("/{id}")

@@ -16,7 +16,6 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.generic.model.BaseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

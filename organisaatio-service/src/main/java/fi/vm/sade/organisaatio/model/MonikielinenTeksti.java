@@ -16,7 +16,6 @@
 package fi.vm.sade.organisaatio.model;
 
 import com.google.common.base.Objects;
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.security.xssfilter.XssFilter;
 import org.hibernate.annotations.BatchSize;
 

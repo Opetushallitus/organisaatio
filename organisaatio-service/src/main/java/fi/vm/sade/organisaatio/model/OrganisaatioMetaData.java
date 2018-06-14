@@ -15,16 +15,10 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
-
-import fi.vm.sade.generic.model.BaseEntity;
-import org.hibernate.annotations.Table;
+import java.util.*;
 
 /**
  * LOP related metadata. Always accosiated with a Organisation.

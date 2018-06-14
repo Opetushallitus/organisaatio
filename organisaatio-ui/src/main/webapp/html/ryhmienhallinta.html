@@ -18,18 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <form name="mainform" class="form-horizontal" novalidate>
     <h1 tt="RyhmienHallinta.otsikko">RyhmienHallinta.otsikko</h1>
 
-    <div class="control-group">
-            <ui-select class="span10" style="left: -20px;" ng-model="currentGroupSelection.selected" theme="selectize" ng-disabled="disabled"
-                       on-select="valitseRyhma($item)">
-                <ui-select-match placeholder="{{t('RyhmienHallinta.valitseRyhma')}}">{{localizeNimi($select.selected)}}</ui-select-match>
-                <ui-select-choices repeat="group in model.groups | filter: $select.search | orderBy : localizeNimi">
-                    <span ng-bind-html-unsafe="group.nimi.fi | highlight: $select">{{localizeNimi(group)}}</span>
-                </ui-select-choices>
-            </ui-select>
-    </div>
-
-    <hr>
-
     <div ng-show="currentGroup" ng-form="form">
         <div ng-show="currentGroup.oid">
             <h3>OID</h3>
@@ -153,10 +141,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="row">
         <div class="span6">
-            <button class="btn" ng-click="luoUusi()" tt="RyhmienHallinta.luoUusi">
-                RyhmienHallinta.luoUusi
-            </button>
-            <button class="btn" ng-disabled="!currentGroup" ng-click="poista()" tt="RyhmienHallinta.poista">
+            <button class="btn" ng-if="currentGroup.oid !== null" ng-click="poista()" tt="RyhmienHallinta.poista">
                 RyhmienHallinta.poista
             </button>
             <button class="btn" ng-if="currentGroup.status === 'AKTIIVINEN'" tt="RyhmienHallinta.disabloi" ng-click="disabloi()">
@@ -168,9 +153,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         </div>
         <div class="offset7">
-            <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}">
-                <i class="icon-arrow-left"></i>
-            </button>
             <button class="btn" ng-disabled="!currentGroup" ng-click="peruuta()" tt="RyhmienHallinta.peruuta">
                 RyhmienHallinta.peruuta
             </button>

@@ -15,21 +15,10 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-
-import fi.vm.sade.generic.model.BaseEntity;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Entity luokka organisaation nimelle ja nimihistorialle.

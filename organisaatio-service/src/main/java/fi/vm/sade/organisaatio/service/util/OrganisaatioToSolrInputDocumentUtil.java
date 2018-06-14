@@ -20,12 +20,12 @@ import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.search.SolrOrgFields;
-import java.util.Date;
-import java.util.List;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Add Organisaatio And Organisaatio Nimihistoria to SolrInputDocument so that it can be indexed.
@@ -71,6 +71,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         final Organisaatio parent = org.getParent();
         add(doc, PARENTOID, parent != null ? parent.getOid() : null);
         add(doc, YTUNNUS, org.getYtunnus());
+        add(doc, VIRASTOTUNNUS, org.getVirastoTunnus());
         add(doc, KUNTA, org.getKotipaikka());
         do {
             add(doc, PATH, org.getOid());

@@ -21,16 +21,20 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -51,6 +55,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Autowired
     private ConversionService conversionService;
 
+    @Value("${root.organisaatio.oid}")
+    private String rootOid;
+
     @Override
     @Transactional(readOnly = true)
     public List<Organisaatio> findBySearchCriteria(
@@ -67,10 +74,18 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organisaatio> findGroups() {
-        return organisaatioDAO.findGroups();
+    public List<Organisaatio> findGroups(RyhmaCriteriaDtoV3 criteria) {
+        return findGroups(conversionService.convert(criteria, RyhmaCriteriaDto.class));
     }
 
+    private List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
+        if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
+            criteria.setLakkautusPvm(LocalDate.now());
+        }
+        criteria.setParentOidPath("|" + rootOid + "|");
+        criteria.setPoistettu(false);
+        return organisaatioDAO.findGroups(criteria);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -108,5 +123,4 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
         return organisaatioSuhdeDAO.findLiitokset(date);
     }
-
 }

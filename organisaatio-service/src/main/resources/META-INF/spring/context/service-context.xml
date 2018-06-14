@@ -2,11 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
     ">
 
     <context:annotation-config/>
@@ -23,9 +21,19 @@
         </property>
     </bean>
 
+    <bean id="modelMapper" class="org.modelmapper.ModelMapper" />
+
+    <bean id="ryhmaCriteriaV2ToV3Converter" class="fi.vm.sade.organisaatio.service.converter.v2.RyhmaCriteriaV2ToV3Converter">
+        <constructor-arg index="0" ref="modelMapper" />
+    </bean>
+
+    <bean id="ryhmaCriteriaV3Converter" class="fi.vm.sade.organisaatio.service.converter.v3.RyhmaCriteriaV3Converter">
+        <constructor-arg index="0" ref="modelMapper" />
+    </bean>
 
     <!-- Conversion service, note: Old converters are not using spring conversion framework -->
-    <bean id="conversionService"
+    <!-- If this was called id=conversionService spring-session injects this and won't work! -->
+    <bean id="sadeConversionService"
           class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
         <property name="converters">
             <list>
@@ -34,6 +42,9 @@
                 <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisaatioConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.LisatietoConverter"/>
+                <ref bean="ryhmaCriteriaV2ToV3Converter"/>
+                <ref bean="ryhmaCriteriaV3Converter"/>
             </list>
         </property>
     </bean>
@@ -46,11 +57,6 @@
     <bean id="groupModelMapperV2" class="fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2"/>
     <bean id="groupModelMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3"/>
 
-    <!--
-        Enable @Scheduled annotations
-    -->
-    <task:annotation-driven />
-
-    <bean scope="singleton" class="fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService"/>
+    <bean class="fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService"/>
 
 </beans>

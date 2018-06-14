@@ -5,9 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.nio.file.Paths;
 
-/**
- * Created by autio on 7.9.2016.
- */
 @Configuration
 public class UrlConfiguration extends OphProperties {
     public UrlConfiguration(){

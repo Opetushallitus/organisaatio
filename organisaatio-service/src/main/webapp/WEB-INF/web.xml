@@ -21,6 +21,15 @@
     <listener>
         <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
     </listener>
+    <!-- For spring-session to allow handling of CAS session timeout -->
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>springSessionRepositoryFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
 
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -61,6 +70,13 @@
     <filter-mapping>
         <filter-name>OpenEntityManagerInViewFilter</filter-name>
         <url-pattern>/rest/yhteystietojentyyppi/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>springSessionRepositoryFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
     <filter-mapping>

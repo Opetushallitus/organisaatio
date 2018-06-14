@@ -73,20 +73,17 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
     /**
      * Hae koodi URIn mukaan
      *
-     * @param uri koodiston uri, esim.
-     * "/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
+     * @param uri kononainen koodiston uri, käytä urlpropertiesseja generointiin esim.
+     * "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
      * @return koodi json-muodossa, tai null jos koodia ei löydy
      * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
-        String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
-        String url = koodistoServiceUrl + uri + createKoodistoServiceParameters();
-        LOG.debug("GET " + url);
-        LOG.info("GET " + url);
+        LOG.info("GET " + uri);
         String json = null;
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet get = new HttpGet(url);
+        HttpGet get = new HttpGet(uri);
         get.addHeader("ID", IDContextMessageHelper.getIDChain());
         get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
         get.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
@@ -107,12 +104,12 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
                 return null;
             }
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from GET " + koodistoServiceUrl + uri;
+                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from GET " + uri;
                 LOG.error(err);
                 throw new OrganisaatioKoodistoException(err);
             }
         } catch (IOException e) {
-            String err = "Failed to GET " + url + ": " + e.getMessage();
+            String err = "Failed to GET " + uri + ": " + e.getMessage();
             LOG.error(err);
             throw new OrganisaatioKoodistoException(err);
         }

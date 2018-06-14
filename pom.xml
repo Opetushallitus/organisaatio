@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>2016-9-SNAPSHOT</version>
+    <version>2018-5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>
@@ -41,15 +41,15 @@
         <!-- UI libraries -->
         <servlet.version>3.0.1</servlet.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
-        <swagger.version>1.5.9</swagger.version>
+        <swagger.version>1.5.17</swagger.version>
         <frontend-plugin.version>1.5</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>3.1.6</cxf.version>
-        <cxf.codegen.version>2.4.6</cxf.codegen.version>
+        <cxf.version>3.2.4</cxf.version>
         <wss4j.version>1.6.4</wss4j.version>
-        <spring.version>4.3.1.RELEASE</spring.version>
-        <spring.security.version>4.1.1.RELEASE</spring.security.version>
+        <spring.version>4.3.17.RELEASE</spring.version>
+        <spring.security.version>4.2.6.RELEASE</spring.security.version>
+        <spring.session.version>2.0.3.RELEASE</spring.session.version>
 
         <!-- Logging -->
         <slf4j.version>1.6.1</slf4j.version>
@@ -57,14 +57,17 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
+        <postgresql.version>42.2.1</postgresql.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <querydsl.version>2.6.0</querydsl.version>
-        <hibernate.version>5.2.1.Final</hibernate.version>
-        <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
+        <querydsl.version>4.2.1</querydsl.version>
+        <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
+        <hibernate.validator.version>5.4.2.Final</hibernate.validator.version>
+        <el-api.version>2.2.4</el-api.version>
+        <hibernate.version>5.2.17.Final</hibernate.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
         <solr.version>4.5.1</solr.version>
         <ehcache.version>2.5.2</ehcache.version>
@@ -79,7 +82,7 @@
         <java.version>1.8</java.version>
         <aspectj.version>1.7.0</aspectj.version>
         <modelmapper.version>0.6.3</modelmapper.version>
-        <jackson.version>2.8.1</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <asm.version>5.0.2</asm.version>
         <httpcomponents.version>4.4.5</httpcomponents.version>
         <httpcomponents.client.version>4.5.2</httpcomponents.client.version>
@@ -386,9 +389,19 @@ buildTtime=${maven.build.timestamp}
             </dependency>
 
             <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
                 <version>2.4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.kagkarlsson</groupId>
+                <artifactId>db-scheduler</artifactId>
+                <version>3.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

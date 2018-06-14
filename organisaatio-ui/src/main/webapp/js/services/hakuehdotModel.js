@@ -105,7 +105,7 @@ app.factory('HakuehdotModel', function($q, $filter, $log, $injector,
                             "arvo":orgTyyppiKoodi.koodiArvo};
 
                         organisaatioTyyppi.nimi   = KoodistoKoodi.getLocalizedName(orgTyyppiKoodi);
-                        organisaatioTyyppi.nimifi = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI')
+                        organisaatioTyyppi.nimifi = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                         model.organisaatiotyypit.push(organisaatioTyyppi);
                     });
                     $log.log('organisaatiotyypit: ' +  model.organisaatiotyypit.length);

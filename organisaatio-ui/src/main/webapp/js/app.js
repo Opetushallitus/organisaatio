@@ -92,6 +92,10 @@ var ORGANISAATIO_REST_YTJ_HAE = ORGANISAATIO_REST_YTJ_HAE || "";
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI || "";
 var ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID = ORGANISAATIO_REST_YHTEYSTIETOJENTYYPPI_BY_OID || "";
 var ORGANISAATIO_REST_YTJ_LOKI = ORGANISAATIO_REST_YTJ_LOKI || "";
+var ORGANISAATIO_REST_LISATIEDOT_BY_OID = ORGANISAATIO_REST_LISATIEDOT_BY_OID || "";
+var ORGANISAATIO_REST_LISATIETOTYYPIT = ORGANISAATIO_REST_LISATIETOTYYPIT || "";
+var ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI = ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI || "";
+var ORGANISAATIO_REST_LISATIETOTYYPPI = ORGANISAATIO_REST_LISATIETOTYYPPI || "";
 
 var OPPIJANUMEROREKISTERI_HENKILO_BY_OID = OPPIJANUMEROREKISTERI_HENKILO_BY_OID || "";
 var KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID = KAYTTOOIKEUS_REST_RYHMA_BY_HENKILO_OID || "";
@@ -127,13 +131,27 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
     // create new
     when('/organisaatiot/:parentoid/new', {controller: 'OrganisaatioController', templateUrl:TEMPLATE_URL_BASE + 'organisaationmuokkaus.html'}).
 
-    // yhteystietojen tyypit
-    when('/yhteystietotyypit', {controller: 'YhteystietojentyyppiController', templateUrl:TEMPLATE_URL_BASE + 'yhteystietojentyyppi.html'}).
+    // lisatietojen tyypit ja yhteystietojen tyypit
+    when('/yhteystietotyypit', {templateUrl: TEMPLATE_URL_BASE + 'tyyppienhallinta.html'}).
 
     // manage groups
-    when('/organisaatiot/:parentoid/groups', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html'}).
+    when('/organisaatiot/:parentoid/groups', {controller: 'RyhmatController', controllerAs: 'vm', templateUrl:TEMPLATE_URL_BASE + 'ryhmat.html'}).
 
-        //else
+    // add group
+    when('/ryhmat/uusi', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html', resolve: {
+        ryhma: function ($route) {
+            return {oid: null, parentOid: $route.current.params.parentOid, tyypit: ['Ryhma'], ryhmatyypit: [''], kayttoryhmat: ['']};
+        }
+    }}).
+
+    // edit group
+    when('/ryhmat/:oid', {controller: 'RyhmienHallintaController', templateUrl:TEMPLATE_URL_BASE + 'ryhmienhallinta.html', resolve: {
+        ryhma: function (Organisaatio, $route) {
+            return Organisaatio.get({oid: $route.current.params.oid}).$promise;
+        }
+    }}).
+
+    //else
     otherwise({redirectTo:'/organisaatiot'});
 });
 
@@ -438,5 +456,30 @@ app.factory('Historia', function ($resource) {
 app.factory('YtjLoki', function ($resource) {
     return $resource(ORGANISAATIO_REST_YTJ_LOKI, {alkupvm: "@alkupvm", loppupvm: "@loppupvm"}, {
         get: {method: 'GET', withCredentials: true, isArray: true}
+    });
+});
+
+app.factory('MahdollisetLisatiedot', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIEDOT_BY_OID, {oid: "@oid"}, {
+        get: {method: 'GET', isArray: true}
+    });
+});
+
+app.factory('Lisatietotyypit', function ($resource) {
+   return $resource(ORGANISAATIO_REST_LISATIETOTYYPIT, {}, {
+       get: {method: 'GET', isArray: true}
+   });
+});
+
+app.factory('LisatietotyyppiNimi', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIETOTYYPPI_NIMI, {nimi: '@nimi'}, {
+        delete: {method: 'DELETE', withCredentials: true},
+        get: {method: 'GET'}
+    });
+});
+
+app.factory('Lisatietotyyppi', function ($resource) {
+    return $resource(ORGANISAATIO_REST_LISATIETOTYYPPI, {}, {
+        post: {method: 'POST', withCredentials: true}
     });
 });

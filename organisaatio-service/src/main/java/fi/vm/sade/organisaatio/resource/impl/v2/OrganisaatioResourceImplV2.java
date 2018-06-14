@@ -40,6 +40,9 @@ import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -571,10 +574,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/ryhmat
     @Override
-    public List<OrganisaatioGroupDTOV2> groups() throws Exception {
+    public List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDtoV2 criteria) throws Exception {
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups();
+        List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(conversionService.convert(criteria, RyhmaCriteriaDtoV3.class));
 
         LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();

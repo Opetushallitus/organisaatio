@@ -1,0 +1,111 @@
+<div ng-controller="LisatietotyyppiController as lisatieto">
+    <form name="form">
+        <h1 tt="LisatietotyyppiForm.otsikko">LisatietotyyppiForm.otsikko</h1>
+
+        <select class="span4"
+                ng-model="lisatieto.valittuLisatietotyyppi"
+                ng-change="lisatieto.fetchValittuLisatietotyyppi()"
+                ng-options="lisatietotyyppi for lisatietotyyppi in lisatieto.model.lisatietotyypit">
+            <option value="" tt="LisatietotyyppiForm.valitseTyyppi">LisatietotyyppiForm.valitseTyyppi</option>
+        </select>
+
+
+        <div ng-if="lisatieto.valittuLisatietotyyppi">
+            <!-- Nimi -->
+            <div ng-if="!lisatieto.isLisatietotyyppiNotNew()">
+                <h3 tt="LisatietotyyppiForm.nimi.otsikko">LisatietotyyppiForm.nimi.otsikko</h3>
+                <label class="control-label" tt="LisatietotyyppiForm.nimiLabel">LisatietotyyppiForm.nimiLabel</label>
+                <div class="controls">
+                    <input class="span4"
+                           type="text"
+                           name="nimi"
+                           ng-model="lisatieto.lisatietoDto.nimi"
+                           placeholder="{{lisatieto.lisatietoDto.nimi}}"
+                           required
+                           ng-pattern="/^lisatieto\.[a-zA-Z0-9\.]{3,}$/"
+                           unique-lisatietotyyppi-field callback="lisatieto.isLisatietotyyppiNotUnique"
+                    />
+                    <div>
+                        <span class="text-error" ng-show="form.nimi.$error.unique" tt="LisatietotyyppiForm.nimiValidation.notUnique">
+                            LisatietotyyppiForm.nimiValidation.notUnique
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-error" ng-show="form.nimi.$error.pattern" tt="LisatietotyyppiForm.nimiValidation.pattern">
+                            LisatietotyyppiForm.nimiValidation.pattern
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rajoitteet -->
+            <h3 tt="LisatietotyyppiForm.rajoitteet.otsikko">LisatietotyyppiForm.rajoitteet.otsikko</h3>
+            <div class="control-group">
+                <label class="control-label" tt="LisatietotyyppiForm.organisaatiotyyppi">LisatietotyyppiForm.organisaatiotyyppi</label>
+                <div class="controls">
+                    <div ng-repeat="organisaatiotyyppiKoodi in lisatieto.model.organisaatioTyypit | orderBy:'koodiArvo'">
+                        <input type="checkbox"
+                               ng-checked="lisatieto.isOrganisaatiotyyppiSelected(organisaatiotyyppiKoodi)"
+                               ng-click="lisatieto.toggleOrganisaatiotyyppi(organisaatiotyyppiKoodi)"
+                               ng-disabled="lisatieto.isLisatietotyyppiNotNew() || lisatieto.isOppilaitosAndOppilaitostyyppirajoiteSelected(lisatieto.lokalisoiKoodi(organisaatiotyyppiKoodi))">
+                        {{lisatieto.lokalisoiKoodi(organisaatiotyyppiKoodi)}}
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" tt="LisatietotyyppiForm.oppilaitostyyppi">LisatietotyyppiForm.oppilaitostyyppi</label>
+                <div class="controls">
+                    <select ng-model="lisatieto.valittuOppilaitostyyppi"
+                            ng-disabled="lisatieto.isLisatietotyyppiNotNew() || lisatieto.isOppilaitosSelected()"
+                            ng-change="lisatieto.toggleOppilaitostyyppi(lisatieto.valittuOppilaitostyyppi)"
+                            ng-options="oppilaitostyyppiKoodi as lisatieto.lokalisoiKoodi(oppilaitostyyppiKoodi) for oppilaitostyyppiKoodi in lisatieto.model.oppilaitostyypit"
+                    >
+                        <option value="" tt="LisatietotyyppiForm.lisaaOppilaitostyyppi">LisatietotyyppiForm.lisaaOppilaitostyyppi</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <div ng-if="lisatieto.lisatietoDto.rajoitteet">
+                        <div class="input-append"
+                             ng-repeat="rajoite in lisatieto.getLokalisoidutRajoitteet() | filter : {rajoitetyyppi: 'OPPILAITOSTYYPPI'}">
+                            <input type="text" ng-model="rajoite.lokalitointi" ng-disabled="true">
+                            <button type="button" class="btn" ng-click="lisatieto.poistaRajoite(rajoite.arvo)" ng-disabled="lisatieto.isLisatietotyyppiNotNew()">
+                                &nbsp;<i class="icon-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Napit -->
+        <div class="row">
+            <div class="span6">
+                <button class="btn" ng-click="lisatieto.poistaLisatietotyyppi()" ng-if="lisatieto.valittuLisatietotyyppi" tt="LisatietotyyppiForm.poistaTyyppi">
+                    LisatietotyyppiForm.poistaTyyppi
+                </button>
+                <button class="btn" ng-click="lisatieto.uusiLisatietotyyppi()" tt="LisatietotyyppiForm.luoUusi">
+                    LisatietotyyppiForm.luoUusi
+                </button>
+            </div>
+            <div class="offset7" ng-if="lisatieto.valittuLisatietotyyppi">
+                <button class="btn"
+                        ng-disabled="lisatieto.isLisatietotyyppiNotNew()"
+                        ng-click="lisatieto.tyhjennaLisatietotyyppi()"
+                        tt="LisatietotyyppiForm.peruuta">
+                    LisatietotyyppiForm.peruuta
+                </button>
+                <button class="btn btn-primary"
+                        type="submit"
+                        ng-disabled="lisatieto.isLisatietotyyppiNotNew() || form.nimi.$invalid"
+                        ng-click="lisatieto.luoLisatietotyyppi()"
+                        tt="LisatietotyyppiForm.tallenna">
+                    LisatietotyyppiForm.tallenna
+                </button>
+            </div>
+            <div>&nbsp;</div>
+        </div>
+    </form>
+</div>
