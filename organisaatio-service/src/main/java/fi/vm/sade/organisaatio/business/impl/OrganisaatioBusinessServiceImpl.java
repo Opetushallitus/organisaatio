@@ -1164,7 +1164,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
 
             // Jos toimipisteen nimi alkaa sen parent oppilaitoksen nimellä, niin siivotaan tuo osa pois toimipisteen nimestä
-            MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio);
+            MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio, newParent);
             organisaatio.setNimi(updatedToimipisteNimi);
         }
 
@@ -1180,26 +1180,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     // Poistetaan parent oppilaitoksen nimeä vastaava prefix toimispisteen nimestä
-    private MonikielinenTeksti getUpdatedToimipisteNimi(Organisaatio organisaatio) {
+    private MonikielinenTeksti getUpdatedToimipisteNimi(Organisaatio organisaatio, Organisaatio newParent) {
         Organisaatio oldParent = organisaatio.getParent();
         MonikielinenTeksti oldParentNimi = oldParent.getNimi();
         MonikielinenTeksti nimi = organisaatio.getNimi();
-        Map<String, String> oldNimiValues = oldParentNimi.getValues();
-        Map<String, String> nimiValues = nimi.getValues();
+        MonikielinenTeksti newParentNimi = newParent.getNimi();
+        Map<String, String> oldParentNimiMap = oldParentNimi.getValues();
+        Map<String, String> toimipisteNimiMap = nimi.getValues();
+        Map<String, String> newParentNimiMap = newParentNimi.getValues();
 
-        updateNimiValues(oldNimiValues, nimiValues);
-        nimi.setValues(nimiValues);
+        updateNimiValues(oldParentNimiMap, toimipisteNimiMap, newParentNimiMap);
+        nimi.setValues(toimipisteNimiMap);
         return nimi;
     }
 
-    private void updateNimiValues(Map<String, String> oldNimiValues, Map<String, String> nimiValues) {
-        oldNimiValues.forEach((oldParentNimikey, oldParentNimivalue) -> {
-            String nimiValue = nimiValues.get(oldParentNimikey);
-            if(nimiValue != null && nimiValue.startsWith(oldParentNimivalue)) {
-                String[] organisaatioNimiParts = nimiValue.split(oldParentNimivalue);
-                String newNimivalue = organisaatioNimiParts[organisaatioNimiParts.length - 1];
-                newNimivalue = newNimivalue.startsWith(", ") ? newNimivalue.substring(2) : newNimivalue;
-                nimiValues.put(oldParentNimikey, newNimivalue);
+    private void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap) {
+        oldParentNimiMap.forEach((oldParentNimikey, oldParentNimivalue) -> {
+            String newParentNimi = newParentNimiMap.get(oldParentNimikey) != null ? newParentNimiMap.get(oldParentNimikey) : "";
+            String currentNimi = currentNimiMap.get(oldParentNimikey);
+            if(currentNimi != null) {
+                if(currentNimi.startsWith(oldParentNimivalue)){
+                    currentNimi.replaceAll(oldParentNimivalue, newParentNimi);
+                    currentNimiMap.put(oldParentNimikey, currentNimi);
+                } else {
+                    currentNimiMap.put(oldParentNimikey, newParentNimi + ", " + currentNimi);
+                }
             }
         });
     }
