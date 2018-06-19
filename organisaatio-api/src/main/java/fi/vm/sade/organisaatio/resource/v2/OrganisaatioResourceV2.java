@@ -199,7 +199,7 @@ public interface OrganisaatioResourceV2 {
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/yhteystiedot/hae")
     @ApiOperation(
