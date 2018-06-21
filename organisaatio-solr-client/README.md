@@ -1,1 +1,0 @@
-organisaatio-solr-client tarjoaa indeksoinnin organisaatiodatalle, ja siihen liittyviä hakutoimintoja. Se ei tarjoa rajapintoja ulos. organisaatio-service-moduuli käyttää solr-clientia hauissa. OrganisaatioSearchService on luokka, joka tajoaa hakutoiminnot.

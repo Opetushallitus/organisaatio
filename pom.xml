@@ -141,7 +141,6 @@
 
     <modules>
         <module>organisaatio-api</module>
-        <module>organisaatio-solr-client</module>
         <module>organisaatio-service</module>
         <module>organisaatio-ui</module>
     </modules>
