@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentExcept
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 
 import java.util.*;
@@ -43,9 +42,6 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
-
-    @Autowired
-    private IndexerResource solrIndexer;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -88,12 +84,6 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
 
             // Merkitään organisaatio poistetuksi
             parent = organisaatioDAO.markRemoved(oid);
-
-            // Poistetaan deletoitu organisaatio solr:sta
-            solrIndexer.delete(oid);
-
-            // Päivitetään poistetun organisaation parentin childCount solriin
-            solrIndexer.index(parent);
         }
 
         return parent;

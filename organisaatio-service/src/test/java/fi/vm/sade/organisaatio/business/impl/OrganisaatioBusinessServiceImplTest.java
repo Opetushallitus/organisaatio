@@ -25,7 +25,6 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
@@ -35,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,7 +58,6 @@ import static org.assertj.core.data.MapEntry.entry;
  */
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({"embedded-solr"})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
@@ -70,8 +67,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioBusinessService service;
     @Autowired
-    private IndexerResource indexer;
-    @Autowired
     SearchCriteriaModelMapper searchCriteriaModelMapper;
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
@@ -79,7 +74,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Before
     public void setUp() {
         executeSqlScript("data/basic_organisaatio_data.sql", false);
-        indexer.reBuildIndex(true);
     }
 
     @After

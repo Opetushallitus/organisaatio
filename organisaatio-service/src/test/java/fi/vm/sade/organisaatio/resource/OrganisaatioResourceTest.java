@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,7 +32,6 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("embedded-solr")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
@@ -45,9 +43,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioResourceV2 res2;
 
-    @Autowired
-    private IndexerResource solrIndexer;
-
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -57,7 +52,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         super.before();
         Locale.setDefault(Locale.US); // because of validaton messages
         executeSqlScript("data/basic_organisaatio_data.sql", false);
-        solrIndexer.reBuildIndex(true); //rebuild index
     }
 
     @Override

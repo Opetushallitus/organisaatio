@@ -13,10 +13,6 @@ Tietokannan alustaminen lokaaliin "organisaatio" kantaan:
 
   mvn -Dflyway.user=XXX -Dflyway.password=XXX -P flyway flyway:migrate
 
-3. Solr
-
-ks tarjonta-service/README.txt
-
 Palvelun deployment
 ----------------------------------------------------------------------
 
@@ -62,7 +58,6 @@ Lataa propertyjä seuraavista paikoista:
 Propertyt:
 
 ----------------------------------------------------------------------
-organisaatio.solr.url=http://127.0.0.1:8181/solr/organisaatiot
 #
 # dao-context.xml
 #

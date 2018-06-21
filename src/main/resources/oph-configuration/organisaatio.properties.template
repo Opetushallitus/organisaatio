@@ -24,7 +24,6 @@ port.postgresql={{port_postgresql}}
 rajapinnat.ytj.asiakastunnus={{rajapinnat_ytj_asiakastunnus}}
 rajapinnat.ytj.avain={{rajapinnat_ytj_avain}}
 server.name={{ansible_hostname}}
-organisaatio.solr.url={{organisaatio_solr_url}}
 organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
 organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koodisto}}
 organisaatio-service.scheduled.update.cron.expression=0 0 1 * * ?

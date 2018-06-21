@@ -20,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +39,6 @@ import org.mockito.MockitoAnnotations;
 @ContextConfiguration(loader = SpringockitoContextLoader.class, locations = { "classpath:spring/test-context.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ActiveProfiles("embedded-solr")
 public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
 
     @Autowired

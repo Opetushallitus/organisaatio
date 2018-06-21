@@ -32,7 +32,6 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
@@ -86,9 +85,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private OrganisaatioBusinessChecker checker;
-
-    @Autowired
-    private IndexerResource solrIndexer;
 
     @Autowired
     private OIDService oidService;
@@ -352,19 +348,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity = saveParentSuhde(entity, uberParent, opJarjNro);
         } else {
             entity = saveParentSuhde(entity, parentOrg, opJarjNro);
-            if (!updating && entity.getParent() != null) {
-                solrIndexer.index(Arrays.asList(parentOrg));
-            }
-        }
-
-        // Indeksoidaan organisaatio solriin (HUOM! Ryhmiä ei indeksoida)
-        // Uuden organisaation tapauksessa uudelleenindeksoidaan myös parent
-        if (!OrganisaatioUtil.isRyhma(entity)) {
-            solrIndexer.index(entity);
-
-            if ((parentChanged || !updating) && parentOrg != null) {
-                solrIndexer.index(parentOrg);
-            }
         }
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
@@ -375,7 +358,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Parent changed update children and reindex old parent.
         if (parentChanged) {
             updateChildrenRecursive(entity);
-            solrIndexer.index(oldParent);
         }
 
         // Päivitä tiedot koodistoon.
@@ -730,7 +712,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             organisaatioDAO.update(child);
             updateChildrenRecursive(child);
         }
-        solrIndexer.index(children);
     }
 
     private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
@@ -743,7 +724,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (oppilaitos.getId() != null) {
             List<Organisaatio> children = organisaatioDAO.findChildren(oppilaitos.getId());
             MonikielinenTeksti newParentNames = oppilaitos.getNimi();
-            boolean childrenChanged = false;
             for (Organisaatio child : children) {
                 MonikielinenTeksti childnimi = child.getNimi();
                 boolean childChanged = false;
@@ -778,7 +758,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         }
                         child.setPaivitysPvm(new Date());
                         organisaatioDAO.update(child);
-                        childrenChanged = true;
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
                         // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
@@ -790,9 +769,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 if (childChanged) {
                     organisaatioKoodisto.paivitaKoodistoAsync(child, false);
                 }
-            }
-            if (childrenChanged) {
-                solrIndexer.index(children);
             }
         }
     }
@@ -836,9 +812,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             } catch (OptimisticLockException ole) {
                 throw new OrganisaatioModifiedException(ole);
             }
-
-            // Indeksoidaan organisaatio solriin uudella nimellä
-            solrIndexer.index(Lists.newArrayList(orgEntity));
         }
 
         return nimiEntity;
@@ -952,8 +925,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         batchValidatePvm(givenData, organisaatioMap);
 
-
-        List<Organisaatio> indeksoitavat = new ArrayList<>(givenData.size());
         for(String oid: organisaatioMap.keySet()) {
             OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
             Organisaatio org = organisaatioMap.get(oid);
@@ -979,11 +950,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 tulos.setVersion(org.getVersion());
 
                 edited.lisaaTulos(tulos);
-
-                indeksoitavat.add(org);
             }
         }
-        solrIndexer.index(indeksoitavat);
 
         return edited;
     }
@@ -1039,30 +1007,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public List<Organisaatio> processNewOrganisaatioSuhdeChanges() {
         List<Organisaatio> results = new ArrayList<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
-        Set<Organisaatio> affectedParents = new HashSet<>();
         for (OrganisaatioSuhde os : suhdeList) {
             LOG.info("Processing {}", os);
-            affectedParents.add(os.getParent());
 
             Organisaatio child = os.getChild();
-            // Find previous parent organisation.
-            List<OrganisaatioSuhde> parentRelations = child.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-            Collections.reverse(parentRelations);
-            if (parentRelations.size() > 1) {
-                Organisaatio oldParent = parentRelations.get(1).getParent();
-                affectedParents.add(oldParent);
-            }
             setParentPath(child, os.getParent().getOid());
             organisaatioDAO.update(child);
-            solrIndexer.index(child);
 
             updateChildrenRecursive(child);
 
             results.add(child);
         }
-
-        // Update index for affected parent organisations.
-        solrIndexer.index(new ArrayList<>(affectedParents));
 
         return results;
     }
@@ -1091,7 +1046,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         previousDay.add(Calendar.DAY_OF_MONTH, -1);
         organisaatio.setLakkautusPvm(previousDay.getTime());
         organisaatioDAO.update(organisaatio);
-        solrIndexer.index(organisaatio);
 
         // Lisätään uusi organisaatioiden liitos
         organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
@@ -1169,7 +1123,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (date.before(today) || DateUtils.isSameDay(date, today)) {
             setParentPath(organisaatio, newParent.getOid());
             organisaatioDAO.update(organisaatio);
-            solrIndexer.index(organisaatio);
 
             updateChildrenRecursive(organisaatio);
         }
@@ -1217,9 +1170,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
-
-            // Indeksoidaan organisaatio solriin uudella nimellä
-            solrIndexer.index(Lists.newArrayList(organisaatio));
 
             // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
             if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {

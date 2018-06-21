@@ -33,7 +33,6 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.YtjPaivitysLokiDao;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
@@ -72,9 +71,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
-
-    @Autowired
-    private IndexerResource solrIndexer;
 
     private static Validator validator;
     
@@ -167,9 +163,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         }
         // Call this since the class is readOnly so it won't be called automatically by transaction manager.
         organisaatioDAO.flush();
-
-        // Index the updated resources.
-        solrIndexer.index(updateOrganisaatioList);
 
         ytjPaivitysLoki.setPaivitetytLkm(updateOrganisaatioList.size());
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
