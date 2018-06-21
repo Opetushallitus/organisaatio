@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,7 +266,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
             return null;
         }
         BinaryData bd = new BinaryData();
-        bd.setData(Base64.base64ToByteArray(kuva));
+        bd.setData(Base64.getDecoder().decode(kuva));
         return bd;
     }
 

@@ -20,7 +20,6 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.service.converter.AbstractFromDomainConverter;
-import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -281,7 +280,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
             return null;
         }
 
-        return Base64.byteArrayToBase64(kuva.getData(), 0, kuva.getData().length);
+        return Base64.getEncoder().encodeToString(kuva.getData());
     }
 
     public String convertYhteystietoToPuhelinnumero(List<Yhteystieto> yhteystietos) {

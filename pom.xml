@@ -69,7 +69,6 @@
         <el-api.version>2.2.4</el-api.version>
         <hibernate.version>5.2.17.Final</hibernate.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
-        <solr.version>4.5.1</solr.version>
         <ehcache.version>2.5.2</ehcache.version>
         <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
 

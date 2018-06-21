@@ -32,11 +32,11 @@ import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.solr.common.util.Base64;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +102,7 @@ public class TempFileResource {
         LOG.info("getting " + getUser() + img);
         FileItem imgFile = data.get(getUser() + img);
         byte[] imgData = imgFile.get();
-        return Base64.byteArrayToBase64(imgData, 0, imgData.length);
+        return Base64.getEncoder().encodeToString(imgData);
     }
 
     @DELETE
