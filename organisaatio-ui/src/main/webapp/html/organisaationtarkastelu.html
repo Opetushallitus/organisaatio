@@ -805,10 +805,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div ng-if="histexpanded">
-        <div class="row">
-            <div class="span8" data-ng-include data-src="'historialista.html'"></div>
-        </div>
+    <div ng-if="histexpanded" class="row">
+        <div class="span8" data-ng-include data-src="'historialista.html'"></div>
     </div>
 
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
