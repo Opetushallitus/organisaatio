@@ -157,11 +157,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         return result;
     }
 
-    private List<String> convertListToList(List<String> s) {
+    private List<String> convertListToList(Collection<String> s) {
         return new ArrayList<>(s);
     }
 
-    private Set<String> convertSetToSet(Set<String> s) {
+    private Set<String> convertSetToSet(Collection<String> s) {
         return new HashSet<>(s);
     }
 

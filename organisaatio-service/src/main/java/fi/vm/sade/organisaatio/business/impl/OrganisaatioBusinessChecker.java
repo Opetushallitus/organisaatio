@@ -187,9 +187,9 @@ public class OrganisaatioBusinessChecker {
         // metadata.hakutoimistonNimi
         // metadata.data
         // kielet
-        for (int i = 0; i < entity.getKielet().size(); ++i) {
-            if (entity.getKielet().get(i).matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + entity.getKielet().get(i));
+        for (String kieli : entity.getKielet()) {
+            if (kieli.matches(uriWithVersionRegExp) == false) {
+                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + kieli);
                 throw new NoVersionInKoodistoUriException();
             }
         }
