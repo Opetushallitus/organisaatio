@@ -109,7 +109,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kielet = new ArrayList<>();
+    @Column(name = "kielet", nullable = false)
+    private Set<String> kielet = new LinkedHashSet<>();
 
     private String domainNimi;
 
@@ -312,11 +313,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.tyypit.addAll(tyypit);
     }
 
-    public List<String> getKielet() {
-        return Collections.unmodifiableList(kielet);
+    public Collection<String> getKielet() {
+        return Collections.unmodifiableSet(kielet);
     }
 
-    public void setKielet(List<String> kielet) {
+    public void setKielet(Collection<String> kielet) {
         this.kielet.clear();
         this.kielet.addAll(kielet);
     }

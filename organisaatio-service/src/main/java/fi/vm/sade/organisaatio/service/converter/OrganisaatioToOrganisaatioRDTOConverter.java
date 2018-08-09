@@ -156,7 +156,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         return result;
     }
 
-    private List<String> convertListToList(List<String> s) {
+    private List<String> convertListToList(Collection<String> s) {
         List<String> result = new ArrayList<>();
         for (String v : s) {
             result.add(v);
