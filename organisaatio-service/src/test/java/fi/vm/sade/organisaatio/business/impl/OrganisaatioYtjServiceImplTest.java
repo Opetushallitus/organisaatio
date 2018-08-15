@@ -32,6 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -90,7 +91,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("example@example.com", org.getEmail().getEmail());
         Assert.assertEquals("http://www.ytj.fi", org.getWww().getWwwOsoite());
         Assert.assertEquals("0100000211", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
-        Assert.assertEquals(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI, org.getKielet().get(0));
+        assertThat(org.getKielet()).containsExactly(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI);
         // original 2006-06-29, from YTJ 01.01.1999
         Assert.assertEquals(915141600000L, org.getAlkuPvm().getTime());
         Assert.assertEquals(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI, org.getYtjKieli());
@@ -108,7 +109,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals(918597600000L, org.getNimet().get(1).getAlkuPvm().getTime());
         Assert.assertEquals("Ygankuja 1", org.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite) orgSortedYhteystiedot.get(0)).getPostinumero());
-        Assert.assertEquals(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI, org.getKielet().get(0));
+        assertThat(org.getKielet()).containsExactly(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI);
         Assert.assertEquals("example@example.com", org.getEmail().getEmail());
         Assert.assertEquals("12345", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.oph.fi", org.getWww().getWwwOsoite());
@@ -128,7 +129,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         // new sv address added
         //Assert.assertEquals("Svenska gatan 1", org.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV).getOsoite());
         Assert.assertEquals("posti_00100", ((Osoite) orgSortedYhteystiedot.get(0)).getPostinumero());
-        Assert.assertEquals(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_SV, org.getKielet().get(0));
+        assertThat(org.getKielet()).containsExactly(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_SV);
         Assert.assertEquals("example@example.com", org.getEmail().getEmail());
         Assert.assertEquals("0100000210", org.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero());
         Assert.assertEquals("http://www.ytj.sv", org.getWww().getWwwOsoite());
