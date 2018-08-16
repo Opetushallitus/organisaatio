@@ -278,7 +278,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
 
         refreshParent: function(parentResult, model) {
             model.uriLocalizedNames["parentnimi"] = refreshFunctions.getDecodedLocalizedValue(parentResult.nimi, "", "", false);
-            model.parenttype = parentResult.tyypit[0];
             model.parent = parentResult;
             model.parentPattern = {};
             model.parentPattern["fi"] = (parentResult.nimi.fi ? "^" + parentResult.nimi.fi + ".*" : ".*");
