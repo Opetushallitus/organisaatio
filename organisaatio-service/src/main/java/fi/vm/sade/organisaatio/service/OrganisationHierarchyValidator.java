@@ -28,7 +28,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
  * KOULUTUSTOIMIJA.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS,
- * MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
+ * MUU ORGANISAATIO, VARHAISKASVATUKSEN_JARJESTAJA tai TYÖELÄMÄJÄRJESTÖ.
  * <li>Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään KOULUTUSTOIMIJA.
  *
@@ -93,6 +93,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
         }
     };
