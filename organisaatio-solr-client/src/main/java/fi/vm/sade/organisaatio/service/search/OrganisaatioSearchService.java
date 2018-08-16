@@ -60,6 +60,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
                 Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
+        orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
     }
 
