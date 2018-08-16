@@ -180,7 +180,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <nodeVersion>v8.6.0</nodeVersion>
+                            <nodeVersion>v8.11.4</nodeVersion>
                         </configuration>
                     </execution>
                     <execution>
