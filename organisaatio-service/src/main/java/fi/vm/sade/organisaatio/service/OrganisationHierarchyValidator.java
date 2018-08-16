@@ -23,6 +23,9 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
  * <li>Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on
  * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
  * TYÖELÄMÄJÄRJESTÖ.
+ * <li>Jos organisaatio on VARHAISKASVATUKSEN_JARJESTAJA ja sille on
+ * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
+ * KOULUTUSTOIMIJA.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS,
  * MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
@@ -52,6 +55,17 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
         }
     };
+
+    Predicate<Entry<Organisaatio, Organisaatio>> varhaiskasvatuksenJarjestajaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
+        @Override
+        public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value())
+                    && (parentChild.getKey() == null
+                    || ophOid.equals(parentChild.getKey().getOid())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
+        }
+    };
+
     Predicate<Entry<Organisaatio, Organisaatio>> tyoelamajarjestoRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
@@ -116,7 +130,8 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     @Override
     public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
         Preconditions.checkNotNull(parentChild);
-        return Predicates.or(oppilaitosRule, muuOrgRule, tyoelamajarjestoRule, toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
+        return Predicates.or(oppilaitosRule, muuOrgRule, varhaiskasvatuksenJarjestajaRule, tyoelamajarjestoRule,
+                toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
     }
 
 }

@@ -128,6 +128,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         case MUU_ORGANISAATIO:
             //only oph
             return checkAccess(ophOid, ROLE_CRUD);
+        case VARHAISKASVATUKSEN_JARJESTAJA:
         case TYOELAMAJARJESTO:
             //only oph
             return checkAccess(ophOid, ROLE_CRUD);

@@ -23,6 +23,7 @@ public final class OrganisaatioTyyppiUtil {
         tmp.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(), newHashSet(OrganisaatioTyyppi.TOIMIPISTE,
                 OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE));
         tmp.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), newHashSet(OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        tmp.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         tmp.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO));
         ORG_TYPE_LIMIT = unmodifiableMap(tmp);
     }

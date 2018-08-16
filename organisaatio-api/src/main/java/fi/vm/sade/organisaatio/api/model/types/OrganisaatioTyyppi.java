@@ -8,6 +8,7 @@ public enum OrganisaatioTyyppi {
     OPPISOPIMUSTOIMIPISTE("Oppisopimustoimipiste"),
     MUU_ORGANISAATIO("Muu organisaatio"),
     RYHMA("Ryhma"),
+    VARHAISKASVATUKSEN_JARJESTAJA("Varhaiskasvatuksen jarjestaja"),
     TYOELAMAJARJESTO("Tyoelamajarjesto");
     
     private final String value;
