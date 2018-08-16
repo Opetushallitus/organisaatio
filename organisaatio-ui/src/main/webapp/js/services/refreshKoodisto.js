@@ -61,6 +61,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'Oppilaitos': ["03"],
                         'Toimipiste': ["03"],
                         'Oppisopimustoimipiste': [],
+                        'Varhaiskasvatuksen jarjestaja': [],
                         'Tyoelamajarjesto': ["06","03"]};
                     result.forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
@@ -71,7 +72,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
-                                || orgTyyppiKoodi.koodiArvo === "05")) {
+                                || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             }
 

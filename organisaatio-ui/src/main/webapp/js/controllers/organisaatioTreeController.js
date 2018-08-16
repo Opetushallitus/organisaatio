@@ -80,6 +80,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                 // Muiden käyttäjien tapauksessa seuraaville tyypeille ei voi lisätä aliorganisaatioita
                 !$scope.model.isTyyppi(node, "Koulutustoimija") &&
                 !$scope.model.isTyyppi(node, "Muu organisaatio") &&
+                !$scope.model.isTyyppi(node, "Varhaiskasvatuksen jarjestaja") &&
                 !$scope.model.isTyyppi(node, "Tyoelamajarjesto") &&
                 !$scope.model.isTyyppi(node, "Oppisopimustoimipiste");
     };
