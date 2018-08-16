@@ -67,7 +67,9 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             // Parentin sallitut aliorganisaatiot
-                            if (model.organisaatio.parentOid !== model.OPHOid && sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
+                            if (model.organisaatio.parentOid !== model.OPHOid && model.parent.tyypit.some(function(tyyppi) {
+                                return sallitutAlaOrganisaatiot[tyyppi].indexOf(orgTyyppiKoodi.koodiArvo) !== -1;
+                            })) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
