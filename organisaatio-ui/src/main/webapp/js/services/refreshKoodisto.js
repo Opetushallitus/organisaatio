@@ -63,7 +63,9 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'Oppisopimustoimipiste': [],
                         'Varhaiskasvatuksen jarjestaja': ["03"],
                         'Tyoelamajarjesto': ["06","03"]};
-                    result.forEach(function(orgTyyppiKoodi) {
+                    result.sort(function (a, b) {
+                        return a.koodiArvo.localeCompare(b.koodiArvo);
+                    }).forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             // Parentin sallitut aliorganisaatiot
