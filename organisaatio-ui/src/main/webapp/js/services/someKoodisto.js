@@ -74,6 +74,12 @@ koodisto.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         if (type === 'TWITTER' || type === 'sosiaalinenmedia_4#1') {
             return 'https://twitter.com/';
         }
+        if (type === 'INSTAGRAM' || type === 'sosiaalinenmedia_6#1') {
+            return 'https://instagram.com/'
+        }
+        if (type === 'YOUTUBE' || type === 'sosiaalinenmedia_7#1') {
+            return 'https://youtube.com/'
+        }
 
         // Default / MUU
         return 'https://';
@@ -91,6 +97,12 @@ koodisto.factory('SomeKoodisto', function($q, $log, $filter, $injector,
         }
         if (type === 'TWITTER' || type === 'sosiaalinenmedia_4#1') {
             return '^https{0,1}://(?:www\.){0,1}twitter.com/.+';
+        }
+        if (type === 'INSTAGRAM' || type === 'sosiaalinenmedia_6#1') {
+            return '^https{0,1}://(?:www\.){0,1}instagram.com/.+';
+        }
+        if (type === 'YOUTUBE' || type === 'sosiaalinenmedia_7#1') {
+            return '^https{0,1}://(?:www\.){0,1}youtube.com/.+';
         }
 
         // Default / MUU
@@ -111,7 +123,9 @@ koodisto.factory('SomeKoodisto', function($q, $log, $filter, $injector,
                     {type: 'GOOGLE_PLUS', nimi: $filter('i18n')('Organisaationtarkastelu.GOOGLE_PLUS')},
                     {type: 'LINKED_IN',   nimi: $filter('i18n')('Organisaationtarkastelu.LINKED_IN')},
                     {type: 'TWITTER',     nimi: $filter('i18n')('Organisaationtarkastelu.TWITTER')},
-                    {type: 'MUU',         nimi: $filter('i18n')('Organisaationtarkastelu.MUU')}
+                    {type: 'MUU',         nimi: $filter('i18n')('Organisaationtarkastelu.MUU')},
+                    {type: 'YOUTUBE',     nimi: $filter('i18n')('Organisaationtarkastelu.YOUTUBE')},
+                    {type: 'INSTAGRAM',   nimi: $filter('i18n')('Organisaationtarkastelu.INSTAGRAM')}
                 ]
             };
 
