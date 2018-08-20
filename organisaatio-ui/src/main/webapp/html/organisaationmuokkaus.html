@@ -710,6 +710,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                             <div class="input-append">
                                 <input id="somein" type="text" name="somein" class="span6" oph-enter
                                        oph-pattern="{{model.someurls[field].validator}}"
+                                       ng-focus="model.organisaatio.metadata.data[field][model.smlang] = model.someurls[field].autofill"
                                        ng-model="model.organisaatio.metadata.data[field][model.smlang]"
                                        ie-placeholder placeholder="{{model.someurls[field].autofill}}" required>
                                 <!--onclick="if (!value && placeholder) value = placeholder" -->
