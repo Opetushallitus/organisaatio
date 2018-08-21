@@ -216,7 +216,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                         modelYhteystiedot[phkieli][etyypit[i]] = uusiYt;
                     }
                 }
-                var ptyypit = ['puhelin', 'faksi'];
+                var ptyypit = ['puhelin'];
                 for (i = 0; i < ptyypit.length; ++i) {
                     if (!modelYhteystiedot[phkieli][ptyypit[i]]) {
                         uusiYt = {tyyppi: ptyypit[i], kieli: phkieli};

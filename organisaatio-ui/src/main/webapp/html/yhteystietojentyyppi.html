@@ -145,15 +145,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     {{t('YhteystietojenTyyppiForm.pakollinenFull')}}
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" tt="YhteystietojenTyyppiForm.faksiNumero">YhteystietojenTyyppiForm.faksiNumero</label>
-                <div class="controls" ng-repeat="faksi in yttFindTyyppi({tyyppi: 'FAKSI'})">
-                    <input type="checkbox" ng-model="faksi.kaytossa" ng-disabled="faksi.pakollinen">
-                    {{t('YhteystietojenTyyppiForm.kaytossaFull')}}
-                    <input type="checkbox" ng-model="faksi.pakollinen" ng-disabled="!faksi.kaytossa">
-                    {{t('YhteystietojenTyyppiForm.pakollinenFull')}}
-                </div>
-            </div>
             <div class="control-group" ng-repeat="tyyppi in yttFindTyyppiAll({tyyppi: 'PUHELIN', nimi: regexp('Muu: ')})">
                 <label class="control-label">{{localizeMuuYttNimi(tyyppi)}}</label>
                 <div class="controls">

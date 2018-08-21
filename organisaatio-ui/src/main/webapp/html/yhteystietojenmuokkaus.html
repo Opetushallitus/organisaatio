@@ -153,24 +153,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 </div>
 
 <div class="control-group">
-    <label class="control-label" tt="Organisaationtarkastelu.faksinumero">
-        Organisaationtarkastelu.faksinumero
-    </label>
-    <div class="controls">
-        <input id="faksinumero" type="text" maxlength="20" name="faksinumero"
-               ng-model="model.yhteystiedot[model.ytlang].faksi.numero" oph-null-if-zero-length oph-enter
-               ie-placeholder placeholder="{{t('Organisaationtarkastelu.faksinumero')}}" ng-pattern="/^[\d \-\+]+$/"/>
-        <div>
-            <span class="text-error" ng-show="yhteystiedot.faksinumero.$error.pattern">
-                {{t('Organisaationtarkastelu.faksinumero')}}
-                {{t('Organisaationmuokkaus.validointi.virheellinen')}}
-            </span>
-        </div>
-    </div>
-</div>
-
-
-<div class="control-group">
     <label class="control-label">
         {{t('Organisaationtarkastelu.sahkopostiosoite')}}
         <span ng-if="model.isPostiOsoiteRequired(model.ytlang)">*</span>

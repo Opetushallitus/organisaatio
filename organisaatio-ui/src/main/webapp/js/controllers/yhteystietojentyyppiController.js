@@ -108,7 +108,6 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
             'OSOITE_ULKOMAA': {fi: 'Ulkomaan osoite', sv: 'Utrikes adress', en: 'Foreign Address'},
             'PUHELINMatkapuhelinnumero': {fi: 'Matkapuhelinnumero', sv: 'Mobiltelefonnummer', en: 'Mobile'},
             'PUHELINPuhelinnumero': {fi: 'Puhelinnumero', sv: 'Telefonnummer', en: 'Phone'},
-            'FAKSI': {fi: 'Faksinumero', sv: 'faxnummer', en: 'Fax'},
             'WWWWww-osoite': {fi: 'Www-osoite', sv: 'Www-adress', en: 'WWW Address'}
         };
         return tyypit[tyyppi + nimi][locale];
