@@ -150,9 +150,6 @@ public class TestDataCreator {
         Puhelinnumero puh1 = new Puhelinnumero("12345", Puhelinnumero.TYYPPI_PUHELIN, null);
         puh1.setOrganisaatio(organisaatio);
         yhteystiedot.add(puh1);
-        Puhelinnumero puh2 = new Puhelinnumero("12345", Puhelinnumero.TYYPPI_FAKSI, null);
-        puh2.setOrganisaatio(organisaatio);
-        yhteystiedot.add(puh2);
         Www www = new Www();
         www.setWwwOsoite("http://www.oph.fi");
         www.setOrganisaatio(organisaatio);

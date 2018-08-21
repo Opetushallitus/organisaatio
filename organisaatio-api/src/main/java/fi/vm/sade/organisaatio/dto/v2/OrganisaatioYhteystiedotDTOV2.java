@@ -47,8 +47,6 @@ public class OrganisaatioYhteystiedotDTOV2 {
 
     private Map<String, String> puhelinnumero;
 
-    private Map<String, String> faksinumero;
-
     private Map<String, String> wwwOsoite;
 
     private Map<String, String> emailOsoite;
@@ -206,20 +204,6 @@ public class OrganisaatioYhteystiedotDTOV2 {
      */
     public void setPuhelinnumero(Map<String, String> puhelinnumero) {
         this.puhelinnumero = puhelinnumero;
-    }
-
-    /**
-     * @return the faksinumero
-     */
-    public Map<String, String> getFaksinumero() {
-        return faksinumero;
-    }
-
-    /**
-     * @param faksinumero the faksinumero to set
-     */
-    public void setFaksinumero(Map<String, String> faksinumero) {
-        this.faksinumero = faksinumero;
     }
 
     /**

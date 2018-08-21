@@ -74,8 +74,6 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private String _puhelinnumero; // from List of Yhteystietos
 
-    private String _faksinumero; // from List of Yhteystietos
-
     private String _wwwOsoite; // from List of Yhteystietos
 
     private String _emailOsoite; // from List of Yhteystietos
@@ -403,25 +401,6 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @Deprecated
     public void setEmailOsoite(String _emailOsoite) {
         this._emailOsoite = _emailOsoite;
-    }
-
-    /**
-     * @return
-     * @deprecated Do not use this method! Use getYhteystiedot() instead!
-     */
-    @Deprecated
-    @ApiModelProperty(value = "Faxin numero", required = true)
-    public String getFaksinumero() {
-        return _faksinumero;
-    }
-
-    /**
-     * @param _faksinumero
-     * @deprecated Do not use this method! Use setYhteystiedot() instead!
-     */
-    @Deprecated
-    public void setFaksinumero(String _faksinumero) {
-        this._faksinumero = _faksinumero;
     }
 
     /**

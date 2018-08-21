@@ -33,10 +33,6 @@ public abstract class YhteystietoUtil {
         return numero.getTyyppi().equals(Puhelinnumero.TYYPPI_PUHELIN);
     }
 
-    public static boolean isFaksinumero(Puhelinnumero numero) {
-        return numero.getTyyppi().equals(Puhelinnumero.TYYPPI_FAKSI);
-    }
-    
     public static List<Osoite> getPostiOsoitteet(List<Yhteystieto> yhteystiedot) {
         List<Osoite> postiOsoitteet = new ArrayList<Osoite>();
 
@@ -103,17 +99,4 @@ public abstract class YhteystietoUtil {
         return puhelinnumerot;
     }
 
-    public static List<Puhelinnumero> getFaksinumerot(List<Yhteystieto> yhteystiedot) {
-        List<Puhelinnumero> faksinumerot = new ArrayList<Puhelinnumero>();
-
-        for (Yhteystieto yhteystieto : yhteystiedot) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                Puhelinnumero numero = (Puhelinnumero) yhteystieto;
-                if (isFaksinumero(numero)) {
-                    faksinumerot.add(numero);
-                }
-            }
-        }
-        return faksinumerot;
-    }    
 }
