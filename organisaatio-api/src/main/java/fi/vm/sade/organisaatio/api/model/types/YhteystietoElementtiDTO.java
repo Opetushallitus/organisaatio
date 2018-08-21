@@ -16,7 +16,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     protected boolean pakollinen;
 
     /**
-     * Gets the value of the version property.
+     * Gets the koodiValue of the version property.
      * 
      */
     public long getVersion() {
@@ -24,7 +24,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the version property.
+     * Sets the koodiValue of the version property.
      * 
      */
     public void setVersion(long value) {
@@ -32,7 +32,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the oid property.
+     * Gets the koodiValue of the oid property.
      * 
      * @return
      *     possible object is
@@ -44,7 +44,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the oid property.
+     * Sets the koodiValue of the oid property.
      * 
      * @param value
      *     allowed object is
@@ -56,7 +56,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the nimi property.
+     * Gets the koodiValue of the nimi property.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the nimi property.
+     * Sets the koodiValue of the nimi property.
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the nimiSv property.
+     * Gets the koodiValue of the nimiSv property.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the nimiSv property.
+     * Sets the koodiValue of the nimiSv property.
      * 
      * @param value
      *     allowed object is
@@ -104,7 +104,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the nimiEn property.
+     * Gets the koodiValue of the nimiEn property.
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the nimiEn property.
+     * Sets the koodiValue of the nimiEn property.
      * 
      * @param value
      *     allowed object is
@@ -128,7 +128,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the tyyppi property.
+     * Gets the koodiValue of the tyyppi property.
      * 
      * @return
      *     possible object is
@@ -140,7 +140,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the tyyppi property.
+     * Sets the koodiValue of the tyyppi property.
      * 
      * @param value
      *     allowed object is
@@ -152,7 +152,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the kaytossa property.
+     * Gets the koodiValue of the kaytossa property.
      * 
      */
     public boolean isKaytossa() {
@@ -160,7 +160,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the kaytossa property.
+     * Sets the koodiValue of the kaytossa property.
      * 
      */
     public void setKaytossa(boolean value) {
@@ -168,7 +168,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the pakollinen property.
+     * Gets the koodiValue of the pakollinen property.
      * 
      */
     public boolean isPakollinen() {
@@ -176,7 +176,7 @@ public class YhteystietoElementtiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the pakollinen property.
+     * Sets the koodiValue of the pakollinen property.
      * 
      */
     public void setPakollinen(boolean value) {

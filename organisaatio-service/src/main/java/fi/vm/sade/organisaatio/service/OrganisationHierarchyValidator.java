@@ -1,13 +1,12 @@
 package fi.vm.sade.organisaatio.service;
 
-import java.util.Map.Entry;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+
+import java.util.Map.Entry;
 
 /**
  * Organisaatiohierarkiasäännöt:
@@ -40,19 +39,19 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> oppilaitosRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
                     && parentChild.getKey() != null
-                    && parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value());
+                    && parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue());
         }
     };
 
     Predicate<Entry<Organisaatio, Organisaatio>> muuOrgRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue()));
         }
     };
 
@@ -69,17 +68,17 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> tyoelamajarjestoRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
         }
     };
 
     Predicate<Entry<Organisaatio, Organisaatio>> koulutustoimijaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid()));
         }
@@ -88,36 +87,36 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> toimipisteRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())
                     && parentChild.getKey() != null
-                    && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
+                    && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
         }
     };
 
     Predicate<Entry<Organisaatio, Organisaatio>> oppisopimustoimipisteRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue())
                     && parentChild.getKey() != null
-                    && parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value());
+                    && parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue());
         }
     };
 
     Predicate<Entry<Organisaatio, Organisaatio>> ryhmaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.RYHMA.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.RYHMA.koodiValue())
                     && parentChild.getKey() != null
-                    && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.value())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
+                    && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue())
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
         }
     };
 

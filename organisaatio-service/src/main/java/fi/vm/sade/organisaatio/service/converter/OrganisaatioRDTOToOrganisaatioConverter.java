@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
-        s.setNimet((List<OrganisaatioNimi>) organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
+        s.setNimet(organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
 
         // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
         MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(s.getNimet());
@@ -86,7 +87,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
         // t.set(s.getPuhelin());
         s.setToimipisteKoodi(t.getToimipistekoodi());
-        s.setTyypit(convertListToList(t.getTyypit()));
+        s.setTyypit(OrganisaatioUtil.tyypitToKoodis(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
         // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille

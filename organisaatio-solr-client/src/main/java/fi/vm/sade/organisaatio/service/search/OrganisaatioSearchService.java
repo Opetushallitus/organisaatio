@@ -15,8 +15,12 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
-import java.util.*;
-
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrServer;
@@ -30,13 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import java.util.*;
 
 public class OrganisaatioSearchService extends SolrOrgFields {
 
@@ -51,17 +49,17 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
         this.solr = factory.getSolrServer();
-        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
-                OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(),
-                OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.TOIMIPISTE.value(),
-                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
-                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
-        orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
+                OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.TOIMIPISTE.koodiValue(),
+                OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(),
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue(),
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue() + "\""));
+        orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
     }
 
     public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {

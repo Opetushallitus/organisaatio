@@ -12,7 +12,7 @@ public class YhteystietoArvoDTO implements Serializable {
     protected String organisaatioOid;
 
     /**
-     * Gets the value of the yhteystietoArvoOid property.
+     * Gets the koodiValue of the yhteystietoArvoOid property.
      * 
      * @return
      *     possible object is
@@ -24,7 +24,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the yhteystietoArvoOid property.
+     * Sets the koodiValue of the yhteystietoArvoOid property.
      * 
      * @param value
      *     allowed object is
@@ -36,7 +36,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the arvo property.
+     * Gets the koodiValue of the arvo property.
      * 
      * @return
      *     possible object is
@@ -48,7 +48,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the arvo property.
+     * Sets the koodiValue of the arvo property.
      * 
      * @param value
      *     allowed object is
@@ -60,7 +60,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the kieli property.
+     * Gets the koodiValue of the kieli property.
      * 
      * @return
      *     possible object is
@@ -72,7 +72,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the kieli property.
+     * Sets the koodiValue of the kieli property.
      * 
      * @param value
      *     allowed object is
@@ -84,7 +84,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the kenttaOid property.
+     * Gets the koodiValue of the kenttaOid property.
      * 
      * @return
      *     possible object is
@@ -96,7 +96,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the kenttaOid property.
+     * Sets the koodiValue of the kenttaOid property.
      * 
      * @param value
      *     allowed object is
@@ -108,7 +108,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the organisaatioOid property.
+     * Gets the koodiValue of the organisaatioOid property.
      * 
      * @return
      *     possible object is
@@ -120,7 +120,7 @@ public class YhteystietoArvoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the organisaatioOid property.
+     * Sets the koodiValue of the organisaatioOid property.
      * 
      * @param value
      *     allowed object is

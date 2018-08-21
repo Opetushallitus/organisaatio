@@ -81,7 +81,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
     }
 
     /**
-     * Add field if value is not null
+     * Add field if koodiValue is not null
      */
     private static void add(SolrInputDocument doc, String fieldName, Object value) {
         if (value != null) {

@@ -185,14 +185,6 @@ public class ConverterFactory {
         return jpaClass;
     }
     
-    private List<String> getTyypitStr(List<OrganisaatioTyyppi> tyypit) {
-        List<String> tyypitStr = new ArrayList<>();
-        for (OrganisaatioTyyppi curT : tyypit) {
-            tyypitStr.add(curT.value());
-        }
-        return tyypitStr;
-    }
-
     /**
      * converts dto to jpa entity
      * @param dto
@@ -369,8 +361,8 @@ public class ConverterFactory {
         //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);//OrganisaatiotyypinYhteystiedot
         if (dtos != null) {
             for (fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi dto : dtos) {
-                if (!orgTypes.contains(dto.value())) {
-                    orgTypes.add(dto.value());
+                if (!orgTypes.contains(dto.koodiValue())) {
+                    orgTypes.add(dto.koodiValue());
                 }
             }
         }

@@ -12,7 +12,7 @@ INSERT INTO MONIKIELINENTEKSTI(ID, VERSION) VALUES
 (9, 0),
 (1000, 0);
 
-INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
+INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, KOODIVALUE, KEY) VALUES
 (1, 'opetushallitus', 'fi'),
 (2, 'root test koulutustoimija', 'fi'),
 (2, 'root test utbildningsoperator', 'sv'),
@@ -129,25 +129,25 @@ INSERT INTO ORGANISAATIO_NIMI(ID, VERSION, ALKUPVM, PAIVITTAJA, NIMI_MKT, ORGANI
 (9, 0, DATE '1970-01-01', NULL, 9, 9);
 
 INSERT INTO ORGANISAATIO_TYYPIT(ORGANISAATIO_ID, TYYPIT) VALUES
-(1, 'Koulutustoimija'),
-(2, 'Koulutustoimija'),
-(3, 'Toimipiste'),
-(3, 'Oppilaitos'),
-(3, 'Oppisopimustoimipiste'),
-(4, 'Toimipiste'),
-(4, 'Oppilaitos'),
-(4, 'Oppisopimustoimipiste'),
-(5, 'Toimipiste'),
-(5, 'Oppilaitos'),
-(5, 'Oppisopimustoimipiste'),
-(6, 'Toimipiste'),
-(6, 'Oppilaitos'),
-(6, 'Oppisopimustoimipiste'),
-(7, 'Koulutustoimija'),
-(8, 'Toimipiste'),
-(8, 'Oppilaitos'),
-(8, 'Oppisopimustoimipiste'),
-(9, 'Tyoelamajarjesto');
+(1, 'organisaatiotyyppi_01'),
+(2, 'organisaatiotyyppi_01'),
+(3, 'organisaatiotyyppi_03'),
+(3, 'organisaatiotyyppi_02'),
+(3, 'organisaatiotyyppi_04'),
+(4, 'organisaatiotyyppi_03'),
+(4, 'organisaatiotyyppi_02'),
+(4, 'organisaatiotyyppi_04'),
+(5, 'organisaatiotyyppi_03'),
+(5, 'organisaatiotyyppi_02'),
+(5, 'organisaatiotyyppi_04'),
+(6, 'organisaatiotyyppi_03'),
+(6, 'organisaatiotyyppi_02'),
+(6, 'organisaatiotyyppi_04'),
+(7, 'organisaatiotyyppi_01'),
+(8, 'organisaatiotyyppi_03'),
+(8, 'organisaatiotyyppi_02'),
+(8, 'organisaatiotyyppi_04'),
+(9, 'organisaatiotyyppi_06');
 
 INSERT INTO ORGANISAATIOSUHDE(ID, VERSION, ALKUPVM, LOPPUPVM, OPETUSPISTEENJARJNRO, SUHDETYYPPI, CHILD_ID, PARENT_ID) VALUES
 (1, 0, TIMESTAMP '2014-12-02 12:50:06.46', NULL, NULL, 'HISTORIA', 2, 1),

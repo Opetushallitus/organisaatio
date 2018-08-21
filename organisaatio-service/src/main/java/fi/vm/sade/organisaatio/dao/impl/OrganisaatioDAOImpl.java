@@ -753,8 +753,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         whereExpr.and(org.organisaatioPoistettu.isFalse());
         // Select by Org tyyppi
         if (type != null) {
-             whereExpr.and(org.tyypit.contains(type.value()));
-//            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.value() + "%"));
+             whereExpr.and(org.tyypit.contains(type.koodiValue()));
+//            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.koodiValue() + "%"));
         }
         if(requireYtunnus) {
             whereExpr.and(org.ytunnus.isNotNull());

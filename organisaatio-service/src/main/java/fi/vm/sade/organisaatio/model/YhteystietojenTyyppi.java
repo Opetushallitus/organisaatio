@@ -17,22 +17,13 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import fi.vm.sade.security.xssfilter.XssFilterListener;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
-
-import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 /**
  * @author Antti Salonen
@@ -59,7 +50,6 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
     private List<String> sovellettavatOppilaitostyyppis = new ArrayList<String>();
 
     @OneToMany(mappedBy = "yhteystietojenTyyppi", cascade = CascadeType.ALL, orphanRemoval=true)
-    // TODO remove @Cascade(value = org.hibernate.annotations.CascadeType.DELETE_ORPHAN) // TODO: kun JPA2: @OneToMany(..., orphanRemoval=true)
     private List<YhteystietoElementti> lisatietos = new ArrayList<YhteystietoElementti>();
 
     @NotNull

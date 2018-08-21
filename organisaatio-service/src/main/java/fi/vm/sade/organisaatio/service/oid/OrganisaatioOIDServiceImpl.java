@@ -15,23 +15,19 @@
 
 package fi.vm.sade.organisaatio.service.oid;
 
-import fi.vm.sade.oidgenerator.OIDGenerator;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.oid.service.types.NodeClassData;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.oidgenerator.OIDGenerator;
+import fi.vm.sade.organisaatio.dao.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Organisaation OID generointi toimii kuin OIDServiceMock, mutta tarkistaa ettei
@@ -176,7 +172,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             return true;
         }
 
-        LOG.warn("Unknown node class value: " + nodeClassValue);
+        LOG.warn("Unknown node class koodiValue: " + nodeClassValue);
 
         return false;
     }

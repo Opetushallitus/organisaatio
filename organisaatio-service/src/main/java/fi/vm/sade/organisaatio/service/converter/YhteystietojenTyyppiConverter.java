@@ -1,11 +1,5 @@
 package fi.vm.sade.organisaatio.service.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -14,6 +8,10 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author Antti Salonen
@@ -27,7 +25,7 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
     @Override
     public void setValuesToDTO(YhteystietojenTyyppi entity, YhteystietojenTyyppiDTO dto) {
         for (String oty : entity.getSovellettavatOrganisaatioTyyppis()) {
-            dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.fromValue(oty));
+            dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.fromKoodiValue(oty));
         }
 
         dto.setNimi(convertNimiToDto(entity));

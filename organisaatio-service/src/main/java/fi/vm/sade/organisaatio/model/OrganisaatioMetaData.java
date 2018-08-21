@@ -103,7 +103,7 @@ public class OrganisaatioMetaData extends BaseEntity {
      * @param languageCode
      *            Koodisto language code (uri: EN 123) or just some language key
      * @param value
-     *            actual textual value, null value clears data
+     *            actual textual koodiValue, null koodiValue clears data
      */
     public void setNamedValue(String dataKey, String languageCode, String value) {
         // Find correct entry
@@ -128,7 +128,7 @@ public class OrganisaatioMetaData extends BaseEntity {
             nmkt.setValue(mt);
         }
 
-        // Create/update the actual value with selected language
+        // Create/update the actual koodiValue with selected language
         if (value != null) {
             nmkt.getValue().addString(languageCode, value);
         } else {
@@ -148,7 +148,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     }
 
     /**
-     * Get named value for given language.
+     * Get named koodiValue for given language.
      *
      * @param dataKey
      * @param languageCode

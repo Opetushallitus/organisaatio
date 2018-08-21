@@ -12,8 +12,11 @@ import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import org.junit.*;
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +108,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Test
     public void testSearchOrganisaatios() throws Exception {
         //Finding all koulutustoimijat
-        OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null, null, true, null);
+        OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), null, null, true, null);
         OrganisaatioHakutulos result = res.searchHierarchy(searchCriteria);
         assertEquals(6, result.getNumHits());
 

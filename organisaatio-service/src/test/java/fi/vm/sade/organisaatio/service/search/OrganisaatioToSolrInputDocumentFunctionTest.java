@@ -59,7 +59,7 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         org.getParentSuhteet().add(suhde);
         org.setParentSuhteet(Sets.newHashSet(suhde));
         parent.setOid("1.1.1.1.1.1");
-        org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
+        org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
         org.setYtunnus("123456-7");
 
         List<OrganisaatioNimi> nimet = new ArrayList<>();

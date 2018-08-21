@@ -15,17 +15,16 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation suppeat perustiedot")
@@ -68,7 +67,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Gets the value of the oid property.
+     * Gets the koodiValue of the oid property.
      * 
      * @return possible object is {@link String }
      * 
@@ -78,7 +77,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Sets the value of the oid property.
+     * Sets the koodiValue of the oid property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -126,7 +125,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
     
     /**
-     * Gets the value of the oppilaitostyyppi property.
+     * Gets the koodiValue of the oppilaitostyyppi property.
      * 
      * @return possible object is {@link String }
      * 
@@ -136,7 +135,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Sets the value of the oppilaitostyyppi property.
+     * Sets the koodiValue of the oppilaitostyyppi property.
      * 
      * @param value
      *            allowed object is {@link String }

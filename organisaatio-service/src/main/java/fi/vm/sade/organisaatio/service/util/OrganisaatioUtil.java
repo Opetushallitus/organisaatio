@@ -18,9 +18,11 @@ package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.util.Date;
-import org.apache.commons.lang.time.DateUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -28,17 +30,17 @@ import org.apache.commons.lang.time.DateUtils;
  */
 public abstract class OrganisaatioUtil {
     public static boolean isRyhma(Organisaatio organisaatio) {
-        return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.value());
+        return organisaatio.getTyypit().contains(OrganisaatioTyyppi.RYHMA.koodiValue());
     }
 
     public static boolean isOppilaitos(Organisaatio organisaatio) {
         return organisaatio.getTyypit() != null
-                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.value());
+                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue());
     }
 
     public static boolean isToimipiste(Organisaatio organisaatio) {
         return organisaatio.getTyypit() != null
-                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.value());
+                    && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue());
     }
 
     /**
@@ -110,4 +112,25 @@ public abstract class OrganisaatioUtil {
         return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
     }
 
+    /**
+     * Muuttaa organisaation tyypit koodistoarvoista organisaatiopalvelun vanhaan tyyppiin.
+     * @param tyypitAsKoodi Organisaatiotyypit koodiarvoina
+     * @return Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
+     */
+    public static List<String> tyypitFromKoodis(List<String> tyypitAsKoodi) {
+        return tyypitAsKoodi.stream()
+                .map(tyyppi -> OrganisaatioTyyppi.fromKoodiValue(tyyppi).value())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Muuttaa organisaation tyypit organisaatiopalvelun vanhasta tyypistä koodistoarvoiksi.
+     * @param tyypit Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
+     * @return Organisaatiotyypit koodiarvoina
+     */
+    public static List<String> tyypitToKoodis(List<String> tyypit) {
+        return tyypit.stream()
+                .map(tyyppi -> OrganisaatioTyyppi.fromValue(tyyppi).koodiValue())
+                .collect(Collectors.toList());
+    }
 }

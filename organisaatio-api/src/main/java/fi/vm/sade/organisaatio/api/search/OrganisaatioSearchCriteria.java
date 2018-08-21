@@ -1,11 +1,11 @@
 package fi.vm.sade.organisaatio.api.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")
@@ -44,7 +44,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the oppilaitosTyyppi property.
+     * Gets the koodiValue of the oppilaitosTyyppi property.
      *
      * @return possible object is {@link String }
      *
@@ -55,7 +55,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the oppilaitosTyyppi property.
+     * Sets the koodiValue of the oppilaitosTyyppi property.
      *
      * @param value
      *            allowed object is {@link String }
@@ -68,7 +68,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the organisaatioTyyppi property.
+     * Gets the koodiValue of the organisaatioTyyppi property.
      *
      * @return possible object is {@link String }
      *
@@ -79,7 +79,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the organisaatioTyyppi property.
+     * Sets the koodiValue of the organisaatioTyyppi property.
      *
      * @param value
      *            allowed object is {@link String }
@@ -90,7 +90,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the suunnitellut property.
+     * Gets the koodiValue of the suunnitellut property.
      *
      */
     @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
@@ -99,7 +99,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the suunnitellut property.
+     * Sets the koodiValue of the suunnitellut property.
      *
      */
     public void setSuunnitellut(boolean value) {
@@ -121,7 +121,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the kunta property.
+     * Gets the koodiValue of the kunta property.
      *
      * @return possible object is {@link String }
      *
@@ -132,7 +132,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the kunta property.
+     * Sets the koodiValue of the kunta property.
      *
      * @param value
      *            allowed object is {@link String }
@@ -159,7 +159,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the vainLakkautetut property.
+     * Gets the koodiValue of the vainLakkautetut property.
      */
     @ApiModelProperty(value = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getVainLakkautetut() {
@@ -167,7 +167,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the vainLakkautetut property.
+     * Sets the koodiValue of the vainLakkautetut property.
      *
      */
     public void setVainLakkautetut(boolean value) {
@@ -175,7 +175,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the vainAktiiviset property.
+     * Gets the koodiValue of the vainAktiiviset property.
      */
     @ApiModelProperty(value = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getVainAktiiviset() {
@@ -183,7 +183,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Sets the value of the vainLakkautetut property.
+     * Sets the koodiValue of the vainLakkautetut property.
      *
      */
     public void setVainAktiiviset(boolean vainAktiiviset) {

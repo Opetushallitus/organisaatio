@@ -591,7 +591,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             return false;
         }
 
-        return (org.getTyypit() != null) && (org.getTyypit().contains(organisaatioTyyppi.value()));
+        return (org.getTyypit() != null) && (org.getTyypit().contains(organisaatioTyyppi.koodiValue()));
     }
 
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
@@ -633,8 +633,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, List<String> tyypit) {
         // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
-        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.value())) {
+        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
+                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             LOG.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
                     entity.getOid(), tyypit);
             return null;

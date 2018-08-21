@@ -36,7 +36,7 @@ public class MonikielinenTeksti extends BaseEntity {
 
     @ElementCollection(fetch= FetchType.EAGER)
     @MapKeyColumn(name="key")
-    @Column(name="value", length=16384)
+    @Column(name="koodiValue", length=16384)
     @CollectionTable(joinColumns=@JoinColumn(name="id"))
     @BatchSize(size = 1000)
     private Map<String, String> values = new HashMap<>();

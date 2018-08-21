@@ -15,19 +15,17 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;   
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import org.apache.solr.common.SolrDocument;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.HashSet;
 
-import org.apache.solr.common.SolrDocument;
-import org.junit.Test;
-
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
 
@@ -47,8 +45,8 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
         doc.addField(OID, "1.2.3.4.5.6.7");
         doc.addField(OPPILAITOSKOODI, "123456");
         doc.addField(TOIMIPISTEKOODI, "1234567");
-        doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.KOULUTUSTOIMIJA.value());
-        doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.OPPILAITOS.value());
+        doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue());
+        doc.addField(ORGANISAATIOTYYPPI, OrganisaatioTyyppi.OPPILAITOS.koodiValue());
         doc.addField(PARENTOID, "1.1.1.1.1.1.1");
         doc.addField(PATH, "1.2.3.4.5.6.7");
         doc.addField(PATH, "1.1.1.1.1.1.1");
@@ -64,8 +62,8 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
         assertEquals(doc.getFieldValue(TOIMIPISTEKOODI), result.getToimipistekoodi());
         assertEquals(doc.getFieldValue(PARENTOID), result.getParentOid());
         assertEquals(doc.getFieldValues(ORGANISAATIOTYYPPI).size(), result.getOrganisaatiotyypit().size());
-        assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
-        assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.OPPILAITOS.value()));
+        assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+        assertTrue(doc.getFieldValues(ORGANISAATIOTYYPPI).contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue()));
         assertEquals(doc.getFieldValue(PARENTOID), result.getParentOid());
         assertEquals(2, doc.getFieldValues(PATH).size());
         assertEquals(doc.getFieldValue(YTUNNUS), result.getYtunnus());

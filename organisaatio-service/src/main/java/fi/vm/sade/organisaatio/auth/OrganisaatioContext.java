@@ -16,16 +16,16 @@
  */
 package fi.vm.sade.organisaatio.auth;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class OrganisaatioContext {
     private OrganisaatioRDTO rdto;
@@ -38,6 +38,14 @@ public class OrganisaatioContext {
         Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
         for (String tyyppiStr : tyypitStrs) {
             tyypit.add(OrganisaatioTyyppi.fromValue(tyyppiStr));
+        }
+        return tyypit;
+    }
+
+    private static Set<OrganisaatioTyyppi> getTyypitFromKoodiStrings(List<String> tyypitStrs) {
+        Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
+        for (String tyyppiStr : tyypitStrs) {
+            tyypit.add(OrganisaatioTyyppi.fromKoodiValue(tyyppiStr));
         }
         return tyypit;
     }
@@ -83,7 +91,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
     }
 
     public static OrganisaatioContext get(String oid) {

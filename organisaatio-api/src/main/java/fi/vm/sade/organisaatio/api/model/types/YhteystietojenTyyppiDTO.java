@@ -17,7 +17,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     protected List<String> sovellettavatOppilaitostyyppis;
 
     /**
-     * Gets the value of the version property.
+     * Gets the koodiValue of the version property.
      * 
      */
     public long getVersion() {
@@ -25,7 +25,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the version property.
+     * Sets the koodiValue of the version property.
      * 
      */
     public void setVersion(long value) {
@@ -33,7 +33,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the oid property.
+     * Gets the koodiValue of the oid property.
      * 
      * @return
      *     possible object is
@@ -45,7 +45,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the oid property.
+     * Sets the koodiValue of the oid property.
      * 
      * @param value
      *     allowed object is
@@ -57,7 +57,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the nimi property.
+     * Gets the koodiValue of the nimi property.
      * 
      * @return
      *     possible object is
@@ -69,7 +69,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the nimi property.
+     * Sets the koodiValue of the nimi property.
      * 
      * @param value
      *     allowed object is
@@ -81,7 +81,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the sovellettavatOrganisaatios property.
+     * Gets the koodiValue of the sovellettavatOrganisaatios property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -110,7 +110,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the allLisatietokenttas property.
+     * Gets the koodiValue of the allLisatietokenttas property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -139,7 +139,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the sovellettavatOppilaitostyyppis property.
+     * Gets the koodiValue of the sovellettavatOppilaitostyyppis property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,

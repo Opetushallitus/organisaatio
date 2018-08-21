@@ -15,21 +15,16 @@
 
 package fi.vm.sade.organisaatio.util;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.collect.Lists;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author simok
@@ -127,7 +122,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createKoulutustoimija(String nimi,
                                                          String ytunnus,
                                                          String oid) {
-        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), oid, OPH_OID);
+        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), oid, OPH_OID);
         koulutustoimija.setYTunnus(ytunnus);
 
         return koulutustoimija;

@@ -20,9 +20,8 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import org.modelmapper.Converter;
-
-import org.modelmapper.PropertyMap;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
 
 /**
@@ -70,7 +69,7 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
             @Override
             protected void configure() {
                 
-                // Note: Since a source object is given, the "false"value passed to set[Method] is unused.
+                // Note: Since a source object is given, the "false"koodiValue passed to set[Method] is unused.
                 using(suunnitellutConverter).map(source).setSuunnitellut(false);
                 using(aktiivisetConverter).map(source).setAktiiviset(false);
                 using(lakkautetutConverter).map(source).setLakkautetut(false);

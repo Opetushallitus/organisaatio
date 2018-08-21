@@ -55,7 +55,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
         if (values != null) {
             for (Object value : values) {
                 result.getOrganisaatiotyypit().add(
-                        OrganisaatioTyyppi.fromValue((String) value));
+                        OrganisaatioTyyppi.fromKoodiValue((String) value));
             }
         }
         values = doc.getFieldValues(KIELI);
@@ -91,7 +91,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
     }
 
     /**
-     * Get date value
+     * Get date koodiValue
      * 
      * @param doc
      * @param field
@@ -102,7 +102,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
     }
 
     /**
-     * Get String value
+     * Get String koodiValue
      * 
      * @param doc
      * @param field

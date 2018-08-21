@@ -9,7 +9,7 @@ public abstract class YhteystietoDTO implements Serializable {
     protected String yhteystietoOid;
 
     /**
-     * Gets the value of the version property.
+     * Gets the koodiValue of the version property.
      * 
      */
     public long getVersion() {
@@ -17,7 +17,7 @@ public abstract class YhteystietoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the version property.
+     * Sets the koodiValue of the version property.
      * 
      */
     public void setVersion(long value) {
@@ -25,7 +25,7 @@ public abstract class YhteystietoDTO implements Serializable {
     }
 
     /**
-     * Gets the value of the yhteystietoOid property.
+     * Gets the koodiValue of the yhteystietoOid property.
      * 
      * @return
      *     possible object is
@@ -37,7 +37,7 @@ public abstract class YhteystietoDTO implements Serializable {
     }
 
     /**
-     * Sets the value of the yhteystietoOid property.
+     * Sets the koodiValue of the yhteystietoOid property.
      * 
      * @param value
      *     allowed object is
