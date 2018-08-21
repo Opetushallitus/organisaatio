@@ -297,19 +297,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         return null;
     }
 
-    public String convertYhteystietoToFaksinumero(List<Yhteystieto> yhteystietos) {
-
-        for (Yhteystieto yhteystieto : yhteystietos) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                Puhelinnumero p = (Puhelinnumero) yhteystieto;
-                if (Puhelinnumero.TYYPPI_FAKSI.equals(p.getTyyppi())) {
-                    return p.getPuhelinnumero();
-                }
-            }
-        }
-        return null;
-    }
-
     public String convertYhteystietoToWwwOsoite(List<Yhteystieto> yhteystietos) {
 
         for (Yhteystieto yhteystieto : yhteystietos) {

@@ -41,8 +41,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static final Map<String, String> DEFAULT_WWW = createWww("http://test.oph.fi");
     public static final Map<String, String> DEFAULT_EMAIL = createEmail("asd@asd.asd");
     public static final Map<String, String> DEFAULT_PUHELIN =  createPuhelin(PuhelinNumeroTyyppi.PUHELIN, "123");
-    public static final Map<String, String> DEFAULT_FAKSI  = createPuhelin(PuhelinNumeroTyyppi.FAKSI, "456");
-    public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_FAKSI, DEFAULT_EMAIL, DEFAULT_WWW);
+    public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_EMAIL, DEFAULT_WWW);
     public static final List<String> DEFAULT_KIELET = Arrays.asList("oppilaitoksenopetuskieli_1#1");
     public static final Date DEFAULT_VOIMASSAOLO_ALKU = createPvm(0);
     public static final String DEFAULT_KOTIPAIKKA = "kunta_092";
@@ -192,7 +191,6 @@ public final class OrganisaatioRDTOTestUtil {
         organisaatio.getYhteystiedot().add(DEFAULT_POSTIOSOITE);
         organisaatio.getYhteystiedot().add(DEFAULT_KAYNTIOSOITE);
         organisaatio.getYhteystiedot().add(DEFAULT_PUHELIN);
-        organisaatio.getYhteystiedot().add(DEFAULT_FAKSI);
         organisaatio.getYhteystiedot().add(DEFAULT_WWW);
         organisaatio.getYhteystiedot().add(DEFAULT_EMAIL);
 

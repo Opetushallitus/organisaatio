@@ -4,7 +4,6 @@ package fi.vm.sade.organisaatio.api.model.types;
 public enum YhteystietoElementtiTyyppi {
     TEKSTI("Teksti"),
     PUHELIN("Puhelin"),
-    FAKSI("Faksi"),
     NIMI("Nimi"),
     NIMIKE("Nimike"),
     OSOITE("Osoite"),

@@ -40,7 +40,7 @@ import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 /**
  * @author Antti Salonen
- * @see fi.vm.sade.organisaatio.api.model.YhteystietoArvoDTO
+ * @see fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"kentta_id", "organisaatio_id", "kieli"})})
@@ -108,7 +108,6 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
             return arvoText;
         } else if (kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.EMAIL.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.WWW.value())
-                || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.FAKSI.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.PUHELIN.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.OSOITE.value())
                 || kentta.getTyyppi().equals(YhteystietoElementtiTyyppi.OSOITE_ULKOMAA.value())) {

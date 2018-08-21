@@ -35,15 +35,14 @@ public class Puhelinnumero extends Yhteystieto {
 	private static final long serialVersionUID = 1L;
 
     public static final String TYYPPI_PUHELIN = "puhelin";
-    public static final String TYYPPI_FAKSI = "faksi";
-    
+
     @NotNull
     @Pattern(regexp = "^(\\+|\\-| |\\(|\\)|[0-9]){3,100}$", message = "{validation.invalid.phone}")
     @FilterXss
     private String puhelinnumero;
     
     @NotNull
-    @Pattern(regexp = TYYPPI_PUHELIN + "|" + TYYPPI_FAKSI)
+    @Pattern(regexp = TYYPPI_PUHELIN)
     private String tyyppi;
 
     public Puhelinnumero() {

@@ -73,7 +73,6 @@ public class YhteystietoArvoConverter extends Converter<YhteystietoArvoDTO, Yhte
         Object theArvo = dto.getArvo();
         if (entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.EMAIL.value())
                 || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.WWW.value())
-                || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.FAKSI.value())
                 || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.PUHELIN.value())
                 || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.OSOITE.value())
                 || entity.getKentta().getTyyppi().equals(YhteystietoElementtiTyyppi.OSOITE_ULKOMAA.value())) {
