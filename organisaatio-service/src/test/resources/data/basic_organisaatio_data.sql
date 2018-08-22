@@ -12,7 +12,7 @@ INSERT INTO MONIKIELINENTEKSTI(ID, VERSION) VALUES
 (9, 0),
 (1000, 0);
 
-INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, KOODIVALUE, KEY) VALUES
+INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
 (1, 'opetushallitus', 'fi'),
 (2, 'root test koulutustoimija', 'fi'),
 (2, 'root test utbildningsoperator', 'sv'),
