@@ -1194,14 +1194,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return nimi;
     }
 
-    private void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap) {
+    public void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap) {
         oldParentNimiMap.forEach((oldParentNimikey, oldParentNimivalue) -> {
             String newParentNimi = newParentNimiMap.get(oldParentNimikey) != null ? newParentNimiMap.get(oldParentNimikey) : "";
             String currentNimi = currentNimiMap.get(oldParentNimikey);
-            if(currentNimi != null) {
+            if(currentNimi != null && newParentNimi != "") {
                 if(currentNimi.startsWith(oldParentNimivalue)){
-                    currentNimi.replaceAll(oldParentNimivalue, newParentNimi);
-                    currentNimiMap.put(oldParentNimikey, currentNimi);
+                    String changeName = currentNimi.replaceAll(oldParentNimivalue, newParentNimi);
+                    currentNimiMap.put(oldParentNimikey, changeName);
                 } else {
                     currentNimiMap.put(oldParentNimikey, newParentNimi + ", " + currentNimi);
                 }
