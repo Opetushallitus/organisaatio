@@ -28,6 +28,7 @@ import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author simok
@@ -117,4 +118,12 @@ public interface OrganisaatioBusinessService {
      * @param organisaatioMap The organisations that the data is used to update
      */
     void batchValidatePvm(HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData, HashMap<String, Organisaatio> organisaatioMap);
+
+
+    /*
+     * @Param oldParentNimiMap language-name mappings for the old parent name
+     * @Param currentNimiMap language-name mappings for the curremt child name
+     * @Param newParentNimiMap language-name mappings for the new parent name
+     */
+    void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap);
 }

@@ -1162,6 +1162,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
             organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+
+            // Jos toimipisteen nimi alkaa sen parent oppilaitoksen nimellä, niin siivotaan tuo osa pois toimipisteen nimestä
+            MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio, newParent);
+            organisaatio.setNimi(updatedToimipisteNimi);
         }
 
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
@@ -1173,6 +1177,36 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             updateChildrenRecursive(organisaatio);
         }
+    }
+
+    // Poistetaan parent oppilaitoksen nimeä vastaava prefix toimispisteen nimestä
+    private MonikielinenTeksti getUpdatedToimipisteNimi(Organisaatio organisaatio, Organisaatio newParent) {
+        Organisaatio oldParent = organisaatio.getParent();
+        MonikielinenTeksti oldParentNimi = oldParent.getNimi();
+        MonikielinenTeksti nimi = organisaatio.getNimi();
+        MonikielinenTeksti newParentNimi = newParent.getNimi();
+        Map<String, String> oldParentNimiMap = oldParentNimi.getValues();
+        Map<String, String> toimipisteNimiMap = nimi.getValues();
+        Map<String, String> newParentNimiMap = newParentNimi.getValues();
+
+        updateNimiValues(oldParentNimiMap, toimipisteNimiMap, newParentNimiMap);
+        nimi.setValues(toimipisteNimiMap);
+        return nimi;
+    }
+
+    public void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap) {
+        oldParentNimiMap.forEach((oldParentNimikey, oldParentNimivalue) -> {
+            String newParentNimi = newParentNimiMap.get(oldParentNimikey) != null ? newParentNimiMap.get(oldParentNimikey) : "";
+            String currentNimi = currentNimiMap.get(oldParentNimikey);
+            if(currentNimi != null && newParentNimi != "") {
+                if(currentNimi.startsWith(oldParentNimivalue)){
+                    String changeName = currentNimi.replaceAll(oldParentNimivalue, newParentNimi);
+                    currentNimiMap.put(oldParentNimikey, changeName);
+                } else {
+                    currentNimiMap.put(oldParentNimikey, newParentNimi + ", " + currentNimi);
+                }
+            }
+        });
     }
 
     private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {

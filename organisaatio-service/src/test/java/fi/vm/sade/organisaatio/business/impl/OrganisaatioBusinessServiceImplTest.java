@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -318,6 +321,29 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Organisaatio oppilaitos = this.organisaatioFindBusinessService.findById(organisaatioResult.getOrganisaatio().getOid());
         assertThat(oppilaitos.getNimi().getString("fi")).isEqualTo("toinen nimi");
         assertThat(oppilaitos.getPaivitysPvm()).isAfter(paivitysPvmOnCreate);
+    }
+
+    @Test
+    public void UpdateNimiValues() {
+        HashMap<String, String> oldParentNimi = new HashMap<>();
+        oldParentNimi.put("fi", "Vanha parent oppilaitos");
+        oldParentNimi.put("en", "Old parent oppilaitos");
+        oldParentNimi.put("sv", "Gammalt parent oppilaitos");
+
+        HashMap<String, String> newParentNimi = new HashMap<>();
+        newParentNimi.put("fi", "Uusi parent oppilaitos");
+        newParentNimi.put("en", "New parent oppilaitos");
+
+        HashMap<String, String> currentChildNimi = new HashMap<>();
+        currentChildNimi.put("fi", "Vanha parent oppilaitos, toimipiste");
+        currentChildNimi.put("en", "toimipiste");
+        currentChildNimi.put("sv", "toimipiste");
+
+        service.updateNimiValues(oldParentNimi, currentChildNimi, newParentNimi);
+
+        assertThat(currentChildNimi.get("fi")).isEqualTo("Uusi parent oppilaitos, toimipiste");
+        assertThat(currentChildNimi.get("en")).isEqualTo("New parent oppilaitos, toimipiste");
+        assertThat(currentChildNimi.get("sv")).isEqualTo("toimipiste");
     }
 
 }
