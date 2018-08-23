@@ -16,6 +16,7 @@
 package fi.vm.sade.organisaatio.dto.mapping;
 
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -57,11 +58,16 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
             }
         };
 
-        
+        // Organisaatiotyyppi koodiarvoksi
+        final Converter<OrganisaatioSearchCriteria, String> organisaatiotyyppiConverter = mc -> OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
+        final Converter<OrganisaatioSearchCriteriaDTOV2, String> organisaatiotyyppiV2Converter = mc -> OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
+
+
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV2, SearchCriteria>() {
             @Override
             protected void configure() {    
                 // Mappays menee suoraan ilman säätöjä
+                using(organisaatiotyyppiV2Converter).map(source).setOrganisaatioTyyppi(null);
             }
         });
 
@@ -69,10 +75,11 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
             @Override
             protected void configure() {
                 
-                // Note: Since a source object is given, the "false"koodiValue passed to set[Method] is unused.
+                // Note: Since a source object is given, the "false" value passed to set[Method] is unused.
                 using(suunnitellutConverter).map(source).setSuunnitellut(false);
                 using(aktiivisetConverter).map(source).setAktiiviset(false);
                 using(lakkautetutConverter).map(source).setLakkautetut(false);
+                using(organisaatiotyyppiConverter).map(source).setOrganisaatioTyyppi(null);
             }
         });
 
