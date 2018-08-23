@@ -59,8 +59,12 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
         };
 
         // Organisaatiotyyppi koodiarvoksi
-        final Converter<OrganisaatioSearchCriteria, String> organisaatiotyyppiConverter = mc -> OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
-        final Converter<OrganisaatioSearchCriteriaDTOV2, String> organisaatiotyyppiV2Converter = mc -> OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
+        final Converter<OrganisaatioSearchCriteria, String> organisaatiotyyppiConverter = mc -> mc.getSource().getOrganisaatioTyyppi() == null
+                ? null
+                : OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
+        final Converter<OrganisaatioSearchCriteriaDTOV2, String> organisaatiotyyppiV2Converter = mc -> mc.getSource().getOrganisaatioTyyppi() == null
+                ? null
+                : OrganisaatioTyyppi.fromValue(mc.getSource().getOrganisaatioTyyppi()).koodiValue();
 
 
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV2, SearchCriteria>() {

@@ -300,7 +300,7 @@ app.factory('OrganisaatioHistoria', function ($resource) {
 
 
 // Organisaation siiro puussa
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932/organisaatiosuhde
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.23198065932/organisaatiosuhde
 app.factory('OrganisaatioSiirto', function ($resource) {
     return $resource(ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE, {oid: "@oid"}, {
         post: {method: "POST"}
