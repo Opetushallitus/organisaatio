@@ -46,12 +46,12 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
-                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
+                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO, VARHAISKASVATUKSEN_JARJESTAJA tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava yläorganisaatio
                      joka on tyypiltään KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
-                     05:Muu organisaatio, 06:Työelämäjärjestö
+                     05:Muu organisaatio, 06:Työelämäjärjestö 07:Varhaiskasvatuksen järjestäjä
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
@@ -61,17 +61,22 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'Oppilaitos': ["03"],
                         'Toimipiste': ["03"],
                         'Oppisopimustoimipiste': [],
+                        'Varhaiskasvatuksen jarjestaja': ["03"],
                         'Tyoelamajarjesto': ["06","03"]};
-                    result.forEach(function(orgTyyppiKoodi) {
+                    result.sort(function (a, b) {
+                        return a.koodiArvo.localeCompare(b.koodiArvo);
+                    }).forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
                             var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             // Parentin sallitut aliorganisaatiot
-                            if (model.organisaatio.parentOid !== model.OPHOid && sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
+                            if (model.organisaatio.parentOid !== model.OPHOid && model.parent.tyypit.some(function(tyyppi) {
+                                return sallitutAlaOrganisaatiot[tyyppi].indexOf(orgTyyppiKoodi.koodiArvo) !== -1;
+                            })) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
-                                || orgTyyppiKoodi.koodiArvo === "05")) {
+                                || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
                                 model.koodisto.organisaatiotyypit.push(localizedOrgType);
                             }
 
