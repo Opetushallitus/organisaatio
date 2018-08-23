@@ -2,9 +2,8 @@
 package fi.vm.sade.organisaatio.api.model.types;
 
 public enum PuhelinNumeroTyyppi {
-    PUHELIN("puhelin"),
-    FAKSI("faksi");
-    
+    PUHELIN("puhelin");
+
     private final String value;
 
     PuhelinNumeroTyyppi(String v) {

@@ -406,9 +406,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (yritystiedot.puhelin) {
                 model.yhteystiedot['kieli_fi#1'].puhelin.numero = yritystiedot.puhelin;
             }
-            if (yritystiedot.faksi) {
-                model.yhteystiedot['kieli_fi#1'].faksi.numero = yritystiedot.faksi;
-            }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             if (yritystiedot.aloitusPvm) {
                 model.organisaatio.alkuPvm = moment(yritystiedot.aloitusPvm, 'DD.MM.YYYY');

@@ -120,11 +120,6 @@ describe("Testing OrganisaatioModel", function() {
       "extraRivi" : null
     }, {
       "kieli" : "kielivalikoima_fi",
-      "tyyppi" : "faksi",
-      "id" : "125419",
-      "numero" : "01-7654321"
-    }, {
-      "kieli" : "kielivalikoima_fi",
       "tyyppi" : "puhelin",
       "id" : "125420",
       "numero" : "01-1234567"

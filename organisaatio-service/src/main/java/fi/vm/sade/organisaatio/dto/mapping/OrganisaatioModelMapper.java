@@ -127,23 +127,6 @@ public class OrganisaatioModelMapper extends ModelMapper {
             }
         };
 
-        // faksinumeroConverter
-        final Converter<List<Yhteystieto>, Map<String, String>> faksinumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
-            @Override
-            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
-                List<Puhelinnumero> faksinumerot = YhteystietoUtil.getFaksinumerot(mc.getSource());
-
-                // Tehdään map, jossa avaimena kieli ja arvone faksinumero
-                Map<String, String> faksinumeroMap = new HashMap<>();
-
-                for (Puhelinnumero numero : faksinumerot) {
-                    faksinumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
-                }
-
-                return faksinumeroMap;
-            }
-        };
-
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
             protected void configure() {
@@ -158,9 +141,6 @@ public class OrganisaatioModelMapper extends ModelMapper {
 
                 // Puhelinnumero
                 using(puhelinnumeroConverter).map(source.getYhteystiedot()).setPuhelinnumero(null);
-
-                // Puhelinnumero
-                using(faksinumeroConverter).map(source.getYhteystiedot()).setFaksinumero(null);
 
                 // WWW-osoite
                 using(wwwOsoiteConverter).map(source.getYhteystiedot()).setWwwOsoite(null);
