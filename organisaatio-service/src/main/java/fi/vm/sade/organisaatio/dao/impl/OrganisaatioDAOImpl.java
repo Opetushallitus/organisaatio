@@ -454,6 +454,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return null;
     }
 
+    @Override
     public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
         LOG.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;

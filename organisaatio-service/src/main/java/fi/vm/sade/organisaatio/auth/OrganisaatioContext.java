@@ -19,6 +19,7 @@ package fi.vm.sade.organisaatio.auth;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
@@ -30,6 +31,7 @@ import java.util.Set;
 public class OrganisaatioContext {
     private OrganisaatioRDTO rdto;
     private OrganisaatioRDTOV3 rdtov3;
+    private OrganisaatioRDTOV4 rdtov4;
     private OrganisaatioPerustieto perus;
     private final String orgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
@@ -78,6 +80,12 @@ public class OrganisaatioContext {
         this.rdtov3 = org;
     }
 
+    private OrganisaatioContext(OrganisaatioRDTOV4 org) {
+        this.orgOid = org != null ? org.getOid() : null;
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
+        this.rdtov4 = org;
+    }
+
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
         this.orgTypes = Collections.emptySet();
@@ -107,6 +115,10 @@ public class OrganisaatioContext {
     }
 
     public static OrganisaatioContext get(OrganisaatioRDTOV3 organisaatio) {
+        return new OrganisaatioContext(organisaatio);
+    }
+
+    public static OrganisaatioContext get(OrganisaatioRDTOV4 organisaatio) {
         return new OrganisaatioContext(organisaatio);
     }
 

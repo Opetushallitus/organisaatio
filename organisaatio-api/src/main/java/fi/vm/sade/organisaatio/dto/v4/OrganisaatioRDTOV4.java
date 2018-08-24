@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.dto.v3;
+package fi.vm.sade.organisaatio.dto.v4;
 
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
@@ -11,10 +11,10 @@ import java.util.*;
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
  * REST.
- *
+ * <p>
  * .. well, actually "OrganisaatioDTO" and "Organisaatio" were already used and
  * I wanted to avoid confusion. :)
- *
+ * <p>
  * "Natural key":
  * <ul>
  * <li>Koulutustoimija - y-tunnus</li>
@@ -24,7 +24,7 @@ import java.util.*;
  * </ul>
  */
 @ApiModel(value = "Organisaation tiedot")
-public class OrganisaatioRDTOV3 implements Serializable {
+public class OrganisaatioRDTOV4 implements Serializable {
 
     private static final long serialVersionUID = -5019270750950297893L;
 
@@ -209,8 +209,8 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
     public List<OrganisaatioNimiRDTO> getNimet() {
-         if (_nimet == null) {
-            _nimet = new ArrayList<OrganisaatioNimiRDTO>();
+        if (_nimet == null) {
+            _nimet = new ArrayList<>();
         }
         return _nimet;
     }
@@ -246,10 +246,10 @@ public class OrganisaatioRDTOV3 implements Serializable {
         this._yTunnus = _yTunnus;
     }
 
-    @ApiModelProperty(value = "Tyypit", required = true)
+    @ApiModelProperty(value = "Tyypit koodiarvoina. Kts. organisaatiotyypit koodisto", required = true)
     public List<String> getTyypit() {
         if (_tyypit == null) {
-            _tyypit = new ArrayList<String>();
+            _tyypit = new ArrayList<>();
         }
         return _tyypit;
     }
@@ -279,7 +279,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Vuosiluokat", required = true)
     public List<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
-            _vuosiluokat = new ArrayList<String>();
+            _vuosiluokat = new ArrayList<>();
         }
         return _vuosiluokat;
     }
@@ -291,7 +291,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Ryhmatyypit", required = true)
     public Set<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
-            _ryhmatyypit = new HashSet<String>();
+            _ryhmatyypit = new HashSet<>();
         }
         return _ryhmatyypit;
     }
@@ -303,7 +303,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Kayttoryhmat", required = true)
     public Set<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
-            _kayttoryhmat = new HashSet<String>();
+            _kayttoryhmat = new HashSet<>();
         }
         return _kayttoryhmat;
     }
@@ -315,7 +315,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Käyntiosoite", required = true)
     public Map<String, String> getKayntiosoite() {
         if (_kayntiosoite == null) {
-            _kayntiosoite = new HashMap<String, String>();
+            _kayntiosoite = new HashMap<>();
         }
         return _kayntiosoite;
     }
@@ -327,7 +327,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Postiosoite", required = true)
     public Map<String, String> getPostiosoite() {
         if (_postiosoite == null) {
-            _postiosoite = new HashMap<String, String>();
+            _postiosoite = new HashMap<>();
         }
         return _postiosoite;
     }
@@ -348,7 +348,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Toinen kuvaus", required = true)
     public Map<String, String> getKuvaus2() {
         if (_kuvaus2 == null) {
-            _kuvaus2 = new HashMap<String, String>();
+            _kuvaus2 = new HashMap<>();
         }
         return _kuvaus2;
     }
@@ -479,7 +479,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     public List<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
-            _yhteystiedot = new ArrayList<Map<String, String>>();
+            _yhteystiedot = new ArrayList<>();
         }
         return _yhteystiedot;
     }

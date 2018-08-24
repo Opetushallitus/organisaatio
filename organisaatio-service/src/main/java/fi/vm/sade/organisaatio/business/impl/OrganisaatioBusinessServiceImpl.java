@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -174,6 +175,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException {
+        // Luodaan tallennettava entity objekti
+        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        return save(entity, model.getParentOid(), updating);
+    }
+
+    @Override
+    public OrganisaatioResult save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         return save(entity, model.getParentOid(), updating);
