@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>2018-5-SNAPSHOT</version>
+    <version>2018-6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>

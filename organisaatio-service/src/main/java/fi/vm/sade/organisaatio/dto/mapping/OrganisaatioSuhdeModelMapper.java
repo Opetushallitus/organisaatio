@@ -15,21 +15,44 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSuhdeDTOV2;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrganisaatioSuhdeModelMapper extends ModelMapper {
 
     public OrganisaatioSuhdeModelMapper() {
         super();
+
+        final Converter<OrganisaatioSuhde, List<String>> parentTyypitConverter = mc -> mc.getSource().getParent() == null
+                ? null
+                : mc.getSource().getParent().getTyypit().stream()
+                .map(OrganisaatioTyyppi::fromKoodiValue)
+                .map(OrganisaatioTyyppi::value)
+                .collect(Collectors.toList());
+
+        final Converter<OrganisaatioSuhde, List<String>> childTyypitConverter = mc -> mc.getSource().getChild() == null
+                ? null
+                : mc.getSource().getChild().getTyypit().stream()
+                .map(OrganisaatioTyyppi::fromKoodiValue)
+                .map(OrganisaatioTyyppi::value)
+                .collect(Collectors.toList());
+
         this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioSuhdeDTOV2>() {
             @Override
             protected void configure() {
                 // Monikielinen nimi
                 map().getChild().setNimi(source.getChild().getNimi().getValues());
                 map().getParent().setNimi(source.getParent().getNimi().getValues());
+                using(parentTyypitConverter).map(source).getParent().setTyypit(new ArrayList<>());
+                using(childTyypitConverter).map(source).getChild().setTyypit(new ArrayList<>());
             }
         });
     }
