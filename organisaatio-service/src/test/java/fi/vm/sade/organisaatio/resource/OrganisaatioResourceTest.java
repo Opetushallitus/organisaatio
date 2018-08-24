@@ -108,7 +108,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Test
     public void testSearchOrganisaatios() throws Exception {
         //Finding all koulutustoimijat
-        OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), null, null, true, null);
+        OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null, null, true, null);
         OrganisaatioHakutulos result = res.searchHierarchy(searchCriteria);
         assertEquals(6, result.getNumHits());
 
