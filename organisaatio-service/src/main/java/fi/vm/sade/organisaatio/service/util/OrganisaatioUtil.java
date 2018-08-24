@@ -21,8 +21,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.apache.commons.lang.time.DateUtils;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -112,25 +110,4 @@ public abstract class OrganisaatioUtil {
         return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
     }
 
-    /**
-     * Muuttaa organisaation tyypit koodistoarvoista organisaatiopalvelun vanhaan tyyppiin.
-     * @param tyypitAsKoodi Organisaatiotyypit koodiarvoina
-     * @return Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
-     */
-    public static List<String> tyypitFromKoodis(List<String> tyypitAsKoodi) {
-        return tyypitAsKoodi.stream()
-                .map(tyyppi -> OrganisaatioTyyppi.fromKoodiValue(tyyppi).value())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Muuttaa organisaation tyypit organisaatiopalvelun vanhasta tyypistä koodistoarvoiksi.
-     * @param tyypit Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
-     * @return Organisaatiotyypit koodiarvoina
-     */
-    public static List<String> tyypitToKoodis(List<String> tyypit) {
-        return tyypit.stream()
-                .map(tyyppi -> OrganisaatioTyyppi.fromValue(tyyppi).koodiValue())
-                .collect(Collectors.toList());
-    }
 }

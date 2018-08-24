@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -126,12 +125,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
             }
         };
 
-        final Converter<Organisaatio, List<String>> tyypitConverter = mc -> mc.getSource().getTyypit() == null
-                ? null
-                : mc.getSource().getTyypit().stream()
-                .map(OrganisaatioTyyppi::fromKoodiValue)
-                .map(OrganisaatioTyyppi::value)
-                .collect(Collectors.toList());
+        final Converter<Organisaatio, List<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
 
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override

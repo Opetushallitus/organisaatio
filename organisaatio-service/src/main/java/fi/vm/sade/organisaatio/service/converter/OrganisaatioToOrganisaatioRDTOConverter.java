@@ -14,12 +14,12 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(OrganisaatioUtil.tyypitFromKoodis(s.getTyypit()));
+        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
         t.setRyhmatyypit(convertListToList(s.getRyhmatyypitV1()));

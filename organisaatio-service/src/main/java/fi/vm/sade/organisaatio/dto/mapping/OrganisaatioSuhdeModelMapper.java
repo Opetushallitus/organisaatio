@@ -24,7 +24,6 @@ import org.modelmapper.PropertyMap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrganisaatioSuhdeModelMapper extends ModelMapper {
 
@@ -33,17 +32,11 @@ public class OrganisaatioSuhdeModelMapper extends ModelMapper {
 
         final Converter<OrganisaatioSuhde, List<String>> parentTyypitConverter = mc -> mc.getSource().getParent() == null
                 ? null
-                : mc.getSource().getParent().getTyypit().stream()
-                .map(OrganisaatioTyyppi::fromKoodiValue)
-                .map(OrganisaatioTyyppi::value)
-                .collect(Collectors.toList());
+                : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getParent().getTyypit());
 
         final Converter<OrganisaatioSuhde, List<String>> childTyypitConverter = mc -> mc.getSource().getChild() == null
                 ? null
-                : mc.getSource().getChild().getTyypit().stream()
-                .map(OrganisaatioTyyppi::fromKoodiValue)
-                .map(OrganisaatioTyyppi::value)
-                .collect(Collectors.toList());
+                : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getChild().getTyypit());
 
         this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioSuhdeDTOV2>() {
             @Override
