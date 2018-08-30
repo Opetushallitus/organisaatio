@@ -17,6 +17,7 @@ package fi.vm.sade.organisaatio.service.util;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.search.SolrOrgFields;
@@ -59,7 +60,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         add(doc, OPPILAITOSKOODI, org.getOppilaitosKoodi());
         add(doc, ALIORGANISAATIOIDEN_LKM, org.getChildCount(new Date()));
         for (String tyyppi : org.getTyypit()) {
-            add(doc, ORGANISAATIOTYYPPI, tyyppi);
+            add(doc, ORGANISAATIOTYYPPI, OrganisaatioTyyppi.fromKoodiValue(tyyppi).value());
         }
         for (String kieli : org.getKielet()) {
             add(doc, KIELI, kieli);

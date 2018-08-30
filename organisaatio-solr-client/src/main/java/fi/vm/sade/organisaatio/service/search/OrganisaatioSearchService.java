@@ -49,17 +49,17 @@ public class OrganisaatioSearchService extends SolrOrgFields {
     @Autowired
     public OrganisaatioSearchService(SolrServerFactory factory) {
         this.solr = factory.getSolrServer();
-        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
-                OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.TOIMIPISTE.koodiValue(),
-                OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
-        orgTypeLimit.put(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(),
-                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
-        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue(),
-                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()));
-        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue() + "\""));
-        orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue()));
-        orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
+        orgTypeLimit.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), Sets.newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(),
+                OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPILAITOS.value(), Sets.newHashSet(OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.TOIMIPISTE.value(),
+                OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.TOIMIPISTE.value(),
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
+                Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
+        orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value()));
+        orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
     }
 
     public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {

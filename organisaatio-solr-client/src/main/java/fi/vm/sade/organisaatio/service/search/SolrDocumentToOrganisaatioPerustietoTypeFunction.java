@@ -55,7 +55,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
         if (values != null) {
             for (Object value : values) {
                 result.getOrganisaatiotyypit().add(
-                        OrganisaatioTyyppi.fromKoodiValue((String) value));
+                        OrganisaatioTyyppi.fromValue((String) value));
             }
         }
         values = doc.getFieldValues(KIELI);
