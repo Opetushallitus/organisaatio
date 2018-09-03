@@ -426,9 +426,9 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     };
     $scope.isFromYtj = function(lang) {
         var currentOrganizationTypes = $scope.model.organisaatio.tyypit;
-        return $scope.model.mode == 'edit' && $scope.model.organisaatio.ytjkieli == lang
-            && (currentOrganizationTypes.indexOf("Koulutustoimija") > -1
-            || currentOrganizationTypes.indexOf("Muu organisaatio") > -1
-            || currentOrganizationTypes.indexOf("Tyoelamajarjesto") > -1);
+        return $scope.model.mode === 'edit' && $scope.model.organisaatio.ytjkieli === lang
+            && (currentOrganizationTypes.indexOf("organisaatiotyyppi_01") > -1 // Koulutustoimija
+            || currentOrganizationTypes.indexOf("organisaatiotyyppi_05") > -1 // Muu organisaatio
+            || currentOrganizationTypes.indexOf("organisaatiotyyppi_06") > -1); // Tyoelamajarjesto
     };
 });

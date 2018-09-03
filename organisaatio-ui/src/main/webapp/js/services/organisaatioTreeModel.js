@@ -16,20 +16,6 @@
 
 app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                                               Alert, Organisaatiot, LocalisationService) {
-// organisaatiot[]
-//     {
-//        "oid" : "1.2.246.562.10.71103955986",
-//        "alkuPvm" : 694216800000,
-//        "parentOid" : "1.2.246.562.10.45506210314",
-//        "parentOidPath" : "1.2.246.562.10.71103955986/1.2.246.562.10.45506210314/1.2.246.562.10.45754497167/1.2.246.562.10.00000000001",
-//        "match" : true,
-//        "nimi" : {
-//          "fi" : "Kappelimäen koulu"
-//        },
-//        "children" : [ ],
-//        "organisaatiotyypit" : [ "TOIMIPISTE" ],
-//        "aliOrganisaatioMaara" : 0
-//      }
 
     $log = $log.getInstance("OrganisaatioTreeModel");
     var loadingService = $injector.get('LoadingService');

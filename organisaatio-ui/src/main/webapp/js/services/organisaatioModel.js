@@ -413,7 +413,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
             // Ei kuitenkaan poisteta "Koulutustoimija" tyyppiä, jos se on jo asetettu
-            var organisaatiotyyppi = "Koulutustoimija";
+            var organisaatiotyyppi = "organisaatiotyyppi_01"; // Koulutustoimija
             if (model.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
                 this.toggleCheckOrganisaatio(organisaatiotyyppi);
             }
@@ -796,28 +796,28 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.isOppilaitos = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_02") !== -1;
             }
             return false;
         };
 
         this.isKoulutustoimija = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedKoulutustoimija) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_01") !== -1;
             }
             return false;
         };
 
         this.isToimipiste = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedToimipiste) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_03") !== -1;
             }
             return false;
         };
 
         this.hasVuosiluokat = function() {
             if (model.organisaatio.tyypit) {
-                if (model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1) {
+                if (model.organisaatio.tyypit.indexOf("organisaatiotyyppi_02") !== -1) {
                     var tyyppi = model.organisaatio.oppilaitosTyyppiUri;
                     if (tyyppi) {
                         return (tyyppi === "oppilaitostyyppi_11#1" ||

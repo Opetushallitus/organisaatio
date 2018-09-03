@@ -29,9 +29,6 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
 
     return function(oid, model) {
         if (oid === null || (oid !== model.koodisto.oid)) {
-            model.koodisto.localizedOppilaitos = "";
-            model.koodisto.localizedKoulutustoimija = "";
-            model.koodisto.localizedToimipiste = "";
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
             KoodistoClient.koodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
@@ -56,39 +53,31 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03"],
-                        'Koulutustoimija': ["02", "04"],
-                        'Oppilaitos': ["03"],
-                        'Toimipiste': ["03"],
-                        'Oppisopimustoimipiste': [],
-                        'Varhaiskasvatuksen jarjestaja': ["03"],
-                        'Tyoelamajarjesto': ["06","03"]};
+                        'organisaatiotyyppi_05': ["05", "03"], // Muu organisaatio
+                        'organisaatiotyyppi_01': ["02", "04"], // Koulutustoimija
+                        'organisaatiotyyppi_02': ["03"], // Oppilaitos
+                        'organisaatiotyyppi_03': ["03"], // Toimipiste
+                        'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
+                        'organisaatiotyyppi_07': ["03"], // Varhaiskasvatuksen jarjestaja
+                        'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
                     result.sort(function (a, b) {
                         return a.koodiArvo.localeCompare(b.koodiArvo);
                     }).forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
-                            var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             // Parentin sallitut aliorganisaatiot
                             if (model.organisaatio.parentOid !== model.OPHOid && model.parent.tyypit.some(function(tyyppi) {
                                 return sallitutAlaOrganisaatiot[tyyppi].indexOf(orgTyyppiKoodi.koodiArvo) !== -1;
                             })) {
-                                model.koodisto.organisaatiotyypit.push(localizedOrgType);
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi.koodiUri);
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
                                 || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
-                                model.koodisto.organisaatiotyypit.push(localizedOrgType);
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi.koodiUri);
                             }
 
-                            if (orgTyyppiKoodi.koodiArvo === "01") {
-                                model.koodisto.localizedKoulutustoimija = localizedOrgType;
-                            } else if (orgTyyppiKoodi.koodiArvo === "02") {
-                                model.koodisto.localizedOppilaitos = localizedOrgType;
-                            } else if (orgTyyppiKoodi.koodiArvo === "03") {
-                                model.koodisto.localizedToimipiste = localizedOrgType;
-                            }
                             if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
-                                model.koodisto.ophOrganisaatiot.push(localizedOrgType);
+                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi.koodiUri);
                             }
                         }
                     });

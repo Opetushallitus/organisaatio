@@ -425,9 +425,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                         function(response) {
                             refreshFunctions.showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response, model, loadingService);
                         });
-                    model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
-                    model.koodisto.localizedOppilaitos = "Oppilaitos";
-                    model.koodisto.localizedToimipiste = "Toimipiste";
                 },
                 // Error case
                 function(response) {

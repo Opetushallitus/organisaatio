@@ -7,8 +7,8 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
         rajoitteet: []
     };
 
-    var OPPILAITOSTYYPPI = 'OPPILAITOSTYYPPI';
-    var ORGANISAATIOTYYPPI = 'ORGANISAATIOTYYPPI';
+    var OPPILAITOSTYYPPI_RAJOITE = 'OPPILAITOSTYYPPI';
+    var ORGANISAATIOTYYPPI_RAJOITE = 'ORGANISAATIOTYYPPI';
 
     var ORGANISAATIOTYYPPI_OPPILAITOS_KOODI = 'organisaatiotyyppi_02';
 
@@ -77,9 +77,9 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
     };
 
     vm.toggleOrganisaatiotyyppi = function(organisaatiotyyppiKoodi) {
-        var rajoiteIndex = filterRajoiteByTyyppi(ORGANISAATIOTYYPPI, organisaatiotyyppiKoodi.koodiUri);
+        var rajoiteIndex = filterRajoiteByTyyppi(ORGANISAATIOTYYPPI_RAJOITE, organisaatiotyyppiKoodi.koodiUri);
         if (rajoiteIndex === -1) {
-            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: ORGANISAATIOTYYPPI, arvo: organisaatiotyyppiKoodi.koodiUri});
+            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: ORGANISAATIOTYYPPI_RAJOITE, arvo: organisaatiotyyppiKoodi.koodiUri});
         }
         else {
             vm.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
@@ -93,13 +93,13 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
     };
 
     vm.toggleOppilaitostyyppi = function(valittuOppilaitostyyppi) {
-        var rajoiteIndex = filterRajoiteByTyyppi(OPPILAITOSTYYPPI, valittuOppilaitostyyppi.koodiUri);
+        var rajoiteIndex = filterRajoiteByTyyppi(OPPILAITOSTYYPPI_RAJOITE, valittuOppilaitostyyppi.koodiUri);
         if (rajoiteIndex === -1) {
             // There is no point selecting oppilaitostyyppi rajoite if oppilaitos organisaatiotyyppi is allowed as a whole
             vm.lisatietoDto.rajoitteet = vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
                 return rajoite.arvo !== ORGANISAATIOTYYPPI_OPPILAITOS_KOODI;
             });
-            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: OPPILAITOSTYYPPI, arvo:valittuOppilaitostyyppi.koodiUri});
+            vm.lisatietoDto.rajoitteet.push({rajoitetyyppi: OPPILAITOSTYYPPI_RAJOITE, arvo:valittuOppilaitostyyppi.koodiUri});
         }
         else {
             vm.lisatietoDto.rajoitteet.splice(rajoiteIndex, 1);
@@ -168,13 +168,13 @@ app.controller('LisatietotyyppiController', function ($filter, KoodistoClient, L
 
     function getOppilaitostyyppiRajoitteet() {
         return vm.lisatietoDto.rajoitteet.filter(function (rajoite) {
-            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
+            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI_RAJOITE;
         })
     }
 
     vm.isOppilaitosRajoiteSelected = function () {
         return vm.lisatietoDto.rajoitteet.some(function (rajoite) {
-            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI;
+            return rajoite.rajoitetyyppi === OPPILAITOSTYYPPI_RAJOITE;
         });
     };
 

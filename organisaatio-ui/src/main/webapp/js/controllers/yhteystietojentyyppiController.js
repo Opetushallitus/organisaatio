@@ -196,55 +196,55 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
 
     Object.defineProperty(obj, 'koulutustoimija', {
         get: function() {
-            return _orgTypeContains('KOULUTUSTOIMIJA');
+            return _orgTypeContains('organisaatiotyyppi_01');
         },
         set: function(t) {
-            _orgTypeMod(t, 'KOULUTUSTOIMIJA');
+            _orgTypeMod(t, 'organisaatiotyyppi_01');
         }
     });
 
     Object.defineProperty(obj, 'toimipiste', {
         get: function() {
-            return _orgTypeContains('TOIMIPISTE');
+            return _orgTypeContains('organisaatiotyyppi_03');
         },
         set: function(t) {
-            _orgTypeMod(t, 'TOIMIPISTE');
+            _orgTypeMod(t, 'organisaatiotyyppi_03');
         }
     });
 
     Object.defineProperty(obj, 'oppisopimuspiste', {
         get: function() {
-            return _orgTypeContains('OPPISOPIMUSTOIMIPISTE');
+            return _orgTypeContains('organisaatiotyyppi_04');
         },
         set: function(t) {
-            _orgTypeMod(t, 'OPPISOPIMUSTOIMIPISTE');
+            _orgTypeMod(t, 'organisaatiotyyppi_04');
         }
     });
 
     Object.defineProperty(obj, 'muuOrganisaatio', {
         get: function() {
-            return _orgTypeContains('MUU_ORGANISAATIO');
+            return _orgTypeContains('organisaatiotyyppi_05');
         },
         set: function(t) {
-            _orgTypeMod(t, 'MUU_ORGANISAATIO');
+            _orgTypeMod(t, 'organisaatiotyyppi_05');
         }
     });
 
     Object.defineProperty(obj, 'tyoelamajarjesto', {
         get: function() {
-            return _orgTypeContains('TYOELAMAJARJESTO');
+            return _orgTypeContains('organisaatiotyyppi_06');
         },
         set: function(t) {
-            _orgTypeMod(t, 'TYOELAMAJARJESTO');
+            _orgTypeMod(t, 'organisaatiotyyppi_06');
         }
     });
 
     Object.defineProperty(obj, 'kaikkiOppilaitostyypit', {
         get: function() {
-            return _orgTypeContains('OPPILAITOS');
+            return _orgTypeContains('organisaatiotyyppi_02');
         },
         set: function(t) {
-            _orgTypeMod(t, 'OPPILAITOS');
+            _orgTypeMod(t, 'organisaatiotyyppi_02');
             rajatutOppilaitostyypit = rajatutOppilaitostyypit && !t;
         }
     });
@@ -255,7 +255,7 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
         },
         set: function(t) {
             rajatutOppilaitostyypit = t;
-            _orgTypeMod(!t && _orgTypeContains('OPPILAITOS'), 'OPPILAITOS');
+            _orgTypeMod(!t && _orgTypeContains('organisaatiotyyppi_02'), 'organisaatiotyyppi_02');
         }
     });
 
