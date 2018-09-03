@@ -1,8 +1,7 @@
-package fi.vm.sade.organisaatio.api.search;
+package fi.vm.sade.organisaatio.dto.v4;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,8 +11,8 @@ import java.io.Serializable;
 import java.util.*;
 
 @XmlRootElement
-@ApiModel(value = "Organisaation perustiedot")
-public class OrganisaatioPerustieto implements Serializable {
+@ApiModel(value = "Organisaation perustiedot v4")
+public class OrganisaatioPerustietoV4 implements Serializable {
 
     private final static long serialVersionUID = 100L;
 
@@ -54,24 +53,25 @@ public class OrganisaatioPerustieto implements Serializable {
     private boolean match = false;
 
     @ApiModelProperty(value = "Organisaation nimi", required = true)
-    private Map<String, String> nimi = new HashMap<String, String>();
+    private Map<String, String> nimi = new HashMap<>();
 
-    private List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
-    
+    // Tyypit koodiarvoina
+    private List<String> tyypit = new ArrayList<>();
+
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    private List<String> kieletUris = new ArrayList<String>();
-    
+    private List<String> kieletUris = new ArrayList<>();
+
     @ApiModelProperty(value = "Kotipaikan URI", required = true)
     private String kotipaikkaUri;
 
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
-    private List<OrganisaatioPerustieto> children = new ArrayList<OrganisaatioPerustieto>();
+    private List<OrganisaatioPerustietoV4> children = new ArrayList<>();
 
-    public List<OrganisaatioPerustieto> getChildren() {
+    public List<OrganisaatioPerustietoV4> getChildren() {
         return children;
     }
 
-    public void setChildren(List<OrganisaatioPerustieto> children) {
+    public void setChildren(List<OrganisaatioPerustietoV4> children) {
         this.children = children;
     }
 
@@ -91,7 +91,7 @@ public class OrganisaatioPerustieto implements Serializable {
         this.match = match;
     }
 
-    public OrganisaatioPerustieto() {
+    public OrganisaatioPerustietoV4() {
         super();
     }
 
@@ -319,22 +319,22 @@ public class OrganisaatioPerustieto implements Serializable {
      */
     public void setToimipistekoodi(String value) { this.toimipistekoodi = value; }
 
-    @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    public List<OrganisaatioTyyppi> getOrganisaatiotyypit() {
+    @ApiModelProperty(value = "Organisaation tyypit koodiarvoina", required = true)
+    public List<String> getOrganisaatiotyypit() {
         if (tyypit == null) {
-            tyypit = new ArrayList<OrganisaatioTyyppi>();
+            tyypit = new ArrayList<>();
         }
         return this.tyypit;
     }
 
-    public void setOrganisaatiotyypit(List<OrganisaatioTyyppi> organisaatiotyypit) {
+    public void setOrganisaatiotyypit(List<String> organisaatiotyypit) {
         this.tyypit = organisaatiotyypit;
     }
-    
+
     @ApiModelProperty(value = "Kielten URIt", required = true)
     public List<String> getKieletUris() {
         if (kieletUris == null) {
-            kieletUris = new ArrayList<String>();
+            kieletUris = new ArrayList<>();
         }
         return this.kieletUris;
     }
