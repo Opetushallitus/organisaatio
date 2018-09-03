@@ -68,9 +68,7 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     }
 
     public void setKunta(Set<String> value) {
-        if (value != null) {
-            this.kunta.addAll(value);
-        }
+        this.kunta = value;
     }
 
     @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
@@ -88,9 +86,7 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     }
 
     public void setOppilaitosTyyppi(Set<String> oppilaitostyyppi) {
-        if (oppilaitostyyppi != null) {
-            this.oppilaitostyyppi.addAll(oppilaitostyyppi);
-        }
+        this.oppilaitostyyppi = oppilaitostyyppi;
     }
     
     @ApiModelProperty(value = "Haettavan organisaation kieli tai lista kielistä", required = true)
@@ -99,18 +95,19 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     }
 
     public void setKieli(Set<String> value) {
-        if (value != null) {
-            this.kieli.addAll(value);
-        }
+        this.kieli = value;
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public List<String> getOidRestrictionList() {
+        if (this.oidResctrictionList == null) {
+            this.oidResctrictionList = new ArrayList<>();
+        }
         return this.oidResctrictionList;
     }
 
     public void setOidRestrictionList(List<String> oidRestrictionList) {
-        this.oidResctrictionList.addAll(oidResctrictionList);
+        this.oidResctrictionList = oidRestrictionList;
     }
 
     @ApiModelProperty(value = "Hakutermit", required = true)
