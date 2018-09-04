@@ -68,16 +68,16 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                             if (model.organisaatio.parentOid !== model.OPHOid && model.parent.tyypit.some(function(tyyppi) {
                                 return sallitutAlaOrganisaatiot[tyyppi].indexOf(orgTyyppiKoodi.koodiArvo) !== -1;
                             })) {
-                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi.koodiUri);
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
                                 || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
-                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi.koodiUri);
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             }
 
                             if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
-                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi.koodiUri);
+                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi);
                             }
                         }
                     });

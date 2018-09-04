@@ -15,7 +15,7 @@
  */
 
 app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
-                                              Alert, Organisaatiot, LocalisationService) {
+                                              Alert, Organisaatiot, LocalisationService, KoodistoClient, KoodistoKoodi) {
 
     $log = $log.getInstance("OrganisaatioTreeModel");
     var loadingService = $injector.get('LoadingService');
@@ -203,11 +203,21 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
                     if (i !== 0) {
                         tyypit += ", ";
                     }
-                    tyypit += LocalisationService.t("Organisaatiot."+node.organisaatiotyypit[i], "");
+                    tyypit += model.getKoodiLocalized(node.organisaatiotyypit[i]);
                 }
                 return tyypit;
             }
             return "\u00A0";
+        },
+
+        getKoodiLocalized: function(koodiUri) {
+            var koodi = model.kaikkiOrganisaatiotyypit.filter(function (koodi) {
+                return koodi.koodiUri === koodiUri;
+            })[0];
+            if (koodi) {
+                return KoodistoKoodi.getLocalizedName(koodi);
+            }
+            return koodi;
         },
 
         buildHakuParametrit: function(hakuehdot) {
@@ -318,6 +328,10 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             return deferred.promise;
         }
     };
+
+    KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
+        model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
+    });
 
     return model;
 });

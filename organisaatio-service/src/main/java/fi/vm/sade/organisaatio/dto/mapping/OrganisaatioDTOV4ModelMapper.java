@@ -31,6 +31,14 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
                 ? null
                 : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource());
 
+        final Converter<String, String> organisaatioTyyppiV3ToV4 = mc -> mc.getSource() == null
+                ? null
+                : OrganisaatioTyyppi.fromValue(mc.getSource()).koodiValue();
+
+        final Converter<String,String> organisaatioTyyppiV4ToV3 = mc -> mc.getSource() == null
+                ? null
+                : OrganisaatioTyyppi.fromKoodiValue(mc.getSource()).value();
+
         final Converter<List<OrganisaatioTyyppi>, List<String>> organisaatioTyypitEnumV3ToV4 = mc -> mc.getSource() == null
                 ? null
                 : mc.getSource().stream().map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toList());
@@ -71,13 +79,13 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV2, OrganisaatioSearchCriteriaDTOV4>() {
             @Override
             protected void configure() {
-                using(organisaatioTyypitV3ToV4).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
+                using(organisaatioTyyppiV3ToV4).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
             }
         });
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV4, OrganisaatioSearchCriteriaDTOV2>() {
             @Override
             protected void configure() {
-                using(organisaatioTyypitV4ToV3).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
+                using(organisaatioTyyppiV4ToV3).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
             }
         });
 

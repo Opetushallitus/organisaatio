@@ -55,6 +55,8 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             yhteystietoTyypit: {}
         };
 
+        this.kaikkiOrganisaatiotyypit = [];
+
         this.henkilot = {
             virkailijat: []
         };
@@ -212,6 +214,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
     var model = new function() {
 
         initOrganisaatioModelData.call(this);
+
+        KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
+            model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
+        });
 
         // TODO: Add also parent needed possibly for moving organisaatio
 
