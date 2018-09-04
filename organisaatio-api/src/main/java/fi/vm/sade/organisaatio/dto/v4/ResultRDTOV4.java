@@ -16,11 +16,15 @@ public class ResultRDTOV4 implements Serializable {
         WARNING,
         VALIDATION,
         ERROR
-    };
+    }
 
     private String info;
 
     private OrganisaatioRDTOV4 organisaatio;
+
+    public ResultRDTOV4() {
+
+    }
 
     public ResultRDTOV4(OrganisaatioRDTOV4 organisaatio) {
         this.organisaatio = organisaatio;
