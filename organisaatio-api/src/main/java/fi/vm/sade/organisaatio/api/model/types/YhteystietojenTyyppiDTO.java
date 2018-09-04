@@ -12,7 +12,7 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     protected long version;
     protected String oid;
     protected MonikielinenTekstiTyyppi nimi;
-    protected List<OrganisaatioTyyppi> sovellettavatOrganisaatios;
+    protected List<String> sovellettavatOrganisaatios;
     protected List<YhteystietoElementtiDTO> allLisatietokenttas;
     protected List<String> sovellettavatOppilaitostyyppis;
 
@@ -98,13 +98,13 @@ public class YhteystietojenTyyppiDTO implements Serializable {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link OrganisaatioTyyppi }
+     * {@link String }
      * 
      * 
      */
-    public List<OrganisaatioTyyppi> getSovellettavatOrganisaatios() {
+    public List<String> getSovellettavatOrganisaatios() {
         if (sovellettavatOrganisaatios == null) {
-            sovellettavatOrganisaatios = new ArrayList<OrganisaatioTyyppi>();
+            sovellettavatOrganisaatios = new ArrayList<>();
         }
         return this.sovellettavatOrganisaatios;
     }
