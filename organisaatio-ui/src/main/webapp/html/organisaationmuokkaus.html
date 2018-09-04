@@ -51,7 +51,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
 
         <div class="controls" ng-if="model.koodisto.organisaatiotyypit.length">
-            <span ng-repeat="tyyppiKoodi in ::model.koodisto.organisaatiotyypit">
+            <span ng-repeat="tyyppiKoodi in model.koodisto.organisaatiotyypit">
                 <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppiKoodi.koodiUri) > -1">
                     <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
