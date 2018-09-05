@@ -15,15 +15,24 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLiitosDTOV2;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+
+import java.util.List;
 
 public class OrganisaatioLiitosModelMapper extends ModelMapper {
 
     public OrganisaatioLiitosModelMapper() {
         super();
+
+        final Converter<List<String>, List<String>> tyyppiConverter = mc -> mc.getSource() == null
+                ? null
+                : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource());
+
         this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioLiitosDTOV2>() {
             @Override
             protected void configure() {
@@ -35,11 +44,11 @@ public class OrganisaatioLiitosModelMapper extends ModelMapper {
                 // Katso tuolta miksi enum status --> string status
                 // https://github.com/jhalterman/modelmapper/issues/99
                 map(source.getChild().getStatus()).getOrganisaatio().setStatus(null);
-                map().getOrganisaatio().setTyypit(source.getChild().getTyypit());
+                using(tyyppiConverter).map(source.getChild().getTyypit()).getOrganisaatio().setTyypit(null);
 
                 map().getKohde().setOid((source.getParent().getOid()));
                 map(source.getParent().getStatus()).getKohde().setStatus(null);
-                map().getKohde().setTyypit(source.getParent().getTyypit());
+                using(tyyppiConverter).map(source.getParent().getTyypit()).getKohde().setTyypit(null);
 
             }
         });
