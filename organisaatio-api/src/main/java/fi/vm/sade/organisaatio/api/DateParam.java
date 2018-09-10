@@ -6,7 +6,6 @@
 
 package fi.vm.sade.organisaatio.api;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,17 @@ public class DateParam extends AbstractParam<Date> {
         if (StringUtils.isEmpty(param)) {
             return null;
         }
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String datePattern = "yyyy-MM-dd";
+        String datetimePattern = "yyyy-MM-dd HH:mm";
+        SimpleDateFormat dateFormat;
+
+        if(param.length() == datetimePattern.length()) {
+            dateFormat = new SimpleDateFormat(datetimePattern);
+        } else {
+            dateFormat = new SimpleDateFormat(datePattern);
+        }
+
         try {
             return dateFormat.parse(param);
         } catch (ParseException e) {
@@ -34,5 +43,6 @@ public class DateParam extends AbstractParam<Date> {
                     .entity("Couldn't parse date string: " + e.getMessage())
                     .build());
         }
+
     }
 }
