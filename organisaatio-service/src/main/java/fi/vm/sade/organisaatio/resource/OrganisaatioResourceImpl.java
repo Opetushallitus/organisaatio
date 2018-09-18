@@ -149,12 +149,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // GET /organisaatio/{oid}/childoids
     @Override
-    public String childoids(String oid) throws Exception {
+    public String childoids(String oid, boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) throws Exception {
         Preconditions.checkNotNull(oid);
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<String> childOidList = new LinkedList<>();
         if (parentOrg != null) {
-            for (Organisaatio child : parentOrg.getChildren(true)) {
+            for (Organisaatio child : parentOrg.getChildren(aktiiviset, suunnitellut, lakkautetut)) {
                 childOidList.add("\"" + child.getOid() + "\"");
             }
         }

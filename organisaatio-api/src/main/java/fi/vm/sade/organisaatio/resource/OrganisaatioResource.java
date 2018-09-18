@@ -106,7 +106,10 @@ public interface OrganisaatioResource {
             notes = "Operaatio palauttaa organisaation alla olevien organisaatioiden oid:t.",
             response = String.class)
     public String childoids(
-            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+            @ApiParam(value = "Aktiiviset") @QueryParam("aktiiviset") @DefaultValue("true") boolean aktiiviset,
+            @ApiParam(value = "Suunnitellut") @QueryParam("suunnitellut") @DefaultValue("true") boolean suunnitellut,
+            @ApiParam(value = "Lakkautetut") @QueryParam("lakkautetut") @DefaultValue("true") boolean lakkautetut) throws Exception;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")

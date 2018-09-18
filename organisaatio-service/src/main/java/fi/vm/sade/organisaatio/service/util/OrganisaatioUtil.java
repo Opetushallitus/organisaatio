@@ -84,6 +84,15 @@ public abstract class OrganisaatioUtil {
     }
 
     /**
+     * Tarkistaa onko organisaatio aktiivinen.
+     * @param o Organisaatio
+     * @return true jos organisaatio on aktiivinen, false muuten
+     */
+    public static boolean isAktiivinen(Organisaatio o) {
+        return !isPassive(o) && !isSuunniteltu(o);
+    }
+
+    /**
      * Tarkistaa onko organisaatio passivoitu eli lakkautettu
      * @param o Organisaatio
      * @return true jos organisaatio on passiivinen, false muuten
