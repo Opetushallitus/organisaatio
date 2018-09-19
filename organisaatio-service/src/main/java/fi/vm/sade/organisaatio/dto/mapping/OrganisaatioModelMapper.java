@@ -15,24 +15,22 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioYhteystiedotDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OsoiteDTOV2;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.util.YhteystietoUtil;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeToken;
 import org.modelmapper.spi.MappingContext;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -127,6 +125,8 @@ public class OrganisaatioModelMapper extends ModelMapper {
             }
         };
 
+        final Converter<Organisaatio, List<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
+
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
             protected void configure() {
@@ -148,6 +148,8 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 // Email-osoite
                 using(emailOsoiteConverter).map(source.getYhteystiedot()).setEmailOsoite(null);
 
+                // Tyypit koodiarvoista organisaatiopalvelun formaattiin
+                using(tyypitConverter).map(source).setTyypit(new ArrayList<>());
             }
         });
     }

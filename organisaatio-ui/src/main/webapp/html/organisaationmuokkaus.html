@@ -50,28 +50,28 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             {{t('Organisaationtarkastelu.organisaatiotyyppi')}}*
         </label>
 
-        <div class="controls">
-            <span ng-repeat="tyyppi in model.koodisto.organisaatiotyypit">
-                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppi) > - 1">
+        <div class="controls" ng-if="model.koodisto.organisaatiotyypit.length">
+            <span ng-repeat="tyyppiKoodi in model.koodisto.organisaatiotyypit">
+                <span ng-if="model.koodisto.ophOrganisaatiot.indexOf(tyyppiKoodi.koodiUri) > -1">
                     <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
-                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
-                           ng-click="model.toggleCheckOrganisaatio(tyyppi);form.$dirty = true">
-                    {{t(tyyppi)}}
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppiKoodi.koodiUri) !== -1"
+                           ng-click="model.toggleCheckOrganisaatio(tyyppiKoodi.koodiUri);form.$dirty = true">
+                    {{:: getKoodiLocalized(tyyppiKoodi.koodiUri)}}
                 </span>
-                <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppi) === - 1)">
+                <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppiKoodi.koodiUri) === -1)">
                     <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
-                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1"
-                           ng-click="model.toggleCheckOrganisaatio(tyyppi);form.$dirty = true">
-                    {{t(tyyppi)}}
+                           ng-checked="model.organisaatio.tyypit.indexOf(tyyppiKoodi.koodiUri) !== -1"
+                           ng-click="model.toggleCheckOrganisaatio(tyyppiKoodi.koodiUri);form.$dirty = true">
+                    {{:: getKoodiLocalized(tyyppiKoodi.koodiUri)}}
                 </span>
             </span>
             <!-- Näytetään tyypit, jotka eivät hierarkiasääntöjen mukaan ole valideja -->
-            <span ng-repeat="tyyppi in model.organisaatio.tyypit">
-                <span ng-if="model.koodisto.organisaatiotyypit.indexOf(tyyppi) === - 1">
+            <span ng-repeat="tyyppi in ::model.organisaatio.tyypit">
+                <span ng-if="isNotInOrganisaatiotyypit(tyyppi)">
                     <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1" disabled>
-                    {{t(tyyppi)}}
+                    {{:: getKoodiLocalized(tyyppi)}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">

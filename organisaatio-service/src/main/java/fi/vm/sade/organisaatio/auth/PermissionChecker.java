@@ -16,30 +16,27 @@
  */
 package fi.vm.sade.organisaatio.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import com.google.common.base.Objects;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import java.util.Date;
-
-import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 
 /**

@@ -134,7 +134,7 @@
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        Index Config - These settings control low-level behavior of indexing
-       Most example settings here show the default value, but are commented
+       Most example settings here show the default koodiValue, but are commented
        out, to more easily see where customizations have been made.
        
        Note: This replaces <indexDefaults> and <mainIndex> from older versions
@@ -284,7 +284,7 @@
          To aid in advanced debugging, Lucene provides an "InfoStream"
          of detailed information when indexing.
 
-         Setting The value to true will instruct the underlying Lucene
+         Setting The koodiValue to true will instruct the underlying Lucene
          IndexWriter to write its debugging info the specified file
       -->
      <!-- <infoStream file="INFOSTREAM.txt">false</infoStream> --> 
@@ -443,7 +443,7 @@
          
          This option actually modifies a global Lucene property that
          will affect all SolrCores.  If multiple solrconfig.xml files
-         disagree on this property, the value at any given moment will
+         disagree on this property, the koodiValue at any given moment will
          be based on the last SolrCore to be initialized.
          
       -->
@@ -698,7 +698,7 @@
     <httpCaching never304="true" />
     <!-- If you include a <cacheControl> directive, it will be used to
          generate a Cache-Control header (as well as an Expires header
-         if the value contains "max-age=")
+         if the koodiValue contains "max-age=")
          
          By default, no Cache-Control header is generated.
          
@@ -712,7 +712,7 @@
       -->
     <!-- To enable Solr to respond with automatically generated HTTP
          Caching headers, and to response to Cache Validation requests
-         correctly, set the value of never304="false"
+         correctly, set the koodiValue of never304="false"
          
          This will cause Solr to generate Last-Modified and ETag
          headers based on the properties of the Index.
@@ -720,11 +720,11 @@
          The following options can also be specified to affect the
          values of these headers...
 
-         lastModFrom - the default value is "openTime" which means the
-         Last-Modified value (and validation against If-Modified-Since
+         lastModFrom - the default koodiValue is "openTime" which means the
+         Last-Modified koodiValue (and validation against If-Modified-Since
          requests) will all be relative to when the current Searcher
          was opened.  You can change it to lastModFrom="dirLastMod" if
-         you want the value to exactly correspond to when the physical
+         you want the koodiValue to exactly correspond to when the physical
          index was last modified.
 
          etagSeed="..." is an option you can change to force the ETag
@@ -1032,7 +1032,7 @@
        q (or analysis.q) - text for query time analysis
        analysis.showmatch (true|false) - When set to true and when
            query analysis is performed, the produced tokens of the
-           field value analysis will be marked as "matched" for every
+           field koodiValue analysis will be marked as "matched" for every
            token that is produces by the query analysis
    -->
   <requestHandler name="/analysis/field" 
@@ -1391,7 +1391,7 @@
            Use attribute key as name attribute of str elements
            below. These can be further overridden for individual
            requests by specifying attribute key as request parameter
-           name and attribute value as parameter value.
+           name and attribute koodiValue as parameter koodiValue.
         -->
       <str name="LingoClusteringAlgorithm.desiredClusterCountBase">20</str>
 
@@ -1769,9 +1769,9 @@
        <int name="connection">jdbc://....</int>
      </transformer>
      
-     To add a constant value to all docs, use:
+     To add a constant koodiValue to all docs, use:
      <transformer name="mytrans2" class="org.apache.solr.response.transform.ValueAugmenterFactory" >
-       <int name="value">5</int>
+       <int name="koodiValue">5</int>
      </transformer>
      
      If you want the user to still be able to change it with _value:something_ use this:

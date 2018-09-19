@@ -37,12 +37,12 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
 
     function isKoulutustoimija() {
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
-        return currentOrganizationTypes.indexOf("Koulutustoimija") > -1;
+        return currentOrganizationTypes.indexOf("organisaatiotyyppi_01") > -1; // Koulutustoimija
     }
 
     function isOppilaitos() {
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
-        return currentOrganizationTypes.indexOf("Oppilaitos") > -1;
+        return currentOrganizationTypes.indexOf("organisaatiotyyppi_02") > -1; // Oppilaitos
     }
 
     function getNimi(organisaatio) {
@@ -72,7 +72,7 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
             return organisaatio.ytunnus;
         }
         return null;
-    };
+    }
 
     function updateSearch() {
         var organizationType = "";
@@ -82,7 +82,7 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
         if ($scope.koulutustoimija) {
             // Koulutustoimijan tapauksessa voidaan tehdä vain liitos toiseen
             // koulutustoimijaan
-            organizationType = 'Koulutustoimija';
+            organizationType = 'organisaatiotyyppi_01'; // Koulutustoimija
             $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.koulutustoimija");
             $scope.options.merge = true;
         } else if ($scope.oppilaitos) {
@@ -90,11 +90,11 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
             // oppilaitokseen. Jos taas siirretään oppilaitos, se voidaan siirtää
             // vain koulutustoimijan alle.
             if ($scope.options.merge) {
-                organizationType = 'Oppilaitos';
+                organizationType = 'organisaatiotyyppi_02'; // Oppilaitos
                 $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.oppilaitos");
             }
             else {
-                organizationType = 'Koulutustoimija';
+                organizationType = 'organisaatiotyyppi_01'; // Koulutustoimija
                 $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.koulutustoimija");
             }
         }

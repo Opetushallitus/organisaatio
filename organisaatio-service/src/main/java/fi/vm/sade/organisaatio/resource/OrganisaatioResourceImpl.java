@@ -25,11 +25,14 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -37,10 +40,10 @@ import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +64,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import static java.util.stream.Collectors.joining;
+
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
+import java.util.*;
 
 /**
  * @author Antti Salonen
@@ -329,7 +334,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
             return new ArrayList<>();
         }
-        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(organisaatioTyyppi);
+        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(OrganisaatioTyyppi.fromValueToKoodi(organisaatioTyyppi));
         if (entitys == null) {
             return null;
         }

@@ -510,7 +510,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                     .readValue(json);
         }
         catch (IOException ioe) {
-            throw new RestClientException("Error while parsing koodisto return value for " + koodistoUri, ioe);
+            throw new RestClientException("Error while parsing koodisto return koodiValue for " + koodistoUri, ioe);
         }
         return koodiCollectionType.stream()
                 .map(KoodiType::getKoodiUri)

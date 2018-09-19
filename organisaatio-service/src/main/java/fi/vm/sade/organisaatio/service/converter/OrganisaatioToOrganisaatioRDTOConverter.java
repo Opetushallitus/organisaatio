@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -69,7 +70,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -83,7 +84,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(convertListToList(s.getTyypit()));
+        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
         t.setRyhmatyypit(convertListToList(s.getRyhmatyypitV1()));
@@ -198,7 +199,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     }
 
     private void addToMapIfNotNULL(Map map, String key, Object value) {
-//        if (value != null) {
+//        if (koodiValue != null) {
         map.put(key, value);
 //        }
     }

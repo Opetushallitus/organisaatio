@@ -15,14 +15,7 @@
  */
 package fi.vm.sade.organisaatio.integrationtest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +25,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests to verify the translated text functionality works as expected.
@@ -119,7 +115,7 @@ public class MonikielinenTekstiTest {
         assertEquals(TEXT_SV1, mt.getString("sv"));
         assertNull(mt.getString("ch"));
 
-        // Test removing translation value
+        // Test removing translation koodiValue
         LOG.debug("  remove translation for sv...");
 
         // Remove two translations

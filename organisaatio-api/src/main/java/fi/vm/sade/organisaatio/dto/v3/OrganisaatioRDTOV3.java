@@ -40,19 +40,19 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private Date _ytjPaivitysPvm;
 
-    private List<String> _kieletUris;
+    private List<String> _kieletUris = new ArrayList<>();
 
-    private List<String> _tyypit;
+    private List<String> _tyypit = new ArrayList<>();
 
-    private List<String> _vuosiluokat;
+    private List<String> _vuosiluokat = new ArrayList<>();
 
     private Set<String> _ryhmatyypit;
 
     private Set<String> _kayttoryhmat;
 
-    private Map<String, String> _nimi;
+    private Map<String, String> _nimi = new HashMap<>();
 
-    private List<OrganisaatioNimiRDTO> _nimet;
+    private List<OrganisaatioNimiRDTO> _nimet = new ArrayList<>();
 
     private String _status;
 
@@ -78,17 +78,17 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private String _emailOsoite; // from List of Yhteystietos
 
-    private Map<String, String> _postiosoite;
+    private Map<String, String> _postiosoite = new HashMap<>();
 
-    private Map<String, String> _kayntiosoite;
+    private Map<String, String> _kayntiosoite = new HashMap<>();
 
-    private List<Map<String, String>> _yhteystiedot;
+    private List<Map<String, String>> _yhteystiedot = new ArrayList<>();
 
     private Set<String> _lisatiedot;
 
     private String _kuvaus;
 
-    private Map<String, String> _kuvaus2;
+    private Map<String, String> _kuvaus2 = new HashMap<>();
 
     private String _parentOid;
 
@@ -98,7 +98,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private String yhteishaunKoulukoodi;
 
-    private List<Map<String, String>> _yhteystietoArvos = null;
+    private List<Map<String, String>> _yhteystietoArvos = new ArrayList<>();
     private String _virastoTunnus;
     private String _opetuspisteenJarjNro;
 
@@ -198,7 +198,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Nimi", required = true)
     public Map<String, String> getNimi() {
         if (_nimi == null) {
-            _nimi = new HashMap<String, String>();
+            _nimi = new HashMap<>();
         }
         return _nimi;
     }

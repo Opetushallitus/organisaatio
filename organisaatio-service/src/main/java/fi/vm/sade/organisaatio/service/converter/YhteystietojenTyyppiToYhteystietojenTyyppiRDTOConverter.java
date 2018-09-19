@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
@@ -35,7 +36,7 @@ public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends Abs
         YhteystietojenTyyppiRDTO r = new YhteystietojenTyyppiRDTO();
         r.setNimi(convertMKTToMap(s.getNimi()));
         r.setSovellettavatOppilaitosTyyppis(s.getSovellettavatOppilaitostyyppis());
-        r.setSovellettavatOrganisaatioTyyppis(s.getSovellettavatOrganisaatioTyyppis());
+        r.setSovellettavatOrganisaatioTyyppis(OrganisaatioTyyppi.fromKoodiToValue(s.getSovellettavatOrganisaatioTyyppis()));
         r.setLisatietos(convertLisatietos(s.getLisatietos()));
         return r;
     }

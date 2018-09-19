@@ -304,6 +304,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
             model.organisaationtila = "";
             model.organisaationtila = model.getOrganisaationTila(model.organisaatio.status);
             model.organisaatio.historia = result.historia;
+            model.organisaatio
 
             // Otetaan talteen organisaation nimihistoria ennen muutoksia.
             model.originalNimet = model.organisaatio.nimet;
@@ -425,9 +426,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                         function(response) {
                             refreshFunctions.showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response, model, loadingService);
                         });
-                    model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
-                    model.koodisto.localizedOppilaitos = "Oppilaitos";
-                    model.koodisto.localizedToimipiste = "Toimipiste";
                 },
                 // Error case
                 function(response) {

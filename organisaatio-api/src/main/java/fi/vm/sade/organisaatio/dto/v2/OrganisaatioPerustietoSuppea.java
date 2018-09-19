@@ -15,17 +15,16 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation suppeat perustiedot")

@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -65,7 +66,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
-        s.setNimet((List<OrganisaatioNimi>) organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
+        s.setNimet(organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
 
         // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
         MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(s.getNimet());
@@ -86,7 +87,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
         // t.set(s.getPuhelin());
         s.setToimipisteKoodi(t.getToimipistekoodi());
-        s.setTyypit(convertListToList(t.getTyypit()));
+        s.setTyypit(OrganisaatioTyyppi.tyypitToKoodis(t.getTyypit()));
         // t.set(s.getTyypitAsString());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
         // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille

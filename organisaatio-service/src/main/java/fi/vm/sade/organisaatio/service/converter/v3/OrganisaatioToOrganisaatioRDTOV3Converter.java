@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.service.converter.v3;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
@@ -67,7 +68,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -81,7 +82,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(convertListToList(s.getTyypit()));
+        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
         t.setLisatiedot(convertSetToSet(s.getOrganisaatioLisatietotyypit().stream()
                 .map(OrganisaatioLisatietotyyppi::getLisatietotyyppi)
                 .map(Lisatietotyyppi::getNimi)
@@ -199,7 +200,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
     }
 
     private void addToMapIfNotNULL(Map map, String key, Object value) {
-//        if (value != null) {
+//        if (koodiValue != null) {
         map.put(key, value);
 //        }
     }

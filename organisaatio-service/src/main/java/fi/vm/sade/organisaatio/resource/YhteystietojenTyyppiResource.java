@@ -83,9 +83,9 @@ public class YhteystietojenTyyppiResource {
     @ApiOperation(value = "Palauttaa yhteystietotyypit", notes = "Palauttaa yhteystietotyypit",
             response = YhteystietojenTyyppiDTO.class, responseContainer = "List")
     public List<YhteystietojenTyyppiDTO> getYhteystietoTyypit() {
-        List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<YhteystietojenTyyppiDTO>();
+        List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<>();
         for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
-            tyypit.add((YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t));
+            tyypit.add(converterFactory.convertToDTO(t));
         }
         return tyypit;
     }

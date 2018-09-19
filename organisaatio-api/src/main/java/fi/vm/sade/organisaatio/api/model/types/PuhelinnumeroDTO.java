@@ -10,7 +10,7 @@ public class PuhelinnumeroDTO extends YhteystietoDTO implements Serializable  {
     protected PuhelinNumeroTyyppi tyyppi;
 
     /**
-     * Gets the value of the puhelinnumero property.
+     * Gets the koodiValue of the puhelinnumero property.
      * 
      * @return
      *     possible object is
@@ -22,7 +22,7 @@ public class PuhelinnumeroDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the value of the puhelinnumero property.
+     * Sets the koodiValue of the puhelinnumero property.
      * 
      * @param value
      *     allowed object is
@@ -34,7 +34,7 @@ public class PuhelinnumeroDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the value of the tyyppi property.
+     * Gets the koodiValue of the tyyppi property.
      * 
      * @return
      *     possible object is
@@ -46,7 +46,7 @@ public class PuhelinnumeroDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the value of the tyyppi property.
+     * Sets the koodiValue of the tyyppi property.
      * 
      * @param value
      *     allowed object is

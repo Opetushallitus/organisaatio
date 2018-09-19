@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -174,6 +175,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException {
+        // Luodaan tallennettava entity objekti
+        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        return save(entity, model.getParentOid(), updating);
+    }
+
+    @Override
+    public OrganisaatioResult save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         return save(entity, model.getParentOid(), updating);
@@ -591,7 +599,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             return false;
         }
 
-        return (org.getTyypit() != null) && (org.getTyypit().contains(organisaatioTyyppi.value()));
+        return (org.getTyypit() != null) && (org.getTyypit().contains(organisaatioTyyppi.koodiValue()));
     }
 
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
@@ -633,8 +641,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, List<String> tyypit) {
         // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
-        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.value())
-                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.value())) {
+        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
+                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             LOG.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
                     entity.getOid(), tyypit);
             return null;

@@ -167,7 +167,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Test
     public void olderChild() {
         child1.setAlkuPvm(new GregorianCalendar(1970, 0, 1).getTime());
-        // method validates modified info, so doesn't matter what value parent has
+        // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
         Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));
@@ -176,7 +176,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Test
     public void youngerChild() {
         child1.setAlkuPvm(new GregorianCalendar(1990, 0, 1).getTime());
-        // method validates modified info, so doesn't matter what value parent has
+        // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
         Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));

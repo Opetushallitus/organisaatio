@@ -91,7 +91,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
     }
 
     /**
-     * Get date value
+     * Get date koodiValue
      * 
      * @param doc
      * @param field
@@ -102,7 +102,7 @@ public class SolrDocumentToOrganisaatioPerustietoTypeFunction extends
     }
 
     /**
-     * Get String value
+     * Get String koodiValue
      * 
      * @param doc
      * @param field
