@@ -18,6 +18,7 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.core.convert.ConversionService;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -122,5 +124,10 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
         return organisaatioSuhdeDAO.findLiitokset(date);
+    }
+
+    @Override
+    public Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria) {
+        return organisaatioDAO.findChildOidsRecursive(criteria);
     }
 }
