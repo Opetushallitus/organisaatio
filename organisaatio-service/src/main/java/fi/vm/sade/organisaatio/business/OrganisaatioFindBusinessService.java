@@ -16,10 +16,10 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 
 import java.util.Collection;
@@ -93,5 +93,7 @@ public interface OrganisaatioFindBusinessService {
      * @return Organisaatioiden liitokset.
      */
     public List<OrganisaatioSuhde> findLiitokset(Date date);
+
+    Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
 
 }
