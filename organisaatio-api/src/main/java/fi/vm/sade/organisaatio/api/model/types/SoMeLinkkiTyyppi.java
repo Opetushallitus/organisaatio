@@ -10,7 +10,7 @@ public class SoMeLinkkiTyyppi implements Serializable {
     protected String sisalto;
 
     /**
-     * Gets the koodiValue of the tyyppi property.
+     * Gets the value of the tyyppi property.
      * 
      * @return
      *     possible object is
@@ -22,7 +22,7 @@ public class SoMeLinkkiTyyppi implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the tyyppi property.
+     * Sets the value of the tyyppi property.
      * 
      * @param value
      *     allowed object is
@@ -34,7 +34,7 @@ public class SoMeLinkkiTyyppi implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the sisalto property.
+     * Gets the value of the sisalto property.
      * 
      * @return
      *     possible object is
@@ -46,7 +46,7 @@ public class SoMeLinkkiTyyppi implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the sisalto property.
+     * Sets the value of the sisalto property.
      * 
      * @param value
      *     allowed object is

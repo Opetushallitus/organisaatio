@@ -96,7 +96,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the oid property.
+     * Gets the value of the oid property.
      * 
      * @return possible object is {@link String }
      * 
@@ -106,7 +106,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the oid property.
+     * Sets the value of the oid property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -117,7 +117,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the alkuPvm property.
+     * Gets the value of the alkuPvm property.
      * 
      * @return possible object is {@link String }
      * 
@@ -127,7 +127,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the alkuPvm property.
+     * Sets the value of the alkuPvm property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -138,7 +138,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the lakkautusPvm property.
+     * Gets the value of the lakkautusPvm property.
      * 
      * @return possible object is {@link String }
      * 
@@ -148,7 +148,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the lakkautusPvm property.
+     * Sets the value of the lakkautusPvm property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -159,7 +159,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the parentOid property.
+     * Gets the value of the parentOid property.
      * 
      * @return possible object is {@link String }
      * 
@@ -169,7 +169,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the parentOid property.
+     * Sets the value of the parentOid property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -180,7 +180,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the parentOidPath property.
+     * Gets the value of the parentOidPath property.
      * 
      * @return possible object is {@link String }
      * 
@@ -190,7 +190,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the parentOidPath property.
+     * Sets the value of the parentOidPath property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -201,7 +201,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the ytunnus property.
+     * Gets the value of the ytunnus property.
      * 
      * @return possible object is {@link String }
      * 
@@ -211,7 +211,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the ytunnus property.
+     * Sets the value of the ytunnus property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -222,7 +222,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the virastoTunnus property.
+     * Gets the value of the virastoTunnus property.
      * 
      * @return possible object is {@link String }
      * 
@@ -233,7 +233,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the virastoTunnus property.
+     * Sets the value of the virastoTunnus property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -244,7 +244,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the aliOrganisaatioMaara property.
+     * Gets the value of the aliOrganisaatioMaara property.
      * 
      */
     @ApiModelProperty(value = "Aliorganisaatioiden määrä", required = true)
@@ -253,7 +253,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the aliOrganisaatioMaara property.
+     * Sets the value of the aliOrganisaatioMaara property.
      * 
      */
     public void setAliOrganisaatioMaara(int value) {
@@ -261,7 +261,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the oppilaitosKoodi property.
+     * Gets the value of the oppilaitosKoodi property.
      * 
      * @return possible object is {@link String }
      * 
@@ -271,7 +271,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the oppilaitosKoodi property.
+     * Sets the value of the oppilaitosKoodi property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -282,7 +282,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the oppilaitostyyppi property.
+     * Gets the value of the oppilaitostyyppi property.
      * 
      * @return possible object is {@link String }
      * 
@@ -292,7 +292,7 @@ public class OrganisaatioPerustieto implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the oppilaitostyyppi property.
+     * Sets the value of the oppilaitostyyppi property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -302,7 +302,7 @@ public class OrganisaatioPerustieto implements Serializable {
         this.oppilaitostyyppi = value;
     }
     /**
-     * Gets the koodiValue of the toimipistekoodi property.
+     * Gets the value of the toimipistekoodi property.
      *
      * @return possible object is {@link String }
      *
@@ -311,7 +311,7 @@ public class OrganisaatioPerustieto implements Serializable {
         return toimipistekoodi;
     }
     /**
-     * Sets the koodiValue of the oppilaitoskoodi property.
+     * Sets the value of the oppilaitoskoodi property.
      *
      * @param value
      *            allowed object is {@link String }

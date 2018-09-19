@@ -67,7 +67,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Gets the koodiValue of the oid property.
+     * Gets the value of the oid property.
      * 
      * @return possible object is {@link String }
      * 
@@ -77,7 +77,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the oid property.
+     * Sets the value of the oid property.
      * 
      * @param value
      *            allowed object is {@link String }
@@ -125,7 +125,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
     
     /**
-     * Gets the koodiValue of the oppilaitostyyppi property.
+     * Gets the value of the oppilaitostyyppi property.
      * 
      * @return possible object is {@link String }
      * 
@@ -135,7 +135,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
 
     /**
-     * Sets the koodiValue of the oppilaitostyyppi property.
+     * Sets the value of the oppilaitostyyppi property.
      * 
      * @param value
      *            allowed object is {@link String }

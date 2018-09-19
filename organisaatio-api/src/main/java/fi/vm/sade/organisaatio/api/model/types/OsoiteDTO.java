@@ -22,7 +22,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     protected Date ytjPaivitysPvm;
 
     /**
-     * Gets the koodiValue of the coordinateType property.
+     * Gets the value of the coordinateType property.
      * 
      * @return
      *     possible object is
@@ -34,7 +34,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the coordinateType property.
+     * Sets the value of the coordinateType property.
      * 
      * @param value
      *     allowed object is
@@ -46,7 +46,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the lat property.
+     * Gets the value of the lat property.
      * 
      * @return
      *     possible object is
@@ -58,7 +58,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the lat property.
+     * Sets the value of the lat property.
      * 
      * @param value
      *     allowed object is
@@ -70,7 +70,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the lng property.
+     * Gets the value of the lng property.
      * 
      * @return
      *     possible object is
@@ -82,7 +82,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the lng property.
+     * Sets the value of the lng property.
      * 
      * @param value
      *     allowed object is
@@ -94,7 +94,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the maa property.
+     * Gets the value of the maa property.
      * 
      * @return
      *     possible object is
@@ -106,7 +106,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the maa property.
+     * Sets the value of the maa property.
      * 
      * @param value
      *     allowed object is
@@ -118,7 +118,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the osavaltio property.
+     * Gets the value of the osavaltio property.
      * 
      * @return
      *     possible object is
@@ -130,7 +130,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the osavaltio property.
+     * Sets the value of the osavaltio property.
      * 
      * @param value
      *     allowed object is
@@ -142,7 +142,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the osoite property.
+     * Gets the value of the osoite property.
      * 
      * @return
      *     possible object is
@@ -154,7 +154,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the osoite property.
+     * Sets the value of the osoite property.
      * 
      * @param value
      *     allowed object is
@@ -166,7 +166,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the extraRivi property.
+     * Gets the value of the extraRivi property.
      * 
      * @return
      *     possible object is
@@ -178,7 +178,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the extraRivi property.
+     * Sets the value of the extraRivi property.
      * 
      * @param value
      *     allowed object is
@@ -190,7 +190,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the osoiteKayttotarkoitus property.
+     * Gets the value of the osoiteKayttotarkoitus property.
      * 
      * @return
      *     possible object is
@@ -202,7 +202,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the osoiteKayttotarkoitus property.
+     * Sets the value of the osoiteKayttotarkoitus property.
      * 
      * @param value
      *     allowed object is
@@ -214,7 +214,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the osoiteMuuKaytto property.
+     * Gets the value of the osoiteMuuKaytto property.
      * 
      * @return
      *     possible object is
@@ -226,7 +226,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the osoiteMuuKaytto property.
+     * Sets the value of the osoiteMuuKaytto property.
      * 
      * @param value
      *     allowed object is
@@ -238,7 +238,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the osoiteTyyppi property.
+     * Gets the value of the osoiteTyyppi property.
      * 
      * @return
      *     possible object is
@@ -250,7 +250,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the osoiteTyyppi property.
+     * Sets the value of the osoiteTyyppi property.
      * 
      * @param value
      *     allowed object is
@@ -262,7 +262,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the postinumero property.
+     * Gets the value of the postinumero property.
      * 
      * @return
      *     possible object is
@@ -274,7 +274,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the postinumero property.
+     * Sets the value of the postinumero property.
      * 
      * @param value
      *     allowed object is
@@ -286,7 +286,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the postitoimipaikka property.
+     * Gets the value of the postitoimipaikka property.
      * 
      * @return
      *     possible object is
@@ -298,7 +298,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the postitoimipaikka property.
+     * Sets the value of the postitoimipaikka property.
      * 
      * @param value
      *     allowed object is
@@ -310,7 +310,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Gets the koodiValue of the ytjPaivitysPvm property.
+     * Gets the value of the ytjPaivitysPvm property.
      * 
      * @return
      *     possible object is
@@ -322,7 +322,7 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the ytjPaivitysPvm property.
+     * Sets the value of the ytjPaivitysPvm property.
      * 
      * @param value
      *     allowed object is
