@@ -8,7 +8,7 @@ public class EmailDTO extends YhteystietoDTO implements Serializable  {
     protected String email;
 
     /**
-     * Gets the koodiValue of the email property.
+     * Gets the value of the email property.
      * 
      * @return
      *     possible object is
@@ -20,7 +20,7 @@ public class EmailDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the koodiValue of the email property.
+     * Sets the value of the email property.
      * 
      * @param value
      *     allowed object is

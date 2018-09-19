@@ -12,7 +12,7 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
     protected List<Teksti> teksti;
 
     /**
-     * Gets the koodiValue of the teksti property.
+     * Gets the value of the teksti property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -47,7 +47,7 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
         protected String kieliKoodi;
 
         /**
-         * Gets the koodiValue of the koodiValue property.
+         * Gets the value of the value property.
          * 
          * @return
          *     possible object is
@@ -59,7 +59,7 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
         }
 
         /**
-         * Sets the koodiValue of the koodiValue property.
+         * Sets the value of the value property.
          * 
          * @param value
          *     allowed object is
@@ -71,7 +71,7 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
         }
 
         /**
-         * Gets the koodiValue of the kieliKoodi property.
+         * Gets the value of the kieliKoodi property.
          * 
          * @return
          *     possible object is
@@ -83,7 +83,7 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
         }
 
         /**
-         * Sets the koodiValue of the kieliKoodi property.
+         * Sets the value of the kieliKoodi property.
          * 
          * @param value
          *     allowed object is
