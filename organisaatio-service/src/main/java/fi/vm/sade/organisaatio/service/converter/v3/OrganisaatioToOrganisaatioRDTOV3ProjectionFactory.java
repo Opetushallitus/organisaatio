@@ -17,6 +17,7 @@ package fi.vm.sade.organisaatio.service.converter.v3;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MappingProjection;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
@@ -73,7 +74,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -87,7 +88,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(convertListToList(s.getTyypit()));
+        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
         t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
         t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
@@ -201,7 +202,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
     }
 
     private void addToMapIfNotNULL(Map map, String key, Object value) {
-//        if (value != null) {
+//        if (koodiValue != null) {
         map.put(key, value);
 //        }
     }

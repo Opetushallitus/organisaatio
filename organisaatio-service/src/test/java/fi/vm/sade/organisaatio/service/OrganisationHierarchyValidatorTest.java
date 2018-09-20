@@ -1,19 +1,16 @@
 package fi.vm.sade.organisaatio.service;
 
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.junit.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 public class OrganisationHierarchyValidatorTest {
 
@@ -39,7 +36,7 @@ public class OrganisationHierarchyValidatorTest {
         final Organisaatio org = new Organisaatio();
         List<String> orgTyypit = Lists.newArrayList(org.getTyypit());
         for (OrganisaatioTyyppi tyyppi : tyypit) {
-            orgTyypit.add(tyyppi.value());
+            orgTyypit.add(tyyppi.koodiValue());
         }
         org.setTyypit(orgTyypit);
         return org;

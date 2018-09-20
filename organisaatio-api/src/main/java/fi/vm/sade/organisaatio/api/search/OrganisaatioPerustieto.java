@@ -326,6 +326,10 @@ public class OrganisaatioPerustieto implements Serializable {
         }
         return this.tyypit;
     }
+
+    public void setOrganisaatiotyypit(List<OrganisaatioTyyppi> organisaatiotyypit) {
+        this.tyypit = organisaatiotyypit;
+    }
     
     @ApiModelProperty(value = "Kielten URIt", required = true)
     public List<String> getKieletUris() {

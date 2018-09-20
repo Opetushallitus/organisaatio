@@ -594,7 +594,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return result;
     }
 
-    public List<Organisaatio> getChildren(boolean includeLakkautetut) {
+    public List<Organisaatio> getChildren(boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) {
         List<Organisaatio> result = new ArrayList<>();
 
         Date now = new Date();
@@ -607,14 +607,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             // Organisaatiosuhde ei ole lakannut, eikä lasta ole poistettu
             if ((os.getLoppuPvm()==null || os.getLoppuPvm().after(now))
                     && !os.getChild().isOrganisaatioPoistettu()) {
-
-                // Aliorganisaatio on lakkautettu, katsotaan otetaanko se mukaan
-                if (OrganisaatioUtil.isPassive(os.getChild())) {
-                    if (includeLakkautetut) {
-                        result.add(os.getChild());
-                    }
-                }
-                else {
+                if (aktiiviset && OrganisaatioUtil.isAktiivinen(os.getChild())
+                    || suunnitellut && OrganisaatioUtil.isSuunniteltu(os.getChild())
+                    || lakkautetut && OrganisaatioUtil.isPassive(os.getChild())) {
                     result.add(os.getChild());
                 }
             }
@@ -622,6 +617,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return result;
     }
 
+    public List<Organisaatio> getChildren(boolean includeLakkautetut) {
+        return getChildren(true, true, includeLakkautetut);
+    }
 
     /**
      * Laskee organisaatiosuhteet.

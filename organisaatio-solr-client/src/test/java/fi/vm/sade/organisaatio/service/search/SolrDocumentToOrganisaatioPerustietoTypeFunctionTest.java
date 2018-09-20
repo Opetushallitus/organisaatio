@@ -15,19 +15,17 @@
  */
 package fi.vm.sade.organisaatio.service.search;
 
-import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;   
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import org.apache.solr.common.SolrDocument;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.HashSet;
 
-import org.apache.solr.common.SolrDocument;
-import org.junit.Test;
-
-
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import static fi.vm.sade.organisaatio.service.search.SolrOrgFields.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SolrDocumentToOrganisaatioPerustietoTypeFunctionTest {
 

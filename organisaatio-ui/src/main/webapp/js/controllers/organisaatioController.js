@@ -17,7 +17,7 @@
 app.controller('OrganisaatioController', function OrganisaatioController($scope, $location,
                                 $routeParams, $uibModal,
                                 $log, $injector, $q,
-                                OrganisaatioModel) {
+                                OrganisaatioModel, KoodistoKoodi) {
 
     $log = $log.getInstance("OrganisaatioController");
 
@@ -34,6 +34,20 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         if ($scope.nimenmuokkaus) {
             $scope.nimenmuokkaus.clear();
         }
+    };
+
+    $scope.getKoodiLocalized = function(koodiUri) {
+        var koodi = $scope.model.kaikkiOrganisaatiotyypit.filter(function (koodi) {
+            return koodi.koodiUri === koodiUri;
+        })[0];
+        if (koodi) {
+            return KoodistoKoodi.getLocalizedName(koodi);
+        }
+        return koodi;
+    };
+
+    $scope.isNotInOrganisaatiotyypit = function(koodiUri) {
+        return $scope.model.koodisto.organisaatiotyypit.every(function(koodi) {return koodi.koodiUri !== koodiUri});
     };
 
     // Käsitellään muokkausnäkymästä poistuminen
@@ -426,9 +440,9 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     };
     $scope.isFromYtj = function(lang) {
         var currentOrganizationTypes = $scope.model.organisaatio.tyypit;
-        return $scope.model.mode == 'edit' && $scope.model.organisaatio.ytjkieli == lang
-            && (currentOrganizationTypes.indexOf("Koulutustoimija") > -1
-            || currentOrganizationTypes.indexOf("Muu organisaatio") > -1
-            || currentOrganizationTypes.indexOf("Tyoelamajarjesto") > -1);
+        return $scope.model.mode === 'edit' && $scope.model.organisaatio.ytjkieli === lang
+            && (currentOrganizationTypes.indexOf("organisaatiotyyppi_01") > -1 // Koulutustoimija
+            || currentOrganizationTypes.indexOf("organisaatiotyyppi_05") > -1 // Muu organisaatio
+            || currentOrganizationTypes.indexOf("organisaatiotyyppi_06") > -1); // Tyoelamajarjesto
     };
 });

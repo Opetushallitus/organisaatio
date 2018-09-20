@@ -147,7 +147,7 @@ describe("Testing OrganisaatioModel", function() {
   },
   "oid" : "1.2.246.562.10.99999999999",
   "parentOid" : "1.2.246.562.10.11111111111",
-  "tyypit" : [ "Toimipiste" ],
+  "tyypit" : [ "organisaatiotyyppi_03" ],
   "nimi" : {
     "fi" : "Testi-Koulutus"
   },
@@ -197,7 +197,7 @@ var parentResult = {
   "version" : 35,
   "oid" : "1.2.246.562.10.11111111111",
   "parentOid" : "1.2.246.562.10.00000000001",
-  "tyypit" : [ "Koulutustoimija" ],
+  "tyypit" : [ "organisaatiotyyppi_01" ],
   "nimi" : {
     "fi" : "Testi-Koulutustoimija"
   },

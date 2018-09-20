@@ -63,7 +63,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         Assert.assertEquals("NIMI", org.getNimi().getString("fi"));
         Assert.assertEquals(1, org.getNimet().size());
         Assert.assertEquals(org.getNimet().get(0).getAlkuPvm(), new GregorianCalendar(2013, Calendar.FEBRUARY, 1).getTime());
-        // same value in name history
+        // same koodiValue in name history
         Assert.assertEquals("NIMI", org.getNimet().get(0).getNimi().getString("fi"));
     }
 

@@ -1,11 +1,11 @@
 package fi.vm.sade.organisaatio.api.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")

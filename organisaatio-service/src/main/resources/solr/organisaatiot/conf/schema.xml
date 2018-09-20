@@ -32,7 +32,7 @@
  be used for benchmarking.  To improve performance one could
   - set stored="false" for all fields possible (esp large fields) when you
     only need to search on the field but don't need to return the original
-    value.
+    koodiValue.
   - set indexed="false" if you don't need to search on the field, but only
     return the field as a result of searching on other indexed fields.
   - remove all unneeded copyField statements
@@ -77,7 +77,7 @@
        limitations: they are currently only supported by StrField, UUIDField
        and all Trie*Fields, and depending on the field type, they might
        require the field to be single-valued, be required or have a default
-       value (check the documentation of the field type you're interested in
+       koodiValue (check the documentation of the field type you're interested in
        for more information)
      multiValued: true if this field may contain multiple values per document
      omitNorms: (expert) set to true to omit the norms associated with
@@ -94,8 +94,8 @@
      termOffsets: Store offset information with the term vector. This 
        will increase storage costs.
      required: The field is required.  It will throw an error if the
-       value does not exist
-     default: a value that should be used if no value is specified
+       koodiValue does not exist
+     default: a koodiValue that should be used if no koodiValue is specified
        when adding a document.
    -->
 
@@ -298,7 +298,7 @@
 
     <!-- The StrField type is not analyzed, but indexed/stored verbatim.
        It supports doc values but in that case the field needs to be
-       single-valued and either required or have a default value.
+       single-valued and either required or have a default koodiValue.
       -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
 
@@ -325,7 +325,7 @@
       Default numeric field types. For faster range queries, consider the tint/tfloat/tlong/tdouble types.
 
       These fields support doc values, but they require the field to be
-      single-valued and either be required or have a default value.
+      single-valued and either be required or have a default koodiValue.
     -->
     <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" positionIncrementGap="0"/>
@@ -333,13 +333,13 @@
     <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
 
     <!--
-     Numeric field types that index each value at various levels of precision
+     Numeric field types that index each koodiValue at various levels of precision
      to accelerate range queries when the number of values between the range
      endpoints is large. See the javadoc for NumericRangeQuery for internal
      implementation details.
 
      Smaller precisionStep values (specified in bits) will lead to more tokens
-     indexed per value, slightly larger index size, and faster range queries.
+     indexed per koodiValue, slightly larger index size, and faster range queries.
      A precisionStep of 0 disables indexing at different precision levels.
     -->
     <fieldType name="tint" class="solr.TrieIntField" precisionStep="8" positionIncrementGap="0"/>
@@ -355,7 +355,7 @@
          All other components are mandatory.
 
          Expressions can also be used to denote calculations that should be
-         performed relative to "NOW" to determine the value, ie...
+         performed relative to "NOW" to determine the koodiValue, ie...
 
                NOW/HOUR
                   ... Round to the start of the current hour
@@ -384,7 +384,7 @@
       Use Trie based fields instead. As of Solr 3.5 and 4.x, Trie based fields support sortMissingFirst/Last
       
       Plain numeric field types that store and index the text
-      value verbatim (and hence don't correctly support range queries, since the
+      koodiValue verbatim (and hence don't correctly support range queries, since the
       lexicographic ordering isn't equal to the numeric ordering)
     -->
     <fieldType name="pint" class="solr.IntField"/>
@@ -649,7 +649,7 @@
         a token of "foo|1.4"  would be indexed as "foo" with a payload of 1.4f
         Attributes of the DelimitedPayloadTokenFilterFactory : 
          "delimiter" - a one character delimiter. Default is | (pipe)
-	 "encoder" - how to encode the following value into a playload
+	 "encoder" - how to encode the following koodiValue into a playload
 	    float -> org.apache.lucene.analysis.payloads.FloatEncoder,
 	    integer -> o.a.l.a.p.IntegerEncoder
 	    identity -> o.a.l.a.p.IdentityEncoder
@@ -659,7 +659,7 @@
       </analyzer>
     </fieldtype>
 
-    <!-- lowercases the entire field value, keeping it as a single token.  -->
+    <!-- lowercases the entire field koodiValue, keeping it as a single token.  -->
     <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -1130,7 +1130,7 @@
     -->
   <!--
      <similarity class="com.example.solr.CustomSimilarityFactory">
-       <str name="paramkey">param value</str>
+       <str name="paramkey">param koodiValue</str>
      </similarity>
     -->
 

@@ -41,14 +41,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div class="control-group" ng-show="model.organisaatio.tyypit">
+    <div class="control-group" ng-if="model.organisaatio.tyypit">
         <label class="control-label" tt="Organisaationtarkastelu.organisaatiotyyppi">
             Organisaationtarkastelu.organisaatiotyyppi
         </label>
-        <div class="controls">
+        <div class="controls" ng-if="model.kaikkiOrganisaatiotyypit.length">
             <label class="control-label control-label-left">
-                <div ng-repeat="tyyppi in model.organisaatio.tyypit">
-                    {{t(tyyppi)}}<br>
+                <div ng-repeat="tyyppi in ::model.organisaatio.tyypit">
+                    {{:: getKoodiLocalized(tyyppi)}}<br>
                 </div>
             </label>
         </div>
@@ -735,7 +735,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-if="yoexpanded">
             <div class="row">
                 <label class="offset2">
-                    <a href='organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{t(model.parent.tyypit[0])}})</a>
+                    <a href='organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{getKoodiLocalized(model.parent.tyypit[0])}})</a>
                 </label>
             </div>
         <hr>

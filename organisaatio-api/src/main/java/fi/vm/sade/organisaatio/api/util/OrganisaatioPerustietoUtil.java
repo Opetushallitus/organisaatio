@@ -17,6 +17,7 @@
 package fi.vm.sade.organisaatio.api.util;
 
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 
 import java.util.*;
 
@@ -70,6 +71,24 @@ public abstract class OrganisaatioPerustietoUtil {
      * @return true jos organisaatio on suunniteltu, false muuten
      */
     public static boolean isSuunniteltu(OrganisaatioPerustieto o) {
+        return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
+    }
+
+    /**
+     * Tarkistaa onko organisaatio passivoitu eli lakkautettu
+     * @param o Organisaatio
+     * @return true jos organisaatio on passiivinen, false muuten
+     */
+    public static boolean isPassive(OrganisaatioPerustietoV4 o) {
+        return o.getLakkautusPvm() != null && o.getLakkautusPvm().before(new Date());
+    }
+
+    /**
+     * Tarkistaa onko organisaatio suunniteltu, eli alkupvm tulevaisuudessa
+     * @param o Organisaatio
+     * @return true jos organisaatio on suunniteltu, false muuten
+     */
+    public static boolean isSuunniteltu(OrganisaatioPerustietoV4 o) {
         return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
     }
 }

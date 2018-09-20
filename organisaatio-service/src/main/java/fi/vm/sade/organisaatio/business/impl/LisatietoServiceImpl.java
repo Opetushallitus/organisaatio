@@ -81,7 +81,7 @@ public class LisatietoServiceImpl implements LisatietoService {
                 break;
             case ORGANISAATIOTYYPPI:
                 if (Arrays.stream(OrganisaatioTyyppi.values()).noneMatch(organisaatioTyyppi ->
-                        organisaatioTyyppi.value().equals(rajoiteDto.getArvo()))) {
+                        organisaatioTyyppi.koodiValue().equals(rajoiteDto.getArvo()))) {
                     throw new ValidationException("Invalid organisaatiotyyppi " + rajoiteDto.getArvo());
                 }
                 rajoite = new OrganisaatiotyyppiRajoite();

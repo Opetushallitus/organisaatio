@@ -176,7 +176,7 @@ public class OrganisaatioPermissionServiceTest {
 
     private OrganisaatioRDTO getOrganisaatio(String nimi, String oid, OrganisaatioTyyppi tyyppi) {
         OrganisaatioRDTO org = new OrganisaatioRDTO();
-        Map<String,String> nimiMap =new HashMap<>();
+        Map<String,String> nimiMap = new HashMap<>();
         nimiMap.put("fi", nimi);
         org.setNimi(nimiMap);
         org.getTyypit().add(tyyppi.value());

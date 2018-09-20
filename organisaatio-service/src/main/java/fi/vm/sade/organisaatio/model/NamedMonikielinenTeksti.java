@@ -20,7 +20,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
- * This class represents a "keyed" translatable text with name and value - both translatable.
+ * This class represents a "keyed" translatable text with name and koodiValue - both translatable.
  *
  * Used for LOP's multitude of data... "generalInformationAboutXXX" x 100
  *
@@ -41,7 +41,7 @@ public class NamedMonikielinenTeksti extends BaseEntity {
     private MonikielinenTeksti name;
 
     /**
-     * Translatable value
+     * Translatable koodiValue
      */
     @ManyToOne(cascade= CascadeType.ALL)
     private MonikielinenTeksti value;

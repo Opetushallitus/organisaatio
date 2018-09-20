@@ -120,7 +120,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
             <!-- Organisaatiotyyppi -->
             <select class="input-xlarge" ng-model="hakuehdot.organisaatiotyyppi"
-                    ng-options="orgTyyppi.nimifi as (t(orgTyyppi.nimi)) for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'"
+                    ng-options="orgTyyppi.uri as orgTyyppi.nimi for orgTyyppi in hakuehdot.organisaatiotyypit | orderBy:'uri'"
                     ng-change="organisaatiotyyppiChanged()">
                 <option value="" tt="Organisaatiot.organisaatiotyyppi">Organisaatiot.organisaatiotyyppi</option>
             </select>

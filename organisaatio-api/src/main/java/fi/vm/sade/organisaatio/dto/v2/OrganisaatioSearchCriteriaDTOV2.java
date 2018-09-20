@@ -15,13 +15,13 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteriaDTOV2 {
@@ -121,11 +121,14 @@ public class OrganisaatioSearchCriteriaDTOV2 {
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public List<String> getOidRestrictionList() {
+        if (this.oidResctrictionList == null) {
+            this.oidResctrictionList = new ArrayList<>();
+        }
         return this.oidResctrictionList;
     }
 
-    public void setOidRestrictionList(List<String> oidRestrictionList) {
-        this.oidResctrictionList.addAll(oidResctrictionList);
+    public void setOidRestrictionList(List<String> oidRestrictionListAdd) {
+        this.oidResctrictionList.addAll(oidRestrictionListAdd);
     }
 
     @ApiModelProperty(value = "Hakutermit", required = true)

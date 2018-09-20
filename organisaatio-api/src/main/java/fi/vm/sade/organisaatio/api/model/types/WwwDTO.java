@@ -8,7 +8,7 @@ public class WwwDTO extends YhteystietoDTO implements Serializable  {
     protected String wwwOsoite;
 
     /**
-     * Gets the value of the wwwOsoite property.
+     * Gets the koodiValue of the wwwOsoite property.
      * 
      * @return
      *     possible object is
@@ -20,7 +20,7 @@ public class WwwDTO extends YhteystietoDTO implements Serializable  {
     }
 
     /**
-     * Sets the value of the wwwOsoite property.
+     * Sets the koodiValue of the wwwOsoite property.
      * 
      * @param value
      *     allowed object is

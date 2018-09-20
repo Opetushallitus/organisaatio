@@ -1,23 +1,17 @@
 package fi.vm.sade.organisaatio.service.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.MonikielinenTekstiTyyppi.Teksti;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 
-/**
-* @author Antti Salonen
-*/
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Map;
+
 public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyyppiDTO, YhteystietojenTyyppi> {
 
     public YhteystietojenTyyppiConverter(ConverterFactory converterFactory, EntityManager entityManager) {
@@ -27,27 +21,14 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
     @Override
     public void setValuesToDTO(YhteystietojenTyyppi entity, YhteystietojenTyyppiDTO dto) {
         for (String oty : entity.getSovellettavatOrganisaatioTyyppis()) {
-            dto.getSovellettavatOrganisaatios().add(OrganisaatioTyyppi.fromValue(oty));
+            dto.getSovellettavatOrganisaatios().add(oty);
         }
 
         dto.setNimi(convertNimiToDto(entity));
 
         dto.getSovellettavatOppilaitostyyppis().addAll(entity.getSovellettavatOppilaitostyyppis());
 
-        //dto.setSovellettavatOrganisaatios(converterFactory.convertToDTO(entity.getSovellettavatOrganisaatios(), OrganisaatiotyypinYhteystiedotDTO.class));
-
-
         dto.getAllLisatietokenttas().addAll(converterFactory.convertToDTO(entity.getLisatietos(), YhteystietoElementtiDTO.class));//setAllLisatietokenttas(converterFactory.convertToDTO(entity.getLisatietos(), YhteystietoElementtiDTO.class));
-
-
-        // poistetaan poistetut kentät listasta
-        /*List<YhteystietoElementtiDTO> toBeDeleted = new ArrayList<YhteystietoElementtiDTO>();
-        for (YhteystietoElementtiDTO kentta : dto.getAllLisatietokenttas()) {
-            if (!kentta.isKaytossa()) {
-                toBeDeleted.add(kentta);
-            }
-        }
-        dto.getAllLisatietokenttas().removeAll(toBeDeleted);*/
     }
 
     private MonikielinenTekstiTyyppi convertNimiToDto(YhteystietojenTyyppi entity) {
@@ -67,7 +48,7 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
 
     @Override
     public void setValuesToJPA(YhteystietojenTyyppiDTO dto, YhteystietojenTyyppi entity, boolean merge) {
-        entity.setSovellettavatOrganisaatioTyyppis(converterFactory.convertOrganisaatiotyypinYhteystiedotToJPA(dto.getSovellettavatOrganisaatios(), merge));
+        entity.setSovellettavatOrganisaatioTyyppis(dto.getSovellettavatOrganisaatios());
 
         entity.setSovellettavatOppilaitostyyppis(dto.getSovellettavatOppilaitostyyppis());
 
@@ -85,7 +66,7 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
                 YhteystietoElementtiDTO newKentta = getLisatietokentta(dto, oldKentta.getNimi());
                 boolean creatingSameKenttaAgain = !oldKentta.isKaytossa() && newKentta != null;
                 if (creatingSameKenttaAgain) {
-                    newKentta.setOid(oldKentta.getOid());//setId(oldKentta.getId());
+                    newKentta.setOid(oldKentta.getOid());
                 }
             }
         }

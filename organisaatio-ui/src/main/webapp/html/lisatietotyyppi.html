@@ -47,7 +47,7 @@
                         <input type="checkbox"
                                ng-checked="lisatieto.isOrganisaatiotyyppiSelected(organisaatiotyyppiKoodi)"
                                ng-click="lisatieto.toggleOrganisaatiotyyppi(organisaatiotyyppiKoodi)"
-                               ng-disabled="lisatieto.isLisatietotyyppiNotNew() || lisatieto.isOppilaitosAndOppilaitostyyppirajoiteSelected(lisatieto.lokalisoiKoodi(organisaatiotyyppiKoodi))">
+                               ng-disabled="lisatieto.isLisatietotyyppiNotNew() || lisatieto.isOppilaitosAndOppilaitostyyppirajoiteSelected(organisaatiotyyppiKoodi)">
                         {{lisatieto.lokalisoiKoodi(organisaatiotyyppiKoodi)}}
                     </div>
                 </div>

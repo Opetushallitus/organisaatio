@@ -185,14 +185,6 @@ public class ConverterFactory {
         return jpaClass;
     }
     
-    private List<String> getTyypitStr(List<OrganisaatioTyyppi> tyypit) {
-        List<String> tyypitStr = new ArrayList<>();
-        for (OrganisaatioTyyppi curT : tyypit) {
-            tyypitStr.add(curT.value());
-        }
-        return tyypitStr;
-    }
-
     /**
      * converts dto to jpa entity
      * @param dto
@@ -326,7 +318,7 @@ public class ConverterFactory {
 
     public YhteystietojenTyyppi convertYhteystietojenTyyppiToJPA(YhteystietojenTyyppiDTO dto, boolean merge) {
         YhteystietojenTyyppi entity = null;
-        Class jpaClass = YhteystietojenTyyppi.class;
+        Class<YhteystietojenTyyppi> jpaClass = YhteystietojenTyyppi.class;
          if (dto != null) {
              // reload if !merge and entity exists in db already
             if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).size() > 0 && !merge) {
@@ -346,7 +338,7 @@ public class ConverterFactory {
              } else {
                  // or convert fields from dto
 
-                 entity = (YhteystietojenTyyppi) mapper.map(dto, jpaClass);
+                 entity = mapper.map(dto, jpaClass);
 
              }
              // organisaatio parent
@@ -359,23 +351,6 @@ public class ConverterFactory {
          //DEBUGSAWAY:log.debug("convertToJPA: " + dto + " -> " + entity);
          return entity;
      }
-
-    //
-
-
-
-    public List<String> convertOrganisaatiotyypinYhteystiedotToJPA(List<fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi> dtos, boolean merge ) {
-        List<String> orgTypes = new ArrayList<>();
-        //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);//OrganisaatiotyypinYhteystiedot
-        if (dtos != null) {
-            for (fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi dto : dtos) {
-                if (!orgTypes.contains(dto.value())) {
-                    orgTypes.add(dto.value());
-                }
-            }
-        }
-        return orgTypes;
-    }
 
     public <JPACLASS extends OrganisaatioBaseEntity> List<JPACLASS> convertYhteystiedotToJPA(List<? extends YhteystietoDTO> dtos, Class<? extends JPACLASS> resultClass, boolean merge ) {
         List jpas = new ArrayList();

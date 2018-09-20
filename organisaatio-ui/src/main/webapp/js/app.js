@@ -74,15 +74,20 @@ var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
 var ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL = ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL || "";
 
 var ORGANISAATIO_REST_V3 = ORGANISAATIO_REST_V3 || "";
+var ORGANISAATIO_REST_V4 = ORGANISAATIO_REST_V4 || "";
 var ORGANISAATIO_REST_HAE = ORGANISAATIO_REST_HAE || "";
 var ORGANISAATIO_REST_V3_BY_OID = ORGANISAATIO_REST_V3_BY_OID || "";
+var ORGANISAATIO_REST_V4_BY_OID = ORGANISAATIO_REST_V4_BY_OID || "";
 
 var ORGANISAATIO_REST_V2_HAE = ORGANISAATIO_REST_V2_HAE || "";
+var ORGANISAATIO_REST_V4_HAE = ORGANISAATIO_REST_V4_HAE || "";
 var ORGANISAATIO_REST_V3_RYHMAT = ORGANISAATIO_REST_V3_RYHMAT || "";
 var ORGANISAATIO_REST_V2_MUOKKAAMONTA = ORGANISAATIO_REST_V2_MUOKKAAMONTA || "";
 var ORGANISAATIO_REST_V2_OID_HISTORIA = ORGANISAATIO_REST_V2_OID_HISTORIA || "";
+var ORGANISAATIO_REST_V4_OID_HISTORIA = ORGANISAATIO_REST_V4_OID_HISTORIA || "";
 var ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE = ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE || "";
 var ORGANISAATIO_REST_V2_HIERARKIA_HAE = ORGANISAATIO_REST_V2_HIERARKIA_HAE || "";
+var ORGANISAATIO_REST_V4_HIERARKIA_HAE = ORGANISAATIO_REST_V4_HIERARKIA_HAE || "";
 var ORGANISAATIO_REST_V2_PAIVITTAJA_HAE = ORGANISAATIO_REST_V2_PAIVITTAJA_HAE || "";
 var ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE = ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE || "";
 
@@ -283,7 +288,7 @@ app.factory('NoCacheInterceptor', function() {
 // Organisaation haku / päivitys organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v3/1.2.246.562.10.23198065932
 app.factory('Organisaatio', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V3_BY_OID + "?includeImage=true", {oid: "@oid"}, {
+    return $resource(ORGANISAATIO_REST_V4_BY_OID + "?includeImage=true", {oid: "@oid"}, {
         get: {method: "GET"},
         update: {method: "PUT"},
         delete: {method: "DELETE"}
@@ -293,14 +298,14 @@ app.factory('Organisaatio', function ($resource) {
 // Organisaation historian haku
 // Esim: https://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.68986346941/historia
 app.factory('OrganisaatioHistoria', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V2_OID_HISTORIA, {oid: "@oid"}, {
+    return $resource(ORGANISAATIO_REST_V4_OID_HISTORIA, {oid: "@oid"}, {
         get: {method: "GET"}
     });
 });
 
 
 // Organisaation siiro puussa
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/1.2.246.562.10.23198065932/organisaatiosuhde
+// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.23198065932/organisaatiosuhde
 app.factory('OrganisaatioSiirto', function ($resource) {
     return $resource(ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE, {oid: "@oid"}, {
         post: {method: "POST"}
@@ -310,30 +315,22 @@ app.factory('OrganisaatioSiirto', function ($resource) {
 // Organisaation luonti organisaatiopalveluun
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/v3
 app.factory('UusiOrganisaatio', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V3, {}, {
+    return $resource(ORGANISAATIO_REST_V4, {}, {
         create: {method: "POST"}
-    });
-});
-
-// Aliorganisaatioiden haku organisaatiopalvelulta
-// Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?oidRestrictionList=1.2.246.562.10.59347432821
-app.factory('Aliorganisaatiot', function ($resource) {
-    return $resource(ORGANISAATIO_REST_HAE + "?oidRestrictionList=:oid", {oid: "@oid"}, {
-        get: {method: "GET"}
     });
 });
 
 // Organisaatioiden haku puunäkymää varten organisaatiopalvelulta
 // Esim: http://localhost:8180/organisaatio-service/rest/organisaatio/hae?searchstr=lukio&lakkautetut=true
 app.factory('Organisaatiot', function($resource) {
-    return $resource(ORGANISAATIO_REST_V2_HIERARKIA_HAE, {}, {
+    return $resource(ORGANISAATIO_REST_V4_HIERARKIA_HAE, {}, {
         get: {method: 'GET'}
     });
 });
 
 // Organisaatioiden haku ilman hierrarkiaa
 app.factory('OrganisaatiotFlat', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V2_HAE, {}, {
+    return $resource(ORGANISAATIO_REST_V4_HAE, {}, {
         get: {method: 'GET'}
     });
 });
@@ -427,18 +424,6 @@ app.factory('Paivittaja', function ($resource) {
     });
 });
 
-// Nimihistorian haku organisaatioplavelulta
-// Lisäksi operaatiot: uuden nimen luonti, vanhan päivitys ja ajastetun nimen poistaminen
-// Esim. http://localhost:8180/organisaatio-service/rest/organisaatio/v2/1.2.246.562.10.00000000001/nimet
-app.factory('Nimet', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE, {oid: "@oid", alkuPvm: "@alkuPvm"}, {
-        get: {method: 'GET', isArray: true},
-        post: {method: 'POST'},
-        put: {method: 'PUT'},
-        delete: {method: 'DELETE'}
-    });
-});
-
 // Usean organisaation voimassaolon muokkaus yhdellä kertaa
 app.factory('Muokkaamonta', function ($resource) {
     return $resource(ORGANISAATIO_REST_V2_MUOKKAAMONTA, {}, {
@@ -448,7 +433,7 @@ app.factory('Muokkaamonta', function ($resource) {
 
 // Organisaation historiatietojen haku
 app.factory('Historia', function ($resource) {
-    return $resource(ORGANISAATIO_REST_V2_OID_HISTORIA, {oid: "@oid"}, {
+    return $resource(ORGANISAATIO_REST_V4_OID_HISTORIA, {oid: "@oid"}, {
         get: {method: 'GET', isArray: true}
     });
 });

@@ -10,6 +10,7 @@ public class UrlConfiguration extends OphProperties {
     public UrlConfiguration(){
         addFiles("/organisaatio-ui-oph.properties");
         addOptionalFiles("/organisaatio-ui.properties");
+        addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/organisaatio-ui.properties").toString());
         addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/common.properties").toString());
     }
 }

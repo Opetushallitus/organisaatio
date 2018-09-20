@@ -14,6 +14,13 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.dao"/>
 
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg index="0" ref="dbDataSource" />
+    </bean>
+    <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg index="0" ref="jdbcTemplate" />
+    </bean>
+
     <!-- Add EntityManagerFactory (required by jta) support -->
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
         <property name="loadTimeWeaver">
