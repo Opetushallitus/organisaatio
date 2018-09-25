@@ -15,8 +15,8 @@ public class HttpClientConfiguration {
     @Bean(name = HTTP_CLIENT_KAYTTOOIKEUS)
     public OphHttpClient kayttooikeusHttpClient(OphProperties properties) {
         CasAuthenticator authenticator = new CasAuthenticator.Builder()
-                .username(properties.getProperty("organisaatio.service.username"))
-                .password(properties.getProperty("organisaatio.service.password"))
+                .username(properties.require("organisaatio.service.username"))
+                .password(properties.require("organisaatio.service.password"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("kayttooikeus-service.login"))
                 .build();
