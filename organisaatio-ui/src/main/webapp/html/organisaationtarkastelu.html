@@ -47,7 +47,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </label>
         <div class="controls" ng-if="model.kaikkiOrganisaatiotyypit.length">
             <label class="control-label control-label-left">
-                <div ng-repeat="tyyppi in ::model.organisaatio.tyypit">
+                <div ng-repeat="tyyppi in model.organisaatio.tyypit">
                     {{:: getKoodiLocalized(tyyppi)}}<br>
                 </div>
             </label>
