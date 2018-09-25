@@ -88,6 +88,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testOppisopimustoimipisteUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                false,
+                validator,
+                validator.oppisopimustoimipisteRule
+        );
+    }
+
+    @Test
     public void testOppisopimustoimipisteUnderTyoelamajarjesto() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
@@ -177,6 +188,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testToimipisteUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                getOrg(OrganisaatioTyyppi.TOIMIPISTE),
+                true,
+                validator,
+                validator.toimipisteRule
+        );
+    }
+
+    @Test
     public void testToimipisteUnderTyoelamajarjesto() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
@@ -247,6 +269,17 @@ public class OrganisationHierarchyValidatorTest {
     public void testOppilaitosUnderMuuOrganisaatio() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                false,
+                validator,
+                validator.oppilaitosRule
+        );
+    }
+
+    @Test
+    public void testOppilaitosUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
                 getOrg(OrganisaatioTyyppi.OPPILAITOS),
                 false,
                 validator,
@@ -355,6 +388,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testKoulutustoimijaUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                getOrg(OrganisaatioTyyppi.KOULUTUSTOIMIJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
     public void testKoulutustoimijaUnderTyoelamajarjesto() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
@@ -444,6 +488,17 @@ public class OrganisationHierarchyValidatorTest {
     }
 
     @Test
+    public void testMuuOrganisaatioUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                false,
+                validator,
+                validator.muuOrgRule
+        );
+    }
+
+    @Test
     public void testMuuOrganisaatioUnderTyoelamajarjesto() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
@@ -487,6 +542,95 @@ public class OrganisationHierarchyValidatorTest {
         );
     }
 
+    /* child == varhaiskasvatuksen järjestäjä */
+    @Test
+    public void testToplevelVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                null,
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                true,
+                validator,
+                validator.varhaiskasvatuksenJarjestajaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderOPH() {
+        assertResult(
+                root,
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                true,
+                validator,
+                validator.varhaiskasvatuksenJarjestajaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.varhaiskasvatuksenJarjestajaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderMuuOrganisaatio() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderTyoelamajarjesto() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderOppilaitos() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPILAITOS),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderToimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.TOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
+    @Test
+    public void testVarhaiskasvatuksenJarjestajaUnderOppisopimustoimipiste() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE),
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
+                false,
+                validator,
+                validator.koulutustoimijaRule
+        );
+    }
+
     /* child == työelämäjärjestö */
     @Test
     public void testToplevelTyoelamajarjesto() {
@@ -525,6 +669,17 @@ public class OrganisationHierarchyValidatorTest {
     public void testTyoelamajarjestoUnderMuuOrganisaatio() {
         assertResult(
                 getOrg(OrganisaatioTyyppi.MUU_ORGANISAATIO),
+                getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
+                false,
+                validator,
+                validator.tyoelamajarjestoRule
+        );
+    }
+
+    @Test
+    public void testTyoelamajarjestoUnderVarhaiskasvatuksenJarjestaja() {
+        assertResult(
+                getOrg(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA),
                 getOrg(OrganisaatioTyyppi.TYOELAMAJARJESTO),
                 false,
                 validator,
