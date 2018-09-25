@@ -273,4 +273,5 @@ span#paivittaja {
     font-weight:normal;
     display:inline-block;
     float:right;
+    line-height: normal;
 }

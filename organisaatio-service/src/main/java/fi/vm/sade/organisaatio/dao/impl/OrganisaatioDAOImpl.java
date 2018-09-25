@@ -56,6 +56,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.querydsl.core.types.dsl.Expressions.anyOf;
@@ -168,6 +169,24 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .where(whereExpression)
                 .distinct()
                 .select(qOrganisaatio)
+                .fetch();
+    }
+
+    @Override
+    public Collection<String> findOidByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvmLocalDate, Collection<String> oids, long limit) {
+        java.sql.Date voimassaPvm = java.sql.Date.valueOf(voimassaPvmLocalDate);
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        return new JPAQuery<>(getEntityManager())
+                .from(qOrganisaatio)
+                .where(qOrganisaatio.organisaatioPoistettu.isFalse())
+                .where(anyOf(qOrganisaatio.alkuPvm.loe(voimassaPvm), qOrganisaatio.alkuPvm.isNull()))
+                .where(anyOf(qOrganisaatio.lakkautusPvm.after(voimassaPvm), qOrganisaatio.lakkautusPvm.isNull()))
+                .where(qOrganisaatio.oid.in(oids))
+                .where(anyOf(qOrganisaatio.tarkastusPvm.before(tarkastusPvm), qOrganisaatio.tarkastusPvm.isNull()))
+                .select(qOrganisaatio.oid)
+                .distinct()
+                .orderBy(qOrganisaatio.tarkastusPvm.asc().nullsFirst(), qOrganisaatio.id.asc())
+                .limit(limit)
                 .fetch();
     }
 

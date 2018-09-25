@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
+import fi.vm.sade.organisaatio.dto.ViestintaSahkopostiDto;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
@@ -69,6 +70,11 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         }
         viestintaClient.setReauthorize(reauthorize);
         return viestintaClient;
+    }
+
+    @Override
+    public String sendEmail(EmailData data) {
+        return gson.fromJson(viestintaClient.post(gson.toJson(data), ""), ViestintaSahkopostiDto.class).getId();
     }
 
     @Override

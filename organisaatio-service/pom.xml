@@ -784,6 +784,11 @@
             <artifactId>oid-generator</artifactId>
             <version>${oidgenerator.version}</version>
         </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-http</artifactId>
+            <version>${java-http.version}</version>
+        </dependency>
 
         <!-- Tarjonta :: API -->
         <dependency>
@@ -835,6 +840,12 @@
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-user-details-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
         </dependency>
     </dependencies>
 

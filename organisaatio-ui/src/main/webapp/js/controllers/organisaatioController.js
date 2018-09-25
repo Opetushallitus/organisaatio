@@ -195,6 +195,14 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         }
     };
 
+    // Organisaation tiedot merkitään tarkastetuiksi
+    $scope.checkAndRefresh = function() {
+        $log.info("checkAndRefresh(): " + $scope.model.organisaatio.oid);
+        $scope.model.checkOrganisaatio().then(function(organisaatio) {
+            $scope.model.refresh(organisaatio);
+        });
+    };
+
     // Siirtyminen organisaation muokkausnäkymään
     $scope.edit = function() {
         $location.path($location.path() + "/edit");

@@ -108,6 +108,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setYtjPaivitysPvm(t.getYTJPaivitysPvm());
         s.setYtunnus(t.getYTunnus());
         s.setVirastoTunnus(t.getVirastoTunnus());
+        s.setTarkastusPvm(t.getTarkastusPvm());
 
         if (t.getYhteystietoArvos()!=null) {
             s.setYhteystietoArvos(convertYhteystietoArvos(t.getYhteystietoArvos()));

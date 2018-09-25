@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV3> {
 
@@ -96,6 +97,7 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
+        t.setTarkastusPvm(toTimestamp(s.getTarkastusPvm()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
@@ -223,8 +225,8 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         if (s.isIncludeImage()) {
             t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
         }
-        t.setLuontiPvm(s.getLuontiPvm());
-        t.setMuokkausPvm(s.getMuokkausPvm());
+        t.setLuontiPvm(toTimestamp(s.getLuontiPvm()));
+        t.setMuokkausPvm(toTimestamp(s.getMuokkausPvm()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
         // TODO t.set(s.getYhteystiedot());

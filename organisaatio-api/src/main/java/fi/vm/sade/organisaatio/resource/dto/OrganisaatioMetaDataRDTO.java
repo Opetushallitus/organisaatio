@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.*;
 
 @ApiModel(value = "Organisaation metatiedot")
@@ -43,9 +44,9 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
 
     private String _kuvaEncoded;
 
-    private Date _luontiPvm;
+    private Timestamp _luontiPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
-    private Date _muokkausPvm;
+    private Timestamp _muokkausPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
     private List<Map<String, String>> _yhteystiedot;
 
@@ -126,20 +127,20 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Luontipäivämäärä", required = true)
-    public Date getLuontiPvm() {
+    public Timestamp getLuontiPvm() {
         return _luontiPvm;
     }
 
-    public void setLuontiPvm(Date _luontiPvm) {
+    public void setLuontiPvm(Timestamp _luontiPvm) {
         this._luontiPvm = _luontiPvm;
     }
 
     @ApiModelProperty(value = "Muokkauspäivämäärä", required = true)
-    public Date getMuokkausPvm() {
+    public Timestamp getMuokkausPvm() {
         return _muokkausPvm;
     }
 
-    public void setMuokkausPvm(Date _muokkausPvm) {
+    public void setMuokkausPvm(Timestamp _muokkausPvm) {
         this._muokkausPvm = _muokkausPvm;
     }
 

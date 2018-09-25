@@ -514,6 +514,21 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return deferred.promise;
         };
 
+        this.checkOrganisaatio = function() {
+            var organisaatio = JSON.parse(JSON.stringify(model.organisaatio));
+            organisaatio.tarkastusPvm = new Date().getTime();
+
+            var deferred = $q.defer();
+            Organisaatio.update(organisaatio, function(result) {
+                model.organisaatio = result.organisaatio;
+                deferred.resolve(result.organisaatio);
+            }, function(response) {
+                RefreshOrganisaatio.showAndLogError("Organisaationmuokkaus.tallennusvirhe", response, model, loadingService);
+                deferred.reject(response);
+            });
+            return deferred.promise;
+        };
+
         this.toggleCheckOrganisaatio = function(organisaatiotyyppi) {
             if (model.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
                 model.organisaatio.tyypit.push(organisaatiotyyppi);

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -101,6 +102,8 @@ public class OrganisaatioRDTOV3 implements Serializable {
     private List<Map<String, String>> _yhteystietoArvos = new ArrayList<>();
     private String _virastoTunnus;
     private String _opetuspisteenJarjNro;
+
+    private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
     @ApiModelProperty(value = "Organisaation oid", required = true)
     public String getOid() {
@@ -475,6 +478,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     public void setOpetuspisteenJarjNro(String _opetuspisteenJarjNro) {
         this._opetuspisteenJarjNro = _opetuspisteenJarjNro;
+    }
+
+    public Timestamp getTarkastusPvm() {
+        return _tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Timestamp _tarkastusPvm) {
+        this._tarkastusPvm = _tarkastusPvm;
     }
 
     public List<Map<String, String>> getYhteystiedot() {

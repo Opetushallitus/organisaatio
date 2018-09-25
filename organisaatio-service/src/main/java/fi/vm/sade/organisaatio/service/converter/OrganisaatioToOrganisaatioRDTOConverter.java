@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 /**
  *
@@ -95,6 +96,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
+        t.setTarkastusPvm(toTimestamp(s.getTarkastusPvm()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
@@ -222,8 +224,8 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         if (s.isIncludeImage()) {
             t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
         }
-        t.setLuontiPvm(s.getLuontiPvm());
-        t.setMuokkausPvm(s.getMuokkausPvm());
+        t.setLuontiPvm(toTimestamp(s.getLuontiPvm()));
+        t.setMuokkausPvm(toTimestamp(s.getMuokkausPvm()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
         // TODO t.set(s.getYhteystiedot());

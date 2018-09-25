@@ -36,6 +36,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import static java.util.stream.Collectors.joining;
 
 
 @Component
@@ -60,7 +63,7 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
         }
     }
 
-    public void post(String json, String uri) throws OrganisaatioViestintaException {
+    public String post(String json, String uri) throws OrganisaatioViestintaException {
         String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri);
         LOG.debug("POST " + viestintaServiceUrl );
         LOG.debug("POST data=" + json);
@@ -93,6 +96,9 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
             } else {
                 LOG.info("Code " + viestintaServiceUrl  + " succesfully posted: return code "
                         + resp.getStatusLine().getStatusCode());
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()))) {
+                    return reader.lines().collect(joining("\n"));
+                }
             }
         } catch (IOException e) {
             String err = "Failed to POST " + viestintaServiceUrl  + ": " + e.getMessage();

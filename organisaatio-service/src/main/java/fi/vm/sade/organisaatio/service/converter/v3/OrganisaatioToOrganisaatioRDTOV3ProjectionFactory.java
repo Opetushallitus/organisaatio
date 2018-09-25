@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 /**
  *  Organisaatio to OrganisaatioRDTOV3 projection. By doing the converstion on DAO layer avoid n+1 select when fetching multiple organisations.
@@ -98,6 +99,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
+        t.setTarkastusPvm(toTimestamp(s.getTarkastusPvm()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
@@ -225,8 +227,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         if (s.isIncludeImage()) {
             t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
         }
-        t.setLuontiPvm(s.getLuontiPvm());
-        t.setMuokkausPvm(s.getMuokkausPvm());
+        t.setLuontiPvm(toTimestamp(s.getLuontiPvm()));
+        t.setMuokkausPvm(toTimestamp(s.getMuokkausPvm()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
         // TODO t.set(s.getYhteystiedot());
