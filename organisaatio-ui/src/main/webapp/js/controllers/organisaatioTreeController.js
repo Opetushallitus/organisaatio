@@ -82,6 +82,7 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_01") && // Koulutustoimija
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_05") && // Muu organisaatio
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_07") && // Varhaiskasvatuksen jarjestaja
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_08") && // Varhaiskasvatuksen toimipaikka
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_06") && // Tyoelamajarjesto
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_04"); // Oppisopimustoimipiste
     };

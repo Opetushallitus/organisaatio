@@ -25,6 +25,8 @@ import java.util.Map.Entry;
  * <li>Jos organisaatio on VARHAISKASVATUKSEN_JARJESTAJA ja sille on
  * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
  * KOULUTUSTOIMIJA.
+ * <li>Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava
+ * yläorganisaatio joka on tyypiltään VARHAISKASVATUKSEN_JARJESTAJA.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS,
  * MUU ORGANISAATIO, VARHAISKASVATUKSEN_JARJESTAJA tai TYÖELÄMÄJÄRJESTÖ.
@@ -62,6 +64,15 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+        }
+    };
+
+    Predicate<Entry<Organisaatio, Organisaatio>> varhaiskasvatuksenToimipaikkaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
+        @Override
+        public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue())
+                    && parentChild.getKey() != null
+                    && parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue());
         }
     };
 
@@ -130,8 +141,9 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     @Override
     public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
         Preconditions.checkNotNull(parentChild);
-        return Predicates.or(oppilaitosRule, muuOrgRule, varhaiskasvatuksenJarjestajaRule, tyoelamajarjestoRule,
-                toimipisteRule, koulutustoimijaRule, oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
+        return Predicates.or(oppilaitosRule, muuOrgRule, varhaiskasvatuksenJarjestajaRule,
+                varhaiskasvatuksenToimipaikkaRule, tyoelamajarjestoRule, toimipisteRule, koulutustoimijaRule,
+                oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
     }
 
 }

@@ -12,6 +12,7 @@ public enum OrganisaatioTyyppi {
     MUU_ORGANISAATIO("Muu organisaatio", "organisaatiotyyppi_05"),
     RYHMA("Ryhma", "Ryhma"),
     VARHAISKASVATUKSEN_JARJESTAJA("Varhaiskasvatuksen jarjestaja", "organisaatiotyyppi_07"),
+    VARHAISKASVATUKSEN_TOIMIPAIKKA("Varhaiskasvatuksen toimipaikka", "organisaatiotyyppi_08"),
     TYOELAMAJARJESTO("Tyoelamajarjesto", "organisaatiotyyppi_06")
     ;
 
