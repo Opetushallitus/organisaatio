@@ -31,7 +31,8 @@ public class LisatietoTyyppiDaoImpl extends AbstractJpaDAOImpl<Lisatietotyyppi, 
                 .leftJoin(oppilaitostyyppiRajoite).on(oppilaitostyyppiRajoite.lisatietotyyppi.eq(lisatietotyyppi))
                 .leftJoin(rajoite).on(lisatietotyyppi.rajoitteet.isEmpty())
                 .where(organisaatiotyyppiRajoite.arvo.in(organisaatio.tyypit)
-                        .or(oppilaitostyyppiRajoite.arvo.eq(organisaatio.oppilaitosTyyppi))
+                        // organisaatio oppilaitoskoodilla on perässä versionumero esim. #2
+                        .or(organisaatio.oppilaitosTyyppi.like(oppilaitostyyppiRajoite.arvo.concat("#%")))
                         .or(lisatietotyyppi.rajoitteet.isEmpty()))
                 .fetch();
 
