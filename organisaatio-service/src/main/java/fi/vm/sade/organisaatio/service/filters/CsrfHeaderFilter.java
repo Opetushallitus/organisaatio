@@ -29,7 +29,7 @@ public class CsrfHeaderFilter implements Filter {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(CSRF_HEADER_NAME)) {
-                    return Optional.of(cookie.getValue());
+                    return Optional.ofNullable(cookie.getValue());
                 }
             }
         }
