@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
+import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
@@ -13,23 +14,6 @@ import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Collection;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import java.util.stream.Stream;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +21,18 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-@Service
-public class VanhentuneetTiedotSahkopostiService {
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Stream;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VanhentuneetTiedotSahkopostiService.class);
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
+
+@Service
+public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTiedotSahkopostiService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VanhentuneetTiedotSahkopostiServiceImpl.class);
     private static final String PALVELU = "ORGANISAATIO";
     private static final String KAYTTOOIKEUS = "VASTUUKAYTTAJAT";
     private static final Collection<String> TUETUT_KIELET = Stream.of("fi", "sv").collect(toSet());
@@ -54,12 +46,12 @@ public class VanhentuneetTiedotSahkopostiService {
     private final Configuration freemarker;
     private final OphProperties properties;
 
-    public VanhentuneetTiedotSahkopostiService(KayttooikeusClient kayttooikeusClient,
-            OrganisaatioViestinta organisaatioViestinta,
-            OrganisaatioDAO organisaatioDAO,
-            MessageSource messageSource,
-            Configuration freemarker,
-            OphProperties properties) {
+    public VanhentuneetTiedotSahkopostiServiceImpl(KayttooikeusClient kayttooikeusClient,
+                                                   OrganisaatioViestinta organisaatioViestinta,
+                                                   OrganisaatioDAO organisaatioDAO,
+                                                   MessageSource messageSource,
+                                                   Configuration freemarker,
+                                                   OphProperties properties) {
         this.kayttooikeusClient = kayttooikeusClient;
         this.organisaatioViestinta = organisaatioViestinta;
         this.organisaatioDAO = organisaatioDAO;
@@ -98,7 +90,7 @@ public class VanhentuneetTiedotSahkopostiService {
     private void lahetaSahkoposti(String organisaatioOid) {
         haeVirkailijat(organisaatioOid).stream()
                 .filter(virkailija -> virkailija.getSahkoposti() != null)
-                .collect(groupingBy(VanhentuneetTiedotSahkopostiService::getAsiointikieli,
+                .collect(groupingBy(VanhentuneetTiedotSahkopostiServiceImpl::getAsiointikieli,
                         mapping(VirkailijaDto::getSahkoposti, toSet())))
                 .forEach((kieli, sahkopostiosoitteet) -> lahetaSahkoposti(organisaatioOid, kieli, sahkopostiosoitteet));
     }

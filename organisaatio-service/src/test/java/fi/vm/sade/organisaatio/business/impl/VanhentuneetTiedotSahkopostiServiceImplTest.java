@@ -32,9 +32,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 @RunWith(MockitoJUnitRunner.class)
-public class VanhentuneetTiedotSahkopostiServiceTest {
+public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
-    private VanhentuneetTiedotSahkopostiService service;
+    private VanhentuneetTiedotSahkopostiServiceImpl service;
 
     @Mock
     private KayttooikeusClient kayttooikeusClientMock;
@@ -55,7 +55,7 @@ public class VanhentuneetTiedotSahkopostiServiceTest {
         Configuration freemarker = freeMarkerConfigurationFactoryBean.getObject();
 
         UrlConfiguration properties = new UrlConfiguration();
-        service = new VanhentuneetTiedotSahkopostiService(kayttooikeusClientMock, organisaatioViestintaMock,
+        service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, organisaatioViestintaMock,
                 organisaatioDAOMock, messageSource, freemarker, properties);
     }
 

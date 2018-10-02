@@ -4,9 +4,10 @@ import com.github.kagkarlsson.scheduler.task.ExecutionContext;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import com.github.kagkarlsson.scheduler.task.schedule.Daily;
-import fi.vm.sade.organisaatio.business.impl.VanhentuneetTiedotSahkopostiService;
-import java.time.LocalTime;
+import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalTime;
 
 @Component
 public class VanhentuneetTiedotSahkopostiTask extends RecurringTask<Void> {
