@@ -61,13 +61,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
     }
 
     public void lahetaSahkopostit() {
-        haeOrganisaatiot().forEach(organisaatioOid -> {
-            try {
-                lahetaSahkoposti(organisaatioOid);
-            } catch (Exception e) {
-                LOGGER.error("Vanhentuneet tiedot -sähköpostin lähetys epäonnistui organisaatiolle {}", organisaatioOid, e);
-            }
-        });
+        haeOrganisaatiot().forEach(this::lahetaSahkoposti);
     }
 
     private Collection<String> haeOrganisaatiot() {
