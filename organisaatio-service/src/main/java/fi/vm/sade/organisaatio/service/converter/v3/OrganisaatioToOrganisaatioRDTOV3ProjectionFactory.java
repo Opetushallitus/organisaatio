@@ -227,8 +227,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         if (s.isIncludeImage()) {
             t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
         }
-        t.setLuontiPvm(toTimestamp(s.getLuontiPvm()));
-        t.setMuokkausPvm(toTimestamp(s.getMuokkausPvm()));
+        t.setLuontiPvm(s.getLuontiPvm());
+        t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
 
         // TODO t.set(s.getYhteystiedot());
