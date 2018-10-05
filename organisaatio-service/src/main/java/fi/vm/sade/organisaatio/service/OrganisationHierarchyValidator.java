@@ -58,10 +58,10 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
     Predicate<Entry<Organisaatio, Organisaatio>> varhaiskasvatuksenJarjestajaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
         @Override
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
-            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value())
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue())
                     && (parentChild.getKey() == null
                     || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()));
+                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
         }
     };
 
