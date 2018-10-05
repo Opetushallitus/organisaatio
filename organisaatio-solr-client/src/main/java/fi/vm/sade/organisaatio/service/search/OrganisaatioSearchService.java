@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OrganisaatioSearchService extends SolrOrgFields {
 
@@ -57,7 +58,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
                 Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(),
                 Sets.newHashSet(OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()));
-        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet("\"" + OrganisaatioTyyppi.MUU_ORGANISAATIO.value() + "\""));
+        orgTypeLimit.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), Sets.newHashSet(OrganisaatioTyyppi.MUU_ORGANISAATIO.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(),
                 OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.value()));
         orgTypeLimit.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.value(), Sets.newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.value()));
@@ -152,8 +153,9 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             if (organisaatioTyyppi != null && organisaatioTyyppi.length() > 0) {
                 final Set<String> limitToTypes = orgTypeLimit
                         .get(organisaatioTyyppi);
-                q.addFilterQuery(String.format("%s:(%s)", ORGANISAATIOTYYPPI, Joiner.on(" ")
-                        .join(limitToTypes)));
+                q.addFilterQuery(String.format("%s:(%s)", ORGANISAATIOTYYPPI, limitToTypes.stream()
+                        .map(type -> "\"" + type + "\"")
+                        .collect(Collectors.joining(" "))));
             }
 
             // restrictions
