@@ -40,7 +40,7 @@ public final class KoodistoUtil {
     public static String getRyhmatyyppiV1(String koodistoValue) {
         String staticValue = RYHMATYYPIT.get(koodistoValue);
         if (staticValue == null) {
-            LOGGER.warn("Tuntematon ryhmätyypit-koodiston koodi {}", koodistoValue);
+            LOGGER.debug("Tuntematon ryhmätyypit-koodiston koodi {}", koodistoValue);
         }
         return staticValue;
     }
@@ -56,7 +56,7 @@ public final class KoodistoUtil {
     public static String getKayttoryhmaV1(String koodistoValue) {
         String staticValue = KAYTTORYHMAT.get(koodistoValue);
         if (staticValue == null) {
-            LOGGER.warn("Tuntematon käyttöryhmät-koodiston koodi {}", koodistoValue);
+            LOGGER.debug("Tuntematon käyttöryhmät-koodiston koodi {}", koodistoValue);
         }
         return staticValue;
     }
