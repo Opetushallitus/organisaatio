@@ -40,6 +40,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
                      Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
+                     Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava yläorganisaatio joka on
+                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA.
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
@@ -49,6 +51,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
                      05:Muu organisaatio, 06:Työelämäjärjestö 07:Varhaiskasvatuksen järjestäjä
+                     08:Varhaiskasvatuksen toimipaikka
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
@@ -58,7 +61,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'organisaatiotyyppi_02': ["03"], // Oppilaitos
                         'organisaatiotyyppi_03': ["03"], // Toimipiste
                         'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
-                        'organisaatiotyyppi_07': ["03"], // Varhaiskasvatuksen jarjestaja
+                        'organisaatiotyyppi_07': ["03", "08"], // Varhaiskasvatuksen jarjestaja
+                        'organisaatiotyyppi_08': [], // Varhaiskasvatuksen toimipaikka
                         'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
                     result.sort(function (a, b) {
                         return a.koodiArvo.localeCompare(b.koodiArvo);
