@@ -1,23 +1,7 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-package fi.vm.sade.organisaatio.service.converter.v3;
+package fi.vm.sade.organisaatio.service.converter.v4;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
@@ -27,23 +11,20 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.modelmapper.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
+public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV4, Organisaatio> {
 
     @Override
-    public Organisaatio convert(OrganisaatioRDTOV3 t) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        List<Yhteystieto> yhteystietos = new ArrayList<Yhteystieto>();
+    public Organisaatio convert(OrganisaatioRDTOV4 t) {
+        List<Yhteystieto> yhteystietos = new ArrayList<>();
         Organisaatio s = new Organisaatio();
 
         s.setOid(t.getOid());
         s.setVersion((long)t.getVersion());
 
         s.setAlkuPvm(t.getAlkuPvm());
-        // t.setChildCount(s.getChildCount());
         s.setDomainNimi(t.getDomainNimi());
 
         s.setKielet(convertListToList(t.getKieletUris()));
@@ -68,21 +49,13 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
             s.setNimihaku(convertNimiMapToNimihaku(nimi.getValues()));
         }
 
-        // t.set(s.getNimiLyhenne());
         s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
         s.setOppilaitosKoodi(t.getOppilaitosKoodi());
         s.setOppilaitosTyyppi(t.getOppilaitosTyyppiUri());
-        // t.set(s.getOrganisaatiotyypitStr());
-        // s.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
-        // t.set(s.getParentIdPath());
-        // t.setParentMetadata(s.getParentMetadata());
         s.setParentOidPath(s.getParentOidPath());
-        // t.set(s.getParentSuhteet());
 
-        // t.set(s.getPuhelin());
         s.setToimipisteKoodi(t.getToimipistekoodi());
-        s.setTyypit(OrganisaatioTyyppi.tyypitToKoodis(t.getTyypit()));
-        // t.set(s.getTyypitAsString());
+        s.setTyypit(t.getTyypit());
         s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
         s.setOrganisaatioLisatietotyypit(t.getLisatiedot().stream()
                 .map(lisatietoNimi -> {
@@ -97,14 +70,11 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setRyhmatyypit(convertSetToSet(t.getRyhmatyypit()));
         s.setKayttoryhmat(convertSetToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
-        // t.set(s.getYhteystiedot());
-        // t.set(s.getYhteystietoArvos());
         s.setYritysmuoto(t.getYritysmuoto());
         s.setYtjKieli(t.getYTJKieli());
         s.setYtjPaivitysPvm(t.getYTJPaivitysPvm());
         s.setYtunnus(t.getYTunnus());
         s.setVirastoTunnus(t.getVirastoTunnus());
-        s.setTarkastusPvm(t.getTarkastusPvm());
 
         if (t.getYhteystietoArvos()!=null) {
             s.setYhteystietoArvos(YhteystietoConverterUtils.convertYhteystietoArvos(t.getYhteystietoArvos()));
@@ -128,7 +98,6 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
     private Set<String> convertSetToSet(Set<String> s) {
         return new HashSet<>(s);
     }
-
 
     private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
         StringBuilder sb = new StringBuilder();

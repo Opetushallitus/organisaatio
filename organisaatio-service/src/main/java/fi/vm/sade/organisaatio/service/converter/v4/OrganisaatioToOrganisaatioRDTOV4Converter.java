@@ -1,23 +1,11 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-package fi.vm.sade.organisaatio.service.converter.v3;
+package fi.vm.sade.organisaatio.service.converter.v4;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
-import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioLisatietotyyppi;
+import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.service.converter.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
@@ -30,27 +18,24 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
+public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV4> {
 
-public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV3> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOV3Converter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOV4Converter.class);
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOV3Converter() {
+    public OrganisaatioToOrganisaatioRDTOV4Converter() {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
     }
 
 
     @Override
-    public OrganisaatioRDTOV3 convert(Organisaatio s) {
+    public OrganisaatioRDTOV4 convert(Organisaatio s) {
         long qstarted = System.currentTimeMillis();
 
-        OrganisaatioRDTOV3 t = new OrganisaatioRDTOV3();
+        OrganisaatioRDTOV4 t = new OrganisaatioRDTOV4();
 
         t.setOid(s.getOid());
         t.setVersion(s.getVersion() != null ? s.getVersion().intValue() : 0);
@@ -62,11 +47,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
 
         t.setKieletUris(convertListToList(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
-        t.setKuvaus2(convertMKTToMap(s.getKuvaus2()));
+        t.setKuvaus2(YhteystietoConverterUtils.convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
         t.setMetadata(MetadataConverterUtils.convertMetadata(s.getMetadata()));
-        t.setNimi(convertMKTToMap(s.getNimi()));
+        t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
 
         t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
@@ -77,12 +62,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
         t.setParentOidPath(s.getParentOidPath());
 
-
         t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
+        t.setTyypit(s.getTyypit());
         t.setLisatiedot(convertSetToSet(s.getOrganisaatioLisatietotyypit().stream()
                 .map(OrganisaatioLisatietotyyppi::getLisatietotyyppi)
                 .map(Lisatietotyyppi::getNimi)
@@ -96,7 +80,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
-        t.setTarkastusPvm(toTimestamp(s.getTarkastusPvm()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
@@ -110,21 +93,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 
         return t;
-    }
-
-    private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
-        Map<String, String> result = new HashMap<>();
-
-        if (nimi != null) {
-            // Lisätään vastauksiin kaikki nimen kielet, joissa tekstiä
-            for (Map.Entry<String, String> entry : nimi.getValues().entrySet()) {
-                if (isNullOrEmpty(entry.getValue()) == false) {
-                    result.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-
-        return result;
     }
 
     private List<String> convertListToList(Collection<String> s) {
