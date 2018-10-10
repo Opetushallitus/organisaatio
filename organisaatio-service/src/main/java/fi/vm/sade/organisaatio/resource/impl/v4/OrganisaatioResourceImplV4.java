@@ -15,6 +15,8 @@ import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,7 @@ import java.util.List;
 @Component
 @CrossOriginResourceSharing(allowAllOrigins = true)
 public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV4.class);
 
     private final OrganisaatioResourceV2 organisaatioResourceV2;
     private final OrganisaatioResourceV3 organisaatioResourceV3;
@@ -87,20 +90,20 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
-//            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
+            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
             throw new OrganisaatioResourceException(nae);
         }
         try {
             return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
-//            LOG.warn("Error saving new org", ex);
+            LOG.warn("Error saving new org", ex);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-//            LOG.warn("Error saving new org", sbe);
+            LOG.warn("Error saving new org", sbe);
             throw new OrganisaatioResourceException(sbe);
         } catch (Throwable t) {
-//            LOG.warn("Error saving new org", t);
+            LOG.warn("Error saving new org", t);
             throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }

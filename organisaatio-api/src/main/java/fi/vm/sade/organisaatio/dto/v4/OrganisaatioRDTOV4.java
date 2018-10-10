@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import io.swagger.annotations.ApiModel;
@@ -104,6 +105,8 @@ public class OrganisaatioRDTOV4 implements Serializable {
     private String _opetuspisteenJarjNro;
 
     private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
+    
+    private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatukenToimipaikkaTiedot;
 
     @ApiModelProperty(value = "Organisaation oid", required = true)
     public String getOid() {
@@ -527,5 +530,14 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     public void setLisatiedot(Set<String> _lisatiedot) {
         this._lisatiedot = _lisatiedot;
+    }
+
+    @ApiModelProperty(value = "Lisatiedot", required = true)
+    public VarhaiskasvatuksenToimipaikkaTiedotDto getVarhaiskasvatukenToimipaikkaTiedot() {
+        return _varhaiskasvatukenToimipaikkaTiedot;
+    }
+
+    public void setVarhaiskasvatukenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatukenToimipaikkaTiedot) {
+        this._varhaiskasvatukenToimipaikkaTiedot = varhaiskasvatukenToimipaikkaTiedot;
     }
 }

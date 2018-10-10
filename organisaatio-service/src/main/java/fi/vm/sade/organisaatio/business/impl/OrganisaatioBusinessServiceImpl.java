@@ -56,8 +56,10 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Transactional
 @Service("organisaatioBusinessService")
@@ -458,9 +460,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("validation.Organisaatio.virastotunnus");
         }
 
-        // Validate and persis lisatietotyypit
+        // Validate and persist lisatietotyypit
         if (!CollectionUtils.isEmpty(model.getOrganisaatioLisatietotyypit())) {
-            Set<OrganisaatioLisatietotyyppi> persistedLisatieotyypit = model.getOrganisaatioLisatietotyypit().stream()
+            Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = model.getOrganisaatioLisatietotyypit().stream()
                     .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
                     .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
                     .map(lisatietotyyppi -> {
@@ -470,7 +472,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                         return organisaatioLisatietotyyppi;
                     })
                     .collect(Collectors.toSet());
-            model.setOrganisaatioLisatietotyypit(persistedLisatieotyypit);
+            model.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
+        }
+
+        boolean isVarhaiskasvatuksenToimipaikka = model.getTyypit().stream()
+                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.value()::equals);
+        if (isVarhaiskasvatuksenToimipaikka) {
+            boolean isInvalid = Stream.<Function<VarhaiskasvatuksenToimipaikkaTiedot, Boolean>>of(
+                    Objects::nonNull,
+                    toimipaikka -> Objects.nonNull(toimipaikka.getPaikkojenLukumaara()),
+                    toimipaikka -> this.organisaatioKoodisto.haeVardaJarjestamismuoto().stream()
+                            .anyMatch(koodi -> koodi.equals(toimipaikka.getJarjestamismuoto())),
+                    toimipaikka -> this.organisaatioKoodisto.haeVardaKasvatusopillinenJarjestelma().stream()
+                            .anyMatch(koodi -> koodi.equals(toimipaikka.getKasvatusopillinenJarjestelma())),
+                    toimipaikka -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
+                            .anyMatch(koodi -> koodi.equals(toimipaikka.getToiminnallinenPainotus())),
+                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
+                            .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
+                                    .anyMatch(koodi -> koodi.equals(toimintamuoto))),
+                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
+                            .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeKielikoodit().stream()
+                                    .anyMatch(koodi -> koodi.equals(toimintamuoto)))
+            ).anyMatch(toimipaikkaValidator -> !toimipaikkaValidator.apply(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            if (isInvalid) {
+                throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka");
+            }
         }
 
         // Validointi: koodistoureissa pitää olla versiotieto

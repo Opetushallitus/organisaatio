@@ -1,11 +1,10 @@
 package fi.vm.sade.organisaatio.service.converter.v4;
 
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
-import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioLisatietotyyppi;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.service.converter.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
@@ -15,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -90,10 +91,44 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         }
         YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
 
+        Optional.ofNullable(s.getVarhaiskasvatuksenToimipaikkaTiedot())
+                .map(this::varhaiskasvatuksenToimipaikkaTiedotEntityToDto)
+                .ifPresent(t::setVarhaiskasvatukenToimipaikkaTiedot);
+
         LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 
         return t;
     }
+
+    private VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotEntityToDto(VarhaiskasvatuksenToimipaikkaTiedot toimipaikkaTiedot) {
+        VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
+        varhaiskasvatuksenToimipaikkaTiedotDto.setJarjestamismuoto(toimipaikkaTiedot.getJarjestamismuoto());
+        varhaiskasvatuksenToimipaikkaTiedotDto.setKasvatusopillinenJarjestelma(toimipaikkaTiedot.getKasvatusopillinenJarjestelma());
+        varhaiskasvatuksenToimipaikkaTiedotDto.setPaikkojenLukumaara(toimipaikkaTiedot.getPaikkojenLukumaara());
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToimintamuodot(this.convertSetToSet(toimipaikkaTiedot.getVarhaiskasvatuksenToimintamuodot()));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setToiminnallinenPainotus(toimipaikkaTiedot.getToiminnallinenPainotus());
+        Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
+                .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
+                .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenKielipainotukset);
+        return varhaiskasvatuksenToimipaikkaTiedotDto;
+    }
+
+    private Set<VarhaiskasvatuksenKielipainotusDto> varhaiskasvatuksenKielipainotuksetEntityToDto(Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotusSet) {
+        return varhaiskasvatuksenKielipainotusSet.stream()
+                .map(kielipainotus -> {
+                    VarhaiskasvatuksenKielipainotusDto varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotusDto();
+                    varhaiskasvatuksenKielipainotus.setAlkupvm(this.dateToLocaldate(kielipainotus.getAlkupvm()));
+                    varhaiskasvatuksenKielipainotus.setLoppupvm(this.dateToLocaldate(kielipainotus.getLoppupvm()));
+                    varhaiskasvatuksenKielipainotus.setKielipainotus(kielipainotus.getKielipainotus());
+                    return varhaiskasvatuksenKielipainotus;
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private LocalDate dateToLocaldate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
 
     private List<String> convertListToList(Collection<String> s) {
         return new ArrayList<>(s);

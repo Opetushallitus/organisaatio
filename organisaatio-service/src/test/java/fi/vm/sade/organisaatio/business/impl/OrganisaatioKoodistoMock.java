@@ -28,4 +28,29 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
     public Set<String> haeOppilaitoskoodit() {
         return null;
     }
+
+    @Override
+    public Set<String> haeVardaJarjestamismuoto() {
+        return null;
+    }
+
+    @Override
+    public Set<String> haeVardaKasvatusopillinenJarjestelma() {
+        return null;
+    }
+
+    @Override
+    public Set<String> haeVardaToiminnallinenPainotus() {
+        return null;
+    }
+
+    @Override
+    public Set<String> haeVardaToimintamuoto() {
+        return null;
+    }
+
+    @Override
+    public Set<String> haeKielikoodit() {
+        return null;
+    }
 }

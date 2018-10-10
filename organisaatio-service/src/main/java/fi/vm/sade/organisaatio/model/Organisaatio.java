@@ -167,7 +167,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
-    private VarhaiskasvatukenToimipaikkaTiedot varhaiskasvatukenToimipaikkaTiedot;
+    private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
 
     /**
      * Utility method to retrieve the current parent of the organisaatio.
@@ -820,11 +820,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.organisaatioLisatietotyypit = organisaatioLisatietotyypit;
     }
 
-    public VarhaiskasvatukenToimipaikkaTiedot getVarhaiskasvatukenToimipaikkaTiedot() {
-        return varhaiskasvatukenToimipaikkaTiedot;
+    public VarhaiskasvatuksenToimipaikkaTiedot getVarhaiskasvatuksenToimipaikkaTiedot() {
+        return varhaiskasvatuksenToimipaikkaTiedot;
     }
 
-    public void setVarhaiskasvatukenToimipaikkaTiedot(VarhaiskasvatukenToimipaikkaTiedot varhaiskasvatukenToimipaikkaTiedot) {
-        this.varhaiskasvatukenToimipaikkaTiedot = varhaiskasvatukenToimipaikkaTiedot;
+    public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot) {
+        this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
     }
 }

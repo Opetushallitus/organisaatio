@@ -9,24 +9,29 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "varhaiskasvatuksen_toimipaikka_tiedot")
-public class VarhaiskasvatukenToimipaikkaTiedot extends BaseEntity {
+public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
 
+    // Koodisto vardajarjestamismuoto
     @Column(name = "jarjestamismuoto", nullable = false)
     private String jarjestamismuoto;
 
+    // Koodisto vardakasvatusopillinenjarjestelma
     @Column(name = "kasvatusopillinen_jarjestelma", nullable = false)
     private String kasvatusopillinenJarjestelma;
 
+    // Koodisto vardatoiminnallinenpainotus
     @Column(name = "toiminnallinen_painotus", nullable = false)
     private String toiminnallinenPainotus;
 
     @Column(name = "paikkojen_lukumaara", nullable = false)
     private long paikkojenLukumaara;
 
+    // Koodisto maatjavaltiot2
     @ElementCollection
     @CollectionTable(name = "varhaiskasvatuksen_kielipainotus", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
     private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
+    // Koodisto vardatoimintamuoto
     @ElementCollection
     @CollectionTable(name = "varhaiskasvatuksen_toimintamuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
     @Column(name = "toimintamuoto")

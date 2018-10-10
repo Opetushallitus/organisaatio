@@ -498,6 +498,31 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         return this.haeKoodistonKoodit("oppilaitostyyppi");
     }
 
+    @Override
+    public Set<String> haeVardaJarjestamismuoto() {
+        return this.haeKoodistonKoodit("vardajarjestamismuoto");
+    }
+
+    @Override
+    public Set<String> haeVardaKasvatusopillinenJarjestelma() {
+        return this.haeKoodistonKoodit("vardakasvatusopillinenjarjestelma");
+    }
+
+    @Override
+    public Set<String> haeVardaToiminnallinenPainotus() {
+        return this.haeKoodistonKoodit("vardatoiminnallinenpainotus");
+    }
+
+    @Override
+    public Set<String> haeVardaToimintamuoto() {
+        return this.haeKoodistonKoodit("vardatoimintamuoto");
+    }
+
+    @Override
+    public Set<String> haeKielikoodit() {
+        return this.haeKoodistonKoodit("maatjavaltiot2");
+    }
+
     private Set<String> haeKoodistonKoodit(String koodistoUri) {
         String url = this.urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodistoUri);
         String json = this.client.get(url);
