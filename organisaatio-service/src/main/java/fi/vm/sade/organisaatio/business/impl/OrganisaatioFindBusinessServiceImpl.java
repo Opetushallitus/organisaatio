@@ -21,8 +21,10 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -37,9 +39,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.core.convert.ConversionService;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -99,6 +98,30 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
         return organisaatioDAO.findByOids(oids);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrganisaatioRDTOV4 findByIdV4(String id, boolean includeImage) {
+        LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", id);
+
+        Organisaatio o = this.findById(id);
+
+        if (o == null) {
+            LOG.info("Failed to find organisaatio by: " + id);
+            throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
+        }
+
+        // Jätetään kuva pois, jos sitä ei haluta
+        if (o.getMetadata() != null) {
+            o.getMetadata().setIncludeImage(includeImage);
+        }
+
+        OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
+
+        LOG.debug("  result={}", result);
+        return result;
+
     }
 
     @Override

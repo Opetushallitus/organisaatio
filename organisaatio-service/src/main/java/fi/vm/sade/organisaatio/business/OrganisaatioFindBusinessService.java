@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -26,11 +27,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author simok
- */
 public interface OrganisaatioFindBusinessService {
+
+    /**
+     * Wrappaa findById(String id) mutta palauttaa v4 apin tuloksen
+     * @param id findById(String id) vastaava hakuavain
+     * @param includeImage Haetaanko kuva
+     * @return Organisaatio dto muodossa OrganisaatioRDTOV4
+     */
+    OrganisaatioRDTOV4 findByIdV4(String id, boolean includeImage);
 
     /**
      * Idllä haku (Id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi, toimipistekoodi)

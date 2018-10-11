@@ -4,6 +4,7 @@ import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
@@ -36,18 +37,21 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     private final PermissionChecker permissionChecker;
     private final OrganisaatioBusinessService organisaatioBusinessService;
+    private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
     @Autowired
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2,
                                       OrganisaatioResourceV3 organisaatioResourceV3,
                                       OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper,
                                       PermissionChecker permissionChecker,
-                                      OrganisaatioBusinessService organisaatioBusinessService) {
+                                      OrganisaatioBusinessService organisaatioBusinessService,
+                                      OrganisaatioFindBusinessService organisaatioFindBusinessService) {
         this.organisaatioResourceV2 = organisaatioResourceV2;
         this.organisaatioResourceV3 = organisaatioResourceV3;
         this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
         this.permissionChecker = permissionChecker;
         this.organisaatioBusinessService = organisaatioBusinessService;
+        this.organisaatioFindBusinessService = organisaatioFindBusinessService;
     }
 
     // POST //organisaatio/v4/findbyoids
@@ -65,7 +69,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}
     @Override
     public OrganisaatioRDTOV4 getOrganisaatioByOID(String oid, boolean includeImage) {
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.getOrganisaatioByOID(oid, includeImage), OrganisaatioRDTOV4.class);
+        return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
 
     // PUT /organisaatio/v4/{oid}
