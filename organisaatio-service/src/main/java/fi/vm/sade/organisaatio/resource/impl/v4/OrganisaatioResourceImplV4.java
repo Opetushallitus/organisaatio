@@ -7,7 +7,6 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
@@ -73,10 +72,34 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
-        OrganisaatioRDTOV3 organisaatioRDTOV3 = this.organisaatioDTOV4ModelMapper.map(ordto, OrganisaatioRDTOV3.class);
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.updateOrganisaatio(oid, organisaatioRDTOV3), ResultRDTOV4.class);
+        LOG.info("Saving " + oid);
+        try {
+            permissionChecker.checkSaveOrganisation(ordto, true);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to update organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
+        try {
+            return organisaatioBusinessService.save(ordto, true);
+        } catch (ValidationException ex) {
+            LOG.warn("Error saving " + oid, ex);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    ex.getMessage(), "organisaatio.validointi.virhe");
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving " + oid, sbe);
+            throw new OrganisaatioResourceException(sbe);
+        } catch (OrganisaatioResourceException ore) {
+            LOG.warn("Error saving " + oid, ore);
+            throw ore;
+        } catch (Throwable t) {
+            LOG.error("Error saving " + oid, t);
+            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+                    t.getMessage(), "generic.error");
+        }
     }
 
+    // DELETE /organisaatio/v4/{oid}
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatio(String oid) {
@@ -115,17 +138,20 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.haeMuutetut(lastModifiedSince, includeImage), new TypeToken<List<OrganisaatioRDTOV4>>() {}.getType());
     }
 
+    // GET /organisaatio/v4/{oid}/historia
     @Override
     public OrganisaatioHistoriaRDTOV4 getOrganizationHistory(String oid) throws Exception {
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
 
+    // GET /organisaatio/v4/hae
     @Override
     public OrganisaatioHakutulosV4 searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatiot(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
     }
 
+    // GET /organisaatio/v4/hierarkia/hae
     @Override
     public OrganisaatioHakutulosV4 searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
