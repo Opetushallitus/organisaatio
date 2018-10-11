@@ -165,7 +165,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
     private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
 

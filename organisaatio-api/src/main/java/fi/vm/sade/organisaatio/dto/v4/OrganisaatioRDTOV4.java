@@ -105,7 +105,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
     private String _opetuspisteenJarjNro;
 
     private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
-    
+
     private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatukenToimipaikkaTiedot;
 
     @ApiModelProperty(value = "Organisaation oid", required = true)

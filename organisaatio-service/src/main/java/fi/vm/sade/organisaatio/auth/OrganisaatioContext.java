@@ -84,7 +84,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(OrganisaatioRDTOV4 org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov4 = org;
     }
 

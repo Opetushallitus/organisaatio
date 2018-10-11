@@ -475,10 +475,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             model.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
         }
 
+        // This effectively blocks creating/updating VARHAISKASVATUKSEN_TOIMIPAIKKA from older apis since they don't
+        // support this info
         boolean isVarhaiskasvatuksenToimipaikka = model.getTyypit().stream()
-                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.value()::equals);
+                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
         if (isVarhaiskasvatuksenToimipaikka) {
-            boolean isInvalid = Stream.<Function<VarhaiskasvatuksenToimipaikkaTiedot, Boolean>>of(
+            boolean isVarhaiskasvatuksenToimipaikkaTiedotValid = Stream.<Function<VarhaiskasvatuksenToimipaikkaTiedot, Boolean>>of(
                     Objects::nonNull,
                     toimipaikka -> Objects.nonNull(toimipaikka.getPaikkojenLukumaara()),
                     toimipaikka -> this.organisaatioKoodisto.haeVardaJarjestamismuoto().stream()
@@ -487,14 +489,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             .anyMatch(koodi -> koodi.equals(toimipaikka.getKasvatusopillinenJarjestelma())),
                     toimipaikka -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
                             .anyMatch(koodi -> koodi.equals(toimipaikka.getToiminnallinenPainotus())),
+                    toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenToimintamuodot()),
+                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().size() > 0,
                     toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
                             .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
                                     .anyMatch(koodi -> koodi.equals(toimintamuoto))),
-                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
-                            .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeKielikoodit().stream()
-                                    .anyMatch(koodi -> koodi.equals(toimintamuoto)))
-            ).anyMatch(toimipaikkaValidator -> !toimipaikkaValidator.apply(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            if (isInvalid) {
+                    toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenKielipainotukset()),
+                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().size() > 0,
+                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()
+                            .allMatch(kielipainotus -> this.organisaatioKoodisto.haeKielikoodit().stream()
+                                    .anyMatch(koodi -> koodi.equals(kielipainotus.getKielipainotus())))
+            ).allMatch(toimipaikkaValidator -> toimipaikkaValidator.apply(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            if (!isVarhaiskasvatuksenToimipaikkaTiedotValid) {
                 throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka");
             }
         }
