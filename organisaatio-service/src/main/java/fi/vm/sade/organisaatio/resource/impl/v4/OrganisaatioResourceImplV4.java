@@ -14,7 +14,6 @@ import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +56,13 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // POST //organisaatio/v4/findbyoids
     @Override
     public List<OrganisaatioRDTOV4> findByOids(List<String> oids){
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.findByOids(oids), new TypeToken<List<OrganisaatioRDTOV4>>() {}.getType());
+        return organisaatioFindBusinessService.findByOidsV4(oids);
     }
 
     // GET /organisaatio/v4/{oid}/children
     @Override
-    public List<OrganisaatioRDTOV4> children(String oid, boolean includeImage) throws Exception {
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.children(oid, includeImage), new TypeToken<List<OrganisaatioRDTOV4>>() {}.getType());
+    public List<OrganisaatioRDTOV4> children(String oid, boolean includeImage) {
+        return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
 
     // GET /organisaatio/v4/{oid}
@@ -139,7 +138,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/muutetut
     @Override
     public List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV3.haeMuutetut(lastModifiedSince, includeImage), new TypeToken<List<OrganisaatioRDTOV4>>() {}.getType());
+        return this.organisaatioFindBusinessService.haeMuutetut(lastModifiedSince, includeImage);
     }
 
     // GET /organisaatio/v4/{oid}/historia

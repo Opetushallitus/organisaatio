@@ -17,11 +17,11 @@ package fi.vm.sade.organisaatio.dao;
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
@@ -155,6 +155,14 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
     List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi, String oppilaitosTyyppi, String kunta, String searchStr, boolean suunnitellut, boolean lakkautetut, int maxResults, List<String> oids);
+
+    /**
+     * Hakee useita laajempaa mappausta varten valmiiksi alustettuja organisaatiota oidien perusteella
+     * @param oids Organisaatioiden oidit
+     * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
+     * @return Oideja vastaavat organisaatiot
+     */
+    List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
 
     List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults);
 

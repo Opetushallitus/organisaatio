@@ -27,8 +27,7 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     private long paikkojenLukumaara;
 
     // Koodisto maatjavaltiot2
-    @ElementCollection
-    @CollectionTable(name = "varhaiskasvatuksen_kielipainotus", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
     private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
     // Koodisto vardatoimintamuoto

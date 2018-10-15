@@ -503,6 +503,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (!isVarhaiskasvatuksenToimipaikkaTiedotValid) {
                 throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka");
             }
+            model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
+                    .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
         }
 
         // Validointi: koodistoureissa pitää olla versiotieto

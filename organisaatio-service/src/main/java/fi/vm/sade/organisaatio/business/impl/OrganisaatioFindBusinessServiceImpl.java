@@ -14,6 +14,8 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.google.common.base.Preconditions;
+import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
@@ -36,9 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -102,6 +103,17 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
+    public List<OrganisaatioRDTOV4> findByOidsV4(Collection<String> oids) {
+        Preconditions.checkNotNull(oids);
+        Preconditions.checkArgument(!oids.isEmpty());
+        Preconditions.checkArgument(oids.size() <= 1000);
+        return organisaatioDAO.findByOids(oids, true).stream()
+                .map(organisaatio -> this.conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public OrganisaatioRDTOV4 findByIdV4(String id, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", id);
 
@@ -122,6 +134,28 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         LOG.debug("  result={}", result);
         return result;
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioRDTOV4> findChildrenById(String id, boolean includeImage) {
+        Preconditions.checkNotNull(id);
+        Organisaatio parentOrg = this.findById(id);
+        return parentOrg == null
+                ? new ArrayList<>()
+                : mapToOrganisaatioRdtoV4(parentOrg.getChildren(true), includeImage);
+    }
+
+    private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
+        return children.stream()
+                .map(child -> {
+                    // Jätetään kuva pois, jos sitä ei haluta
+                    if (child.getMetadata() != null) {
+                        child.getMetadata().setIncludeImage(includeImage);
+                    }
+                    return conversionService.convert(child, OrganisaatioRDTOV4.class);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -159,4 +193,23 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria) {
         return organisaatioDAO.findChildOidsRecursive(criteria);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
+        Preconditions.checkNotNull(lastModifiedSince);
+
+        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        long qstarted = System.currentTimeMillis();
+
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+
+        LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
+
+        if (organisaatiot == null || organisaatiot.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return this.mapToOrganisaatioRdtoV4(organisaatiot, includeImage);
+    }
+
 }

@@ -493,6 +493,51 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .fetch();
     }
 
+    @Override
+    public List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu) {
+        LOG.debug("findByOids(Number of OIDs = {})", oids.size());
+        QOrganisaatio org = QOrganisaatio.organisaatio;
+        QOrganisaatioMetaData metaData = QOrganisaatioMetaData.organisaatioMetaData;
+        QYhteystieto metadataYhteystieto = new QYhteystieto("metadataYhteystieto");
+        QNamedMonikielinenTeksti metadataValues = QNamedMonikielinenTeksti.namedMonikielinenTeksti;
+        QOrganisaatioNimi nimet = QOrganisaatioNimi.organisaatioNimi;
+        QOrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = QOrganisaatioLisatietotyyppi.organisaatioLisatietotyyppi;
+        QLisatietotyyppi lisatietotyyppi = QLisatietotyyppi.lisatietotyyppi;
+        QVarhaiskasvatuksenToimipaikkaTiedot qVarhaiskasvatuksenToimipaikkaTiedot = QVarhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimipaikkaTiedot;
+        QYhteystietoArvo yhteystietoArvo = QYhteystietoArvo.yhteystietoArvo;
+        QYhteystieto yhteystieto = new QYhteystieto("yhteystieto");
+        QOrganisaatioSuhde parentSuhteet = QOrganisaatioSuhde.organisaatioSuhde;
+
+        // TODO OH-494
+        JPAQuery<Organisaatio> jpaQuery = new JPAQuery<Organisaatio>(getEntityManager())
+                .select(org)
+                .distinct()
+                .from(org)
+//                .leftJoin(org.vuosiluokat).fetchJoin()
+//                .leftJoin(org.tyypit).fetchJoin()
+                .leftJoin(org.ryhmatyypit).fetchJoin()
+                .leftJoin(org.kayttoryhmat).fetchJoin()
+                .leftJoin(org.kuvaus2).fetchJoin()
+                .leftJoin(org.nimi).fetchJoin()
+                .leftJoin(org.kielet).fetchJoin()
+                .leftJoin(org.metadata, metaData).fetchJoin()
+                .leftJoin(metaData.values, metadataValues).fetchJoin()
+//                .leftJoin(metaData.yhteystiedot, metadataYhteystieto).fetchJoin()
+                .leftJoin(org.nimet, nimet).fetchJoin()
+                .leftJoin(org.organisaatioLisatietotyypit, organisaatioLisatietotyyppi).fetchJoin()
+                .leftJoin(organisaatioLisatietotyyppi.lisatietotyyppi, lisatietotyyppi).fetchJoin()
+                .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, qVarhaiskasvatuksenToimipaikkaTiedot).fetchJoin()
+//                .leftJoin(org.yhteystietoArvos, yhteystietoArvo).fetchJoin()
+//                .leftJoin(org.parentSuhteet, parentSuhteet).fetchJoin()
+                .leftJoin(org.yhteystiedot, yhteystieto).fetchJoin()
+                .where(org.oid.in(oids));
+        if (excludePoistettu) {
+            jpaQuery.where(org.organisaatioPoistettu.isFalse());
+        }
+        return jpaQuery
+                .fetch();
+    }
+
     /**
      *
      * @param oidList

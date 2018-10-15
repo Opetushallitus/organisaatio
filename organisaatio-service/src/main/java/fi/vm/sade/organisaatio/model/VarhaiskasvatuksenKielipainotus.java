@@ -1,12 +1,15 @@
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 
-@Embeddable
-public class VarhaiskasvatuksenKielipainotus {
+@Entity
+@Table(name = "varhaiskasvatuksen_kielipainotus")
+public class VarhaiskasvatuksenKielipainotus extends BaseEntity {
+    @ManyToOne
+    @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
+    private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
+
     private String kielipainotus;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -37,5 +40,13 @@ public class VarhaiskasvatuksenKielipainotus {
 
     public void setLoppupvm(Date loppupvm) {
         this.loppupvm = loppupvm;
+    }
+
+    public VarhaiskasvatuksenToimipaikkaTiedot getVarhaiskasvatuksenToimipaikkaTiedot() {
+        return varhaiskasvatuksenToimipaikkaTiedot;
+    }
+
+    public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot) {
+        this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
     }
 }
