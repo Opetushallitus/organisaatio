@@ -506,6 +506,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
                     .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
         }
+        else {
+            if (model.getVarhaiskasvatuksenToimipaikkaTiedot() != null) {
+                throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka.badorganisationtype");
+            }
+        }
 
         // Validointi: koodistoureissa pitää olla versiotieto
         checker.checkVersionInKoodistoUris(model);
