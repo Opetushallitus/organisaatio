@@ -418,6 +418,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             {{:: t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}*
         </label>
         <div class="controls">
+            <div ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
+                <div>
+                    {{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}: {{:: model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}
+                </div>
+                <div>
+                    {{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}: {{::  model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}
+                </div>
+                <div>
+                    {{t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}: {{:: model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}
+                </div>
+                <div>
+                    {{t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}: {{:: model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}
+                </div>
+            </div>
             <button class="btn" ng-click="openVarhaiskasvatuksenToimipaikanTietojenMuokkaus()">
                 <i class="icon-pencil"></i> {{t('Organisaationmuokkaus.muokkaaVarhaiskasvatuksenToimipaikanTietoja')}}
             </button>

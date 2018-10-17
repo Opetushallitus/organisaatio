@@ -256,6 +256,32 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return "--";
         };
 
+        this.localiseJarjestamismuoto = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.jarjestamismuoto, koodiUri);
+        };
+
+        this.localiseKasvatusopillinenJarjestelma = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kasvatusopillinenJarjestelma, koodiUri);
+        };
+
+        this.localiseToiminnallinenPainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.toiminnallinenPainotus, koodiUri);
+        };
+
+        this.localiseVarhaiskasvatuksenToimintamuodot = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.varhaiskasvatuksenToimintamuodot, koodiUri);
+        };
+
+        this.localiseKielipainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
+        };
+
+        this.localiseKoodiUri = function (koodisto, koodiUri) {
+            var matchingKoodi = koodisto.filter(function (kieliKoodi) {
+                return kieliKoodi.uri === koodiUri;
+            })[0];
+            return matchingKoodi && matchingKoodi.nimi;
+        };
 
         this.setNimet = function() {
             $log.log('setNimet()');
