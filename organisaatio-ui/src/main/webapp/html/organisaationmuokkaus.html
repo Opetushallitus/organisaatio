@@ -421,7 +421,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <button class="btn" ng-click="openVarhaiskasvatuksenToimipaikanTietojenMuokkaus()">
                 <i class="icon-pencil"></i> {{t('Organisaationmuokkaus.muokkaaVarhaiskasvatuksenToimipaikanTietoja')}}
             </button>
-            <div ng-if="!model.organisaatio.varhaiskasvatuksenToimipaikanTiedot">
+            <div ng-if="!model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
                 <input type="hidden" name="kieli" ng-model="kieli" required>
                 <span class="text-error" ng-show="form.kieli.$error.required">
                     {{t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}

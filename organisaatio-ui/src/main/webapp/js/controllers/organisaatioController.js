@@ -219,7 +219,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                     return $scope.model.koodisto;
                 },
                 varhaiskasvatuksenToimipaikanTiedot: function () {
-                    var toimipaikanTiedot = angular.copy($scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot);
+                    var toimipaikanTiedot = angular.copy($scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot);
                     if (toimipaikanTiedot) {
                         toimipaikanTiedot.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
                             kielipainotus.alkupvm = moment(kielipainotus.alkupvm);
@@ -232,19 +232,18 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             scope: $scope
         });
 
-        modalInstance.result.then(function (varhaiskasvatuksenToimipaikanTiedotModel) {
+        modalInstance.result.then(function (varhaiskasvatuksenToimipaikkaTiedotModel) {
             $scope.modalOpen = false;
-            varhaiskasvatuksenToimipaikanTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
-                kielipainotus.alkupvm = kielipainotus.alkupvm.format();
-                kielipainotus.loppupvm = kielipainotus.loppupvm.format();
+            varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
+                kielipainotus.alkupvm = kielipainotus.alkupvm.format('YYYY-MM-DD');
+                kielipainotus.loppupvm = kielipainotus.loppupvm.format('YYYY-MM-DD');
             });
-            $scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot = varhaiskasvatuksenToimipaikanTiedotModel;
+            $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedotModel;
 
             $scope.form.$setDirty();
         }, function () {
             $scope.modalOpen = false;
-            // $scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot = null;
-            $log.log('VarhaiskasvatuksenToimipaikanTiedot Modal dismissed at: ' + new Date());
+            $log.log('VarhaiskasvatuksenToimipaikkaTiedot Modal dismissed at: ' + new Date());
         });
 
     };
