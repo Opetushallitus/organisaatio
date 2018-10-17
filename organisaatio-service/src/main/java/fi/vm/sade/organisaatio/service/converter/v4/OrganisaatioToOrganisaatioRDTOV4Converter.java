@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.service.converter.v4;
 
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimintamuotoDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -105,7 +106,9 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         varhaiskasvatuksenToimipaikkaTiedotDto.setJarjestamismuoto(toimipaikkaTiedot.getJarjestamismuoto());
         varhaiskasvatuksenToimipaikkaTiedotDto.setKasvatusopillinenJarjestelma(toimipaikkaTiedot.getKasvatusopillinenJarjestelma());
         varhaiskasvatuksenToimipaikkaTiedotDto.setPaikkojenLukumaara(toimipaikkaTiedot.getPaikkojenLukumaara());
-        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToimintamuodot(this.convertSetToSet(toimipaikkaTiedot.getVarhaiskasvatuksenToimintamuodot()));
+        Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenToimintamuodot())
+                .map(this::varhaiskasvatuksenToimintamuotoEntityToDto)
+                .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenToimintamuodot);
         varhaiskasvatuksenToimipaikkaTiedotDto.setToiminnallinenPainotus(toimipaikkaTiedot.getToiminnallinenPainotus());
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
@@ -120,6 +123,18 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
                     varhaiskasvatuksenKielipainotus.setAlkupvm(this.dateToLocaldate(kielipainotus.getAlkupvm()));
                     varhaiskasvatuksenKielipainotus.setLoppupvm(this.dateToLocaldate(kielipainotus.getLoppupvm()));
                     varhaiskasvatuksenKielipainotus.setKielipainotus(kielipainotus.getKielipainotus());
+                    return varhaiskasvatuksenKielipainotus;
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenToimintamuotoEntityToDto(Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenKielipainotusSet) {
+        return varhaiskasvatuksenKielipainotusSet.stream()
+                .map(kielipainotus -> {
+                    VarhaiskasvatuksenToimintamuotoDto varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenToimintamuotoDto();
+                    varhaiskasvatuksenKielipainotus.setAlkupvm(this.dateToLocaldate(kielipainotus.getAlkupvm()));
+                    varhaiskasvatuksenKielipainotus.setLoppupvm(this.dateToLocaldate(kielipainotus.getLoppupvm()));
+                    varhaiskasvatuksenKielipainotus.setToimintamuoto(kielipainotus.getToimintamuoto());
                     return varhaiskasvatuksenKielipainotus;
                 })
                 .collect(Collectors.toSet());

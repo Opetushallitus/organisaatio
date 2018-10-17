@@ -31,10 +31,8 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
     // Koodisto vardatoimintamuoto
-    @ElementCollection
-    @CollectionTable(name = "varhaiskasvatuksen_toimintamuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
-    @Column(name = "toimintamuoto")
-    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
+    private Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenToimintamuodot = new HashSet<>();
 
     public String getJarjestamismuoto() {
         return jarjestamismuoto;
@@ -76,11 +74,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
         this.varhaiskasvatuksenKielipainotukset = varhaiskasvatuksenKielipainotukset;
     }
 
-    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
+    public Set<VarhaiskasvatuksenToimintamuoto> getVarhaiskasvatuksenToimintamuodot() {
         return varhaiskasvatuksenToimintamuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<String> varhaiskasvatuksenToimintamuodot) {
+    public void setVarhaiskasvatuksenToimintamuodot(Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenToimintamuodot) {
         this.varhaiskasvatuksenToimintamuodot = varhaiskasvatuksenToimintamuodot;
     }
 }

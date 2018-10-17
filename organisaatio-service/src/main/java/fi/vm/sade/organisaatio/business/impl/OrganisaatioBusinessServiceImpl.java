@@ -493,7 +493,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().size() > 0,
                     toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
                             .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
-                                    .anyMatch(koodi -> koodi.equals(toimintamuoto))),
+                                    .anyMatch(koodi -> koodi.equals(toimintamuoto.getToimintamuoto()))),
                     toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenKielipainotukset()),
                     toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().size() > 0,
                     toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()

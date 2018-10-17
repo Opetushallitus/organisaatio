@@ -14,7 +14,7 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private Set<VarhaiskasvatuksenKielipainotusDto> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
-    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    private Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenToimintamuodot = new HashSet<>();
 
     public String getJarjestamismuoto() {
         return jarjestamismuoto;
@@ -56,11 +56,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
         this.varhaiskasvatuksenKielipainotukset = varhaiskasvatuksenKielipainotukset;
     }
 
-    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
+    public Set<VarhaiskasvatuksenToimintamuotoDto> getVarhaiskasvatuksenToimintamuodot() {
         return varhaiskasvatuksenToimintamuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<String> varhaiskasvatuksenToimintamuodot) {
+    public void setVarhaiskasvatuksenToimintamuodot(Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenToimintamuodot) {
         this.varhaiskasvatuksenToimintamuodot = varhaiskasvatuksenToimintamuodot;
     }
 }

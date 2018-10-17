@@ -19,8 +19,13 @@ create table varhaiskasvatuksen_kielipainotus (
 );
 
 create table varhaiskasvatuksen_toimintamuoto (
+  id bigint not null,
+  version bigint not null,
   varhaiskasvatuksen_toimipaikka_tiedot_id bigint not null references varhaiskasvatuksen_toimipaikka_tiedot,
-  toimintamuoto varchar (255) not null
+  toimintamuoto varchar (255) not null,
+  alkupvm timestamp not null,
+  loppupvm timestamp not null,
+  primary key (id)
 );
 
 alter table organisaatio
