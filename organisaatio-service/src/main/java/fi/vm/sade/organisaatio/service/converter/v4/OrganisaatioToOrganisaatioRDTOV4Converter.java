@@ -93,7 +93,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
         Optional.ofNullable(s.getVarhaiskasvatuksenToimipaikkaTiedot())
                 .map(this::varhaiskasvatuksenToimipaikkaTiedotEntityToDto)
-                .ifPresent(t::setVarhaiskasvatukenToimipaikkaTiedot);
+                .ifPresent(t::setVarhaiskasvatuksenToimipaikkaTiedot);
 
         LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 

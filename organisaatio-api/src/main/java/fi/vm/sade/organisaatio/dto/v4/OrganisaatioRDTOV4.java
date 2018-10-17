@@ -106,7 +106,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
-    private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatukenToimipaikkaTiedot;
+    private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatuksenToimipaikkaTiedot;
 
     @ApiModelProperty(value = "Organisaation oid", required = true)
     public String getOid() {
@@ -533,11 +533,11 @@ public class OrganisaatioRDTOV4 implements Serializable {
     }
 
     @ApiModelProperty(value = "Lisatiedot", required = true)
-    public VarhaiskasvatuksenToimipaikkaTiedotDto getVarhaiskasvatukenToimipaikkaTiedot() {
-        return _varhaiskasvatukenToimipaikkaTiedot;
+    public VarhaiskasvatuksenToimipaikkaTiedotDto getVarhaiskasvatuksenToimipaikkaTiedot() {
+        return _varhaiskasvatuksenToimipaikkaTiedot;
     }
 
-    public void setVarhaiskasvatukenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatukenToimipaikkaTiedot) {
-        this._varhaiskasvatukenToimipaikkaTiedot = varhaiskasvatukenToimipaikkaTiedot;
+    public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatukenToimipaikkaTiedot) {
+        this._varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatukenToimipaikkaTiedot;
     }
 }

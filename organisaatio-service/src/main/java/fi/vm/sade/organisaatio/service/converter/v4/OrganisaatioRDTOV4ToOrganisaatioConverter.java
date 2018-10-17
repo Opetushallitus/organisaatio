@@ -92,7 +92,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         }
         target.setYhteystiedot(yhteystietos);
 
-        Optional.ofNullable(source.getVarhaiskasvatukenToimipaikkaTiedot())
+        Optional.ofNullable(source.getVarhaiskasvatuksenToimipaikkaTiedot())
                 .map(this::varhaiskasvatuksenToimipaikkaTiedotDtoToEntity)
                 .ifPresent(target::setVarhaiskasvatuksenToimipaikkaTiedot);
 
