@@ -57,7 +57,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             kasvatusopillinenJarjestelma: [],
             toiminnallinenPainotus: [],
             varhaiskasvatuksenToimintamuodot: [],
-            varhaiskasvatuksenToimintamuodotPlaceholder: $filter('i18n')("Organisaationmuokkaus.lisaaVarhaiskasvatuksenToimintamuodot"),
             kieli: []
         };
 

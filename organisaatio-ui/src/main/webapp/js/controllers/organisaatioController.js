@@ -225,6 +225,10 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
                             kielipainotus.alkupvm = moment(kielipainotus.alkupvm);
                             kielipainotus.loppupvm = moment(kielipainotus.loppupvm);
                         });
+                        toimipaikanTiedot.varhaiskasvatuksenToimintamuodot.forEach(function (toimintamuoto) {
+                            toimintamuoto.alkupvm = moment(toimintamuoto.alkupvm);
+                            toimintamuoto.loppupvm = moment(toimintamuoto.loppupvm);
+                        });
                     }
                     return toimipaikanTiedot;
                 }
@@ -237,6 +241,10 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
                 kielipainotus.alkupvm = kielipainotus.alkupvm.format('YYYY-MM-DD');
                 kielipainotus.loppupvm = kielipainotus.loppupvm.format('YYYY-MM-DD');
+            });
+            varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenToimintamuodot.forEach(function (toimintamuoto) {
+                toimintamuoto.alkupvm = toimintamuoto.alkupvm.format('YYYY-MM-DD');
+                toimintamuoto.loppupvm = toimintamuoto.loppupvm.format('YYYY-MM-DD');
             });
             $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedotModel;
 
