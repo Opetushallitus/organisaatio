@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+
+This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+soon as they will be approved by the European Commission - subsequent versions
+of the EUPL (the "Licence");
+
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-->
+
+<!-- Varhaiskasvatuksen toimipaikan tietojen muokkaus -->
+<div class="modal-header">
+    <h3 tt="VarhaiskasvatuksenToimipaikanMuokkaus.title">Varhaiskasvatuksen toimipaikan tietojen muokkaus</h3>
+</div>
+
+<div class="modal-body" style='max-height: 600px; height:100%; overflow-y: visible;'>
+    <form name="form" class="form-horizontal" novalidate>
+        <!-- Järjestämismuoto -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}*
+            </label>
+            <div class="controls">
+                <select id="jarjestamismuoto" ng-model="model.jarjestamismuoto"
+                        ng-options="jarjestamismuoto.uri as jarjestamismuoto.nimi for jarjestamismuoto in koodisto.jarjestamismuoto | orderBy:'uri'" required>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!model.jarjestamismuoto">
+                    <input type="hidden" name="jarjestamismuoto" ng-model="jarjestamismuoto" required>
+                    <span class="text-error" ng-show="form.jarjestamismuoto.$error.required">
+                        {{:: t('Organisaationtarkastelu.jarjestamismuoto')}}
+                        {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Kasvatusopillinen järjestelmä -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}*
+            </label>
+            <div class="controls">
+                <select id="kasvatusopillinenJarjestelma" ng-model="model.kasvatusopillinenJarjestelma"
+                        ng-options="kasvatusopillinenJarjestelma.uri as kasvatusopillinenJarjestelma.nimi for kasvatusopillinenJarjestelma in koodisto.kasvatusopillinenJarjestelma | orderBy:'uri'" required>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!model.kasvatusopillinenJarjestelma">
+                    <input type="hidden" name="kasvatusopillinenJarjestelma" ng-model="kasvatusopillinenJarjestelma" required>
+                    <span class="text-error" ng-show="form.kasvatusopillinenJarjestelma.$error.required">
+                        {{:: t('Organisaationtarkastelu.kasvatusopillinenJarjestelma')}}
+                        {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Toiminnallinen painotus -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}*
+            </label>
+            <div class="controls">
+                <select id="toiminnallinenPainotus" ng-model="model.toiminnallinenPainotus"
+                        ng-options="toiminnallinenPainotus.uri as toiminnallinenPainotus.nimi for toiminnallinenPainotus in koodisto.toiminnallinenPainotus | orderBy:'uri'" required>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!model.toiminnallinenPainotus">
+                    <input type="hidden" name="toiminnallinenPainotus" ng-model="toiminnallinenPainotus" required>
+                    <span class="text-error" ng-show="form.toiminnallinenPainotus.$error.required">
+                    {{:: t('Organisaationtarkastelu.toiminnallinenPainotus')}}
+                    {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                </span>
+                </div>
+            </div>
+        </div>
+        <!-- Paikkojen lukumäärä -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}*
+            </label>
+            <div class="controls">
+                <input id="paikkojenLukumaara" ng-model="model.paikkojenLukumaara" />
+                <div ng-if="!model.paikkojenLukumaara">
+                    <input type="hidden" name="paikkojenLukumaara" ng-model="paikkojenLukumaara" required>
+                    <span class="text-error" ng-show="form.paikkojenLukumaara.$error.required">
+                    {{:: t('Organisaationtarkastelu.paikkojenLukumaara')}}
+                    {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                </span>
+                </div>
+            </div>
+        </div>
+        <!-- Varhaiskasvatuksen toimintamuodot -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationtarkastelu.varhaiskasvatuksenToimintamuodot')}}*
+            </label>
+            <div class="controls">
+                <span ng-repeat="varhaiskasvatuksenToimintamuoto in model.varhaiskasvatuksenToimintamuodot">
+                    <button type="button" class="btn btn-small" ng-click="removeVarhaiskasvatuksenToimintamuoto(varhaiskasvatuksenToimintamuoto);
+                            form.$dirty = true">{{:: localiseVarhaiskasvatuksenToimintamuoto(varhaiskasvatuksenToimintamuoto)}}&nbsp;<i class="icon-remove"></i></button>
+                </span>
+                <select id="varhaiskasvatuksenToimintamuodot" ng-model="varhaiskasvatuksenToimintamuodotPlaceholder"
+                        ng-options="varhaiskasvatuksenToimintamuodot.uri as varhaiskasvatuksenToimintamuodot.nimi for varhaiskasvatuksenToimintamuodot in getUnselectedToimintamuodot() | orderBy:'uri'"
+                        ng-required="false"
+                        ng-change="addVarhaiskasvatuksenToimintamuoto()">
+                    <option value="" tt="Organisaationmuokkaus.lisaaVarhaiskasvatuksenToimintamuodot">Lisää varhaiskasvatuksen toimintamuoto</option>
+                </select>
+                <div ng-if="model.varhaiskasvatuksenToimintamuodot.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenToimintamuodot" ng-model="varhaiskasvatuksenToimintamuodot" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenToimintamuodot.$error.required">
+                        {{:: t('Organisaationtarkastelu.varhaiskasvatuksenToimintamuodot')}}
+                        {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Varhaiskasvatuksen kielipainotukset -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}*
+            </label>
+            <div class="controls">
+                <div ng-repeat="kielipainotus in model.varhaiskasvatuksenKielipainotukset">
+                    {{:: localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: kielipainotus.alkupvm.format('DD.MM.YYYY')}} - {{:: kielipainotus.loppupvm.format('DD.MM.YYYY')}}
+                    <button type="button" class="btn btn-small" id="{{'kielipainotusbutton' + $index}}"
+                            ng-click="removeKielipainotus(kielipainotus)"><i class="icon-remove"></i></button>
+                </div>
+                <div>
+                    <select id="kielipainotus" ng-model="kielipainotus.kielipainotus" ng-required="false"
+                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in koodisto.maatJaValtiot2 | orderBy:'uri'" required>
+                        <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                    </select>
+                    <div>
+                        <em class="muted" tt="Organisaationmuokkaus.ohje.kielipainotus.kielipainotus">Alkupvm</em>
+                    </div>
+                    <input id="kielipainotus.alkupvm" ng-model="kielipainotus.alkupvm"
+                           name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy" is-open="dpOpen1"
+                           ng-click="dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <div>
+                        <em class="muted" tt="Organisaationmuokkaus.ohje.kielipainotus.alkupvm">Alkupvm</em>
+                    </div>
+                    <input id="kielipainotus.loppupvm" ng-model="kielipainotus.loppupvm"
+                           name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="dpOpen2" ng-click="dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <div>
+                        <em class="muted" tt="Organisaationmuokkaus.ohje.kielipainotus.loppupvm">Loppupvm</em>
+                    </div>
+                    <button class="btn" ng-click="addKielipainotus()">
+                        <i class="icon-plus"></i> {{:: t('Organisaationmuokkaus.luoKielipainotus')}}
+                    </button>
+                    <div ng-if="model.varhaiskasvatuksenKielipainotukset.length === 0">
+                        <input type="hidden" name="varhaiskasvatuksenKielipainotukset" ng-model="varhaiskasvatuksenKielipainotukset" required>
+                        <span class="text-error" ng-show="form.varhaiskasvatuksenKielipainotukset.$error.required" tt="Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset">
+                            ohje.varhaiskasvatuksenKielipainotukset
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <div class="form-fluid">
+        <button class="btn" ng-click="cancel()" tt="Organisaationmuokkaus.peruuta">Peruuta</button>
+        <button class="btn btn-primary" ng-disabled="!form.$dirty || form.$invalid" ng-click="accept()"
+                tt="Organisaationmuokkaus.hyvaksy">Hyväksy</button>
+    </div>
+</div>
+
+

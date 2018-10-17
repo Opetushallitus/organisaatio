@@ -208,6 +208,47 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         $location.path($location.path() + "/edit");
     };
 
+    $scope.openVarhaiskasvatuksenToimipaikanTietojenMuokkaus = function () {
+        $scope.modalOpen = true;
+        var modalInstance = $uibModal.open({
+            templateUrl: 'varhaiskasvatuksentoimipaikkatietojenmuokkaus.html',
+            controller: 'VarhaiskasvatuksenToimipaikanTietojenMuokkausController',
+            windowClass: 'modal-wide',
+            resolve: {
+                koodisto: function () {
+                    return $scope.model.koodisto;
+                },
+                varhaiskasvatuksenToimipaikanTiedot: function () {
+                    var toimipaikanTiedot = angular.copy($scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot);
+                    if (toimipaikanTiedot) {
+                        toimipaikanTiedot.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
+                            kielipainotus.alkupvm = moment(kielipainotus.alkupvm);
+                            kielipainotus.loppupvm = moment(kielipainotus.loppupvm);
+                        });
+                    }
+                    return toimipaikanTiedot;
+                }
+            },
+            scope: $scope
+        });
+
+        modalInstance.result.then(function (varhaiskasvatuksenToimipaikanTiedotModel) {
+            $scope.modalOpen = false;
+            varhaiskasvatuksenToimipaikanTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
+                kielipainotus.alkupvm = kielipainotus.alkupvm.format();
+                kielipainotus.loppupvm = kielipainotus.loppupvm.format();
+            });
+            $scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot = varhaiskasvatuksenToimipaikanTiedotModel;
+
+            $scope.form.$setDirty();
+        }, function () {
+            $scope.modalOpen = false;
+            // $scope.model.organisaatio.varhaiskasvatuksenToimipaikanTiedot = null;
+            $log.log('VarhaiskasvatuksenToimipaikanTiedot Modal dismissed at: ' + new Date());
+        });
+
+    };
+
     // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;

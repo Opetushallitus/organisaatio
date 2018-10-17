@@ -225,21 +225,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     </div>
                 </div>
             </label>
-            <!-- Tällä näytetään muokattu nimihistoria
-            <table class="table table-striped">
-                <thead><tr><th>{{t('Organisaationtarkastelu.alkupvm')}}</th><th>{{t('Organisaationtarkastelu.nimi')}}</th></tr></thead>
-                <tbody>
-                    <tr ng-repeat="entry in model.organisaatio.nimet | orderBy:'alkuPvm'">
-                        <td>{{entry.alkuPvm}}</td>
-                        <td>
-                            <span ng-repeat="avain in organisaatioNimiLangs(entry.nimi)| orderBy:orderByLang">
-                                {{entry.nimi[avain] | decodeAmp}} [{{avain}}]<br>
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            -->
             <button ng-if="model.isKoulutustoimija() || model.isOppilaitos()"
                     auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                     class="btn" ng-click="openNimenMuokkaus()">
@@ -397,7 +382,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div ng-if="!model.organisaatio.maaUri">
                 <input type="hidden" name="maa" ng-model="maa" required>
                 <span class="text-error" ng-show="form.maa.$error.required">
-                    {{t('Organisaationtarkastelu.maa)')}}
+                    {{t('Organisaationtarkastelu.maa')}}
                     {{t('Organisaationmuokkaus.validointi.pakollinen')}}
                 </span>
             </div>
@@ -422,6 +407,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <input type="hidden" name="kieli" ng-model="kieli" required>
                 <span class="text-error" ng-show="form.kieli.$error.required">
                     {{t('Organisaationtarkastelu.kieli')}}
+                    {{t('Organisaationmuokkaus.validointi.pakollinen')}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group" ng-if="model.isVarhaiskasvatuksenToimipaikka()">
+        <label class="control-label">
+            {{:: t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}*
+        </label>
+        <div class="controls">
+            <button class="btn" ng-click="openVarhaiskasvatuksenToimipaikanTietojenMuokkaus()">
+                <i class="icon-pencil"></i> {{t('Organisaationmuokkaus.muokkaaVarhaiskasvatuksenToimipaikanTietoja')}}
+            </button>
+            <div ng-if="!model.organisaatio.varhaiskasvatuksenToimipaikanTiedot">
+                <input type="hidden" name="kieli" ng-model="kieli" required>
+                <span class="text-error" ng-show="form.kieli.$error.required">
+                    {{t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}
                     {{t('Organisaationmuokkaus.validointi.pakollinen')}}
                 </span>
             </div>

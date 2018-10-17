@@ -52,7 +52,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             postinumerot: [],
             nimetFI: {},
             nimetSV: {},
-            yhteystietoTyypit: {}
+            yhteystietoTyypit: {},
+            jarjestamismuoto: [],
+            kasvatusopillinenJarjestelma: [],
+            toiminnallinenPainotus: [],
+            varhaiskasvatuksenToimintamuodot: [],
+            varhaiskasvatuksenToimintamuodotPlaceholder: $filter('i18n')("Organisaationmuokkaus.lisaaVarhaiskasvatuksenToimintamuodot"),
+            maatJaValtiot2: []
         };
 
         this.kaikkiOrganisaatiotyypit = [];
@@ -834,6 +840,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_03") !== -1;
             }
             return false;
+        };
+
+        this.isVarhaiskasvatuksenToimipaikka = function() {
+            return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_08") !== -1;
         };
 
         this.hasVuosiluokat = function() {

@@ -78,6 +78,21 @@ koodisto.factory('KoodistoClient', function ($resource) {
         koodistoVuosiluokat: $resource(KOODISTO_VUOSILUOKAT, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
+        koodistoJarjestamismuoto: $resource(KOODISTO_JARJESTAMISMUOTO, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoKasvatusopillinenJarjestelma: $resource(KOODISTO_KASVATUSOPILLINEN_JARJESTELMA, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoToiminnallinePainotus: $resource(KOODISTO_TOIMINNALLINEN_PAINOTUS, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoMaatJaValtiot2: $resource(KOODISTO_MAAT_JA_VALTIOT2, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoVarhaiskasvatuksenToimintamuodot: $resource(KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
         // Koodiston haku koodistopalvelulta koodistoUrin perusteella
         koodistoArrayByUri: $resource(KOODISTO_URI_KOODI, {params: "@uri"}, {
             get: {method: "GET", withCredentials : true, isArray: true}
