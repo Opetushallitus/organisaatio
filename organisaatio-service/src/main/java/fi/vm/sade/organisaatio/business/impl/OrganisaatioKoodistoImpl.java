@@ -520,7 +520,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     @Override
     public Set<String> haeKielikoodit() {
-        return this.haeKoodistonKoodit("maatjavaltiot2");
+        return this.haeKoodistonKoodit("kieli");
     }
 
     private Set<String> haeKoodistonKoodit(String koodistoUri) {

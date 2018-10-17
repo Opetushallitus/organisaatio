@@ -132,7 +132,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 </div>
                 <div>
                     <select id="kielipainotus" ng-model="kielipainotus.kielipainotus" ng-required="false"
-                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in koodisto.maatJaValtiot2 | orderBy:'uri'" required>
+                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in koodisto.kieli | orderBy:'uri'" required>
                         <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                     </select>
                     <div>

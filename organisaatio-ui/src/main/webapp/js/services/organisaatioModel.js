@@ -58,7 +58,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             toiminnallinenPainotus: [],
             varhaiskasvatuksenToimintamuodot: [],
             varhaiskasvatuksenToimintamuodotPlaceholder: $filter('i18n')("Organisaationmuokkaus.lisaaVarhaiskasvatuksenToimintamuodot"),
-            maatJaValtiot2: []
+            kieli: []
         };
 
         this.kaikkiOrganisaatiotyypit = [];

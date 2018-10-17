@@ -105,10 +105,10 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                                 model.koodisto.toiminnallinenPainotus.push({uri: toiminnallinenPainotus.koodiUri, nimi: KoodistoKoodi.getLocalizedName(toiminnallinenPainotus)});
                             });
                         });
-                        KoodistoClient.koodistoMaatJaValtiot2.get({}, function (maatJaValtiot2) {
-                            model.koodisto.maatJaValtiot2.length = 0;
-                            maatJaValtiot2.forEach(function(maatJaValtiot2Koodi) {
-                                model.koodisto.maatJaValtiot2.push({uri: maatJaValtiot2Koodi.koodiUri, nimi: KoodistoKoodi.getLocalizedName(maatJaValtiot2Koodi)});
+                        KoodistoClient.koodistoKieli.get({}, function (kielet) {
+                            model.koodisto.kieli.length = 0;
+                            kielet.forEach(function(kieli) {
+                                model.koodisto.kieli.push({uri: kieli.koodiUri, nimi: KoodistoKoodi.getLocalizedName(kieli)});
                             });
                         });
                         KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot.get({}, function (toimintamuodot) {

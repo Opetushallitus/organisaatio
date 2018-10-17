@@ -77,7 +77,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController',
         };
 
         $scope.localiseKielipainotus = function (koodiUri) {
-            return $scope.koodisto.maatJaValtiot2.filter(function (kieliKoodi) {
+            return $scope.koodisto.kieli.filter(function (kieliKoodi) {
                 return kieliKoodi.uri === koodiUri;
             })[0].nimi;
         };
