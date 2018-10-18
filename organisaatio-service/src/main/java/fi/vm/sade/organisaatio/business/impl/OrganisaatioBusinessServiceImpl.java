@@ -505,6 +505,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
             model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
                     .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToimintamuodot()
+                    .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
         }
         else {
             if (model.getVarhaiskasvatuksenToimipaikkaTiedot() != null) {
