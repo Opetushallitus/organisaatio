@@ -170,34 +170,34 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <label class="control-label control-label-left" ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}:</div>
-                    <div class="span6">{{:: model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}:</div>
+                    <div class="span6">{{model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}</div>
                 </div>
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
-                    <div class="span6">{{::  model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
+                    <div class="span6">{{model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}</div>
                 </div>
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
-                    <div class="span6">{{:: model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
+                    <div class="span6">{{model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}</div>
                 </div>
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
-                    <div class="span6">{{:: model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
+                    <div class="span6">{{model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
                 </div>
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}:</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}:</div>
                     <div class="span6">
-                        <div ng-repeat="toimintamuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimintamuodot">
-                            {{:: model.localiseVarhaiskasvatuksenToimintamuodot(toimintamuoto.toimintamuoto)}} {{:: model.dbFormatToUI(toimintamuoto.alkupvm)}} - {{:: model.dbFormatToUI(toimintamuoto.loppupvm)}}
+                        <div ng-repeat="toimintamuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimintamuodot | orderBy: 'toimintamuoto'">
+                            {{model.localiseVarhaiskasvatuksenToimintamuodot(toimintamuoto.toimintamuoto)}} {{model.dbFormatToUI(toimintamuoto.alkupvm)}} - {{model.dbFormatToUI(toimintamuoto.loppupvm)}}
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}:</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}:</div>
                     <div class="span6">
-                        <div ng-repeat="kielipainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset">
-                            {{:: model.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: model.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: model.dbFormatToUI(kielipainotus.loppupvm)}}
+                        <div ng-repeat="kielipainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset | orderBy: 'kielipainotus'">
+                            {{model.localiseKielipainotus(kielipainotus.kielipainotus)}} {{model.dbFormatToUI(kielipainotus.alkupvm)}} - {{model.dbFormatToUI(kielipainotus.loppupvm)}}
                         </div>
                     </div>
                 </div>

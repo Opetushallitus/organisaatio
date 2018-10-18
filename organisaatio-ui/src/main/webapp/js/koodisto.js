@@ -103,6 +103,7 @@ koodisto.factory('KoodistoClient', function ($resource) {
 koodisto.service('KoodistoKoodi', function($locale, $window, $http, LocalisationService, $log) {
     $log = $log.getInstance('KoodistoKoodi');
     var language = LocalisationService.getLocale().toUpperCase();
+    var vm = this;
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
@@ -114,6 +115,18 @@ koodisto.service('KoodistoKoodi', function($locale, $window, $http, Localisation
             }
         });
         return nimi;
+    };
+
+    this.refreshKoodistoIfNeeded = function (client, koodistot, koodistoNimi) {
+        var koodisto = koodistot[koodistoNimi];
+        if (!koodisto || koodisto.length === 0) {
+            client.get({}, function (koodit) {
+                koodistot[koodistoNimi] = [];
+                koodit.forEach(function(koodi) {
+                    koodistot[koodistoNimi].push({uri: koodi.koodiUri, nimi: vm.getLocalizedName(koodi)});
+                });
+            });
+        }
     };
 
     // lang = FI tai SV

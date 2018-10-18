@@ -87,36 +87,11 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                     });
                     // Organisaation on mahdollista olla varhaiskasvatuksen toimipaikka joten haetaan tähän liittyvät koodit
                     if (model.koodisto.organisaatiotyypit.some(function (orgTyyppi) { return orgTyyppi.koodiUri === 'organisaatiotyyppi_08'; })) {
-                        KoodistoClient.koodistoJarjestamismuoto.get({}, function (jastestamismuodot) {
-                            model.koodisto.jarjestamismuoto.length = 0;
-                            jastestamismuodot.forEach(function(jarjestamismuoto) {
-                                model.koodisto.jarjestamismuoto.push({uri: jarjestamismuoto.koodiUri, nimi: KoodistoKoodi.getLocalizedName(jarjestamismuoto)});
-                            });
-                        });
-                        KoodistoClient.koodistoKasvatusopillinenJarjestelma.get({}, function (kasvatusopillinenJarjestelmat) {
-                            model.koodisto.kasvatusopillinenJarjestelma.length = 0;
-                            kasvatusopillinenJarjestelmat.forEach(function(kasvatusopillinenJarjestelma) {
-                                model.koodisto.kasvatusopillinenJarjestelma.push({uri: kasvatusopillinenJarjestelma.koodiUri, nimi: KoodistoKoodi.getLocalizedName(kasvatusopillinenJarjestelma)});
-                            });
-                        });
-                        KoodistoClient.koodistoToiminnallinePainotus.get({}, function (toiminnallinenPainotukset) {
-                            model.koodisto.toiminnallinenPainotus.length = 0;
-                            toiminnallinenPainotukset.forEach(function(toiminnallinenPainotus) {
-                                model.koodisto.toiminnallinenPainotus.push({uri: toiminnallinenPainotus.koodiUri, nimi: KoodistoKoodi.getLocalizedName(toiminnallinenPainotus)});
-                            });
-                        });
-                        KoodistoClient.koodistoKieli.get({}, function (kielet) {
-                            model.koodisto.kieli.length = 0;
-                            kielet.forEach(function(kieli) {
-                                model.koodisto.kieli.push({uri: kieli.koodiUri, nimi: KoodistoKoodi.getLocalizedName(kieli)});
-                            });
-                        });
-                        KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot.get({}, function (toimintamuodot) {
-                            model.koodisto.varhaiskasvatuksenToimintamuodot.length = 0;
-                            toimintamuodot.forEach(function(toimintamuoto) {
-                                model.koodisto.varhaiskasvatuksenToimintamuodot.push({uri: toimintamuoto.koodiUri, nimi: KoodistoKoodi.getLocalizedName(toimintamuoto)});
-                            });
-                        });
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoToiminnallinePainotus, model.koodisto, 'toiminnallinenPainotus');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKieli, model.koodisto, 'kieli');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot, model.koodisto, 'varhaiskasvatuksenToimintamuodot');
                     }
                 },
                 // Error case

@@ -220,10 +220,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         initOrganisaatioModelData.call(this);
 
-        KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
-            model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
-        });
-
         // TODO: Add also parent needed possibly for moving organisaatio
 
         this.getDecodedLocalizedValue= function(res, prefix, suffix, create, language) {
