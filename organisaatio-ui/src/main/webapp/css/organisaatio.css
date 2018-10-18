@@ -56,6 +56,12 @@ input.greyed[type="text"] {
     width: 700px;
 }
 
+.modal.modal-xwide {
+    width: 1100px;
+    left: 17.5%;
+    margin-left: -14%;
+}
+
 .modal.modal-large {
     position: fixed;
     top: 10%;

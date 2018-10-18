@@ -213,7 +213,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         var modalInstance = $uibModal.open({
             templateUrl: 'varhaiskasvatuksentoimipaikkatietojenmuokkaus.html',
             controller: 'VarhaiskasvatuksenToimipaikanTietojenMuokkausController',
-            windowClass: 'modal-large',
+            windowClass: 'modal-xwide',
             resolve: {
                 koodisto: function () {
                     return $scope.model.koodisto;

@@ -100,10 +100,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 {{t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}*
             </label>
             <div class="controls">
-                <div ng-repeat="toimintamuoto in model.varhaiskasvatuksenToimintamuodot">
-                    {{:: localiseVarhaiskasvatuksenToimintamuoto(toimintamuoto.toimintamuoto)}} {{:: toimintamuoto.alkupvm.format('DD.MM.YYYY')}} - {{:: toimintamuoto.loppupvm.format('DD.MM.YYYY')}}
+                <div>
+                    <span ng-repeat="toimintamuoto in model.varhaiskasvatuksenToimintamuodot">
                     <button type="button" class="btn btn-small" id="{{'toimintamuotobutton' + $index}}"
-                            ng-click="removeVarhaiskasvatuksenToimintamuoto(toimintamuoto)"><i class="icon-remove"></i></button>
+                            ng-click="removeVarhaiskasvatuksenToimintamuoto(toimintamuoto)">{{:: localiseVarhaiskasvatuksenToimintamuoto(toimintamuoto.toimintamuoto)}} {{:: toimintamuoto.alkupvm.format('DD.MM.YYYY')}} - {{:: toimintamuoto.loppupvm.format('DD.MM.YYYY')}}<i class="icon-remove"></i></button>
+                    </span>
                 </div>
                 <div>
                     <select id="toimintamuoto" ng-model="toimintamuoto.toimintamuoto" ng-required="false"
@@ -149,10 +150,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 {{t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}*
             </label>
             <div class="controls">
-                <div ng-repeat="kielipainotus in model.varhaiskasvatuksenKielipainotukset">
-                    {{:: localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: kielipainotus.alkupvm.format('DD.MM.YYYY')}} - {{:: kielipainotus.loppupvm.format('DD.MM.YYYY')}}
+                <div>
+                    <span  ng-repeat="kielipainotus in model.varhaiskasvatuksenKielipainotukset">
                     <button type="button" class="btn btn-small" id="{{'kielipainotusbutton' + $index}}"
-                            ng-click="removeKielipainotus(kielipainotus)"><i class="icon-remove"></i></button>
+                            ng-click="removeKielipainotus(kielipainotus)">{{:: localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: kielipainotus.alkupvm.format('DD.MM.YYYY')}} - {{:: kielipainotus.loppupvm.format('DD.MM.YYYY')}}<i class="icon-remove"></i></button>
+                    </span>
                 </div>
                 <div>
                     <select id="kielipainotus" ng-model="kielipainotus.kielipainotus" ng-required="false"
