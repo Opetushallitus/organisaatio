@@ -108,45 +108,38 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <div>
                     <select id="toimintamuoto" ng-model="toimintamuoto.toimintamuoto" ng-required="false"
                             ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
-                        <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                        <option value="" tt="Organisaationmuokkaus.valitsetoimintamuoto">Valitse</option>
                     </select>
-                    <div>
-                        <em class="muted" tt="Organisaationmuokkaus.ohje.toimintamuoto.toimintamuoto">Toimintamuoto</em>
-                    </div>
-                    <div>
-                        <input id="toimintamuoto.alkupvm" ng-model="toimintamuoto.alkupvm"
-                               name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
-                               is-open="dpOpen1" ng-click="dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
-                               close-on-date-selection="true"
-                               ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
-                               close-text="{{t('Organisaationmuokkaus.sulje')}}"
-                               current-text="{{t('Organisaationmuokkaus.tanaan')}}"
-                               clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
-                               toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
-                        />
-                        <input id="toimintamuoto.loppupvm" ng-model="toimintamuoto.loppupvm"
-                               name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
-                               is-open="dpOpen2" ng-click="dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
-                               close-on-date-selection="true"
-                               ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
-                               close-text="{{t('Organisaationmuokkaus.sulje')}}"
-                               current-text="{{t('Organisaationmuokkaus.tanaan')}}"
-                               clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
-                               toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
-                        />
-                    </div>
-                    <div>
-                        <em class="muted" tt="Organisaationmuokkaus.ohje.toimintamuoto.alkupvm">Alkupvm</em>
-                    </div>
+                    <input id="toimintamuoto.alkupvm" ng-model="toimintamuoto.alkupvm"
+                           name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="dpOpen1" ng-click="dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <input id="toimintamuoto.loppupvm" ng-model="toimintamuoto.loppupvm"
+                           name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="dpOpen2" ng-click="dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
                     <button class="btn" ng-click="addVarhaiskasvatuksenToimintamuoto()">
                         <i class="icon-plus"></i> {{:: t('Organisaationmuokkaus.luoToimintamuoto')}}
                     </button>
-                    <div ng-if="model.varhaiskasvatuksenToimintamuodot.length === 0">
-                        <input type="hidden" name="varhaiskasvatuksenToimintamuodot" ng-model="varhaiskasvatuksenToimintamuodot" required>
-                        <span class="text-error" ng-show="form.varhaiskasvatuksenToimintamuodot.$error.required" tt="Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot">
-                            ohje.varhaiskasvatuksenToimintamuodot
-                        </span>
-                    </div>
+                </div>
+                <div ng-if="model.varhaiskasvatuksenToimintamuodot.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenToimintamuodot" ng-model="varhaiskasvatuksenToimintamuodot" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenToimintamuodot.$error.required">
+                    {{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}
+                    {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
                 </div>
             </div>
         </div>
@@ -164,45 +157,38 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <div>
                     <select id="kielipainotus" ng-model="kielipainotus.kielipainotus" ng-required="false"
                             ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in koodisto.kieli | orderBy:'uri'" required>
-                        <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                        <option value="" tt="Organisaationmuokkaus.valitsekielipainotus">Valitse</option>
                     </select>
-                    <div>
-                        <em class="muted" tt="Organisaationmuokkaus.ohje.kielipainotus.kielipainotus">Alkupvm</em>
-                    </div>
-                    <div>
-                        <input id="kielipainotus.alkupvm" ng-model="kielipainotus.alkupvm"
-                               name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
-                               is-open="dpOpen3" ng-click="dpOpen3=true" min="'1900-01-01'" max="'2030-12-31'"
-                               close-on-date-selection="true"
-                               ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
-                               close-text="{{t('Organisaationmuokkaus.sulje')}}"
-                               current-text="{{t('Organisaationmuokkaus.tanaan')}}"
-                               clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
-                               toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
-                        />
-                        <input id="kielipainotus.loppupvm" ng-model="kielipainotus.loppupvm"
-                               name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
-                               is-open="dpOpen4" ng-click="dpOpen4=true" min="'1900-01-01'" max="'2030-12-31'"
-                               close-on-date-selection="true"
-                               ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
-                               close-text="{{t('Organisaationmuokkaus.sulje')}}"
-                               current-text="{{t('Organisaationmuokkaus.tanaan')}}"
-                               clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
-                               toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
-                        />
-                    </div>
-                    <div>
-                        <em class="muted" tt="Organisaationmuokkaus.ohje.kielipainotus.alkupvm">Alkupvm</em>
-                    </div>
+                    <input id="kielipainotus.alkupvm" ng-model="kielipainotus.alkupvm"
+                           name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="dpOpen3" ng-click="dpOpen3=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.luontipvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <input id="kielipainotus.loppupvm" ng-model="kielipainotus.loppupvm"
+                           name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="dpOpen4" ng-click="dpOpen4=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{t('Organisaationmuokkaus.lakkautuspvm')}}"
+                           close-text="{{t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
                     <button class="btn" ng-click="addKielipainotus()">
                         <i class="icon-plus"></i> {{:: t('Organisaationmuokkaus.luoKielipainotus')}}
                     </button>
-                    <div ng-if="model.varhaiskasvatuksenKielipainotukset.length === 0">
-                        <input type="hidden" name="varhaiskasvatuksenKielipainotukset" ng-model="varhaiskasvatuksenKielipainotukset" required>
-                        <span class="text-error" ng-show="form.varhaiskasvatuksenKielipainotukset.$error.required" tt="Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset">
-                            ohje.varhaiskasvatuksenKielipainotukset
-                        </span>
-                    </div>
+                </div>
+                <div ng-if="model.varhaiskasvatuksenKielipainotukset.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenKielipainotukset" ng-model="varhaiskasvatuksenKielipainotukset" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenKielipainotukset.$error.required">
+                        {{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}
+                        {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
                 </div>
             </div>
         </div>
