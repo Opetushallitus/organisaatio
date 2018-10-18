@@ -418,30 +418,52 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             {{:: t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}*
         </label>
         <div class="controls">
-            <div ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
-                <div>
-                    {{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}: {{:: model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}
+            <label class="control-label control-label-left" ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}:</div>
+                    <div class="span6">{{:: model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
+                    <div class="span6">{{::  model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
+                    <div class="span6">{{:: model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
+                    <div class="span6">{{:: model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
+                </div>
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="toimintamuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimintamuodot">
+                            {{:: model.localiseVarhaiskasvatuksenToimintamuodot(toimintamuoto.toimintamuoto)}} {{:: model.dbFormatToUI(toimintamuoto.alkupvm)}} - {{:: model.dbFormatToUI(toimintamuoto.loppupvm)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span2">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="kielipainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset">
+                            {{:: model.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: model.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: model.dbFormatToUI(kielipainotus.loppupvm)}}
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    {{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}: {{::  model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}
+                    <button class="btn" ng-click="openVarhaiskasvatuksenToimipaikanTietojenMuokkaus()">
+                        <i class="icon-pencil"></i> {{t('Organisaationmuokkaus.muokkaaVarhaiskasvatuksenToimipaikanTietoja')}}
+                    </button>
+                    <div ng-if="!model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
+                        <input type="hidden" name="kieli" ng-model="kieli" required>
+                        <span class="text-error" ng-show="form.kieli.$error.required">
+                            {{t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}
+                            {{t('Organisaationmuokkaus.validointi.pakollinen')}}
+                        </span>
+                    </div>
                 </div>
-                <div>
-                    {{t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}: {{:: model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}
-                </div>
-                <div>
-                    {{t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}: {{:: model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}
-                </div>
-            </div>
-            <button class="btn" ng-click="openVarhaiskasvatuksenToimipaikanTietojenMuokkaus()">
-                <i class="icon-pencil"></i> {{t('Organisaationmuokkaus.muokkaaVarhaiskasvatuksenToimipaikanTietoja')}}
-            </button>
-            <div ng-if="!model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
-                <input type="hidden" name="kieli" ng-model="kieli" required>
-                <span class="text-error" ng-show="form.kieli.$error.required">
-                    {{t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}
-                    {{t('Organisaationmuokkaus.validointi.pakollinen')}}
-                </span>
-            </div>
+            </label>
         </div>
     </div>
 

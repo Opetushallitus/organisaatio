@@ -282,6 +282,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return matchingKoodi && matchingKoodi.nimi;
         };
 
+        this.dbFormatToUI = function (dbFormatDate) {
+            return moment(dbFormatDate).format('DD.MM.YYYY');
+        };
+
         this.setNimet = function() {
             $log.log('setNimet()');
             var nimiHistoriaModel = NimiHistoriaModel;
