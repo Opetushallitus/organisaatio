@@ -568,6 +568,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             model.organisaatio.yhteystietoArvos = [];
             model.lisayhteystiedot = {};
+            if (!this.isVarhaiskasvatuksenToimipaikka()) {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = null;
+            }
             LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
