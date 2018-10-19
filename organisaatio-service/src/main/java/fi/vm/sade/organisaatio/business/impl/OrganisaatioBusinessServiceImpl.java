@@ -19,10 +19,10 @@ import com.google.common.collect.Maps;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
-import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.dao.*;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -56,10 +56,7 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Transactional
 @Service("organisaatioBusinessService")
@@ -110,7 +107,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private LisatietoTyyppiDao lisatietoTyyppiDao;
 
     @Autowired
-    private OrganisaatioLisatietoTyyppiDao organisaatioLisatietoTyyppiDao;
+    private OrganisaatioValidationService organisaatioValidationService;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -212,7 +209,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 ? organisaatioDAO.findByOid(parentOid) : null;
 
         // Validate (throws exception)
-        validateOrganisation(entity, parentOid, parentOrg);
+        this.organisaatioValidationService.validateOrganisation(entity, parentOid, parentOrg);
+
+        // Validate and persist lisatietotyypit
+        if (!CollectionUtils.isEmpty(entity.getOrganisaatioLisatietotyypit())) {
+            persistOrganisaatioLisatietotyyppis(entity);
+        }
+
+        boolean isVarhaiskasvatuksenToimipaikka = entity.getTyypit().stream()
+                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
+        setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
 
         Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
@@ -399,6 +405,29 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return new OrganisaatioResult(entity, info);
     }
 
+    private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
+        Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = entity.getOrganisaatioLisatietotyypit().stream()
+                .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
+                        .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
+                .map(lisatietotyyppi -> {
+                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                    organisaatioLisatietotyyppi.setOrganisaatio(entity);
+                    return organisaatioLisatietotyyppi;
+                })
+                .collect(Collectors.toSet());
+        entity.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
+    }
+
+    private void setVarhaiskasvatuksenToimipaikkaTietoRelations(Organisaatio entity, boolean isVarhaiskasvatuksenToimipaikka) {
+        if (isVarhaiskasvatuksenToimipaikka) {
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
+                    .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToimintamuodot()
+                    .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+        }
+    }
+
     private Organisaatio validateHierarchy(String parentOid, Organisaatio entity) {
         Organisaatio oldParent = null;
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(entity.getOid());
@@ -426,96 +455,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             checker.checkLakkautusAlkavatKoulutukset(entity);
         }
         return oldParent;
-    }
-
-    private void validateOrganisation(Organisaatio model, String parentOid, Organisaatio parentOrg) {
-        // Validointi: Tarkistetaan, että parent ei ole ryhmä
-        if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
-            throw new ValidationException("Parent cannot be group");
-        }
-
-        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
-        if (OrganisaatioUtil.isRyhma(model) && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) {
-            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
-        }
-
-        // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
-        if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
-            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
-        }
-
-        // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getYtunnus() != null && model.getYtunnus().length() == 0) {
-            model.setYtunnus(null);
-        }
-        if (model.getYtunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYtunnus())) {
-            throw new ValidationException("validation.Organisaatio.ytunnus");
-        }
-
-        // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
-            model.setVirastoTunnus(null);
-        }
-        if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
-            throw new ValidationException("validation.Organisaatio.virastotunnus");
-        }
-
-        // Validate and persist lisatietotyypit
-        if (!CollectionUtils.isEmpty(model.getOrganisaatioLisatietotyypit())) {
-            Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = model.getOrganisaatioLisatietotyypit().stream()
-                    .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
-                    .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
-                    .map(lisatietotyyppi -> {
-                        OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
-                        organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
-                        organisaatioLisatietotyyppi.setOrganisaatio(model);
-                        return organisaatioLisatietotyyppi;
-                    })
-                    .collect(Collectors.toSet());
-            model.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
-        }
-
-        // This effectively blocks creating/updating VARHAISKASVATUKSEN_TOIMIPAIKKA from older apis since they don't
-        // support this info
-        boolean isVarhaiskasvatuksenToimipaikka = model.getTyypit().stream()
-                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
-        if (isVarhaiskasvatuksenToimipaikka) {
-            boolean isVarhaiskasvatuksenToimipaikkaTiedotValid = Stream.<Function<VarhaiskasvatuksenToimipaikkaTiedot, Boolean>>of(
-                    Objects::nonNull,
-                    toimipaikka -> Objects.nonNull(toimipaikka.getPaikkojenLukumaara()),
-                    toimipaikka -> this.organisaatioKoodisto.haeVardaJarjestamismuoto().stream()
-                            .anyMatch(koodi -> koodi.equals(toimipaikka.getJarjestamismuoto())),
-                    toimipaikka -> this.organisaatioKoodisto.haeVardaKasvatusopillinenJarjestelma().stream()
-                            .anyMatch(koodi -> koodi.equals(toimipaikka.getKasvatusopillinenJarjestelma())),
-                    toimipaikka -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
-                            .anyMatch(koodi -> koodi.equals(toimipaikka.getToiminnallinenPainotus())),
-                    toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenToimintamuodot()),
-                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().size() > 0,
-                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
-                            .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
-                                    .anyMatch(koodi -> koodi.equals(toimintamuoto.getToimintamuoto()))),
-                    toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenKielipainotukset()),
-                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().size() > 0,
-                    toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()
-                            .allMatch(kielipainotus -> this.organisaatioKoodisto.haeKielikoodit().stream()
-                                    .anyMatch(koodi -> koodi.equals(kielipainotus.getKielipainotus())))
-            ).allMatch(toimipaikkaValidator -> toimipaikkaValidator.apply(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            if (!isVarhaiskasvatuksenToimipaikkaTiedotValid) {
-                throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka");
-            }
-            model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
-                    .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            model.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToimintamuodot()
-                    .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(model.getVarhaiskasvatuksenToimipaikkaTiedot()));
-        }
-        else {
-            if (model.getVarhaiskasvatuksenToimipaikkaTiedot() != null) {
-                throw new ValidationException("validation.Organisaatio.varhaiskasvatuksentoimipaikka.badorganisationtype");
-            }
-        }
-
-        // Validointi: koodistoureissa pitää olla versiotieto
-        checker.checkVersionInKoodistoUris(model);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {

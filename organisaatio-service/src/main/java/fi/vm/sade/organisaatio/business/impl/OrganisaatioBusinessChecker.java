@@ -15,7 +15,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
-import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
@@ -29,12 +28,6 @@ import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
-import java.util.*;
-import static java.util.stream.Collectors.toList;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
@@ -42,6 +35,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  *
@@ -69,8 +67,6 @@ public class OrganisaatioBusinessChecker {
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
-
-    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
     public boolean isEmpty(String val) {
         return val == null || val.isEmpty();
@@ -177,58 +173,6 @@ public class OrganisaatioBusinessChecker {
     public void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
         if (organisaatioTarjonta.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
             throw new OrganisaatioLakkautusKoulutuksiaException();
-        }
-    }
-
-    public void checkVersionInKoodistoUris(Organisaatio entity) {
-        // kotipaikka
-
-        // maa
-        // metadata.hakutoimistonNimi
-        // metadata.data
-        // kielet
-        for (String kieli : entity.getKielet()) {
-            if (kieli.matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation kieli: " + kieli);
-                throw new NoVersionInKoodistoUriException();
-            }
-        }
-
-        // oppilaitostyyppi
-        if (isEmpty(entity.getOppilaitosTyyppi()) == false) {
-            if (entity.getOppilaitosTyyppi().matches(uriWithVersionRegExp) == false) {
-                LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + entity.getOppilaitosTyyppi());
-                throw new NoVersionInKoodistoUriException();
-            }
-        }
-
-        // yhteystieto.postinumero
-        // yhteystieto.kieli
-        for (int i = 0; i < entity.getYhteystiedot().size(); ++i) {
-            if (entity.getYhteystiedot().get(i).getKieli() != null) {
-                if (entity.getYhteystiedot().get(i).getKieli().matches(uriWithVersionRegExp) == false) {
-                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + entity.getYhteystiedot().get(i).getKieli());
-                    throw new NoVersionInKoodistoUriException();
-                }
-            }
-        }
-
-        // ryhmätyypit
-        if (entity.getRyhmatyypit() != null) {
-            List<String> errors = entity.getRyhmatyypit().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
-            if (!errors.isEmpty()) {
-                LOG.warn("Version missing from koodistouri! Organisaation ryhmätyypit: {}", errors);
-                throw new NoVersionInKoodistoUriException();
-            }
-        }
-
-        // käyttöryhmät
-        if (entity.getKayttoryhmat() != null) {
-            List<String> errors = entity.getKayttoryhmat().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
-            if (!errors.isEmpty()) {
-                LOG.warn("Version missing from koodistouri! Organisaation käyttöryhmät: {}", errors);
-                throw new NoVersionInKoodistoUriException();
-            }
         }
     }
 
