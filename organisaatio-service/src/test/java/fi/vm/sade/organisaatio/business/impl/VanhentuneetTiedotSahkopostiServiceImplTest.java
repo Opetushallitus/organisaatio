@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.organisaatio.PrintingAnswer;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.config.FreemarkerConfiguration;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
@@ -57,6 +58,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
         UrlConfiguration properties = new UrlConfiguration();
         service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, organisaatioViestintaMock,
                 organisaatioDAOMock, messageSource, freemarker, properties);
+        when(organisaatioViestintaMock.sendEmail(any())).then(new PrintingAnswer<>());
     }
 
     @Test
