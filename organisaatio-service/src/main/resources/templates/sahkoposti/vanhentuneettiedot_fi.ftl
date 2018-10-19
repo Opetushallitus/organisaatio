@@ -1,12 +1,7 @@
-<!doctype html>
-<html lang="fi">
-<head>
-    <meta charset="utf-8">
-    <title>${otsikko}</title>
-</head>
-<body>
+<#import "pohja_fi.ftl" as pohja>
+
+<@pohja.sisalto otsikko>
     <p>Opetushallinto pyytää koulutuksen- ja opetuksen järjestäjää tarkistamaan Opintopolussa olevien oppilaitosten yhteys ja muut tiedot.</p>
     <p><a href="${linkki}">${linkki}</a></p>
     <p>Opetushallitus</p>
-</body>
-</html>
+</@pohja.sisalto>

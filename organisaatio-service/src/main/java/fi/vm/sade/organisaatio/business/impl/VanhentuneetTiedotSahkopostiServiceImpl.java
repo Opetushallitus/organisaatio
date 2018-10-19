@@ -126,7 +126,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
 
     private String createBody(Locale locale, String organisaatioOid, String otsikko) {
         try {
-            Template template = freemarker.getTemplate("sahkoposti/vanhentuneettiedot.html", locale);
+            Template template = freemarker.getTemplate("sahkoposti/vanhentuneettiedot.ftl", locale);
             Map<String, Object> model = new HashMap<>();
             model.put("otsikko", otsikko);
             model.put("linkki", properties.url("organisaatio-ui.organisaatio.byOid", organisaatioOid));
