@@ -10,7 +10,7 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private String toiminnallinenPainotus;
 
-    private long paikkojenLukumaara;
+    private Long paikkojenLukumaara;
 
     private Set<VarhaiskasvatuksenKielipainotusDto> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
@@ -40,11 +40,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
         this.toiminnallinenPainotus = toiminnallinenPainotus;
     }
 
-    public long getPaikkojenLukumaara() {
+    public Long getPaikkojenLukumaara() {
         return paikkojenLukumaara;
     }
 
-    public void setPaikkojenLukumaara(long paikkojenLukumaara) {
+    public void setPaikkojenLukumaara(Long paikkojenLukumaara) {
         this.paikkojenLukumaara = paikkojenLukumaara;
     }
 

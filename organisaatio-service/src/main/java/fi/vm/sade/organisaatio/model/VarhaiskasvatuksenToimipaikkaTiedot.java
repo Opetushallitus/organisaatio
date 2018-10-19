@@ -24,7 +24,7 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     private String toiminnallinenPainotus;
 
     @Column(name = "paikkojen_lukumaara", nullable = false)
-    private long paikkojenLukumaara;
+    private Long paikkojenLukumaara;
 
     // Koodisto maatjavaltiot2
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
@@ -58,11 +58,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
         this.toiminnallinenPainotus = toiminnallinenPainotus;
     }
 
-    public long getPaikkojenLukumaara() {
+    public Long getPaikkojenLukumaara() {
         return paikkojenLukumaara;
     }
 
-    public void setPaikkojenLukumaara(long paikkojenLukumaara) {
+    public void setPaikkojenLukumaara(Long paikkojenLukumaara) {
         this.paikkojenLukumaara = paikkojenLukumaara;
     }
 

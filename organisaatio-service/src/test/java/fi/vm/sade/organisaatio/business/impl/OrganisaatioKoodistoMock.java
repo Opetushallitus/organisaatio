@@ -4,6 +4,7 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -31,26 +32,26 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
     public Set<String> haeVardaJarjestamismuoto() {
-        return null;
+        return Collections.singleton("vardajarjestamismuoto_jm03");
     }
 
     @Override
     public Set<String> haeVardaKasvatusopillinenJarjestelma() {
-        return null;
+        return Collections.singleton("vardakasvatusopillinenjarjestelma_kj99");
     }
 
     @Override
     public Set<String> haeVardaToiminnallinenPainotus() {
-        return null;
+        return Collections.singleton("vardatoiminnallinenpainotus_tp99");
     }
 
     @Override
     public Set<String> haeVardaToimintamuoto() {
-        return null;
+        return Collections.singleton("vardatoimintamuoto_tm02");
     }
 
     @Override
     public Set<String> haeKielikoodit() {
-        return null;
+        return Collections.singleton("kieli_bh");
     }
 }
