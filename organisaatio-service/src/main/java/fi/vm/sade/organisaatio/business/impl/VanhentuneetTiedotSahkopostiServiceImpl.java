@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.*;
 public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTiedotSahkopostiService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VanhentuneetTiedotSahkopostiServiceImpl.class);
-    private static final String PALVELU = "ORGANISAATIO";
+    private static final String PALVELU = "ORGANISAATIOHALLINTA";
     private static final String KAYTTOOIKEUS = "VASTUUKAYTTAJAT";
     private static final Collection<String> TUETUT_KIELET = Stream.of("fi", "sv").collect(toSet());
     private static final String OLETUSKIELI = "fi";
