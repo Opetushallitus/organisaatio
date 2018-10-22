@@ -1,6 +1,6 @@
 <#macro sisalto otsikko>
 <!doctype html>
-<html lang="fi">
+<html lang="sv">
 <head>
     <meta charset="utf-8">
     <title>${otsikko}</title>
