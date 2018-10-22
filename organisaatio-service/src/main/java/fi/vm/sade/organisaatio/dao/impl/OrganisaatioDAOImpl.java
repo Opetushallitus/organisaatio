@@ -173,9 +173,15 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public Collection<String> findOidByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvmLocalDate, Collection<String> oids, long limit) {
+    public Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvmLocalDate, Collection<String> oids, long limit) {
         java.sql.Date voimassaPvm = java.sql.Date.valueOf(voimassaPvmLocalDate);
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        QOrganisaatioSahkoposti qOrganisaatioSahkoposti = QOrganisaatioSahkoposti.organisaatioSahkoposti;
+        JPQLQuery<Organisaatio> sahkopostiLahetettySubQuery = JPAExpressions
+                .selectDistinct(qOrganisaatioSahkoposti.organisaatio)
+                .from(qOrganisaatioSahkoposti)
+                .where(qOrganisaatioSahkoposti.tyyppi.eq(OrganisaatioSahkoposti.Tyyppi.VANHENTUNEET_TIEDOT))
+                .where(qOrganisaatioSahkoposti.aikaleima.after(tarkastusPvm));
         return new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(qOrganisaatio.organisaatioPoistettu.isFalse())
@@ -183,7 +189,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .where(anyOf(qOrganisaatio.lakkautusPvm.after(voimassaPvm), qOrganisaatio.lakkautusPvm.isNull()))
                 .where(qOrganisaatio.oid.in(oids))
                 .where(anyOf(qOrganisaatio.tarkastusPvm.before(tarkastusPvm), qOrganisaatio.tarkastusPvm.isNull()))
-                .select(qOrganisaatio.oid)
+                .where(qOrganisaatio.notIn(sahkopostiLahetettySubQuery))
+                .select(qOrganisaatio)
                 .distinct()
                 .orderBy(qOrganisaatio.tarkastusPvm.asc().nullsFirst(), qOrganisaatio.id.asc())
                 .limit(limit)

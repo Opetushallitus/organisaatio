@@ -5,7 +5,9 @@ import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.config.FreemarkerConfiguration;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dao.OrganisaatioSahkopostiDao;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import freemarker.template.Configuration;
@@ -43,6 +45,8 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
     private OrganisaatioViestinta organisaatioViestintaMock;
     @Mock
     private OrganisaatioDAO organisaatioDAOMock;
+    @Mock
+    private OrganisaatioSahkopostiDao organisaatioSahkopostiDaoMock;
 
     @Before
     public void setup() throws Exception {
@@ -57,15 +61,19 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
         UrlConfiguration properties = new UrlConfiguration();
         service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, organisaatioViestintaMock,
-                organisaatioDAOMock, messageSource, freemarker, properties);
+                organisaatioDAOMock, organisaatioSahkopostiDaoMock, messageSource, freemarker, properties);
         when(organisaatioViestintaMock.sendEmail(any())).then(new PrintingAnswer<>());
     }
 
     @Test
     public void lahetaSahkopostit() {
         when(kayttooikeusClientMock.listOrganisaatioOid(any())).thenReturn(singletonList("org1"));
-        when(organisaatioDAOMock.findOidByTarkastusPvm(any(), any(), any(), anyLong()))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgumentAt(2, Collection.class));
+        when(organisaatioDAOMock.findByTarkastusPvm(any(), any(), any(), anyLong()))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgumentAt(2, Collection.class).stream().map(oid -> {
+                    Organisaatio organisaatio = new Organisaatio();
+                    organisaatio.setOid((String) oid);
+                    return organisaatio;
+                }).collect(toList()));
         VirkailijaDto virkailija1 = new VirkailijaDto();
         virkailija1.setSahkoposti("example1@example.com");
         VirkailijaDto virkailija2 = new VirkailijaDto();
@@ -84,7 +92,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
         service.lahetaSahkopostit();
 
-        verify(organisaatioDAOMock).findOidByTarkastusPvm(any(), any(), eq(singletonList("org1")), anyLong());
+        verify(organisaatioDAOMock).findByTarkastusPvm(any(), any(), eq(singletonList("org1")), anyLong());
         ArgumentCaptor<EmailData> emailDataArgumentCaptor = ArgumentCaptor.forClass(EmailData.class);
         verify(organisaatioViestintaMock, times(2)).sendEmail(emailDataArgumentCaptor.capture());
         List<EmailData> emailDatas = emailDataArgumentCaptor.getAllValues();

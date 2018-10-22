@@ -191,7 +191,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param limit palautettavien rivien maksimimäärä
      * @return tarkastamattomat organisaatiot
      */
-    Collection<String> findOidByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
+    Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
 
     /**
      * Implementation of merge without flush, let hibernate decide when
