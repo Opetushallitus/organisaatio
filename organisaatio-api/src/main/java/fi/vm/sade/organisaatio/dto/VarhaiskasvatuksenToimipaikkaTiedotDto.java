@@ -8,13 +8,13 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private String kasvatusopillinenJarjestelma;
 
-    private String toiminnallinenPainotus;
+    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
 
     private Long paikkojenLukumaara;
 
     private Set<VarhaiskasvatuksenKielipainotusDto> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
-    private Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    private Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
     public String getJarjestamismuoto() {
         return jarjestamismuoto;
@@ -30,14 +30,6 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     public void setKasvatusopillinenJarjestelma(String kasvatusopillinenJarjestelma) {
         this.kasvatusopillinenJarjestelma = kasvatusopillinenJarjestelma;
-    }
-
-    public String getToiminnallinenPainotus() {
-        return toiminnallinenPainotus;
-    }
-
-    public void setToiminnallinenPainotus(String toiminnallinenPainotus) {
-        this.toiminnallinenPainotus = toiminnallinenPainotus;
     }
 
     public Long getPaikkojenLukumaara() {
@@ -56,11 +48,19 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
         this.varhaiskasvatuksenKielipainotukset = varhaiskasvatuksenKielipainotukset;
     }
 
-    public Set<VarhaiskasvatuksenToimintamuotoDto> getVarhaiskasvatuksenToimintamuodot() {
+    public Set<VarhaiskasvatuksenToiminnallinepainotusDto> getVarhaiskasvatuksenToiminnallinenpainotukset() {
+        return varhaiskasvatuksenToiminnallinenpainotukset;
+    }
+
+    public void setVarhaiskasvatuksenToiminnallinenpainotukset(Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotukset) {
+        this.varhaiskasvatuksenToiminnallinenpainotukset = varhaiskasvatuksenToiminnallinenpainotukset;
+    }
+
+    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
         return varhaiskasvatuksenToimintamuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenToimintamuodot) {
+    public void setVarhaiskasvatuksenToimintamuodot(Set<String> varhaiskasvatuksenToimintamuodot) {
         this.varhaiskasvatuksenToimintamuodot = varhaiskasvatuksenToimintamuodot;
     }
 }

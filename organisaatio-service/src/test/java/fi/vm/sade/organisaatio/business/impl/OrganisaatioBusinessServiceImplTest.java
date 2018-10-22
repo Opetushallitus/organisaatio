@@ -24,7 +24,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
-import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimintamuotoDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -363,18 +363,18 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         varhaiskasvatuksenToimipaikkaTiedotDto.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedotDto.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedotDto.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
+        VarhaiskasvatuksenToiminnallinepainotusDto varhaiskasvatuksenToiminnallinenpainotusDto = new VarhaiskasvatuksenToiminnallinepainotusDto();
+        varhaiskasvatuksenToiminnallinenpainotusDto.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToiminnallinenpainotusDto.setAlkupvm(LocalDate.now());
+        varhaiskasvatuksenToiminnallinenpainotusDto.setLoppupvm(LocalDate.now().plusDays(10));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotusDto));
         varhaiskasvatuksenToimipaikkaTiedotDto.setPaikkojenLukumaara(10L);
         VarhaiskasvatuksenKielipainotusDto varhaiskasvatuksenKielipainotusDto = new VarhaiskasvatuksenKielipainotusDto();
         varhaiskasvatuksenKielipainotusDto.setKielipainotus("kieli_bh");
         varhaiskasvatuksenKielipainotusDto.setAlkupvm(LocalDate.now());
         varhaiskasvatuksenKielipainotusDto.setLoppupvm(LocalDate.now().plusDays(10));
         varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotusDto));
-        VarhaiskasvatuksenToimintamuotoDto varhaiskasvatuksenToimintamuotoDto = new VarhaiskasvatuksenToimintamuotoDto();
-        varhaiskasvatuksenToimintamuotoDto.setToimintamuoto("vardatoimintamuoto_tm02");
-        varhaiskasvatuksenToimintamuotoDto.setAlkupvm(LocalDate.now());
-        varhaiskasvatuksenToimintamuotoDto.setLoppupvm(LocalDate.now().plusDays(10));
-        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToimintamuodot(Collections.singleton(varhaiskasvatuksenToimintamuotoDto));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
 
         ResultRDTOV4 result = this.service.save(organisaatio, false);
@@ -383,15 +383,15 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot())
                 .extracting(VarhaiskasvatuksenToimipaikkaTiedotDto::getJarjestamismuoto,
                         VarhaiskasvatuksenToimipaikkaTiedotDto::getKasvatusopillinenJarjestelma,
-                        VarhaiskasvatuksenToimipaikkaTiedotDto::getToiminnallinenPainotus,
+                        VarhaiskasvatuksenToimipaikkaTiedotDto::getVarhaiskasvatuksenToimintamuodot,
                         VarhaiskasvatuksenToimipaikkaTiedotDto::getPaikkojenLukumaara)
-                .containsExactly("vardajarjestamismuoto_jm03", "vardakasvatusopillinenjarjestelma_kj99", "vardatoiminnallinenpainotus_tp99", 10L);
+                .containsExactly("vardajarjestamismuoto_jm03", "vardakasvatusopillinenjarjestelma_kj99", Collections.singleton("vardatoimintamuoto_tm02"), 10L);
         assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset())
                 .extracting(VarhaiskasvatuksenKielipainotusDto::getKielipainotus)
                 .containsExactly("kieli_bh");
-        assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToimintamuodot())
-                .extracting(VarhaiskasvatuksenToimintamuotoDto::getToimintamuoto)
-                .containsExactly("vardatoimintamuoto_tm02");
+        assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset())
+                .extracting(VarhaiskasvatuksenToiminnallinepainotusDto::getToiminnallinenpainotus)
+                .containsExactly("vardatoiminnallinenpainotus_tp99");
     }
 
 

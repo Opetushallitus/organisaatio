@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.service.converter.v4;
 
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
-import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimintamuotoDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -105,10 +105,10 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto(toimipaikkaTiedotDto.getJarjestamismuoto());
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma(toimipaikkaTiedotDto.getKasvatusopillinenJarjestelma());
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(toimipaikkaTiedotDto.getPaikkojenLukumaara());
-        Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenToimintamuodot())
-                .map(this::varhaiskasvatuksenToimintamuotoDtoToEntity)
-                .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenToimintamuodot);
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus(toimipaikkaTiedotDto.getToiminnallinenPainotus());
+        Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenToiminnallinenpainotukset())
+                .map(this::varhaiskasvatuksenToiminnallinenpainotusDtoToEntity)
+                .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenToiminnallinenpainotukset);
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(this.convertSetToSet(toimipaikkaTiedotDto.getVarhaiskasvatuksenToimintamuodot()));
         Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetDtoToEntity)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenKielipainotukset);
@@ -127,14 +127,14 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
                 .collect(Collectors.toSet());
     }
 
-    private Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenToimintamuotoDtoToEntity(Set<VarhaiskasvatuksenToimintamuotoDto> varhaiskasvatuksenKielipainotusDtoSet) {
-        return varhaiskasvatuksenKielipainotusDtoSet.stream()
-                .map(kielipainotusDto -> {
-                    VarhaiskasvatuksenToimintamuoto varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenToimintamuoto();
-                    varhaiskasvatuksenKielipainotus.setAlkupvm(this.localDateToDate(kielipainotusDto.getAlkupvm()));
-                    varhaiskasvatuksenKielipainotus.setLoppupvm(this.localDateToDate(kielipainotusDto.getLoppupvm()));
-                    varhaiskasvatuksenKielipainotus.setToimintamuoto(kielipainotusDto.getToimintamuoto());
-                    return varhaiskasvatuksenKielipainotus;
+    private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotusDtoToEntity(Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotusDtoSet) {
+        return varhaiskasvatuksenToiminnallinenpainotusDtoSet.stream()
+                .map(toiminnallinepainotusDto -> {
+                    VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+                    varhaiskasvatuksenToiminnallinenpainotus.setAlkupvm(this.localDateToDate(toiminnallinepainotusDto.getAlkupvm()));
+                    varhaiskasvatuksenToiminnallinenpainotus.setLoppupvm(this.localDateToDate(toiminnallinepainotusDto.getLoppupvm()));
+                    varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus(toiminnallinepainotusDto.getToiminnallinenpainotus());
+                    return varhaiskasvatuksenToiminnallinenpainotus;
                 })
                 .collect(Collectors.toSet());
     }

@@ -423,7 +423,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (isVarhaiskasvatuksenToimipaikka) {
             entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
                     .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToimintamuodot()
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
                     .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
         }
     }

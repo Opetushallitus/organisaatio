@@ -106,16 +106,21 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
                 this.entry(toimipaikka -> this.organisaatioKoodisto.haeVardaKasvatusopillinenJarjestelma().stream()
                                 .anyMatch(koodi -> koodi.equals(toimipaikka.getKasvatusopillinenJarjestelma())),
                         "validation.varhaiskasvatuksentoimipaikka.jarjestelma.invalidkoodi"),
-                this.entry(toimipaikka -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
-                                .anyMatch(koodi -> koodi.equals(toimipaikka.getToiminnallinenPainotus())),
-                        "validation.varhaiskasvatuksentoimipaikka.painotus.invalidkoodi"),
+                this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset()),
+                        "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.null"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().size() > 0,
+                        "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.empty"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().stream()
+                                .allMatch(toiminnallinenpainotus -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
+                                        .anyMatch(koodi -> koodi.equals(toiminnallinenpainotus.getToiminnallinenpainotus()))),
+                        "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.invalidkoodi"),
                 this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenToimintamuodot()),
                         "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.null"),
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().size() > 0,
                         "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.empty"),
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
                                 .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
-                                        .anyMatch(koodi -> koodi.equals(toimintamuoto.getToimintamuoto()))),
+                                        .anyMatch(koodi -> koodi.equals(toimintamuoto))),
                         "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.invalidkoodi"),
                 this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenKielipainotukset()),
                         "validation.varhaiskasvatuksentoimipaikka.kielipainotukset.null"),

@@ -2,7 +2,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenKielipainotus;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimintamuoto;
+import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToiminnallinenpainotus;
 import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,9 +90,10 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(null);
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.painotus.invalidkoodi");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.null");
     }
 
     @Test
@@ -102,10 +103,12 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("invalid");
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("invalid");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.painotus.invalidkoodi");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.invalidkoodi");
     }
 
     @Test
@@ -115,7 +118,9 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(null);
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
@@ -129,7 +134,12 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
+        VarhaiskasvatuksenKielipainotus varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotus();
+        varhaiskasvatuksenKielipainotus.setKielipainotus("kieli_bh");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotus));
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(new HashSet<>());
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
@@ -143,8 +153,12 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton(new VarhaiskasvatuksenToimintamuoto()));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoiminnallinenpainotus_tp99"));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(new VarhaiskasvatuksenToiminnallinenpainotus()));
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("invalid"));
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuodot.invalidkoodi");
@@ -157,10 +171,10 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
-        VarhaiskasvatuksenToimintamuoto varhaiskasvatuksenToimintamuoto = new VarhaiskasvatuksenToimintamuoto();
-        varhaiskasvatuksenToimintamuoto.setToimintamuoto("vardatoimintamuoto_tm02");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton(varhaiskasvatuksenToimintamuoto));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(null);
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
@@ -174,10 +188,10 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
-        VarhaiskasvatuksenToimintamuoto varhaiskasvatuksenToimintamuoto = new VarhaiskasvatuksenToimintamuoto();
-        varhaiskasvatuksenToimintamuoto.setToimintamuoto("vardatoimintamuoto_tm02");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton(varhaiskasvatuksenToimintamuoto));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(new HashSet<>());
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
@@ -191,10 +205,10 @@ public class OrganisaatioValidationServiceImplTest {
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
         varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setToiminnallinenPainotus("vardatoiminnallinenpainotus_tp99");
-        VarhaiskasvatuksenToimintamuoto varhaiskasvatuksenToimintamuoto = new VarhaiskasvatuksenToimintamuoto();
-        varhaiskasvatuksenToimintamuoto.setToimintamuoto("vardatoimintamuoto_tm02");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton(varhaiskasvatuksenToimintamuoto));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
+        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         VarhaiskasvatuksenKielipainotus varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotus();
         varhaiskasvatuksenKielipainotus.setKielipainotus("kieli_bh");
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotus));

@@ -97,21 +97,21 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <!-- Varhaiskasvatuksen toimintamuodot -->
         <div class="control-group">
             <label class="control-label">
-                {{t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}*
+                {{t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToiminnallinenpainotukset')}}*
             </label>
             <div class="controls">
                 <div>
-                    <span ng-repeat="toimintamuoto in model.varhaiskasvatuksenToimintamuodot">
+                    <span ng-repeat="toiminnallinenpainotus in model.varhaiskasvatuksenToiminnallinenpainotukset">
                     <button type="button" class="btn btn-small" id="{{'toimintamuotobutton' + $index}}"
-                            ng-click="removeVarhaiskasvatuksenToimintamuoto(toimintamuoto)">{{:: localiseVarhaiskasvatuksenToimintamuoto(toimintamuoto.toimintamuoto)}} {{:: toimintamuoto.alkupvm.format('DD.MM.YYYY')}} - {{:: toimintamuoto.loppupvm.format('DD.MM.YYYY')}}<i class="icon-remove"></i></button>
+                            ng-click="removeVarhaiskasvatuksenToimintamuoto(toiminnallinenpainotus)">{{:: localiseVarhaiskasvatuksenToimintamuoto(toiminnallinenpainotus.toiminnallinenpainotus)}} {{:: toiminnallinenpainotus.alkupvm.format('DD.MM.YYYY')}} - {{:: toiminnallinenpainotus.loppupvm.format('DD.MM.YYYY')}}<i class="icon-remove"></i></button>
                     </span>
                 </div>
                 <div>
-                    <select id="toimintamuoto" ng-model="toimintamuoto.toimintamuoto" ng-required="false"
-                            ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
+                    <select id="toiminnallinenpainotus" ng-model="toiminnallinenpainotus.toiminnallinenpainotus" ng-required="false"
+                            ng-options="toiminnallinenpainotus.uri as toiminnallinenpainotus.nimi for toiminnallinenpainotus in koodisto.varhaiskasvatuksenToiminnallinenpainotukset | orderBy:'uri'" required>
                         <option value="" tt="Organisaationmuokkaus.valitsetoimintamuoto">Valitse</option>
                     </select>
-                    <input id="toimintamuoto.alkupvm" ng-model="toimintamuoto.alkupvm"
+                    <input id="toiminnallinenpainotus.alkupvm" ng-model="toiminnallinenpainotus.alkupvm"
                            name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="dpOpen1" ng-click="dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
                            close-on-date-selection="true"
@@ -121,7 +121,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                            clear-text="{{t('Organisaationmuokkaus.tyhjenna')}}"
                            toggle-weeks-text="{{t('Organisaationmuokkaus.viikkonumerot')}}"
                     />
-                    <input id="toimintamuoto.loppupvm" ng-model="toimintamuoto.loppupvm"
+                    <input id="toiminnallinenpainotus.loppupvm" ng-model="toiminnallinenpainotus.loppupvm"
                            name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="dpOpen2" ng-click="dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
                            close-on-date-selection="true"
@@ -135,10 +135,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                         <i class="icon-plus"></i> {{:: t('Organisaationmuokkaus.luoToimintamuoto')}}
                     </button>
                 </div>
-                <div ng-if="model.varhaiskasvatuksenToimintamuodot.length === 0">
-                    <input type="hidden" name="varhaiskasvatuksenToimintamuodot" ng-model="varhaiskasvatuksenToimintamuodot" required>
-                    <span class="text-error" ng-show="form.varhaiskasvatuksenToimintamuodot.$error.required">
-                    {{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}
+                <div ng-if="model.varhaiskasvatuksenToiminnallinenpainotukset.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenToiminnallinenpainotukset" ng-model="varhaiskasvatuksenToiminnallinenpainotukset" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenToiminnallinenpainotukset.$error.required">
+                    {{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToiminnallinenpainotukset')}}
                     {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
                     </span>
                 </div>

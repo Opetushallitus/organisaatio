@@ -4,13 +4,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "varhaiskasvatuksen_toimintamuoto")
-public class VarhaiskasvatuksenToimintamuoto extends BaseEntity {
+@Table(name = "varhaiskasvatuksen_toiminnallinenpainotus")
+public class VarhaiskasvatuksenToiminnallinenpainotus extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
     private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
 
-    private String toimintamuoto;
+    private String toiminnallinenpainotus;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date alkupvm;
@@ -42,11 +42,11 @@ public class VarhaiskasvatuksenToimintamuoto extends BaseEntity {
         this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
     }
 
-    public String getToimintamuoto() {
-        return toimintamuoto;
+    public String getToiminnallinenpainotus() {
+        return toiminnallinenpainotus;
     }
 
-    public void setToimintamuoto(String toimintamuoto) {
-        this.toimintamuoto = toimintamuoto;
+    public void setToiminnallinenpainotus(String toiminnallinenpainotus) {
+        this.toiminnallinenpainotus = toiminnallinenpainotus;
     }
 }

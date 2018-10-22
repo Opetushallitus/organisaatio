@@ -19,9 +19,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     @Column(name = "kasvatusopillinen_jarjestelma", nullable = false)
     private String kasvatusopillinenJarjestelma;
 
-    // Koodisto vardatoiminnallinenpainotus
-    @Column(name = "toiminnallinen_painotus", nullable = false)
-    private String toiminnallinenPainotus;
+    // Koodisto vardatoimintamuoto
+    @ElementCollection
+    @CollectionTable(name = "varhaiskasvatuksen_toimintamuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
+    @Column(name = "toimintamuoto", nullable = false)
+    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
 
     @Column(name = "paikkojen_lukumaara", nullable = false)
     private Long paikkojenLukumaara;
@@ -30,9 +32,9 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
     private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
-    // Koodisto vardatoimintamuoto
+    // Koodisto vardatoiminnallinenpainotus
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
-    private Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
     public String getJarjestamismuoto() {
         return jarjestamismuoto;
@@ -48,14 +50,6 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
 
     public void setKasvatusopillinenJarjestelma(String kasvatusopillinenJarjestelma) {
         this.kasvatusopillinenJarjestelma = kasvatusopillinenJarjestelma;
-    }
-
-    public String getToiminnallinenPainotus() {
-        return toiminnallinenPainotus;
-    }
-
-    public void setToiminnallinenPainotus(String toiminnallinenPainotus) {
-        this.toiminnallinenPainotus = toiminnallinenPainotus;
     }
 
     public Long getPaikkojenLukumaara() {
@@ -74,11 +68,19 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
         this.varhaiskasvatuksenKielipainotukset = varhaiskasvatuksenKielipainotukset;
     }
 
-    public Set<VarhaiskasvatuksenToimintamuoto> getVarhaiskasvatuksenToimintamuodot() {
+    public Set<VarhaiskasvatuksenToiminnallinenpainotus> getVarhaiskasvatuksenToiminnallinenpainotukset() {
+        return varhaiskasvatuksenToiminnallinenpainotukset;
+    }
+
+    public void setVarhaiskasvatuksenToiminnallinenpainotukset(Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToimintamuodot) {
+        this.varhaiskasvatuksenToiminnallinenpainotukset = varhaiskasvatuksenToimintamuodot;
+    }
+
+    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
         return varhaiskasvatuksenToimintamuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<VarhaiskasvatuksenToimintamuoto> varhaiskasvatuksenToimintamuodot) {
-        this.varhaiskasvatuksenToimintamuodot = varhaiskasvatuksenToimintamuodot;
+    public void setVarhaiskasvatuksenToimintamuodot(Set<String> toimintamuoto) {
+        this.varhaiskasvatuksenToimintamuodot = toimintamuoto;
     }
 }

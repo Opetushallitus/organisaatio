@@ -2,8 +2,8 @@ package fi.vm.sade.organisaatio.dto;
 
 import java.time.LocalDate;
 
-public class VarhaiskasvatuksenToimintamuotoDto {
-    private String toimintamuoto;
+public class VarhaiskasvatuksenToiminnallinepainotusDto {
+    private String toiminnallinenpainotus;
 
     private LocalDate alkupvm;
 
@@ -25,11 +25,11 @@ public class VarhaiskasvatuksenToimintamuotoDto {
         this.loppupvm = loppupvm;
     }
 
-    public String getToimintamuoto() {
-        return toimintamuoto;
+    public String getToiminnallinenpainotus() {
+        return toiminnallinenpainotus;
     }
 
-    public void setToimintamuoto(String toimintamuoto) {
-        this.toimintamuoto = toimintamuoto;
+    public void setToiminnallinenpainotus(String toiminnallinenpainotus) {
+        this.toiminnallinenpainotus = toiminnallinenpainotus;
     }
 }
