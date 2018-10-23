@@ -46,18 +46,11 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
             entityToAdd.loppupvm = moment(entityToAdd.loppupvm).add(loppupvmTimezoneOffsetInMinutes, 'minutes');
         }
 
-        var isAlreadyAdded = existingEntities.filter(function (existingEntity) {
-                return existingEntity[koodiFieldName] === entityToAdd[koodiFieldName]
-                    && existingEntity.alkupvm.isSame(entityToAdd.alkupvm)
-                    && existingEntity.loppupvm.isSame(entityToAdd.loppupvm);
-            }
-        )[0];
-        if (!isAlreadyAdded) {
-            var newOrganisaatioEntity = angular.copy(lisattavaKielipainotus);
-            newOrganisaatioEntity.alkupvm = lisattavaKielipainotus.alkupvm.format('YYYY-MM-DD');
-            newOrganisaatioEntity.loppupvm = lisattavaKielipainotus.loppupvm && lisattavaKielipainotus.loppupvm.format('YYYY-MM-DD');
-            existingEntities.push(newOrganisaatioEntity);
-        }
+        var newOrganisaatioEntity = angular.copy(lisattavaKielipainotus);
+        newOrganisaatioEntity.alkupvm = lisattavaKielipainotus.alkupvm.format('YYYY-MM-DD');
+        newOrganisaatioEntity.loppupvm = lisattavaKielipainotus.loppupvm && lisattavaKielipainotus.loppupvm.format('YYYY-MM-DD');
+        existingEntities.push(newOrganisaatioEntity);
+
         vm[koodiFieldName] = {};
     };
 
@@ -101,21 +94,24 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     };
 
     vm.localiseVarhaiskasvatuksenJarjestamismuoto = function (koodiUri) {
-        return vm.koodisto.jarjestamismuoto.filter(function (jarjestamismuotoKoodi) {
+        var localisedKoodi = vm.koodisto.jarjestamismuoto.filter(function (jarjestamismuotoKoodi) {
             return jarjestamismuotoKoodi.uri === koodiUri;
-        })[0].nimi;
+        })[0];
+        return localisedKoodi && localisedKoodi.nimi;
     };
 
     vm.localiseVarhaiskasvatuksenToiminnallinenpainotus = function (koodiUri) {
-        return vm.koodisto.toiminnallinenPainotus.filter(function (toiminnallinepainotusKoodi) {
+        var localisedKoodi = vm.koodisto.toiminnallinenPainotus.filter(function (toiminnallinepainotusKoodi) {
             return toiminnallinepainotusKoodi.uri === koodiUri;
-        })[0].nimi;
+        })[0];
+        return localisedKoodi && localisedKoodi.nimi;
     };
 
     vm.localiseKielipainotus = function (koodiUri) {
-        return vm.koodisto.kieli.filter(function (kieliKoodi) {
+        var localisedKoodi =  vm.koodisto.kieli.filter(function (kieliKoodi) {
             return kieliKoodi.uri === koodiUri;
-        })[0].nimi;
+        })[0];
+        return localisedKoodi && localisedKoodi.nimi;
     };
 
     vm.getUnselectedJarjestamismuodot = function () {
