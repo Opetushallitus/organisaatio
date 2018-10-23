@@ -233,6 +233,12 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     }
 ]);
 
+app.run(function ($rootScope) {
+    $rootScope.$on('$includeContentRequested', function (event, url) {
+        console.log(event);
+        console.log(url);
+    });
+});
 
 app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
                                      'Alert', 'OrganisaatioAuthGET',

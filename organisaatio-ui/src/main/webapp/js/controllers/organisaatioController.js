@@ -208,54 +208,6 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         $location.path($location.path() + "/edit");
     };
 
-    $scope.openVarhaiskasvatuksenToimipaikanTietojenMuokkaus = function () {
-        $scope.modalOpen = true;
-        var modalInstance = $uibModal.open({
-            templateUrl: 'varhaiskasvatuksentoimipaikkatietojenmuokkaus.html',
-            controller: 'VarhaiskasvatuksenToimipaikanTietojenMuokkausController',
-            windowClass: 'modal-xwide',
-            resolve: {
-                koodisto: function () {
-                    return $scope.model.koodisto;
-                },
-                varhaiskasvatuksenToimipaikanTiedot: function () {
-                    var toimipaikanTiedot = angular.copy($scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot);
-                    if (toimipaikanTiedot) {
-                        toimipaikanTiedot.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
-                            kielipainotus.alkupvm = moment(kielipainotus.alkupvm);
-                            kielipainotus.loppupvm = moment(kielipainotus.loppupvm);
-                        });
-                        toimipaikanTiedot.varhaiskasvatuksenToimintamuodot.forEach(function (toimintamuoto) {
-                            toimintamuoto.alkupvm = moment(toimintamuoto.alkupvm);
-                            toimintamuoto.loppupvm = moment(toimintamuoto.loppupvm);
-                        });
-                    }
-                    return toimipaikanTiedot;
-                }
-            },
-            scope: $scope
-        });
-
-        modalInstance.result.then(function (varhaiskasvatuksenToimipaikkaTiedotModel) {
-            $scope.modalOpen = false;
-            varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
-                kielipainotus.alkupvm = kielipainotus.alkupvm.format('YYYY-MM-DD');
-                kielipainotus.loppupvm = kielipainotus.loppupvm.format('YYYY-MM-DD');
-            });
-            varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenToimintamuodot.forEach(function (toimintamuoto) {
-                toimintamuoto.alkupvm = toimintamuoto.alkupvm.format('YYYY-MM-DD');
-                toimintamuoto.loppupvm = toimintamuoto.loppupvm.format('YYYY-MM-DD');
-            });
-            $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedotModel;
-
-            $scope.form.$setDirty();
-        }, function () {
-            $scope.modalOpen = false;
-            $log.log('VarhaiskasvatuksenToimipaikkaTiedot Modal dismissed at: ' + new Date());
-        });
-
-    };
-
     // Nimenmuokkauksen modaalin dialogin avaus
     $scope.openNimenMuokkaus = function () {
         $scope.modalOpen = true;

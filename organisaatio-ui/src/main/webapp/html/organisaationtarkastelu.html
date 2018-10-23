@@ -179,17 +179,21 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 </div>
                 <div class="row">
                     <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
-                    <div class="span6">{{model.localiseToiminnallinenPainotus(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toiminnallinenPainotus)}}</div>
+                    <div class="span6">
+                        <div ng-repeat="toiminnallinenpainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset | orderBy: 'toiminnallinenpainotus'">
+                            {{model.localiseToiminnallinenPainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{model.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{model.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="span3">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
                     <div class="span6">{{model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
                 </div>
                 <div class="row">
-                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToiminnallinenpainotukset')}}:</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}:</div>
                     <div class="span6">
-                        <div ng-repeat="toiminnallinenpainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset | orderBy: 'toiminnallinenpainotus'">
-                            {{model.localiseVarhaiskasvatuksenToimintamuodot(toiminnallinenpainotus.toiminnallinenpainotus)}} {{model.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{model.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}
+                        <div ng-repeat="toimintamuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimintamuodot | orderBy: 'toimintamuoto'">
+                            {{model.localiseVarhaiskasvatuksenToimintamuodot(toimintamuoto)}}
                         </div>
                     </div>
                 </div>

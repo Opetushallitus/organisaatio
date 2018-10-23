@@ -571,6 +571,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (!this.isVarhaiskasvatuksenToimipaikka()) {
                 model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = null;
             }
+            else {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot || {};
+            }
             LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
