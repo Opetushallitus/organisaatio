@@ -170,8 +170,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <label class="control-label control-label-left" ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
                 <div class="row">
-                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}:</div>
-                    <div class="span6">{{model.localiseJarjestamismuoto(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.jarjestamismuoto)}}</div>
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toimintamuoto')}}:</div>
+                    <div class="span6">{{model.localiseVarhaiskasvatuksenToimintamuodot(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto)}}</div>
                 </div>
                 <div class="row">
                     <div class="span3">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
@@ -190,10 +190,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     <div class="span6">{{model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
                 </div>
                 <div class="row">
-                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}:</div>
+                    <div class="span3">{{:: t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}:</div>
                     <div class="span6">
-                        <div ng-repeat="toimintamuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimintamuodot | orderBy: 'toimintamuoto'">
-                            {{model.localiseVarhaiskasvatuksenToimintamuodot(toimintamuoto)}}
+                        <div ng-repeat="jarjestamismuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot | orderBy: 'varhaiskasvatuksenJarjestamismuodot'">
+                            {{model.localiseJarjestamismuoto(jarjestamismuoto)}}
                         </div>
                     </div>
                 </div>

@@ -1,20 +1,20 @@
 <!-- Varhaiskasvatuksen toimipaikan tietojen muokkaus -->
 <div ng-controller="VarhaiskasvatuksenToimipaikanTietojenMuokkausController as vakaeditctrl">
     <form name="form" class="form-horizontal" novalidate>
-        <!-- Järjestämismuoto -->
+        <!-- Varhaiskasvatuksen toimintamuodot -->
         <div class="control-group">
             <label class="control-label">
-                {{vakaeditctrl.t('Organisaationmuokkaus.ohje.jarjestamismuoto')}}*
+                {{vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}*
             </label>
             <div class="controls">
-                <select id="jarjestamismuoto" ng-model="vakaeditctrl.model.jarjestamismuoto"
-                        ng-options="jarjestamismuoto.uri as jarjestamismuoto.nimi for jarjestamismuoto in vakaeditctrl.koodisto.jarjestamismuoto | orderBy:'uri'" required>
+                <select id="toimintamuoto" ng-model="vakaeditctrl.model.toimintamuoto"
+                        ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in vakaeditctrl.koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
-                <div ng-if="!vakaeditctrl.model.jarjestamismuoto">
-                    <input type="hidden" name="jarjestamismuoto" ng-model="vakaeditctrl.jarjestamismuoto" required>
-                    <span class="text-error" ng-show="form.jarjestamismuoto.$error.required">
-                        {{:: vakaeditctrl.t('Organisaationtarkastelu.jarjestamismuoto')}}
+                <div ng-if="!vakaeditctrl.model.toimintamuoto">
+                    <input type="hidden" name="toimintamuoto" ng-model="vakaeditctrl.toimintamuoto" required>
+                    <span class="text-error" ng-show="form.toimintamuoto.$error.required">
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}
                         {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
                     </span>
                 </div>
@@ -105,29 +105,29 @@
                 </div>
             </div>
         </div>
-        <!-- Varhaiskasvatuksen toimintamuodot -->
+        <!-- Järjestämismuoto -->
         <div class="control-group">
             <label class="control-label">
-                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToimintamuodot')}}*
+                {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}*
             </label>
             <div class="controls">
-                <span ng-repeat="toimintamuoto in vakaeditctrl.model.varhaiskasvatuksenToimintamuodot">
+                <span ng-repeat="jarjestamismuuoto in vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot">
                     <button type="button"
                             class="btn btn-small"
-                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenToimintamuoto(toimintamuoto);form.$dirty = true">
-                        {{:: vakaeditctrl.localiseVarhaiskasvatuksenToimintamuoto(toimintamuoto)}}&nbsp;<i class="icon-remove"></i>
+                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto);form.$dirty = true">
+                        {{:: vakaeditctrl.localiseVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto)}}&nbsp;<i class="icon-remove"></i>
                     </button>
                 </span>
-                <select id="toimintamuodot" ng-model="vakaeditctrl.toimintamuoto"
-                        ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in vakaeditctrl.getUnselectedToimintamuodot() | orderBy:'uri'"
-                        ng-change="vakaeditctrl.addVarhaiskasvatuksenToimintamuoto()"
-                        >
+                <select id="varhaiskasvatuksenJarjestamismuodot" ng-model="vakaeditctrl.varhaiskasvatuksenJarjestamismuodot"
+                        ng-options="jarjestamismuoto.uri as jarjestamismuoto.nimi for jarjestamismuoto in vakaeditctrl.getUnselectedJarjestamismuodot() | orderBy:'uri'"
+                        ng-change="vakaeditctrl.addVarhaiskasvatuksenJarjestamismuoto()"
+                >
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
-                <div ng-if="!vakaeditctrl.model.varhaiskasvatuksenToimintamuodot.length">
-                    <input type="hidden" name="toimintamuodot" ng-model="vakaeditctrl.toimintamuodot" required>
-                    <span class="text-error" ng-show="form.toimintamuodot.$error.required">
-                    {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenToimintamuodot')}}
+                <div ng-if="!vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot.length">
+                    <input type="hidden" name="varhaiskasvatuksenJarjestamismuodot" ng-model="vakaeditctrl.varhaiskasvatuksenJarjestamismuodot" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenJarjestamismuodot.$error.required">
+                    {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}
                     {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
                 </span>
                 </div>

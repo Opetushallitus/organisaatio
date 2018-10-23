@@ -26,11 +26,11 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         }
         else {
             vm.model = {
-                jarjestamismuoto: '',
+                toimintamuoto: '',
                 kasvatusopillinenJarjestelma: '',
                 varhaiskasvatuksenToiminnallinenpainotukset: [],
                 paikkojenLukumaara: null,
-                varhaiskasvatuksenToimintamuodot: [],
+                varhaiskasvatuksenJarjestamismuodot: [],
                 varhaiskasvatuksenKielipainotukset: []
             };
             $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = vm.model;
@@ -107,22 +107,22 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         });
     };
 
-    vm.addVarhaiskasvatuksenToimintamuoto = function() {
-        if (vm.toimintamuoto && vm.model.varhaiskasvatuksenToimintamuodot.indexOf(vm.toimintamuoto) === -1) {
-            vm.model.varhaiskasvatuksenToimintamuodot.push(vm.toimintamuoto);
+    vm.addVarhaiskasvatuksenJarjestamismuoto = function() {
+        if (vm.varhaiskasvatuksenJarjestamismuodot && vm.model.varhaiskasvatuksenJarjestamismuodot.indexOf(vm.varhaiskasvatuksenJarjestamismuodot) === -1) {
+            vm.model.varhaiskasvatuksenJarjestamismuodot.push(vm.varhaiskasvatuksenJarjestamismuodot);
         }
     };
 
-    vm.removeVarhaiskasvatuksenToimintamuoto = function (poistettavaToimintamuoto) {
-        var toimintamuodot = vm.model.varhaiskasvatuksenToimintamuodot;
-        vm.model.varhaiskasvatuksenToimintamuodot = toimintamuodot.filter(function (toimintamuoto) {
-            return toimintamuoto !== poistettavaToimintamuoto;
+    vm.removeVarhaiskasvatuksenJarjestamismuoto = function (poistettavaJarjestamismuoto) {
+        var jarjestamismuodot = vm.model.varhaiskasvatuksenJarjestamismuodot;
+        vm.model.varhaiskasvatuksenJarjestamismuodot = jarjestamismuodot.filter(function (jarjestamismuoto) {
+            return jarjestamismuoto !== poistettavaJarjestamismuoto;
         });
     };
 
-    vm.localiseVarhaiskasvatuksenToimintamuoto = function (koodiUri) {
-        return vm.koodisto.varhaiskasvatuksenToimintamuodot.filter(function (toimintamuotoKoodi) {
-            return toimintamuotoKoodi.uri === koodiUri;
+    vm.localiseVarhaiskasvatuksenJarjestamismuoto = function (koodiUri) {
+        return vm.koodisto.jarjestamismuoto.filter(function (jarjestamismuotoKoodi) {
+            return jarjestamismuotoKoodi.uri === koodiUri;
         })[0].nimi;
     };
 
@@ -138,9 +138,9 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         })[0].nimi;
     };
 
-    vm.getUnselectedToimintamuodot = function () {
-        return vm.koodisto.varhaiskasvatuksenToimintamuodot.filter(function (toimintamuotoKoodi) {
-            return vm.model.varhaiskasvatuksenToimintamuodot.indexOf(toimintamuotoKoodi.uri) === -1;
+    vm.getUnselectedJarjestamismuodot = function () {
+        return vm.koodisto.jarjestamismuoto.filter(function (jarjestamismuotoKoodi) {
+            return vm.model.varhaiskasvatuksenJarjestamismuodot.indexOf(jarjestamismuotoKoodi.uri) === -1;
         });
     };
 
