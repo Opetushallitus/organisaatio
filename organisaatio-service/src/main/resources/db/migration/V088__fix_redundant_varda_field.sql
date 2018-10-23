@@ -1,1 +1,0 @@
-alter table varhaiskasvatuksen_toimipaikka_tiedot drop column toiminnallinen_painotus;

@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VarhaiskasvatuksenToimipaikkaTiedotDto {
-    private String jarjestamismuoto;
+    private String toimintamuoto;
 
     private String kasvatusopillinenJarjestelma;
 
-    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    private Set<String> varhaiskasvatuksenJarjestamismuodot = new HashSet<>();
 
     private Long paikkojenLukumaara;
 
@@ -16,12 +16,12 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
-    public String getJarjestamismuoto() {
-        return jarjestamismuoto;
+    public String getToimintamuoto() {
+        return toimintamuoto;
     }
 
-    public void setJarjestamismuoto(String jarjestamismuoto) {
-        this.jarjestamismuoto = jarjestamismuoto;
+    public void setToimintamuoto(String toimintamuoto) {
+        this.toimintamuoto = toimintamuoto;
     }
 
     public String getKasvatusopillinenJarjestelma() {
@@ -56,11 +56,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
         this.varhaiskasvatuksenToiminnallinenpainotukset = varhaiskasvatuksenToiminnallinenpainotukset;
     }
 
-    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
-        return varhaiskasvatuksenToimintamuodot;
+    public Set<String> getVarhaiskasvatuksenJarjestamismuodot() {
+        return varhaiskasvatuksenJarjestamismuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<String> varhaiskasvatuksenToimintamuodot) {
-        this.varhaiskasvatuksenToimintamuodot = varhaiskasvatuksenToimintamuodot;
+    public void setVarhaiskasvatuksenJarjestamismuodot(Set<String> varhaiskasvatuksenJarjestamismuodot) {
+        this.varhaiskasvatuksenJarjestamismuodot = varhaiskasvatuksenJarjestamismuodot;
     }
 }

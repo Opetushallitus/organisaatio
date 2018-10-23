@@ -10,6 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.validation.ValidationException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -32,189 +33,163 @@ public class OrganisaatioValidationServiceImplTest {
 
     @Test
     public void paikkojenLkmNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setPaikkojenLukumaara(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.paikkojenlkm.null");
     }
 
     @Test
     public void jarjestamismuotoNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenJarjestamismuodot(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestamismuoto.invalidkoodi");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestamismuodot.null");
     }
 
     @Test
-    public void jarjestamismuotoInvalidKoodi() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("invalid");
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+    public void toimintamuotoInvalidKoodi() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setToimintamuoto("invalid");
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestamismuoto.invalidkoodi");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuoto.invalidkoodi");
     }
 
     @Test
-    public void jarjestelmaNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+    public void kasvatusopillinenjarjestelmaNull() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setKasvatusopillinenJarjestelma(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestelma.invalidkoodi");
     }
 
     @Test
-    public void jarjestelmaInvalidKoodi() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("invalid");
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+    public void kasvatusopillinenjarjestelmaInvalidKoodi() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setKasvatusopillinenJarjestelma("invalid");
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestelma.invalidkoodi");
     }
 
     @Test
     public void painotusNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(null);
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenToiminnallinenpainotukset(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.null");
     }
 
     @Test
-    public void painotusInvalidKoodi() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("invalid");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+    public void toiminnallinenpainotusAlkupvmNull() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
+                .forEach(painotus -> painotus.setAlkupvm(null));
+        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.alkupvm.null");
+    }
+
+    @Test
+    public void toiminnallinenpainotusLoppupvmInvalid() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
+                .forEach(painotus -> painotus.setLoppupvm(new Date(100)));
+        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.loppupvm.invalid");
+    }
+
+    @Test
+    public void toiminnallinenpainotusInvalidKoodi() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
+                .forEach(painotus -> painotus.setToiminnallinenpainotus("invalid"));
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.invalidkoodi");
     }
 
     @Test
     public void toimintamuodotNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(null);
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setToimintamuoto(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuodot.null");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuoto.null");
     }
 
     @Test
-    public void toimintamuodotEmpty() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        VarhaiskasvatuksenKielipainotus varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotus();
-        varhaiskasvatuksenKielipainotus.setKielipainotus("kieli_bh");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotus));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(new HashSet<>());
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+    public void jarjestamismuodotEmpty() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenJarjestamismuodot(new HashSet<>());
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuodot.empty");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.jarjestamismuodot.empty");
     }
 
     @Test
     public void toimintamuodotInvalidKoodi() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoiminnallinenpainotus_tp99"));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(new VarhaiskasvatuksenToiminnallinenpainotus()));
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("invalid"));
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setToimintamuoto("invalid");
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuodot.invalidkoodi");
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toimintamuoto.invalidkoodi");
     }
 
     @Test
     public void kielipainotuksetNull() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(null);
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenKielipainotukset(null);
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.null");
     }
 
     @Test
+    public void kielipainotuksetAlkupvmNull() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
+                .forEach(painotus -> painotus.setAlkupvm(null));
+        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.alkupvm.null");
+    }
+
+    @Test
+    public void kielipainotuksetLoppupvmInvalid() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
+                .forEach(painotus -> painotus.setLoppupvm(new Date(100)));
+        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.loppupvm.invalid");
+    }
+
+    @Test
     public void kielipainotuksetEmpty() {
-        Organisaatio organisaatio = new Organisaatio();
-        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
-        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
-        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
-        VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
-        varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(new HashSet<>());
-        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenKielipainotukset(new HashSet<>());
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
                 .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.empty");
     }
 
     @Test
     public void allOk() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .doesNotThrowAnyException();
+    }
+
+    private Organisaatio createValidOrganisation() {
         Organisaatio organisaatio = new Organisaatio();
         VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
         varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(1L);
-        varhaiskasvatuksenToimipaikkaTiedot.setJarjestamismuoto("vardajarjestamismuoto_jm03");
+        varhaiskasvatuksenToimipaikkaTiedot.setToimintamuoto("vardatoimintamuoto_tm02");
         varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
-        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToimintamuodot(Collections.singleton("vardatoimintamuoto_tm02"));
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenJarjestamismuodot(Collections.singleton("vardajarjestamismuoto_jm03"));
         VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+        varhaiskasvatuksenToiminnallinenpainotus.setAlkupvm(new Date(1000000));
+        varhaiskasvatuksenToiminnallinenpainotus.setLoppupvm(new Date());
         varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotus));
         VarhaiskasvatuksenKielipainotus varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotus();
+        varhaiskasvatuksenKielipainotus.setAlkupvm(new Date(1000000));
+        varhaiskasvatuksenKielipainotus.setLoppupvm(new Date());
         varhaiskasvatuksenKielipainotus.setKielipainotus("kieli_bh");
         varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotus));
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedot);
-        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .doesNotThrowAnyException();
+        return organisaatio;
     }
 
 }

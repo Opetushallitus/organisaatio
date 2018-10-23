@@ -12,8 +12,8 @@ import java.util.Set;
 public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
 
     // Koodisto vardajarjestamismuoto
-    @Column(name = "jarjestamismuoto", nullable = false)
-    private String jarjestamismuoto;
+    @Column(name = "toimintamuoto", nullable = false)
+    private String toimintamuoto;
 
     // Koodisto vardakasvatusopillinenjarjestelma
     @Column(name = "kasvatusopillinen_jarjestelma", nullable = false)
@@ -21,9 +21,9 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
 
     // Koodisto vardatoimintamuoto
     @ElementCollection
-    @CollectionTable(name = "varhaiskasvatuksen_toimintamuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
+    @CollectionTable(name = "varhaiskasvatuksen_jarjestamismuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
     @Column(name = "toimintamuoto", nullable = false)
-    private Set<String> varhaiskasvatuksenToimintamuodot = new HashSet<>();
+    private Set<String> varhaiskasvatuksenJarjestamismuodot = new HashSet<>();
 
     @Column(name = "paikkojen_lukumaara", nullable = false)
     private Long paikkojenLukumaara;
@@ -36,12 +36,12 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
     private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
-    public String getJarjestamismuoto() {
-        return jarjestamismuoto;
+    public String getToimintamuoto() {
+        return toimintamuoto;
     }
 
-    public void setJarjestamismuoto(String jarjestamismuoto) {
-        this.jarjestamismuoto = jarjestamismuoto;
+    public void setToimintamuoto(String jarjestamismuoto) {
+        this.toimintamuoto = jarjestamismuoto;
     }
 
     public String getKasvatusopillinenJarjestelma() {
@@ -76,11 +76,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
         this.varhaiskasvatuksenToiminnallinenpainotukset = varhaiskasvatuksenToimintamuodot;
     }
 
-    public Set<String> getVarhaiskasvatuksenToimintamuodot() {
-        return varhaiskasvatuksenToimintamuodot;
+    public Set<String> getVarhaiskasvatuksenJarjestamismuodot() {
+        return varhaiskasvatuksenJarjestamismuodot;
     }
 
-    public void setVarhaiskasvatuksenToimintamuodot(Set<String> toimintamuoto) {
-        this.varhaiskasvatuksenToimintamuodot = toimintamuoto;
+    public void setVarhaiskasvatuksenJarjestamismuodot(Set<String> toimintamuoto) {
+        this.varhaiskasvatuksenJarjestamismuodot = toimintamuoto;
     }
 }

@@ -103,13 +103,13 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
     private VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotEntityToDto(VarhaiskasvatuksenToimipaikkaTiedot toimipaikkaTiedot) {
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
-        varhaiskasvatuksenToimipaikkaTiedotDto.setJarjestamismuoto(toimipaikkaTiedot.getJarjestamismuoto());
+        varhaiskasvatuksenToimipaikkaTiedotDto.setToimintamuoto(toimipaikkaTiedot.getToimintamuoto());
         varhaiskasvatuksenToimipaikkaTiedotDto.setKasvatusopillinenJarjestelma(toimipaikkaTiedot.getKasvatusopillinenJarjestelma());
         varhaiskasvatuksenToimipaikkaTiedotDto.setPaikkojenLukumaara(toimipaikkaTiedot.getPaikkojenLukumaara());
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenToiminnallinenpainotukset())
                 .map(this::varhaiskasvatuksenToiminnallinenpainotusEntityToDto)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenToiminnallinenpainotukset);
-        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToimintamuodot(this.convertSetToSet(toimipaikkaTiedot.getVarhaiskasvatuksenToimintamuodot()));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenJarjestamismuodot(this.convertSetToSet(toimipaikkaTiedot.getVarhaiskasvatuksenJarjestamismuodot()));
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenKielipainotukset);

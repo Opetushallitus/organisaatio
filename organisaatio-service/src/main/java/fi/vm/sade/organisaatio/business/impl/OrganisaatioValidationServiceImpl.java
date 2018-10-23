@@ -6,6 +6,8 @@ import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenKielipainotus;
+import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToiminnallinenpainotus;
 import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
@@ -100,9 +102,11 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
                         "validation.varhaiskasvatuksentoimipaikka.null"),
                 this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getPaikkojenLukumaara()),
                         "validation.varhaiskasvatuksentoimipaikka.paikkojenlkm.null"),
-                this.entry(toimipaikka -> this.organisaatioKoodisto.haeVardaJarjestamismuoto().stream()
-                                .anyMatch(koodi -> koodi.equals(toimipaikka.getJarjestamismuoto())),
-                        "validation.varhaiskasvatuksentoimipaikka.jarjestamismuoto.invalidkoodi"),
+                this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getToimintamuoto()),
+                        "validation.varhaiskasvatuksentoimipaikka.toimintamuoto.null"),
+                this.entry(toimipaikka -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
+                                .anyMatch(koodi -> koodi.equals(toimipaikka.getToimintamuoto())),
+                        "validation.varhaiskasvatuksentoimipaikka.toimintamuoto.invalidkoodi"),
                 this.entry(toimipaikka -> this.organisaatioKoodisto.haeVardaKasvatusopillinenJarjestelma().stream()
                                 .anyMatch(koodi -> koodi.equals(toimipaikka.getKasvatusopillinenJarjestelma())),
                         "validation.varhaiskasvatuksentoimipaikka.jarjestelma.invalidkoodi"),
@@ -111,21 +115,35 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().size() > 0,
                         "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.empty"),
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().stream()
+                                .map(VarhaiskasvatuksenToiminnallinenpainotus::getAlkupvm)
+                                .allMatch(Objects::nonNull),
+                        "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.alkupvm.null"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().stream()
+                                .allMatch(painotus -> painotus.getLoppupvm() == null || painotus.getLoppupvm().after(painotus.getAlkupvm())),
+                        "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.loppupvm.invalid"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToiminnallinenpainotukset().stream()
                                 .allMatch(toiminnallinenpainotus -> this.organisaatioKoodisto.haeVardaToiminnallinenPainotus().stream()
                                         .anyMatch(koodi -> koodi.equals(toiminnallinenpainotus.getToiminnallinenpainotus()))),
                         "validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.invalidkoodi"),
-                this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenToimintamuodot()),
-                        "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.null"),
-                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().size() > 0,
-                        "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.empty"),
-                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenToimintamuodot().stream()
-                                .allMatch(toimintamuoto -> this.organisaatioKoodisto.haeVardaToimintamuoto().stream()
-                                        .anyMatch(koodi -> koodi.equals(toimintamuoto))),
-                        "validation.varhaiskasvatuksentoimipaikka.toimintamuodot.invalidkoodi"),
+                this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenJarjestamismuodot()),
+                        "validation.varhaiskasvatuksentoimipaikka.jarjestamismuodot.null"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenJarjestamismuodot().size() > 0,
+                        "validation.varhaiskasvatuksentoimipaikka.jarjestamismuodot.empty"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenJarjestamismuodot().stream()
+                                .allMatch(jarjestamismuoto -> this.organisaatioKoodisto.haeVardaJarjestamismuoto().stream()
+                                        .anyMatch(koodi -> koodi.equals(jarjestamismuoto))),
+                        "validation.varhaiskasvatuksentoimipaikka.jarjestamismuodot.invalidkoodi"),
                 this.entry(toimipaikka -> Objects.nonNull(toimipaikka.getVarhaiskasvatuksenKielipainotukset()),
                         "validation.varhaiskasvatuksentoimipaikka.kielipainotukset.null"),
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().size() > 0,
                         "validation.varhaiskasvatuksentoimipaikka.kielipainotukset.empty"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()
+                                .map(VarhaiskasvatuksenKielipainotus::getAlkupvm)
+                                .allMatch(Objects::nonNull),
+                        "validation.varhaiskasvatuksentoimipaikka.kielipainotukset.alkupvm.null"),
+                this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()
+                                .allMatch(painotus -> painotus.getLoppupvm() == null || painotus.getLoppupvm().after(painotus.getAlkupvm())),
+                        "validation.varhaiskasvatuksentoimipaikka.kielipainotukset.loppupvm.invalid"),
                 this.entry(toimipaikka -> toimipaikka.getVarhaiskasvatuksenKielipainotukset().stream()
                                 .allMatch(kielipainotus -> this.organisaatioKoodisto.haeKielikoodit().stream()
                                         .anyMatch(koodi -> koodi.equals(kielipainotus.getKielipainotus()))),
