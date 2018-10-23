@@ -73,8 +73,8 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     }
 
     @Override
-    public String sendEmail(EmailData data) {
-        return gson.fromJson(viestintaClient.post(gson.toJson(data), ""), ViestintaSahkopostiDto.class).getId();
+    public String sendEmail(EmailData data, boolean sanitize) {
+        return gson.fromJson(viestintaClient.post(gson.toJson(data), "", sanitize), ViestintaSahkopostiDto.class).getId();
     }
 
     @Override

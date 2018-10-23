@@ -26,9 +26,10 @@ public interface OrganisaatioViestinta {
      * Lähettää sähköpostin.
      *
      * @param data sähköpostin sisältö
+     * @param sanitize true=viestintäpalvelu poistaa kielletyt html-tagit sähköpostin sisällöstä
      * @return sähköpostin tunniste
      */
-    String sendEmail(EmailData data);
+    String sendEmail(EmailData data, boolean sanitize);
 
     void sendStringViestintaEmail(String message, boolean reauthorize);
 

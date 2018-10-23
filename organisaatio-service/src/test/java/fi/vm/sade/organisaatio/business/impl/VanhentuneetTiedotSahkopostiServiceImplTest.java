@@ -22,10 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
+
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,7 +61,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
         UrlConfiguration properties = new UrlConfiguration();
         service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, organisaatioViestintaMock,
                 organisaatioDAOMock, organisaatioSahkopostiDaoMock, messageSource, freemarker, properties);
-        when(organisaatioViestintaMock.sendEmail(any())).then(new PrintingAnswer<>());
+        when(organisaatioViestintaMock.sendEmail(any(), anyBoolean())).then(new PrintingAnswer<>());
     }
 
     @Test
@@ -94,7 +93,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
         verify(organisaatioDAOMock).findByTarkastusPvm(any(), any(), eq(singletonList("org1")), anyLong());
         ArgumentCaptor<EmailData> emailDataArgumentCaptor = ArgumentCaptor.forClass(EmailData.class);
-        verify(organisaatioViestintaMock, times(2)).sendEmail(emailDataArgumentCaptor.capture());
+        verify(organisaatioViestintaMock, times(2)).sendEmail(emailDataArgumentCaptor.capture(), eq(false));
         List<EmailData> emailDatas = emailDataArgumentCaptor.getAllValues();
         assertThat(emailDatas).extracting(emailData -> emailData.getEmail().getLanguageCode(),
                 emailData -> emailData.getRecipient().stream().map(EmailRecipient::getEmail).sorted().collect(toList()))

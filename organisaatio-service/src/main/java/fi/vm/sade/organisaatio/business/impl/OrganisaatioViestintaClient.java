@@ -64,7 +64,11 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
     }
 
     public String post(String json, String uri) throws OrganisaatioViestintaException {
-        String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri);
+        return post(json, uri, true);
+    }
+
+    public String post(String json, String uri, boolean sanitize) {
+        String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri, sanitize);
         LOG.debug("POST " + viestintaServiceUrl );
         LOG.debug("POST data=" + json);
         authorize();

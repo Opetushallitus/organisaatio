@@ -125,7 +125,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
                 .map(sahkopostiosoite -> new EmailRecipient(null, null, sahkopostiosoite, kieli))
                 .collect(toList()));
 
-        String sahkopostiId = organisaatioViestinta.sendEmail(data);
+        String sahkopostiId = organisaatioViestinta.sendEmail(data, false);
 
         OrganisaatioSahkoposti organisaatioSahkoposti = new OrganisaatioSahkoposti();
         organisaatioSahkoposti.setOrganisaatio(organisaatio);
