@@ -279,7 +279,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.dbFormatToUI = function (dbFormatDate) {
-            return moment(dbFormatDate).format('DD.MM.YYYY');
+            return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
         };
 
         this.setNimet = function() {
