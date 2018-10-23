@@ -81,7 +81,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setYtunnus(source.getYTunnus());
         target.setVirastoTunnus(source.getVirastoTunnus());
 
-        if (source.getYhteystietoArvos()!=null) {
+        if (source.getYhteystietoArvos() != null) {
             target.setYhteystietoArvos(YhteystietoConverterUtils.convertYhteystietoArvos(source.getYhteystietoArvos()));
         }
 
@@ -140,6 +140,9 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
     }
 
     private Date localDateToDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 

@@ -52,10 +52,6 @@
                     </span>
                 </div>
                 <div>
-                    <select id="toiminnallinenpainotus" ng-model="vakaeditctrl.toiminnallinenpainotus.toiminnallinenpainotus" ng-required="false"
-                            ng-options="toiminnallinenpainotus.uri as toiminnallinenpainotus.nimi for toiminnallinenpainotus in vakaeditctrl.koodisto.toiminnallinenPainotus | orderBy:'uri'" required>
-                        <option value="" tt="Organisaationmuokkaus.valitsetoiminnallinenpainotus">Valitse</option>
-                    </select>
                     <input id="toiminnallinenpainotus.alkupvm" ng-model="vakaeditctrl.toiminnallinenpainotus.alkupvm"
                            name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="vakaeditctrl.dpOpen1" ng-click="vakaeditctrl.dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
@@ -66,6 +62,7 @@
                            clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
                            toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
                     />
+                    -
                     <input id="toiminnallinenpainotus.loppupvm" ng-model="vakaeditctrl.toiminnallinenpainotus.loppupvm"
                            name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="vakaeditctrl.dpOpen2" ng-click="vakaeditctrl.dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
@@ -76,6 +73,10 @@
                            clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
                            toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
                     />
+                    <select id="toiminnallinenpainotus" ng-model="vakaeditctrl.toiminnallinenpainotus.toiminnallinenpainotus" ng-required="false"
+                            ng-options="toiminnallinenpainotus.uri as toiminnallinenpainotus.nimi for toiminnallinenpainotus in vakaeditctrl.koodisto.toiminnallinenPainotus | orderBy:'uri'" required>
+                        <option value="" tt="Organisaationmuokkaus.valitsetoiminnallinenpainotus">Valitse</option>
+                    </select>
                     <button class="btn" ng-click="vakaeditctrl.addVarhaiskasvatuksenToiminnallinenpainotus()">
                         <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoToiminnallinenpainotus')}}
                     </button>
@@ -146,10 +147,6 @@
                     </span>
                 </div>
                 <div>
-                    <select id="kielipainotus" ng-model="vakaeditctrl.kielipainotus.kielipainotus" ng-required="false"
-                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in vakaeditctrl.koodisto.kieli | orderBy:'uri'" required>
-                        <option value="" tt="Organisaationmuokkaus.valitsekielipainotus">Valitse</option>
-                    </select>
                     <input id="kielipainotus.alkupvm" ng-model="vakaeditctrl.kielipainotus.alkupvm"
                            name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="vakaeditctrl.dpOpen3" ng-click="vakaeditctrl.dpOpen3=true" min="'1900-01-01'" max="'2030-12-31'"
@@ -160,6 +157,7 @@
                            clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
                            toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
                     />
+                    -
                     <input id="kielipainotus.loppupvm" ng-model="vakaeditctrl.kielipainotus.loppupvm"
                            name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
                            is-open="vakaeditctrl.dpOpen4" ng-click="vakaeditctrl.dpOpen4=true" min="'1900-01-01'" max="'2030-12-31'"
@@ -170,6 +168,10 @@
                            clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
                            toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
                     />
+                    <select id="kielipainotus" ng-model="vakaeditctrl.kielipainotus.kielipainotus" ng-required="false"
+                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in vakaeditctrl.koodisto.kieli | orderBy:'uri'" required>
+                        <option value="" tt="Organisaationmuokkaus.valitsekielipainotus">Valitse</option>
+                    </select>
                     <button class="btn" ng-click="vakaeditctrl.addKielipainotus()">
                         <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoKielipainotus')}}
                     </button>

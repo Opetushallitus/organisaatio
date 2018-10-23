@@ -141,6 +141,9 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
     }
 
     private LocalDate dateToLocaldate(Date date) {
+        if (date == null) {
+            return null;
+        }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 

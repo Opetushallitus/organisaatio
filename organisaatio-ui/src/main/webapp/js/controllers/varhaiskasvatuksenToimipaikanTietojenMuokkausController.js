@@ -15,14 +15,6 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
 
         if (existingModel && Object.getOwnPropertyNames(existingModel).length) {
             vm.model = existingModel;
-            // vm.model.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
-            //     kielipainotus.alkupvm = moment(kielipainotus.alkupvm);
-            //     kielipainotus.loppupvm = moment(kielipainotus.loppupvm);
-            // });
-            // vm.model.varhaiskasvatuksenToiminnallinenpainotukset.forEach(function (toimintamuoto) {
-            //     toimintamuoto.alkupvm = moment(toimintamuoto.alkupvm);
-            //     toimintamuoto.loppupvm = moment(toimintamuoto.loppupvm);
-            // });
         }
         else {
             vm.model = {
@@ -41,20 +33,6 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
 
     vm.initialiseModel();
 
-    // vm.modelToOrganisaatio = function () {
-    //     varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenKielipainotukset.forEach(function (kielipainotus) {
-    //         kielipainotus.alkupvm = kielipainotus.alkupvm.format('YYYY-MM-DD');
-    //         kielipainotus.loppupvm = kielipainotus.loppupvm.format('YYYY-MM-DD');
-    //     });
-    //     varhaiskasvatuksenToimipaikkaTiedotModel.varhaiskasvatuksenToimintamuodot.forEach(function (toimintamuoto) {
-    //         toimintamuoto.alkupvm = toimintamuoto.alkupvm.format('YYYY-MM-DD');
-    //         toimintamuoto.loppupvm = toimintamuoto.loppupvm.format('YYYY-MM-DD');
-    //     });
-    //     $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedotModel;
-    //
-    // };
-
-
     var addEntity = function(existingEntities, entityToAdd, koodiFieldName) {
         var lisattavaKielipainotus = entityToAdd;
         if (!existingEntities) {
@@ -62,9 +40,11 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         }
         // Workaround for timezone issue with UIB https://github.com/angular-ui/bootstrap/issues/6235
         var alkupvmTimezoneOffsetInMinutes = -entityToAdd.alkupvm.getTimezoneOffset();
-        var loppupvmTimezoneOffsetInMinutes = -entityToAdd.loppupvm.getTimezoneOffset();
         entityToAdd.alkupvm = moment(entityToAdd.alkupvm).add(alkupvmTimezoneOffsetInMinutes, 'minutes');
-        entityToAdd.loppupvm = moment(entityToAdd.loppupvm).add(loppupvmTimezoneOffsetInMinutes, 'minutes');
+        if (entityToAdd.loppupvm) {
+            var loppupvmTimezoneOffsetInMinutes = -entityToAdd.loppupvm.getTimezoneOffset();
+            entityToAdd.loppupvm = moment(entityToAdd.loppupvm).add(loppupvmTimezoneOffsetInMinutes, 'minutes');
+        }
 
         var isAlreadyAdded = existingEntities.filter(function (existingEntity) {
                 return existingEntity[koodiFieldName] === entityToAdd[koodiFieldName]
@@ -75,7 +55,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         if (!isAlreadyAdded) {
             var newOrganisaatioEntity = angular.copy(lisattavaKielipainotus);
             newOrganisaatioEntity.alkupvm = lisattavaKielipainotus.alkupvm.format('YYYY-MM-DD');
-            newOrganisaatioEntity.loppupvm = lisattavaKielipainotus.loppupvm.format('YYYY-MM-DD');
+            newOrganisaatioEntity.loppupvm = lisattavaKielipainotus.loppupvm && lisattavaKielipainotus.loppupvm.format('YYYY-MM-DD');
             existingEntities.push(newOrganisaatioEntity);
         }
         vm[koodiFieldName] = {};
@@ -145,7 +125,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     };
 
     vm.dbFormatToUI = function (dbFormatDate) {
-        return moment(dbFormatDate).format('DD.MM.YYYY');
+        return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
     };
 
 });
