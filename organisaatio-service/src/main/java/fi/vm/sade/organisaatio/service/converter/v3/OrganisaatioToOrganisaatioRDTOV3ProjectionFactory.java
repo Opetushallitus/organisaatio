@@ -221,10 +221,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
 
-        // Otetaan kuva mukaan vain "pyydettäessä"
-        if (s.isIncludeImage()) {
-            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
-        }
+        // Ei oteta ikinä kuvia mukaan
+
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));

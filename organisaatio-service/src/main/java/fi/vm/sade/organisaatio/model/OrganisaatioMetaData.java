@@ -58,7 +58,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     private MonikielinenTeksti hakutoimistoEctsPuhelinmkt;
 
 
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private BinaryData kuva;
 
     @Transient private boolean includeImage = true;
