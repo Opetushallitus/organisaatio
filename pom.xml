@@ -57,7 +57,7 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Database -->
-        <postgresql.version>42.2.1</postgresql.version>
+        <postgresql.version>42.2.5</postgresql.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <hsqldb.version>2.0.0</hsqldb.version>
@@ -340,7 +340,7 @@ buildTtime=${maven.build.timestamp}
             <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
-                <version>2.4.7</version>
+                <version>3.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.github.kagkarlsson</groupId>
