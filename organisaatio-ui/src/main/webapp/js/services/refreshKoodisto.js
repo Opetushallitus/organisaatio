@@ -85,6 +85,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                             }
                         }
                     });
+                    model.kaikkiOrganisaatiotyypit = result;
                     // Organisaation on mahdollista olla varhaiskasvatuksen toimipaikka joten haetaan tähän liittyvät koodit
                     if (model.koodisto.organisaatiotyypit.some(function (orgTyyppi) { return orgTyyppi.koodiUri === 'organisaatiotyyppi_08'; })) {
                         KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');

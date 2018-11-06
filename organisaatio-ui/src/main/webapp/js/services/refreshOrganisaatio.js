@@ -327,9 +327,11 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                 model.organisaationTulevaNimi.nimi = {};
             }
 
-            KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
-                model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
-            });
+            if (!model.kaikkiOrganisaatiotyypit || model.kaikkiOrganisaatiotyypit.length === 0) {
+                KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
+                    model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
+                });
+            }
             if (model.organisaatio.tyypit.indexOf('organisaatiotyyppi_08') !== -1) {
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
