@@ -26,7 +26,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -42,7 +41,6 @@ import java.util.stream.Collectors;
  *
  */
 @Component
-@Primary
 public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -496,6 +494,31 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     @Override
     public Set<String> haeOppilaitoskoodit() {
         return this.haeKoodistonKoodit("oppilaitostyyppi");
+    }
+
+    @Override
+    public Set<String> haeVardaJarjestamismuoto() {
+        return this.haeKoodistonKoodit("vardajarjestamismuoto");
+    }
+
+    @Override
+    public Set<String> haeVardaKasvatusopillinenJarjestelma() {
+        return this.haeKoodistonKoodit("vardakasvatusopillinenjarjestelma");
+    }
+
+    @Override
+    public Set<String> haeVardaToiminnallinenPainotus() {
+        return this.haeKoodistonKoodit("vardatoiminnallinenpainotus");
+    }
+
+    @Override
+    public Set<String> haeVardaToimintamuoto() {
+        return this.haeKoodistonKoodit("vardatoimintamuoto");
+    }
+
+    @Override
+    public Set<String> haeKielikoodit() {
+        return this.haeKoodistonKoodit("kieli");
     }
 
     private Set<String> haeKoodistonKoodit(String koodistoUri) {

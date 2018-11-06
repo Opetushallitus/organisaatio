@@ -338,6 +338,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         }
         return this.kieletUris;
     }
+
+    public void setKieletUris(List<String> kieletUris) {
+        this.kieletUris = kieletUris;
+    }
     
     @ApiModelProperty(value = "Kotipaikan URI", required = true)
     public String getKotipaikkaUri() {

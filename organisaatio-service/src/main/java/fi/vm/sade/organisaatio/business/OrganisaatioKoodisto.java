@@ -19,6 +19,16 @@ public interface OrganisaatioKoodisto {
      */
     Set<String> haeOppilaitoskoodit();
 
+    Set<String> haeVardaJarjestamismuoto();
+
+    Set<String> haeVardaKasvatusopillinenJarjestelma();
+
+    Set<String> haeVardaToiminnallinenPainotus();
+
+    Set<String> haeVardaToimintamuoto();
+
+    Set<String> haeKielikoodit();
+
     enum KoodistoUri {
         TOIMIPISTE("opetuspisteet"),
         OPPILAITOS("oppilaitosnumero"),

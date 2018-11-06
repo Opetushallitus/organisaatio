@@ -165,6 +165,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
+    private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
+
     /**
      * Utility method to retrieve the current parent of the organisaatio.
      * @return the parent organisaatio
@@ -814,5 +818,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setOrganisaatioLisatietotyypit(Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit) {
         this.organisaatioLisatietotyypit = organisaatioLisatietotyypit;
+    }
+
+    public VarhaiskasvatuksenToimipaikkaTiedot getVarhaiskasvatuksenToimipaikkaTiedot() {
+        return varhaiskasvatuksenToimipaikkaTiedot;
+    }
+
+    public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot) {
+        this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
     }
 }

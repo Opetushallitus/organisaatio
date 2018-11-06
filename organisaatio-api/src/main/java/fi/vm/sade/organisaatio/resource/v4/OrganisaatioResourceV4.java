@@ -14,6 +14,7 @@ import java.util.List;
  * Changes to V3:
  * <ul>
  * <li>organisaatiotyypit as codeelement values</li>
+ * <li>supports varhaiskasvatuksen toimipaikka typed organisations</li>
  * </ul>
  */
 @Path("/organisaatio/v4")

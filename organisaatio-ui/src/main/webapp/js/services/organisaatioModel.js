@@ -52,7 +52,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             postinumerot: [],
             nimetFI: {},
             nimetSV: {},
-            yhteystietoTyypit: {}
+            yhteystietoTyypit: {},
+            jarjestamismuoto: [],
+            kasvatusopillinenJarjestelma: [],
+            toiminnallinenPainotus: [],
+            varhaiskasvatuksenToimintamuodot: [],
+            kieli: []
         };
 
         this.kaikkiOrganisaatiotyypit = [];
@@ -215,10 +220,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         initOrganisaatioModelData.call(this);
 
-        KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
-            model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
-        });
-
         // TODO: Add also parent needed possibly for moving organisaatio
 
         this.getDecodedLocalizedValue= function(res, prefix, suffix, create, language) {
@@ -250,6 +251,36 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return "--";
         };
 
+        this.localiseJarjestamismuoto = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.jarjestamismuoto, koodiUri);
+        };
+
+        this.localiseKasvatusopillinenJarjestelma = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kasvatusopillinenJarjestelma, koodiUri);
+        };
+
+        this.localiseToiminnallinenPainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.toiminnallinenPainotus, koodiUri);
+        };
+
+        this.localiseVarhaiskasvatuksenToimintamuodot = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.varhaiskasvatuksenToimintamuodot, koodiUri);
+        };
+
+        this.localiseKielipainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
+        };
+
+        this.localiseKoodiUri = function (koodisto, koodiUri) {
+            var matchingKoodi = koodisto.filter(function (kieliKoodi) {
+                return kieliKoodi.uri === koodiUri;
+            })[0];
+            return matchingKoodi && matchingKoodi.nimi;
+        };
+
+        this.dbFormatToUI = function (dbFormatDate) {
+            return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
+        };
 
         this.setNimet = function() {
             $log.log('setNimet()');
@@ -537,6 +568,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             model.organisaatio.yhteystietoArvos = [];
             model.lisayhteystiedot = {};
+            if (!this.isVarhaiskasvatuksenToimipaikka()) {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = null;
+            }
+            else {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot || {};
+            }
             LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
@@ -834,6 +871,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_03") !== -1;
             }
             return false;
+        };
+
+        this.isVarhaiskasvatuksenToimipaikka = function() {
+            return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_08") !== -1;
         };
 
         this.hasVuosiluokat = function() {

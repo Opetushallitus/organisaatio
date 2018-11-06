@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
@@ -31,9 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author simok
- */
 public interface OrganisaatioBusinessService {
 
     /**
@@ -52,7 +50,14 @@ public interface OrganisaatioBusinessService {
      */
     public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException;
 
-    OrganisaatioResult save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException;
+    /**
+     * Organisaatio api v4 wrapperi organisaation luomiseen ja tallennukseen.
+     * @param model Organisaatio v4 rajapinnan mukainen dto organisaatiosta
+     * @param updating Luodaanko uusi vai päivitetäänkö
+     * @return Organisaatio v4 rajapinnan tulos dto
+     * @throws ValidationException Validointivirhe jos organisaation tiedot ovat virheellisiä
+     */
+    ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException;
 
     /**
      * @param oid

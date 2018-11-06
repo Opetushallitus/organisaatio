@@ -68,6 +68,11 @@ var KOODISTO_KUNTA_KOODI = KOODISTO_KUNTA_KOODI || "";
 var KOODISTO_KOODI_HAE = KOODISTO_KOODI_HAE || "";
 var KOODISTO_POSTI = KOODISTO_POSTI || "";
 var KOODISTO_OPPILAITOKSENOPETUSKIELI = KOODISTO_OPPILAITOKSENOPETUSKIELI || "";
+var KOODISTO_JARJESTAMISMUOTO = KOODISTO_JARJESTAMISMUOTO || "";
+var KOODISTO_KASVATUSOPILLINEN_JARJESTELMA = KOODISTO_KASVATUSOPILLINEN_JARJESTELMA || "";
+var KOODISTO_TOIMINNALLINEN_PAINOTUS = KOODISTO_TOIMINNALLINEN_PAINOTUS || "";
+var KOODISTO_MAAT_JA_VALTIOT2 = KOODISTO_MAAT_JA_VALTIOT2 ||"";
+var KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT = KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT || "";
 
 var SESSION_KEEPALIVE_INTERVAL_IN_SECONDS = SESSION_KEEPALIVE_INTERVAL_IN_SECONDS || 30;
 var MAX_SESSION_IDLE_TIME_IN_SECONDS = MAX_SESSION_IDLE_TIME_IN_SECONDS || 1800;
@@ -228,6 +233,12 @@ app.factory('Alert', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     }
 ]);
 
+app.run(function ($rootScope) {
+    $rootScope.$on('$includeContentRequested', function (event, url) {
+        console.log(event);
+        console.log(url);
+    });
+});
 
 app.factory('OrganisaatioInitAuth', ['$log', '$timeout', '$filter', '$injector',
                                      'Alert', 'OrganisaatioAuthGET',

@@ -19,10 +19,10 @@ import com.google.common.collect.Maps;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
-import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.dao.*;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -32,6 +32,7 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -55,7 +56,6 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -107,7 +107,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private LisatietoTyyppiDao lisatietoTyyppiDao;
 
     @Autowired
-    private OrganisaatioLisatietoTyyppiDao organisaatioLisatietoTyyppiDao;
+    private OrganisaatioValidationService organisaatioValidationService;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -181,10 +181,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
+    public ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        return save(entity, model.getParentOid(), updating);
+        OrganisaatioResult organisaatioResult = save(entity, model.getParentOid(), updating);
+        return new ResultRDTOV4(this.conversionService.convert(organisaatioResult.getOrganisaatio(), OrganisaatioRDTOV4.class), organisaatioResult.getInfo());
     }
 
     private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating) {
@@ -208,7 +209,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 ? organisaatioDAO.findByOid(parentOid) : null;
 
         // Validate (throws exception)
-        validateOrganisation(entity, parentOid, parentOrg);
+        this.organisaatioValidationService.validateOrganisation(entity, parentOid, parentOrg);
+
+        // Validate and persist lisatietotyypit
+        if (!CollectionUtils.isEmpty(entity.getOrganisaatioLisatietotyypit())) {
+            persistOrganisaatioLisatietotyyppis(entity);
+        }
+
+        boolean isVarhaiskasvatuksenToimipaikka = entity.getTyypit().stream()
+                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
+        setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
 
         Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
@@ -395,6 +405,29 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return new OrganisaatioResult(entity, info);
     }
 
+    private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
+        Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = entity.getOrganisaatioLisatietotyypit().stream()
+                .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
+                        .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
+                .map(lisatietotyyppi -> {
+                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                    organisaatioLisatietotyyppi.setOrganisaatio(entity);
+                    return organisaatioLisatietotyyppi;
+                })
+                .collect(Collectors.toSet());
+        entity.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
+    }
+
+    private void setVarhaiskasvatuksenToimipaikkaTietoRelations(Organisaatio entity, boolean isVarhaiskasvatuksenToimipaikka) {
+        if (isVarhaiskasvatuksenToimipaikka) {
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
+                    .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
+                    .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+        }
+    }
+
     private Organisaatio validateHierarchy(String parentOid, Organisaatio entity) {
         Organisaatio oldParent = null;
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(entity.getOid());
@@ -422,57 +455,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             checker.checkLakkautusAlkavatKoulutukset(entity);
         }
         return oldParent;
-    }
-
-    private void validateOrganisation(Organisaatio model, String parentOid, Organisaatio parentOrg) {
-        // Validointi: Tarkistetaan, että parent ei ole ryhmä
-        if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
-            throw new ValidationException("Parent cannot be group");
-        }
-
-        // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
-        if (OrganisaatioUtil.isRyhma(model) && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) {
-            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
-        }
-
-        // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
-        if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
-            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
-        }
-
-        // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getYtunnus() != null && model.getYtunnus().length() == 0) {
-            model.setYtunnus(null);
-        }
-        if (model.getYtunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYtunnus())) {
-            throw new ValidationException("validation.Organisaatio.ytunnus");
-        }
-
-        // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
-        if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
-            model.setVirastoTunnus(null);
-        }
-        if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
-            throw new ValidationException("validation.Organisaatio.virastotunnus");
-        }
-
-        // Validate and persis lisatietotyypit
-        if (!CollectionUtils.isEmpty(model.getOrganisaatioLisatietotyypit())) {
-            Set<OrganisaatioLisatietotyyppi> persistedLisatieotyypit = model.getOrganisaatioLisatietotyypit().stream()
-                    .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
-                    .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
-                    .map(lisatietotyyppi -> {
-                        OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
-                        organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
-                        organisaatioLisatietotyyppi.setOrganisaatio(model);
-                        return organisaatioLisatietotyyppi;
-                    })
-                    .collect(Collectors.toSet());
-            model.setOrganisaatioLisatietotyypit(persistedLisatieotyypit);
-        }
-
-        // Validointi: koodistoureissa pitää olla versiotieto
-        checker.checkVersionInKoodistoUris(model);
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {

@@ -304,7 +304,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
             model.organisaationtila = "";
             model.organisaationtila = model.getOrganisaationTila(model.organisaatio.status);
             model.organisaatio.historia = result.historia;
-            model.organisaatio
 
             // Otetaan talteen organisaation nimihistoria ennen muutoksia.
             model.originalNimet = model.organisaatio.nimet;
@@ -326,6 +325,17 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                 // Tyhjennetään tuleva nimi
                 model.organisaationTulevaNimi = {};
                 model.organisaationTulevaNimi.nimi = {};
+            }
+
+            KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
+                model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
+            });
+            if (model.organisaatio.tyypit.indexOf('organisaatiotyyppi_08') !== -1) {
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoToiminnallinePainotus, model.koodisto, 'toiminnallinenPainotus');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKieli, model.koodisto, 'kieli');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot, model.koodisto, 'varhaiskasvatuksenToimintamuodot');
             }
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {

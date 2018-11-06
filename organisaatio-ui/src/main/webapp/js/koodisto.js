@@ -78,6 +78,21 @@ koodisto.factory('KoodistoClient', function ($resource) {
         koodistoVuosiluokat: $resource(KOODISTO_VUOSILUOKAT, {}, {
             get: {method: "GET", withCredentials : true, isArray: true}
         }),
+        koodistoJarjestamismuoto: $resource(KOODISTO_JARJESTAMISMUOTO, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoKasvatusopillinenJarjestelma: $resource(KOODISTO_KASVATUSOPILLINEN_JARJESTELMA, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoToiminnallinePainotus: $resource(KOODISTO_TOIMINNALLINEN_PAINOTUS, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoMaatJaValtiot2: $resource(KOODISTO_MAAT_JA_VALTIOT2, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
+        koodistoVarhaiskasvatuksenToimintamuodot: $resource(KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT, {}, {
+            get: {method: "GET", withCredentials : true, isArray: true}
+        }),
         // Koodiston haku koodistopalvelulta koodistoUrin perusteella
         koodistoArrayByUri: $resource(KOODISTO_URI_KOODI, {params: "@uri"}, {
             get: {method: "GET", withCredentials : true, isArray: true}
@@ -88,6 +103,7 @@ koodisto.factory('KoodistoClient', function ($resource) {
 koodisto.service('KoodistoKoodi', function($locale, $window, $http, LocalisationService, $log) {
     $log = $log.getInstance('KoodistoKoodi');
     var language = LocalisationService.getLocale().toUpperCase();
+    var vm = this;
 
     this.getLocalizedName = function(koodi) {
         var nimi = koodi.metadata[0].nimi;
@@ -99,6 +115,18 @@ koodisto.service('KoodistoKoodi', function($locale, $window, $http, Localisation
             }
         });
         return nimi;
+    };
+
+    this.refreshKoodistoIfNeeded = function (client, koodistot, koodistoNimi) {
+        var koodisto = koodistot[koodistoNimi];
+        if (!koodisto || koodisto.length === 0) {
+            client.get({}, function (koodit) {
+                koodistot[koodistoNimi] = [];
+                koodit.forEach(function(koodi) {
+                    koodistot[koodistoNimi].push({uri: koodi.koodiUri, nimi: vm.getLocalizedName(koodi)});
+                });
+            });
+        }
     };
 
     // lang = FI tai SV

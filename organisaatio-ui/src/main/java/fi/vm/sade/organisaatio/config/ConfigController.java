@@ -84,6 +84,11 @@ public class ConfigController {
         append(b, "KOODISTO_KOODI_HAE", ophProperties.getProperty("koodisto-service.url.rest.search.koodis"));
         append(b, "KOODISTO_POSTI", ophProperties.getProperty("koodisto-service.url.rest.posti"));
         append(b, "KOODISTO_OPPILAITOKSENOPETUSKIELI", ophProperties.getProperty("koodisto-service.url.rest.oppilaitoksenopetuskieli.koodi"));
+        append(b, "KOODISTO_JARJESTAMISMUOTO", ophProperties.getProperty("koodisto-service.url.rest.jarjestamismuoto"));
+        append(b, "KOODISTO_KASVATUSOPILLINEN_JARJESTELMA", ophProperties.getProperty("koodisto-service.url.rest.kasvatusopillinenjarjestelma"));
+        append(b, "KOODISTO_TOIMINNALLINEN_PAINOTUS", ophProperties.getProperty("koodisto-service.url.rest.toiminnallinenpainotus"));
+        append(b, "KOODISTO_MAAT_JA_VALTIOT2", ophProperties.getProperty("koodisto-service.url.rest.maatjavaltiot2"));
+        append(b, "KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT", ophProperties.getProperty("koodisto-service.url.rest.toimintamuoto"));
 
         append(b, "ORGANISAATIO_REST_LISATIEDOT_BY_OID", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit.byoid"));
         append(b, "ORGANISAATIO_REST_LISATIETOTYYPIT", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit"));

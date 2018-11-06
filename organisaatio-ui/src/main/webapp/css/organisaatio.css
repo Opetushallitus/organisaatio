@@ -41,7 +41,7 @@
 
 .form-horizontal .controls .control-label.control-label-left {
   text-align: left;
-  width:500px;
+  width: 700px;
 }
 
 .greyed {
@@ -54,6 +54,12 @@ input.greyed[type="text"] {
 
 .modal.modal-wide {
     width: 700px;
+}
+
+.modal.modal-xwide {
+    width: 1100px;
+    left: 17.5%;
+    margin-left: -14%;
 }
 
 .modal.modal-large {
@@ -274,4 +280,9 @@ span#paivittaja {
     display:inline-block;
     float:right;
     line-height: normal;
+}
+
+div > .row-element {
+    margin-bottom: 2px;
+    margin-top: 2px;
 }

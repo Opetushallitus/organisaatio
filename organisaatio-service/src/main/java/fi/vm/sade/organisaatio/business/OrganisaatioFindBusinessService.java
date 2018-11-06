@@ -15,9 +15,11 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -26,11 +28,30 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author simok
- */
 public interface OrganisaatioFindBusinessService {
+
+    /**
+     * Hakee v4 rajapinnan mukaiset organisaatiotiedot oidien perusteella
+     * @param oids Organisaatioden oidit
+     * @return V4 rajapinnan käyttämä organisaatiolista
+     */
+    List<OrganisaatioRDTOV4> findByOidsV4(Collection<String> oids);
+
+    /**
+     * Wrappaa findById(String id) mutta palauttaa v4 apin tuloksen
+     * @param id findById(String id) vastaava hakuavain
+     * @param includeImage Haetaanko kuvat
+     * @return Organisaatio dto muodossa OrganisaatioRDTOV4
+     */
+    OrganisaatioRDTOV4 findByIdV4(String id, boolean includeImage);
+
+    /**
+     * Hakee organisaation ID:n perusteella ja palauttaa tämän lapsiorganisaatiot.
+     * @param id Käyttää findById(String id)
+     * @param includeImage Haetaanko kuvat
+     * @return Organisaation aliorganisaatiot muodossa OrganisaatioRDTOV4
+     */
+    List<OrganisaatioRDTOV4> findChildrenById(String id, boolean includeImage);
 
     /**
      * Idllä haku (Id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi, toimipistekoodi)
@@ -96,4 +117,11 @@ public interface OrganisaatioFindBusinessService {
 
     Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
 
+    /**
+     * Hakee muuttuneet organisaatiot
+     * @param lastModifiedSince Päivämäärä jonka jälkeen muuttuneita haetaan
+     * @param includeImage Haetaanko kuvat
+     * @return Muuttuneet organisaatiot muodossa OrganisaatioRDTOV4
+     */
+    List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage);
 }

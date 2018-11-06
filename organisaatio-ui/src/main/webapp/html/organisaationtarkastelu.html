@@ -163,6 +163,53 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
+    <div class="control-group" ng-if="model.isVarhaiskasvatuksenToimipaikka()">
+        <label class="control-label">
+            {{:: t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}*
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left" ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toimintamuoto')}}:</div>
+                    <div class="span6">{{model.localiseVarhaiskasvatuksenToimintamuodot(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
+                    <div class="span6">{{model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="toiminnallinenpainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset | orderBy: 'toiminnallinenpainotus'">
+                            {{model.localiseToiminnallinenPainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{model.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{model.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
+                    <div class="span6">{{model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="jarjestamismuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot | orderBy: 'varhaiskasvatuksenJarjestamismuodot'">
+                            {{model.localiseJarjestamismuoto(jarjestamismuoto)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="kielipainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset | orderBy: 'kielipainotus'">
+                            {{model.localiseKielipainotus(kielipainotus.kielipainotus)}} {{model.dbFormatToUI(kielipainotus.alkupvm)}} - {{model.dbFormatToUI(kielipainotus.loppupvm)}}
+                        </div>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </div>
+
+
     <div class="control-group" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
         <label class="control-label" tt="Organisaationtarkastelu.tkkoodi">
             Organisaationtarkastelu.tkkoodi

@@ -1,0 +1,165 @@
+package fi.vm.sade.organisaatio.service.converter.v4;
+
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
+import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
+import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverterUtils;
+import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
+import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
+import org.modelmapper.TypeToken;
+
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV4, Organisaatio> {
+
+    @Override
+    public Organisaatio convert(OrganisaatioRDTOV4 source) {
+        List<Yhteystieto> yhteystietos = new ArrayList<>();
+        Organisaatio target = new Organisaatio();
+
+        target.setOid(source.getOid());
+        target.setVersion((long) source.getVersion());
+
+        target.setAlkuPvm(source.getAlkuPvm());
+        target.setDomainNimi(source.getDomainNimi());
+
+        target.setKielet(convertListToList(source.getKieletUris()));
+        target.setKotipaikka(source.getKotipaikkaUri());
+        target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
+        target.setLakkautusPvm(source.getLakkautusPvm());
+        target.setMaa(source.getMaaUri());
+        target.setMetadata(MetadataConverterUtils.convertMetadata(source.getMetadata()));
+        target.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getNimi()));
+
+        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+
+        // Define the target list type for mapping
+        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
+
+        // Map DTO to domain type
+        target.setNimet(organisaatioNimiModelMapper.map(source.getNimet(), organisaatioNimiListType));
+
+        // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
+        MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(target.getNimet());
+        if (nimi != null) {
+            target.setNimihaku(convertNimiMapToNimihaku(nimi.getValues()));
+        }
+
+        target.setOpetuspisteenJarjNro(source.getOpetuspisteenJarjNro());
+        target.setOppilaitosKoodi(source.getOppilaitosKoodi());
+        target.setOppilaitosTyyppi(source.getOppilaitosTyyppiUri());
+        target.setParentOidPath(target.getParentOidPath());
+
+        target.setToimipisteKoodi(source.getToimipistekoodi());
+        target.setTyypit(source.getTyypit());
+        target.setVuosiluokat(convertListToList(source.getVuosiluokat()));
+        target.setOrganisaatioLisatietotyypit(source.getLisatiedot().stream()
+                .map(lisatietoNimi -> {
+                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+                    Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+                    lisatietotyyppi.setNimi(lisatietoNimi);
+                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+                    organisaatioLisatietotyyppi.setOrganisaatio(target);
+                    return organisaatioLisatietotyyppi;
+                })
+                .collect(Collectors.toSet()));
+        target.setRyhmatyypit(convertSetToSet(source.getRyhmatyypit()));
+        target.setKayttoryhmat(convertSetToSet(source.getKayttoryhmat()));
+        target.setYhteishaunKoulukoodi(source.getYhteishaunKoulukoodi());
+        target.setYritysmuoto(source.getYritysmuoto());
+        target.setYtjKieli(source.getYTJKieli());
+        target.setYtjPaivitysPvm(source.getYTJPaivitysPvm());
+        target.setYtunnus(source.getYTunnus());
+        target.setVirastoTunnus(source.getVirastoTunnus());
+
+        if (source.getYhteystietoArvos() != null) {
+            target.setYhteystietoArvos(YhteystietoConverterUtils.convertYhteystietoArvos(source.getYhteystietoArvos()));
+        }
+
+        for (Map<String, String> m : source.getYhteystiedot()) {
+            Yhteystieto y = YhteystietoConverterUtils.convertYhteystietoGeneric(m);
+            if (y != null) {
+                yhteystietos.add(y);
+            }
+        }
+        target.setYhteystiedot(yhteystietos);
+
+        Optional.ofNullable(source.getVarhaiskasvatuksenToimipaikkaTiedot())
+                .map(this::varhaiskasvatuksenToimipaikkaTiedotDtoToEntity)
+                .ifPresent(target::setVarhaiskasvatuksenToimipaikkaTiedot);
+
+        return target;
+    }
+
+    private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedotDtoToEntity(VarhaiskasvatuksenToimipaikkaTiedotDto toimipaikkaTiedotDto) {
+        VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot = new VarhaiskasvatuksenToimipaikkaTiedot();
+        varhaiskasvatuksenToimipaikkaTiedot.setToimintamuoto(toimipaikkaTiedotDto.getToimintamuoto());
+        varhaiskasvatuksenToimipaikkaTiedot.setKasvatusopillinenJarjestelma(toimipaikkaTiedotDto.getKasvatusopillinenJarjestelma());
+        varhaiskasvatuksenToimipaikkaTiedot.setPaikkojenLukumaara(toimipaikkaTiedotDto.getPaikkojenLukumaara());
+        Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenToiminnallinenpainotukset())
+                .map(this::varhaiskasvatuksenToiminnallinenpainotusDtoToEntity)
+                .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenToiminnallinenpainotukset);
+        varhaiskasvatuksenToimipaikkaTiedot.setVarhaiskasvatuksenJarjestamismuodot(this.convertSetToSet(toimipaikkaTiedotDto.getVarhaiskasvatuksenJarjestamismuodot()));
+        Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenKielipainotukset())
+                .map(this::varhaiskasvatuksenKielipainotuksetDtoToEntity)
+                .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenKielipainotukset);
+        return varhaiskasvatuksenToimipaikkaTiedot;
+    }
+
+    private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotuksetDtoToEntity(Set<VarhaiskasvatuksenKielipainotusDto> varhaiskasvatuksenKielipainotusDtoSet) {
+        return varhaiskasvatuksenKielipainotusDtoSet.stream()
+                .map(kielipainotusDto -> {
+                    VarhaiskasvatuksenKielipainotus varhaiskasvatuksenKielipainotus = new VarhaiskasvatuksenKielipainotus();
+                    varhaiskasvatuksenKielipainotus.setAlkupvm(this.localDateToDate(kielipainotusDto.getAlkupvm()));
+                    varhaiskasvatuksenKielipainotus.setLoppupvm(this.localDateToDate(kielipainotusDto.getLoppupvm()));
+                    varhaiskasvatuksenKielipainotus.setKielipainotus(kielipainotusDto.getKielipainotus());
+                    return varhaiskasvatuksenKielipainotus;
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotusDtoToEntity(Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotusDtoSet) {
+        return varhaiskasvatuksenToiminnallinenpainotusDtoSet.stream()
+                .map(toiminnallinepainotusDto -> {
+                    VarhaiskasvatuksenToiminnallinenpainotus varhaiskasvatuksenToiminnallinenpainotus = new VarhaiskasvatuksenToiminnallinenpainotus();
+                    varhaiskasvatuksenToiminnallinenpainotus.setAlkupvm(this.localDateToDate(toiminnallinepainotusDto.getAlkupvm()));
+                    varhaiskasvatuksenToiminnallinenpainotus.setLoppupvm(this.localDateToDate(toiminnallinepainotusDto.getLoppupvm()));
+                    varhaiskasvatuksenToiminnallinenpainotus.setToiminnallinenpainotus(toiminnallinepainotusDto.getToiminnallinenpainotus());
+                    return varhaiskasvatuksenToiminnallinenpainotus;
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private Date localDateToDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    private List<String> convertListToList(List<String> s) {
+        return new ArrayList<>(s);
+    }
+
+    private Set<String> convertSetToSet(Set<String> s) {
+        return new HashSet<>(s);
+    }
+
+    private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
+        StringBuilder sb = new StringBuilder();
+        for (String nimi : nimiMap.values()) {
+                sb.append(",");
+                sb.append(nimi);
+        }
+        return sb.toString();
+    }
+}

@@ -85,6 +85,14 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                             }
                         }
                     });
+                    // Organisaation on mahdollista olla varhaiskasvatuksen toimipaikka joten haetaan tähän liittyvät koodit
+                    if (model.koodisto.organisaatiotyypit.some(function (orgTyyppi) { return orgTyyppi.koodiUri === 'organisaatiotyyppi_08'; })) {
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoToiminnallinePainotus, model.koodisto, 'toiminnallinenPainotus');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKieli, model.koodisto, 'kieli');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot, model.koodisto, 'varhaiskasvatuksenToimintamuodot');
+                    }
                 },
                 // Error case
                 function(response) {
