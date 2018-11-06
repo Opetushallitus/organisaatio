@@ -47,7 +47,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="control-group">
         <label class="control-label">
-            {{t('Organisaationtarkastelu.organisaatiotyyppi')}}*
+            {{:: t('Organisaationtarkastelu.organisaatiotyyppi')}}*
         </label>
 
         <div class="controls" ng-if="model.koodisto.organisaatiotyypit.length">
@@ -57,13 +57,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                            auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppiKoodi.koodiUri) !== -1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppiKoodi.koodiUri);form.$dirty = true">
-                    {{:: getKoodiLocalized(tyyppiKoodi.koodiUri)}}
+                    {{getKoodiLocalized(tyyppiKoodi.koodiUri)}}
                 </span>
                 <span ng-if="(model.koodisto.ophOrganisaatiot.indexOf(tyyppiKoodi.koodiUri) === -1)">
                     <input type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppiKoodi.koodiUri) !== -1"
                            ng-click="model.toggleCheckOrganisaatio(tyyppiKoodi.koodiUri);form.$dirty = true">
-                    {{:: getKoodiLocalized(tyyppiKoodi.koodiUri)}}
+                    {{getKoodiLocalized(tyyppiKoodi.koodiUri)}}
                 </span>
             </span>
             <!-- Näytetään tyypit, jotka eivät hierarkiasääntöjen mukaan ole valideja -->
@@ -71,14 +71,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <span ng-if="isNotInOrganisaatiotyypit(tyyppi)">
                     <input class="" type='checkbox' name="orgtyyppi" ng-model='dummy_orgtyyppi'
                            ng-checked="model.organisaatio.tyypit.indexOf(tyyppi) !== - 1" disabled>
-                    {{:: getKoodiLocalized(tyyppi)}}
+                    {{getKoodiLocalized(tyyppi)}}
                 </span>
             </span>
             <div ng-if="model.organisaatio.tyypit.length === 0">
                 <input type="hidden" name="organisaatiotyyppi" ng-model="organisaatiotyyppi" required>
                 <span class="text-error" ng-show="form.organisaatiotyyppi.$error.required">
-                    {{t('Organisaationtarkastelu.organisaatiotyyppi')}}
-                    {{t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    {{:: t('Organisaationtarkastelu.organisaatiotyyppi')}}
+                    {{:: t('Organisaationmuokkaus.validointi.pakollinen')}}
                 </span>
             </div>
         </div>
