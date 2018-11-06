@@ -162,6 +162,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String parentIdPath;
     private String organisaatiotyypitStr;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tarkastusPvm;
+
     /**
      * Utility method to retrieve the current parent of the organisaatio.
      * @return the parent organisaatio
@@ -702,6 +705,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setOrganisaatiotyypitStr(String organisaatiotyypitStr) {
         this.organisaatiotyypitStr = organisaatiotyypitStr;
+    }
+
+    public Date getTarkastusPvm() {
+        return tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Date tarkastusPvm) {
+        this.tarkastusPvm = tarkastusPvm;
     }
 
     public Date getTuontiPvm() {

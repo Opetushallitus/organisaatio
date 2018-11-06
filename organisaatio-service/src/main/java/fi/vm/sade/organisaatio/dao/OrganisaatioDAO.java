@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -180,6 +181,17 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     List<Organisaatio> findModifiedSince(Date lastModifiedSince);
+
+    /**
+     * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.
+     *
+     * @param tarkastusPvm aikaleima jonka jälkeen tarkastus tulee olla tehtynä
+     * @param voimassaPvm aikaleima jolla organisaatiot halutaan olevan aktiivisia
+     * @param oids organisaatiot joita haetaan
+     * @param limit palautettavien rivien maksimimäärä
+     * @return tarkastamattomat organisaatiot
+     */
+    Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
 
     /**
      * Implementation of merge without flush, let hibernate decide when
