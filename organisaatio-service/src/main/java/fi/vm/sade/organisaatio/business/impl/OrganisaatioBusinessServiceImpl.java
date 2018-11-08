@@ -471,7 +471,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return this.organisaatioDAO.findByOid(child.getOid());
     }
 
-    private List<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, List<YhteystietoArvo> nys,
+    private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys,
             boolean updating) {
 
         Map<String, YhteystietoArvo> ov = new HashMap<>();
@@ -484,7 +484,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
-        List<YhteystietoArvo> ret = new ArrayList<>();
+        Set<YhteystietoArvo> ret = new HashSet<>();
 
         for (YhteystietoArvo ya : nys) {
             List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiDAO.findBy("oid", ya.getKentta().getYhteystietojenTyyppi().getOid());
@@ -620,7 +620,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * Generoidaan opetuspisteen järjestysnumero toimipisteelle.
      * Opetuspisteen järjestysnumero on seuraava vapaa numero oppilaitoksen alla.
      */
-    private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, List<String> tyypit) {
+    private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, Set<String> tyypit) {
         // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
         if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
@@ -1026,8 +1026,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public List<Organisaatio> processNewOrganisaatioSuhdeChanges() {
-        List<Organisaatio> results = new ArrayList<>();
+    public Set<Organisaatio> processNewOrganisaatioSuhdeChanges() {
+        Set<Organisaatio> results = new HashSet<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
         Set<Organisaatio> affectedParents = new HashSet<>();
         for (OrganisaatioSuhde os : suhdeList) {

@@ -367,9 +367,8 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         final SolrDocumentToOrganisaatioPerustietoTypeFunction converter = new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
 
         try {
-            List<OrganisaatioPerustieto> result = Lists.newArrayList(Lists.transform(solr.query(q, METHOD.POST).getResults(),
+            return Lists.newArrayList(Lists.transform(solr.query(q, METHOD.POST).getResults(),
                     converter));
-            return result;
         } catch (SolrServerException e) {
             throw new RuntimeException(e);
         }

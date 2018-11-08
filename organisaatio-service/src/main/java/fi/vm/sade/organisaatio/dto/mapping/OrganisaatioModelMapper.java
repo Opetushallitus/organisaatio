@@ -29,10 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -111,23 +108,20 @@ public class OrganisaatioModelMapper extends ModelMapper {
         };
 
         // puhelinnumeroConverter
-        final Converter<List<Yhteystieto>, Map<String, String>> puhelinnumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
-            @Override
-            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
-                List<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
+        final Converter<List<Yhteystieto>, Map<String, String>> puhelinnumeroConverter = mc -> {
+            List<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
 
-                // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
-                Map<String, String> puhelinnumeroMap = new HashMap<>();
+            // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
+            Map<String, String> puhelinnumeroMap = new HashMap<>();
 
-                for (Puhelinnumero numero : puhelinnumerot) {
-                    puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
-                }
-
-                return puhelinnumeroMap;
+            for (Puhelinnumero numero : puhelinnumerot) {
+                puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
             }
+
+            return puhelinnumeroMap;
         };
 
-        final Converter<Organisaatio, List<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
+        final Converter<Organisaatio, Set<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
 
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override

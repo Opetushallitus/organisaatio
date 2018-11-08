@@ -22,10 +22,10 @@ import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -53,8 +53,8 @@ public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends Abs
         return result;
     }
 
-    private List<Map<String, String>> convertLisatietos(List<YhteystietoElementti> les) {
-        List<Map<String, String>> ret = new ArrayList<Map<String, String>>(les.size());
+    private Set<Map<String, String>> convertLisatietos(Set<YhteystietoElementti> les) {
+        Set<Map<String, String>> ret = new HashSet<>(les.size());
         for (YhteystietoElementti e : les) {
             ret.add(convertYhteystietoElementti(e));
         }

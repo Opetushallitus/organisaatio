@@ -12,10 +12,10 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 public final class RyhmaBuilder {
 
@@ -70,7 +70,7 @@ public final class RyhmaBuilder {
     public Organisaatio build() {
         Organisaatio ryhma = new Organisaatio();
         ryhma.setOid(oid);
-        ryhma.setTyypit(Stream.of(OrganisaatioTyyppi.RYHMA).map(OrganisaatioTyyppi::koodiValue).collect(toList()));
+        ryhma.setTyypit(Stream.of(OrganisaatioTyyppi.RYHMA).map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet()));
         ryhma.setOrganisaatiotyypitStr("Ryhma|");
         ryhma.setRyhmatyypit(ryhmatyypit);
         ryhma.setKayttoryhmat(kayttoryhmat);

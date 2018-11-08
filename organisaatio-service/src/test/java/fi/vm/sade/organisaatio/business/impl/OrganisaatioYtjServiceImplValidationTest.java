@@ -62,9 +62,9 @@ public class OrganisaatioYtjServiceImplValidationTest {
         // updated name from YTJ
         Assert.assertEquals("NIMI", org.getNimi().getString("fi"));
         Assert.assertEquals(1, org.getNimet().size());
-        Assert.assertEquals(org.getNimet().get(0).getAlkuPvm(), new GregorianCalendar(2013, Calendar.FEBRUARY, 1).getTime());
+        Assert.assertEquals(org.getNimet().iterator().next().getAlkuPvm(), new GregorianCalendar(2013, Calendar.FEBRUARY, 1).getTime());
         // same koodiValue in name history
-        Assert.assertEquals("NIMI", org.getNimet().get(0).getNimi().getString("fi"));
+        Assert.assertEquals("NIMI", org.getNimet().iterator().next().getNimi().getString("fi"));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         ytjdto.getYritysTunnus().setAlkupvm("01.02.2000");
         // just to pass name validations, we are not testing that now
         ytjdto.setAloitusPvm("01.01.2010");
-        org.setNimet(new ArrayList<OrganisaatioNimi>());
+        org.setNimet(new HashSet<>());
         generateOrganisaatioNimi(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
         org.setAlkuPvm(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
         Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
@@ -98,7 +98,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         os1.setParent(org);
         os1.setChild(child);
         os1.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> children = new ArrayList<>();
+        Set<OrganisaatioSuhde> children = new HashSet<>();
         children.add(os1);
         ReflectionTestUtils.setField(org, "childSuhteet", children);
         Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
@@ -158,7 +158,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         orgOsoite.setOsoite("katu1");
         orgOsoite.setKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI);
         orgOsoite.setOsoiteTyyppi(Osoite.TYYPPI_POSTIOSOITE);
-        List<Yhteystieto> yhteystiedot = new ArrayList<>();
+        Set<Yhteystieto> yhteystiedot = new HashSet<>();
         yhteystiedot.add(orgOsoite);
         org.setYhteystiedot(yhteystiedot);
         ReflectionTestUtils.setField(org, "parentSuhteet", new HashSet<>());

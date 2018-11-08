@@ -2,14 +2,8 @@ package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import org.junit.After;
+import fi.vm.sade.organisaatio.model.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,10 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author mlyly
@@ -257,7 +248,7 @@ public class OrganisaatioSuhdeDAOImplTest extends AbstractTransactionalJUnit4Spr
         o.setNimi(new MonikielinenTeksti());
         o.getNimi().addString("FI", nimi);
 
-        List<Yhteystieto> oYhteystiedot = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> oYhteystiedot = new HashSet<Yhteystieto>();
         oYhteystiedot.add(createOsoite());
         o.setYhteystiedot(oYhteystiedot);
 

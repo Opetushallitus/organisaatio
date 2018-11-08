@@ -41,7 +41,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
     private void createAndPersistOrganisation(String oid, String organisaatiotyyppi, String oppilaitostyyppi) {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setOid(oid);
-        organisaatio.setTyypit(Collections.singletonList(organisaatiotyyppi));
+        organisaatio.setTyypit(Collections.singleton(organisaatiotyyppi));
         organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
         this.entityManager.persist(organisaatio);
     }

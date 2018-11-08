@@ -183,14 +183,14 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // yhteystieto.postinumero
         // yhteystieto.kieli
-        for (int i = 0; i < entity.getYhteystiedot().size(); ++i) {
-            if (entity.getYhteystiedot().get(i).getKieli() != null) {
-                if (!entity.getYhteystiedot().get(i).getKieli().matches(uriWithVersionRegExp)) {
-                    LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + entity.getYhteystiedot().get(i).getKieli());
-                    throw new NoVersionInKoodistoUriException();
-                }
-            }
-        }
+        entity.getYhteystiedot().stream()
+                .filter(yhteystieto -> !Objects.isNull(yhteystieto.getKieli()))
+                .forEach(yhteystieto -> {
+                    if (!yhteystieto.getKieli().matches(uriWithVersionRegExp)) {
+                        LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + yhteystieto.getKieli());
+                        throw new NoVersionInKoodistoUriException();
+                    }
+                });
 
         // ryhmätyypit
         if (entity.getRyhmatyypit() != null) {

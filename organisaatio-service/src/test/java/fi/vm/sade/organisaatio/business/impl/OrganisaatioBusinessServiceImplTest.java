@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
@@ -99,7 +83,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void processOrganisaatioSuhdeChangesNoNewChanges() {
-        List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
+        Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);
         Assert.assertTrue("Results should be empty!", results.isEmpty());
     }
@@ -123,11 +107,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         Assert.assertEquals("Row count should match!", 9, countRowsInTable("organisaatiosuhde"));
 
-        List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
+        Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);
         Assert.assertEquals("Results size does not match!", 1, results.size());
 
-        Organisaatio modified = results.get(0);
+        Organisaatio modified = results.iterator().next();
         Assert.assertEquals("Modified organisation does not match!", Long.valueOf(4), modified.getId());
 
         Assert.assertEquals("Parent oid path should match!", "|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
@@ -356,11 +340,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Test
     public void lisaaVarhaiskasvatuksenToimipaikkaTieto() {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
-        organisaatio.setTyypit(Collections.singletonList(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
+        organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
-        organisaatio.setNimet(Collections.singletonList(nimi));
+        organisaatio.setNimet(Collections.singleton(nimi));
 
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         varhaiskasvatuksenToimipaikkaTiedotDto.setToimintamuoto("vardatoimintamuoto_tm02");
@@ -400,11 +384,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Test
     public void lisaaVarhaiskasvatuksenToimipaikkaTietoVaaralleTyypille() {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
-        organisaatio.setTyypit(Collections.singletonList(OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
+        organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
-        organisaatio.setNimet(Collections.singletonList(nimi));
+        organisaatio.setNimet(Collections.singleton(nimi));
 
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);

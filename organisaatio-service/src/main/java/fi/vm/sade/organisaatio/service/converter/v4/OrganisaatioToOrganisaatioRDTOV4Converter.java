@@ -32,7 +32,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
     @Autowired
     public OrganisaatioToOrganisaatioRDTOV4Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
+        this.organisaatioNimiRDTOListType = new TypeToken<Set<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
@@ -51,7 +51,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
         t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
 
-        t.setKieletUris(convertListToList(s.getKielet()));
+        t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setKuvaus2(YhteystietoConverterUtils.convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
@@ -77,7 +77,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
                 .map(OrganisaatioLisatietotyyppi::getLisatietotyyppi)
                 .map(Lisatietotyyppi::getNimi)
                 .collect(Collectors.toSet())));
-        t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
+        t.setVuosiluokat(convertCollectionToSet(s.getVuosiluokat()));
         t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
@@ -88,7 +88,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setVirastoTunnus(s.getVirastoTunnus());
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
-        List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
+        Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
         for (Yhteystieto y : s.getYhteystiedot()) {
@@ -152,8 +152,8 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
     }
 
 
-    private List<String> convertListToList(Collection<String> s) {
-        return new ArrayList<>(s);
+    private Set<String> convertCollectionToSet(Collection<String> s) {
+        return new HashSet<>(s);
     }
 
     private Set<String> convertSetToSet(Collection<String> s) {

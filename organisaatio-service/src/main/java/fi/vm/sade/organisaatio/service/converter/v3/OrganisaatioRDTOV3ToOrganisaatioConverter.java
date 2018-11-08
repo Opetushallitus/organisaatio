@@ -29,7 +29,10 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,7 +47,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
     @Override
     public Organisaatio convert(OrganisaatioRDTOV3 t) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        List<Yhteystieto> yhteystietos = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio s = new Organisaatio();
 
         s.setOid(t.getOid());
@@ -54,7 +57,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         // t.setChildCount(s.getChildCount());
         s.setDomainNimi(t.getDomainNimi());
 
-        s.setKielet(convertListToList(t.getKieletUris()));
+        s.setKielet(convertCollectionToSet(t.getKieletUris()));
         s.setKotipaikka(t.getKotipaikkaUri());
         s.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(t.getKuvaus2()));
         s.setLakkautusPvm(t.getLakkautusPvm());
@@ -63,7 +66,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(t.getNimi()));
 
         // Define the target list type for mapping
-        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
+        Type organisaatioNimiListType = new TypeToken<Set<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
         s.setNimet(organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
@@ -89,7 +92,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setToimipisteKoodi(t.getToimipistekoodi());
         s.setTyypit(OrganisaatioTyyppi.tyypitToKoodis(t.getTyypit()));
         // t.set(s.getTyypitAsString());
-        s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
+        s.setVuosiluokat(convertCollectionToSet(t.getVuosiluokat()));
         s.setOrganisaatioLisatietotyypit(t.getLisatiedot().stream()
                 .map(lisatietoNimi -> {
                     OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
@@ -127,8 +130,8 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         return s;
     }
 
-    private List<String> convertListToList(List<String> s) {
-        return new ArrayList<>(s);
+    private Set<String> convertCollectionToSet(Collection<String> s) {
+        return new HashSet<>(s);
     }
 
     private Set<String> convertSetToSet(Set<String> s) {

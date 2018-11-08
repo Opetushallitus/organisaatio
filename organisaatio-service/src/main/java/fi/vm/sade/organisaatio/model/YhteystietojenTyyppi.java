@@ -1,33 +1,13 @@
-/*
- *
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * @author Antti Salonen
- */
 @Entity
 @EntityListeners(XssFilterListener.class)
 public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
@@ -42,15 +22,15 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
     @ElementCollection
     @Column(name = "organisaatio_tyyppi")
     @CollectionTable(name = "yhteystietojenTyyppi_organisaatioTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
-    private List<String> sovellettavatOrganisaatioTyyppis = new ArrayList<String>();
+    private Set<String> sovellettavatOrganisaatioTyyppis = new HashSet<>();
 
     @ElementCollection
     @Column(name = "oppilaitos_tyyppi")
     @CollectionTable(name = "yhteystietojenTyyppi_oppilaitosTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
-    private List<String> sovellettavatOppilaitostyyppis = new ArrayList<String>();
+    private Set<String> sovellettavatOppilaitostyyppis = new HashSet<>();
 
     @OneToMany(mappedBy = "yhteystietojenTyyppi", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<YhteystietoElementti> lisatietos = new ArrayList<YhteystietoElementti>();
+    private Set<YhteystietoElementti> lisatietos = new HashSet<>();
 
     @NotNull
     private String oid;
@@ -63,26 +43,26 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
         this.nimi = nimi;
     }
 
-    public List<String> getSovellettavatOrganisaatioTyyppis() {
-        return Collections.unmodifiableList(sovellettavatOrganisaatioTyyppis);
+    public Set<String> getSovellettavatOrganisaatioTyyppis() {
+        return Collections.unmodifiableSet(sovellettavatOrganisaatioTyyppis);
     }
 
-    public void setSovellettavatOrganisaatioTyyppis(List<String> sovellettavatOrganisaatioTyyppis) {
+    public void setSovellettavatOrganisaatioTyyppis(Set<String> sovellettavatOrganisaatioTyyppis) {
         this.sovellettavatOrganisaatioTyyppis.clear();
         this.sovellettavatOrganisaatioTyyppis.addAll(sovellettavatOrganisaatioTyyppis);
     }
 
-    public List<String> getSovellettavatOppilaitostyyppis() {
+    public Set<String> getSovellettavatOppilaitostyyppis() {
         return this.sovellettavatOppilaitostyyppis;
     }
 
     public void setSovellettavatOppilaitostyyppis(
-            List<String> sovellettavatOppilaitostyyppis) {
+            Set<String> sovellettavatOppilaitostyyppis) {
         this.sovellettavatOppilaitostyyppis = sovellettavatOppilaitostyyppis;
     }
 
-    public List<YhteystietoElementti> getLisatietos() {
-        return Collections.unmodifiableList(lisatietos);
+    public Set<YhteystietoElementti> getLisatietos() {
+        return Collections.unmodifiableSet(lisatietos);
     }
 
     public void addLisatieto(YhteystietoElementti lisatieto) {
@@ -90,7 +70,7 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
         lisatietos.add(lisatieto);
     }
 
-    public void setLisatietos(List<YhteystietoElementti> lisatietos) {
+    public void setLisatietos(Set<YhteystietoElementti> lisatietos) {
 
         this.lisatietos.clear();
 

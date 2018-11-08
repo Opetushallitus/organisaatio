@@ -1,20 +1,3 @@
-/*
- *
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.*;
@@ -32,10 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConverterFactory {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -88,12 +68,10 @@ public class ConverterFactory {
         converters.add(converter);
     }
 
-    public <DTO> List<DTO> convertToDTO(List<? extends OrganisaatioBaseEntity> entities, Class<? extends DTO> resultClass) {
-        List<DTO> dtos = new ArrayList<>();
+    public <DTO> Set<DTO> convertToDTO(Set<? extends OrganisaatioBaseEntity> entities, Class<? extends DTO> resultClass) {
+        Set<DTO> dtos = new HashSet<>();
         for (OrganisaatioBaseEntity entity : entities) {
-
             dtos.add(convertToDTO(entity, resultClass));
-
         }
         return dtos;
     }
@@ -407,9 +385,8 @@ public class ConverterFactory {
         return isValid;
     }
 
-    public <JPACLASS extends OrganisaatioBaseEntity> List<JPACLASS> convertYhteystietoElementtisToJPA(List<YhteystietoElementtiDTO> dtos, Class<? extends JPACLASS> resultClass, boolean merge ) {
-        List jpas = new ArrayList();
-        //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);
+    public Set<YhteystietoElementti> convertYhteystietoElementtisToJPA(Set<YhteystietoElementtiDTO> dtos, boolean merge) {
+        Set<YhteystietoElementti> jpas = new HashSet<>();
         if (dtos != null) {
             for (YhteystietoElementtiDTO dto : dtos) {
                 YhteystietoElementti jpa = convertYhteystietoElementtiToJPA(dto, merge);

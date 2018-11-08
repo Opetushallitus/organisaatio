@@ -3,10 +3,9 @@ package fi.vm.sade.organisaatio.dao;
 import fi.vm.sade.organisaatio.RyhmaBuilder;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
-import java.time.LocalDate;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,9 +17,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
@@ -250,7 +250,7 @@ public class OrganisaatioDAOImplTest {
         o.setNimi(new MonikielinenTeksti());
         o.getNimi().addString("FI", nimi);
 
-        List<Yhteystieto> oYhteystiedot = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> oYhteystiedot = new HashSet<>();
         oYhteystiedot.add(createOsoite());
         o.setYhteystiedot(oYhteystiedot);
 

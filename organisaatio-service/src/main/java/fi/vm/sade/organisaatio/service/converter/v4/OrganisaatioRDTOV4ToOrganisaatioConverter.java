@@ -32,7 +32,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
 
     @Override
     public Organisaatio convert(OrganisaatioRDTOV4 source) {
-        List<Yhteystieto> yhteystietos = new ArrayList<>();
+        Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio target = new Organisaatio();
 
         target.setOid(source.getOid());
@@ -41,7 +41,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setAlkuPvm(source.getAlkuPvm());
         target.setDomainNimi(source.getDomainNimi());
 
-        target.setKielet(convertListToList(source.getKieletUris()));
+        target.setKielet(convertCollectionToSet(source.getKieletUris()));
         target.setKotipaikka(source.getKotipaikkaUri());
         target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
         target.setLakkautusPvm(source.getLakkautusPvm());
@@ -50,7 +50,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getNimi()));
 
         // Define the target list type for mapping
-        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
+        Type organisaatioNimiListType = new TypeToken<Set<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
         target.setNimet(organisaatioNimiModelMapper.map(source.getNimet(), organisaatioNimiListType));
@@ -68,7 +68,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
 
         target.setToimipisteKoodi(source.getToimipistekoodi());
         target.setTyypit(source.getTyypit());
-        target.setVuosiluokat(convertListToList(source.getVuosiluokat()));
+        target.setVuosiluokat(convertCollectionToSet(source.getVuosiluokat()));
         target.setOrganisaatioLisatietotyypit(source.getLisatiedot().stream()
                 .map(lisatietoNimi -> {
                     OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
@@ -153,8 +153,8 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    private List<String> convertListToList(List<String> s) {
-        return new ArrayList<>(s);
+    private Set<String> convertCollectionToSet(Collection<String> s) {
+        return new HashSet<>(s);
     }
 
     private Set<String> convertSetToSet(Set<String> s) {

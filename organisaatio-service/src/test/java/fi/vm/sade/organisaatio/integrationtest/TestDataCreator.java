@@ -81,15 +81,15 @@ public class TestDataCreator {
             organisaatio.setOrganisaatioPoistettu(false);
             if (parent != null) {
                 if (!parent.getOid().equals("1.2.246.562.24.00000000001")) {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue()}));
+                    organisaatio.setTyypit(new HashSet<>(Arrays.asList(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue())));
                     organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
                 } else if (organisaatio.getOid().equals("1.2.2004.7")) {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()}));
+                    organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
                 } else {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()}));
+                    organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
                 }
             } else {
-                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()}));
+                organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
             }
 
             createYhteystietos(organisaatio);
@@ -128,7 +128,7 @@ public class TestDataCreator {
     }
 
     private void createYhteystietos(Organisaatio organisaatio) {
-        List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> yhteystiedot = new HashSet<>();
         Osoite osoite1 = new Osoite(Osoite.TYYPPI_POSTIOSOITE, "Mannerheimintie 1", "00100", "Helsinki", null);
         osoite1.setOrganisaatio(organisaatio);
         yhteystiedot.add(osoite1);

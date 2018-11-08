@@ -18,11 +18,12 @@ package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import java.util.Date;
-import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -39,7 +40,7 @@ public class OrganisaatioNimiUtil {
      * @param nimet
      * @return
      */
-    public static MonikielinenTeksti getNimi(List<OrganisaatioNimi> nimet) {
+    public static MonikielinenTeksti getNimi(Set<OrganisaatioNimi> nimet) {
         OrganisaatioNimi currentNimi = null;
         for (OrganisaatioNimi nimi : nimet) {
             if (isValidCurrentNimi(nimi)) {
@@ -59,7 +60,7 @@ public class OrganisaatioNimiUtil {
         return currentNimi.getNimi();
     }
 
-    public static MonikielinenTeksti getUusinNimi(List<OrganisaatioNimi> nimet) {
+    public static MonikielinenTeksti getUusinNimi(Set<OrganisaatioNimi> nimet) {
         OrganisaatioNimi uusinNimi = null;
         for (OrganisaatioNimi nimi : nimet) {
             if (uusinNimi == null) {
