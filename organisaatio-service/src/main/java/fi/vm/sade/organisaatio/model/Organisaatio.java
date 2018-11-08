@@ -25,7 +25,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ElementCollection(fetch= FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
     private Set<String> tyypit = new HashSet<>();
 

@@ -504,35 +504,71 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatioMetaData metaData = QOrganisaatioMetaData.organisaatioMetaData;
         QYhteystieto metadataYhteystieto = new QYhteystieto("metadataYhteystieto");
         QNamedMonikielinenTeksti metadataValues = QNamedMonikielinenTeksti.namedMonikielinenTeksti;
+        QMonikielinenTeksti metadatavaluesvalue = new QMonikielinenTeksti("metadatavaluesvalue");
+        QMonikielinenTeksti metadatavaluesname = new QMonikielinenTeksti("metadatavaluesname");
+        QMonikielinenTeksti metadatanimi = new QMonikielinenTeksti("metadatanimi");
         QOrganisaatioNimi nimet = QOrganisaatioNimi.organisaatioNimi;
+        QMonikielinenTeksti currentnimi = new QMonikielinenTeksti("currentnimi");
+        QMonikielinenTeksti nimi = new QMonikielinenTeksti("orgnimi");
         QOrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = QOrganisaatioLisatietotyyppi.organisaatioLisatietotyyppi;
         QLisatietotyyppi lisatietotyyppi = QLisatietotyyppi.lisatietotyyppi;
         QVarhaiskasvatuksenToimipaikkaTiedot qVarhaiskasvatuksenToimipaikkaTiedot = QVarhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimipaikkaTiedot;
         QYhteystietoArvo yhteystietoArvo = QYhteystietoArvo.yhteystietoArvo;
+        QYhteystietoElementti kentta = QYhteystietoElementti.yhteystietoElementti;
+        QYhteystietojenTyyppi yhteystietojenTyyppi = QYhteystietojenTyyppi.yhteystietojenTyyppi;
+        QMonikielinenTeksti yhteystietojenTyyppiNimi = new QMonikielinenTeksti("yhteystietojenTyyppiNimi");
         QYhteystieto yhteystieto = new QYhteystieto("yhteystieto");
         QOrganisaatioSuhde parentSuhteet = QOrganisaatioSuhde.organisaatioSuhde;
+        QMonikielinenTeksti kuvaus2 = new QMonikielinenTeksti("kuvaus2");
+        QOrganisaatio parent = new QOrganisaatio("parent");
+        QMonikielinenTeksti hakutoimistoEctsEmailmkt = new QMonikielinenTeksti("hakutoimistoEctsEmailmkt");
+        QMonikielinenTeksti hakutoimistoEctsNimimkt = new QMonikielinenTeksti("hakutoimistoEctsNimimkt");
+        QMonikielinenTeksti hakutoimistoEctsTehtavanimikemkt = new QMonikielinenTeksti("hakutoimistoEctsTehtavanimikemkt");
+        QMonikielinenTeksti hakutoimistoEctsPuhelinmkt = new QMonikielinenTeksti("hakutoimistoEctsPuhelinmkt");
+        QMonikielinenTeksti hakutoimistoNimi = new QMonikielinenTeksti("hakutoimistoNimi");
+        QBinaryData binaryData = QBinaryData.binaryData;
+        QMonikielinenTeksti kuvanimi = new QMonikielinenTeksti("kuvanimi");
+        QMonikielinenTeksti parentnimi = new QMonikielinenTeksti("parentnimi");
+        QMonikielinenTeksti parentkuvaus2 = new QMonikielinenTeksti("parentparentkuvaus2");
 
-        // TODO OH-494
         JPAQuery<Organisaatio> jpaQuery = new JPAQuery<Organisaatio>(getEntityManager())
                 .select(org)
                 .distinct()
                 .from(org)
-//                .leftJoin(org.vuosiluokat).fetchJoin()
-//                .leftJoin(org.tyypit).fetchJoin()
+                .leftJoin(org.vuosiluokat).fetchJoin()
+                .leftJoin(org.tyypit).fetchJoin()
                 .leftJoin(org.ryhmatyypit).fetchJoin()
                 .leftJoin(org.kayttoryhmat).fetchJoin()
-                .leftJoin(org.kuvaus2).fetchJoin()
-                .leftJoin(org.nimi).fetchJoin()
+                .leftJoin(org.kuvaus2, kuvaus2).fetchJoin().leftJoin(kuvaus2.values).fetchJoin()
+                .leftJoin(org.nimi, currentnimi).fetchJoin().leftJoin(currentnimi.values).fetchJoin()
                 .leftJoin(org.kielet).fetchJoin()
                 .leftJoin(org.metadata, metaData).fetchJoin()
+//                .leftJoin(metaData.kuva, binaryData).fetchJoin() //
+//                .leftJoin(binaryData.name, kuvanimi).fetchJoin().leftJoin(kuvanimi.values).fetchJoin() //
+                .leftJoin(metaData.nimi, metadatanimi).fetchJoin().leftJoin(metadatanimi.values).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsEmailmkt, hakutoimistoEctsEmailmkt).fetchJoin().leftJoin(hakutoimistoEctsEmailmkt.values).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsNimimkt, hakutoimistoEctsNimimkt).fetchJoin().leftJoin(hakutoimistoEctsNimimkt.values).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsTehtavanimikemkt, hakutoimistoEctsTehtavanimikemkt).fetchJoin().leftJoin(hakutoimistoEctsTehtavanimikemkt.values).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsPuhelinmkt, hakutoimistoEctsPuhelinmkt).fetchJoin().leftJoin(hakutoimistoEctsPuhelinmkt.values).fetchJoin()
+                .leftJoin(metaData.hakutoimistoNimi, hakutoimistoNimi).fetchJoin().leftJoin(hakutoimistoNimi.values).fetchJoin()
                 .leftJoin(metaData.values, metadataValues).fetchJoin()
-//                .leftJoin(metaData.yhteystiedot, metadataYhteystieto).fetchJoin()
+//                .leftJoin(metadataValues.name, metadatavaluesname).fetchJoin().leftJoin(metadatavaluesname.values).fetchJoin() //
+                .leftJoin(metadataValues.value, metadatavaluesvalue).fetchJoin().leftJoin(metadatavaluesvalue.values).fetchJoin()
+                .leftJoin(metaData.yhteystiedot, metadataYhteystieto).fetchJoin()
                 .leftJoin(org.nimet, nimet).fetchJoin()
+                .leftJoin(nimet.nimi, nimi).fetchJoin().leftJoin(nimi.values).fetchJoin()
                 .leftJoin(org.organisaatioLisatietotyypit, organisaatioLisatietotyyppi).fetchJoin()
                 .leftJoin(organisaatioLisatietotyyppi.lisatietotyyppi, lisatietotyyppi).fetchJoin()
                 .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, qVarhaiskasvatuksenToimipaikkaTiedot).fetchJoin()
-//                .leftJoin(org.yhteystietoArvos, yhteystietoArvo).fetchJoin()
-//                .leftJoin(org.parentSuhteet, parentSuhteet).fetchJoin()
+                .leftJoin(org.yhteystietoArvos, yhteystietoArvo).fetchJoin()
+//                .leftJoin(yhteystietoArvo.kentta, kentta).fetchJoin() //
+//                .leftJoin(kentta.yhteystietojenTyyppi, yhteystietojenTyyppi).fetchJoin() //
+//                .leftJoin(yhteystietojenTyyppi.nimi, yhteystietojenTyyppiNimi).fetchJoin().leftJoin(yhteystietojenTyyppiNimi.values).fetchJoin() //
+                .leftJoin(org.parentSuhteet, parentSuhteet).fetchJoin()
+                .leftJoin(parentSuhteet.parent, parent).fetchJoin()
+                .leftJoin(parent.tyypit).fetchJoin()// Because this is eager fetch type it will be loaded anyway
+                .leftJoin(parent.nimi, parentnimi).fetchJoin().leftJoin(parentnimi.values).fetchJoin()// Because this is eager fetch type it will be loaded anyway
+                .leftJoin(parent.kuvaus2, parentkuvaus2).fetchJoin().leftJoin(parentkuvaus2.values).fetchJoin()// Because this is eager fetch type it will be loaded anyway
                 .leftJoin(org.yhteystiedot, yhteystieto).fetchJoin()
                 .where(org.oid.in(oids));
         if (excludePoistettu) {
