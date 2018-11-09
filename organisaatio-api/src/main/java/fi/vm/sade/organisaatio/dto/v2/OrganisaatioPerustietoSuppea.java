@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -21,10 +6,10 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation suppeat perustiedot")
@@ -39,18 +24,18 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     private Map<String, String> nimi = new HashMap<String, String>();
     
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    private List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
+    private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
     
     @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
     private String oppilaitostyyppi;
 
-    private List<OrganisaatioPerustietoSuppea> children = new ArrayList<OrganisaatioPerustietoSuppea>();
+    private Set<OrganisaatioPerustietoSuppea> children = new HashSet<>();
 
-    public List<OrganisaatioPerustietoSuppea> getChildren() {
+    public Set<OrganisaatioPerustietoSuppea> getChildren() {
         return children;
     }
 
-    public void setChildren(List<OrganisaatioPerustietoSuppea> children) {
+    public void setChildren(Set<OrganisaatioPerustietoSuppea> children) {
         this.children = children;
     }
 
@@ -110,7 +95,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     }
     
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    public List<OrganisaatioTyyppi> getOrganisaatiotyypit() {
+    public Set<OrganisaatioTyyppi> getOrganisaatiotyypit() {
         if (tyypit == null) {
             return null;
         }
@@ -120,7 +105,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
         return this.tyypit;
     }
     
-    public void setOrganisaatiotyypit(List<OrganisaatioTyyppi> tyypit) {
+    public void setOrganisaatiotyypit(Set<OrganisaatioTyyppi> tyypit) {
         this.tyypit = tyypit;
     }
     

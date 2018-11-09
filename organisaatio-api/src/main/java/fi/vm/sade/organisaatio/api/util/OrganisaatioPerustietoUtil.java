@@ -32,13 +32,13 @@ public abstract class OrganisaatioPerustietoUtil {
      * @param organisaatiot List organisaatioista, joista muodostetaan puu
      * @return Lista juuritason organisaatioista (lapset asetettu niiden alle)
      */
-    public static List<OrganisaatioPerustieto> createHierarchy(
+    public static Set<OrganisaatioPerustieto> createHierarchy(
             final List<OrganisaatioPerustieto> organisaatiot) {
 
         Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<String, OrganisaatioPerustieto>();
 
         //ORganisaatiot joilla eil ole isää:
-        List<OrganisaatioPerustieto> rootOrgs = new ArrayList<OrganisaatioPerustieto>();
+        Set<OrganisaatioPerustieto> rootOrgs = new HashSet<>();
 
         for (OrganisaatioPerustieto curOrg : organisaatiot) {
             oidToOrgMap.put(curOrg.getOid(), curOrg);

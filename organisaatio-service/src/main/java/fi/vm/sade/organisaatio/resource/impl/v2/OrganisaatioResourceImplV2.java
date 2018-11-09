@@ -159,8 +159,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
-        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<>();
+    private Set<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(Set<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
+        Set<OrganisaatioPerustietoSuppea> opts = new HashSet<>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
             OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
@@ -220,7 +220,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
@@ -238,7 +238,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);

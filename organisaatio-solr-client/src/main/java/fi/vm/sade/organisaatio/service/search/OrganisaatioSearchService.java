@@ -65,7 +65,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
         orgTypeLimit.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), Sets.newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO.value()));
     }
 
-    public List<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
+    public Set<OrganisaatioPerustieto> searchExact(final SearchCriteria searchCriteria) {
         long time = System.currentTimeMillis();
         final List<String> kunta = searchCriteria.getKunta();
         final List<String> restrictionList = searchCriteria.getOidRestrictionList();
@@ -85,8 +85,8 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             final SolrDocumentToOrganisaatioPerustietoTypeFunction converter =
                     new SolrDocumentToOrganisaatioPerustietoTypeFunction(null);
 
-            final List<OrganisaatioPerustieto> result =
-                    Lists.newArrayList(Lists.transform(response.getResults(), converter));
+            final Set<OrganisaatioPerustieto> result =
+                    new HashSet<>(Lists.transform(response.getResults(), converter));
 
             LOG.debug("Total time :{} ms. Results :{}",
                     (System.currentTimeMillis() - time),
