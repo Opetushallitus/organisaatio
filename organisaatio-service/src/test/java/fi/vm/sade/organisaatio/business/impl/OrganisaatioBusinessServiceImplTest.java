@@ -187,6 +187,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     }
 
+    @Transactional
     @Test
     public void updateOppilaitosShouldUpdateToimipisteNames() {
         OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
@@ -297,6 +298,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(throwable).isExactlyInstanceOf(OrganisaatioNameHistoryNotValidException.class);
     }
 
+    @Transactional
     @Test
     public void updateCurrentOrganisaatioNimet() {
         OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid);

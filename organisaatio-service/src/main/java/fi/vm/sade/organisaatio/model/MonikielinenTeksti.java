@@ -58,14 +58,6 @@ public class MonikielinenTeksti extends BaseEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof MonikielinenTeksti) {
-            return Objects.equal(this.values, ((MonikielinenTeksti)o).values);
-        }
-        return false;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hashCode(this.values);
     }

@@ -104,8 +104,15 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
         return organisaatioDAO.findByOids(oids, true).stream()
+                .map(this::markImagesNotIncluded)
                 .map(organisaatio -> this.conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
                 .collect(Collectors.toList());
+    }
+
+    private Organisaatio markImagesNotIncluded(Organisaatio organisaatio) {
+        Optional.ofNullable(organisaatio.getMetadata())
+                .ifPresent(metadata -> metadata.setIncludeImage(false));
+        return organisaatio;
     }
 
     @Override

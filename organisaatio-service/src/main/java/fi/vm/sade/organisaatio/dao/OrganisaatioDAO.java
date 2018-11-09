@@ -157,7 +157,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi, String oppilaitosTyyppi, String kunta, String searchStr, boolean suunnitellut, boolean lakkautetut, int maxResults, List<String> oids);
 
     /**
-     * Hakee useita laajempaa mappausta varten valmiiksi alustettuja organisaatiota oidien perusteella
+     * Hakee useita laajempaa mappausta varten valmiiksi (V4 dto:n mukaan) alustettuja organisaatiota oidien perusteella
      * @param oids Organisaatioiden oidit
      * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
      * @return Oideja vastaavat organisaatiot
