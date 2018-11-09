@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -31,8 +31,8 @@ public class OrganisaatioSuhdeModelMapper extends ModelMapper {
                 // Monikielinen nimi
                 map().getChild().setNimi(source.getChild().getNimi().getValues());
                 map().getParent().setNimi(source.getParent().getNimi().getValues());
-                using(parentTyypitConverter).map(source).getParent().setTyypit(new ArrayList<>());
-                using(childTyypitConverter).map(source).getChild().setTyypit(new ArrayList<>());
+                using(parentTyypitConverter).map(source).getParent().setTyypit(new HashSet<>());
+                using(childTyypitConverter).map(source).getChild().setTyypit(new HashSet<>());
             }
         });
     }

@@ -2,8 +2,9 @@ package fi.vm.sade.organisaatio.dto.v3;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
+
 import java.util.Map;
+import java.util.Set;
 
 @ApiModel(value = "Organisaation ydintiedot",
           subTypes={OrganisaatioGroupDTOV3.class})
@@ -11,7 +12,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     private String oid;
     private Map<String, String> nimi;
     private String status;
-    private List<String> _tyypit;
+    private Set<String> _tyypit;
 
     /**
      * @return the oid
@@ -47,14 +48,14 @@ public class OrganisaatioCoreInfoDTOV3 {
      * @return the _tyypit
      */
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    public List<String> getTyypit() {
+    public Set<String> getTyypit() {
         return _tyypit;
     }
 
     /**
      * @param _tyypit the _tyypit to set
      */
-    public void setTyypit(List<String> _tyypit) {
+    public void setTyypit(Set<String> _tyypit) {
         this._tyypit = _tyypit;
     }
 

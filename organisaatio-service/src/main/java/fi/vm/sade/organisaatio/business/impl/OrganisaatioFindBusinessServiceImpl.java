@@ -64,13 +64,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
+    public Set<Organisaatio> findBySearchCriteria(
+            Set<String> kieliList,
+            Set<String> kuntaList,
+            Set<String> oppilaitostyyppiList,
+            Set<String> vuosiluokkaList,
+            Set<String> ytunnusList,
+            Set<String> oidList,
             int limit) {
 
         return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);

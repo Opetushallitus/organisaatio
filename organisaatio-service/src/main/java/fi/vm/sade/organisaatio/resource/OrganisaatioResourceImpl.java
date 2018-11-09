@@ -113,12 +113,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         //sorttaa
-        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
-            @Override
-            public Comparable<String> apply(OrganisaatioPerustieto input) {
-                return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
-            }
-        });
+        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural()
+                .nullsFirst()
+                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input));
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 

@@ -3,9 +3,7 @@ package fi.vm.sade.organisaatio.api.search;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")
@@ -23,7 +21,7 @@ public class OrganisaatioSearchCriteria {
 
     private Set<String> kunta = new HashSet<String>();
 
-    private List<String> oidResctrictionList = new ArrayList<String>();
+    private Set<String> oidResctrictionList = new HashSet<>();
 
     private String searchStr;
 
@@ -39,8 +37,8 @@ public class OrganisaatioSearchCriteria {
         super();
     }
 
-    public void setOidRestrictionList(List<String> oidRestrictionList) {
-        this.oidResctrictionList.addAll(oidResctrictionList);
+    public void setOidRestrictionList(Set<String> oidRestrictionList) {
+        this.oidResctrictionList.addAll(oidRestrictionList);
     }
 
     /**
@@ -145,7 +143,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
-    public List<String> getOidRestrictionList() {
+    public Set<String> getOidRestrictionList() {
         return this.oidResctrictionList;
     }
 

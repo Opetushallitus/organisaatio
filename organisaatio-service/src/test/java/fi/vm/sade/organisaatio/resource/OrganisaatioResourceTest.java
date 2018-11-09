@@ -29,7 +29,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -113,7 +116,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         assertEquals(6, result.getNumHits());
 
         //List roots
-        ArrayList<String> oidList = new ArrayList<String>();
+        Set<String> oidList = new HashSet<>();
         oidList.add("1.2.2004.1");
         oidList.add("1.2.2004.5");
         searchCriteria = createOrgSearchCriteria(null, null, null, true, oidList);
@@ -121,7 +124,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             LOG.debug("ORG: {}", org.getOid());
         }
-        assertEquals(8, result.getNumHits());
+        assertEquals(7, result.getNumHits());
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
@@ -205,7 +208,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
-                                                               boolean suunnitellut, List<String> oids) {
+                                                               boolean suunnitellut, Set<String> oids) {
         OrganisaatioSearchCriteria sc = new OrganisaatioSearchCriteria();
         sc.setOrganisaatioTyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
         Set<String> tyypit = new HashSet<>();

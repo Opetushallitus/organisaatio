@@ -15,16 +15,12 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-/**
- *
- * @author hpy
- */
+import java.util.HashMap;
+import java.util.Map;
+
 @ApiModel(value = "Organisaation hakutulos suppea")
 public class OrganisaatioLOPTietoDTOV2 {
 

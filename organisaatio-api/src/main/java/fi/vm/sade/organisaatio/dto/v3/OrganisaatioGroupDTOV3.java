@@ -2,9 +2,10 @@ package fi.vm.sade.organisaatio.dto.v3;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @ApiModel(value = "Ryhmän tiedot", parent=OrganisaatioCoreInfoDTOV3.class)
 public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
@@ -14,8 +15,8 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     private Date alkuPvm;
     private Date lakkautusPvm;
     private Map<String, String> kuvaus;
-    private List<String> ryhmatyypit;
-    private List<String> kayttoryhmat;
+    private Set<String> ryhmatyypit;
+    private Set<String> kayttoryhmat;
 
     /**
      * @return the version
@@ -81,14 +82,14 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
      * @return the ryhmatyypit
      */
     @ApiModelProperty(value = "Ryhmätyypit", required = true)
-    public List<String> getRyhmatyypit() {
+    public Set<String> getRyhmatyypit() {
         return ryhmatyypit;
     }
 
     /**
      * @param ryhmatyypit the ryhmatyypit to set
      */
-    public void setRyhmatyypit(List<String> ryhmatyypit) {
+    public void setRyhmatyypit(Set<String> ryhmatyypit) {
         this.ryhmatyypit = ryhmatyypit;
     }
 
@@ -96,14 +97,14 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
      * @return the kayttoryhmat
      */
     @ApiModelProperty(value = "Ryhmän käyttöryhmät", required = true)
-    public List<String> getKayttoryhmat() {
+    public Set<String> getKayttoryhmat() {
         return kayttoryhmat;
     }
 
     /**
      * @param kayttoryhmat the kayttoryhmat to set
      */
-    public void setKayttoryhmat(List<String> kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> kayttoryhmat) {
         this.kayttoryhmat = kayttoryhmat;
     }
 

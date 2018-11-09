@@ -1,36 +1,18 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
-import java.util.Map;
 
-/**
- *
- * @author simok
- */
+import java.util.Map;
+import java.util.Set;
+
 @ApiModel(value = "Organisaation ydintiedot",
           subTypes={OrganisaatioGroupDTOV2.class})
 public class OrganisaatioCoreInfoDTOV2 {
     private String oid;
     private Map<String, String> nimi;
     private String status;
-    private List<String> _tyypit;
+    private Set<String> _tyypit;
 
     /**
      * @return the oid
@@ -66,14 +48,14 @@ public class OrganisaatioCoreInfoDTOV2 {
      * @return the _tyypit
      */
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    public List<String> getTyypit() {
+    public Set<String> getTyypit() {
         return _tyypit;
     }
 
     /**
      * @param _tyypit the _tyypit to set
      */
-    public void setTyypit(List<String> _tyypit) {
+    public void setTyypit(Set<String> _tyypit) {
         this._tyypit = _tyypit;
     }
 

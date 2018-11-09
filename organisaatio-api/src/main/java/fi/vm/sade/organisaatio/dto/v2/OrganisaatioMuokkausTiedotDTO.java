@@ -2,9 +2,6 @@ package fi.vm.sade.organisaatio.dto.v2;
 
 import java.util.Date;
 
-/**
- * Created by jefin on 29.8.2014.
- */
 public class OrganisaatioMuokkausTiedotDTO {
     public String getOid() {
         return oid;

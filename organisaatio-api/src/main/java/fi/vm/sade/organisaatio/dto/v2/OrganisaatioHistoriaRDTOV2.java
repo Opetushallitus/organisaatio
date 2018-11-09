@@ -1,83 +1,68 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class OrganisaatioHistoriaRDTOV2 {
-    private List<OrganisaatioSuhdeDTOV2> childSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
-    private List<OrganisaatioSuhdeDTOV2> parentSuhteet = new ArrayList<OrganisaatioSuhdeDTOV2>();
-    private List<OrganisaatioLiitosDTOV2> liitokset = new ArrayList<OrganisaatioLiitosDTOV2>();
-    private List<OrganisaatioLiitosDTOV2> liittymiset = new ArrayList<OrganisaatioLiitosDTOV2>();
+    private Set<OrganisaatioSuhdeDTOV2> childSuhteet = new HashSet<>();
+    private Set<OrganisaatioSuhdeDTOV2> parentSuhteet = new HashSet<>();
+    private Set<OrganisaatioLiitosDTOV2> liitokset = new HashSet<>();
+    private Set<OrganisaatioLiitosDTOV2> liittymiset = new HashSet<>();
 
     /**
      * @return the childSuhteet
      */
-    public List<OrganisaatioSuhdeDTOV2> getChildSuhteet() {
+    public Set<OrganisaatioSuhdeDTOV2> getChildSuhteet() {
         return childSuhteet;
     }
 
     /**
      * @param childSuhteet the childSuhteet to set
      */
-    public void setChildSuhteet(List<OrganisaatioSuhdeDTOV2> childSuhteet) {
+    public void setChildSuhteet(Set<OrganisaatioSuhdeDTOV2> childSuhteet) {
         this.childSuhteet = childSuhteet;
     }
 
     /**
      * @return the parentSuhteet
      */
-    public List<OrganisaatioSuhdeDTOV2> getParentSuhteet() {
+    public Set<OrganisaatioSuhdeDTOV2> getParentSuhteet() {
         return parentSuhteet;
     }
 
     /**
      * @param parentSuhteet the parentSuhteet to set
      */
-    public void setParentSuhteet(List<OrganisaatioSuhdeDTOV2> parentSuhteet) {
+    public void setParentSuhteet(Set<OrganisaatioSuhdeDTOV2> parentSuhteet) {
         this.parentSuhteet = parentSuhteet;
     }
 
     /**
      * @return the liitokset
      */
-    public List<OrganisaatioLiitosDTOV2> getLiitokset() {
+    public Set<OrganisaatioLiitosDTOV2> getLiitokset() {
         return liitokset;
     }
 
     /**
      * @param liitokset the liitokset to set
      */
-    public void setLiitokset(List<OrganisaatioLiitosDTOV2> liitokset) {
+    public void setLiitokset(Set<OrganisaatioLiitosDTOV2> liitokset) {
         this.liitokset = liitokset;
     }
 
     /**
      * @return the liittymiset
      */
-    public List<OrganisaatioLiitosDTOV2> getLiittymiset() {
+    public Set<OrganisaatioLiitosDTOV2> getLiittymiset() {
         return liittymiset;
     }
 
     /**
      * @param liittymiset the liittymiset to set
      */
-    public void setLiittymiset(List<OrganisaatioLiitosDTOV2> liittymiset) {
+    public void setLiittymiset(Set<OrganisaatioLiitosDTOV2> liittymiset) {
         this.liittymiset = liittymiset;
     }
 

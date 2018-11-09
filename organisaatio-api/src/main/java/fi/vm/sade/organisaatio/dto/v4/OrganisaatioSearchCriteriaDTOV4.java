@@ -3,9 +3,7 @@ package fi.vm.sade.organisaatio.dto.v4;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot v4")
@@ -20,7 +18,7 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     private Set<String> oppilaitostyyppi = new HashSet<>();
     private Set<String> kieli = new HashSet<>();
 
-    private List<String> oidResctrictionList = new ArrayList<>();
+    private Set<String> oidResctrictionList = new HashSet<>();
 
     private String searchStr;
     private String oid;
@@ -99,14 +97,14 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
-    public List<String> getOidRestrictionList() {
+    public Set<String> getOidRestrictionList() {
         if (this.oidResctrictionList == null) {
-            this.oidResctrictionList = new ArrayList<>();
+            this.oidResctrictionList = new HashSet<>();
         }
         return this.oidResctrictionList;
     }
 
-    public void setOidRestrictionList(List<String> oidRestrictionList) {
+    public void setOidRestrictionList(Set<String> oidRestrictionList) {
         this.oidResctrictionList = oidRestrictionList;
     }
 

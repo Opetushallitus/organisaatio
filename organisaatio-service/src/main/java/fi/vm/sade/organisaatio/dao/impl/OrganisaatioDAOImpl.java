@@ -946,13 +946,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
+    public Set<Organisaatio> findBySearchCriteria(
+            Set<String> kieliList,
+            Set<String> kuntaList,
+            Set<String> oppilaitostyyppiList,
+            Set<String> vuosiluokkaList,
+            Set<String> ytunnusList,
+            Set<String> oidList,
             int limit) {
 
         LOG.debug("findBySearchCriteria()");
@@ -1013,89 +1013,94 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     " kielet: " + organisaatiot.get(i).getKielet());
         }
 
-        return organisaatiot;
+        return new HashSet<>(organisaatiot);
     }
 
-    private BooleanExpression getKieliExpression(QOrganisaatio qOrganisaatio, List<String> kieliList) {
+    private BooleanExpression getKieliExpression(QOrganisaatio qOrganisaatio, Set<String> kieliList) {
         if (kieliList == null || kieliList.isEmpty()) {
             return null;
         }
 
-        BooleanExpression kieliExpr = qOrganisaatio.kielet.contains(kieliList.get(0));
+        Iterator<String> kieli = kieliList.iterator();
+        BooleanExpression kieliExpr = qOrganisaatio.kielet.contains(kieli.next());
         if (kieliList.size() > 1) {
             for (int i = 1; i < kieliList.size(); ++i) {
-                kieliExpr = kieliExpr.or(qOrganisaatio.kielet.contains(kieliList.get(i)));
+                kieliExpr = kieliExpr.or(qOrganisaatio.kielet.contains(kieli.next()));
             }
         }
         return kieliExpr;
     }
 
-    private BooleanExpression getKuntaExpression(QOrganisaatio qOrganisaatio, List<String> kuntaList) {
+    private BooleanExpression getKuntaExpression(QOrganisaatio qOrganisaatio, Set<String> kuntaList) {
         if (kuntaList == null || kuntaList.isEmpty()) {
             return null;
         }
 
         // TODO: kotipaikka vielä kunta-koodiston uri ilman versiota --> version lisäyksen jälkeen: getUriVersionExpression()
-        BooleanExpression kuntaExpr = qOrganisaatio.kotipaikka.eq(kuntaList.get(0));
+        Iterator<String> kunta = kuntaList.iterator();
+        BooleanExpression kuntaExpr = qOrganisaatio.kotipaikka.eq(kunta.next());
         if (kuntaList.size() > 1) {
             for (int i = 1; i < kuntaList.size(); ++i) {
-                kuntaExpr = kuntaExpr.or(qOrganisaatio.kotipaikka.eq(kuntaList.get(i)));
+                kuntaExpr = kuntaExpr.or(qOrganisaatio.kotipaikka.eq(kunta.next()));
             }
         }
         return kuntaExpr;
     }
 
-    private BooleanExpression getOppilaitostyyppiExpression(QOrganisaatio qOrganisaatio, List<String> oppilaitostyyppiList) {
+    private BooleanExpression getOppilaitostyyppiExpression(QOrganisaatio qOrganisaatio, Set<String> oppilaitostyyppiList) {
         if (oppilaitostyyppiList == null || oppilaitostyyppiList.isEmpty()) {
             return null;
         }
-
-        BooleanExpression oppilaitostyyppiExpr = getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppiList.get(0));
+        Iterator<String> oppilaitostyyppi = oppilaitostyyppiList.iterator();
+        BooleanExpression oppilaitostyyppiExpr = getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppi.next());
         if (oppilaitostyyppiList.size() > 1) {
             for (int i = 1; i < oppilaitostyyppiList.size(); ++i) {
-                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppiList.get(i)));
+                oppilaitostyyppiExpr = oppilaitostyyppiExpr.or(getUriVersionExpression(qOrganisaatio.oppilaitosTyyppi, oppilaitostyyppi.next()));
             }
         }
         return oppilaitostyyppiExpr;
     }
 
-    private BooleanExpression getYtunnusExpression(QOrganisaatio qOrganisaatio, List<String> ytunnusList) {
+    private BooleanExpression getYtunnusExpression(QOrganisaatio qOrganisaatio, Set<String> ytunnusList) {
         if (ytunnusList == null || ytunnusList.isEmpty()) {
             return null;
         }
 
-        BooleanExpression ytunnusExpr = qOrganisaatio.ytunnus.eq(ytunnusList.get(0));
+        Iterator<String> ytunnus = ytunnusList.iterator();
+        BooleanExpression ytunnusExpr = qOrganisaatio.ytunnus.eq(ytunnus.next());
         if (ytunnusList.size() > 1) {
             for (int i = 1; i < ytunnusList.size(); ++i) {
-                ytunnusExpr = ytunnusExpr.or(qOrganisaatio.ytunnus.eq(ytunnusList.get(i)));
+                ytunnusExpr = ytunnusExpr.or(qOrganisaatio.ytunnus.eq(ytunnus.next()));
             }
         }
         return ytunnusExpr;
     }
 
-    private BooleanExpression getVuosiluokkaExpression(QOrganisaatio qOrganisaatio, List<String> vuosiluokkaList) {
+    private BooleanExpression getVuosiluokkaExpression(QOrganisaatio qOrganisaatio, Set<String> vuosiluokkaList) {
         if (vuosiluokkaList == null || vuosiluokkaList.isEmpty()) {
             return null;
         }
 
-        BooleanExpression vuosiluokkaExpr = qOrganisaatio.vuosiluokat.contains(vuosiluokkaList.get(0));
+        Iterator<String> vuosiluokka = vuosiluokkaList.iterator();
+        BooleanExpression vuosiluokkaExpr = qOrganisaatio.vuosiluokat.contains(vuosiluokka.next());
         if (vuosiluokkaList.size() > 1) {
             for (int i = 1; i < vuosiluokkaList.size(); ++i) {
-                vuosiluokkaExpr = vuosiluokkaExpr.or(qOrganisaatio.vuosiluokat.contains(vuosiluokkaList.get(i)));
+                vuosiluokkaExpr = vuosiluokkaExpr.or(qOrganisaatio.vuosiluokat.contains(vuosiluokka.next()));
             }
         }
         return vuosiluokkaExpr;
     }
 
-    private BooleanExpression getOidExpression(QOrganisaatio qOrganisaatio, List<String> oidList) {
+    private BooleanExpression getOidExpression(QOrganisaatio qOrganisaatio, Set<String> oidList) {
         if (oidList == null || oidList.isEmpty()) {
             return null;
         }
 
-        BooleanExpression oidExpr = qOrganisaatio.oid.eq(oidList.get(0));
+        Iterator<String> oid = oidList.iterator();
+        BooleanExpression oidExpr = qOrganisaatio.oid.eq(oid.next());
         if (oidList.size() > 1) {
             for (int i = 1; i < oidList.size(); ++i) {
-                oidExpr = oidExpr.or(qOrganisaatio.oid.eq(oidList.get(i)));
+                oidExpr = oidExpr.or(qOrganisaatio.oid.eq(oid.next()));
             }
         }
         return oidExpr;
