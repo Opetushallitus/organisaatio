@@ -351,74 +351,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return ret;
     }
 
-    /**
-     *
-     * @param orgTyyppi
-     * @param oppilaitosTyyppi
-     * @param kunta
-     * @param searchStr
-     * @param suunnitellut
-     * @param lakkautetut
-     * @param maxResults
-     * @param oids
-     * @return
-     */
-    @Override
-    public List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi,
-                                                         String oppilaitosTyyppi,
-                                                         String kunta,
-                                                         String searchStr,
-                                                         boolean suunnitellut,
-                                                         boolean lakkautetut,
-                                                         int maxResults,
-                                                         List<String> oids) {
-        LOG.debug("findBySearchCriteriaExact()");
-
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        //QOrganisaatio qOrganisaatio1 = new QOrganisaatio("b");
-        //DslExpression<List<String>> tyypit = qOrganisaatio1.tyypit.as("tyypit");
-
-
-        //Not retrieving root of all organisations
-        BooleanExpression whereExpression = qOrganisaatio.oid.ne(ophOid);
-
-        //Not retrieving removed organisations
-        whereExpression = whereExpression.and(qOrganisaatio.organisaatioPoistettu.isFalse());
-
-        //Retrieving only organisations whose start and end date match the given criteria
-        BooleanExpression voimassaOloExpr = getVoimassaoloExpression(suunnitellut, lakkautetut, qOrganisaatio);
-        whereExpression = (voimassaOloExpr != null) ? whereExpression.and(voimassaOloExpr) : whereExpression;
-
-        //Retrieving only organisations whose type equal the given criteria
-        BooleanExpression orgTyyppiMatches = (orgTyyppi != null) ? qOrganisaatio.tyypit.contains(orgTyyppi) : null;
-        whereExpression = (orgTyyppiMatches != null) ? whereExpression.and(orgTyyppiMatches) : whereExpression;
-
-        //Retrieving only organisations that match the given search string
-        BooleanExpression stringMatches = getStringExpression(searchStr, qOrganisaatio);
-        whereExpression = (stringMatches != null) ? whereExpression.and(stringMatches) : whereExpression;
-
-        //Retrieving only organisations whose oppilaitoskoodi matches the given criteria
-        whereExpression = (oppilaitosTyyppi != null) ? whereExpression.and(qOrganisaatio.oppilaitosTyyppi.eq(oppilaitosTyyppi)) : whereExpression;
-
-        //Retrieving only organisations whose home place matches the given criteria
-        whereExpression = (kunta != null) ? whereExpression.and(qOrganisaatio.kotipaikka.eq(kunta)) : whereExpression;
-
-        //Retrieving only organisations whose oid match the given list
-        BooleanExpression restrictedMatches = getRestrictedMatches(qOrganisaatio, oids);
-        whereExpression = (restrictedMatches != null) ? whereExpression.and(restrictedMatches) : whereExpression;
-
-        List<OrgPerustieto> organisaatiot = new JPAQuery<>(getEntityManager())
-                .from(qOrganisaatio)
-                .where(whereExpression)
-                .distinct()
-                .limit(maxResults + 1)
-                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
-                        qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath,
-                        qOrganisaatio.organisaatiotyypitStr))
-                .fetch();
-        return organisaatiot;
-    }
-
     private BooleanExpression getRestrictedMatches(QOrganisaatio qOrganisaatio, List<String> oids) {
         if (oids == null || oids.isEmpty()) {
             return null;
@@ -533,40 +465,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         return jpaQuery.fetch();
     }
 
-    /**
-     *
-     * @param oidList
-     * @param maxResults
-     * @return
-     */
-    @Override
-    public List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults) {
-        LOG.debug("findByOidList({}, {})", oidList, maxResults);
-
-        // first drop nulls from oidList
-        List<String> oidListFiltered = new ArrayList<>();
-        for (String oid : oidList) {
-            if (oid != null) {
-                oidListFiltered.add(oid);
-            }
-        }
-
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        List<Organisaatio> result = new ArrayList<>();
-
-        for (String curOid : oidListFiltered) {
-            result.addAll(new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
-                    .where((qOrganisaatio.oid.eq(curOid).or(qOrganisaatio.parentOidPath.like("%|" + curOid + "|%")))
-                            .and(qOrganisaatio.organisaatioPoistettu.isFalse()))
-                    .distinct()
-                    .orderBy(qOrganisaatio.nimihaku.asc())
-                    .select(qOrganisaatio).fetch());
-        }
-
-        return result;
-
-    }
-
     public List<OrgPerustieto> findDescendantsBasicByOidList(List<String> oidList, int maxResults) {
         LOG.debug("findByOidList({}, {})", oidList, maxResults);
 
@@ -648,49 +546,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         query.where(where);
         return getEntityManager().createQuery(query).setMaxResults(maxResults).getResultList();
 
-    }
-
-    /**
-     * Return OID list of all organizations.
-     *
-     * @param myosPoistetut
-     * @return
-     */
-    @Override
-    public Collection<String> findAllOids(boolean myosPoistetut) {
-        String q = "SELECT p.oid FROM Organisaatio p";
-
-        if (!myosPoistetut) {
-            q += " WHERE p.organisaatioPoistettu = false";
-        }
-
-        return (List<String>) getEntityManager().createQuery(q).getResultList();
-    }
-
-    /**
-     * List OIDs of descendants for a given parent OID.
-     *
-     * @param parentOid
-     * @param myosPoistetut
-     * @return
-     */
-    @Override
-    public Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut) {
-        parentOid = parentOid != null ? parentOid.trim() : null;
-        if (parentOid == null) {
-            return new ArrayList<>();
-        }
-
-        String parentOidStr = "%|" + parentOid + "|%";
-
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-
-
-        return new JPAQuery<>(getEntityManager()).from(qOrganisaatio)
-                .where(qOrganisaatio.parentOidPath.like(parentOidStr).and(qOrganisaatio.organisaatioPoistettu.isFalse()))
-                .distinct()
-                .select(qOrganisaatio.oid)
-                .fetch();
     }
 
     /**

@@ -1,17 +1,3 @@
-/*
-* Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*/
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
@@ -20,7 +6,6 @@ import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 
 import javax.persistence.EntityManager;
@@ -155,34 +140,15 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      */
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
-    List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi, String oppilaitosTyyppi, String kunta, String searchStr, boolean suunnitellut, boolean lakkautetut, int maxResults, List<String> oids);
-
     /**
-     * Hakee useita laajempaa mappausta varten valmiiksi (V4 dto:n mukaan) alustettuja organisaatiota oidien perusteella
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Hibernaten odotetaan lataavan laiskasti batcheissa
+     * puuttuvat tiedot.
      * @param oids Organisaatioiden oidit
      * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
      * @return Oideja vastaavat organisaatiot
      */
     List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
 
-    List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults);
-
-    /**
-     * Return OID list of all organizations.
-     *
-     * @param myosPoistetut
-     * @return
-     */
-    Collection<String> findAllOids(boolean myosPoistetut);
-
-    /**
-     * List OIDs of descendants for a given parent OID.
-     *
-     * @param parentOid
-     * @param myosPoistetut
-     * @return
-     */
-    Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
     /***
      * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
      *
