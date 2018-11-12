@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Set;
 
 /**
  * V4 REST services for Organisaatio.
@@ -30,7 +31,7 @@ public interface OrganisaatioResourceV4 {
             response = OrganisaatioRDTOV4.class,
             responseContainer = "List")
     List<OrganisaatioRDTOV4> findByOids(@ApiParam(value = "JSON-taulukko organisaatio OIDeja: [\"oid1\", \"oid2\", ...]",
-            required = true) List<String> oids);
+            required = true) Set<String> oids);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")

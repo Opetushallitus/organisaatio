@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +15,7 @@ import javax.persistence.ManyToOne;
  * @author mlyly
  */
 @Entity
+@BatchSize(size = 200)
 public class NamedMonikielinenTeksti extends BaseEntity {
 
     /**

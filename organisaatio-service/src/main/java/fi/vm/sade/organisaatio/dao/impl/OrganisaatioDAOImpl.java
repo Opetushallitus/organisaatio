@@ -59,8 +59,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import static java.util.stream.Collectors.toSet;
@@ -504,98 +502,35 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         LOG.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
         QOrganisaatioMetaData metaData = QOrganisaatioMetaData.organisaatioMetaData;
-        QYhteystieto metadataYhteystieto = new QYhteystieto("metadataYhteystieto");
-        QNamedMonikielinenTeksti metadataValues = QNamedMonikielinenTeksti.namedMonikielinenTeksti;
-        QMonikielinenTeksti metadatavaluesvalue = new QMonikielinenTeksti("metadatavaluesvalue");
-        QMonikielinenTeksti metadatavaluesname = new QMonikielinenTeksti("metadatavaluesname");
         QMonikielinenTeksti metadatanimi = new QMonikielinenTeksti("metadatanimi");
-        QOrganisaatioNimi nimet = QOrganisaatioNimi.organisaatioNimi;
         QMonikielinenTeksti currentnimi = new QMonikielinenTeksti("currentnimi");
-        QMonikielinenTeksti nimi = new QMonikielinenTeksti("orgnimi");
-        QOrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = QOrganisaatioLisatietotyyppi.organisaatioLisatietotyyppi;
-        QLisatietotyyppi lisatietotyyppi = QLisatietotyyppi.lisatietotyyppi;
         QVarhaiskasvatuksenToimipaikkaTiedot qVarhaiskasvatuksenToimipaikkaTiedot = QVarhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimipaikkaTiedot;
-        QYhteystietoArvo yhteystietoArvo = QYhteystietoArvo.yhteystietoArvo;
-        QYhteystietoElementti kentta = QYhteystietoElementti.yhteystietoElementti;
-        QYhteystietojenTyyppi yhteystietojenTyyppi = QYhteystietojenTyyppi.yhteystietojenTyyppi;
-        QMonikielinenTeksti yhteystietojenTyyppiNimi = new QMonikielinenTeksti("yhteystietojenTyyppiNimi");
-        QOrganisaatioSuhde parentSuhteet = QOrganisaatioSuhde.organisaatioSuhde;
         QMonikielinenTeksti kuvaus2 = new QMonikielinenTeksti("kuvaus2");
-        QOrganisaatio parent = new QOrganisaatio("parent");
         QMonikielinenTeksti hakutoimistoEctsEmailmkt = new QMonikielinenTeksti("hakutoimistoEctsEmailmkt");
         QMonikielinenTeksti hakutoimistoEctsNimimkt = new QMonikielinenTeksti("hakutoimistoEctsNimimkt");
         QMonikielinenTeksti hakutoimistoEctsTehtavanimikemkt = new QMonikielinenTeksti("hakutoimistoEctsTehtavanimikemkt");
         QMonikielinenTeksti hakutoimistoEctsPuhelinmkt = new QMonikielinenTeksti("hakutoimistoEctsPuhelinmkt");
         QMonikielinenTeksti hakutoimistoNimi = new QMonikielinenTeksti("hakutoimistoNimi");
-        QVarhaiskasvatuksenToimipaikkaTiedot vakaToimipaikkatiedot = QVarhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToimipaikkaTiedot;
 
         JPAQuery<Organisaatio> jpaQuery = new JPAQuery<Organisaatio>(getEntityManager())
                 .select(org)
-//                .distinct()
                 .from(org)
-//                .leftJoin(org.vuosiluokat).fetchJoin()
-//                .innerJoin(org.tyypit).fetchJoin()
-//                .leftJoin(org.ryhmatyypit).fetchJoin()
-//                .leftJoin(org.kayttoryhmat).fetchJoin()
-                .leftJoin(org.kuvaus2, kuvaus2).fetchJoin()//.leftJoin(kuvaus2.values).fetchJoin()
-                .innerJoin(org.nimi, currentnimi).fetchJoin()//.innerJoin(currentnimi.values).fetchJoin()
+                .leftJoin(org.kuvaus2, kuvaus2).fetchJoin()
+                .innerJoin(org.nimi, currentnimi).fetchJoin()
                 .leftJoin(org.kielet).fetchJoin()
                 .leftJoin(org.metadata, metaData).fetchJoin()
-                .leftJoin(metaData.nimi, metadatanimi).fetchJoin()//.leftJoin(metadatanimi.values).fetchJoin()
-                .leftJoin(metaData.hakutoimistoEctsEmailmkt, hakutoimistoEctsEmailmkt).fetchJoin()//.leftJoin(hakutoimistoEctsEmailmkt.values).fetchJoin()
-                .leftJoin(metaData.hakutoimistoEctsNimimkt, hakutoimistoEctsNimimkt).fetchJoin()//.leftJoin(hakutoimistoEctsNimimkt.values).fetchJoin()
-                .leftJoin(metaData.hakutoimistoEctsTehtavanimikemkt, hakutoimistoEctsTehtavanimikemkt).fetchJoin()//.leftJoin(hakutoimistoEctsTehtavanimikemkt.values).fetchJoin()
-                .leftJoin(metaData.hakutoimistoEctsPuhelinmkt, hakutoimistoEctsPuhelinmkt)//.fetchJoin().leftJoin(hakutoimistoEctsPuhelinmkt.values).fetchJoin()
-                .leftJoin(metaData.hakutoimistoNimi, hakutoimistoNimi).fetchJoin()//.leftJoin(hakutoimistoNimi.values).fetchJoin()
-//                .leftJoin(metaData.values, metadataValues).fetchJoin()
-//                .leftJoin(metadataValues.value, metadatavaluesvalue).fetchJoin().leftJoin(metadatavaluesvalue.values).fetchJoin()
-//                .leftJoin(metaData.yhteystiedot, metadataYhteystieto).fetchJoin()
-//                .leftJoin(org.nimet, nimet).fetchJoin()
-//                .leftJoin(nimet.nimi, nimi).fetchJoin().leftJoin(nimi.values).fetchJoin()
-//                .leftJoin(org.organisaatioLisatietotyypit, organisaatioLisatietotyyppi).fetchJoin()
-//                .leftJoin(organisaatioLisatietotyyppi.lisatietotyyppi, lisatietotyyppi).fetchJoin()
+                .leftJoin(metaData.nimi, metadatanimi).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsEmailmkt, hakutoimistoEctsEmailmkt).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsNimimkt, hakutoimistoEctsNimimkt).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsTehtavanimikemkt, hakutoimistoEctsTehtavanimikemkt).fetchJoin()
+                .leftJoin(metaData.hakutoimistoEctsPuhelinmkt, hakutoimistoEctsPuhelinmkt).fetchJoin()
+                .leftJoin(metaData.hakutoimistoNimi, hakutoimistoNimi).fetchJoin()
                 .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, qVarhaiskasvatuksenToimipaikkaTiedot).fetchJoin()
-//                .leftJoin(org.yhteystietoArvos, yhteystietoArvo).fetchJoin()
-//                .leftJoin(yhteystietoArvo.kentta, kentta).fetchJoin()
-//                .leftJoin(kentta.yhteystietojenTyyppi, yhteystietojenTyyppi).fetchJoin()
-//                .leftJoin(yhteystietojenTyyppi.nimi, yhteystietojenTyyppiNimi).fetchJoin().leftJoin(yhteystietojenTyyppiNimi.values).fetchJoin()
-//                .leftJoin(org.yhteystiedot).fetchJoin()
-
-                .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, vakaToimipaikkatiedot).fetchJoin()
-//                .leftJoin(vakaToimipaikkatiedot.varhaiskasvatuksenJarjestamismuodot).fetchJoin()
-//                .leftJoin(vakaToimipaikkatiedot.varhaiskasvatuksenKielipainotukset).fetchJoin()
-//                .leftJoin(vakaToimipaikkatiedot.varhaiskasvatuksenToiminnallinenpainotukset).fetchJoin()
-                // Parents. Fetching only essentials since this can have heavy impact on postgres distinct sort.
-//                .leftJoin(org.parentSuhteet, parentSuhteet).fetchJoin()
-//                .leftJoin(parentSuhteet.parent, parent).fetchJoin()
                 .where(org.oid.in(oids));
         if (excludePoistettu) {
             jpaQuery.where(org.organisaatioPoistettu.isFalse());
         }
-        List<Organisaatio> organisaatios = jpaQuery.fetch();
-        Set<Long> monikielinenTekstiIds = Stream.of(
-                organisaatios.stream().map(Organisaatio::getNimi),
-                organisaatios.stream().map(Organisaatio::getKuvaus2),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getNimi),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getHakutoimistoNimi),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getHakutoimistoEctsEmail),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getHakutoimistoEctsNimi),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getHakutoimistoEctsPuhelin),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getHakutoimistoEctsTehtavanimike),
-                organisaatios.stream().map(Organisaatio::getMetadata).filter(Objects::nonNull).map(OrganisaatioMetaData::getValues).filter(Objects::nonNull).flatMap(namedMonikielinenTekstis -> namedMonikielinenTekstis == null ? Stream.empty() : namedMonikielinenTekstis.stream().map(NamedMonikielinenTeksti::getValue))
-        )
-                .flatMap(monikielinenTekstiStream -> monikielinenTekstiStream)
-                .filter(Objects::nonNull)
-                .map(MonikielinenTeksti::getId)
-                .collect(Collectors.toSet());
-        QMonikielinenTeksti mkt = QMonikielinenTeksti.monikielinenTeksti;
-        new JPAQuery<MonikielinenTeksti>(getEntityManager())
-                .select(mkt)
-                .from(mkt)
-                .leftJoin(mkt.values).fetchJoin()
-                .where(mkt.id.in(monikielinenTekstiIds))
-                .fetch();
-        return organisaatios;
+        return jpaQuery.fetch();
     }
 
     /**

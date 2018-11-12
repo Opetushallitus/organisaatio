@@ -29,22 +29,22 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<String> tyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<String> vuosiluokat = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<String> ryhmatyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<String> kayttoryhmat = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -58,6 +58,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private OrganisaatioMetaData metadata;
 
+    // This long field is actually not used
+    @Deprecated
     @Column(length=256000)
     private String nimihaku;
 
@@ -70,7 +72,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<Yhteystieto> yhteystiedot = new HashSet<>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
@@ -81,11 +83,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<OrganisaatioNimi> nimet = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
-    @BatchSize(size = 10)
+    @BatchSize(size = 200)
     private Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit = new HashSet<>();
 
     private String yritysmuoto;
@@ -108,7 +110,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
-    @BatchSize(size = 100)
+    @BatchSize(size = 200)
     private Set<YhteystietoArvo> yhteystietoArvos = new HashSet<>();
 
     @Column(unique = true)
