@@ -15,11 +15,12 @@ import java.util.Map;
  * @author mlyly
  */
 @Entity
+@BatchSize(size = 500)
 public class MonikielinenTeksti extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
     @CollectionTable(joinColumns=@JoinColumn(name="id"))

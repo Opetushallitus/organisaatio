@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
@@ -53,6 +54,7 @@ public class OrganisaatioMetaData extends BaseEntity {
     private MonikielinenTeksti hakutoimistoNimi;
 
     @OneToMany(orphanRemoval=true, cascade = CascadeType.ALL)
+    @BatchSize(size = 100)
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     /**
@@ -64,6 +66,7 @@ public class OrganisaatioMetaData extends BaseEntity {
      * Translated values for this entry by key.
      */
     @OneToMany(cascade = CascadeType.ALL)
+    @BatchSize(size = 500)
     private Set<NamedMonikielinenTeksti> values = new HashSet<NamedMonikielinenTeksti>();
 
     @Temporal(TemporalType.TIMESTAMP)

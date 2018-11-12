@@ -109,6 +109,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 .collect(Collectors.toList());
     }
 
+
     private Organisaatio markImagesNotIncluded(Organisaatio organisaatio) {
         Optional.ofNullable(organisaatio.getMetadata())
                 .ifPresent(metadata -> metadata.setIncludeImage(false));

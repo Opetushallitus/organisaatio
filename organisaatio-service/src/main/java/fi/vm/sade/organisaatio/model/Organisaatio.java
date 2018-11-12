@@ -6,10 +6,12 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -27,23 +29,27 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 100)
     private Set<String> tyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 100)
     private Set<String> vuosiluokat = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 100)
     private Set<String> ryhmatyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 100)
     private Set<String> kayttoryhmat = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "nimi_mkt")
-    private MonikielinenTeksti nimi;
+        private MonikielinenTeksti nimi;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "kuvaus_mkt")
@@ -64,6 +70,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
+    @BatchSize(size = 100)
     private Set<Yhteystieto> yhteystiedot = new HashSet<>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
@@ -74,9 +81,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
+    @BatchSize(size = 100)
     private Set<OrganisaatioNimi> nimet = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
+    @BatchSize(size = 10)
     private Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit = new HashSet<>();
 
     private String yritysmuoto;
@@ -93,11 +102,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
     @Column(name = "kielet", nullable = false)
+    @BatchSize(size = 100)
     private Set<String> kielet = new LinkedHashSet<>();
 
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 100)
     private Set<YhteystietoArvo> yhteystietoArvos = new HashSet<>();
 
     @Column(unique = true)
@@ -182,15 +193,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return (latestSuhde != null) ? latestSuhde.getParent() : null;
     }
 
-    public String getParentOid() {
-        if (parentOidPath == null || parentOidPath.isEmpty()) {
-            return null;
+    public Optional<String> getParentOid() {
+        if (this.parentOidPath != null) {
+            Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
+                    .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                    .descendingIterator();
+            if (!oidsPathInverted.hasNext()) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(oidsPathInverted.next());
         }
-        String[] paths = parentOidPath.split("\\|", -1);
-        if (paths.length < 3) {
-            return null;
-        }
-        return paths[paths.length - 2];
+        return Optional.empty();
     }
 
     /**
