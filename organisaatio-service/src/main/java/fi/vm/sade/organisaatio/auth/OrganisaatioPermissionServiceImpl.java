@@ -60,7 +60,6 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
         if (checkAccess(context.getOrgOid(), ROLE_CRUD, ROLE_RU)) {
             if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)
-                    && !context.getOrgTypes().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA)
                     && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
                 return true;
             }
@@ -74,7 +73,6 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         //oph ru can edit everything else but muu organisaatio (OVT-4755)
         if (checkAccess(ophOid, ROLE_RU)){
             if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)
-                    && !context.getOrgTypes().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA)
                     && !context.getOrgTypes().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO)) {
                 return true;
             }
