@@ -16,10 +16,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
@@ -55,7 +52,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
 
         // Define the target list type for mapping
-        Type organisaatioNimiListType = new TypeToken<Set<OrganisaatioNimi>>() {}.getType();
+        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
         s.setNimet(organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));

@@ -76,7 +76,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private Set<Yhteystieto> yhteystiedot = new HashSet<>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    private Set<OrganisaatioSuhde> parentSuhteet = new LinkedHashSet<>();
+    @OrderBy("alkuPvm")
+    private List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
     private Set<OrganisaatioSuhde> childSuhteet = new HashSet<>();
@@ -84,7 +85,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
     @BatchSize(size = 200)
-    private Set<OrganisaatioNimi> nimet = new HashSet<>();
+    private List<OrganisaatioNimi> nimet = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
     @BatchSize(size = 200)
@@ -579,7 +580,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return null;
     }
 
-    public Set<OrganisaatioSuhde> getParentSuhteet() {
+    public List<OrganisaatioSuhde> getParentSuhteet() {
         return parentSuhteet;
     }
 
@@ -601,7 +602,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public Set<OrganisaatioSuhde> getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
         Set<OrganisaatioSuhde> result = new HashSet<>();
 
-        Date now = new Date();
         for (OrganisaatioSuhde os : childSuhteet) {
             if (os.getSuhdeTyyppi() == tyyppi) {
                 result.add(os);
@@ -660,7 +660,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return ret;
     }
 
-    public void setParentSuhteet(Set<OrganisaatioSuhde> parentSuhteet) {
+    public void setParentSuhteet(List<OrganisaatioSuhde> parentSuhteet) {
         this.parentSuhteet = parentSuhteet;
     }
 
@@ -796,14 +796,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * @return the nimet
      */
-    public Set<OrganisaatioNimi> getNimet() {
-        return Collections.unmodifiableSet(nimet);
+    public List<OrganisaatioNimi> getNimet() {
+        return Collections.unmodifiableList(nimet);
     }
 
     /**
      * @param nimet the nimet to set
      */
-    public void setNimet(Set<OrganisaatioNimi> nimet) {
+    public void setNimet(List<OrganisaatioNimi> nimet) {
         this.nimet = nimet;
     }
 

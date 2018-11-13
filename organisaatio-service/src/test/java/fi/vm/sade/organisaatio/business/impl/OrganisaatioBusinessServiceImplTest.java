@@ -346,7 +346,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
-        organisaatio.setNimet(Collections.singleton(nimi));
+        organisaatio.setNimet(Collections.singletonList(nimi));
 
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         varhaiskasvatuksenToimipaikkaTiedotDto.setToimintamuoto("vardatoimintamuoto_tm02");
@@ -390,7 +390,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
-        organisaatio.setNimet(Collections.singleton(nimi));
+        organisaatio.setNimet(Collections.singletonList(nimi));
 
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);

@@ -8,10 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class OrganisaatioBusinessServiceBatchValidationTest {
 
@@ -43,7 +40,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
         os3.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         os3.setChild(parent);
         os3.setParent(root);
-        Set<OrganisaatioSuhde> parentSuhde = new HashSet<>();
+        List<OrganisaatioSuhde> parentSuhde = new ArrayList<>();
         parentSuhde.add(os3);
         ReflectionTestUtils.setField(parent, "childSuhteet", children);
         ReflectionTestUtils.setField(parent, "parentSuhteet", parentSuhde);

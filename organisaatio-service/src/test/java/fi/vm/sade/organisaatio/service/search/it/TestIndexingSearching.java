@@ -390,7 +390,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
             n.setAlkuPvm(new Date());
         }
 
-        Set<OrganisaatioNimi> nimet = new HashSet<>();
+        List<OrganisaatioNimi> nimet = new ArrayList<>();
         nimet.add(n);
         o.setNimet(nimet);
 

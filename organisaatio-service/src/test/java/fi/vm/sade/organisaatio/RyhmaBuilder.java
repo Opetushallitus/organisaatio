@@ -8,10 +8,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,7 +76,7 @@ public final class RyhmaBuilder {
         ryhma.setLakkautusPvm(Optional.ofNullable(lakkautusPvm).map(Date::valueOf).orElse(null));
         ryhma.setOrganisaatioPoistettu(poistettu);
         if (parent != null) {
-            Set<OrganisaatioSuhde> parentSuhteet = new LinkedHashSet<>();
+            List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
             OrganisaatioSuhde parentSuhde = new OrganisaatioSuhde();
             parentSuhde.setChild(ryhma);
             parentSuhde.setParent(parent);

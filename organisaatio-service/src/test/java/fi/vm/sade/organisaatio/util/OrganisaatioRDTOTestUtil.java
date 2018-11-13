@@ -162,7 +162,7 @@ public final class OrganisaatioRDTOTestUtil {
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
         organisaatio.setNimi(nimiRDTO.getNimi());
-        Set<OrganisaatioNimiRDTO> nimet = new HashSet<>();
+        List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
         nimet.add(nimiRDTO);
         organisaatio.setNimet(nimet);
 

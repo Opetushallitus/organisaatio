@@ -16,10 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Tests for {@link fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessChecker} class.
@@ -60,7 +57,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         os3.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         os3.setChild(parent);
         os3.setParent(root);
-        Set<OrganisaatioSuhde> parentSuhde = new HashSet<>();
+        List<OrganisaatioSuhde> parentSuhde = new ArrayList<>();
         parentSuhde.add(os3);
         ReflectionTestUtils.setField(parent, "childSuhteet", children);
         ReflectionTestUtils.setField(parent, "parentSuhteet", parentSuhde);

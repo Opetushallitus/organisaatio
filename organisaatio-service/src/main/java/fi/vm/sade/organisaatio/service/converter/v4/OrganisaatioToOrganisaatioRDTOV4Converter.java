@@ -32,7 +32,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
     @Autowired
     public OrganisaatioToOrganisaatioRDTOV4Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        this.organisaatioNimiRDTOListType = new TypeToken<Set<OrganisaatioNimiRDTO>>() {}.getType();
+        this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 

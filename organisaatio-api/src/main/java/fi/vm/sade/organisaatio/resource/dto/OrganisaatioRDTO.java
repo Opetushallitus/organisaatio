@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
 package fi.vm.sade.organisaatio.resource.dto;
 
 import io.swagger.annotations.ApiModel;
@@ -67,7 +53,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Map<String, String> _nimi;
 
-    private Set<OrganisaatioNimiRDTO> _nimet;
+    private List<OrganisaatioNimiRDTO> _nimet;
 
     private String _status;
 
@@ -223,14 +209,14 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
-    public Set<OrganisaatioNimiRDTO> getNimet() {
+    public List<OrganisaatioNimiRDTO> getNimet() {
          if (_nimet == null) {
-            _nimet = new HashSet<>();
+            _nimet = new ArrayList<>();
         }
         return _nimet;
     }
 
-    public void setNimet(Set<OrganisaatioNimiRDTO> _nimet) {
+    public void setNimet(List<OrganisaatioNimiRDTO> _nimet) {
         this._nimet = _nimet;
     }
 

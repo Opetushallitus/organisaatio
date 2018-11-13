@@ -53,7 +53,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private Map<String, String> _nimi = new HashMap<>();
 
-    private Set<OrganisaatioNimiRDTO> _nimet = new HashSet<>();
+    private List<OrganisaatioNimiRDTO> _nimet = new ArrayList<>();
 
     private String _status;
 
@@ -211,14 +211,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
-    public Set<OrganisaatioNimiRDTO> getNimet() {
+    public List<OrganisaatioNimiRDTO> getNimet() {
          if (_nimet == null) {
-            _nimet = new HashSet<>();
+            _nimet = new ArrayList<>();
         }
         return _nimet;
     }
 
-    public void setNimet(Set<OrganisaatioNimiRDTO> _nimet) {
+    public void setNimet(List<OrganisaatioNimiRDTO> _nimet) {
         this._nimet = _nimet;
     }
 

@@ -50,7 +50,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getNimi()));
 
         // Define the target list type for mapping
-        Type organisaatioNimiListType = new TypeToken<Set<OrganisaatioNimi>>() {}.getType();
+        Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
         target.setNimet(organisaatioNimiModelMapper.map(source.getNimet(), organisaatioNimiListType));

@@ -30,7 +30,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
 
     @Autowired
     public OrganisaatioToOrganisaatioRDTOConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        this.organisaatioNimiRDTOListType = new TypeToken<Set<OrganisaatioNimiRDTO>>() {}.getType();
+        this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 

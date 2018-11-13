@@ -25,8 +25,8 @@ import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Add Organisaatio And Organisaatio Nimihistoria to SolrInputDocument so that it can be indexed.
@@ -90,7 +90,7 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
         }
     }
 
-    private static void addNimiHistoria(SolrInputDocument doc, String fieldName, Set<OrganisaatioNimi> nimet) {
+    private static void addNimiHistoria(SolrInputDocument doc, String fieldName, Collection<OrganisaatioNimi> nimet) {
         if (nimet.isEmpty()) {
             LOG.warn("Nimihistoriassa ei nimiä!");
         }

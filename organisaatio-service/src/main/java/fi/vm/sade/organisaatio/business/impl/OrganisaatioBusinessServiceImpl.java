@@ -467,7 +467,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
             organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
         }
-        child.setParentSuhteet(new HashSet<>(organisaatioSuhdeDAO.findBy("child", child)));
+        child.setParentSuhteet(organisaatioSuhdeDAO.findBy("child", child));
         return this.organisaatioDAO.findByOid(child.getOid());
     }
 
