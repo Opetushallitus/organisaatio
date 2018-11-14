@@ -21,10 +21,12 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OrganisaatioSuhdeModelMapper extends ModelMapper {
 
     public OrganisaatioSuhdeModelMapper() {

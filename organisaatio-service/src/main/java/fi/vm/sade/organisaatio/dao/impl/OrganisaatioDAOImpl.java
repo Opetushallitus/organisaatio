@@ -31,6 +31,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
@@ -82,6 +83,9 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Autowired
     private NativeQueryHelper nativeQueryHelper;
+
+    @Autowired
+    private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
@@ -489,7 +493,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .from(org)
                 .where(org.oid.in(oids)
                         .and(org.organisaatioPoistettu.isFalse()))
-                .select(new OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(org))
+                .select(new OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(org, this.organisaatioNimiModelMapper))
                 .fetch();
     }
 

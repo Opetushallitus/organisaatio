@@ -22,13 +22,15 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author simok
  */
+@Component
 public class SearchCriteriaModelMapper  extends ModelMapper {
-                
+
     public SearchCriteriaModelMapper() {
         super();
     

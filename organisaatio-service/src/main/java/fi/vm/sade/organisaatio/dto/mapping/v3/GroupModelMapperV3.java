@@ -19,7 +19,9 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GroupModelMapperV3 extends ModelMapper {
 
     public GroupModelMapperV3() {

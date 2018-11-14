@@ -13,6 +13,8 @@ import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTOV4> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOV4Converter.class);
@@ -27,9 +30,10 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOV4Converter() {
+    @Autowired
+    public OrganisaatioToOrganisaatioRDTOV4Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
-        this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
 

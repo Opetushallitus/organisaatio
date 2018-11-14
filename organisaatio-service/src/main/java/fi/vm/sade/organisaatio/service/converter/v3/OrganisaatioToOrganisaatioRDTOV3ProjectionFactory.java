@@ -45,10 +45,10 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(Expression<Organisaatio> organisaatioExpression) {
+    public OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(Expression<Organisaatio> organisaatioExpression, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         super(OrganisaatioRDTOV3.class, organisaatioExpression);
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
-        this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
     @Override
