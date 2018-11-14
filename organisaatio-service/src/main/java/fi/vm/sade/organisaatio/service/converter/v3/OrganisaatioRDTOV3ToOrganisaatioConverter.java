@@ -25,13 +25,21 @@ import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverte
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.modelmapper.TypeToken;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
+
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+
+    public OrganisaatioRDTOV3ToOrganisaatioConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
+    }
 
     @Override
     public Organisaatio convert(OrganisaatioRDTOV3 t) {
@@ -53,8 +61,6 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         s.setMaa(t.getMaaUri());
         s.setMetadata(MetadataConverterUtils.convertMetadata(t.getMetadata()));
         s.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(t.getNimi()));
-
-        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
 
         // Define the target list type for mapping
         Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();

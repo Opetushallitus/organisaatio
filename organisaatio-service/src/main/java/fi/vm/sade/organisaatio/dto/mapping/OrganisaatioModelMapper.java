@@ -25,6 +25,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeToken;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,17 +39,19 @@ import java.util.Map;
  *
  * @author simok
  */
+@Component
 public class OrganisaatioModelMapper extends ModelMapper {
+    private final OsoiteModelMapper modelMapper;
 
-    public OrganisaatioModelMapper() {
+    @Autowired
+    public OrganisaatioModelMapper(OsoiteModelMapper modelMapper) {
         super();
+        this.modelMapper = modelMapper;
 
         // PostiOsoiteConverter
         final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> postiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                OsoiteModelMapper modelMapper = new OsoiteModelMapper();
-
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
 
@@ -62,8 +66,6 @@ public class OrganisaatioModelMapper extends ModelMapper {
         final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> kayntiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
             @Override
             public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                OsoiteModelMapper modelMapper = new OsoiteModelMapper();
-
                 // Define the target list type for mapping
                 Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
 

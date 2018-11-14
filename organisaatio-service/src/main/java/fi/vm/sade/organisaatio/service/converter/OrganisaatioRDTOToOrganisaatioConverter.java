@@ -25,6 +25,8 @@ import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -35,9 +37,17 @@ import java.util.*;
  *
  * @author rsal
  */
+@Component
 public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOToOrganisaatioConverter.class);
+
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+
+    @Autowired
+    public OrganisaatioRDTOToOrganisaatioConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
+    }
 
     @Override
     public Organisaatio convert(OrganisaatioRDTO t) {
@@ -59,8 +69,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setMaa(t.getMaaUri());
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
-
-        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
 
         // Define the target list type for mapping
         Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();

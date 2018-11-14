@@ -83,6 +83,9 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
 
+    @Autowired
+    private OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter;
+
     @Before
     public void setUp() {
         executeSqlScript("data/basic_organisaatio_data.sql", false);
@@ -184,7 +187,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void saveNewAndUpdateOrganisation() {
-        OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
         OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid);
         model.setKayntiosoite(null);
         model.setYhteystiedot(null);

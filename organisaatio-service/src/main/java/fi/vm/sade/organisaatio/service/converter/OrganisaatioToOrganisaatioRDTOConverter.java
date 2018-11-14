@@ -24,6 +24,8 @@ import org.apache.solr.common.util.Base64;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,7 @@ import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
  *
  * @author mlyly, simok
  */
+@Component
 public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTO> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOConverter.class);
@@ -43,9 +46,10 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOConverter() {
+    @Autowired
+    public OrganisaatioToOrganisaatioRDTOConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
-        this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
 
