@@ -82,7 +82,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
 
                             if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04" &&
                                 orgTyyppiKoodi.koodiArvo !== "08") {
-                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi);
+                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi.koodiUri);
                             }
                         }
                     });
