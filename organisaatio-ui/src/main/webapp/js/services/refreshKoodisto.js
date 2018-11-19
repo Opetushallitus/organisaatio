@@ -80,7 +80,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                                 model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             }
 
-                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
+                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04" &&
+                                orgTyyppiKoodi.koodiArvo !== "08") {
                                 model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi);
                             }
                         }
