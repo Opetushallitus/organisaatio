@@ -34,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,6 +45,7 @@ import java.util.Set;
  * Encapsulate most of the auth check logic done at server here.
  */
 @Component
+@Transactional(readOnly = true)
 public class PermissionChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
