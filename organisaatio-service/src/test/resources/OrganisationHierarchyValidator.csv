@@ -5,5 +5,5 @@ TOIMIPISTE                      false           true        true        false   
 OPPISOPIMUSTOIMIPISTE           true            false       false       false                   false               false                           false                           false
 MUU_ORGANISAATIO                false           false       false       false                   true                false                           false                           false
 VARHAISKASVATUKSEN_JARJESTAJA   true            false       false       false                   false               false                           false                           false
-VARHAISKASVATUKSEN_TOIMIPAIKKA  false           false       false       false                   false               true                            false                           false
+VARHAISKASVATUKSEN_TOIMIPAIKKA  false           false       false       false                   false               true                            true                            false
 TYOELAMAJARJESTO                false           false       false       false                   false               false                           false                           true

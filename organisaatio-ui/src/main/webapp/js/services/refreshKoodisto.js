@@ -41,7 +41,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
                      Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava yläorganisaatio joka on
-                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA.
+                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA tai VARHAISKASVATUKSEN_TOIMIPAIKKA.
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
@@ -62,7 +62,7 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'organisaatiotyyppi_03': ["03"], // Toimipiste
                         'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
                         'organisaatiotyyppi_07': ["03", "08"], // Varhaiskasvatuksen jarjestaja
-                        'organisaatiotyyppi_08': [], // Varhaiskasvatuksen toimipaikka
+                        'organisaatiotyyppi_08': ["08"], // Varhaiskasvatuksen toimipaikka
                         'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
                     result.sort(function (a, b) {
                         return a.koodiArvo.localeCompare(b.koodiArvo);
