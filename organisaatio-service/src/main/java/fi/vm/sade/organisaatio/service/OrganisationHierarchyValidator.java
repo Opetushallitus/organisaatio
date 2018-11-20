@@ -23,8 +23,7 @@ import java.util.Map.Entry;
  * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
  * TYÖELÄMÄJÄRJESTÖ.
  * <li>Jos organisaatio on VARHAISKASVATUKSEN_JARJESTAJA ja sille on
- * määritelty yläorganisaatio, on yläorganisaation oltava joko OPH tai
- * KOULUTUSTOIMIJA.
+ * määritelty yläorganisaatio, on yläorganisaation oltava OPH.
  * <li>Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava
  * yläorganisaatio joka on tyypiltään VARHAISKASVATUKSEN_JARJESTAJA tai VARHAISKASVATUKSEN_TOIMIPAIKKA.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
@@ -62,8 +61,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
         public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
             return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue())
                     && (parentChild.getKey() == null
-                    || ophOid.equals(parentChild.getKey().getOid())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+                    || ophOid.equals(parentChild.getKey().getOid()));
         }
     };
 
