@@ -28,7 +28,7 @@ import java.util.Map.Entry;
  * yläorganisaatio joka on tyypiltään VARHAISKASVATUKSEN_JARJESTAJA tai VARHAISKASVATUKSEN_TOIMIPAIKKA.
  * <li>Jos organisaatio on TOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään joko TOIMIPISTE, OPPILAITOS,
- * MUU ORGANISAATIO, VARHAISKASVATUKSEN_JARJESTAJA tai TYÖELÄMÄJÄRJESTÖ.
+ * MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
  * <li>Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava
  * yläorganisaatio joka on tyypiltään KOULUTUSTOIMIJA.
  *
@@ -102,7 +102,6 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
                     && (parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue())
-                    || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue())
                     || parentChild.getKey().getTyypit().contains(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
         }
     };
