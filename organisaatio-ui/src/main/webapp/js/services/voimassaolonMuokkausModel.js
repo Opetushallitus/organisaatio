@@ -15,7 +15,7 @@
  */
 
 app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
-                                                  Alert, Muokkaamonta) {
+                                                  Alert, Muokkaamonta, OrganisaatioModel, KoodistoKoodi) {
 
     $log = $log.getInstance("VoimassaolonMuokkausModel");
     var loadingService = $injector.get('LoadingService');
@@ -394,6 +394,16 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
             return ($filter('i18n')("Organisaatiot.aktiivinen",""));
         };
 
+        var getKoodiLocalized = function(koodiUri) {
+            var koodi = OrganisaatioModel.kaikkiOrganisaatiotyypit.filter(function (koodi) {
+                return koodi.koodiUri === koodiUri;
+            })[0];
+            if (koodi) {
+                return KoodistoKoodi.getLocalizedName(koodi);
+            }
+            return koodi;
+        };
+
         var constructAliorganisaatioTree = function(aliOrgList, level, localizedNameOfParent) {
             var constructedTree = [];
             if (aliOrgList) {
@@ -417,13 +427,12 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
                     var lakkautettu = isBeforeToday(item.lakkautusPvm);
 
                     var tyyppi = "";
-
                     if (item.organisaatiotyypit) {
                         for (var j = 0; j < item.organisaatiotyypit.length; j++) {
                             if (j !== 0) {
                                 tyyppi += ", ";
                             }
-                            tyyppi += $filter('i18n')("Organisaatiot."+item.organisaatiotyypit[0], "");
+                            tyyppi += getKoodiLocalized(item.organisaatiotyypit[0]);
                         }
                     }
 
