@@ -204,6 +204,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             if (!oidsPathInverted.hasNext()) {
                 return Optional.empty();
             }
+            oidsPathInverted.next();
             return Optional.ofNullable(oidsPathInverted.next());
         }
         return Optional.empty();

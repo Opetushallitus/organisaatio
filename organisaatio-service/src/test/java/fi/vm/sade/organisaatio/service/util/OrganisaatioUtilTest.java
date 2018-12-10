@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -96,6 +97,22 @@ public class OrganisaatioUtilTest {
         assertTrue(OrganisaatioUtil.isAktiivinen(organisaatio));
         assertFalse(OrganisaatioUtil.isSuunniteltu(organisaatio));
         assertFalse(OrganisaatioUtil.isPassive(organisaatio));
+    }
+
+    @Test
+    public void getParentOid() {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath("1|2|3|4");
+        organisaatio.getParentOid();
+        assertThat(organisaatio.getParentOid()).contains("3");
+    }
+
+    @Test
+    public void getParentOidJuuriOrganisaatioon() {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath(null);
+        organisaatio.getParentOid();
+        assertThat(organisaatio.getParentOid()).isEmpty();
     }
 
 }
