@@ -104,7 +104,7 @@ public class OrganisaatioUtilTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("1|2|3|4");
         organisaatio.getParentOid();
-        assertThat(organisaatio.getParentOid()).contains("3");
+        assertThat(organisaatio.getParentOid()).contains("4");
     }
 
     @Test

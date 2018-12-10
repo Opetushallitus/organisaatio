@@ -344,6 +344,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
+        organisaatio.setParentOidPath("|1.2.246.562.24.00000000001|tyyppitesti|");
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
         organisaatio.setNimet(Collections.singletonList(nimi));
