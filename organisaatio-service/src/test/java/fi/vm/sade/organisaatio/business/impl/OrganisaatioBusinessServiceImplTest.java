@@ -344,7 +344,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
         organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
-        organisaatio.setParentOidPath("|1.2.246.562.24.00000000001|tyyppitesti|");
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
         organisaatio.setNimet(Collections.singletonList(nimi));
@@ -368,6 +367,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         ResultRDTOV4 result = this.service.save(organisaatio, false);
         assertThat(result.getOrganisaatio().getParentOid()).isEqualTo("tyyppitesti");
+        assertThat(result.getOrganisaatio().getParentOidPath()).isEqualTo("|1.2.246.562.24.00000000001|tyyppitesti|");
         assertThat(result.getOrganisaatio().getTyypit()).containsExactly(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue());
         assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot())
                 .extracting(VarhaiskasvatuksenToimipaikkaTiedotDto::getToimintamuoto,
