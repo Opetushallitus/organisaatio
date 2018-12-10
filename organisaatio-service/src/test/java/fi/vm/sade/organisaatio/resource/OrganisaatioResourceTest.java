@@ -27,13 +27,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.core.Response;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -125,6 +126,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             LOG.debug("ORG: {}", org.getOid());
         }
         assertEquals(7, result.getNumHits());
+        assertThat(result.getOrganisaatiot())
+                .flatExtracting(perustieto -> Stream.concat(Stream.of(perustieto.getOid()), this.allChildrenFlat(perustieto.getChildren()).map(OrganisaatioPerustieto::getOid)).collect(Collectors.toSet()))
+                // 1.2.2004.6 on lakkautettu joten se ei ole validi vaikka sillä onkin 1.2.2004.5 organisaatio indeksin parent pathissaan
+                .containsExactlyInAnyOrder("1.2.2004.1", "1.2.2004.2", "1.2.2004.3", "1.2.2004.4", "1.2.2005.4", "1.2.2004.5", "1.2.2005.5");
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
@@ -135,6 +140,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits());
+    }
+
+    private Stream<OrganisaatioPerustieto> allChildrenFlat(Collection<OrganisaatioPerustieto> organisaatioPerustieto) {
+        return Stream.concat(organisaatioPerustieto.stream(), organisaatioPerustieto.stream().flatMap(child -> CollectionUtils.isEmpty(child.getChildren()) ? Stream.empty() : this.allChildrenFlat(child.getChildren())));
     }
 
     @Test
