@@ -241,12 +241,12 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.organisaatiotyyppiChanged = function() {
-        if ($scope.hakuehdot.organisaatiotyyppi !== 'Oppilaitos') {
+        if ($scope.hakuehdot.organisaatiotyyppi !== 'organisaatiotyyppi_02') {
             $scope.hakuehdot.oppilaitostyyppiKoodi = '';
         }
     };
 
     $scope.isOppilaitosSelected = function() {
-        return $scope.hakuehdot.organisaatiotyyppi === 'Oppilaitos';
+        return $scope.hakuehdot.organisaatiotyyppi === 'organisaatiotyyppi_02';
     };
 });
