@@ -187,7 +187,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Test
     public void testMixedOsoitetyyppi() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("tyyppitesti").getEntity();
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1").getEntity();
         Assert.assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),

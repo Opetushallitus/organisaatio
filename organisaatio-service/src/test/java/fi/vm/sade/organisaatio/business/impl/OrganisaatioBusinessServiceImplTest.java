@@ -344,7 +344,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     public void lisaaVarhaiskasvatuksenToimipaikkaTieto() {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
-        organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
+        organisaatio.setParentOid("1.2.8000.1"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
         organisaatio.setNimet(Collections.singletonList(nimi));
@@ -367,8 +367,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
 
         ResultRDTOV4 result = this.service.save(organisaatio, false);
-        assertThat(result.getOrganisaatio().getParentOid()).isEqualTo("tyyppitesti");
-        assertThat(result.getOrganisaatio().getParentOidPath()).isEqualTo("|1.2.246.562.24.00000000001|tyyppitesti|");
+        assertThat(result.getOrganisaatio().getParentOid()).isEqualTo("1.2.8000.1");
+        assertThat(result.getOrganisaatio().getParentOidPath()).isEqualTo("|1.2.246.562.24.00000000001|1.2.8000.1|");
         assertThat(result.getOrganisaatio().getTyypit()).containsExactly(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue());
         assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot())
                 .extracting(VarhaiskasvatuksenToimipaikkaTiedotDto::getToimintamuoto,
@@ -389,7 +389,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     public void lisaaVarhaiskasvatuksenToimipaikkaTietoVaaralleTyypille() {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
-        organisaatio.setParentOid("tyyppitesti"); // Varhaiskasvatuksen järjestäjä
+        organisaatio.setParentOid("1.2.8000.1"); // Varhaiskasvatuksen järjestäjä
         OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
         organisaatio.setNimi(nimi.getNimi());
         organisaatio.setNimet(Collections.singletonList(nimi));

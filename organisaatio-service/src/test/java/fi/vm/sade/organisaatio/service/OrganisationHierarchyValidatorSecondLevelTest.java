@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
@@ -54,7 +54,7 @@ public class OrganisationHierarchyValidatorSecondLevelTest {
 
     private Organisaatio getOrg(OrganisaatioTyyppi... tyypit) {
         Organisaatio organisaatio = new Organisaatio();
-        organisaatio.setTyypit(Arrays.stream(tyypit).map(OrganisaatioTyyppi::koodiValue).collect(toList()));
+        organisaatio.setTyypit(Arrays.stream(tyypit).map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet()));
         return organisaatio;
     }
 

@@ -77,28 +77,28 @@ public class OrganisaatioContext {
     private OrganisaatioContext(OrganisaatioRDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
         this.parentOrgOid = org != null ? org.getParentOid() : null;
-        this.orgTypes = org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet();
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdto = org;
     }
 
     private OrganisaatioContext(OrganisaatioRDTOV3 org) {
         this.orgOid = org != null ? org.getOid() : null;
         this.parentOrgOid = org != null ? org.getParentOid() : null;
-        this.orgTypes = org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet();
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov3 = org;
     }
 
     private OrganisaatioContext(OrganisaatioRDTOV4 org) {
         this.orgOid = org != null ? org.getOid() : null;
         this.parentOrgOid = org != null ? org.getParentOid() : null;
-        this.orgTypes = org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet();
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov4 = org;
     }
 
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
         this.parentOrgOid = null;
-        this.orgTypes = Collections.emptySet();
+        this.orgTypes = new HashSet<>();
     }
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {
@@ -110,7 +110,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.parentOrgOid = org != null ? org.getParentOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid().orElse(null) : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
     }
 

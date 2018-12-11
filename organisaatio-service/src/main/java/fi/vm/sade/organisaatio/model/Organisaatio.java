@@ -204,7 +204,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             if (!oidsPathInverted.hasNext()) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(oidsPathInverted.next());
+            return Optional.ofNullable(oidsPathInverted.next())
+                    .filter(s -> s.matches("[\\d\\.]+"));
         }
         return Optional.empty();
     }
