@@ -199,6 +199,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return (latestSuhde != null) ? latestSuhde.getParent() : null;
     }
 
+    public String getParentOid() {
+        if (parentOidPath == null || parentOidPath.isEmpty()) {
+            return null;
+        }
+        String[] paths = parentOidPath.split("\\|", -1);
+        if (paths.length < 3) {
+            return null;
+        }
+        return paths[paths.length - 2];
+    }
+
     /**
      * Utility method to get current status of the organisaatio.
      * @return the status

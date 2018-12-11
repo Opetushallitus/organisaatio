@@ -93,24 +93,24 @@ public class PermissionChecker {
     public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
     }
 
     public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
     }
 
     public void checkSaveOrganisation(OrganisaatioRDTOV4 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm(), organisaatio.getParentOid());
+                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
     }
 
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
             String oid, Map<String, String> nimi,
-            Date alkuPvm, Date lakkautusPvm, String parentOid) {
+            Date alkuPvm, Date lakkautusPvm) {
         if (checkCRUDRyhma(authContext)) {
             return;
         }
@@ -140,7 +140,7 @@ public class PermissionChecker {
             }
             checkPermission(permissionService.userCanUpdateOrganisation(authContext));
         } else {
-            checkPermission(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(parentOid)));
+            checkPermission(permissionService.userCanCreateOrganisation(authContext));
         }
     }
 

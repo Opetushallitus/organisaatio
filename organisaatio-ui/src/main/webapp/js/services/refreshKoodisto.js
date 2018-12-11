@@ -41,11 +41,11 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
                      Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava yläorganisaatio joka on
-                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA.
+                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA tai VARHAISKASVATUKSEN_TOIMIPAIKKA.
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
-                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO, VARHAISKASVATUKSEN_JARJESTAJA tai TYÖELÄMÄJÄRJESTÖ.
+                     TOIMIPISTE, OPPILAITOS, MUU ORGANISAATIO tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on OPPISOPIMUSTOIMIPISTE, sillä on oltava yläorganisaatio
                      joka on tyypiltään KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
@@ -61,8 +61,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                         'organisaatiotyyppi_02': ["03"], // Oppilaitos
                         'organisaatiotyyppi_03': ["03"], // Toimipiste
                         'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
-                        'organisaatiotyyppi_07': ["03", "08"], // Varhaiskasvatuksen jarjestaja
-                        'organisaatiotyyppi_08': [], // Varhaiskasvatuksen toimipaikka
+                        'organisaatiotyyppi_07': ["08"], // Varhaiskasvatuksen jarjestaja
+                        'organisaatiotyyppi_08': ["08"], // Varhaiskasvatuksen toimipaikka
                         'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
                     result.sort(function (a, b) {
                         return a.koodiArvo.localeCompare(b.koodiArvo);
@@ -80,8 +80,9 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                                 model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             }
 
-                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
-                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi);
+                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04" &&
+                                orgTyyppiKoodi.koodiArvo !== "08") {
+                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi.koodiUri);
                             }
                         }
                     });

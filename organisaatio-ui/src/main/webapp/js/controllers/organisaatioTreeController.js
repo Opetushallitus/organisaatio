@@ -78,11 +78,11 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
         return ($scope.hakuehdot.organisaatioRajausVisible===false) ?
                 // OPH-käyttäjän tapauksessa oppisopimustoimipisteelle ei voi lisätä aliorganisaatiota
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_04") : // Oppisopimustoimipiste
+                // Muiden käyttäjien tapauksessa seuraaville tyypeille voi lisätä aliorganisaatioita
+                $scope.model.isTyyppi(node, "organisaatiotyyppi_07") || // Varhaiskasvatuksen jarjestaja
                 // Muiden käyttäjien tapauksessa seuraaville tyypeille ei voi lisätä aliorganisaatioita
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_01") && // Koulutustoimija
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_05") && // Muu organisaatio
-                !$scope.model.isTyyppi(node, "organisaatiotyyppi_07") && // Varhaiskasvatuksen jarjestaja
-                !$scope.model.isTyyppi(node, "organisaatiotyyppi_08") && // Varhaiskasvatuksen toimipaikka
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_06") && // Tyoelamajarjesto
                 !$scope.model.isTyyppi(node, "organisaatiotyyppi_04"); // Oppisopimustoimipiste
     };

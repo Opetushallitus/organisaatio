@@ -34,6 +34,7 @@ public class OrganisaatioContext {
     private OrganisaatioRDTOV4 rdtov4;
     private OrganisaatioPerustieto perus;
     private final String orgOid;
+    private final String parentOrgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
 
     private static Set<OrganisaatioTyyppi> getTyypitFromStrings(List<String> tyypitStrs) {
@@ -56,6 +57,10 @@ public class OrganisaatioContext {
         return orgOid;
     }
 
+    public String getParentOrgOid() {
+        return parentOrgOid;
+    }
+
     public Set<OrganisaatioTyyppi> getOrgTypes() {
         return Collections.unmodifiableSet(orgTypes);
     }
@@ -72,35 +77,41 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(OrganisaatioRDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdto = org;
     }
 
     private OrganisaatioContext(OrganisaatioRDTOV3 org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov3 = org;
     }
 
     private OrganisaatioContext(OrganisaatioRDTOV4 org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov4 = org;
     }
 
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
+        this.parentOrgOid = null;
         this.orgTypes = Collections.emptySet();
     }
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? org.getOrganisaatiotyypit() : Collections.emptySet());
         this.perus = org;
     }
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
     }
 
