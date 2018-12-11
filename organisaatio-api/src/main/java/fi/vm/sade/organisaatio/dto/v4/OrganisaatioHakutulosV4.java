@@ -3,8 +3,8 @@ package fi.vm.sade.organisaatio.dto.v4;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @ApiModel(value = "Organisaation hakutulos v4")
 public class OrganisaatioHakutulosV4 {
@@ -13,7 +13,7 @@ public class OrganisaatioHakutulosV4 {
     private int numHits;
 
     @ApiModelProperty(value = "Organisaatiot", required = true)
-    private List<OrganisaatioPerustietoV4> organisaatiot = new ArrayList<>();
+    private Set<OrganisaatioPerustietoV4> organisaatiot = new HashSet<>();
 
     public int getNumHits() {
         return numHits;
@@ -23,11 +23,11 @@ public class OrganisaatioHakutulosV4 {
         this.numHits = numHits;
     }
 
-    public List<OrganisaatioPerustietoV4> getOrganisaatiot() {
+    public Set<OrganisaatioPerustietoV4> getOrganisaatiot() {
         return organisaatiot;
     }
 
-    public void setOrganisaatiot(List<OrganisaatioPerustietoV4> organisaatiot) {
+    public void setOrganisaatiot(Set<OrganisaatioPerustietoV4> organisaatiot) {
         this.organisaatiot = organisaatiot;
     }
 

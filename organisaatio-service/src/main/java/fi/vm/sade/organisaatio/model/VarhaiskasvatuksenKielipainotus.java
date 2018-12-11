@@ -6,7 +6,7 @@ import java.util.Date;
 @Entity
 @Table(name = "varhaiskasvatuksen_kielipainotus")
 public class VarhaiskasvatuksenKielipainotus extends BaseEntity {
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
     private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
 

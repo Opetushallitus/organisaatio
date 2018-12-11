@@ -32,7 +32,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
 
     @Override
     public Organisaatio convert(OrganisaatioRDTOV4 source) {
-        List<Yhteystieto> yhteystietos = new ArrayList<>();
+        Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio target = new Organisaatio();
 
         target.setOid(source.getOid());
@@ -41,7 +41,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setAlkuPvm(source.getAlkuPvm());
         target.setDomainNimi(source.getDomainNimi());
 
-        target.setKielet(convertListToList(source.getKieletUris()));
+        target.setKielet(convertCollectionToSet(source.getKieletUris()));
         target.setKotipaikka(source.getKotipaikkaUri());
         target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
         target.setLakkautusPvm(source.getLakkautusPvm());
@@ -64,11 +64,11 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setOpetuspisteenJarjNro(source.getOpetuspisteenJarjNro());
         target.setOppilaitosKoodi(source.getOppilaitosKoodi());
         target.setOppilaitosTyyppi(source.getOppilaitosTyyppiUri());
-        target.setParentOidPath(target.getParentOidPath());
+        target.setParentOidPath(source.getParentOidPath());
 
         target.setToimipisteKoodi(source.getToimipistekoodi());
-        target.setTyypit(source.getTyypit());
-        target.setVuosiluokat(convertListToList(source.getVuosiluokat()));
+        target.setTyypit(this.convertSetToSet(source.getTyypit()));
+        target.setVuosiluokat(convertCollectionToSet(source.getVuosiluokat()));
         target.setOrganisaatioLisatietotyypit(source.getLisatiedot().stream()
                 .map(lisatietoNimi -> {
                     OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
@@ -153,8 +153,8 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    private List<String> convertListToList(List<String> s) {
-        return new ArrayList<>(s);
+    private Set<String> convertCollectionToSet(Collection<String> s) {
+        return new HashSet<>(s);
     }
 
     private Set<String> convertSetToSet(Set<String> s) {

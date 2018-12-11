@@ -1,10 +1,10 @@
 package fi.vm.sade.organisaatio.api.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @ApiModel(value = "Organisaation hakutulos")
 public class OrganisaatioHakutulos {
@@ -13,7 +13,7 @@ public class OrganisaatioHakutulos {
     private int numHits;
 
     @ApiModelProperty(value = "Organisaatiot", required = true)
-    private List<OrganisaatioPerustieto> organisaatiot = new ArrayList<OrganisaatioPerustieto>();
+    private Set<OrganisaatioPerustieto> organisaatiot = new HashSet<>();
 
     public int getNumHits() {
         return numHits;
@@ -23,11 +23,11 @@ public class OrganisaatioHakutulos {
         this.numHits = numHits;
     }
 
-    public List<OrganisaatioPerustieto> getOrganisaatiot() {
+    public Set<OrganisaatioPerustieto> getOrganisaatiot() {
         return organisaatiot;
     }
 
-    public void setOrganisaatiot(List<OrganisaatioPerustieto> organisaatiot) {
+    public void setOrganisaatiot(Set<OrganisaatioPerustieto> organisaatiot) {
         this.organisaatiot = organisaatiot;
     }
 

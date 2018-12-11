@@ -9,8 +9,8 @@ import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyyppiDTO, YhteystietojenTyyppi> {
 
@@ -54,7 +54,7 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
 
         entity.setNimi(convertNimiToJpa(dto));
 
-        List<YhteystietoElementtiDTO> newLisatietokenttas = dto.getAllLisatietokenttas();
+        Set<YhteystietoElementtiDTO> newLisatietokenttas = dto.getAllLisatietokenttas();
 
         // jos ollaan updateamassa
         // katsotaan ollaanko poistettua kenttää luomassa uudestaan -> muutetaankin olemassaolevaa
@@ -71,7 +71,7 @@ public class YhteystietojenTyyppiConverter extends Converter<YhteystietojenTyypp
             }
         }
 
-        List<YhteystietoElementti> newLisatietos = converterFactory.convertYhteystietoElementtisToJPA(newLisatietokenttas, YhteystietoElementti.class, merge);
+        Set<YhteystietoElementti> newLisatietos = converterFactory.convertYhteystietoElementtisToJPA(newLisatietokenttas, merge);
 
         // jos ollaan updateamassa
         // katsotaan onko kenttiä poistumassa -> merkataan poistetuksi poistamisen sijaan

@@ -1,57 +1,38 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- *
- * @author simok
- */
 public class YhteystiedotSearchCriteriaDTOV2 {
     // Palautettavien organisaatioiden kielirajaus. 
     // Lista kielivalikoima-koodiston koodiUreja. 
     // Esim. ["kielivalikoima_en", "kielivalikoima_sv"]
-    private List<String> kieliList = new ArrayList<String>();
+    private Set<String> kieliList = new HashSet<>();
 
     // Palautettavien organisaatioiden kuntarajaus. 
     // Lista kunta-koodiston koodiUreja. 
     // Esim. ["kunta_905", "kunta_401"]
-    private List<String> kuntaList = new ArrayList<String>();
+    private Set<String> kuntaList = new HashSet<>();
         
     // Palautettavien organisaatioiden oppilaitostyyppirajaus. 
     // Lista oppilaitostyyppi-koodiston koodiUreja. / List<String>	
     // Esim. ["oppilaitostyyppi_19", "oppilaitostyyppi_91"]
-    private List<String> oppilaitostyyppiList = new ArrayList<String>();
+    private Set<String> oppilaitostyyppiList = new HashSet<>();
 
     // Palautettavien organisaatioiden y-tunnusrajaus.
     // Lista y-tunnuksia.
     // Esim. ["0147510-4", "0203797-4"]
-    private List<String> ytunnusList = new ArrayList<String>();
+    private Set<String> ytunnusList = new HashSet<>();
     
     // Palautettavien organisaatioiden vuosiluokat.
     // Lista vuosiluokat-koodiston koodiUreja.
     // Esim. ["vuosiluokat_1","vuosiluokat_2"]
-    private List<String> vuosiluokkaList = new ArrayList<String>();
+    private Set<String> vuosiluokkaList = new HashSet<>();
 
     // Palautettavien organisaatioiden oidit.
     // Lista oid:ja.
     // Esim. ["1.2.246.562.10.195703655110","1.2.246.562.10.22439399159"]
-    private List<String> oidList = new ArrayList<String>();
+    private Set<String> oidList = new HashSet<>();
 
     // Hakutuloksen määrän rajoite.
     private int limit;
@@ -67,70 +48,70 @@ public class YhteystiedotSearchCriteriaDTOV2 {
     /**
      * @return the kieliList
      */
-    public List<String> getKieliList() {
+    public Set<String> getKieliList() {
         return kieliList;
     }
 
     /**
      * @param kieliList the kieliList to set
      */
-    public void setKieliList(List<String> kieliList) {
+    public void setKieliList(Set<String> kieliList) {
         this.kieliList = kieliList;
     }
 
     /**
      * @return the kuntaList
      */
-    public List<String> getKuntaList() {
+    public Set<String> getKuntaList() {
         return kuntaList;
     }
 
     /**
      * @param kuntaList the kuntaList to set
      */
-    public void setKuntaList(List<String> kuntaList) {
+    public void setKuntaList(Set<String> kuntaList) {
         this.kuntaList = kuntaList;
     }
 
     /**
      * @return the oppilaitostyyppiList
      */
-    public List<String> getOppilaitostyyppiList() {
+    public Set<String> getOppilaitostyyppiList() {
         return oppilaitostyyppiList;
     }
 
     /**
      * @param oppilaitostyyppiList the oppilaitostyyppiList to set
      */
-    public void setOppilaitostyyppiList(List<String> oppilaitostyyppiList) {
+    public void setOppilaitostyyppiList(Set<String> oppilaitostyyppiList) {
         this.oppilaitostyyppiList = oppilaitostyyppiList;
     }
 
     /**
      * @return the ytunnusList
      */
-    public List<String> getYtunnusList() {
+    public Set<String> getYtunnusList() {
         return ytunnusList;
     }
 
     /**
      * @param ytunnusList the ytunnusList to set
      */
-    public void setYtunnusList(List<String> ytunnusList) {
+    public void setYtunnusList(Set<String> ytunnusList) {
         this.ytunnusList = ytunnusList;
     }
 
     /**
      * @return the vuosiluokkaList
      */
-    public List<String> getVuosiluokkaList() {
+    public Set<String> getVuosiluokkaList() {
         return vuosiluokkaList;
     }
 
     /**
      * @param vuosiluokkaList the vuosiluokkaList to set
      */
-    public void setVuosiluokkaList(List<String> vuosiluokkaList) {
+    public void setVuosiluokkaList(Set<String> vuosiluokkaList) {
         this.vuosiluokkaList = vuosiluokkaList;
     }
 
@@ -151,14 +132,14 @@ public class YhteystiedotSearchCriteriaDTOV2 {
     /**
      * @return the oidList
      */
-    public List<String> getOidList() {
+    public Set<String> getOidList() {
         return oidList;
     }
 
     /**
      * @param oidList the oidList to set
      */
-    public void setOidList(List<String> oidList) {
+    public void setOidList(Set<String> oidList) {
         this.oidList = oidList;
     }
     

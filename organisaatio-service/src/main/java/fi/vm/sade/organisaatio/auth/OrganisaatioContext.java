@@ -25,7 +25,6 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class OrganisaatioContext {
@@ -37,7 +36,7 @@ public class OrganisaatioContext {
     private final String parentOrgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
 
-    private static Set<OrganisaatioTyyppi> getTyypitFromStrings(List<String> tyypitStrs) {
+    private static Set<OrganisaatioTyyppi> getTyypitFromStrings(Set<String> tyypitStrs) {
         Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
         for (String tyyppiStr : tyypitStrs) {
             tyypit.add(OrganisaatioTyyppi.fromValue(tyyppiStr));
@@ -45,7 +44,7 @@ public class OrganisaatioContext {
         return tyypit;
     }
 
-    private static Set<OrganisaatioTyyppi> getTyypitFromKoodiStrings(List<String> tyypitStrs) {
+    private static Set<OrganisaatioTyyppi> getTyypitFromKoodiStrings(Set<String> tyypitStrs) {
         Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
         for (String tyyppiStr : tyypitStrs) {
             tyypit.add(OrganisaatioTyyppi.fromKoodiValue(tyyppiStr));
@@ -99,7 +98,7 @@ public class OrganisaatioContext {
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
         this.parentOrgOid = null;
-        this.orgTypes = Collections.emptySet();
+        this.orgTypes = new HashSet<>();
     }
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {
@@ -111,7 +110,7 @@ public class OrganisaatioContext {
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.parentOrgOid = org != null ? org.getParentOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid().orElse(null) : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
     }
 

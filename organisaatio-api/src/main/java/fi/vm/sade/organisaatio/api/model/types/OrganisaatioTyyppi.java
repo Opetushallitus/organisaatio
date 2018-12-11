@@ -1,7 +1,6 @@
-
 package fi.vm.sade.organisaatio.api.model.types;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum OrganisaatioTyyppi {
@@ -55,13 +54,13 @@ public enum OrganisaatioTyyppi {
      * @param source Organisaatiotyyppilista koodiarvoja
      * @return Organisaatiotyyppilista vanhassa muodossa.
      */
-    public static List<String> fromKoodiToValue(List<String> source) {
+    public static Set<String> fromKoodiToValue(Set<String> source) {
         return source == null
                 ? null
                 : source.stream()
                 .map(OrganisaatioTyyppi::fromKoodiValue)
                 .map(OrganisaatioTyyppi::value)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -69,13 +68,13 @@ public enum OrganisaatioTyyppi {
      * @param source Organisaatiotyyppilista vanhassa muodossa.
      * @return Organisaatiotyyppilista koodiarvoja
      */
-    public static List<String> fromValueToKoodi(List<String> source) {
+    public static Set<String> fromValueToKoodi(Set<String> source) {
         return source == null
                 ? null
                 : source.stream()
                 .map(OrganisaatioTyyppi::fromValue)
                 .map(OrganisaatioTyyppi::koodiValue)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -83,10 +82,10 @@ public enum OrganisaatioTyyppi {
      * @param tyypitAsKoodi Organisaatiotyypit koodiarvoina
      * @return Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
      */
-    public static List<String> tyypitFromKoodis(List<String> tyypitAsKoodi) {
+    public static Set<String> tyypitFromKoodis(Set<String> tyypitAsKoodi) {
         return tyypitAsKoodi.stream()
                 .map(tyyppi -> OrganisaatioTyyppi.fromKoodiValue(tyyppi).value())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -94,10 +93,10 @@ public enum OrganisaatioTyyppi {
      * @param tyypit Organisaatiotyypit organisaatiopalvelun vanhassa muodossa
      * @return Organisaatiotyypit koodiarvoina
      */
-    public static List<String> tyypitToKoodis(List<String> tyypit) {
+    public static Set<String> tyypitToKoodis(Set<String> tyypit) {
         return tyypit.stream()
                 .map(tyyppi -> OrganisaatioTyyppi.fromValue(tyyppi).koodiValue())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 }

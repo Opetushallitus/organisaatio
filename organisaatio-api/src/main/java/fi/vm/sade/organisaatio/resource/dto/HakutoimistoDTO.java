@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HakutoimistoDTO {
@@ -13,7 +14,7 @@ public class HakutoimistoDTO {
     public final Map<String, HakutoimistonYhteystiedotDTO> yhteystiedot;
 
     public HakutoimistoDTO(Map<String, String> nimi, Map<String, HakutoimistonYhteystiedotDTO> yhteystiedot) {
-        this.nimi = nimi;
+        this.nimi = new HashMap<>(nimi);
         this.yhteystiedot = yhteystiedot;
     }
 

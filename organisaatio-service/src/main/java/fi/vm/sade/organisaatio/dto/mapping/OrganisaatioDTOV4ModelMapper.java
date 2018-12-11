@@ -14,7 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,11 +23,11 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
     public OrganisaatioDTOV4ModelMapper() {
         super();
 
-        final Converter<List<String>, List<String>> organisaatioTyypitV3ToV4 = mc -> mc.getSource() == null
+        final Converter<Set<String>, Set<String>> organisaatioTyypitV3ToV4 = mc -> mc.getSource() == null
                 ? null
                 : OrganisaatioTyyppi.fromValueToKoodi(mc.getSource());
 
-        final Converter<List<String>, List<String>> organisaatioTyypitV4ToV3 = mc -> mc.getSource() == null
+        final Converter<Set<String>, Set<String>> organisaatioTyypitV4ToV3 = mc -> mc.getSource() == null
                 ? null
                 : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource());
 
@@ -39,13 +39,13 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
                 ? null
                 : OrganisaatioTyyppi.fromKoodiValue(mc.getSource()).value();
 
-        final Converter<List<OrganisaatioTyyppi>, List<String>> organisaatioTyypitEnumV3ToV4 = mc -> mc.getSource() == null
+        final Converter<Set<OrganisaatioTyyppi>, Set<String>> organisaatioTyypitEnumV3ToV4 = mc -> mc.getSource() == null
                 ? null
-                : mc.getSource().stream().map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toList());
+                : mc.getSource().stream().map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet());
 
-        final Converter<List<String>, List<OrganisaatioTyyppi>> organisaatioTyypitEnumV4ToV3 = mc -> mc.getSource() == null
+        final Converter<Set<String>, Set<OrganisaatioTyyppi>> organisaatioTyypitEnumV4ToV3 = mc -> mc.getSource() == null
                 ? null
-                : mc.getSource().stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
+                : mc.getSource().stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toSet());
 
         // OrganisaatioRDTO
         this.addMappings(new PropertyMap<OrganisaatioRDTOV3, OrganisaatioRDTOV4>() {

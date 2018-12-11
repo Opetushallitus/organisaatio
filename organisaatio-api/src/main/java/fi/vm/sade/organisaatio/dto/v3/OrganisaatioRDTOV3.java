@@ -41,11 +41,11 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private Date _ytjPaivitysPvm;
 
-    private List<String> _kieletUris = new ArrayList<>();
+    private Set<String> _kieletUris = new HashSet<>();
 
-    private List<String> _tyypit = new ArrayList<>();
+    private Set<String> _tyypit = new HashSet<>();
 
-    private List<String> _vuosiluokat = new ArrayList<>();
+    private Set<String> _vuosiluokat = new HashSet<>();
 
     private Set<String> _ryhmatyypit;
 
@@ -83,7 +83,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private Map<String, String> _kayntiosoite = new HashMap<>();
 
-    private List<Map<String, String>> _yhteystiedot = new ArrayList<>();
+    private Set<Map<String, String>> _yhteystiedot = new HashSet<>();
 
     private Set<String> _lisatiedot;
 
@@ -99,7 +99,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
 
     private String yhteishaunKoulukoodi;
 
-    private List<Map<String, String>> _yhteystietoArvos = new ArrayList<>();
+    private Set<Map<String, String>> _yhteystietoArvos = new HashSet<>();
     private String _virastoTunnus;
     private String _opetuspisteenJarjNro;
 
@@ -160,14 +160,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    public List<String> getKieletUris() {
+    public Set<String> getKieletUris() {
         if (_kieletUris == null) {
-            _kieletUris = new ArrayList<String>();
+            _kieletUris = new HashSet<>();
         }
         return _kieletUris;
     }
 
-    public void setKieletUris(List<String> _kieletUris) {
+    public void setKieletUris(Set<String> _kieletUris) {
         this._kieletUris = _kieletUris;
     }
 
@@ -213,7 +213,7 @@ public class OrganisaatioRDTOV3 implements Serializable {
     @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
     public List<OrganisaatioNimiRDTO> getNimet() {
          if (_nimet == null) {
-            _nimet = new ArrayList<OrganisaatioNimiRDTO>();
+            _nimet = new ArrayList<>();
         }
         return _nimet;
     }
@@ -250,14 +250,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Tyypit", required = true)
-    public List<String> getTyypit() {
+    public Set<String> getTyypit() {
         if (_tyypit == null) {
-            _tyypit = new ArrayList<String>();
+            _tyypit = new HashSet<>();
         }
         return _tyypit;
     }
 
-    public void setTyypit(List<String> _tyypit) {
+    public void setTyypit(Set<String> _tyypit) {
         this._tyypit = _tyypit;
     }
 
@@ -280,14 +280,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Vuosiluokat", required = true)
-    public List<String> getVuosiluokat() {
+    public Set<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
-            _vuosiluokat = new ArrayList<String>();
+            _vuosiluokat = new HashSet<>();
         }
         return _vuosiluokat;
     }
 
-    public void setVuosiluokat(List<String> _vuosiluokat) {
+    public void setVuosiluokat(Set<String> _vuosiluokat) {
         this._vuosiluokat = _vuosiluokat;
     }
 
@@ -456,11 +456,11 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @ApiModelProperty(value = "Yhteystiedot", required = true)
-    public List<Map<String, String>> getYhteystietoArvos() {
+    public Set<Map<String, String>> getYhteystietoArvos() {
         return _yhteystietoArvos;
     }
 
-    public void setYhteystietoArvos(List<Map<String, String>> yhteystietoArvos) {
+    public void setYhteystietoArvos(Set<Map<String, String>> yhteystietoArvos) {
         this._yhteystietoArvos = yhteystietoArvos;
     }
 
@@ -488,14 +488,14 @@ public class OrganisaatioRDTOV3 implements Serializable {
         this._tarkastusPvm = _tarkastusPvm;
     }
 
-    public List<Map<String, String>> getYhteystiedot() {
+    public Set<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
-            _yhteystiedot = new ArrayList<Map<String, String>>();
+            _yhteystiedot = new HashSet<>();
         }
         return _yhteystiedot;
     }
 
-    public void setYhteystiedot(List<Map<String, String>> _yhteystiedot) {
+    public void setYhteystiedot(Set<Map<String, String>> _yhteystiedot) {
         this._yhteystiedot = _yhteystiedot;
     }
 

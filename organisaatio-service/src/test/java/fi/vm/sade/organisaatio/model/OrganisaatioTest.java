@@ -11,7 +11,7 @@ public class OrganisaatioTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath(null);
 
-        String parentOid = organisaatio.getParentOid();
+        String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isNull();
     }
@@ -21,7 +21,7 @@ public class OrganisaatioTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("");
 
-        String parentOid = organisaatio.getParentOid();
+        String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isNull();
     }
@@ -31,7 +31,7 @@ public class OrganisaatioTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("|1.2.246.562.10.00000000001|1.2.246.562.10.81269623245|1.2.246.562.10.86638002385|");
 
-        String parentOid = organisaatio.getParentOid();
+        String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isEqualTo("1.2.246.562.10.86638002385");
     }
@@ -41,7 +41,7 @@ public class OrganisaatioTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("|1.2.246.562.10.00000000001|");
 
-        String parentOid = organisaatio.getParentOid();
+        String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isEqualTo("1.2.246.562.10.00000000001");
     }
@@ -51,7 +51,7 @@ public class OrganisaatioTest {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("1.2.246.562.10.00000000001/1.2.246.562.10.81269623245/1.2.246.562.10.86638002385");
 
-        String parentOid = organisaatio.getParentOid();
+        String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isNull();
     }

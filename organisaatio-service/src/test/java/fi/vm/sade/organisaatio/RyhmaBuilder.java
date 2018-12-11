@@ -8,14 +8,11 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 public final class RyhmaBuilder {
 
@@ -70,7 +67,7 @@ public final class RyhmaBuilder {
     public Organisaatio build() {
         Organisaatio ryhma = new Organisaatio();
         ryhma.setOid(oid);
-        ryhma.setTyypit(Stream.of(OrganisaatioTyyppi.RYHMA).map(OrganisaatioTyyppi::koodiValue).collect(toList()));
+        ryhma.setTyypit(Stream.of(OrganisaatioTyyppi.RYHMA).map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet()));
         ryhma.setOrganisaatiotyypitStr("Ryhma|");
         ryhma.setRyhmatyypit(ryhmatyypit);
         ryhma.setKayttoryhmat(kayttoryhmat);
@@ -79,7 +76,7 @@ public final class RyhmaBuilder {
         ryhma.setLakkautusPvm(Optional.ofNullable(lakkautusPvm).map(Date::valueOf).orElse(null));
         ryhma.setOrganisaatioPoistettu(poistettu);
         if (parent != null) {
-            Set<OrganisaatioSuhde> parentSuhteet = new LinkedHashSet<>();
+            List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
             OrganisaatioSuhde parentSuhde = new OrganisaatioSuhde();
             parentSuhde.setChild(ryhma);
             parentSuhde.setParent(parent);

@@ -64,13 +64,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
+    public Set<Organisaatio> findBySearchCriteria(
+            Set<String> kieliList,
+            Set<String> kuntaList,
+            Set<String> oppilaitostyyppiList,
+            Set<String> vuosiluokkaList,
+            Set<String> ytunnusList,
+            Set<String> oidList,
             int limit) {
 
         return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
@@ -104,8 +104,16 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
         return organisaatioDAO.findByOids(oids, true).stream()
+                .map(this::markImagesNotIncluded)
                 .map(organisaatio -> this.conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
                 .collect(Collectors.toList());
+    }
+
+
+    private Organisaatio markImagesNotIncluded(Organisaatio organisaatio) {
+        Optional.ofNullable(organisaatio.getMetadata())
+                .ifPresent(metadata -> metadata.setIncludeImage(false));
+        return organisaatio;
     }
 
     @Override

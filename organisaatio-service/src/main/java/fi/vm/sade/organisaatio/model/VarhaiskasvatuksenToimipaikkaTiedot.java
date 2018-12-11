@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +22,7 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     private String kasvatusopillinenJarjestelma;
 
     // Koodisto vardatoimintamuoto
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "varhaiskasvatuksen_jarjestamismuoto", joinColumns = @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id"))
     @Column(name = "toimintamuoto", nullable = false)
     private Set<String> varhaiskasvatuksenJarjestamismuodot = new HashSet<>();
@@ -29,11 +31,13 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     private Long paikkojenLukumaara;
 
     // Koodisto maatjavaltiot2
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
+    @BatchSize(size = 100)
     private Set<VarhaiskasvatuksenKielipainotus> varhaiskasvatuksenKielipainotukset = new HashSet<>();
 
     // Koodisto vardatoiminnallinenpainotus
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "varhaiskasvatuksenToimipaikkaTiedot")
+    @BatchSize(size = 100)
     private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
     public String getToimintamuoto() {

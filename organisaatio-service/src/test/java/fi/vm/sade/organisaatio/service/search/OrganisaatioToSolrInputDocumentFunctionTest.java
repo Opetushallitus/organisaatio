@@ -16,7 +16,6 @@
 package fi.vm.sade.organisaatio.service.search;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -27,6 +26,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,9 +57,9 @@ public class OrganisaatioToSolrInputDocumentFunctionTest {
         suhde.setChild(org);
         suhde.setAlkuPvm(new Date());
         org.getParentSuhteet().add(suhde);
-        org.setParentSuhteet(Sets.newHashSet(suhde));
+        org.setParentSuhteet(Lists.newArrayList(suhde));
         parent.setOid("1.1.1.1.1.1");
-        org.setTyypit(Lists.newArrayList(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+        org.setTyypit(Collections.singleton(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
         org.setYtunnus("123456-7");
 
         List<OrganisaatioNimi> nimet = new ArrayList<>();

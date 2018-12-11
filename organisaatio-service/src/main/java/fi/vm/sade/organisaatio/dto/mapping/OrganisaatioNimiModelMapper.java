@@ -30,11 +30,11 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- *
- * @author simok
- */
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @Component
 public class OrganisaatioNimiModelMapper extends ModelMapper {
 

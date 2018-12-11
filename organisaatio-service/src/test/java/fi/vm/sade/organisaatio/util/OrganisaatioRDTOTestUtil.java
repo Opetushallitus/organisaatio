@@ -15,7 +15,6 @@
 
 package fi.vm.sade.organisaatio.util;
 
-import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
@@ -37,7 +36,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static final Map<String, String> DEFAULT_EMAIL = createEmail("asd@asd.asd");
     public static final Map<String, String> DEFAULT_PUHELIN =  createPuhelin(PuhelinNumeroTyyppi.PUHELIN, "123");
     public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_EMAIL, DEFAULT_WWW);
-    public static final List<String> DEFAULT_KIELET = Arrays.asList("oppilaitoksenopetuskieli_1#1");
+    public static final Set<String> DEFAULT_KIELET = Collections.singleton("oppilaitoksenopetuskieli_1#1");
     public static final Date DEFAULT_VOIMASSAOLO_ALKU = createPvm(0);
     public static final String DEFAULT_KOTIPAIKKA = "kunta_092";
     public static final String DEFAULT_MAA = "maatjavaltiot1_fin";
@@ -163,7 +162,9 @@ public final class OrganisaatioRDTOTestUtil {
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
         organisaatio.setNimi(nimiRDTO.getNimi());
-        organisaatio.setNimet(Lists.newArrayList(nimiRDTO));
+        List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
+        nimet.add(nimiRDTO);
+        organisaatio.setNimet(nimet);
 
         if (isNullOrEmpty(oid)) {
             organisaatio.setOid(OrganisaatioOidTestUtil.createOid());

@@ -1,18 +1,3 @@
-/*
-* Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*/
-
 package fi.vm.sade.organisaatio.dto.mapping;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -29,16 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-
-/**
- *
- * @author simok
- */
 @Component
 public class OrganisaatioModelMapper extends ModelMapper {
     private final OsoiteModelMapper modelMapper;
@@ -49,85 +29,70 @@ public class OrganisaatioModelMapper extends ModelMapper {
         this.modelMapper = modelMapper;
 
         // PostiOsoiteConverter
-        final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> postiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
-            @Override
-            public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                // Define the target list type for mapping
-                Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
+        final Converter<Set<Yhteystieto>, Set<OsoiteDTOV2>> postiOsoiteConverter = mc -> {
+            // Define the target type for mapping
+            Type osoiteDTOV2Type = new TypeToken<Set<OsoiteDTOV2>>() {}.getType();
 
-                List<Osoite> postiOsoitteet = YhteystietoUtil.getPostiOsoitteet(mc.getSource());
+            Set<Osoite> postiOsoitteet = YhteystietoUtil.getPostiOsoitteet(mc.getSource());
 
-                // Map domain type to DTO
-                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);
-            }
+            // Map domain type to DTO
+            return modelMapper.map(postiOsoitteet, osoiteDTOV2Type);
         };
 
         // KayntiOsoiteConverter
-        final Converter<List<Yhteystieto>, List<OsoiteDTOV2>> kayntiOsoiteConverter = new Converter<List<Yhteystieto>, List<OsoiteDTOV2>>() {
-            @Override
-            public List<OsoiteDTOV2> convert(MappingContext<List<Yhteystieto>, List<OsoiteDTOV2>> mc) {
-                // Define the target list type for mapping
-                Type osoiteDTOV2ListType = new TypeToken<List<OsoiteDTOV2>>() {}.getType();
+        final Converter<Set<Yhteystieto>, Set<OsoiteDTOV2>> kayntiOsoiteConverter = mc -> {
+            // Define the target type for mapping
+            Type osoiteDTOV2Type = new TypeToken<Set<OsoiteDTOV2>>() {}.getType();
 
-                List<Osoite> postiOsoitteet = YhteystietoUtil.getKayntiOsoitteet(mc.getSource());
+            Set<Osoite> postiOsoitteet = YhteystietoUtil.getKayntiOsoitteet(mc.getSource());
 
-                // Map domain type to DTO
-                return modelMapper.map(postiOsoitteet, osoiteDTOV2ListType);
-            }
+            // Map domain type to DTO
+            return modelMapper.map(postiOsoitteet, osoiteDTOV2Type);
         };
 
         // wwwOsoiteConverter
-        final Converter<List<Yhteystieto>, Map<String, String>> wwwOsoiteConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
-            @Override
-            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
-                List<Www> wwwOsoitteet = YhteystietoUtil.getWwwOsoitteet(mc.getSource());
+        final Converter<Set<Yhteystieto>, Map<String, String>> wwwOsoiteConverter = mc -> {
+            Set<Www> wwwOsoitteet = YhteystietoUtil.getWwwOsoitteet(mc.getSource());
 
-                // Tehdään map, jossa avaimena kieli ja arvone www osoite
-                Map<String, String> wwwOsoiteMap = new HashMap<>();
+            // Tehdään map, jossa avaimena kieli ja arvone www osoite
+            Map<String, String> wwwOsoiteMap = new HashMap<>();
 
-                for (Www www : wwwOsoitteet) {
-                    wwwOsoiteMap.put(www.getKieli(), www.getWwwOsoite());
-                }
-
-                return wwwOsoiteMap;
+            for (Www www : wwwOsoitteet) {
+                wwwOsoiteMap.put(www.getKieli(), www.getWwwOsoite());
             }
+
+            return wwwOsoiteMap;
         };
 
         // wwwOsoiteConverter
-        final Converter<List<Yhteystieto>, Map<String, String>> emailOsoiteConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
-            @Override
-            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
-                List<Email> emailOsoitteet = YhteystietoUtil.getEmailOsoitteet(mc.getSource());
+        final Converter<Set<Yhteystieto>, Map<String, String>> emailOsoiteConverter = mc -> {
+            Set<Email> emailOsoitteet = YhteystietoUtil.getEmailOsoitteet(mc.getSource());
 
-                // Tehdään map, jossa avaimena kieli ja arvona email osoite
-                Map<String, String> emailOsoiteMap = new HashMap<>();
+            // Tehdään map, jossa avaimena kieli ja arvona email osoite
+            Map<String, String> emailOsoiteMap = new HashMap<>();
 
-                for (Email email : emailOsoitteet) {
-                    emailOsoiteMap.put(email.getKieli(), email.getEmail());
-                }
-
-                return emailOsoiteMap;
+            for (Email email : emailOsoitteet) {
+                emailOsoiteMap.put(email.getKieli(), email.getEmail());
             }
+
+            return emailOsoiteMap;
         };
 
         // puhelinnumeroConverter
-        final Converter<List<Yhteystieto>, Map<String, String>> puhelinnumeroConverter = new Converter<List<Yhteystieto>, Map<String, String>>() {
-            @Override
-            public Map<String, String> convert(MappingContext<List<Yhteystieto>, Map<String, String>> mc) {
-                List<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
+        final Converter<Set<Yhteystieto>, Map<String, String>> puhelinnumeroConverter = mc -> {
+            Set<Puhelinnumero> puhelinnumerot = YhteystietoUtil.getPuhelinnumerot(mc.getSource());
 
-                // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
-                Map<String, String> puhelinnumeroMap = new HashMap<>();
+            // Tehdään map, jossa avaimena kieli ja arvone puhelinnumero
+            Map<String, String> puhelinnumeroMap = new HashMap<>();
 
-                for (Puhelinnumero numero : puhelinnumerot) {
-                    puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
-                }
-
-                return puhelinnumeroMap;
+            for (Puhelinnumero numero : puhelinnumerot) {
+                puhelinnumeroMap.put(numero.getKieli(), numero.getPuhelinnumero());
             }
+
+            return puhelinnumeroMap;
         };
 
-        final Converter<Organisaatio, List<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
+        final Converter<Organisaatio, Set<String>> tyypitConverter = mc -> OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getTyypit());
 
         this.addMappings(new PropertyMap<Organisaatio, OrganisaatioYhteystiedotDTOV2>() {
             @Override
@@ -151,7 +116,7 @@ public class OrganisaatioModelMapper extends ModelMapper {
                 using(emailOsoiteConverter).map(source.getYhteystiedot()).setEmailOsoite(null);
 
                 // Tyypit koodiarvoista organisaatiopalvelun formaattiin
-                using(tyypitConverter).map(source).setTyypit(new ArrayList<>());
+                using(tyypitConverter).map(source).setTyypit(new HashSet<>());
             }
         });
     }

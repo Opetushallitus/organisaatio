@@ -1,20 +1,6 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
@@ -67,7 +53,8 @@ public class OrganisaatioMetaData extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private MonikielinenTeksti hakutoimistoNimi;
 
-    @OneToMany(orphanRemoval=true, cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @BatchSize(size = 200)
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     /**
@@ -79,6 +66,7 @@ public class OrganisaatioMetaData extends BaseEntity {
      * Translated values for this entry by key.
      */
     @OneToMany(cascade = CascadeType.ALL)
+    @BatchSize(size = 500)
     private Set<NamedMonikielinenTeksti> values = new HashSet<NamedMonikielinenTeksti>();
 
     @Temporal(TemporalType.TIMESTAMP)

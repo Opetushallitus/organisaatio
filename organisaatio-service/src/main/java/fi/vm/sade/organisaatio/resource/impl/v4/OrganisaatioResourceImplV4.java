@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @CrossOriginResourceSharing(allowAllOrigins = true)
@@ -55,7 +56,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     // POST //organisaatio/v4/findbyoids
     @Override
-    public List<OrganisaatioRDTOV4> findByOids(List<String> oids){
+    public List<OrganisaatioRDTOV4> findByOids(Set<String> oids){
         return organisaatioFindBusinessService.findByOidsV4(oids);
     }
 

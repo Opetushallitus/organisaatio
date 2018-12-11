@@ -82,7 +82,7 @@ public class OrganisaatioBusinessChecker {
      *
      * @param nimet
      */
-    public void checkNimihistoriaAlkupvm(List<OrganisaatioNimi> nimet) {
+    public void checkNimihistoriaAlkupvm(Collection<OrganisaatioNimi> nimet) {
         Set<LocalDate> alkuPvms = new HashSet<>();
         for (OrganisaatioNimi nimi : nimet) {
             if (nimi.getAlkuPvm() == null) {

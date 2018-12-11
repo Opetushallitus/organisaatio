@@ -56,22 +56,22 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     private Map<String, String> nimi = new HashMap<>();
 
     // Tyypit koodiarvoina
-    private List<String> tyypit = new ArrayList<>();
+    private Set<String> tyypit = new HashSet<>();
 
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    private List<String> kieletUris = new ArrayList<>();
+    private Set<String> kieletUris = new HashSet<>();
 
     @ApiModelProperty(value = "Kotipaikan URI", required = true)
     private String kotipaikkaUri;
 
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
-    private List<OrganisaatioPerustietoV4> children = new ArrayList<>();
+    private Set<OrganisaatioPerustietoV4> children = new HashSet<>();
 
-    public List<OrganisaatioPerustietoV4> getChildren() {
+    public Set<OrganisaatioPerustietoV4> getChildren() {
         return children;
     }
 
-    public void setChildren(List<OrganisaatioPerustietoV4> children) {
+    public void setChildren(Set<OrganisaatioPerustietoV4> children) {
         this.children = children;
     }
 
@@ -320,26 +320,26 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     public void setToimipistekoodi(String value) { this.toimipistekoodi = value; }
 
     @ApiModelProperty(value = "Organisaation tyypit koodiarvoina", required = true)
-    public List<String> getOrganisaatiotyypit() {
+    public Set<String> getOrganisaatiotyypit() {
         if (tyypit == null) {
-            tyypit = new ArrayList<>();
+            tyypit = new HashSet<>();
         }
         return this.tyypit;
     }
 
-    public void setOrganisaatiotyypit(List<String> organisaatiotyypit) {
+    public void setOrganisaatiotyypit(Set<String> organisaatiotyypit) {
         this.tyypit = organisaatiotyypit;
     }
 
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    public List<String> getKieletUris() {
+    public Set<String> getKieletUris() {
         if (kieletUris == null) {
-            kieletUris = new ArrayList<>();
+            kieletUris = new HashSet<>();
         }
         return this.kieletUris;
     }
 
-    public void setKieletUris(List<String> kieletUris) {
+    public void setKieletUris(Set<String> kieletUris) {
         this.kieletUris = kieletUris;
     }
     

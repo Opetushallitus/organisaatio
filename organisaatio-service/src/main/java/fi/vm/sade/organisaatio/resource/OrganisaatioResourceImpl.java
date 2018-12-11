@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Function;
@@ -31,8 +16,8 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -53,27 +38,14 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import static java.util.stream.Collectors.joining;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.util.*;
 
-/**
- * @author Antti Salonen
- * @author mlyly
- * @author simok
- */
+import static java.util.stream.Collectors.joining;
+
 @Component
 @Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
@@ -121,12 +93,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
 
         //sorttaa
-        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
-            @Override
-            public Comparable<String> apply(OrganisaatioPerustieto input) {
-                return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
-            }
-        });
+        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural()
+                .nullsFirst()
+                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input));
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 
@@ -330,15 +299,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     // GET /organisaatio/yhteystietometadata
     @Override
     @Transactional(readOnly = true)
-    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
+    public Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(Set<String> organisaatioTyyppi) {
         if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
         List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(OrganisaatioTyyppi.fromValueToKoodi(organisaatioTyyppi));
         if (entitys == null) {
             return null;
         }
-        List<YhteystietojenTyyppiRDTO> result = new ArrayList<>();
+        Set<YhteystietojenTyyppiRDTO> result = new HashSet<>();
         for (YhteystietojenTyyppi entity : entitys) {
             result.add(conversionService.convert(entity, YhteystietojenTyyppiRDTO.class));
         }

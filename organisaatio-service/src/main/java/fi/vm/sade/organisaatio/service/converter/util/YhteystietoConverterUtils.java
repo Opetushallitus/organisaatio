@@ -14,7 +14,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class YhteystietoConverterUtils {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOV4ToOrganisaatioConverter.class);
 
-    public static void convertYhteystietosToListMap(Organisaatio s, List<Map<String, String>> yhteystietoArvos) {
+    public static void convertYhteystietosToListMap(Organisaatio s, Set<Map<String, String>> yhteystietoArvos) {
         for (YhteystietoArvo yhteystietoArvo : s.getYhteystietoArvos()) {
             YhteystietoElementti yElementti;
             YhteystietojenTyyppi yTyyppi;
@@ -138,8 +138,8 @@ public class YhteystietoConverterUtils {
     }
 
 
-    public static List<YhteystietoArvo> convertYhteystietoArvos(List<Map<String, String>> arvoMaps) {
-        ArrayList<YhteystietoArvo> arvos = new ArrayList<>(arvoMaps.size());
+    public static Set<YhteystietoArvo> convertYhteystietoArvos(Set<Map<String, String>> arvoMaps) {
+        Set<YhteystietoArvo> arvos = new HashSet<>(arvoMaps.size());
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
             arvo.setKentta(new YhteystietoElementti());

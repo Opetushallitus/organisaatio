@@ -117,7 +117,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
 
-        List<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
+        Set<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
                 hakuEhdot.getOppilaitostyyppiList(),
@@ -159,8 +159,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
-        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<>();
+    private Set<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(Set<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
+        Set<OrganisaatioPerustietoSuppea> opts = new HashSet<>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
             OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
@@ -220,7 +220,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
@@ -238,7 +238,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
@@ -537,21 +537,21 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
 
         // Haetaan organisaatiosuhteet
-        List<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> parentSuhteet = organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        Type organisaatioSuhdeType = new TypeToken<List<OrganisaatioSuhdeDTOV2>>() {}.getType();
+        Set<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+        Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA));
+        Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {}.getType();
 
-        historia.setChildSuhteet(organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeType));
-        historia.setParentSuhteet(organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeType));
+        historia.setChildSuhteet(organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeSetType));
+        historia.setParentSuhteet(organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeSetType));
 
         // Haetaan organisaation liitokset
-        List<OrganisaatioSuhde> liitokset = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
-        List<OrganisaatioSuhde> liittynyt = organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+        Set<OrganisaatioSuhde> liitokset = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+        Set<OrganisaatioSuhde> liittynyt = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS));
 
-        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+        Type organisaatioLiitosSetType = new TypeToken<Set<OrganisaatioLiitosDTOV2>>() {}.getType();
 
-        historia.setLiitokset(organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType));
-        historia.setLiittymiset(organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosType));
+        historia.setLiitokset(organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosSetType));
+        historia.setLiittymiset(organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosSetType));
 
         return historia;
     }

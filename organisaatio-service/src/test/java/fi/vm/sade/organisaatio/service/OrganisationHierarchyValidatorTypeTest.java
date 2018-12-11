@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -75,7 +76,7 @@ public class OrganisationHierarchyValidatorTypeTest {
 
     private Organisaatio getOrg(OrganisaatioTyyppi... tyypit) {
         Organisaatio organisaatio = new Organisaatio();
-        organisaatio.setTyypit(Arrays.stream(tyypit).map(OrganisaatioTyyppi::koodiValue).collect(toList()));
+        organisaatio.setTyypit(Arrays.stream(tyypit).map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet()));
         return organisaatio;
     }
 

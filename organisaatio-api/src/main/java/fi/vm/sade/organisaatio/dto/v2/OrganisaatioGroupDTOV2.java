@@ -1,30 +1,12 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
-/**
- *
- * @author simok
- */
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+
 @ApiModel(value = "Ryhmän tiedot", parent=OrganisaatioCoreInfoDTOV2.class)
 public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     private int version;
@@ -33,8 +15,8 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     private Date alkuPvm;
     private Date lakkautusPvm;
     private Map<String, String> kuvaus;
-    private List<String> ryhmatyypit;
-    private List<String> kayttoryhmat;
+    private Set<String> ryhmatyypit;
+    private Set<String> kayttoryhmat;
 
     /**
      * @return the version
@@ -100,14 +82,14 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
      * @return the ryhmatyypit
      */
     @ApiModelProperty(value = "Ryhmätyypit", required = true)
-    public List<String> getRyhmatyypit() {
+    public Set<String> getRyhmatyypit() {
         return ryhmatyypit;
     }
 
     /**
      * @param ryhmatyypit the ryhmatyypit to set
      */
-    public void setRyhmatyypit(List<String> ryhmatyypit) {
+    public void setRyhmatyypit(Set<String> ryhmatyypit) {
         this.ryhmatyypit = ryhmatyypit;
     }
 
@@ -115,14 +97,14 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
      * @return the kayttoryhmat
      */
     @ApiModelProperty(value = "Ryhmän käyttöryhmät", required = true)
-    public List<String> getKayttoryhmat() {
+    public Set<String> getKayttoryhmat() {
         return kayttoryhmat;
     }
 
     /**
      * @param kayttoryhmat the kayttoryhmat to set
      */
-    public void setKayttoryhmat(List<String> kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> kayttoryhmat) {
         this.kayttoryhmat = kayttoryhmat;
     }
 

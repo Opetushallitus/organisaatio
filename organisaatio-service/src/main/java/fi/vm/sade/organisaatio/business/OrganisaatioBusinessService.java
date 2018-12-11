@@ -27,10 +27,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface OrganisaatioBusinessService {
 
@@ -102,7 +99,7 @@ public interface OrganisaatioBusinessService {
      *
      * @return List of changed organisations.
      */
-    public List<Organisaatio> processNewOrganisaatioSuhdeChanges();
+    public Set<Organisaatio> processNewOrganisaatioSuhdeChanges();
 
     /**
      * Siirtää organisaatiota puussa toisen parentin alle

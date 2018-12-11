@@ -25,32 +25,19 @@ import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResource;
 import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SolrServerFactory;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import org.junit.Assert;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kubek2k.springockito.annotations.ReplaceWithMock;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +47,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Indexes set of orgs in a hierarchy, indexes org data, searches org data from index and compares the result with current implementation.
@@ -388,7 +380,7 @@ public class TestIndexingSearching extends SecurityAwareTestBase {
             o.setLakkautusPvm(startStop[1]);
         }
 
-        List<Yhteystieto> oYhteystiedot = Lists.newArrayList(createOsoite());
+        Set<Yhteystieto> oYhteystiedot = Collections.singleton(createOsoite());
         o.setYhteystiedot(oYhteystiedot);
 
         n.setOrganisaatio(o);

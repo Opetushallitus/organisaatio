@@ -2,9 +2,6 @@ package fi.vm.sade.organisaatio.dto.v2;
 
 import java.util.Date;
 
-/**
- * Created by jefin on 3.9.2014.
- */
 public class OrganisaatioMuokkausTulosDTO {
     private String oid;
     private Date alkuPvm;
