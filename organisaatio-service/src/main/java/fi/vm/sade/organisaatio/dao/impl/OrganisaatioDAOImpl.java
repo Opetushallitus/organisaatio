@@ -75,7 +75,6 @@ import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toCollection;
 import java.util.stream.Stream;
 
-import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -149,8 +148,9 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 -> query.where(qKieli.in(kielet)));
 
         ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids -> {
-            BooleanBuilder parentOidPathPredicate = new BooleanBuilder();
-            oids.stream().map(oid -> qOrganisaatio.parentOidPath.contains(oid)).forEach(parentOidPathPredicate::or);
+            BooleanBuilder parentOidPathPredicate = oids.stream()
+                    .map(oid -> qOrganisaatio.parentOidPath.contains(oid))
+                    .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
             query.where(qOrganisaatio.oid.in(oids).or(parentOidPathPredicate));
         });
 
