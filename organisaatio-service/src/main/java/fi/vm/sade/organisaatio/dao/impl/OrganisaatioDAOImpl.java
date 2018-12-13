@@ -138,8 +138,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 organisaatiotyypit -> query.where(qOrganisaatiotyyppi.in(organisaatiotyypit)),
                 () -> query.where(qOrganisaatiotyyppi.notIn("Ryhma")));
 
-        ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit
-                -> query.where(qOrganisaatio.oppilaitosTyyppi.in(oppilaitostyypit)));
+        ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit -> {
+            BooleanBuilder predicate = oppilaitostyypit.stream()
+                    .map(oppilaitostyyppi -> qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppi.replace("*", "%")))
+                    .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
+            query.where(predicate);
+        });
 
         ofNullableAndNotEmpty(criteria.getKieli()).ifPresent(kielet
                 -> query.where(qKieli.in(kielet)));
