@@ -16,25 +16,27 @@
  */
 package fi.vm.sade.organisaatio.auth;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import java.util.List;
-
 public class OrganisaatioContext {
     private OrganisaatioRDTO rdto;
     private OrganisaatioRDTOV3 rdtov3;
+    private OrganisaatioRDTOV4 rdtov4;
     private OrganisaatioPerustieto perus;
     private final String orgOid;
+    private final String parentOrgOid;
     private final Set<OrganisaatioTyyppi> orgTypes;
 
-    private static Set<OrganisaatioTyyppi> getTyypitFromStrings(List<String> tyypitStrs) {
+    private static Set<OrganisaatioTyyppi> getTyypitFromStrings(Set<String> tyypitStrs) {
         Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
         for (String tyyppiStr : tyypitStrs) {
             tyypit.add(OrganisaatioTyyppi.fromValue(tyyppiStr));
@@ -42,8 +44,20 @@ public class OrganisaatioContext {
         return tyypit;
     }
 
+    private static Set<OrganisaatioTyyppi> getTyypitFromKoodiStrings(Set<String> tyypitStrs) {
+        Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
+        for (String tyyppiStr : tyypitStrs) {
+            tyypit.add(OrganisaatioTyyppi.fromKoodiValue(tyyppiStr));
+        }
+        return tyypit;
+    }
+
     public String getOrgOid() {
         return orgOid;
+    }
+
+    public String getParentOrgOid() {
+        return parentOrgOid;
     }
 
     public Set<OrganisaatioTyyppi> getOrgTypes() {
@@ -55,35 +69,49 @@ public class OrganisaatioContext {
             return rdto.getNimi().values().iterator().next();
         if (rdtov3 != null)
             return rdtov3.getNimi().values().iterator().next();
+        if (rdtov4 != null)
+            return rdtov4.getNimi().values().iterator().next();
         return (perus != null) ? perus.getNimi("fi") : null;
     }
 
     private OrganisaatioContext(OrganisaatioRDTO org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdto = org;
     }
 
     private OrganisaatioContext(OrganisaatioRDTOV3 org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
         this.rdtov3 = org;
     }
 
+    private OrganisaatioContext(OrganisaatioRDTOV4 org) {
+        this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
+        this.rdtov4 = org;
+    }
+
     private OrganisaatioContext(String orgOid) {
         this.orgOid = orgOid;
-        this.orgTypes = Collections.emptySet();
+        this.parentOrgOid = null;
+        this.orgTypes = new HashSet<>();
     }
 
     private OrganisaatioContext(OrganisaatioPerustieto org) {
         this.orgOid = org != null ? org.getOid() : null;
+        this.parentOrgOid = org != null ? org.getParentOid() : null;
         this.orgTypes = new HashSet<>(org != null ? org.getOrganisaatiotyypit() : Collections.emptySet());
         this.perus = org;
     }
 
     private OrganisaatioContext(Organisaatio org) {
         this.orgOid = org != null ? org.getOid() : null;
-        this.orgTypes = new HashSet<>(org != null ? getTyypitFromStrings(org.getTyypit()) : Collections.emptySet());
+        this.parentOrgOid = org != null ? org.getParentOid().orElse(null) : null;
+        this.orgTypes = new HashSet<>(org != null ? getTyypitFromKoodiStrings(org.getTyypit()) : Collections.emptySet());
     }
 
     public static OrganisaatioContext get(String oid) {
@@ -99,6 +127,10 @@ public class OrganisaatioContext {
     }
 
     public static OrganisaatioContext get(OrganisaatioRDTOV3 organisaatio) {
+        return new OrganisaatioContext(organisaatio);
+    }
+
+    public static OrganisaatioContext get(OrganisaatioRDTOV4 organisaatio) {
         return new OrganisaatioContext(organisaatio);
     }
 

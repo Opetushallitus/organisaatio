@@ -53,7 +53,6 @@ public class OrganisaatioPermissionServiceTest {
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(
                 permissionService.ROLE_CRUD, userOrgOid)));
         OrganisaatioRDTO org = getOrganisaatio(userOid, otherOrgOid, OrganisaatioTyyppi.KOULUTUSTOIMIJA);
-        Assert.assertFalse(permissionService.userCanCreateRootOrganisation());
         Assert.assertFalse(permissionService.userCanUpdateYTJ());
         Assert.assertFalse(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
         Assert.assertFalse(permissionService.userCanDeleteOrganisation(OrganisaatioContext.get(org)));
@@ -70,8 +69,11 @@ public class OrganisaatioPermissionServiceTest {
         //non oph user inside own hierarchy
         setCurrentUser(userOid, Lists.newArrayList(getAuthority(
                 permissionService.ROLE_CRUD, userOrgOid)));
-        org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.OPPILAITOS);
+        org = getOrganisaatio(userOid, null, userOrgOid, OrganisaatioTyyppi.OPPILAITOS);
+        Assert.assertFalse(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
+        org = getOrganisaatio(userOid, null, userOrgOid, OrganisaatioTyyppi.TOIMIPISTE);
         Assert.assertTrue(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
+        org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.OPPILAITOS);
         Assert.assertFalse(permissionService.userCanDeleteOrganisation(OrganisaatioContext.get(org)));
         Assert.assertTrue(permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
         Assert.assertTrue(permissionService.userCanMoveOrganisation(OrganisaatioContext.get(org)));
@@ -175,12 +177,17 @@ public class OrganisaatioPermissionServiceTest {
     }
 
     private OrganisaatioRDTO getOrganisaatio(String nimi, String oid, OrganisaatioTyyppi tyyppi) {
+        return getOrganisaatio(nimi, oid, null, tyyppi);
+    }
+
+    private OrganisaatioRDTO getOrganisaatio(String nimi, String oid, String parentOid, OrganisaatioTyyppi tyyppi) {
         OrganisaatioRDTO org = new OrganisaatioRDTO();
-        Map<String,String> nimiMap =new HashMap<>();
+        Map<String,String> nimiMap = new HashMap<>();
         nimiMap.put("fi", nimi);
         org.setNimi(nimiMap);
         org.getTyypit().add(tyyppi.value());
         org.setOid(oid);
+        org.setParentOid(parentOid);
         return org;
     }
 

@@ -17,28 +17,15 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-
-import java.util.Date;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.PUT;
+import io.swagger.annotations.*;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Organisaation REST palvelut (Versio 1).
@@ -106,7 +93,11 @@ public interface OrganisaatioResource {
             notes = "Operaatio palauttaa organisaation alla olevien organisaatioiden oid:t.",
             response = String.class)
     public String childoids(
-            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid) throws Exception;
+            @ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid,
+            @ApiParam(value = "Rekursiivisesti") @QueryParam("rekursiivisesti") @DefaultValue("false") boolean rekursiivisesti,
+            @ApiParam(value = "Aktiiviset") @QueryParam("aktiiviset") @DefaultValue("true") boolean aktiiviset,
+            @ApiParam(value = "Suunnitellut") @QueryParam("suunnitellut") @DefaultValue("true") boolean suunnitellut,
+            @ApiParam(value = "Lakkautetut") @QueryParam("lakkautetut") @DefaultValue("true") boolean lakkautetut) throws Exception;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
@@ -219,8 +210,8 @@ public interface OrganisaatioResource {
             notes = "Operaatio palauttaa annetuille organisaatiotyypeille sallitut yhteystietotyypit.",
             response = YhteystietojenTyyppiRDTO.class,
             responseContainer = "List")
-    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(
-            @ApiParam(value = "Organisaatiotyypit", required = true) @QueryParam("organisaatioTyyppi") List<String> organisaatioTyyppi);
+    public Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(
+            @ApiParam(value = "Organisaatiotyypit", required = true) @QueryParam("organisaatioTyyppi") Set<String> organisaatioTyyppi);
 
     @GET
     @Path("/auth")

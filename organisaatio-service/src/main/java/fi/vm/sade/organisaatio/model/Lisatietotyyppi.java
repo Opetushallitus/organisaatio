@@ -1,11 +1,14 @@
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "lisatietotyyppi")
+@BatchSize(size = 100)
 public class Lisatietotyyppi extends BaseEntity {
     // Lokalisointipalvelun avain
     @Column(name = "nimi", unique = true)

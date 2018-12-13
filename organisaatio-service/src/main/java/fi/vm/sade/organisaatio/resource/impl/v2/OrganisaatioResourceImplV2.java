@@ -15,13 +15,13 @@
 
 package fi.vm.sade.organisaatio.resource.impl.v2;
 
-import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.Hakutoimisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -31,16 +31,16 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.*;
+import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
+import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
@@ -114,7 +114,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         // TODO tarkistetaanko tässä vai business kerroksessa parametrit
 
-        List<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
+        Set<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
                 hakuEhdot.getOppilaitostyyppiList(),
@@ -158,8 +158,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    private List<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(List<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
-        List<OrganisaatioPerustietoSuppea> opts = new ArrayList<>();
+    private Collection<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(Collection<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
+        Set<OrganisaatioPerustietoSuppea> opts = new HashSet<>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
             OrganisaatioPerustietoSuppea item = new OrganisaatioPerustietoSuppea();
@@ -542,21 +542,21 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
 
         // Haetaan organisaatiosuhteet
-        List<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> parentSuhteet = organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        Type organisaatioSuhdeType = new TypeToken<List<OrganisaatioSuhdeDTOV2>>() {}.getType();
+        Set<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+        Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA));
+        Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {}.getType();
 
-        historia.setChildSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeType));
-        historia.setParentSuhteet((List<OrganisaatioSuhdeDTOV2>) organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeType));
+        historia.setChildSuhteet(organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeSetType));
+        historia.setParentSuhteet(organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeSetType));
 
         // Haetaan organisaation liitokset
-        List<OrganisaatioSuhde> liitokset = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
-        List<OrganisaatioSuhde> liittynyt = organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+        Set<OrganisaatioSuhde> liitokset = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
+        Set<OrganisaatioSuhde> liittynyt = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS));
 
-        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+        Type organisaatioLiitosSetType = new TypeToken<Set<OrganisaatioLiitosDTOV2>>() {}.getType();
 
-        historia.setLiitokset((List<OrganisaatioLiitosDTOV2>) organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType));
-        historia.setLiittymiset((List<OrganisaatioLiitosDTOV2>) organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosType));
+        historia.setLiitokset(organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosSetType));
+        historia.setLiittymiset(organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosSetType));
 
         return historia;
     }

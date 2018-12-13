@@ -56,22 +56,22 @@ public class OrganisaatioPerustieto implements Serializable {
     @ApiModelProperty(value = "Organisaation nimi", required = true)
     private Map<String, String> nimi = new HashMap<String, String>();
 
-    private List<OrganisaatioTyyppi> tyypit = new ArrayList<OrganisaatioTyyppi>();
+    private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
     
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    private List<String> kieletUris = new ArrayList<String>();
+    private Set<String> kieletUris = new HashSet<>();
     
     @ApiModelProperty(value = "Kotipaikan URI", required = true)
     private String kotipaikkaUri;
 
     @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
-    private List<OrganisaatioPerustieto> children = new ArrayList<OrganisaatioPerustieto>();
+    private Set<OrganisaatioPerustieto> children = new HashSet<>();
 
-    public List<OrganisaatioPerustieto> getChildren() {
+    public Set<OrganisaatioPerustieto> getChildren() {
         return children;
     }
 
-    public void setChildren(List<OrganisaatioPerustieto> children) {
+    public void setChildren(Set<OrganisaatioPerustieto> children) {
         this.children = children;
     }
 
@@ -320,21 +320,29 @@ public class OrganisaatioPerustieto implements Serializable {
     public void setToimipistekoodi(String value) { this.toimipistekoodi = value; }
 
     @ApiModelProperty(value = "Organisaation tyypit", required = true)
-    public List<OrganisaatioTyyppi> getOrganisaatiotyypit() {
+    public Set<OrganisaatioTyyppi> getOrganisaatiotyypit() {
         if (tyypit == null) {
-            tyypit = new ArrayList<OrganisaatioTyyppi>();
+            tyypit = new HashSet<>();
         }
         return this.tyypit;
     }
+
+    public void setOrganisaatiotyypit(Set<OrganisaatioTyyppi> organisaatiotyypit) {
+        this.tyypit = organisaatiotyypit;
+    }
     
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    public List<String> getKieletUris() {
+    public Set<String> getKieletUris() {
         if (kieletUris == null) {
-            kieletUris = new ArrayList<String>();
+            kieletUris = new HashSet<>();
         }
         return this.kieletUris;
     }
-    
+
+    public void setKieletUris(Set<String> kieletUris) {
+        this.kieletUris = kieletUris;
+    }
+
     @ApiModelProperty(value = "Kotipaikan URI", required = true)
     public String getKotipaikkaUri() {
         return kotipaikkaUri;

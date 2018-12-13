@@ -20,8 +20,8 @@ public class SearchCriteriaModelMapperTest {
     public void organisaatioSearchCriteriaDTOV2OrganisaatioTyyppi() {
         OrganisaatioSearchCriteriaDTOV2 dto = new OrganisaatioSearchCriteriaDTOV2();
 
-        dto.setOrganisaatioTyyppi("tyyppi1");
-        assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("tyyppi1");
+        dto.setOrganisaatioTyyppi("Koulutustoimija");
+        assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("organisaatiotyyppi_01");
 
         dto.setOrganisaatioTyyppi(null);
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();
@@ -45,8 +45,8 @@ public class SearchCriteriaModelMapperTest {
     public void organisaatioSearchCriteriaOrganisaatioTyyppi() {
         OrganisaatioSearchCriteria dto = new OrganisaatioSearchCriteria();
 
-        dto.setOrganisaatioTyyppi("tyyppi1");
-        assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("tyyppi1");
+        dto.setOrganisaatioTyyppi("Koulutustoimija");
+        assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("organisaatiotyyppi_01");
 
         dto.setOrganisaatioTyyppi(null);
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();

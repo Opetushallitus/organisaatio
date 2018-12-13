@@ -1,17 +1,14 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Created by jefin on 3.9.2014.
- */
 public class OrganisaatioMuokkausTulosListaDTO {
-    private List<OrganisaatioMuokkausTulosDTO> tulokset;
+    private Set<OrganisaatioMuokkausTulosDTO> tulokset;
 
     public OrganisaatioMuokkausTulosListaDTO(int alkuKoko) {
-        this.tulokset = new ArrayList<OrganisaatioMuokkausTulosDTO>(alkuKoko);
+        this.tulokset = new HashSet<>(alkuKoko);
     }
 
     public void lisaaTulos(OrganisaatioMuokkausTulosDTO tulos) {
@@ -26,11 +23,11 @@ public class OrganisaatioMuokkausTulosListaDTO {
     }
 
     public OrganisaatioMuokkausTulosListaDTO() {
-        this.tulokset = new ArrayList<OrganisaatioMuokkausTulosDTO>(10);
+        this.tulokset = new HashSet<>(10);
     }
 
-    public List<OrganisaatioMuokkausTulosDTO> getTulokset() {
-        return Collections.unmodifiableList(tulokset);
+    public Set<OrganisaatioMuokkausTulosDTO> getTulokset() {
+        return Collections.unmodifiableSet(tulokset);
     }
 
 }

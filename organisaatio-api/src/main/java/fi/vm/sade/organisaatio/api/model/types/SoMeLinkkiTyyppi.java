@@ -1,7 +1,6 @@
 
 package fi.vm.sade.organisaatio.api.model.types;
 
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 public class SoMeLinkkiTyyppi implements Serializable {

@@ -39,7 +39,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
         //destination.setMatch asetetaan muualla
         destination.setNimi(source.getNimi().getValues());
         source.getTyypit().stream()
-                .map(OrganisaatioTyyppi::fromValue)
+                .map(OrganisaatioTyyppi::fromKoodiValue)
                 .forEach(destination.getOrganisaatiotyypit()::add);
         source.getKielet().forEach(destination.getKieletUris()::add);
         destination.setKotipaikkaUri(source.getKotipaikka());

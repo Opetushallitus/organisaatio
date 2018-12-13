@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.business.impl;
 
 
@@ -46,7 +31,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
         os2.setParent(parent);
         os2.setChild(child2);
         os2.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> children = new ArrayList<>();
+        Set<OrganisaatioSuhde> children = new HashSet<>();
         children.add(os1);
         children.add(os2);
         root.setOid("1234.4");
@@ -55,7 +40,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
         os3.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         os3.setChild(parent);
         os3.setParent(root);
-        Set<OrganisaatioSuhde> parentSuhde = new HashSet<>();
+        List<OrganisaatioSuhde> parentSuhde = new ArrayList<>();
         parentSuhde.add(os3);
         ReflectionTestUtils.setField(parent, "childSuhteet", children);
         ReflectionTestUtils.setField(parent, "parentSuhteet", parentSuhde);

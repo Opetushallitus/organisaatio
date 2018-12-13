@@ -15,21 +15,15 @@
 
 package fi.vm.sade.organisaatio.util;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import com.google.common.collect.Lists;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author simok
@@ -41,9 +35,8 @@ public final class OrganisaatioRDTOTestUtil {
     public static final Map<String, String> DEFAULT_WWW = createWww("http://test.oph.fi");
     public static final Map<String, String> DEFAULT_EMAIL = createEmail("asd@asd.asd");
     public static final Map<String, String> DEFAULT_PUHELIN =  createPuhelin(PuhelinNumeroTyyppi.PUHELIN, "123");
-    public static final Map<String, String> DEFAULT_FAKSI  = createPuhelin(PuhelinNumeroTyyppi.FAKSI, "456");
-    public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_FAKSI, DEFAULT_EMAIL, DEFAULT_WWW);
-    public static final List<String> DEFAULT_KIELET = Arrays.asList("oppilaitoksenopetuskieli_1#1");
+    public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_EMAIL, DEFAULT_WWW);
+    public static final Set<String> DEFAULT_KIELET = Collections.singleton("oppilaitoksenopetuskieli_1#1");
     public static final Date DEFAULT_VOIMASSAOLO_ALKU = createPvm(0);
     public static final String DEFAULT_KOTIPAIKKA = "kunta_092";
     public static final String DEFAULT_MAA = "maatjavaltiot1_fin";
@@ -128,7 +121,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createKoulutustoimija(String nimi,
                                                          String ytunnus,
                                                          String oid) {
-        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), oid, OPH_OID);
+        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), oid, OPH_OID);
         koulutustoimija.setYTunnus(ytunnus);
 
         return koulutustoimija;
@@ -169,7 +162,9 @@ public final class OrganisaatioRDTOTestUtil {
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
         organisaatio.setNimi(nimiRDTO.getNimi());
-        organisaatio.setNimet(Lists.newArrayList(nimiRDTO));
+        List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
+        nimet.add(nimiRDTO);
+        organisaatio.setNimet(nimet);
 
         if (isNullOrEmpty(oid)) {
             organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
@@ -192,7 +187,6 @@ public final class OrganisaatioRDTOTestUtil {
         organisaatio.getYhteystiedot().add(DEFAULT_POSTIOSOITE);
         organisaatio.getYhteystiedot().add(DEFAULT_KAYNTIOSOITE);
         organisaatio.getYhteystiedot().add(DEFAULT_PUHELIN);
-        organisaatio.getYhteystiedot().add(DEFAULT_FAKSI);
         organisaatio.getYhteystiedot().add(DEFAULT_WWW);
         organisaatio.getYhteystiedot().add(DEFAULT_EMAIL);
 

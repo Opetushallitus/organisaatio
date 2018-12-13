@@ -1,30 +1,21 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
@@ -39,17 +30,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.data.MapEntry.entry;
 
 /**
@@ -67,9 +56,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioBusinessService service;
     @Autowired
-    SearchCriteriaModelMapper searchCriteriaModelMapper;
+    private SearchCriteriaModelMapper searchCriteriaModelMapper;
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
+    @Autowired
+    private OrganisaatioKoodisto organisaatioKoodisto;
+
+    @Autowired
+    private OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter;
 
     @Before
     public void setUp() {
@@ -83,7 +77,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void processOrganisaatioSuhdeChangesNoNewChanges() {
-        List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
+        Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);
         Assert.assertTrue("Results should be empty!", results.isEmpty());
     }
@@ -95,20 +89,21 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         String oldParentOid = "1.2.2004.1";
         String newParentOid = "1.2.2004.5";
 
+        int rowCount = countRowsInTable("organisaatiosuhde");
         // Make new organisaatiosuhde change
         Date time = new Date();
-        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (10, 1, 'HISTORIA', ?, ?, ?)",
+        jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (-1, 1, 'HISTORIA', ?, ?, ?)",
                 new Object[] {childId, parentId, time});
         // End old organisaatiosuhde
         jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
 
-        Assert.assertEquals("Row count should match!", 10, countRowsInTable("organisaatiosuhde"));
+        Assert.assertEquals("Row count should match!", rowCount + 1, countRowsInTable("organisaatiosuhde"));
 
-        List<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
+        Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         Assert.assertNotNull(results);
         Assert.assertEquals("Results size does not match!", 1, results.size());
 
-        Organisaatio modified = results.get(0);
+        Organisaatio modified = results.iterator().next();
         Assert.assertEquals("Modified organisation does not match!", Long.valueOf(4), modified.getId());
 
         Assert.assertEquals("Parent oid path should match!", "|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
@@ -165,7 +160,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void saveNewAndUpdateOrganisation() {
-        OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter = new OrganisaatioToOrganisaatioRDTOConverter();
         OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid);
         model.setKayntiosoite(null);
         model.setYhteystiedot(null);
@@ -182,6 +176,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     }
 
+    @Transactional
     @Test
     public void updateOppilaitosShouldUpdateToimipisteNames() {
         OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
@@ -292,6 +287,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(throwable).isExactlyInstanceOf(OrganisaatioNameHistoryNotValidException.class);
     }
 
+    @Transactional
     @Test
     public void updateCurrentOrganisaatioNimet() {
         OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid);
@@ -308,4 +304,89 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(oppilaitos.getPaivitysPvm()).isAfter(paivitysPvmOnCreate);
     }
 
+    @Test
+    public void UpdateNimiValues() {
+        HashMap<String, String> oldParentNimi = new HashMap<>();
+        oldParentNimi.put("fi", "Vanha parent oppilaitos");
+        oldParentNimi.put("en", "Old parent oppilaitos");
+        oldParentNimi.put("sv", "Gammalt parent oppilaitos");
+
+        HashMap<String, String> newParentNimi = new HashMap<>();
+        newParentNimi.put("fi", "Uusi parent oppilaitos");
+        newParentNimi.put("en", "New parent oppilaitos");
+
+        HashMap<String, String> currentChildNimi = new HashMap<>();
+        currentChildNimi.put("fi", "Vanha parent oppilaitos, toimipiste");
+        currentChildNimi.put("en", "toimipiste");
+        currentChildNimi.put("sv", "toimipiste");
+
+        service.updateNimiValues(oldParentNimi, currentChildNimi, newParentNimi);
+
+        assertThat(currentChildNimi.get("fi")).isEqualTo("Uusi parent oppilaitos, toimipiste");
+        assertThat(currentChildNimi.get("en")).isEqualTo("New parent oppilaitos, toimipiste");
+        assertThat(currentChildNimi.get("sv")).isEqualTo("toimipiste");
+    }
+
+
+    @Test
+    public void lisaaVarhaiskasvatuksenToimipaikkaTieto() {
+        OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
+        organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()));
+        organisaatio.setParentOid("1.2.8000.1"); // Varhaiskasvatuksen järjestäjä
+        OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
+        organisaatio.setNimi(nimi.getNimi());
+        organisaatio.setNimet(Collections.singletonList(nimi));
+
+        VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
+        varhaiskasvatuksenToimipaikkaTiedotDto.setToimintamuoto("vardatoimintamuoto_tm02");
+        varhaiskasvatuksenToimipaikkaTiedotDto.setKasvatusopillinenJarjestelma("vardakasvatusopillinenjarjestelma_kj99");
+        VarhaiskasvatuksenToiminnallinepainotusDto varhaiskasvatuksenToiminnallinenpainotusDto = new VarhaiskasvatuksenToiminnallinepainotusDto();
+        varhaiskasvatuksenToiminnallinenpainotusDto.setToiminnallinenpainotus("vardatoiminnallinenpainotus_tp99");
+        varhaiskasvatuksenToiminnallinenpainotusDto.setAlkupvm(LocalDate.now());
+        varhaiskasvatuksenToiminnallinenpainotusDto.setLoppupvm(LocalDate.now().plusDays(10));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenToiminnallinenpainotukset(Collections.singleton(varhaiskasvatuksenToiminnallinenpainotusDto));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setPaikkojenLukumaara(10L);
+        VarhaiskasvatuksenKielipainotusDto varhaiskasvatuksenKielipainotusDto = new VarhaiskasvatuksenKielipainotusDto();
+        varhaiskasvatuksenKielipainotusDto.setKielipainotus("kieli_bh");
+        varhaiskasvatuksenKielipainotusDto.setAlkupvm(LocalDate.now());
+        varhaiskasvatuksenKielipainotusDto.setLoppupvm(LocalDate.now().plusDays(10));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenKielipainotukset(Collections.singleton(varhaiskasvatuksenKielipainotusDto));
+        varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenJarjestamismuodot(Collections.singleton("vardajarjestamismuoto_jm03"));
+        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
+
+        ResultRDTOV4 result = this.service.save(organisaatio, false);
+        assertThat(result.getOrganisaatio().getParentOid()).isEqualTo("1.2.8000.1");
+        assertThat(result.getOrganisaatio().getParentOidPath()).isEqualTo("|1.2.246.562.24.00000000001|1.2.8000.1|");
+        assertThat(result.getOrganisaatio().getTyypit()).containsExactly(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue());
+        assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot())
+                .extracting(VarhaiskasvatuksenToimipaikkaTiedotDto::getToimintamuoto,
+                        VarhaiskasvatuksenToimipaikkaTiedotDto::getKasvatusopillinenJarjestelma,
+                        VarhaiskasvatuksenToimipaikkaTiedotDto::getVarhaiskasvatuksenJarjestamismuodot,
+                        VarhaiskasvatuksenToimipaikkaTiedotDto::getPaikkojenLukumaara)
+                .containsExactly("vardatoimintamuoto_tm02", "vardakasvatusopillinenjarjestelma_kj99", Collections.singleton("vardajarjestamismuoto_jm03"), 10L);
+        assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset())
+                .extracting(VarhaiskasvatuksenKielipainotusDto::getKielipainotus)
+                .containsExactly("kieli_bh");
+        assertThat(result.getOrganisaatio().getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset())
+                .extracting(VarhaiskasvatuksenToiminnallinepainotusDto::getToiminnallinenpainotus)
+                .containsExactly("vardatoiminnallinenpainotus_tp99");
+    }
+
+
+    @Test
+    public void lisaaVarhaiskasvatuksenToimipaikkaTietoVaaralleTyypille() {
+        OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
+        organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
+        organisaatio.setParentOid("1.2.8000.1"); // Varhaiskasvatuksen järjestäjä
+        OrganisaatioNimiRDTO nimi = OrganisaatioRDTOTestUtil.createNimi("nimi", new Date());
+        organisaatio.setNimi(nimi.getNimi());
+        organisaatio.setNimet(Collections.singletonList(nimi));
+
+        VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
+        organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
+
+        assertThatThrownBy(() -> this.service.save(organisaatio, false))
+                .isInstanceOf(ValidationException.class)
+                .hasMessage("validation.Organisaatio.varhaiskasvatuksentoimipaikka.badorganisationtype");
+    }
 }

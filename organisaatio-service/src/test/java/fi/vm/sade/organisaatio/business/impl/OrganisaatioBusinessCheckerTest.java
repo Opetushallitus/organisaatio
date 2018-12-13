@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
@@ -62,7 +47,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         os1.setParent(parent);
         os1.setChild(child1);
         os1.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> children = new ArrayList<>();
+        Set<OrganisaatioSuhde> children = new HashSet<>();
         children.add(os1);
         root.setOid("1234.4");
         OrganisaatioSuhde os3 = new OrganisaatioSuhde();
@@ -70,7 +55,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         os3.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         os3.setChild(parent);
         os3.setParent(root);
-        Set<OrganisaatioSuhde> parentSuhde = new HashSet<>();
+        List<OrganisaatioSuhde> parentSuhde = new ArrayList<>();
         parentSuhde.add(os3);
         ReflectionTestUtils.setField(parent, "childSuhteet", children);
         ReflectionTestUtils.setField(parent, "parentSuhteet", parentSuhde);
@@ -115,7 +100,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Test
     public void testOrgWithNoChildrenValidAlkupvm() {
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
-        ReflectionTestUtils.setField(parent, "childSuhteet", new ArrayList());
+        ReflectionTestUtils.setField(parent, "childSuhteet", new HashSet<>());
         data.put(parent.getOid(), muokatutTiedot);
         Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));
     }
@@ -165,7 +150,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Test
     public void olderChild() {
         child1.setAlkuPvm(new GregorianCalendar(1970, 0, 1).getTime());
-        // method validates modified info, so doesn't matter what value parent has
+        // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
         Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));
@@ -174,7 +159,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @Test
     public void youngerChild() {
         child1.setAlkuPvm(new GregorianCalendar(1990, 0, 1).getTime());
-        // method validates modified info, so doesn't matter what value parent has
+        // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
         Assert.assertTrue("".equals(checker.checkPvmConstraints(parent, null, null, data)));

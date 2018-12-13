@@ -41,7 +41,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
     private void createAndPersistOrganisation(String oid, String organisaatiotyyppi, String oppilaitostyyppi) {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setOid(oid);
-        organisaatio.setTyypit(Collections.singletonList(organisaatiotyyppi));
+        organisaatio.setTyypit(Collections.singleton(organisaatiotyyppi));
         organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
         this.entityManager.persist(organisaatio);
     }
@@ -108,7 +108,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
         Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         lisatietotyyppi.setNimi("lisatieto.nimi");
         OppilaitostyyppiRajoite rajoite = new OppilaitostyyppiRajoite();
-        rajoite.setArvo("oppilaitoskoodi_12#1");
+        rajoite.setArvo("oppilaitoskoodi_12");
         rajoite.setLisatietotyyppi(lisatietotyyppi);
         lisatietotyyppi.setRajoitteet(Collections.singleton(rajoite));
         this.lisatietoTyyppiDao.getEntityManager().persist(rajoite);
@@ -117,6 +117,22 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
         Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
                 .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("oid");
         assertThat(lisatietotyyppiNimiList).containsExactly("lisatieto.nimi");
+    }
+
+    @Test
+    public void oppilaitostyyppiRajoiteIsNotFoundIncorrectly() {
+        Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
+        lisatietotyyppi.setNimi("lisatieto.nimi");
+        OppilaitostyyppiRajoite rajoite = new OppilaitostyyppiRajoite();
+        rajoite.setArvo("oppilaitoskoodi_1");
+        rajoite.setLisatietotyyppi(lisatietotyyppi);
+        lisatietotyyppi.setRajoitteet(Collections.singleton(rajoite));
+        this.lisatietoTyyppiDao.getEntityManager().persist(rajoite);
+        this.lisatietoTyyppiDao.getEntityManager().persist(lisatietotyyppi);
+
+        Set<String> lisatietotyyppiNimiList = this.lisatietoTyyppiDao
+                .findValidByOrganisaatiotyyppiAndOppilaitostyyppi("oid");
+        assertThat(lisatietotyyppiNimiList).isEmpty();
     }
 
     @Test

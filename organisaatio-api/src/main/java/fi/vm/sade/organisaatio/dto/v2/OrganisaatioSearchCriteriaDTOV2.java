@@ -1,27 +1,10 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @ApiModel(value = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteriaDTOV2 {
@@ -35,7 +18,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private Set<String> oppilaitostyyppi = new HashSet<String>();
     private Set<String> kieli = new HashSet<String>();
 
-    private List<String> oidRestrictionList = new ArrayList<String>();
+    private Set<String> oidRestrictionList = new HashSet<>();
 
     private String searchStr;
     private String oid;
@@ -120,11 +103,14 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     }
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
-    public List<String> getOidRestrictionList() {
+    public Set<String> getOidRestrictionList() {
+        if (this.oidRestrictionList == null) {
+            this.oidRestrictionList = new HashSet<>();
+        }
         return this.oidRestrictionList;
     }
 
-    public void setOidRestrictionList(List<String> oidRestrictionList) {
+    public void setOidRestrictionList(Set<String> oidRestrictionList) {
         this.oidRestrictionList.addAll(oidRestrictionList);
     }
 

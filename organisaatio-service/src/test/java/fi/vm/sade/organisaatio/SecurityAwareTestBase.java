@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 /**
  * By default executes tests as CRUD_USER, override before to customize
  */
-public class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
+public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
     
     @Value("${root.organisaatio.oid}")
     protected String ophOid;

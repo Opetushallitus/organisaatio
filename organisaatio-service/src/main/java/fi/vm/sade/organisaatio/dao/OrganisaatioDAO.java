@@ -1,34 +1,22 @@
-/*
-* Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*/
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.dto.OrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.OrgStructure;
-import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -65,13 +53,13 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param limit hakutuloksen määrän rajoite
      * @return
      */
-    List<Organisaatio> findBySearchCriteria(
-            List<String> kieliList,
-            List<String> kuntaList,
-            List<String> oppilaitostyyppiList,
-            List<String> vuosiluokkaList,
-            List<String> ytunnusList,
-            List<String> oidList,
+    Set<Organisaatio> findBySearchCriteria(
+            Set<String> kieliList,
+            Set<String> kuntaList,
+            Set<String> oppilaitostyyppiList,
+            Set<String> vuosiluokkaList,
+            Set<String> ytunnusList,
+            Set<String> oidList,
             int limit);
 
     /**
@@ -171,26 +159,15 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      */
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
-    List<OrgPerustieto> findBySearchCriteriaExact(String orgTyyppi, String oppilaitosTyyppi, String kunta, String searchStr, boolean suunnitellut, boolean lakkautetut, int maxResults, List<String> oids);
-
-    List<Organisaatio> findDescendantsByOidList(List<String> oidList, int maxResults);
-
     /**
-     * Return OID list of all organizations.
-     *
-     * @param myosPoistetut
-     * @return
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Hibernaten odotetaan lataavan laiskasti batcheissa
+     * puuttuvat tiedot.
+     * @param oids Organisaatioiden oidit
+     * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
+     * @return Oideja vastaavat organisaatiot
      */
-    Collection<String> findAllOids(boolean myosPoistetut);
+    List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
 
-    /**
-     * List OIDs of descendants for a given parent OID.
-     *
-     * @param parentOid
-     * @param myosPoistetut
-     * @return
-     */
-    Collection<String> listDescendantOids(String parentOid, boolean myosPoistetut);
     /***
      * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
      *
@@ -198,6 +175,17 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @return
      */
     List<Organisaatio> findModifiedSince(Date lastModifiedSince);
+
+    /**
+     * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.
+     *
+     * @param tarkastusPvm aikaleima jonka jälkeen tarkastus tulee olla tehtynä
+     * @param voimassaPvm aikaleima jolla organisaatiot halutaan olevan aktiivisia
+     * @param oids organisaatiot joita haetaan
+     * @param limit palautettavien rivien maksimimäärä
+     * @return tarkastamattomat organisaatiot
+     */
+    Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
 
     /**
      * Implementation of merge without flush, let hibernate decide when
@@ -210,4 +198,5 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
 
     EntityManager getJpaEntityManager();
 
+    Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
 }

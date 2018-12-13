@@ -16,10 +16,21 @@
 package fi.vm.sade.organisaatio.business;
 
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 
 import java.util.List;
 
 public interface OrganisaatioViestinta {
+
+    /**
+     * Lähettää sähköpostin.
+     *
+     * @param data sähköpostin sisältö
+     * @param sanitize true=viestintäpalvelu poistaa kielletyt html-tagit sähköpostin sisällöstä
+     * @return sähköpostin tunniste
+     */
+    String sendEmail(EmailData data, boolean sanitize);
+
     void sendStringViestintaEmail(String message, boolean reauthorize);
 
     void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize);

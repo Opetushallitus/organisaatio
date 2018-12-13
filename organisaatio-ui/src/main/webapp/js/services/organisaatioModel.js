@@ -52,8 +52,15 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             postinumerot: [],
             nimetFI: {},
             nimetSV: {},
-            yhteystietoTyypit: {}
+            yhteystietoTyypit: {},
+            jarjestamismuoto: [],
+            kasvatusopillinenJarjestelma: [],
+            toiminnallinenPainotus: [],
+            varhaiskasvatuksenToimintamuodot: [],
+            kieli: []
         };
+
+        this.kaikkiOrganisaatiotyypit = [];
 
         this.henkilot = {
             virkailijat: []
@@ -244,6 +251,36 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return "--";
         };
 
+        this.localiseJarjestamismuoto = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.jarjestamismuoto, koodiUri);
+        };
+
+        this.localiseKasvatusopillinenJarjestelma = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kasvatusopillinenJarjestelma, koodiUri);
+        };
+
+        this.localiseToiminnallinenPainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.toiminnallinenPainotus, koodiUri);
+        };
+
+        this.localiseVarhaiskasvatuksenToimintamuodot = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.varhaiskasvatuksenToimintamuodot, koodiUri);
+        };
+
+        this.localiseKielipainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
+        };
+
+        this.localiseKoodiUri = function (koodisto, koodiUri) {
+            var matchingKoodi = koodisto.filter(function (kieliKoodi) {
+                return kieliKoodi.uri === koodiUri;
+            })[0];
+            return matchingKoodi && matchingKoodi.nimi;
+        };
+
+        this.dbFormatToUI = function (dbFormatDate) {
+            return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
+        };
 
         this.setNimet = function() {
             $log.log('setNimet()');
@@ -406,9 +443,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             if (yritystiedot.puhelin) {
                 model.yhteystiedot['kieli_fi#1'].puhelin.numero = yritystiedot.puhelin;
             }
-            if (yritystiedot.faksi) {
-                model.yhteystiedot['kieli_fi#1'].faksi.numero = yritystiedot.faksi;
-            }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             if (yritystiedot.aloitusPvm) {
                 model.organisaatio.alkuPvm = moment(yritystiedot.aloitusPvm, 'DD.MM.YYYY');
@@ -416,7 +450,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
             // Ei kuitenkaan poisteta "Koulutustoimija" tyyppiä, jos se on jo asetettu
-            var organisaatiotyyppi = "Koulutustoimija";
+            var organisaatiotyyppi = "organisaatiotyyppi_01"; // Koulutustoimija
             if (model.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
                 this.toggleCheckOrganisaatio(organisaatiotyyppi);
             }
@@ -511,6 +545,21 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return deferred.promise;
         };
 
+        this.checkOrganisaatio = function() {
+            var organisaatio = JSON.parse(JSON.stringify(model.organisaatio));
+            organisaatio.tarkastusPvm = new Date().getTime();
+
+            var deferred = $q.defer();
+            Organisaatio.update(organisaatio, function(result) {
+                model.organisaatio = result.organisaatio;
+                deferred.resolve(result.organisaatio);
+            }, function(response) {
+                RefreshOrganisaatio.showAndLogError("Organisaationmuokkaus.tallennusvirhe", response, model, loadingService);
+                deferred.reject(response);
+            });
+            return deferred.promise;
+        };
+
         this.toggleCheckOrganisaatio = function(organisaatiotyyppi) {
             if (model.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
                 model.organisaatio.tyypit.push(organisaatiotyyppi);
@@ -519,6 +568,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             model.organisaatio.yhteystietoArvos = [];
             model.lisayhteystiedot = {};
+            if (!this.isVarhaiskasvatuksenToimipaikka()) {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = null;
+            }
+            else {
+                model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot || {};
+            }
             LisaYhteystiedot.updateLisayhteystiedot(model);
         };
 
@@ -799,28 +854,32 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.isOppilaitos = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_02") !== -1;
             }
             return false;
         };
 
         this.isKoulutustoimija = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedKoulutustoimija) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_01") !== -1;
             }
             return false;
         };
 
         this.isToimipiste = function() {
             if (model.organisaatio.tyypit) {
-                return model.organisaatio.tyypit.indexOf(model.koodisto.localizedToimipiste) !== -1;
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_03") !== -1;
             }
             return false;
         };
 
+        this.isVarhaiskasvatuksenToimipaikka = function() {
+            return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_08") !== -1;
+        };
+
         this.hasVuosiluokat = function() {
             if (model.organisaatio.tyypit) {
-                if (model.organisaatio.tyypit.indexOf(model.koodisto.localizedOppilaitos) !== -1) {
+                if (model.organisaatio.tyypit.indexOf("organisaatiotyyppi_02") !== -1) {
                     var tyyppi = model.organisaatio.oppilaitosTyyppiUri;
                     if (tyyppi) {
                         return (tyyppi === "oppilaitostyyppi_11#1" ||

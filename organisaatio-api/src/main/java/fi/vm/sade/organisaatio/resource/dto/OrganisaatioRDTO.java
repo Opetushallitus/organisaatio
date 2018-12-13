@@ -1,23 +1,10 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
 package fi.vm.sade.organisaatio.resource.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -54,15 +41,15 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Date _ytjPaivitysPvm;
 
-    private List<String> _kieletUris;
+    private Set<String> _kieletUris;
 
-    private List<String> _tyypit;
+    private Set<String> _tyypit;
 
-    private List<String> _vuosiluokat;
+    private Set<String> _vuosiluokat;
 
-    private List<String> _ryhmatyypit;
+    private Set<String> _ryhmatyypit;
 
-    private List<String> _kayttoryhmat;
+    private Set<String> _kayttoryhmat;
 
     private Map<String, String> _nimi;
 
@@ -88,8 +75,6 @@ public class OrganisaatioRDTO implements Serializable {
 
     private String _puhelinnumero; // from List of Yhteystietos
 
-    private String _faksinumero; // from List of Yhteystietos
-
     private String _wwwOsoite; // from List of Yhteystietos
 
     private String _emailOsoite; // from List of Yhteystietos
@@ -98,7 +83,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Map<String, String> _kayntiosoite;
 
-    private List<Map<String, String>> _yhteystiedot;
+    private Set<Map<String, String>> _yhteystiedot;
 
     private String _kuvaus;
 
@@ -112,9 +97,11 @@ public class OrganisaatioRDTO implements Serializable {
 
     private String yhteishaunKoulukoodi;
 
-    private List<Map<String, String>> _yhteystietoArvos = null;
+    private Set<Map<String, String>> _yhteystietoArvos = null;
     private String _virastoTunnus;
     private String _opetuspisteenJarjNro;
+
+    private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
     @ApiModelProperty(value = "Organisaation oid", required = true)
     public String getOid() {
@@ -171,14 +158,14 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Kielten URIt", required = true)
-    public List<String> getKieletUris() {
+    public Set<String> getKieletUris() {
         if (_kieletUris == null) {
-            _kieletUris = new ArrayList<String>();
+            _kieletUris = new HashSet<>();
         }
         return _kieletUris;
     }
 
-    public void setKieletUris(List<String> _kieletUris) {
+    public void setKieletUris(Set<String> _kieletUris) {
         this._kieletUris = _kieletUris;
     }
 
@@ -224,7 +211,7 @@ public class OrganisaatioRDTO implements Serializable {
     @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
     public List<OrganisaatioNimiRDTO> getNimet() {
          if (_nimet == null) {
-            _nimet = new ArrayList<OrganisaatioNimiRDTO>();
+            _nimet = new ArrayList<>();
         }
         return _nimet;
     }
@@ -261,14 +248,14 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Tyypit", required = true)
-    public List<String> getTyypit() {
+    public Set<String> getTyypit() {
         if (_tyypit == null) {
-            _tyypit = new ArrayList<String>();
+            _tyypit = new HashSet<>();
         }
         return _tyypit;
     }
 
-    public void setTyypit(List<String> _tyypit) {
+    public void setTyypit(Set<String> _tyypit) {
         this._tyypit = _tyypit;
     }
 
@@ -291,38 +278,38 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Vuosiluokat", required = true)
-    public List<String> getVuosiluokat() {
+    public Set<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
-            _vuosiluokat = new ArrayList<String>();
+            _vuosiluokat = new HashSet<>();
         }
         return _vuosiluokat;
     }
 
-    public void setVuosiluokat(List<String> _vuosiluokat) {
+    public void setVuosiluokat(Set<String> _vuosiluokat) {
         this._vuosiluokat = _vuosiluokat;
     }
 
     @ApiModelProperty(value = "Ryhmatyypit", required = true)
-    public List<String> getRyhmatyypit() {
+    public Set<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
-            _ryhmatyypit = new ArrayList<String>();
+            _ryhmatyypit = new HashSet<>();
         }
         return _ryhmatyypit;
     }
 
-    public void setRyhmatyypit(List<String> _ryhmatyypit) {
+    public void setRyhmatyypit(Set<String> _ryhmatyypit) {
         this._ryhmatyypit = _ryhmatyypit;
     }
 
     @ApiModelProperty(value = "Kayttoryhmat", required = true)
-    public List<String> getKayttoryhmat() {
+    public Set<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
-            _kayttoryhmat = new ArrayList<String>();
+            _kayttoryhmat = new HashSet<>();
         }
         return _kayttoryhmat;
     }
 
-    public void setKayttoryhmat(List<String> _kayttoryhmat) {
+    public void setKayttoryhmat(Set<String> _kayttoryhmat) {
         this._kayttoryhmat = _kayttoryhmat;
     }
 
@@ -422,25 +409,6 @@ public class OrganisaatioRDTO implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @ApiModelProperty(value = "Faxin numero", required = true)
-    public String getFaksinumero() {
-        return _faksinumero;
-    }
-
-    /**
-     * @param _faksinumero
-     * @deprecated Do not use this method! Use setYhteystiedot() instead!
-     */
-    @Deprecated
-    public void setFaksinumero(String _faksinumero) {
-        this._faksinumero = _faksinumero;
-    }
-
-    /**
-     * @return
-     * @deprecated Do not use this method! Use getYhteystiedot() instead!
-     */
-    @Deprecated
     @ApiModelProperty(value = "Puhelinnumero", required = true)
     public String getPuhelinnumero() {
         return _puhelinnumero;
@@ -486,11 +454,11 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @ApiModelProperty(value = "Yhteystiedot", required = true)
-    public List<Map<String, String>> getYhteystietoArvos() {
+    public Set<Map<String, String>> getYhteystietoArvos() {
         return _yhteystietoArvos;
     }
 
-    public void setYhteystietoArvos(List<Map<String, String>> yhteystietoArvos) {
+    public void setYhteystietoArvos(Set<Map<String, String>> yhteystietoArvos) {
         this._yhteystietoArvos = yhteystietoArvos;
     }
 
@@ -510,14 +478,22 @@ public class OrganisaatioRDTO implements Serializable {
         this._opetuspisteenJarjNro = _opetuspisteenJarjNro;
     }
 
-    public List<Map<String, String>> getYhteystiedot() {
+    public Timestamp getTarkastusPvm() {
+        return _tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Timestamp _tarkastusPvm) {
+        this._tarkastusPvm = _tarkastusPvm;
+    }
+
+    public Set<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
-            _yhteystiedot = new ArrayList<Map<String, String>>();
+            _yhteystiedot = new HashSet<>();
         }
         return _yhteystiedot;
     }
 
-    public void setYhteystiedot(List<Map<String, String>> _yhteystiedot) {
+    public void setYhteystiedot(Set<Map<String, String>> _yhteystiedot) {
         this._yhteystiedot = _yhteystiedot;
     }
 

@@ -2,8 +2,8 @@
 package fi.vm.sade.organisaatio.api.model.types;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class YhteystietojenTyyppiDTO implements Serializable {
@@ -12,9 +12,9 @@ public class YhteystietojenTyyppiDTO implements Serializable {
     protected long version;
     protected String oid;
     protected MonikielinenTekstiTyyppi nimi;
-    protected List<OrganisaatioTyyppi> sovellettavatOrganisaatios;
-    protected List<YhteystietoElementtiDTO> allLisatietokenttas;
-    protected List<String> sovellettavatOppilaitostyyppis;
+    protected Set<String> sovellettavatOrganisaatios;
+    protected Set<YhteystietoElementtiDTO> allLisatietokenttas;
+    protected Set<String> sovellettavatOppilaitostyyppis;
 
     /**
      * Gets the value of the version property.
@@ -98,13 +98,13 @@ public class YhteystietojenTyyppiDTO implements Serializable {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link OrganisaatioTyyppi }
+     * {@link String }
      * 
      * 
      */
-    public List<OrganisaatioTyyppi> getSovellettavatOrganisaatios() {
+    public Set<String> getSovellettavatOrganisaatios() {
         if (sovellettavatOrganisaatios == null) {
-            sovellettavatOrganisaatios = new ArrayList<OrganisaatioTyyppi>();
+            sovellettavatOrganisaatios = new HashSet<>();
         }
         return this.sovellettavatOrganisaatios;
     }
@@ -131,9 +131,9 @@ public class YhteystietojenTyyppiDTO implements Serializable {
      * 
      * 
      */
-    public List<YhteystietoElementtiDTO> getAllLisatietokenttas() {
+    public Set<YhteystietoElementtiDTO> getAllLisatietokenttas() {
         if (allLisatietokenttas == null) {
-            allLisatietokenttas = new ArrayList<YhteystietoElementtiDTO>();
+            allLisatietokenttas = new HashSet<>();
         }
         return this.allLisatietokenttas;
     }
@@ -160,9 +160,9 @@ public class YhteystietojenTyyppiDTO implements Serializable {
      * 
      * 
      */
-    public List<String> getSovellettavatOppilaitostyyppis() {
+    public Set<String> getSovellettavatOppilaitostyyppis() {
         if (sovellettavatOppilaitostyyppis == null) {
-            sovellettavatOppilaitostyyppis = new ArrayList<String>();
+            sovellettavatOppilaitostyyppis = new HashSet<>();
         }
         return this.sovellettavatOppilaitostyyppis;
     }

@@ -453,7 +453,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // Adds the missing language information to Organisaatio according to the YTJ language.
     private boolean updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
         String YTJKieli = ytjdto.getYrityksenKieli();
-        if(YTJKieli != null) {
+        if(YTJKieli != null && !YTJKieli.trim().isEmpty()) {
             Boolean YTJkieliExists = false;
             for (String kieli : organisaatio.getKielet()) {
                 if (kieli.trim().equals(ORG_KIELI_KOODI_FI)

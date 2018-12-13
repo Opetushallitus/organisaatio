@@ -69,19 +69,22 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.isMoveAllowed = function(node) {
-        return $scope.model.isTyyppi(node, "OPPILAITOS") || $scope.model.isTyyppi(node, "KOULUTUSTOIMIJA");
+        // Oppilaitos || Koulutustoimija
+        return $scope.model.isTyyppi(node, "organisaatiotyyppi_02") || $scope.model.isTyyppi(node, "organisaatiotyyppi_01");
     };
 
     $scope.isCreateSubAllowed = function(node) {
         // Vain OPH-käyttäjä saa luoda alaorganisaation koulutustoimijalle
         return ($scope.hakuehdot.organisaatioRajausVisible===false) ?
                 // OPH-käyttäjän tapauksessa oppisopimustoimipisteelle ei voi lisätä aliorganisaatiota
-                !$scope.model.isTyyppi(node, "Oppisopimustoimipiste") :
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_04") : // Oppisopimustoimipiste
+                // Muiden käyttäjien tapauksessa seuraaville tyypeille voi lisätä aliorganisaatioita
+                $scope.model.isTyyppi(node, "organisaatiotyyppi_07") || // Varhaiskasvatuksen jarjestaja
                 // Muiden käyttäjien tapauksessa seuraaville tyypeille ei voi lisätä aliorganisaatioita
-                !$scope.model.isTyyppi(node, "Koulutustoimija") &&
-                !$scope.model.isTyyppi(node, "Muu organisaatio") &&
-                !$scope.model.isTyyppi(node, "Tyoelamajarjesto") &&
-                !$scope.model.isTyyppi(node, "Oppisopimustoimipiste");
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_01") && // Koulutustoimija
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_05") && // Muu organisaatio
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_06") && // Tyoelamajarjesto
+                !$scope.model.isTyyppi(node, "organisaatiotyyppi_04"); // Oppisopimustoimipiste
     };
 
     $scope.moveOrganisaatio = function (node) {
@@ -238,12 +241,12 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.organisaatiotyyppiChanged = function() {
-        if ($scope.hakuehdot.organisaatiotyyppi !== 'Oppilaitos') {
+        if ($scope.hakuehdot.organisaatiotyyppi !== 'organisaatiotyyppi_02') {
             $scope.hakuehdot.oppilaitostyyppiKoodi = '';
         }
     };
 
     $scope.isOppilaitosSelected = function() {
-        return $scope.hakuehdot.organisaatiotyyppi === 'Oppilaitos';
+        return $scope.hakuehdot.organisaatiotyyppi === 'organisaatiotyyppi_02';
     };
 });

@@ -12,8 +12,11 @@ import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import org.junit.*;
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +26,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.core.Response;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -116,7 +123,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         assertEquals(6, result.getNumHits());
 
         //List roots
-        ArrayList<String> oidList = new ArrayList<String>();
+        Set<String> oidList = new HashSet<>();
         oidList.add("1.2.2004.1");
         oidList.add("1.2.2004.5");
         searchCriteria = createOrgSearchCriteria(null, null, null, true, oidList);
@@ -125,6 +132,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             LOG.debug("ORG: {}", org.getOid());
         }
         assertEquals(7, result.getNumHits());
+        assertThat(result.getOrganisaatiot())
+                .flatExtracting(perustieto -> Stream.concat(Stream.of(perustieto.getOid()), this.allChildrenFlat(perustieto.getChildren()).map(OrganisaatioPerustieto::getOid)).collect(Collectors.toSet()))
+                // 1.2.2004.6 on lakkautettu joten se ei ole validi vaikka sillä onkin 1.2.2004.5 organisaatio indeksin parent pathissaan
+                .containsExactlyInAnyOrder("1.2.2004.1", "1.2.2004.2", "1.2.2004.3", "1.2.2004.4", "1.2.2005.4", "1.2.2004.5", "1.2.2005.5");
 
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
@@ -135,6 +146,10 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits());
+    }
+
+    private Stream<OrganisaatioPerustieto> allChildrenFlat(Collection<OrganisaatioPerustieto> organisaatioPerustieto) {
+        return Stream.concat(organisaatioPerustieto.stream(), organisaatioPerustieto.stream().flatMap(child -> CollectionUtils.isEmpty(child.getChildren()) ? Stream.empty() : this.allChildrenFlat(child.getChildren())));
     }
 
     @Test
@@ -178,7 +193,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Test
     public void testMixedOsoitetyyppi() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("tyyppitesti").getEntity();
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1").getEntity();
         Assert.assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
@@ -208,7 +223,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
-                                                               boolean suunnitellut, List<String> oids) {
+                                                               boolean suunnitellut, Set<String> oids) {
         OrganisaatioSearchCriteria sc = new OrganisaatioSearchCriteria();
         sc.setOrganisaatioTyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
         Set<String> tyypit = new HashSet<>();

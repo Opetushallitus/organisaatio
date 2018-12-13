@@ -1,20 +1,3 @@
-/*
-*
-* Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* European Union Public Licence for more details.
-*/
-
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
@@ -23,12 +6,14 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 
 @Entity
@@ -42,33 +27,39 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ElementCollection(fetch= FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "organisaatio_tyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> tyypit = new ArrayList<>();
+    @BatchSize(size = 200)
+    private Set<String> tyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_vuosiluokat", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> vuosiluokat = new ArrayList<>();
+    @BatchSize(size = 200)
+    private Set<String> vuosiluokat = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_ryhmatyypit", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 200)
     private Set<String> ryhmatyypit = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kayttoryhmat", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @BatchSize(size = 200)
     private Set<String> kayttoryhmat = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "nimi_mkt")
-    private MonikielinenTeksti nimi;
+        private MonikielinenTeksti nimi;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "kuvaus_mkt")
     private MonikielinenTeksti kuvaus2;
 
     @OneToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private OrganisaatioMetaData metadata;
 
+    // This long field is actually not used
+    @Deprecated
     @Column(length=256000)
     private String nimihaku;
 
@@ -81,19 +72,23 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<Yhteystieto> yhteystiedot = new ArrayList<>();
+    @BatchSize(size = 200)
+    private Set<Yhteystieto> yhteystiedot = new HashSet<>();
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    private Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>();
+    @OrderBy("alkuPvm")
+    private List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
-    private List<OrganisaatioSuhde> childSuhteet = new ArrayList<>();
+    private Set<OrganisaatioSuhde> childSuhteet = new HashSet<>();
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
+    @BatchSize(size = 200)
     private List<OrganisaatioNimi> nimet = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organisaatio", cascade = CascadeType.ALL)
+    @BatchSize(size = 200)
     private Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit = new HashSet<>();
 
     private String yritysmuoto;
@@ -109,12 +104,15 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_kielet", joinColumns = @JoinColumn(name = "organisaatio_id"))
-    private List<String> kielet = new ArrayList<>();
+    @Column(name = "kielet", nullable = false)
+    @BatchSize(size = 100)
+    private Set<String> kielet = new LinkedHashSet<>();
 
     private String domainNimi;
 
-    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<YhteystietoArvo> yhteystietoArvos = new ArrayList<>();
+    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 200)
+    private Set<YhteystietoArvo> yhteystietoArvos = new HashSet<>();
 
     @Column(unique = true)
     private String oppilaitosKoodi;
@@ -161,6 +159,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String parentIdPath;
     private String organisaatiotyypitStr;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tarkastusPvm;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
+    private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
+
     /**
      * Utility method to retrieve the current parent of the organisaatio.
      * @return the parent organisaatio
@@ -191,6 +196,20 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return (latestSuhde != null) ? latestSuhde.getParent() : null;
     }
 
+    public Optional<String> getParentOid() {
+        if (this.parentOidPath != null) {
+            Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
+                    .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                    .descendingIterator();
+            if (!oidsPathInverted.hasNext()) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(oidsPathInverted.next())
+                    .filter(s -> s.matches("[\\d\\.]+"));
+        }
+        return Optional.empty();
+    }
+
     /**
      * Utility method to get current status of the organisaatio.
      * @return the status
@@ -216,12 +235,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.metadata = metadata;
     }
 
-    public List<Yhteystieto> getYhteystiedot() {
-        return Collections.unmodifiableList(yhteystiedot);
+    public Set<Yhteystieto> getYhteystiedot() {
+        return Collections.unmodifiableSet(yhteystiedot);
     }
 
 
-    public void setYhteystiedot(List<Yhteystieto> newYhteystiedot) {
+    public void setYhteystiedot(Set<Yhteystieto> newYhteystiedot) {
         yhteystiedot = newYhteystiedot;
     }
 
@@ -303,17 +322,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.lakkautusPvm = filterPvm(lakkautusPvm);
     }
 
-    public List<String> getTyypit() {
-        return Collections.unmodifiableList(tyypit);
+    public Set<String> getTyypit() {
+        return Collections.unmodifiableSet(tyypit);
     }
 
-    public void setTyypit(Collection<String> tyypit) {
+    public void setTyypit(Set<String> tyypit) {
         this.tyypit.clear();
         this.tyypit.addAll(tyypit);
     }
 
-    public List<String> getKielet() {
-        return Collections.unmodifiableList(kielet);
+    public Collection<String> getKielet() {
+        return Collections.unmodifiableSet(kielet);
     }
 
     public void setKielet(Collection<String> kielet) {
@@ -329,11 +348,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.maa = maa;
     }
 
-    public List<YhteystietoArvo> getYhteystietoArvos() {
+    public Set<YhteystietoArvo> getYhteystietoArvos() {
         return yhteystietoArvos;
     }
 
-    public void setYhteystietoArvos(List<YhteystietoArvo> yhteystietoArvos) {
+    public void setYhteystietoArvos(Set<YhteystietoArvo> yhteystietoArvos) {
         this.yhteystietoArvos.clear();
         if (yhteystietoArvos == null) {
             return;
@@ -378,14 +397,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * @return the vuosiluokat
      */
-    public List<String> getVuosiluokat() {
-        return Collections.unmodifiableList(vuosiluokat);//vuosiluokat;
+    public Set<String> getVuosiluokat() {
+        return Collections.unmodifiableSet(vuosiluokat);//vuosiluokat;
     }
 
     /**
      * @param vuosiluokat the vuosiluokat to set
      */
-    public void setVuosiluokat(List<String> vuosiluokat) {
+    public void setVuosiluokat(Set<String> vuosiluokat) {
         this.vuosiluokat.clear();
         this.vuosiluokat.addAll(vuosiluokat);// = vuosiluokat;
     }
@@ -410,11 +429,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      *
      * @return ryhmatyypit
      */
-    public List<String> getRyhmatyypitV1() {
+    public Set<String> getRyhmatyypitV1() {
         return getRyhmatyypit().stream()
                 .map(KoodistoUtil::getRyhmatyyppiV1)
                 .filter(Objects::nonNull)
-                .collect(toList());
+                .collect(toSet());
     }
 
     /**
@@ -422,9 +441,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      *
      * @param ryhmatyypit ryhmatyypit to set
      */
-    public void setRyhmatyypitV1(List<String> ryhmatyypit) {
+    public void setRyhmatyypitV1(Set<String> ryhmatyypit) {
         this.ryhmatyypit.clear();
-        this.ryhmatyypit.addAll(ryhmatyypit.stream().map(KoodistoUtil::getRyhmatyyppiV3).collect(toList()));
+        this.ryhmatyypit.addAll(ryhmatyypit.stream().map(KoodistoUtil::getRyhmatyyppiV3).collect(toSet()));
     }
 
     /**
@@ -447,11 +466,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      *
      * @return kayttoryhmat
      */
-    public List<String> getKayttoryhmatV1() {
+    public Set<String> getKayttoryhmatV1() {
         return getKayttoryhmat().stream()
                 .map(KoodistoUtil::getKayttoryhmaV1)
                 .filter(Objects::nonNull)
-                .collect(toList());
+                .collect(toSet());
     }
 
     /**
@@ -459,9 +478,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      *
      * @param kayttoryhmat kayttoryhmat to set
      */
-    public void setKayttoryhmatV1(List<String> kayttoryhmat) {
+    public void setKayttoryhmatV1(Set<String> kayttoryhmat) {
         this.kayttoryhmat.clear();
-        this.kayttoryhmat.addAll(kayttoryhmat.stream().map(KoodistoUtil::getKayttoryhmaV3).collect(toList()));
+        this.kayttoryhmat.addAll(kayttoryhmat.stream().map(KoodistoUtil::getKayttoryhmaV3).collect(toSet()));
     }
 
     /**
@@ -562,7 +581,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return null;
     }
 
-    public Set<OrganisaatioSuhde> getParentSuhteet() {
+    public List<OrganisaatioSuhde> getParentSuhteet() {
         return parentSuhteet;
     }
 
@@ -577,14 +596,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return result;
     }
 
-    public List<OrganisaatioSuhde> getChildSuhteet() {
+    public Set<OrganisaatioSuhde> getChildSuhteet() {
         return childSuhteet;
     }
 
-    public List<OrganisaatioSuhde> getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
-        List<OrganisaatioSuhde> result = new ArrayList<>();
+    public Set<OrganisaatioSuhde> getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
+        Set<OrganisaatioSuhde> result = new HashSet<>();
 
-        Date now = new Date();
         for (OrganisaatioSuhde os : childSuhteet) {
             if (os.getSuhdeTyyppi() == tyyppi) {
                 result.add(os);
@@ -593,8 +611,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return result;
     }
 
-    public List<Organisaatio> getChildren(boolean includeLakkautetut) {
-        List<Organisaatio> result = new ArrayList<>();
+    public Set<Organisaatio> getChildren(boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) {
+        Set<Organisaatio> result = new HashSet<>();
 
         Date now = new Date();
         for (OrganisaatioSuhde os : childSuhteet) {
@@ -606,14 +624,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             // Organisaatiosuhde ei ole lakannut, eikä lasta ole poistettu
             if ((os.getLoppuPvm()==null || os.getLoppuPvm().after(now))
                     && !os.getChild().isOrganisaatioPoistettu()) {
-
-                // Aliorganisaatio on lakkautettu, katsotaan otetaanko se mukaan
-                if (OrganisaatioUtil.isPassive(os.getChild())) {
-                    if (includeLakkautetut) {
-                        result.add(os.getChild());
-                    }
-                }
-                else {
+                if (aktiiviset && OrganisaatioUtil.isAktiivinen(os.getChild())
+                    || suunnitellut && OrganisaatioUtil.isSuunniteltu(os.getChild())
+                    || lakkautetut && OrganisaatioUtil.isPassive(os.getChild())) {
                     result.add(os.getChild());
                 }
             }
@@ -621,6 +634,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return result;
     }
 
+    public Set<Organisaatio> getChildren(boolean includeLakkautetut) {
+        return getChildren(true, true, includeLakkautetut);
+    }
 
     /**
      * Laskee organisaatiosuhteet.
@@ -645,7 +661,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return ret;
     }
 
-    public void setParentSuhteet(Set<OrganisaatioSuhde> parentSuhteet) {
+    public void setParentSuhteet(List<OrganisaatioSuhde> parentSuhteet) {
         this.parentSuhteet = parentSuhteet;
     }
 
@@ -703,6 +719,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setOrganisaatiotyypitStr(String organisaatiotyypitStr) {
         this.organisaatiotyypitStr = organisaatiotyypitStr;
+    }
+
+    public Date getTarkastusPvm() {
+        return tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Date tarkastusPvm) {
+        this.tarkastusPvm = tarkastusPvm;
     }
 
     public Date getTuontiPvm() {
@@ -804,5 +828,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setOrganisaatioLisatietotyypit(Set<OrganisaatioLisatietotyyppi> organisaatioLisatietotyypit) {
         this.organisaatioLisatietotyypit = organisaatioLisatietotyypit;
+    }
+
+    public VarhaiskasvatuksenToimipaikkaTiedot getVarhaiskasvatuksenToimipaikkaTiedot() {
+        return varhaiskasvatuksenToimipaikkaTiedot;
+    }
+
+    public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot) {
+        this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
     }
 }

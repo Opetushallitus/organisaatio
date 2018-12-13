@@ -36,21 +36,26 @@ public class ConfigController {
         append(b, "MAX_SESSION_IDLE_TIME_IN_SECONDS", ophProperties.getOrElse("organisaatio-ui.max-session-idle-time.seconds", "1800"));
 
         append(b, "ORGANISAATIO_REST_V3", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3"));
+        append(b, "ORGANISAATIO_REST_V4", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v4"));
         append(b, "ORGANISAATIO_REST_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.param", "hae"));
         append(b, "ORGANISAATIO_REST_V3_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3.param", ":oid"));
+        append(b, "ORGANISAATIO_REST_V4_BY_OID", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v4.param", ":oid"));
 
         append(b, "ORGANISAATIO_REST_ORGAISAATIO_MAXINACTIVEINTERVAL", ophProperties.getProperty("organisaatio-service.rest.organisaatio.session.maxinactiveinterval"));
         append(b, "ORGANISAATIO_REST_YTJ_LOKI", ophProperties.getProperty("organisaatio-service.rest.organisaatio.ytjloki"));
 
 
         append(b, "ORGANISAATIO_REST_V2_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.param", "hae"));
+        append(b, "ORGANISAATIO_REST_V4_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v4.param", "hae"));
         append(b, "ORGANISAATIO_REST_V3_RYHMAT", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v3.param", "ryhmat"));
         append(b, "ORGANISAATIO_REST_V2_MUOKKAAMONTA", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.param", "muokkaamonta"));
 
 
         append(b, "ORGANISAATIO_REST_V2_OID_HISTORIA", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.params", ":oid", "historia"));
+        append(b, "ORGANISAATIO_REST_V4_OID_HISTORIA", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v4.params", ":oid", "historia"));
         append(b, "ORGANISAATIO_REST_V2_OID_ORGANISAATIOSUHDE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.params", ":oid", "organisaatiosuhde"));
         append(b, "ORGANISAATIO_REST_V2_HIERARKIA_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.params", "hierarkia", "hae"));
+        append(b, "ORGANISAATIO_REST_V4_HIERARKIA_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v4.params", "hierarkia", "hae"));
         append(b, "ORGANISAATIO_REST_V2_PAIVITTAJA_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.params", ":oid", "paivittaja"));
         append(b, "ORGANISAATIO_REST_V2_NIMIHISTORIA_HAE", ophProperties.getProperty("organisaatio-service.rest.organisaatio.v2.nimihistoria.haku"));
 
@@ -79,6 +84,11 @@ public class ConfigController {
         append(b, "KOODISTO_KOODI_HAE", ophProperties.getProperty("koodisto-service.url.rest.search.koodis"));
         append(b, "KOODISTO_POSTI", ophProperties.getProperty("koodisto-service.url.rest.posti"));
         append(b, "KOODISTO_OPPILAITOKSENOPETUSKIELI", ophProperties.getProperty("koodisto-service.url.rest.oppilaitoksenopetuskieli.koodi"));
+        append(b, "KOODISTO_JARJESTAMISMUOTO", ophProperties.getProperty("koodisto-service.url.rest.jarjestamismuoto"));
+        append(b, "KOODISTO_KASVATUSOPILLINEN_JARJESTELMA", ophProperties.getProperty("koodisto-service.url.rest.kasvatusopillinenjarjestelma"));
+        append(b, "KOODISTO_TOIMINNALLINEN_PAINOTUS", ophProperties.getProperty("koodisto-service.url.rest.toiminnallinenpainotus"));
+        append(b, "KOODISTO_MAAT_JA_VALTIOT2", ophProperties.getProperty("koodisto-service.url.rest.maatjavaltiot2"));
+        append(b, "KOODISTO_VARHAISKASVATUKSEN_TOIMINTAMUODOT", ophProperties.getProperty("koodisto-service.url.rest.toimintamuoto"));
 
         append(b, "ORGANISAATIO_REST_LISATIEDOT_BY_OID", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit.byoid"));
         append(b, "ORGANISAATIO_REST_LISATIETOTYYPIT", ophProperties.getProperty("organisaatio-service.rest.lisatieto.lisatietotyypit"));

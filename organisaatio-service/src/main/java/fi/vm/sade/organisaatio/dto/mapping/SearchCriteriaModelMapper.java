@@ -15,7 +15,7 @@
 
 package fi.vm.sade.organisaatio.dto.mapping;
 
-
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -26,17 +26,18 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
 import org.modelmapper.Converter;
-
-import org.modelmapper.PropertyMap;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author simok
  */
+@Component
 public class SearchCriteriaModelMapper  extends ModelMapper {
-                
+
     public SearchCriteriaModelMapper() {
         super();
     
@@ -68,13 +69,13 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
         final Converter<OrganisaatioSearchCriteria, List<String>> organisaatiotyyppiConverter = new Converter<OrganisaatioSearchCriteria, List<String>>() {
             @Override
             public List<String> convert(MappingContext<OrganisaatioSearchCriteria, List<String>> context) {
-                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(context.getSource().getOrganisaatioTyyppi()) : null;
+                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(OrganisaatioTyyppi.fromValue(context.getSource().getOrganisaatioTyyppi()).koodiValue()) : null;
             }
         };
         final Converter<OrganisaatioSearchCriteriaDTOV2, List<String>> organisaatiotyyppiConverterV2 = new Converter<OrganisaatioSearchCriteriaDTOV2, List<String>>() {
             @Override
             public List<String> convert(MappingContext<OrganisaatioSearchCriteriaDTOV2, List<String>> context) {
-                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(context.getSource().getOrganisaatioTyyppi()) : null;
+                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(OrganisaatioTyyppi.fromValue(context.getSource().getOrganisaatioTyyppi()).koodiValue()) : null;
             }
         };
 
@@ -104,7 +105,7 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
             @Override
             protected void configure() {
                 
-                // Note: Since a source object is given, the "false"value passed to set[Method] is unused.
+                // Note: Since a source object is given, the "false" value passed to set[Method] is unused.
                 using(suunnitellutConverter).map(source).setSuunnitellut(false);
                 using(aktiivisetConverter).map(source).setAktiiviset(false);
                 using(lakkautetutConverter).map(source).setLakkautetut(false);

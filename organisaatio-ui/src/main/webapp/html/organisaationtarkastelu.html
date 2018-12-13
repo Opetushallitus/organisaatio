@@ -20,9 +20,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div class="control-group">
         <div class="offset2" ng-show="model.organisaatio.nimi">
             <h2>{{model.uriLocalizedNames["nimi"]}}
-                <span ng-show="model.paivitys.pvm" id="paivittaja">
-                    ({{t('Organisaationtarkastelu.tallennettu')}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})
-            </span>
+                <span id="paivittaja">
+                    <div ng-show="model.paivitys.pvm">({{t('Organisaationtarkastelu.tallennettu')}} {{model.paivitys.pvm}}, {{model.paivitys.paivittaja}})</div>
+                    <div ng-show="model.organisaatio.tarkastusPvm">({{t('Organisaationtarkastelu.tarkastettu')}} {{model.organisaatio.tarkastusPvm | date:'medium'}})</div>
+                </span>
             </h2>
         </div>
     </div>
@@ -41,14 +42,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div class="control-group" ng-show="model.organisaatio.tyypit">
+    <div class="control-group" ng-if="model.organisaatio.tyypit">
         <label class="control-label" tt="Organisaationtarkastelu.organisaatiotyyppi">
             Organisaationtarkastelu.organisaatiotyyppi
         </label>
-        <div class="controls">
+        <div class="controls" ng-if="model.kaikkiOrganisaatiotyypit.length">
             <label class="control-label control-label-left">
                 <div ng-repeat="tyyppi in model.organisaatio.tyypit">
-                    {{t(tyyppi)}}<br>
+                    {{:: getKoodiLocalized(tyyppi)}}<br>
                 </div>
             </label>
         </div>
@@ -161,6 +162,53 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </label>
         </div>
     </div>
+
+    <div class="control-group" ng-if="model.isVarhaiskasvatuksenToimipaikka()">
+        <label class="control-label">
+            {{:: t('Organisaationtarkastelu.varhaiskasvatuksentoimipaikkatiedot')}}*
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left" ng-if="model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot">
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toimintamuoto')}}:</div>
+                    <div class="span6">{{model.localiseVarhaiskasvatuksenToimintamuodot(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}:</div>
+                    <div class="span6">{{model.localiseKasvatusopillinenJarjestelma(model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma)}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="toiminnallinenpainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset | orderBy: 'toiminnallinenpainotus'">
+                            {{model.localiseToiminnallinenPainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{model.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{model.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}:</div>
+                    <div class="span6">{{model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara}}</div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="jarjestamismuoto in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot | orderBy: 'varhaiskasvatuksenJarjestamismuodot'">
+                            {{model.localiseJarjestamismuoto(jarjestamismuoto)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">{{:: t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}:</div>
+                    <div class="span6">
+                        <div ng-repeat="kielipainotus in model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset | orderBy: 'kielipainotus'">
+                            {{model.localiseKielipainotus(kielipainotus.kielipainotus)}} {{model.dbFormatToUI(kielipainotus.alkupvm)}} - {{model.dbFormatToUI(kielipainotus.loppupvm)}}
+                        </div>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </div>
+
 
     <div class="control-group" ng-show="model.organisaatio.oppilaitosKoodi" ng-if='model.isOppilaitos()'>
         <label class="control-label" tt="Organisaationtarkastelu.tkkoodi">
@@ -328,19 +376,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <div class="controls">
                     <label class="control-label control-label-left">
                         {{model.yhteystiedot[model.ytlang].puhelin.numero}}
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group" ng-if="model.yhteystiedot[model.ytlang].faksi.numero">
-            <div>
-                <label class="control-label" tt="Organisaationtarkastelu.faksinumero">
-                    Organisaationtarkastelu.faksinumero
-                </label>
-                <div class="controls">
-                    <label class="control-label control-label-left">
-                        {{model.yhteystiedot[model.ytlang].faksi.numero}}
                     </label>
                 </div>
             </div>
@@ -520,17 +555,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div class="controls">
                 <label class="control-label control-label-left">
                     {{model.mdyhteystiedot[model.hplang].puhelin.numero}}
-                </label>
-            </div>
-        </div>
-
-        <div class="control-group" ng-if="model.mdyhteystiedot[model.hplang].faksi.numero">
-            <label class="control-label" tt="Organisaationtarkastelu.faksinumero">
-                Organisaationtarkastelu.faksinumero
-            </label>
-            <div class="controls">
-                <label class="control-label control-label-left">
-                    {{model.mdyhteystiedot[model.hplang].faksi.numero}}
                 </label>
             </div>
         </div>
@@ -759,7 +783,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <div ng-if="yoexpanded">
             <div class="row">
                 <label class="offset2">
-                    <a href='organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{t(model.parent.tyypit[0])}})</a>
+                    <a href='organisaatiot/{{model.parent.oid}}'>{{model.uriLocalizedNames.parentnimi}} ({{getKoodiLocalized(model.parent.tyypit[0])}})</a>
                 </label>
             </div>
         <hr>
@@ -805,15 +829,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div ng-if="histexpanded">
-        <div class="row">
-            <div class="span8" data-ng-include data-src="'historialista.html'"></div>
-        </div>
+    <div ng-if="histexpanded" class="row">
+        <div class="span8" data-ng-include data-src="'historialista.html'"></div>
     </div>
 
     <div class="row fixed-footer" ng-if="modalOpen == false" ng-hide="isLoading()">
         <div class="align-right ">
             <button type="button" class="btn" ng-click="cancel()" uib-tooltip="{{t('Organisaatiot.ohje.palaahakuun')}}"><i class="icon-arrow-left"></i></button>
+            <button type="button" class="btn" ng-click="checkAndRefresh()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
+                    auth-org="{{model.organisaatio.oid}}"><i class="icon-ok"></i> {{t('Organisaationtarkastelu.tarkasta')}}</button>
             <button type="button" class="btn btn-primary" ng-click="edit()" auth="updateOrg" auth-service="APP_ORGANISAATIOHALLINTA"
                     auth-org="{{model.organisaatio.oid}}"><i class="icon-pencil"></i> {{t('Organisaationtarkastelu.muokkaa')}}</button>
         </div>

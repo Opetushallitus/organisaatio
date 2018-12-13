@@ -21,24 +21,12 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
+import fi.vm.sade.organisaatio.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Tuomas Katva
@@ -93,15 +81,15 @@ public class TestDataCreator {
             organisaatio.setOrganisaatioPoistettu(false);
             if (parent != null) {
                 if (!parent.getOid().equals("1.2.246.562.24.00000000001")) {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TOIMIPISTE.value(), OrganisaatioTyyppi.OPPILAITOS.value(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value()}));
+                    organisaatio.setTyypit(new HashSet<>(Arrays.asList(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), OrganisaatioTyyppi.OPPILAITOS.koodiValue(), OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue())));
                     organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);
                 } else if (organisaatio.getOid().equals("1.2.2004.7")) {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.TYOELAMAJARJESTO.value()}));
+                    organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue()));
                 } else {
-                    organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
+                    organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
                 }
             } else {
-                organisaatio.setTyypit(Arrays.asList(new String[]{OrganisaatioTyyppi.KOULUTUSTOIMIJA.value()}));
+                organisaatio.setTyypit(Collections.singleton(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
             }
 
             createYhteystietos(organisaatio);
@@ -140,7 +128,7 @@ public class TestDataCreator {
     }
 
     private void createYhteystietos(Organisaatio organisaatio) {
-        List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> yhteystiedot = new HashSet<>();
         Osoite osoite1 = new Osoite(Osoite.TYYPPI_POSTIOSOITE, "Mannerheimintie 1", "00100", "Helsinki", null);
         osoite1.setOrganisaatio(organisaatio);
         yhteystiedot.add(osoite1);
@@ -150,9 +138,6 @@ public class TestDataCreator {
         Puhelinnumero puh1 = new Puhelinnumero("12345", Puhelinnumero.TYYPPI_PUHELIN, null);
         puh1.setOrganisaatio(organisaatio);
         yhteystiedot.add(puh1);
-        Puhelinnumero puh2 = new Puhelinnumero("12345", Puhelinnumero.TYYPPI_FAKSI, null);
-        puh2.setOrganisaatio(organisaatio);
-        yhteystiedot.add(puh2);
         Www www = new Www();
         www.setWwwOsoite("http://www.oph.fi");
         www.setOrganisaatio(organisaatio);

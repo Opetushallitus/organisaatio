@@ -1,20 +1,6 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -23,24 +9,30 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- *
- * @author rsal
- */
+@Component
 public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOToOrganisaatioConverter.class);
 
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+
+    @Autowired
+    public OrganisaatioRDTOToOrganisaatioConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
+    }
+
     @Override
     public Organisaatio convert(OrganisaatioRDTO t) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        List<Yhteystieto> yhteystietos = new ArrayList<Yhteystieto>();
+        Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio s = new Organisaatio();
 
         s.setOid(t.getOid());
@@ -50,7 +42,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         // t.setChildCount(s.getChildCount());
         s.setDomainNimi(t.getDomainNimi());
 
-        s.setKielet(convertListToList(t.getKieletUris()));
+        s.setKielet(convertCollectionToSet(t.getKieletUris()));
         s.setKotipaikka(t.getKotipaikkaUri());
         s.setKuvaus2(convertMapToMonikielinenTeksti(t.getKuvaus2()));
         s.setLakkautusPvm(t.getLakkautusPvm());
@@ -58,13 +50,11 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setMetadata(convertMetadata(t.getMetadata()));
         s.setNimi(convertMapToMonikielinenTeksti(t.getNimi()));
 
-        OrganisaatioNimiModelMapper organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
-
         // Define the target list type for mapping
         Type organisaatioNimiListType = new TypeToken<List<OrganisaatioNimi>>() {}.getType();
 
         // Map DTO to domain type
-        s.setNimet((List<OrganisaatioNimi>) organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
+        s.setNimet(organisaatioNimiModelMapper.map(t.getNimet(), organisaatioNimiListType));
 
         // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
         MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(s.getNimet());
@@ -85,12 +75,12 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
         // t.set(s.getPuhelin());
         s.setToimipisteKoodi(t.getToimipistekoodi());
-        s.setTyypit(convertListToList(t.getTyypit()));
+        s.setTyypit(OrganisaatioTyyppi.tyypitToKoodis(t.getTyypit()));
         // t.set(s.getTyypitAsString());
-        s.setVuosiluokat(convertListToList(t.getVuosiluokat()));
+        s.setVuosiluokat(convertCollectionToSet(t.getVuosiluokat()));
         // tuetaan vanhaa formaattia ryhmätyypeille ja käyttöryhmille
-        s.setRyhmatyypitV1(convertListToList(t.getRyhmatyypit()));
-        s.setKayttoryhmatV1(convertListToList(t.getKayttoryhmat()));
+        s.setRyhmatyypitV1(convertCollectionToSet(t.getRyhmatyypit()));
+        s.setKayttoryhmatV1(convertCollectionToSet(t.getKayttoryhmat()));
         s.setYhteishaunKoulukoodi(t.getYhteishaunKoulukoodi());
         // t.set(s.getYhteystiedot());
         // t.set(s.getYhteystietoArvos());
@@ -99,6 +89,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         s.setYtjPaivitysPvm(t.getYTJPaivitysPvm());
         s.setYtunnus(t.getYTunnus());
         s.setVirastoTunnus(t.getVirastoTunnus());
+        s.setTarkastusPvm(t.getTarkastusPvm());
 
         if (t.getYhteystietoArvos()!=null) {
             s.setYhteystietoArvos(convertYhteystietoArvos(t.getYhteystietoArvos()));
@@ -115,8 +106,8 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         return s;
     }
 
-    private List<YhteystietoArvo> convertYhteystietoArvos(List<Map<String, String>> arvoMaps) {
-        ArrayList<YhteystietoArvo> arvos = new ArrayList<YhteystietoArvo>(arvoMaps.size());
+    private Set<YhteystietoArvo> convertYhteystietoArvos(Set<Map<String, String>> arvoMaps) {
+        Set<YhteystietoArvo> arvos = new HashSet<>(arvoMaps.size());
         for (Map<String, String> arvoMap : arvoMaps) {
             YhteystietoArvo arvo = new YhteystietoArvo();
             arvo.setKentta(new YhteystietoElementti());
@@ -246,8 +237,8 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         return email;
     }
 
-    private List<String> convertListToList(List<String> a) {
-        return new ArrayList<String>(a);
+    private Set<String> convertCollectionToSet(Collection<String> a) {
+        return new HashSet<>(a);
     }
 
     private BinaryData decodeFromUUENCODED(String kuva) {

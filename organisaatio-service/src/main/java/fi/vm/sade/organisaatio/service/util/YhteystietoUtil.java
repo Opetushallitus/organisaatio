@@ -1,23 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fi.vm.sade.organisaatio.service.util;
 
-import fi.vm.sade.organisaatio.model.Email;
-import fi.vm.sade.organisaatio.model.Osoite;
-import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.model.Www;
-import fi.vm.sade.organisaatio.model.Yhteystieto;
-import java.util.ArrayList;
-import java.util.List;
+import fi.vm.sade.organisaatio.model.*;
 
-/**
- *
- * @author simok
- */
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class YhteystietoUtil {
     public static boolean isPostiOsoite(Osoite osoite) {
         return osoite.getOsoiteTyyppi().equals(Osoite.TYYPPI_POSTIOSOITE) || 
@@ -33,12 +20,8 @@ public abstract class YhteystietoUtil {
         return numero.getTyyppi().equals(Puhelinnumero.TYYPPI_PUHELIN);
     }
 
-    public static boolean isFaksinumero(Puhelinnumero numero) {
-        return numero.getTyyppi().equals(Puhelinnumero.TYYPPI_FAKSI);
-    }
-    
-    public static List<Osoite> getPostiOsoitteet(List<Yhteystieto> yhteystiedot) {
-        List<Osoite> postiOsoitteet = new ArrayList<Osoite>();
+    public static Set<Osoite> getPostiOsoitteet(Set<Yhteystieto> yhteystiedot) {
+        Set<Osoite> postiOsoitteet = new HashSet<>();
 
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Osoite) {
@@ -51,8 +34,8 @@ public abstract class YhteystietoUtil {
         return postiOsoitteet;
     }
 
-    public static List<Osoite> getKayntiOsoitteet(List<Yhteystieto> yhteystiedot) {
-        List<Osoite> kayntiOsoitteet = new ArrayList<Osoite>();
+    public static Set<Osoite> getKayntiOsoitteet(Set<Yhteystieto> yhteystiedot) {
+        Set<Osoite> kayntiOsoitteet = new HashSet<>();
 
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Osoite) {
@@ -65,8 +48,8 @@ public abstract class YhteystietoUtil {
         return kayntiOsoitteet;
     }
 
-    public static List<Www> getWwwOsoitteet(List<Yhteystieto> yhteystiedot) {
-        List<Www> wwwOsoitteet = new ArrayList<Www>();
+    public static Set<Www> getWwwOsoitteet(Set<Yhteystieto> yhteystiedot) {
+        Set<Www> wwwOsoitteet = new HashSet<>();
 
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Www) {
@@ -77,8 +60,8 @@ public abstract class YhteystietoUtil {
         return wwwOsoitteet;
     }
 
-    public static List<Email> getEmailOsoitteet(List<Yhteystieto> yhteystiedot) {
-        List<Email> emailOsoitteet = new ArrayList<Email>();
+    public static Set<Email> getEmailOsoitteet(Set<Yhteystieto> yhteystiedot) {
+        Set<Email> emailOsoitteet = new HashSet<>();
 
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Email) {
@@ -89,8 +72,8 @@ public abstract class YhteystietoUtil {
         return emailOsoitteet;
     }
 
-    public static List<Puhelinnumero> getPuhelinnumerot(List<Yhteystieto> yhteystiedot) {
-        List<Puhelinnumero> puhelinnumerot = new ArrayList<Puhelinnumero>();
+    public static Set<Puhelinnumero> getPuhelinnumerot(Set<Yhteystieto> yhteystiedot) {
+        Set<Puhelinnumero> puhelinnumerot = new HashSet<>();
 
         for (Yhteystieto yhteystieto : yhteystiedot) {
             if (yhteystieto instanceof Puhelinnumero) {
@@ -103,17 +86,4 @@ public abstract class YhteystietoUtil {
         return puhelinnumerot;
     }
 
-    public static List<Puhelinnumero> getFaksinumerot(List<Yhteystieto> yhteystiedot) {
-        List<Puhelinnumero> faksinumerot = new ArrayList<Puhelinnumero>();
-
-        for (Yhteystieto yhteystieto : yhteystiedot) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                Puhelinnumero numero = (Puhelinnumero) yhteystieto;
-                if (isFaksinumero(numero)) {
-                    faksinumerot.add(numero);
-                }
-            }
-        }
-        return faksinumerot;
-    }    
 }

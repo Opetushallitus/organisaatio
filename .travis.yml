@@ -1,0 +1,48 @@
+sudo: required
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - docker
+cache:
+  directories:
+    - $HOME/.m2
+env:
+  global:
+    # ARTIFACTORY_USERNAME
+    - secure: "dNrgckZN/CuutxMXsN/B2MZ+uYw4ra19xtgLvHngz20Wj5PfcTyzhX/fHVFY5jnl1hYgP7kRgohWgCziVGCBV3LhUPG0Cev5+N3lF/WfkfaHCowqc0g65EN9K08omSZUMMnsU5VmkqES4EPFl44ldoGpPc+s4kCfis2BHwA5xDA="
+    # ARTIFACTORY_PASSWORD
+    - secure: "J0u6Oow9jD+I+heRT7HlbBIocPNPkKnlw6z5k1pmPvYNSPHc+f7x6tg0wn5YoyPnMSu80thhcRUbbDnBu+FqwBI19WC73zdXLiTFOGkfvhykzoU5hoeq2SRK2fHd1RyQYtRlEJqc2fElPGjroUZQ2FZfVk9myQ73I2HF5NM1BvQ="
+    # AWS_ACCESS_KEY_ID
+    - secure: "Fzy+TYEe3HNZ1gFPbvDQ+7CQLJoAU146ch1Lg62AqD6qvLOW13CN71x1opBHn87tgwbAMu+R87NHfHv1D9IsBY4pWy4rh3OE0kKdiBlsktvbOYIgGdNqugtIISniIM+VV3U9LkSHlkQk7qFHvvaI2PgmhEAOltK3qMjEcDkV2vY="
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "PHCsorIqkSQ7IjSGEHQcRZ7rrdyNpfc72VGJAHZnPrRREfPxh+nI9n48VrSrIXrZSX5o0GpkJK8147UxON6lXbE2pLXQWBNNt9D5i73OD63JY00olDcdNuVRmy0SQ2bApqphVnAyU98c/QYxKhMx6EM2W4COmXl+q1n1NtCm+O4="
+
+install:
+  - git clone https://github.com/Opetushallitus/ci-tools.git
+  - source ci-tools/common/setup-tools.sh
+  - export ARTIFACT_NAME="organisaatio"
+  - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
+  - export TZ=Europe/Helsinki # TODO: fix tests
+
+script:
+  - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+
+  - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
+  - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
+  - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+
+  - export BASE_IMAGE="baseimage-war:master"
+  - ./ci-tools/common/pull-image.sh
+  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+
+deploy:
+  - provider: script
+    script: mvn deploy -pl organisaatio-api,organisaatio-solr-client -DskipTests --settings ci-tools/common/maven-settings.xml
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+    on:
+      all_branches: true

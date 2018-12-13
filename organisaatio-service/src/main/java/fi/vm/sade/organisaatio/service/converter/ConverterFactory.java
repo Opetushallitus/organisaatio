@@ -1,20 +1,3 @@
-/*
- *
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.*;
@@ -32,10 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConverterFactory {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -88,12 +68,10 @@ public class ConverterFactory {
         converters.add(converter);
     }
 
-    public <DTO> List<DTO> convertToDTO(List<? extends OrganisaatioBaseEntity> entities, Class<? extends DTO> resultClass) {
-        List<DTO> dtos = new ArrayList<>();
+    public <DTO> Set<DTO> convertToDTO(Set<? extends OrganisaatioBaseEntity> entities, Class<? extends DTO> resultClass) {
+        Set<DTO> dtos = new HashSet<>();
         for (OrganisaatioBaseEntity entity : entities) {
-
             dtos.add(convertToDTO(entity, resultClass));
-
         }
         return dtos;
     }
@@ -185,14 +163,6 @@ public class ConverterFactory {
         return jpaClass;
     }
     
-    private List<String> getTyypitStr(List<OrganisaatioTyyppi> tyypit) {
-        List<String> tyypitStr = new ArrayList<>();
-        for (OrganisaatioTyyppi curT : tyypit) {
-            tyypitStr.add(curT.value());
-        }
-        return tyypitStr;
-    }
-
     /**
      * converts dto to jpa entity
      * @param dto
@@ -326,7 +296,7 @@ public class ConverterFactory {
 
     public YhteystietojenTyyppi convertYhteystietojenTyyppiToJPA(YhteystietojenTyyppiDTO dto, boolean merge) {
         YhteystietojenTyyppi entity = null;
-        Class jpaClass = YhteystietojenTyyppi.class;
+        Class<YhteystietojenTyyppi> jpaClass = YhteystietojenTyyppi.class;
          if (dto != null) {
              // reload if !merge and entity exists in db already
             if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).size() > 0 && !merge) {
@@ -346,7 +316,7 @@ public class ConverterFactory {
              } else {
                  // or convert fields from dto
 
-                 entity = (YhteystietojenTyyppi) mapper.map(dto, jpaClass);
+                 entity = mapper.map(dto, jpaClass);
 
              }
              // organisaatio parent
@@ -359,23 +329,6 @@ public class ConverterFactory {
          //DEBUGSAWAY:log.debug("convertToJPA: " + dto + " -> " + entity);
          return entity;
      }
-
-    //
-
-
-
-    public List<String> convertOrganisaatiotyypinYhteystiedotToJPA(List<fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi> dtos, boolean merge ) {
-        List<String> orgTypes = new ArrayList<>();
-        //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);//OrganisaatiotyypinYhteystiedot
-        if (dtos != null) {
-            for (fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi dto : dtos) {
-                if (!orgTypes.contains(dto.value())) {
-                    orgTypes.add(dto.value());
-                }
-            }
-        }
-        return orgTypes;
-    }
 
     public <JPACLASS extends OrganisaatioBaseEntity> List<JPACLASS> convertYhteystiedotToJPA(List<? extends YhteystietoDTO> dtos, Class<? extends JPACLASS> resultClass, boolean merge ) {
         List jpas = new ArrayList();
@@ -432,9 +385,8 @@ public class ConverterFactory {
         return isValid;
     }
 
-    public <JPACLASS extends OrganisaatioBaseEntity> List<JPACLASS> convertYhteystietoElementtisToJPA(List<YhteystietoElementtiDTO> dtos, Class<? extends JPACLASS> resultClass, boolean merge ) {
-        List jpas = new ArrayList();
-        //YhteystietoConverter ytConv = new YhteystietoConverter(this, entityManager);
+    public Set<YhteystietoElementti> convertYhteystietoElementtisToJPA(Set<YhteystietoElementtiDTO> dtos, boolean merge) {
+        Set<YhteystietoElementti> jpas = new HashSet<>();
         if (dtos != null) {
             for (YhteystietoElementtiDTO dto : dtos) {
                 YhteystietoElementti jpa = convertYhteystietoElementtiToJPA(dto, merge);

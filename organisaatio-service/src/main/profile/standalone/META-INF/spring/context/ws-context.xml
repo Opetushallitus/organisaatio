@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:beans="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+
+
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
         
@@ -22,7 +19,7 @@
 
 <!--
     <bean class="org.apache.cxf.jaxrs.JAXRSServerFactoryBean" init-method="create">
-      <property name="address" value="/uiapi/v1"/>
+      <property name="address" koodiValue="/uiapi/v1"/>
       <property name="serviceBeans" ref="uiapi"/>
 	  <property name="providers" ref="jsonProvider"/>
     </bean>

@@ -1,0 +1,199 @@
+<!-- Varhaiskasvatuksen toimipaikan tietojen muokkaus -->
+<div ng-controller="VarhaiskasvatuksenToimipaikanTietojenMuokkausController as vakaeditctrl">
+    <form name="form" class="form-horizontal" novalidate>
+        <!-- Varhaiskasvatuksen toimintamuodot -->
+        <div class="control-group">
+            <label class="control-label">
+                {{vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}*
+            </label>
+            <div class="controls">
+                <select id="toimintamuoto" ng-model="vakaeditctrl.model.toimintamuoto"
+                        ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in vakaeditctrl.koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!vakaeditctrl.model.toimintamuoto">
+                    <input type="hidden" name="toimintamuoto" ng-model="vakaeditctrl.toimintamuoto" required>
+                    <span class="text-error" ng-show="form.toimintamuoto.$error.required">
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Kasvatusopillinen järjestelmä -->
+        <div class="control-group">
+            <label class="control-label">
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}*
+            </label>
+            <div class="controls">
+                <select id="kasvatusopillinenJarjestelma" ng-model="vakaeditctrl.model.kasvatusopillinenJarjestelma"
+                        ng-options="kasvatusopillinenJarjestelma.uri as kasvatusopillinenJarjestelma.nimi for kasvatusopillinenJarjestelma in vakaeditctrl.koodisto.kasvatusopillinenJarjestelma | orderBy:'uri'" required>
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!vakaeditctrl.model.kasvatusopillinenJarjestelma">
+                    <input type="hidden" name="kasvatusopillinenJarjestelma" ng-model="vakaeditctrl.kasvatusopillinenJarjestelma" required>
+                    <span class="text-error" ng-show="form.kasvatusopillinenJarjestelma.$error.required">
+                        {{:: vakaeditctrl.t('Organisaationtarkastelu.kasvatusopillinenJarjestelma')}}
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Toiminnallinen painotus -->
+        <div class="control-group">
+            <label class="control-label">
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}*
+            </label>
+            <div class="controls">
+                <div>
+                    <span ng-repeat="toiminnallinenpainotus in vakaeditctrl.model.varhaiskasvatuksenToiminnallinenpainotukset">
+                    <button type="button" class="btn btn-small" id="{{'toiminnallinenpainotusbutton' + $index}}"
+                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenToiminnallinepainotus(toiminnallinenpainotus)">{{:: vakaeditctrl.localiseVarhaiskasvatuksenToiminnallinenpainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}<i class="icon-remove"></i></button>
+                    </span>
+                </div>
+                <div>
+                    <input id="toiminnallinenpainotus.alkupvm" ng-model="vakaeditctrl.toiminnallinenpainotus.alkupvm"
+                           class="row-element"
+                           name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="vakaeditctrl.dpOpen1" ng-click="vakaeditctrl.dpOpen1=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{:: vakaeditctrl.t('Organisaationmuokkaus.alkupvm')}}*"
+                           close-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    -
+                    <input id="toiminnallinenpainotus.loppupvm" ng-model="vakaeditctrl.toiminnallinenpainotus.loppupvm"
+                           class="row-element"
+                           name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="vakaeditctrl.dpOpen2" ng-click="vakaeditctrl.dpOpen2=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{:: vakaeditctrl.t('Organisaationmuokkaus.loppupvm')}}"
+                           close-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <select id="toiminnallinenpainotus" ng-model="vakaeditctrl.toiminnallinenpainotus.toiminnallinenpainotus" ng-required="false"
+                            class="row-element"
+                            ng-options="toiminnallinenpainotus.uri as toiminnallinenpainotus.nimi for toiminnallinenpainotus in vakaeditctrl.koodisto.toiminnallinenPainotus | orderBy:'uri'" required>
+                        <option value="" tt="Organisaationmuokkaus.valitsetoiminnallinenpainotus">Valitse</option>
+                    </select>
+                    <button class="btn row-element"
+                            ng-click="vakaeditctrl.addVarhaiskasvatuksenToiminnallinenpainotus(); form.$setDirty()"
+                            ng-disabled="!vakaeditctrl.toiminnallinenpainotus.toiminnallinenpainotus || !vakaeditctrl.toiminnallinenpainotus.alkupvm">
+                        <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoToiminnallinenpainotus')}}
+                    </button>
+                </div>
+                <div ng-if="vakaeditctrl.model.varhaiskasvatuksenToiminnallinenpainotukset.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder" ng-model="vakaeditctrl.varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder.$error.required">
+                    {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToiminnallinenpainotukset')}}
+                    {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Paikkojen lukumäärä -->
+        <div class="control-group">
+            <label class="control-label">
+                {{t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}*
+            </label>
+            <div class="controls">
+                <input id="paikkojenLukumaara" ng-model="vakaeditctrl.model.paikkojenLukumaara" />
+                <div ng-if="!vakaeditctrl.model.paikkojenLukumaara">
+                    <input type="hidden" name="paikkojenLukumaara" ng-model="vakaeditctrl.paikkojenLukumaara" required>
+                    <span class="text-error" ng-show="form.paikkojenLukumaara.$error.required">
+                        {{:: vakaeditctrl.t('Organisaationtarkastelu.paikkojenLukumaara')}}
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Järjestämismuoto -->
+        <div class="control-group">
+            <label class="control-label">
+                {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}*
+            </label>
+            <div class="controls">
+                <span ng-repeat="jarjestamismuuoto in vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot">
+                    <button type="button"
+                            class="btn btn-small"
+                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto);form.$dirty = true">
+                        {{:: vakaeditctrl.localiseVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto)}}&nbsp;<i class="icon-remove"></i>
+                    </button>
+                </span>
+                <select id="varhaiskasvatuksenJarjestamismuodot" ng-model="vakaeditctrl.varhaiskasvatuksenJarjestamismuodot"
+                        ng-options="jarjestamismuoto.uri as jarjestamismuoto.nimi for jarjestamismuoto in vakaeditctrl.getUnselectedJarjestamismuodot() | orderBy:'uri'"
+                        ng-change="vakaeditctrl.addVarhaiskasvatuksenJarjestamismuoto()"
+                >
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+                <div ng-if="!vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot.length">
+                    <input type="hidden" name="varhaiskasvatuksenJarjestamismuodot" ng-model="vakaeditctrl.varhaiskasvatuksenJarjestamismuodot" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenJarjestamismuodot.$error.required">
+                    {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}
+                    {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                </span>
+                </div>
+            </div>
+        </div>
+        <!-- Varhaiskasvatuksen kielipainotukset -->
+        <div class="control-group">
+            <label class="control-label">
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}*
+            </label>
+            <div class="controls">
+                <div>
+                    <span ng-repeat="kielipainotus in vakaeditctrl.model.varhaiskasvatuksenKielipainotukset">
+                        <button type="button" class="btn btn-small" id="{{'kielipainotusbutton' + $index}}"
+                                ng-click="vakaeditctrl.removeKielipainotus(kielipainotus)">{{:: vakaeditctrl.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: vakaeditctrl.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(kielipainotus.loppupvm)}}<i class="icon-remove"></i></button>
+                    </span>
+                </div>
+                <div>
+                    <input id="kielipainotus.alkupvm" ng-model="vakaeditctrl.kielipainotus.alkupvm"
+                           class="row-element"
+                           name="luontipvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="vakaeditctrl.dpOpen3" ng-click="vakaeditctrl.dpOpen3=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{:: vakaeditctrl.t('Organisaationmuokkaus.alkupvm')}}*"
+                           close-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    -
+                    <input id="kielipainotus.loppupvm" ng-model="vakaeditctrl.kielipainotus.loppupvm"
+                           class="row-element"
+                           name="loppupvm" formatteddate uib-datepicker-popup="dd.MM.yyyy"
+                           is-open="vakaeditctrl.dpOpen4" ng-click="vakaeditctrl.dpOpen4=true" min="'1900-01-01'" max="'2030-12-31'"
+                           close-on-date-selection="true"
+                           ie-placeholder placeholder="{{:: vakaeditctrl.t('Organisaationmuokkaus.loppupvm')}}"
+                           close-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.sulje')}}"
+                           current-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tanaan')}}"
+                           clear-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.tyhjenna')}}"
+                           toggle-weeks-text="{{:: vakaeditctrl.t('Organisaationmuokkaus.viikkonumerot')}}"
+                    />
+                    <select id="kielipainotus" ng-model="vakaeditctrl.kielipainotus.kielipainotus" ng-required="false"
+                            class="row-element"
+                            ng-options="kielipainotus.uri as kielipainotus.nimi for kielipainotus in vakaeditctrl.koodisto.kieli | orderBy:'uri'" required>
+                        <option value="" tt="Organisaationmuokkaus.valitsekielipainotus">Valitse</option>
+                    </select>
+                    <button class="btn row-element"
+                            ng-click="vakaeditctrl.addKielipainotus(); form.$setDirty()"
+                            ng-disabled="!vakaeditctrl.kielipainotus.kielipainotus || !vakaeditctrl.kielipainotus.alkupvm">
+                        <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoKielipainotus')}}
+                    </button>
+                </div>
+                <div ng-if="vakaeditctrl.model.varhaiskasvatuksenKielipainotukset.length === 0">
+                    <input type="hidden" name="varhaiskasvatuksenKielipainotuksetPlaceholder" ng-model="vakaeditctrl.varhaiskasvatuksenKielipainotuksetPlaceholder" required>
+                    <span class="text-error" ng-show="form.varhaiskasvatuksenKielipainotuksetPlaceholder.$error.required">
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}
+                        {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

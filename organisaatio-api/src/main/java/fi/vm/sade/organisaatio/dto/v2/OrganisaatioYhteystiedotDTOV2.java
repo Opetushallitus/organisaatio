@@ -1,36 +1,17 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
-
 package fi.vm.sade.organisaatio.dto.v2;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-/**
- *
- * @author simok
- */
 public class OrganisaatioYhteystiedotDTOV2 {
     
     private String oid;
     
     private Map<String, String> nimi;
     
-    private List<String> tyypit;
+    private Set<String> tyypit;
 
-    private List<String> kielet; 
+    private Set<String> kielet;
     
     private String kotipaikka;
     
@@ -41,13 +22,11 @@ public class OrganisaatioYhteystiedotDTOV2 {
     private String ytunnus;
     private String toimipisteKoodi;
 
-    private List<OsoiteDTOV2> postiosoite;
+    private Set<OsoiteDTOV2> postiosoite;
 
-    private List<OsoiteDTOV2> kayntiosoite;
+    private Set<OsoiteDTOV2> kayntiosoite;
 
     private Map<String, String> puhelinnumero;
-
-    private Map<String, String> faksinumero;
 
     private Map<String, String> wwwOsoite;
 
@@ -85,14 +64,14 @@ public class OrganisaatioYhteystiedotDTOV2 {
     /**
      * @return the tyypit
      */
-    public List<String> getTyypit() {
+    public Set<String> getTyypit() {
         return tyypit;
     }
 
     /**
      * @param tyypit the tyypit to set
      */
-    public void setTyypit(List<String> tyypit) {
+    public void setTyypit(Set<String> tyypit) {
         this.tyypit = tyypit;
     }
 
@@ -127,14 +106,14 @@ public class OrganisaatioYhteystiedotDTOV2 {
     /**
      * @return the kielet
      */
-    public List<String> getKielet() {
+    public Set<String> getKielet() {
         return kielet;
     }
 
     /**
      * @param kielet the kielet to set
      */
-    public void setKielet(List<String> kielet) {
+    public void setKielet(Set<String> kielet) {
         this.kielet = kielet;
     }
 
@@ -169,28 +148,28 @@ public class OrganisaatioYhteystiedotDTOV2 {
     /**
      * @return the postiosoite
      */
-    public List<OsoiteDTOV2> getPostiosoite() {
+    public Set<OsoiteDTOV2> getPostiosoite() {
         return postiosoite;
     }
 
     /**
      * @param postiosoite the postiosoite to set
      */
-    public void setPostiosoite(List<OsoiteDTOV2> postiosoite) {
+    public void setPostiosoite(Set<OsoiteDTOV2> postiosoite) {
         this.postiosoite = postiosoite;
     }
 
     /**
      * @return the kayntiosoite
      */
-    public List<OsoiteDTOV2> getKayntiosoite() {
+    public Set<OsoiteDTOV2> getKayntiosoite() {
         return kayntiosoite;
     }
 
     /**
      * @param kayntiosoite the kayntiosoite to set
      */
-    public void setKayntiosoite(List<OsoiteDTOV2> kayntiosoite) {
+    public void setKayntiosoite(Set<OsoiteDTOV2> kayntiosoite) {
         this.kayntiosoite = kayntiosoite;
     }
 
@@ -206,20 +185,6 @@ public class OrganisaatioYhteystiedotDTOV2 {
      */
     public void setPuhelinnumero(Map<String, String> puhelinnumero) {
         this.puhelinnumero = puhelinnumero;
-    }
-
-    /**
-     * @return the faksinumero
-     */
-    public Map<String, String> getFaksinumero() {
-        return faksinumero;
-    }
-
-    /**
-     * @param faksinumero the faksinumero to set
-     */
-    public void setFaksinumero(Map<String, String> faksinumero) {
-        this.faksinumero = faksinumero;
     }
 
     /**

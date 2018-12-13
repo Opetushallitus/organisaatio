@@ -216,7 +216,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                         modelYhteystiedot[phkieli][etyypit[i]] = uusiYt;
                     }
                 }
-                var ptyypit = ['puhelin', 'faksi'];
+                var ptyypit = ['puhelin'];
                 for (i = 0; i < ptyypit.length; ++i) {
                     if (!modelYhteystiedot[phkieli][ptyypit[i]]) {
                         uusiYt = {tyyppi: ptyypit[i], kieli: phkieli};
@@ -278,7 +278,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
 
         refreshParent: function(parentResult, model) {
             model.uriLocalizedNames["parentnimi"] = refreshFunctions.getDecodedLocalizedValue(parentResult.nimi, "", "", false);
-            model.parenttype = parentResult.tyypit[0];
             model.parent = parentResult;
             model.parentPattern = {};
             model.parentPattern["fi"] = (parentResult.nimi.fi ? "^" + parentResult.nimi.fi + ".*" : ".*");
@@ -326,6 +325,19 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                 // Tyhjennetään tuleva nimi
                 model.organisaationTulevaNimi = {};
                 model.organisaationTulevaNimi.nimi = {};
+            }
+
+            if (!model.kaikkiOrganisaatiotyypit || model.kaikkiOrganisaatiotyypit.length === 0) {
+                KoodistoClient.koodistoOrganisaatiotyypit.get({}, function (organisaatioTyypit) {
+                    model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
+                });
+            }
+            if (model.organisaatio.tyypit.indexOf('organisaatiotyyppi_08') !== -1) {
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoToiminnallinePainotus, model.koodisto, 'toiminnallinenPainotus');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKieli, model.koodisto, 'kieli');
+                KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot, model.koodisto, 'varhaiskasvatuksenToimintamuodot');
             }
 
             Organisaatio.get({oid: result.parentOid}, function(parentResult) {
@@ -426,9 +438,6 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                         function(response) {
                             refreshFunctions.showAndLogError("Organisaationtarkastelu.koodistohakuvirhe", response, model, loadingService);
                         });
-                    model.koodisto.localizedKoulutustoimija = "Koulutustoimija";
-                    model.koodisto.localizedOppilaitos = "Oppilaitos";
-                    model.koodisto.localizedToimipiste = "Toimipiste";
                 },
                 // Error case
                 function(response) {

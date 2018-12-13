@@ -15,19 +15,22 @@
 
 package fi.vm.sade.organisaatio.service.converter;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
  */
+@Component
 public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends AbstractFromDomainConverter<YhteystietojenTyyppi, YhteystietojenTyyppiRDTO>{
 
     @Override
@@ -35,7 +38,7 @@ public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends Abs
         YhteystietojenTyyppiRDTO r = new YhteystietojenTyyppiRDTO();
         r.setNimi(convertMKTToMap(s.getNimi()));
         r.setSovellettavatOppilaitosTyyppis(s.getSovellettavatOppilaitostyyppis());
-        r.setSovellettavatOrganisaatioTyyppis(s.getSovellettavatOrganisaatioTyyppis());
+        r.setSovellettavatOrganisaatioTyyppis(OrganisaatioTyyppi.fromKoodiToValue(s.getSovellettavatOrganisaatioTyyppis()));
         r.setLisatietos(convertLisatietos(s.getLisatietos()));
         return r;
     }
@@ -50,8 +53,8 @@ public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends Abs
         return result;
     }
 
-    private List<Map<String, String>> convertLisatietos(List<YhteystietoElementti> les) {
-        List<Map<String, String>> ret = new ArrayList<Map<String, String>>(les.size());
+    private Set<Map<String, String>> convertLisatietos(Set<YhteystietoElementti> les) {
+        Set<Map<String, String>> ret = new HashSet<>(les.size());
         for (YhteystietoElementti e : les) {
             ret.add(convertYhteystietoElementti(e));
         }

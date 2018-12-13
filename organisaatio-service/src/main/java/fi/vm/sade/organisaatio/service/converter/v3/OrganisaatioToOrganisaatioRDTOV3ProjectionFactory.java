@@ -1,22 +1,9 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- */
 package fi.vm.sade.organisaatio.service.converter.v3;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MappingProjection;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
@@ -31,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 /**
  *  Organisaatio to OrganisaatioRDTOV3 projection. By doing the converstion on DAO layer avoid n+1 select when fetching multiple organisations.
@@ -42,10 +30,10 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    public OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(Expression<Organisaatio> organisaatioExpression) {
+    public OrganisaatioToOrganisaatioRDTOV3ProjectionFactory(Expression<Organisaatio> organisaatioExpression, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         super(OrganisaatioRDTOV3.class, organisaatioExpression);
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
-        this.organisaatioNimiModelMapper = new OrganisaatioNimiModelMapper();
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
     @Override
@@ -64,7 +52,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
 
         t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
 
-        t.setKieletUris(convertListToList(s.getKielet()));
+        t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setKuvaus2(convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
@@ -72,7 +60,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setMetadata(convertMetadata(s.getMetadata()));
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        t.setNimet((List<OrganisaatioNimiRDTO>) organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -86,8 +74,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
-        t.setTyypit(convertListToList(s.getTyypit()));
-        t.setVuosiluokat(convertListToList(s.getVuosiluokat()));
+        t.setTyypit(OrganisaatioTyyppi.tyypitFromKoodis(s.getTyypit()));
+        t.setVuosiluokat(convertCollectionToSet(s.getVuosiluokat()));
         t.setRyhmatyypit(convertSetToSet(s.getRyhmatyypit()));
         t.setKayttoryhmat(convertSetToSet(s.getKayttoryhmat()));
         t.setYhteishaunKoulukoodi(s.getYhteishaunKoulukoodi());
@@ -96,9 +84,10 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setYTJPaivitysPvm(s.getYtjPaivitysPvm());
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
+        t.setTarkastusPvm(toTimestamp(s.getTarkastusPvm()));
 
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
-        List<Map<String, String>> yhteystietoArvos = new ArrayList<>();
+        Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
         for (Yhteystieto y : s.getYhteystiedot()) {
@@ -158,11 +147,11 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         return result;
     }
 
-    private List<String> convertListToList(List<String> s) {
-        return new ArrayList<>(s);
+    private Set<String> convertCollectionToSet(Collection<String> s) {
+        return new HashSet<>(s);
     }
 
-    private Set<String> convertSetToSet(Set<String> s) {
+    private Set<String> convertSetToSet(Collection<String> s) {
         return new HashSet<>(s);
     }
 
@@ -200,7 +189,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
     }
 
     private void addToMapIfNotNULL(Map map, String key, Object value) {
-//        if (value != null) {
+//        if (koodiValue != null) {
         map.put(key, value);
 //        }
     }
@@ -219,10 +208,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
 
-        // Otetaan kuva mukaan vain "pyydettäessä"
-        if (s.isIncludeImage()) {
-            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
-        }
+        // Ei oteta ikinä kuvia mukaan
+
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
@@ -275,64 +262,6 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
         }
 
         return result;
-    }
-
-    private String encodeToUUENCODED(BinaryData kuva) {
-        if (kuva == null || kuva.getData() == null) {
-            return null;
-        }
-
-        return Base64.getEncoder().encodeToString(kuva.getData());
-    }
-
-    public String convertYhteystietoToPuhelinnumero(List<Yhteystieto> yhteystietos) {
-
-        for (Yhteystieto yhteystieto : yhteystietos) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                Puhelinnumero p = (Puhelinnumero) yhteystieto;
-                if (Puhelinnumero.TYYPPI_PUHELIN.equals(p.getTyyppi())) {
-                    return p.getPuhelinnumero();
-                }
-            }
-        }
-        return null;
-    }
-
-    public String convertYhteystietoToFaksinumero(List<Yhteystieto> yhteystietos) {
-
-        for (Yhteystieto yhteystieto : yhteystietos) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                Puhelinnumero p = (Puhelinnumero) yhteystieto;
-                if (Puhelinnumero.TYYPPI_FAKSI.equals(p.getTyyppi())) {
-                    return p.getPuhelinnumero();
-                }
-            }
-        }
-        return null;
-    }
-
-    public String convertYhteystietoToWwwOsoite(List<Yhteystieto> yhteystietos) {
-
-        for (Yhteystieto yhteystieto : yhteystietos) {
-            if (yhteystieto instanceof Www) {
-                return ((Www) yhteystieto).getWwwOsoite();
-            }
-        }
-        return null;
-    }
-
-    public String convertYhteystietoToEmailOsoite(List<Yhteystieto> yhteystietos) {
-
-        for (Yhteystieto yhteystieto : yhteystietos) {
-            if (yhteystieto instanceof Email) {
-                return ((Email) yhteystieto).getEmail();
-            }
-        }
-        return null;
-    }
-
-    private boolean isEmpty(String s) {
-        return (s == null || s.trim().isEmpty());
     }
 
 }

@@ -20,8 +20,8 @@
         <property name="mappingFiles">
             <list>
                 <value>dozer-mapping.xml</value>
-                <!--<value>dozer-bean-mappings.xml</value>-->
-                <!--<value>more-dozer-bean-mappings.xml</value>-->
+                <!--<koodiValue>dozer-bean-mappings.xml</koodiValue>-->
+                <!--<koodiValue>more-dozer-bean-mappings.xml</koodiValue>-->
             </list>
         </property>
     </bean>

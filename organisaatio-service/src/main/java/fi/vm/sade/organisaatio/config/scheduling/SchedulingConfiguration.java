@@ -16,9 +16,10 @@ public class SchedulingConfiguration {
 
     @Bean(destroyMethod = "stop")
     Scheduler scheduler(DataSource dataSource,
+                        VanhentuneetTiedotSahkopostiTask vanhentuneetTiedotSahkopostiTask,
                         OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource)
-                .startTasks(organisaatioUpdateTask)
+                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask)
                 .threads(1)
                 .build();
         scheduler.start();

@@ -29,9 +29,6 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
 
     return function(oid, model) {
         if (oid === null || (oid !== model.koodisto.oid)) {
-            model.koodisto.localizedOppilaitos = "";
-            model.koodisto.localizedKoulutustoimija = "";
-            model.koodisto.localizedToimipiste = "";
             model.koodisto.kieliplaceholder = $filter('i18n')("lisaakieli");
             KoodistoClient.koodistoOrganisaatiotyypit.get({}, function(result) {
                     model.koodisto.organisaatiotyypit.length = 0;
@@ -43,6 +40,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      on yläorganisaation oltava joko OPH tai MUU ORGANISAATIO.
                      Jos organisaatio on KOULUTUSTOIMIJA ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai KOULUTUSTOIMIJA
+                     Jos organisaatio on VARHAISKASVATUKSEN_TOIMIPAIKKA, sillä on oltava yläorganisaatio joka on
+                     tyypiltään VARHAISKASVATUKSEN_JARJESTAJA tai VARHAISKASVATUKSEN_TOIMIPAIKKA.
                      Jos organisaatio on TYÖELÄMÄJÄRJESTÖ ja sille on määritelty yläorganisaatio,
                      on yläorganisaation oltava joko OPH tai TYÖELÄMÄJÄRJESTÖ.
                      Jos organisaatio on TOIMIPISTE, sillä on oltava yläorganisaatio joka on tyypiltään joko
@@ -51,42 +50,51 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                      joka on tyypiltään KOULUTUSTOIMIJA.
                      Siis: OPH [1] -> MUU ORGANISAATIO [0..n] -> KOULUTUSTOIMIJA [1] -> OPPILAITOS [0..1] -> TOIMIPISTE [0..n]
                      Koodiston tyypit: 01:Koulutustoimija, 02:Oppilaitos, 03:Toimipiste, 04:Oppisopimustoimipiste,
-                     05:Muu organisaatio, 06:Työelämäjärjestö
+                     05:Muu organisaatio, 06:Työelämäjärjestö 07:Varhaiskasvatuksen järjestäjä
+                     08:Varhaiskasvatuksen toimipaikka
                      OPH-organisaation tyyppi on 'Muu organisaatio'
                      Lisäys 30.6.2014: Kaikille organisaatiotyypeille saa lisätä Oppisopimustoimipisteen (OH-280)
                      */
                     var sallitutAlaOrganisaatiot = {
-                        'Muu organisaatio': ["05", "03"],
-                        'Koulutustoimija': ["02", "04"],
-                        'Oppilaitos': ["03"],
-                        'Toimipiste': ["03"],
-                        'Oppisopimustoimipiste': [],
-                        'Tyoelamajarjesto': ["06","03"]};
-                    result.forEach(function(orgTyyppiKoodi) {
+                        'organisaatiotyyppi_05': ["05", "03"], // Muu organisaatio
+                        'organisaatiotyyppi_01': ["02", "04"], // Koulutustoimija
+                        'organisaatiotyyppi_02': ["03"], // Oppilaitos
+                        'organisaatiotyyppi_03': ["03"], // Toimipiste
+                        'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
+                        'organisaatiotyyppi_07': ["08"], // Varhaiskasvatuksen jarjestaja
+                        'organisaatiotyyppi_08': ["08"], // Varhaiskasvatuksen toimipaikka
+                        'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
+                    result.sort(function (a, b) {
+                        return a.koodiArvo.localeCompare(b.koodiArvo);
+                    }).forEach(function(orgTyyppiKoodi) {
                         if (KoodistoKoodi.isValid(orgTyyppiKoodi)) {
-                            var localizedOrgType = KoodistoKoodi.getLangName(orgTyyppiKoodi, 'FI');
                             // Parentin sallitut aliorganisaatiot
-                            if (model.organisaatio.parentOid !== model.OPHOid && sallitutAlaOrganisaatiot[model.parenttype].indexOf(orgTyyppiKoodi.koodiArvo) !== -1) {
-                                model.koodisto.organisaatiotyypit.push(localizedOrgType);
+                            if (model.organisaatio.parentOid !== model.OPHOid && model.parent.tyypit.some(function(tyyppi) {
+                                return sallitutAlaOrganisaatiot[tyyppi].indexOf(orgTyyppiKoodi.koodiArvo) !== -1;
+                            })) {
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
-                                || orgTyyppiKoodi.koodiArvo === "05")) {
-                                model.koodisto.organisaatiotyypit.push(localizedOrgType);
+                                || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
+                                model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             }
 
-                            if (orgTyyppiKoodi.koodiArvo === "01") {
-                                model.koodisto.localizedKoulutustoimija = localizedOrgType;
-                            } else if (orgTyyppiKoodi.koodiArvo === "02") {
-                                model.koodisto.localizedOppilaitos = localizedOrgType;
-                            } else if (orgTyyppiKoodi.koodiArvo === "03") {
-                                model.koodisto.localizedToimipiste = localizedOrgType;
-                            }
-                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04") {
-                                model.koodisto.ophOrganisaatiot.push(localizedOrgType);
+                            if (orgTyyppiKoodi.koodiArvo !== "03" && orgTyyppiKoodi.koodiArvo !== "04" &&
+                                orgTyyppiKoodi.koodiArvo !== "08") {
+                                model.koodisto.ophOrganisaatiot.push(orgTyyppiKoodi.koodiUri);
                             }
                         }
                     });
+                    model.kaikkiOrganisaatiotyypit = result;
+                    // Organisaation on mahdollista olla varhaiskasvatuksen toimipaikka joten haetaan tähän liittyvät koodit
+                    if (model.koodisto.organisaatiotyypit.some(function (orgTyyppi) { return orgTyyppi.koodiUri === 'organisaatiotyyppi_08'; })) {
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoToiminnallinePainotus, model.koodisto, 'toiminnallinenPainotus');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKieli, model.koodisto, 'kieli');
+                        KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoVarhaiskasvatuksenToimintamuodot, model.koodisto, 'varhaiskasvatuksenToimintamuodot');
+                    }
                 },
                 // Error case
                 function(response) {

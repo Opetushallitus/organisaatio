@@ -10,7 +10,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.organisaatio.service"/>
     <context:component-scan base-package="fi.vm.sade.security" />
-    
+
     <bean id="organisaatioConverter" class="fi.vm.sade.organisaatio.service.converter.ConverterFactory"/>
 
     <bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper">
@@ -21,15 +21,7 @@
         </property>
     </bean>
 
-    <bean id="modelMapper" class="org.modelmapper.ModelMapper" />
-
-    <bean id="ryhmaCriteriaV2ToV3Converter" class="fi.vm.sade.organisaatio.service.converter.v2.RyhmaCriteriaV2ToV3Converter">
-        <constructor-arg index="0" ref="modelMapper" />
-    </bean>
-
-    <bean id="ryhmaCriteriaV3Converter" class="fi.vm.sade.organisaatio.service.converter.v3.RyhmaCriteriaV3Converter">
-        <constructor-arg index="0" ref="modelMapper" />
-    </bean>
+    <bean id="modelMapper" name="modelMapper" class="org.modelmapper.ModelMapper" />
 
     <!-- Conversion service, note: Old converters are not using spring conversion framework -->
     <!-- If this was called id=conversionService spring-session injects this and won't work! -->
@@ -37,25 +29,19 @@
           class="fi.vm.sade.generic.service.conversion.SadeConversionServiceFactoryBean">
         <property name="converters">
             <list>
-                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter"/>
-                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter"/>
-                <bean class="fi.vm.sade.organisaatio.service.converter.YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
-                <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter"/>
-                <bean class="fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisaatioConverter"/>
-                <bean class="fi.vm.sade.organisaatio.service.converter.LisatietoConverter"/>
+                <ref bean="organisaatioToOrganisaatioRDTOConverter"/>
+                <ref bean="organisaatioRDTOToOrganisaatioConverter"/>
+                <ref bean="yhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter"/>
+                <ref bean="organisaatioToOrganisaatioRDTOV3Converter"/>
+                <ref bean="organisaatioRDTOV3ToOrganisaatioConverter"/>
+                <ref bean="organisaatioToOrganisaatioRDTOV4Converter"/>
+                <ref bean="organisaatioRDTOV4ToOrganisaatioConverter"/>
+                <ref bean="lisatietoConverter"/>
                 <ref bean="ryhmaCriteriaV2ToV3Converter"/>
                 <ref bean="ryhmaCriteriaV3Converter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter"/>
             </list>
         </property>
     </bean>
-
-    <bean id="organisaatioModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper"/>
-    <bean id="organisaatioNimiModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper"/>
-    <bean id="searchCriteriaModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper"/>
-    <bean id="organisaatioSuhdeModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper"/>
-    <bean id="organisaatioLiitosModelMapper" class="fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper"/>
-    <bean id="groupModelMapperV2" class="fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2"/>
-    <bean id="groupModelMapperV3" class="fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3"/>
 
 </beans>

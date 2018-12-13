@@ -8,13 +8,12 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
 import java.util.Optional;
-import java.util.Set;
+
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public final class OrganisaatioBuilder {
 
@@ -52,14 +51,14 @@ public final class OrganisaatioBuilder {
     public Organisaatio build() {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setOid(oid);
-        organisaatio.setTyypit(tyypit.stream().map(OrganisaatioTyyppi::value).collect(toList()));
+        organisaatio.setTyypit(tyypit.stream().map(OrganisaatioTyyppi::value).collect(toSet()));
         organisaatio.setOrganisaatiotyypitStr(tyypit.stream().map(OrganisaatioTyyppi::value).collect(joining("|")));
         organisaatio.setNimi(nimi);
         organisaatio.setNimihaku(nimi.getValues().values().stream().collect(joining(",")));
         organisaatio.setAlkuPvm(alkuPvm);
         organisaatio.setLakkautusPvm(lakkautusPvm);
         if (parent != null) {
-            Set<OrganisaatioSuhde> parentSuhteet = new LinkedHashSet<>();
+            List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
             OrganisaatioSuhde parentSuhde = new OrganisaatioSuhde();
             parentSuhde.setChild(organisaatio);
             parentSuhde.setParent(parent);

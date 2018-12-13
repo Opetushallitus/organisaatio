@@ -14,16 +14,16 @@ public final class OrganisaatioTyyppiUtil {
 
     static {
         Map<String, Set<String>> tmp = new HashMap<>();
-        tmp.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA,
+        tmp.put(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), newHashSet(OrganisaatioTyyppi.KOULUTUSTOIMIJA,
                 OrganisaatioTyyppi.OPPILAITOS, OrganisaatioTyyppi.TOIMIPISTE, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE));
-        tmp.put(OrganisaatioTyyppi.OPPILAITOS.value(), newHashSet(OrganisaatioTyyppi.OPPILAITOS,
+        tmp.put(OrganisaatioTyyppi.OPPILAITOS.koodiValue(), newHashSet(OrganisaatioTyyppi.OPPILAITOS,
                 OrganisaatioTyyppi.TOIMIPISTE, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE));
-        tmp.put(OrganisaatioTyyppi.TOIMIPISTE.value(), newHashSet(OrganisaatioTyyppi.TOIMIPISTE,
+        tmp.put(OrganisaatioTyyppi.TOIMIPISTE.koodiValue(), newHashSet(OrganisaatioTyyppi.TOIMIPISTE,
                 OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE));
-        tmp.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.value(), newHashSet(OrganisaatioTyyppi.TOIMIPISTE,
+        tmp.put(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE.koodiValue(), newHashSet(OrganisaatioTyyppi.TOIMIPISTE,
                 OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE));
-        tmp.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), newHashSet(OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        tmp.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.value(), newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        tmp.put(OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), newHashSet(OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        tmp.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue(), newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO));
         ORG_TYPE_LIMIT = unmodifiableMap(tmp);
     }
 
@@ -41,7 +41,7 @@ public final class OrganisaatioTyyppiUtil {
     }
 
     private static Set<String> newHashSet(OrganisaatioTyyppi... organisaatiotyypit) {
-        return Stream.of(organisaatiotyypit).map(OrganisaatioTyyppi::value).collect(toSet());
+        return Stream.of(organisaatiotyypit).map(OrganisaatioTyyppi::koodiValue).collect(toSet());
     }
 
 }

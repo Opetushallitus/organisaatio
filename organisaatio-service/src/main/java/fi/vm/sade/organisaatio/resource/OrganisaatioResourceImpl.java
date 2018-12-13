@@ -1,22 +1,6 @@
-/*
- * Copyright (c) 2012 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.generic.common.I18N;
@@ -25,10 +9,14 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
+import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -36,9 +24,9 @@ import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +36,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,12 +48,9 @@ import java.util.stream.Stream;
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import org.springframework.util.StringUtils;
+import java.time.LocalDate;
+import java.util.*;
 
-/**
- * @author Antti Salonen
- * @author mlyly
- * @author simok
- */
 @Component
 @Transactional(readOnly = true)
 @CrossOriginResourceSharing(allowAllOrigins = true)
@@ -116,12 +98,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         //sorttaa
-        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural().nullsFirst().onResultOf(new Function<OrganisaatioPerustieto, Comparable<String>>() {
-            @Override
-            public Comparable<String> apply(OrganisaatioPerustieto input) {
-                return OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input);
-            }
-        });
+        final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural()
+                .nullsFirst()
+                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input));
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 
@@ -153,16 +132,21 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // GET /organisaatio/{oid}/childoids
     @Override
-    public String childoids(String oid) throws Exception {
+    public String childoids(String oid, boolean rekursiivisesti, boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) throws Exception {
         Preconditions.checkNotNull(oid);
-        Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<String> childOidList = new LinkedList<>();
-        if (parentOrg != null) {
-            for (Organisaatio child : parentOrg.getChildren(true)) {
-                childOidList.add("\"" + child.getOid() + "\"");
+        if (rekursiivisesti) {
+            ChildOidsCriteria criteria = new ChildOidsCriteria(oid, aktiiviset, suunnitellut, lakkautetut, LocalDate.now());
+            childOidList.addAll(organisaatioFindBusinessService.findChildOidsRecursive(criteria));
+        } else {
+            Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
+            if (parentOrg != null) {
+                for (Organisaatio child : parentOrg.getChildren(aktiiviset, suunnitellut, lakkautetut)) {
+                    childOidList.add(child.getOid());
+                }
             }
         }
-        return "{ \"oids\": [" + Joiner.on(",").join(childOidList) + "]}";
+        return "{ \"oids\": [" + childOidList.stream().map(childOid -> "\"" + childOid + "\"").collect(joining(",")) + "]}";
     }
 
     // GET /organisaatio/{oid}/parentoids - used for security purposes
@@ -316,15 +300,15 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     // GET /organisaatio/yhteystietometadata
     @Override
     @Transactional(readOnly = true)
-    public List<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(List<String> organisaatioTyyppi) {
+    public Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(Set<String> organisaatioTyyppi) {
         if (organisaatioTyyppi == null || organisaatioTyyppi.isEmpty()) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
-        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(organisaatioTyyppi);
+        List<YhteystietojenTyyppi> entitys = yhteystietojenTyyppiDAO.findLisatietoMetadataForOrganisaatio(OrganisaatioTyyppi.fromValueToKoodi(organisaatioTyyppi));
         if (entitys == null) {
             return null;
         }
-        List<YhteystietojenTyyppiRDTO> result = new ArrayList<>();
+        Set<YhteystietojenTyyppiRDTO> result = new HashSet<>();
         for (YhteystietojenTyyppi entity : entitys) {
             result.add(conversionService.convert(entity, YhteystietojenTyyppiRDTO.class));
         }
