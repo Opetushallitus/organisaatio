@@ -22,7 +22,6 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
@@ -78,14 +77,6 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
-    private MonikielinenTeksti convertMapToMonikielinenTeksti(Map<String, String> m) {
-        MonikielinenTeksti mt = new MonikielinenTeksti();
-        for (Map.Entry<String, String> e : m.entrySet()) {
-            mt.addString(e.getKey(), e.getValue());
-        }
-        return mt;
-    }
-
     public void checkUpdateOrganisationName(String oid) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
 
@@ -120,7 +111,7 @@ public class PermissionChecker {
         if (update) {
             final Organisaatio current = organisaatioDAO.findByOid(oid);
 
-            if (!Objects.equal(current.getNimi(), convertMapToMonikielinenTeksti(nimi))) {
+            if (!Objects.equal(current.getNimi().getValues(), nimi)) {
                 LOG.info("Nimi muuttunut");
 
                 // name changed
