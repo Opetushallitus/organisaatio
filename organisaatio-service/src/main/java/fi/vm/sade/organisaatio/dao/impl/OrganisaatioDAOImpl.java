@@ -47,8 +47,8 @@ import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import static fi.vm.sade.organisaatio.service.util.CollectionUtil.ofNullableAndNotEmpty;
 import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +68,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
+
+import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
 import static java.util.Arrays.asList;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -130,10 +132,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu
                 -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
 
-        ofNullableAndNotEmpty(criteria.getKunta()).ifPresent(kunnat
+        Optional.ofNullable(criteria.getKunta()).filter(not(Collection::isEmpty)).ifPresent(kunnat
                 -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
 
-        ifPresentOrElse(ofNullableAndNotEmpty(criteria.getOrganisaatioTyyppi()), organisaatiotyypit -> {
+        ifPresentOrElse(Optional.ofNullable(criteria.getOrganisaatioTyyppi()).filter(not(Collection::isEmpty)), organisaatiotyypit -> {
             QOrganisaatio qOrganisaatio1 = new QOrganisaatio("organisaatio1");
             StringPath qOrganisaatiotyyppi1 = Expressions.stringPath("organisaatiotyyppi1");
             query.where(qOrganisaatio.in(JPAExpressions.selectFrom(qOrganisaatio1)
@@ -141,17 +143,17 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .where(qOrganisaatiotyyppi1.in(organisaatiotyypit))));
         }, () -> query.where(qOrganisaatiotyyppi.notIn("Ryhma")));
 
-        ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit -> {
+        Optional.ofNullable(criteria.getOppilaitosTyyppi()).filter(not(Collection::isEmpty)).ifPresent(oppilaitostyypit -> {
             BooleanBuilder predicate = oppilaitostyypit.stream()
                     .map(oppilaitostyyppi -> qOrganisaatio.oppilaitosTyyppi.like(oppilaitostyyppi.replace("*", "%")))
                     .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
             query.where(predicate);
         });
 
-        ofNullableAndNotEmpty(criteria.getKieli()).ifPresent(kielet
+        Optional.ofNullable(criteria.getKieli()).filter(not(Collection::isEmpty)).ifPresent(kielet
                 -> query.where(qKieli.in(kielet)));
 
-        ofNullableAndNotEmpty(criteria.getOidRestrictionList()).ifPresent(oids -> {
+        Optional.ofNullable(criteria.getOidRestrictionList()).filter(not(Collection::isEmpty)).ifPresent(oids -> {
             BooleanBuilder parentOidPathPredicate = oids.stream()
                     .map(oid -> qOrganisaatio.parentOidPath.contains(oid))
                     .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
@@ -166,10 +168,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
             ));
         });
 
-        ofNullableAndNotEmpty(criteria.getOid()).ifPresent(oids
+        Optional.ofNullable(criteria.getOid()).filter(not(Collection::isEmpty)).ifPresent(oids
                 -> query.where(qOrganisaatio.oid.in(oids)));
 
-        ofNullableAndNotEmpty(criteria.getParentOidPaths()).ifPresent(parentOidPaths
+        Optional.ofNullable(criteria.getParentOidPaths()).filter(not(Collection::isEmpty)).ifPresent(parentOidPaths
                 -> query.where(parentOidPaths.stream().map(parentOidPath -> qOrganisaatio.parentOidPath.startsWith(parentOidPath))
                         .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
 
