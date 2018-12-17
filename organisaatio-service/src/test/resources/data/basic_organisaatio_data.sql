@@ -148,6 +148,7 @@ INSERT INTO ORGANISAATIO_TYYPIT(ORGANISAATIO_ID, TYYPIT) VALUES
 (8, 'organisaatiotyyppi_02'),
 (8, 'organisaatiotyyppi_04'),
 (9, 'organisaatiotyyppi_06'),
+(10, 'organisaatiotyyppi_02'),
 (10, 'organisaatiotyyppi_07');
 
 INSERT INTO ORGANISAATIOSUHDE(ID, VERSION, ALKUPVM, LOPPUPVM, OPETUSPISTEENJARJNRO, SUHDETYYPPI, CHILD_ID, PARENT_ID) VALUES

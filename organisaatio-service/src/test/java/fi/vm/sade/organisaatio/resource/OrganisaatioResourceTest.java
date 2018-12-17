@@ -146,6 +146,14 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits());
+
+        //Finding only organisaatios that are of organisaatiotyyppi Varhaiskasvatuksen jarjestaja
+        searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), null, null, true, null);
+        result = res.searchHierarchy(searchCriteria);
+        assertEquals(1, result.getNumHits());
+        assertThat(result.getOrganisaatiot())
+                .flatExtracting(OrganisaatioPerustieto::getOrganisaatiotyypit)
+                .containsExactlyInAnyOrder(OrganisaatioTyyppi.OPPILAITOS, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA);
     }
 
     private Stream<OrganisaatioPerustieto> allChildrenFlat(Collection<OrganisaatioPerustieto> organisaatioPerustieto) {

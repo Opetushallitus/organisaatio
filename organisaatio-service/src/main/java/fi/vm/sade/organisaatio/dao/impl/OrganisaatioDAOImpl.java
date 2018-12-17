@@ -133,9 +133,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         ofNullableAndNotEmpty(criteria.getKunta()).ifPresent(kunnat
                 -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
 
-        ifPresentOrElse(ofNullableAndNotEmpty(criteria.getOrganisaatioTyyppi()),
-                organisaatiotyypit -> query.where(qOrganisaatiotyyppi.in(organisaatiotyypit)),
-                () -> query.where(qOrganisaatiotyyppi.notIn("Ryhma")));
+        ifPresentOrElse(ofNullableAndNotEmpty(criteria.getOrganisaatioTyyppi()), organisaatiotyypit -> {
+            QOrganisaatio qOrganisaatio1 = new QOrganisaatio("organisaatio1");
+            StringPath qOrganisaatiotyyppi1 = Expressions.stringPath("organisaatiotyyppi1");
+            query.where(qOrganisaatio.in(JPAExpressions.selectFrom(qOrganisaatio1)
+                    .join(qOrganisaatio1.tyypit, qOrganisaatiotyyppi1)
+                    .where(qOrganisaatiotyyppi1.in(organisaatiotyypit))));
+        }, () -> query.where(qOrganisaatiotyyppi.notIn("Ryhma")));
 
         ofNullableAndNotEmpty(criteria.getOppilaitosTyyppi()).ifPresent(oppilaitostyypit -> {
             BooleanBuilder predicate = oppilaitostyypit.stream()
