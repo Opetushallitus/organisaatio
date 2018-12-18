@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 @Configurable
 public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService {
 
+    private static final String ROLE_RYHMA = "APP_ORGANISAATIOHALLINTA_RYHMA";
     public static final String ORGANISAATIOHALLINTA = "ORGANISAATIOHALLINTA";
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -75,6 +76,10 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
             }
         }
 
+        if (context.isRyhma() && userCanEditRyhma()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -88,7 +93,8 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         if (context.getOrgTypes().stream().anyMatch(type -> !userCanCreateOrganisationOfType(type))) {
             return false;
         }
-        return checkAccess(context.getParentOrgOid(), ROLE_CRUD) || checkAccess(ophOid, ROLE_CRUD);
+        return checkAccess(context.getParentOrgOid(), ROLE_CRUD) || checkAccess(ophOid, ROLE_CRUD)
+                || (context.isRyhma() && userCanCreateDeleteRyhma());
     }
 
 
@@ -126,6 +132,8 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         case TOIMIPISTE:
         case VARHAISKASVATUKSEN_TOIMIPAIKKA:
             return checkAccess(new String[]{ROLE_CRUD}) || checkAccess(ophOid, ROLE_CRUD);
+        case RYHMA:
+            return userCanCreateDeleteRyhma();
 
         default:
             log.error("Unhandled or type:" + tyyppi + " returning false!");
@@ -150,6 +158,9 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 //                return true;
 //            }
 //        }
+        if (context.isRyhma() && userCanCreateDeleteRyhma()) {
+            return true;
+        }
 
         // implicitly oph user can delete whatever, is this true?
         return checkAccess(ophOid, ROLE_CRUD);
@@ -206,4 +217,13 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     public boolean userCanDeleteYhteystietojenTyyppi() {
         return checkAccess(ophOid, ROLE_CRUD);
     }
+
+    private boolean userCanCreateDeleteRyhma() {
+        return checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD);
+    }
+
+    private boolean userCanEditRyhma() {
+        return checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
+    }
+
 }
