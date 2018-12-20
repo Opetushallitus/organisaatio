@@ -1,14 +1,12 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.organisaatio.dto.mapping.KoodiToUriVersioMapper;
 import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenKielipainotus;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToiminnallinenpainotus;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +16,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 public class OrganisaatioValidationServiceImpl implements OrganisaatioValidationService {
+
+    private static final Set<String> TUETUT_KIELET = Stream.of("fi", "sv", "en").collect(toSet());
+
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final String rootOrganisaatioOid;
@@ -78,6 +77,16 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             throw new ValidationException("validation.Organisaatio.virastotunnus");
         }
 
+        // Validointi: Nimien kielien täytyy olla yksi tuetuista kielistä
+        validate(model.getNimi(), "nimi");
+        if (model.getNimet() != null) {
+            model.getNimet().forEach(this::validate);
+        }
+
+        // Validointi: Yhteystietojen kielien täytyy olla kielikoodistosta (muodossa "<uri>#<versio>")
+        if (model.getYhteystiedot() != null) {
+            validate(model.getYhteystiedot());
+        }
 
         // This effectively blocks creating/updating VARHAISKASVATUKSEN_TOIMIPAIKKA from older apis since they don't
         // support this info
@@ -94,6 +103,32 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // Validointi: koodistoureissa pitää olla versiotieto
         this.checkVersionInKoodistoUris(model);
+    }
+
+    private void validate(OrganisaatioNimi organisaatioNimi) {
+        if (organisaatioNimi == null) {
+            return;
+        }
+        validate(organisaatioNimi.getNimi(), "nimet");
+    }
+
+    private void validate(MonikielinenTeksti monikielinenTeksti, String path) {
+        if (monikielinenTeksti == null || monikielinenTeksti.getValues() == null) {
+            return;
+        }
+        if (!monikielinenTeksti.getValues().keySet().stream().allMatch(TUETUT_KIELET::contains)) {
+            throw new ValidationException(String.format("validation.Organisaatio.%s.kieli", path));
+        }
+    }
+
+    private void validate(Collection<Yhteystieto> yhteystiedot) {
+        List<String> kielet = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI)
+                .stream()
+                .map(new KoodiToUriVersioMapper())
+                .collect(toList());
+        if (yhteystiedot.stream().filter(Objects::nonNull).anyMatch(yhteystieto -> !kielet.contains(yhteystieto.getKieli()))) {
+            throw new ValidationException("validation.Organisaatio.yhteystiedot.kieli");
+        }
     }
 
     private void validateVarhaiskasvatuksenToimipaikkaTiedot(Organisaatio model) {

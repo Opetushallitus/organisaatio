@@ -2,11 +2,16 @@ package fi.vm.sade.organisaatio.business.impl;
 
 
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
@@ -23,6 +28,18 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
     @Override
     public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
         return null;
+    }
+
+    @Override
+    public List<Koodi> haeKoodit(KoodistoUri koodisto) {
+        switch (koodisto) {
+            case KIELI:
+                return Stream.of("fi", "sv", "en")
+                        .map(koodi -> new Koodi(koodi, String.format("kieli_%s", koodi), 1))
+                        .collect(toList());
+            default:
+                throw new IllegalArgumentException(String.format("Koodisto %s ei ole tuettu mockissa", koodisto));
+        }
     }
 
     @Override
