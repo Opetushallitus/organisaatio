@@ -17,7 +17,6 @@
 package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Objects;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -30,15 +29,11 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -57,24 +52,8 @@ public class PermissionChecker {
 
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
-    private boolean checkCRUDRyhma(OrganisaatioContext authContext) {
-        Set<OrganisaatioTyyppi> tyypit = authContext.getOrgTypes();
-        if (tyypit.size() == 1 && tyypit.contains(OrganisaatioTyyppi.RYHMA)) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            for (GrantedAuthority ga : auth.getAuthorities()) {
-                if (ga.getAuthority().startsWith("ROLE_APP_ORGANISAATIOHALLINTA_RYHMA_")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void checkRemoveOrganisation(String oid) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioDAO.findByOid(oid));
-        if (checkCRUDRyhma(authContext)) {
-            return;
-        }
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
@@ -113,10 +92,6 @@ public class PermissionChecker {
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
             String oid, Map<String, String> nimi,
             Date alkuPvm, Date lakkautusPvm) {
-        if (checkCRUDRyhma(authContext)) {
-            return;
-        }
-
         if (update) {
             final Organisaatio current = organisaatioDAO.findByOid(oid);
 
