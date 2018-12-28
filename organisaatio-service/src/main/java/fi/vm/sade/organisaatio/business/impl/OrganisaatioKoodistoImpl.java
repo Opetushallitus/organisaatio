@@ -54,8 +54,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
-    private boolean reauthorize;
-
     /**
      * Luo instanssin ja alustaa gson:in
      */
@@ -70,7 +68,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     private OrganisaatioKoodistoClient getClient() {
-        client.setReauthorize(reauthorize);
         return client;
     }
 
@@ -254,12 +251,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * {@link #paivitaKoodisto(fi.vm.sade.organisaatio.model.Organisaatio, boolean)}.
      *
      * @param entity organisaatio
-     * @param reauthorize jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
      */
     @Override
     @Async
-    public void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
-        String virheviesti = paivitaKoodisto(entity, reauthorize);
+    public void paivitaKoodistoAsync(Organisaatio entity) {
+        String virheviesti = paivitaKoodisto(entity);
         if (virheviesti != null) {
             LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
         }
@@ -283,12 +279,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      *   => Päivitetään koodi: yhteishaunkoulukoodi_[yhteishaunkoulukoodi]
      *
      * @param entity Organisaatio
-     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
      *
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public synchronized String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public synchronized String paivitaKoodisto(Organisaatio entity) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return null;
@@ -307,8 +302,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         };
         int URI_INDEX = 0;
         int TUNNISTE_INDEX = 1;
-
-        this.reauthorize = reauthorize;
 
         for (Object[] koodiAlkio : koodiLista) {
             String uri = (String) koodiAlkio[URI_INDEX];
@@ -429,14 +422,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * @param uri KoodiUri
      * @param tunniste Koodin tunniste, esim. opetuspiste koodille toimipistekoodi
      * @param lakkautusPvm Lakkautuspäivämäärä
-     * @param reauthorize Jos true, haetaan uusi tiketti, muuten haetaan vain jos ei jo ole
      *
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
-    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
-        this.reauthorize = reauthorize;
-
+    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm) {
         if (uri == null || uri.isEmpty()) {
             LOG.warn("Koodia ei voi lakkauttaa: uri == null / empty");
             return INFO_CODE_SAVE_FAILED;

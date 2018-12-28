@@ -14,60 +14,49 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpEntity;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
-import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import fi.vm.sade.properties.OphProperties;
+import org.apache.http.entity.ContentType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Date;
+import java.util.function.Supplier;
 
-import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
+import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KOODISTO;
+import static java.util.function.Function.identity;
 
 /**
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
-public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
+public class OrganisaatioKoodistoClient {
 
-    @Value("${organisaatio.service.username.to.koodisto}")
-    private String koodistoClientUsername;
+    private final OphHttpClient httpClient;
+    private final OphProperties urlConfiguration;
 
-    @Value("${organisaatio.service.password.to.koodisto}")
-    private String koodistoClientPassword;
-
-    @Autowired
-    private UrlConfiguration urlConfiguration;
-
-    protected void authorize() throws OrganisaatioKoodistoException {
-        try {
-            String koodistoServiceUrl = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.url");
-            LOG.info("authorize url " + koodistoServiceUrl);
-            authorize(koodistoServiceUrl, koodistoClientUsername, koodistoClientPassword);
-        } catch (Exception e) {
-            throw new OrganisaatioKoodistoException(e.getMessage());
-        }
+    public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient,
+                                      OphProperties urlConfiguration) {
+        this.httpClient = httpClient;
+        this.urlConfiguration = urlConfiguration;
     }
-
 
     private String createKoodistoServiceParameters() {
         // Estetään cachen käyttö
         return "?noCache=" + new Date().getTime();
+    }
+
+    private <T> T wrapException(Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            OrganisaatioKoodistoException organisaatioKoodistoException = new OrganisaatioKoodistoException(e.getMessage());
+            organisaatioKoodistoException.initCause(e);
+            throw organisaatioKoodistoException;
+        }
     }
 
     /**
@@ -76,93 +65,35 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      * @param uri kononainen koodiston uri, käytä urlpropertiesseja generointiin esim.
      * "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
      * @return koodi json-muodossa, tai null jos koodia ei löydy
-     * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
-        LOG.info("GET " + uri);
-        String json = null;
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet get = new HttpGet(uri);
-        get.addHeader("ID", IDContextMessageHelper.getIDChain());
-        get.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
-        get.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
-        try {
-            HttpResponse resp = client.execute(get);
-            Header idHeader = resp.getFirstHeader("ID");
-            if (idHeader != null) {
-                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
-            }
-            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
-            if (csrfHeader != null) {
-                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
-            }
-            json = EntityUtils.toString(resp.getEntity(), "UTF-8");
-            if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                // 500 => Koodia ei löydy
-                LOG.debug("Code not found");
-                return null;
-            }
-            if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from GET " + uri;
-                LOG.error(err);
-                throw new OrganisaatioKoodistoException(err);
-            }
-        } catch (IOException e) {
-            String err = "Failed to GET " + uri + ": " + e.getMessage();
-            LOG.error(err);
-            throw new OrganisaatioKoodistoException(err);
-        }
-        return json;
+        return wrapException(() -> httpClient.<String>execute(OphHttpRequest.Builder.get(uri).build())
+                .handleErrorStatus(204).with(json -> { throw new RuntimeException(String.format("Osoite %s palautti 204", uri)); }) // ilman tätä 204 => Optional#empty
+                .handleErrorStatus(500).with(json -> null) // 500 => Koodia ei löydy
+                .expectedStatus(200)
+                .mapWith(identity())
+                .orElse(null)); // 404 => Koodia ei löydy
     }
 
     /**
      * Päivittää koodin koodistoon
      *
      * @param json Päivitettävä koodi json-muodossa
-     * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void put(String json) throws OrganisaatioKoodistoException {
-        HttpContext localContext = new BasicHttpContext();
         String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
-
-        LOG.debug("PUT " + uri);
-        LOG.info("PUT " + uri);
-        LOG.debug("PUT data=" + json);
-        authorize();
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPut put = new HttpPut(uri);
-        put.addHeader("ID", IDContextMessageHelper.getIDChain());
-        put.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
-        put.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
-        put.addHeader("CasSecurityTicket", ticket);
-        put.addHeader("Content-Type", "application/json; charset=UTF-8");
-        try {
-            LOG.debug("NOW json   =" + json);
-            put.setEntity(new StringEntity(json, "UTF-8"));
-            HttpResponse resp = client.execute(put, localContext);
-            Header idHeader = resp.getFirstHeader("ID");
-            if (idHeader != null) {
-                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
-            }
-            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
-            if (csrfHeader != null) {
-                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
-            }
-            if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from PUT " + uri;
-                LOG.error(err);
-                LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
-                throw new OrganisaatioKoodistoException(err);
-            } else {
-                LOG.info("Code " + uri + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
-            }
-        } catch (IOException e) {
-            String err = "Failed to PUT " + uri + ": " + e.getMessage();
-            LOG.error(err);
-            throw new OrganisaatioKoodistoException(err);
-        }
+        OphHttpRequest request = OphHttpRequest.Builder.put(uri)
+                .setEntity(new OphHttpEntity.Builder()
+                        .content(json)
+                        .contentType(ContentType.APPLICATION_JSON)
+                        .build())
+                .build();
+        wrapException(() -> httpClient.<String>execute(request)
+                .expectedStatus(200)
+                .mapWith(identity())
+                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri))));
     }
 
     /**
@@ -170,46 +101,19 @@ public class OrganisaatioKoodistoClient extends OrganisaatioBaseClient {
      *
      * @param json Lisättävä koodi json-muodossa
      * @param uri Lisättävän koodin uri, esim. 'opetuspisteet'
-     * @throws NotAuthorizedException Autorisointi epäonnistui
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
         String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
-
-        LOG.debug("POST " + url);
-        LOG.info("POST " + url);
-        LOG.debug("POST data=" + json);
-        authorize();
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        post.addHeader("ID", IDContextMessageHelper.getIDChain());
-        post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
-        post.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
-        post.addHeader("CasSecurityTicket", ticket);
-        post.addHeader("Content-Type", "application/json; charset=UTF-8");
-        try {
-            post.setEntity(new StringEntity(json, "UTF-8"));
-            HttpResponse resp = client.execute(post);
-            Header idHeader = resp.getFirstHeader("ID");
-            if (idHeader != null) {
-                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
-            }
-            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
-            if (csrfHeader != null) {
-                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
-            }
-            if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST " + url;
-                LOG.error(err);
-                LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
-                throw new OrganisaatioKoodistoException(err);
-            } else {
-                LOG.info("Code " + url + " succesfully updated: return code " + resp.getStatusLine().getStatusCode());
-            }
-        } catch (IOException e) {
-            String err = "Failed to POST " + url + ": " + e.getMessage();
-            LOG.error(err);
-            throw new OrganisaatioKoodistoException(err);
-        }
+        OphHttpRequest request = OphHttpRequest.Builder.post(url)
+                .setEntity(new OphHttpEntity.Builder()
+                        .content(json)
+                        .contentType(ContentType.APPLICATION_JSON)
+                        .build())
+                .build();
+        wrapException(() -> httpClient.<String>execute(request)
+                .expectedStatus(201)
+                .mapWith(identity())
+                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri))));
     }
 }
