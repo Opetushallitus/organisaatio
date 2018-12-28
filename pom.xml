@@ -22,7 +22,7 @@
         <viestinta.version>14.8-SNAPSHOT</viestinta.version>
         <!--Java utils-->
         <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
-        <java-http.version>0.1.3-SNAPSHOT</java-http.version>
+        <java-http.version>0.1.4-SNAPSHOT</java-http.version>
 
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>
