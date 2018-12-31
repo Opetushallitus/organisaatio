@@ -7,24 +7,9 @@ import java.util.Set;
 
 public interface OrganisaatioKoodisto {
 
-    @Deprecated
-    default void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
-        paivitaKoodistoAsync(entity);
-    }
-
     void paivitaKoodistoAsync(Organisaatio entity);
 
-    @Deprecated
-    default String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
-        return paivitaKoodisto(entity);
-    }
-
     String paivitaKoodisto(Organisaatio entity);
-
-    @Deprecated
-    default String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
-        return lakkautaKoodi(uri, tunniste, lakkautusPvm);
-    }
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm);
 

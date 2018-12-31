@@ -31,24 +31,9 @@ public interface OrganisaatioViestinta {
      */
     String sendEmail(EmailData data, boolean sanitize);
 
-    @Deprecated
-    default void sendStringViestintaEmail(String message, boolean reauthorize) {
-        sendStringViestintaEmail(message);
-    }
-
     void sendStringViestintaEmail(String message);
 
-    @Deprecated
-    default void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki, boolean reauthorize) {
-        sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
-    }
-
     void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
-
-    @Deprecated
-    default void generateAndSendEmail(String content, List<String> receiverEmails, boolean reauthorize) {
-        generateAndSendEmail(content, receiverEmails);
-    }
 
     void generateAndSendEmail(String content, List<String> receiverEmails);
 }
