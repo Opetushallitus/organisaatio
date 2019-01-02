@@ -35,7 +35,7 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
         switch (koodisto) {
             case KIELI:
                 return Stream.of("fi", "sv", "en")
-                        .map(koodi -> new Koodi(koodi, String.format("kieli_%s", koodi), versio))
+                        .map(koodi -> new Koodi(koodi.toUpperCase(), String.format("kieli_%s", koodi), versio))
                         .collect(toList());
             default:
                 throw new IllegalArgumentException(String.format("Koodisto %s ei ole tuettu mockissa", koodisto));

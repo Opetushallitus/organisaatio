@@ -73,6 +73,30 @@ public class OrganisaatioValidationServiceImplTest {
     }
 
     @Test
+    public void kuvausOk() {
+        Organisaatio organisaatio = new Organisaatio();
+        MonikielinenTeksti kuvaus = new MonikielinenTeksti();
+        kuvaus.setValues(singletonMap("kieli_fi#1", "kuvaus suomeksi"));
+        organisaatio.setKuvaus2(kuvaus);
+
+        Throwable throwable = catchThrowable(() -> organisaatioValidationService.validateOrganisation(organisaatio, null, null));
+
+        assertThat(throwable).isNull();
+    }
+
+    @Test
+    public void kuvausTuntematonKieli() {
+        Organisaatio organisaatio = new Organisaatio();
+        MonikielinenTeksti kuvaus = new MonikielinenTeksti();
+        kuvaus.setValues(singletonMap("", "kuvaus tuntemattomalla kielellä"));
+        organisaatio.setKuvaus2(kuvaus);
+
+        Throwable throwable = catchThrowable(() -> organisaatioValidationService.validateOrganisation(organisaatio, null, null));
+
+        assertThat(throwable).isInstanceOf(ValidationException.class).hasMessage("validation.Organisaatio.kuvaus2.kieli");
+    }
+
+    @Test
     public void postiosoiteOk() {
         Organisaatio organisaatio = new Organisaatio();
         Osoite postiosoite = new Osoite();
