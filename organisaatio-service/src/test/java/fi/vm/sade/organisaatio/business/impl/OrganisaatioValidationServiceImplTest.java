@@ -101,6 +101,30 @@ public class OrganisaatioValidationServiceImplTest {
     }
 
     @Test
+    public void yhteystietoArvoOk() {
+        Organisaatio organisaatio = new Organisaatio();
+        YhteystietoArvo yhteystietoArvo = new YhteystietoArvo();
+        yhteystietoArvo.setKieli("kieli_fi#1");
+        organisaatio.setYhteystietoArvos(singleton(yhteystietoArvo));
+
+        Throwable throwable = catchThrowable(() -> organisaatioValidationService.validateOrganisation(organisaatio, null, null));
+
+        assertThat(throwable).isNull();
+    }
+
+    @Test
+    public void yhteystietoArvoTuntematonKieli() {
+        Organisaatio organisaatio = new Organisaatio();
+        YhteystietoArvo yhteystietoArvo = new YhteystietoArvo();
+        yhteystietoArvo.setKieli("kieli_dk#1");
+        organisaatio.setYhteystietoArvos(singleton(yhteystietoArvo));
+
+        Throwable throwable = catchThrowable(() -> organisaatioValidationService.validateOrganisation(organisaatio, null, null));
+
+        assertThat(throwable).isInstanceOf(ValidationException.class).hasMessage("validation.Organisaatio.yhteystietoArvos.kieli");
+    }
+
+    @Test
     public void isNotSet() {
         Organisaatio organisaatio = new Organisaatio();
         assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))

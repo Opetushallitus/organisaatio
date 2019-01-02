@@ -84,8 +84,17 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         }
 
         // Validointi: Yhteystietojen kielien täytyy olla kielikoodistosta (muodossa "<uri>#<versio>")
+        List<String> kieliKoodiVersioList = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI)
+                .stream()
+                .map(new KoodiToUriVersioMapper())
+                .collect(toList());
         if (model.getYhteystiedot() != null) {
-            validate(model.getYhteystiedot());
+            model.getYhteystiedot().stream().filter(Objects::nonNull)
+                    .forEach(yhteystieto -> validate(yhteystieto.getKieli(), kieliKoodiVersioList, "yhteystiedot"));
+        }
+        if (model.getYhteystietoArvos() != null) {
+            model.getYhteystietoArvos().stream().filter(Objects::nonNull)
+                    .forEach(yhteystieto -> validate(yhteystieto.getKieli(), kieliKoodiVersioList, "yhteystietoArvos"));
         }
 
         // This effectively blocks creating/updating VARHAISKASVATUKSEN_TOIMIPAIKKA from older apis since they don't
@@ -121,13 +130,9 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         }
     }
 
-    private void validate(Collection<Yhteystieto> yhteystiedot) {
-        List<String> kielet = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI)
-                .stream()
-                .map(new KoodiToUriVersioMapper())
-                .collect(toList());
-        if (yhteystiedot.stream().filter(Objects::nonNull).anyMatch(yhteystieto -> !kielet.contains(yhteystieto.getKieli()))) {
-            throw new ValidationException("validation.Organisaatio.yhteystiedot.kieli");
+    private void validate(String valittuKieli, List<String> sallitutKielet, String path) {
+        if (!sallitutKielet.contains(valittuKieli)) {
+            throw new ValidationException(String.format("validation.Organisaatio.%s.kieli", path));
         }
     }
 
