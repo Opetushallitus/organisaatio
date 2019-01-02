@@ -31,11 +31,11 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
     }
 
     @Override
-    public List<Koodi> haeKoodit(KoodistoUri koodisto) {
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
         switch (koodisto) {
             case KIELI:
                 return Stream.of("fi", "sv", "en")
-                        .map(koodi -> new Koodi(koodi, String.format("kieli_%s", koodi), 1))
+                        .map(koodi -> new Koodi(koodi, String.format("kieli_%s", koodi), versio))
                         .collect(toList());
             default:
                 throw new IllegalArgumentException(String.format("Koodisto %s ei ole tuettu mockissa", koodisto));

@@ -494,8 +494,10 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     @Override
-    public List<Koodi> haeKoodit(KoodistoUri koodisto) {
-        String url = urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri());
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+        Map<String, Object> parametrit = new HashMap<>();
+        parametrit.put("koodistoVersio", versio);
+        String url = urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
         return fetchKoodiTypeList(url)
                 .stream()
                 .map(new KoodiTypeToKoodiMapper())

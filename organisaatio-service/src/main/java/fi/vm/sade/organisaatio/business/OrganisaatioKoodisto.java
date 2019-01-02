@@ -15,7 +15,7 @@ public interface OrganisaatioKoodisto {
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize);
 
-    List<Koodi> haeKoodit(KoodistoUri koodisto);
+    List<Koodi> haeKoodit(KoodistoUri koodisto, int versio);
 
     /**
      * Hakee kaikki oppilaitoskoodit

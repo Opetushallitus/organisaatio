@@ -84,7 +84,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         }
 
         // Validointi: Yhteystietojen kielien täytyy olla kielikoodistosta (muodossa "<uri>#<versio>")
-        List<String> kieliKoodiVersioList = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI)
+        List<String> kieliKoodiVersioList = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, 1)
                 .stream()
                 .map(new KoodiToUriVersioMapper())
                 .collect(toList());
