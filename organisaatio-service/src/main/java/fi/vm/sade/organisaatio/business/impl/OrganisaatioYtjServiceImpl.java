@@ -147,7 +147,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
                 organisaatioDAO.updateOrg(organisaatio);
                 // update koodisto (When name has changed)
-                if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
+                if(organisaatioKoodisto.paivitaKoodisto(organisaatio) != null) {
                     LOG.error("Organisaation " + organisaatio.getOid() + " päivitys koodistoon epäonnistui");
                     logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KOODISTO, "ilmoitukset.log.virhe.koodisto");
                 }
@@ -175,7 +175,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
         ytjPaivitysLokiDao.flush();
 
-        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki, true);
+        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
 
         return ytjPaivitysLoki;
     }

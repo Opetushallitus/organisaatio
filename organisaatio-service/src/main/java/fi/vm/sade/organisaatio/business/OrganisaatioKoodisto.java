@@ -7,11 +7,11 @@ import java.util.Set;
 
 public interface OrganisaatioKoodisto {
 
-    void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize);
+    void paivitaKoodistoAsync(Organisaatio entity);
 
-    String paivitaKoodisto(Organisaatio entity, boolean reauthorize);
+    String paivitaKoodisto(Organisaatio entity);
 
-    String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize);
+    String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm);
 
     /**
      * Hakee kaikki oppilaitoskoodit
