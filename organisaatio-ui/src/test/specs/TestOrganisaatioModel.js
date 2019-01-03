@@ -1,4 +1,4 @@
-describe("Testing OrganisaatioModel", function() {
+xdescribe("Testing OrganisaatioModel", function() {
     var $scope = null;
     var $rootScope;
     var $httpBackend;
@@ -747,7 +747,7 @@ var koodistoSosiaalinenmediaResult = [
 ]
 }
 ]
-};
+;
 
 
     beforeEach(function() { module('organisaatio'); });

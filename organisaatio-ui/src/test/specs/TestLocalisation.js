@@ -1,6 +1,8 @@
 describe('Module: Localisation', function() {
 
-    var $window, LocalisationService, $compile, $q, $scope,
+    const CSRF_VALUE = "random-value-for-CSRF";
+
+    var $window, $cookies, LocalisationService, $compile, $q, $scope,
         mockAngularLocaleManager = {setAngularLocale : function() {}},
         key = 'Test.avain',
         value = 'Testataan lokalisaatioiden toimivuus',
@@ -16,8 +18,12 @@ describe('Module: Localisation', function() {
             APP_CAS_ME: {lang: 'se'}
         };
 
+        $cookies = jasmine.createSpyObj('$cookies', ["get", "getAll"]);
+        $cookies.get.and.returnValue(CSRF_VALUE);
+
         module(function($provide) {
             $provide.value('$window', $window);
+            $provide.value('$cookies', $cookies);
             $provide.value('AngularLocaleManager', mockAngularLocaleManager);
         });
 
@@ -25,6 +31,22 @@ describe('Module: Localisation', function() {
             LocalisationService = $injector.get('LocalisationService');
             $compile = $injector.get('$compile');
         });
+    });
+
+    describe('Localisations factory', function() {
+
+        it('is defined', inject(function(Localisations) {
+            expect(Localisations).toBeDefined();
+        }));
+
+        it('includes CSRF headerasdfasdf', inject(function(Localisations, $httpBackend) {
+            $httpBackend.expectPUT(/.*\/access/, '["key1","key2"]', {'CSRF': CSRF_VALUE}).respond({});
+
+            var result = Localisations.updateAccessed({id: "access"}, ['key1', 'key2']);
+
+            expect($cookies.get.calls.argsFor(0)).toEqual(["CSRF"]);
+            $httpBackend.flush();
+        }));
     });
 
     /*
@@ -78,11 +100,11 @@ describe('Module: Localisation', function() {
         });
 
         it('getRawTranslation() uses getLocale if locale parameter is not a String', function() {
-            spyOn(LocalisationService, 'getLocale').andCallThrough();
+            spyOn(LocalisationService, 'getLocale').and.callThrough();
             var translation = LocalisationService.getRawTranslation(key, ['not', 'a', 'string']);
 
             expect(translation).toEqual(value);
-            expect(LocalisationService.getLocale.callCount).toBe(1);
+            expect(LocalisationService.getLocale.calls.count()).toBe(1);
         });
 
         it('getRawTranslation() returns undefined if the given locale or key isn\'t found and flags nothing to have been accessed', function() {
@@ -93,11 +115,11 @@ describe('Module: Localisation', function() {
         });
 
         it('getTranslation() returns the translation if it can be found using getRawTranslation', function() {
-            spyOn(LocalisationService, 'getRawTranslation').andCallThrough();
+            spyOn(LocalisationService, 'getRawTranslation').and.callThrough();
             var translation = LocalisationService.getTranslation(key, locale);
 
             expect(translation).toEqual(value);
-            expect(LocalisationService.getRawTranslation.callCount).toBe(1);
+            expect(LocalisationService.getRawTranslation.calls.count()).toBe(1);
         });
 
         it('getTranslation() returns an error message if the translation is not found', function() {

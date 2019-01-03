@@ -200,7 +200,7 @@ app.service('LocalisationService', function($log, $window, Localisations, $injec
      */
     this.updateAccessedById = {};
 
-    this.updateAccessInformation = function() {
+    this.updateAccessInformation = function() {   // PETAR odavde se poziva sumnjiv zahtev
         var ids = Object.keys(this.updateAccessedById);
         this.updateAccessedById = {};
 
