@@ -33,9 +33,8 @@ describe('Module: Localisation', function() {
         });
     });
 
-
     /**
-     * Testing only those resource actions that are used in localisation.js
+     * Testing only those Localisation's resource actions that are used in localisation.js
      */
     describe('Localisations factory', function() {
 
@@ -67,12 +66,6 @@ describe('Module: Localisation', function() {
             expect($cookies.get.calls.argsFor(0)).toEqual(["CSRF"]);
             $httpBackend.flush();
         }));
-
-
-
-
-
-
     });
 
     /*
