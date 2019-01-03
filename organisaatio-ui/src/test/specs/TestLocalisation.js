@@ -33,20 +33,46 @@ describe('Module: Localisation', function() {
         });
     });
 
+
+    /**
+     * Testing only those resource actions that are used in localisation.js
+     */
     describe('Localisations factory', function() {
+
+        const HEADER_WITH_CSRF = {
+            "CSRF": CSRF_VALUE,
+            "Content-Type":"application/json; charset=UTF-8",
+            "Accept":"application/json, text/plain, */*"
+        };
 
         it('is defined', inject(function(Localisations) {
             expect(Localisations).toBeDefined();
         }));
 
-        it('includes CSRF headerasdfasdf', inject(function(Localisations, $httpBackend) {
-            $httpBackend.expectPUT(/.*\/access/, '["key1","key2"]', {'CSRF': CSRF_VALUE}).respond({});
+        it('includes CSRF header in request for updateAccessed', inject(function(Localisations, $httpBackend) {
+            $httpBackend.expectPUT(/.*\/access/, '["key1","key2"]', HEADER_WITH_CSRF).respond({});
 
             var result = Localisations.updateAccessed({id: "access"}, ['key1', 'key2']);
 
             expect($cookies.get.calls.argsFor(0)).toEqual(["CSRF"]);
             $httpBackend.flush();
         }));
+
+        it('includes CSRF header in request for save', inject(function(Localisations, $httpBackend) {
+            const data = {category: "tarjonta", key: "key1", locale: "fi", value: "original"};
+            $httpBackend.expectPOST(/.*/, data, HEADER_WITH_CSRF).respond({});
+
+            var result = Localisations.save(data);
+
+            expect($cookies.get.calls.argsFor(0)).toEqual(["CSRF"]);
+            $httpBackend.flush();
+        }));
+
+
+
+
+
+
     });
 
     /*
