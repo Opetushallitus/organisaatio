@@ -5,10 +5,9 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.NoVersionInKoodistoUriException;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenKielipainotus;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToiminnallinenpainotus;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
+import fi.vm.sade.organisaatio.dto.Koodi;
+import fi.vm.sade.organisaatio.dto.mapping.KoodiToUriVersioMapper;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class OrganisaatioValidationServiceImpl implements OrganisaatioValidationService {
+
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final String rootOrganisaatioOid;
@@ -78,6 +79,32 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             throw new ValidationException("validation.Organisaatio.virastotunnus");
         }
 
+        List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, 1);
+        KoodiPredicate kieliKoodiArvoPredicate = new KoodiPredicate(kieliKoodit, koodi -> koodi.getArvo().toLowerCase());
+        KoodiPredicate kieliKoodiUriVersioPredicate = new KoodiPredicate(kieliKoodit, new KoodiToUriVersioMapper());
+
+        // Validointi: Nimien kielien täytyy olla yksi tuetuista kielistä (muodossa "<koodiarvo>")
+        if (model.getNimi() != null) {
+            validateKoodi(model.getNimi(), kieliKoodiArvoPredicate, "nimi");
+        }
+        if (model.getNimet() != null) {
+            model.getNimet().stream().filter(Objects::nonNull).forEach(nimi -> validateKoodi(nimi.getNimi(), kieliKoodiArvoPredicate, "nimet"));
+        }
+
+        // Validointi: Kuvauksen kielien täytyy olla kielikoodistosta (muodossa "<uri>#<versio>")
+        if (model.getKuvaus2() != null) {
+            validateKoodi(model.getKuvaus2(), kieliKoodiUriVersioPredicate, "kuvaus2");
+        }
+
+        // Validointi: Yhteystietojen kielien täytyy olla kielikoodistosta (muodossa "<uri>#<versio>")
+        if (model.getYhteystiedot() != null) {
+            model.getYhteystiedot().stream().filter(Objects::nonNull)
+                    .forEach(yhteystieto -> validate(yhteystieto.getKieli(), kieliKoodiUriVersioPredicate, "yhteystiedot"));
+        }
+        if (model.getYhteystietoArvos() != null) {
+            model.getYhteystietoArvos().stream().filter(Objects::nonNull)
+                    .forEach(yhteystieto -> validate(yhteystieto.getKieli(), kieliKoodiUriVersioPredicate, "yhteystietoArvos"));
+        }
 
         // This effectively blocks creating/updating VARHAISKASVATUKSEN_TOIMIPAIKKA from older apis since they don't
         // support this info
@@ -94,6 +121,18 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // Validointi: koodistoureissa pitää olla versiotieto
         this.checkVersionInKoodistoUris(model);
+    }
+
+    private void validateKoodi(MonikielinenTeksti monikielinenTeksti, Predicate<String> predicate, String path) {
+        if (!monikielinenTeksti.getValues().keySet().stream().allMatch(predicate)) {
+            throw new ValidationException(String.format("validation.Organisaatio.%s.kieli", path));
+        }
+    }
+
+    private void validate(String valittuKieli, Predicate<String> predicate, String path) {
+        if (!predicate.test(valittuKieli)) {
+            throw new ValidationException(String.format("validation.Organisaatio.%s.kieli", path));
+        }
     }
 
     private void validateVarhaiskasvatuksenToimipaikkaTiedot(Organisaatio model) {
@@ -209,6 +248,25 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
                 throw new NoVersionInKoodistoUriException();
             }
         }
+    }
+
+    private static class KoodiPredicate implements Predicate<String> {
+
+        private final List<String> sallitut;
+
+        public KoodiPredicate(List<Koodi> koodit, Function<Koodi, String> koodiFunction) {
+            this(koodit.stream().map(koodiFunction).collect(toList()));
+        }
+
+        public KoodiPredicate(List<String> sallitut) {
+            this.sallitut = sallitut;
+        }
+
+        @Override
+        public boolean test(String koodi) {
+            return sallitut.stream().anyMatch(koodi::equals);
+        }
+
     }
 
 }

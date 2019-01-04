@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.koodisto.service.types.common.KoodiType;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestClientException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -482,6 +484,17 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     @Override
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+        Map<String, Object> parametrit = new HashMap<>();
+        parametrit.put("koodistoVersio", versio);
+        String url = urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
+        return fetchKoodiTypeList(url)
+                .stream()
+                .map(new KoodiTypeToKoodiMapper())
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Set<String> haeOppilaitoskoodit() {
         return this.haeKoodistonKoodit("oppilaitostyyppi");
     }
@@ -529,4 +542,30 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 .map(KoodiType::getKoodiUri)
                 .collect(Collectors.toSet());
     }
+
+    private List<KoodiType> fetchKoodiTypeList(String url) {
+        String json = this.client.get(url);
+        try {
+            return this.objectMapper
+                    .readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class, KoodiType.class))
+                    .readValue(json);
+        }
+        catch (IOException ioe) {
+            throw new RestClientException("Error while parsing koodisto return koodiValue for " + url, ioe);
+        }
+    }
+
+    private static class KoodiTypeToKoodiMapper implements Function<KoodiType, Koodi> {
+
+        @Override
+        public Koodi apply(KoodiType koodiType) {
+            Koodi koodi = new Koodi();
+            koodi.setArvo(koodiType.getKoodiArvo());
+            koodi.setUri(koodiType.getKoodiUri());
+            koodi.setVersio(koodiType.getVersio());
+            return koodi;
+        }
+
+    }
+
 }
