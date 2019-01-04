@@ -17,51 +17,24 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import fi.vm.sade.generic.rest.CachingRestClient;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.springframework.stereotype.Component;
 
-/**
- * Käyttää CachingRestClientia.
- *
- * @author simok
- */
 @Component
 public class OrganisaatioRestToStream {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final OphHttpClient httpClient;
 
-    // NOTE! cachingRestClient is static because we need application-scoped rest cache for organisaatio-service
-    private static final CachingRestClient cachingRestClient = new CachingRestClient().setClientSubSystemCode(IDContextMessageHelper.getClientSubSystemCode());
+    public OrganisaatioRestToStream(OphHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
     public JsonElement getInputStreamFromUri(String uri) {
-        JsonElement json;
-
-        try {
-            long t0 = System.currentTimeMillis();
-            // Set "caller-id" (clientSubSystemCode) and ID chain to be sent on header.
-//            cachingRestClient.setID(IDContextMessageHelper.getIDChain());
-            InputStream inputStream = cachingRestClient.get(uri);
-            // Get the ID chain from received message and set it to cxf exchange.
-            Reader reader = new InputStreamReader(inputStream);
-            json = new JsonParser().parse(reader);
-//            JsonElement ID = json.getAsJsonObject().get("ID");
-//            if(ID != null) {
-//                IDContextMessageHelper.setReceivedIDChain(ID.getAsString());
-//            }
-            LOG.debug("rest get done, uri: {}, took: {} ms, cacheStatus: {}",
-                    new Object[] {uri, (System.currentTimeMillis() - t0), cachingRestClient.getCacheStatus()});
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return json;
+        return httpClient.<JsonElement>execute(OphHttpRequest.Builder.get(uri).build())
+                .expectedStatus(200)
+                .mapWith(json -> new JsonParser().parse(json))
+                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri)));
     }
+
  }

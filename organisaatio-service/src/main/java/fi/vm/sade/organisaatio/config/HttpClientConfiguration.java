@@ -5,6 +5,7 @@ import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import fi.vm.sade.properties.OphProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class HttpClientConfiguration {
@@ -13,6 +14,12 @@ public class HttpClientConfiguration {
     public static final String HTTP_CLIENT_KAYTTOOIKEUS = "kayttooikeusHttpClient";
     public static final String HTTP_CLIENT_VIESTINTA = "viestintaHttpClient";
     public static final String HTTP_CLIENT_KOODISTO = "koodistoHttpClient";
+
+    @Bean
+    @Primary
+    public OphHttpClient httpClient() {
+        return new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE).build();
+    }
 
     @Bean(name = HTTP_CLIENT_KAYTTOOIKEUS)
     public OphHttpClient kayttooikeusHttpClient(OphProperties properties) {
