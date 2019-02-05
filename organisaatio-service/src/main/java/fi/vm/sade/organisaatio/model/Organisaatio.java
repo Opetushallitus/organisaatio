@@ -741,7 +741,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         if (tyyppi != null && kieliKoodi != null) {
             for (Yhteystieto yhteystieto : getYhteystiedot()) {
                 if (yhteystieto instanceof Puhelinnumero) {
-                    if (tyyppi.equals(((Puhelinnumero) yhteystieto).getTyyppi())) {
+                    if (tyyppi.equals(((Puhelinnumero) yhteystieto).getTyyppi()) && kieliKoodi.equals(yhteystieto.getKieli())) {
                         return (Puhelinnumero) yhteystieto;
                     }
                 }

@@ -154,7 +154,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_FI).getOsoite(),
                         organisaatio -> organisaatio.getEmail(KIELI_KOODI_SV).getEmail(),
                         organisaatio -> organisaatio.getWww(KIELI_KOODI_SV).getWwwOsoite(),
-                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, KIELI_KOODI_FI).getPuhelinnumero(),
+                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, KIELI_KOODI_SV).getPuhelinnumero(),
                         Organisaatio::getKielet,
                         organisaatio -> organisaatio.getAlkuPvm().getTime(),
                         Organisaatio::getYtjKieli
