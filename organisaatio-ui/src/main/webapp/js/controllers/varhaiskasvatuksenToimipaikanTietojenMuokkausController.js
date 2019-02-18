@@ -61,9 +61,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     vm.removeKielipainotus = function (poistettavaKielipainotus) {
         var kielipainotukset = vm.model.varhaiskasvatuksenKielipainotukset;
         vm.model.varhaiskasvatuksenKielipainotukset = kielipainotukset.filter(function (kielipainotus) {
-            return kielipainotus.kielipainotus !== poistettavaKielipainotus.kielipainotus
-                || !kielipainotus.alkupvm === poistettavaKielipainotus.alkupvm
-                || !kielipainotus.loppupvm === poistettavaKielipainotus.loppupvm;
+            return !angular.equals(kielipainotus, poistettavaKielipainotus);
         });
     };
 
@@ -74,9 +72,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     vm.removeVarhaiskasvatuksenToiminnallinepainotus = function (poistettavaToiminnallinenpainotus) {
         var toiminnallisetPainotukset = vm.model.varhaiskasvatuksenToiminnallinenpainotukset;
         vm.model.varhaiskasvatuksenToiminnallinenpainotukset = toiminnallisetPainotukset.filter(function (toiminnallinenpainotus) {
-            return toiminnallinenpainotus.toiminnallinenpainotus !== poistettavaToiminnallinenpainotus.toiminnallinenpainotus
-                || !toiminnallinenpainotus.alkupvm === poistettavaToiminnallinenpainotus.alkupvm
-                || !toiminnallinenpainotus.loppupvm === poistettavaToiminnallinenpainotus.loppupvm;
+            return !angular.equals(toiminnallinenpainotus, poistettavaToiminnallinenpainotus);
         });
     };
 

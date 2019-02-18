@@ -42,7 +42,7 @@
         <!-- Toiminnallinen painotus -->
         <div class="control-group">
             <label class="control-label">
-                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}*
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toiminnallinenPainotus')}}
             </label>
             <div class="controls">
                 <div>
@@ -85,13 +85,6 @@
                             ng-disabled="!vakaeditctrl.toiminnallinenpainotus.toiminnallinenpainotus || !vakaeditctrl.toiminnallinenpainotus.alkupvm">
                         <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoToiminnallinenpainotus')}}
                     </button>
-                </div>
-                <div ng-if="vakaeditctrl.model.varhaiskasvatuksenToiminnallinenpainotukset.length === 0">
-                    <input type="hidden" name="varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder" ng-model="vakaeditctrl.varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder" required>
-                    <span class="text-error" ng-show="form.varhaiskasvatuksenToiminnallinenpainotuksetPlaceholder.$error.required">
-                    {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenToiminnallinenpainotukset')}}
-                    {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
-                    </span>
                 </div>
             </div>
         </div>
@@ -142,7 +135,7 @@
         <!-- Varhaiskasvatuksen kielipainotukset -->
         <div class="control-group">
             <label class="control-label">
-                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}*
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}
             </label>
             <div class="controls">
                 <div>
@@ -185,13 +178,6 @@
                             ng-disabled="!vakaeditctrl.kielipainotus.kielipainotus || !vakaeditctrl.kielipainotus.alkupvm">
                         <i class="icon-plus"></i> {{:: vakaeditctrl.t('Organisaationmuokkaus.luoKielipainotus')}}
                     </button>
-                </div>
-                <div ng-if="vakaeditctrl.model.varhaiskasvatuksenKielipainotukset.length === 0">
-                    <input type="hidden" name="varhaiskasvatuksenKielipainotuksetPlaceholder" ng-model="vakaeditctrl.varhaiskasvatuksenKielipainotuksetPlaceholder" required>
-                    <span class="text-error" ng-show="form.varhaiskasvatuksenKielipainotuksetPlaceholder.$error.required">
-                        {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.varhaiskasvatuksenKielipainotukset')}}
-                        {{:: vakaeditctrl.t('Organisaationmuokkaus.validointi.pakollinen')}}
-                    </span>
                 </div>
             </div>
         </div>
