@@ -48,7 +48,7 @@
                 <div>
                     <span ng-repeat="toiminnallinenpainotus in vakaeditctrl.model.varhaiskasvatuksenToiminnallinenpainotukset">
                     <button type="button" class="btn btn-small" id="{{'toiminnallinenpainotusbutton' + $index}}"
-                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenToiminnallinepainotus(toiminnallinenpainotus)">{{:: vakaeditctrl.localiseVarhaiskasvatuksenToiminnallinenpainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}<i class="icon-remove"></i></button>
+                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenToiminnallinepainotus(toiminnallinenpainotus); form.$setDirty()">{{:: vakaeditctrl.localiseVarhaiskasvatuksenToiminnallinenpainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}<i class="icon-remove"></i></button>
                     </span>
                 </div>
                 <div>
@@ -120,7 +120,7 @@
                 <span ng-repeat="jarjestamismuuoto in vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot">
                     <button type="button"
                             class="btn btn-small"
-                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto);form.$dirty = true">
+                            ng-click="vakaeditctrl.removeVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto); form.$setDirty()">
                         {{:: vakaeditctrl.localiseVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto)}}&nbsp;<i class="icon-remove"></i>
                     </button>
                 </span>
@@ -148,7 +148,7 @@
                 <div>
                     <span ng-repeat="kielipainotus in vakaeditctrl.model.varhaiskasvatuksenKielipainotukset">
                         <button type="button" class="btn btn-small" id="{{'kielipainotusbutton' + $index}}"
-                                ng-click="vakaeditctrl.removeKielipainotus(kielipainotus)">{{:: vakaeditctrl.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: vakaeditctrl.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(kielipainotus.loppupvm)}}<i class="icon-remove"></i></button>
+                                ng-click="vakaeditctrl.removeKielipainotus(kielipainotus); form.$setDirty()">{{:: vakaeditctrl.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: vakaeditctrl.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(kielipainotus.loppupvm)}}<i class="icon-remove"></i></button>
                     </span>
                 </div>
                 <div>
