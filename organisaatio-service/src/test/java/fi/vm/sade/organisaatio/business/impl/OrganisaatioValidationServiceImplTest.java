@@ -199,8 +199,16 @@ public class OrganisaatioValidationServiceImplTest {
     public void painotusNull() {
         Organisaatio organisaatio = this.createValidOrganisation();
         organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenToiminnallinenpainotukset(null);
-        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.toiminnallinenpainotus.null");
+        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void painotusEmpty() {
+        Organisaatio organisaatio = this.createValidOrganisation();
+        organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenToiminnallinenpainotukset(new HashSet<>());
+        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -258,8 +266,8 @@ public class OrganisaatioValidationServiceImplTest {
     public void kielipainotuksetNull() {
         Organisaatio organisaatio = this.createValidOrganisation();
         organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenKielipainotukset(null);
-        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.null");
+        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -284,8 +292,8 @@ public class OrganisaatioValidationServiceImplTest {
     public void kielipainotuksetEmpty() {
         Organisaatio organisaatio = this.createValidOrganisation();
         organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot().setVarhaiskasvatuksenKielipainotukset(new HashSet<>());
-        assertThatThrownBy(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
-                .isInstanceOf(ValidationException.class).hasMessage("validation.varhaiskasvatuksentoimipaikka.kielipainotukset.empty");
+        assertThatCode(() -> ReflectionTestUtils.invokeMethod(organisaatioValidationService, "validateVarhaiskasvatuksenToimipaikkaTiedot", organisaatio))
+                .doesNotThrowAnyException();
     }
 
     @Test
