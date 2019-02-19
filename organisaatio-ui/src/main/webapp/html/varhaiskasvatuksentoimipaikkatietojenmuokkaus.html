@@ -7,11 +7,11 @@
                 {{vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}*
             </label>
             <div class="controls">
-                <select id="toimintamuoto" ng-model="vakaeditctrl.model.toimintamuoto"
+                <select id="toimintamuoto" ng-model="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto"
                         ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in vakaeditctrl.koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
-                <div ng-if="!vakaeditctrl.model.toimintamuoto">
+                <div ng-if="!vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto">
                     <input type="hidden" name="toimintamuoto" ng-model="vakaeditctrl.toimintamuoto" required>
                     <span class="text-error" ng-show="form.toimintamuoto.$error.required">
                         {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.toimintamuoto')}}
@@ -26,11 +26,11 @@
                 {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.kasvatusopillinenJarjestelma')}}*
             </label>
             <div class="controls">
-                <select id="kasvatusopillinenJarjestelma" ng-model="vakaeditctrl.model.kasvatusopillinenJarjestelma"
+                <select id="kasvatusopillinenJarjestelma" ng-model="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma"
                         ng-options="kasvatusopillinenJarjestelma.uri as kasvatusopillinenJarjestelma.nimi for kasvatusopillinenJarjestelma in vakaeditctrl.koodisto.kasvatusopillinenJarjestelma | orderBy:'uri'" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
-                <div ng-if="!vakaeditctrl.model.kasvatusopillinenJarjestelma">
+                <div ng-if="!vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma">
                     <input type="hidden" name="kasvatusopillinenJarjestelma" ng-model="vakaeditctrl.kasvatusopillinenJarjestelma" required>
                     <span class="text-error" ng-show="form.kasvatusopillinenJarjestelma.$error.required">
                         {{:: vakaeditctrl.t('Organisaationtarkastelu.kasvatusopillinenJarjestelma')}}
@@ -46,7 +46,7 @@
             </label>
             <div class="controls">
                 <div>
-                    <span ng-repeat="toiminnallinenpainotus in vakaeditctrl.model.varhaiskasvatuksenToiminnallinenpainotukset">
+                    <span ng-repeat="toiminnallinenpainotus in vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset">
                     <button type="button" class="btn btn-small" id="{{'toiminnallinenpainotusbutton' + $index}}"
                             ng-click="vakaeditctrl.removeVarhaiskasvatuksenToiminnallinepainotus(toiminnallinenpainotus); form.$setDirty()">{{:: vakaeditctrl.localiseVarhaiskasvatuksenToiminnallinenpainotus(toiminnallinenpainotus.toiminnallinenpainotus)}} {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(toiminnallinenpainotus.loppupvm)}}<i class="icon-remove"></i></button>
                     </span>
@@ -94,8 +94,8 @@
                 {{t('Organisaationmuokkaus.ohje.paikkojenLukumaara')}}*
             </label>
             <div class="controls">
-                <input id="paikkojenLukumaara" ng-model="vakaeditctrl.model.paikkojenLukumaara" />
-                <div ng-if="!vakaeditctrl.model.paikkojenLukumaara">
+                <input id="paikkojenLukumaara" ng-model="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara" />
+                <div ng-if="!vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara">
                     <input type="hidden" name="paikkojenLukumaara" ng-model="vakaeditctrl.paikkojenLukumaara" required>
                     <span class="text-error" ng-show="form.paikkojenLukumaara.$error.required">
                         {{:: vakaeditctrl.t('Organisaationtarkastelu.paikkojenLukumaara')}}
@@ -110,7 +110,7 @@
                 {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}*
             </label>
             <div class="controls">
-                <span ng-repeat="jarjestamismuuoto in vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot">
+                <span ng-repeat="jarjestamismuuoto in vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot">
                     <button type="button"
                             class="btn btn-small"
                             ng-click="vakaeditctrl.removeVarhaiskasvatuksenJarjestamismuoto(jarjestamismuuoto); form.$setDirty()">
@@ -123,7 +123,7 @@
                 >
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
-                <div ng-if="!vakaeditctrl.model.varhaiskasvatuksenJarjestamismuodot.length">
+                <div ng-if="!vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.length">
                     <input type="hidden" name="varhaiskasvatuksenJarjestamismuodot" ng-model="vakaeditctrl.varhaiskasvatuksenJarjestamismuodot" required>
                     <span class="text-error" ng-show="form.varhaiskasvatuksenJarjestamismuodot.$error.required">
                     {{:: vakaeditctrl.t('Organisaationtarkastelu.varhaiskasvatuksenJarjestamismuodot')}}
@@ -139,7 +139,7 @@
             </label>
             <div class="controls">
                 <div>
-                    <span ng-repeat="kielipainotus in vakaeditctrl.model.varhaiskasvatuksenKielipainotukset">
+                    <span ng-repeat="kielipainotus in vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset">
                         <button type="button" class="btn btn-small" id="{{'kielipainotusbutton' + $index}}"
                                 ng-click="vakaeditctrl.removeKielipainotus(kielipainotus); form.$setDirty()">{{:: vakaeditctrl.localiseKielipainotus(kielipainotus.kielipainotus)}} {{:: vakaeditctrl.dbFormatToUI(kielipainotus.alkupvm)}} - {{:: vakaeditctrl.dbFormatToUI(kielipainotus.loppupvm)}}<i class="icon-remove"></i></button>
                     </span>

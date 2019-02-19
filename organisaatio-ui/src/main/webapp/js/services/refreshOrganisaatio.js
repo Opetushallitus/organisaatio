@@ -304,6 +304,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
             model.organisaationtila = "";
             model.organisaationtila = model.getOrganisaationTila(model.organisaatio.status);
             model.organisaatio.historia = result.historia;
+            model.varhaiskasvatuksenToimipaikkaTiedot = result.varhaiskasvatuksenToimipaikkaTiedot;
 
             // Otetaan talteen organisaation nimihistoria ennen muutoksia.
             model.originalNimet = model.organisaatio.nimet;
