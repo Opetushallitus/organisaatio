@@ -13,10 +13,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     vm.initialiseModel = function() {
         var existingModel = $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot;
 
-        if (existingModel && Object.getOwnPropertyNames(existingModel).length) {
-            vm.model = $scope.model;
-        }
-        else {
+        if (!existingModel || !Object.getOwnPropertyNames(existingModel).length) {
             $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = {
                 toimintamuoto: '',
                 kasvatusopillinenJarjestelma: '',
@@ -25,8 +22,8 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
                 varhaiskasvatuksenJarjestamismuodot: [],
                 varhaiskasvatuksenKielipainotukset: []
             };
-            vm.model = $scope.model;
         }
+        vm.model = $scope.model;
     };
 
     vm.koodisto = $scope.model.koodisto;
