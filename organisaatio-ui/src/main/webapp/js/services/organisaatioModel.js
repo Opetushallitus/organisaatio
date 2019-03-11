@@ -872,6 +872,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return false;
         };
 
+        this.isOppisopimusToimipiste = function() {
+            if (model.organisaatio.tyypit) {
+                return model.organisaatio.tyypit.indexOf("organisaatiotyyppi_04") !== -1;
+            }
+            return false;
+        };
+
         this.isVarhaiskasvatuksenToimipaikka = function() {
             return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_08") !== -1;
         };

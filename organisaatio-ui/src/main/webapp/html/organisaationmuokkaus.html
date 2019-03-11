@@ -33,10 +33,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     <a href="https://www.ytj.fi/index/ilmoittaminen/muutosilmoitus.html" target="_blank"><i class="icon-pencil" aria-hidden="true"></i>
                         &nbsp;<label style="display: inline" tt="organisaationmuokkaus.ohje.ytj_muokkaus_link">Muuta YTJ-tietoja</label></a>
                         </div>
-                    <div>
-                    <a href="https://link.webropolsurveys.com/S/D90BF1EA77056AE8" target="_blank"><i class="icon-pencil" aria-hidden="true"></i>
-                        &nbsp;<label style="display: inline" tt="organisaationmuokkaus.ohje.organisaatiomuutos">Ilmoita organisaatiomuutoksesta</label></a>
-                    </div>
+
+                    <div ng-if="model.isOppilaitos() || model.isOppisopimusToimipiste()">
+                        <a href="https://link.webropolsurveys.com/S/D90BF1EA77056AE8" target="_blank"><i class="icon-pencil" aria-hidden="true"></i>
+                            &nbsp;<label style="display: inline" tt="organisaationmuokkaus.ohje.organisaatiomuutos">Ilmoita organisaatiomuutoksesta</label></a>
+                        </div>
                 </span>
             </div>
             <div>
