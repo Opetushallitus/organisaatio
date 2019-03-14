@@ -397,7 +397,6 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
                 // Täytetään yritystiedot, niiltä osin kun koodistosta saatuja tietoja ei tarvitse käyttää
                 model.fillYritysTiedot(result);
-
                 // Täytetään yritystiedot, koodiston tietoja käyttävältä osalta
                 model.addYtjLang();
                 model.addYtjOsoite();
@@ -445,7 +444,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             if (yritystiedot.aloitusPvm) {
-                model.organisaatio.alkuPvm = moment(yritystiedot.aloitusPvm, 'DD.MM.YYYY');
+                model.organisaatio.alkuPvm = yritystiedot.aloitusPvm;
             }
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija

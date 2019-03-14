@@ -64,6 +64,10 @@ public class OrganisaatioContext {
         return Collections.unmodifiableSet(orgTypes);
     }
 
+    public boolean isRyhma() {
+        return orgTypes.size() == 1 && orgTypes.contains(OrganisaatioTyyppi.RYHMA);
+    }
+
     private String getNimi() {
         if (rdto != null)
             return rdto.getNimi().values().iterator().next();

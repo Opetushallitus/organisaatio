@@ -382,7 +382,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // organisaation päivittäminen koodistoon tehdään taustalla
         // jotta organisaation muokkaus olisi nopeampaa
         String info = null;
-        organisaatioKoodisto.paivitaKoodistoAsync(entity, true);
+        organisaatioKoodisto.paivitaKoodistoAsync(entity);
 
         return new OrganisaatioResult(entity, info);
     }
@@ -757,7 +757,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     childChanged = true;
                 }
                 if (childChanged) {
-                    organisaatioKoodisto.paivitaKoodistoAsync(child, false);
+                    organisaatioKoodisto.paivitaKoodistoAsync(child);
                 }
             }
         }
@@ -925,7 +925,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
-                    organisaatioKoodisto.paivitaKoodisto(org, false);
+                    organisaatioKoodisto.paivitaKoodisto(org);
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);
@@ -1051,7 +1051,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitetään tiedot koodistoon.
-        organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+        organisaatioKoodisto.paivitaKoodisto(organisaatio);
     }
 
     @Override
@@ -1102,10 +1102,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             previousDay.add(Calendar.DAY_OF_MONTH, -1);
 
             // Lakkautetaan vanha opetuspistekoodi (opetuspiste pistetään lakkaamaan päivää ennen)
-            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime(), true);
+            organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime());
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+            organisaatioKoodisto.paivitaKoodisto(organisaatio);
 
             // Jos toimipisteen nimi alkaa sen parent oppilaitoksen nimellä, niin siivotaan tuo osa pois toimipisteen nimestä
             MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio, newParent);
@@ -1202,7 +1202,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             // Päivitetään tiedot koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio, true);
+            organisaatioKoodisto.paivitaKoodisto(organisaatio);
         }
     }
 }

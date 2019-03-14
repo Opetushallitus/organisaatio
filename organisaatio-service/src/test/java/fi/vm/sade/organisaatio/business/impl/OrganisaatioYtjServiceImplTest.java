@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_FI;
+import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_SV;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
@@ -72,11 +74,11 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         assertThat(org)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV).getOsoite(),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI).getOsoite(),
-                        organisaatio -> organisaatio.getEmail().getEmail(),
-                        organisaatio -> organisaatio.getWww().getWwwOsoite(),
-                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero(),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV).getOsoite(),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_FI).getOsoite(),
+                        organisaatio -> organisaatio.getEmail(KIELI_KOODI_FI).getEmail(),
+                        organisaatio -> organisaatio.getWww(KIELI_KOODI_FI).getWwwOsoite(),
+                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, KIELI_KOODI_FI).getPuhelinnumero(),
                         Organisaatio::getKielet,
                         organisaatio -> organisaatio.getAlkuPvm().getTime(),
                         Organisaatio::getYtjKieli
@@ -90,7 +92,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         "0100000211",
                         Collections.singleton(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI),
                         915141600000L,// original 2006-06-29, from YTJ 01.01.1999
-                        OrganisaatioYtjServiceImpl.KIELI_KOODI_FI
+                        KIELI_KOODI_FI
                         );
 
         org = organisaatioDAO.findByOid("1.2.2004.1");
@@ -107,11 +109,11 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         assertThat(org)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI).getOsoite(),
-                        organisaatio -> organisaatio.getEmail().getEmail(),
-                        organisaatio -> organisaatio.getWww().getWwwOsoite(),
-                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero(),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_FI).getOsoite(),
+                        organisaatio -> organisaatio.getEmail(KIELI_KOODI_FI).getEmail(),
+                        organisaatio -> organisaatio.getWww(KIELI_KOODI_FI).getWwwOsoite(),
+                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, KIELI_KOODI_FI).getPuhelinnumero(),
                         Organisaatio::getKielet,
                         organisaatio -> organisaatio.getAlkuPvm().getTime(),
                         Organisaatio::getYtjKieli
@@ -125,7 +127,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         "12345",
                         Collections.singleton(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_FI),
                         1298844000000L,// original 2004-08-08, from YTJ 2011-02-28
-                        OrganisaatioYtjServiceImpl.KIELI_KOODI_FI
+                        KIELI_KOODI_FI
                 );
 
         org = organisaatioDAO.findByOid("1.2.2004.5");
@@ -142,11 +144,11 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         assertThat(org)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_SV).getOsoite(),
-                        organisaatio -> organisaatio.getPostiosoiteByKieli(OrganisaatioYtjServiceImpl.KIELI_KOODI_FI).getOsoite(),
-                        organisaatio -> organisaatio.getEmail().getEmail(),
-                        organisaatio -> organisaatio.getWww().getWwwOsoite(),
-                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN).getPuhelinnumero(),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV).getOsoite(),
+                        organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_FI).getOsoite(),
+                        organisaatio -> organisaatio.getEmail(KIELI_KOODI_SV).getEmail(),
+                        organisaatio -> organisaatio.getWww(KIELI_KOODI_SV).getWwwOsoite(),
+                        organisaatio -> organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, KIELI_KOODI_SV).getPuhelinnumero(),
                         Organisaatio::getKielet,
                         organisaatio -> organisaatio.getAlkuPvm().getTime(),
                         Organisaatio::getYtjKieli
@@ -160,7 +162,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         "0100000210",
                         Collections.singleton(OrganisaatioYtjServiceImpl.ORG_KIELI_KOODI_SV),
                         1298844000000L,// original 2006-06-29, from YTJ 2011-02-28
-                        OrganisaatioYtjServiceImpl.KIELI_KOODI_SV
+                        KIELI_KOODI_SV
                 );
     }
 

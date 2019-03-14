@@ -737,34 +737,36 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.tuontiPvm = tuontiPvm;
     }
 
-    public Puhelinnumero getPuhelin(String tyyppi) {
-        if (tyyppi == null) {
-            return null;
-        }
-        for (Yhteystieto yhteystieto : getYhteystiedot()) {
-            if (yhteystieto instanceof Puhelinnumero) {
-                if (tyyppi.equals(((Puhelinnumero) yhteystieto).getTyyppi())) {
-                    return (Puhelinnumero) yhteystieto;
+    public Puhelinnumero getPuhelin(String tyyppi, String kieliKoodi) {
+        if (tyyppi != null && kieliKoodi != null) {
+            for (Yhteystieto yhteystieto : getYhteystiedot()) {
+                if (yhteystieto instanceof Puhelinnumero) {
+                    if (tyyppi.equals(((Puhelinnumero) yhteystieto).getTyyppi()) && kieliKoodi.equals(yhteystieto.getKieli())) {
+                        return (Puhelinnumero) yhteystieto;
+                    }
                 }
             }
         }
         return null;
     }
 
-
-    public Www getWww() {
-        for(Yhteystieto yhteystieto : getYhteystiedot()) {
-            if(yhteystieto instanceof Www) {
-                return (Www)yhteystieto;
+    public Www getWww(String kieliKoodi) {
+        if (kieliKoodi != null) {
+            for (Yhteystieto yhteystieto : getYhteystiedot()) {
+                if (yhteystieto instanceof Www && kieliKoodi.equals(yhteystieto.getKieli())) {
+                    return (Www) yhteystieto;
+                }
             }
         }
         return null;
     }
 
-    public Email getEmail() {
-        for (Yhteystieto yhteystieto : getYhteystiedot()) {
-            if (yhteystieto instanceof Email) {
-                return (Email) yhteystieto;
+    public Email getEmail(String kieliKoodi) {
+        if (kieliKoodi != null) {
+            for (Yhteystieto yhteystieto : getYhteystiedot()) {
+                if (yhteystieto instanceof Email && kieliKoodi.equals(yhteystieto.getKieli())) {
+                    return (Email) yhteystieto;
+                }
             }
         }
         return null;

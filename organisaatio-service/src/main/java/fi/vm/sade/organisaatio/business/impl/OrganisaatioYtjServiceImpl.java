@@ -143,7 +143,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 }
                 organisaatioDAO.updateOrg(organisaatio);
                 // update koodisto (When name has changed)
-                if(organisaatioKoodisto.paivitaKoodisto(organisaatio, false) != null) {
+                if(organisaatioKoodisto.paivitaKoodisto(organisaatio) != null) {
                     LOG.error("Organisaation " + organisaatio.getOid() + " päivitys koodistoon epäonnistui");
                     logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.KOODISTO, "ilmoitukset.log.virhe.koodisto");
                 }
@@ -168,7 +168,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
         ytjPaivitysLokiDao.flush();
 
-        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki, true);
+        organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
 
         return ytjPaivitysLoki;
     }
@@ -237,7 +237,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updateOsoite = updateOsoiteFromYTJToOrganisaatio(ytjOrg, osoite, forceUpdate);
         }
         if (validateYtjSahkoposti(ytjOrg)) {
-            Email email = organisaatio.getEmail();
+            Email email = organisaatio.getEmail(ytjKielikoodi);
             if (email == null) {
                 email = new Email();
                 if (!initYhteystietoforOrg(email, organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.SAHKOPOSTI, "ilmoitukset.log.virhe.oid.sahkoposti")) {
@@ -247,7 +247,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updateSahkoposti = updateSahkopostiFromYTJToOrganisation(ytjOrg, email, forceUpdate);
         }
         if(validateYtjPuhelin(ytjOrg)) {
-            Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN);
+            Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, ytjKielikoodi);
             if(puhelinnumero == null) {
                 puhelinnumero = new Puhelinnumero();
                 if(!initYhteystietoforOrg(puhelinnumero, organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.PUHELIN, "ilmoitukset.log.virhe.oid.puhelin")) {
@@ -257,7 +257,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updatePuhelin = updatePuhelinFromYTJtoOrganisaatio(ytjOrg, puhelinnumero, forceUpdate);
         }
         if(validateYtjWww(ytjOrg)) {
-            Www www = organisaatio.getWww();
+            Www www = organisaatio.getWww(ytjKielikoodi);
             if(www == null) {
                 www = new Www();
                 if(!initYhteystietoforOrg(www, organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.WWW, "ilmoitukset.log.virhe.oid.www")) {

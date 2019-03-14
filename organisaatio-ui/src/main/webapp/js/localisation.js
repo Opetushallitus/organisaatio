@@ -53,12 +53,18 @@ app.factory('Localisations', function($log, $resource, $window, $cookies, $http)
         save: {
             method: 'POST',
             withCredentials: true,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'CSRF': $cookies.get('CSRF')
+            }
         },
         updateAccessed: {
             method: 'PUT',
             withCredentials: true,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'CSRF': $cookies.get('CSRF')
+            }
         },
         authorize : {
             method: 'GET',

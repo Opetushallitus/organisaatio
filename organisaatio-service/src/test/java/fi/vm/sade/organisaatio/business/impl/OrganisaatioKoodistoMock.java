@@ -2,27 +2,44 @@ package fi.vm.sade.organisaatio.business.impl;
 
 
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
-    public void paivitaKoodistoAsync(Organisaatio entity, boolean reauthorize) {
+    public void paivitaKoodistoAsync(Organisaatio entity) {
         // nop
     }
 
     @Override
-    public String paivitaKoodisto(Organisaatio entity, boolean reauthorize) {
+    public String paivitaKoodisto(Organisaatio entity) {
         return null;
     }
 
     @Override
-    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm, boolean reauthorize) {
+    public String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm) {
         return null;
+    }
+
+    @Override
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+        switch (koodisto) {
+            case KIELI:
+                return Stream.of("fi", "sv", "en")
+                        .map(koodi -> new Koodi(koodi.toUpperCase(), String.format("kieli_%s", koodi), versio))
+                        .collect(toList());
+            default:
+                throw new IllegalArgumentException(String.format("Koodisto %s ei ole tuettu mockissa", koodisto));
+        }
     }
 
     @Override

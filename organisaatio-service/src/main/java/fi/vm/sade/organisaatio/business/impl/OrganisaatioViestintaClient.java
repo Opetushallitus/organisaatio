@@ -15,51 +15,40 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
-import java.io.IOException;
-import java.lang.Exception;
-
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpEntity;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
-import fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import fi.vm.sade.properties.OphProperties;
+import org.apache.http.entity.ContentType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import static java.util.stream.Collectors.joining;
+import java.util.function.Supplier;
+
+import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_VIESTINTA;
+import static java.util.function.Function.identity;
 
 
 @Component
-public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+public class OrganisaatioViestintaClient {
 
-    @Autowired
-    private UrlConfiguration urlConfiguration;
+    private final OphHttpClient httpClient;
+    private final OphProperties urlConfiguration;
 
-    @Value("${organisaatio.service.username.to.viestinta}")
-    private String viestintaClientUsername;
+    public OrganisaatioViestintaClient(@Qualifier(HTTP_CLIENT_VIESTINTA) OphHttpClient httpClient,
+                                       OphProperties urlConfiguration) {
+        this.httpClient = httpClient;
+        this.urlConfiguration = urlConfiguration;
+    }
 
-    @Value("${organisaatio.service.password.to.viestinta}")
-    private String viestintaClientPassword;
-
-    protected void authorize() throws OrganisaatioViestintaException {
+    private <T> T wrapException(Supplier<T> action) {
         try {
-            String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.url");
-            authorize(viestintaServiceUrl, viestintaClientUsername, viestintaClientPassword);
+            return action.get();
         } catch (Exception e) {
-            throw new OrganisaatioViestintaException(e.getMessage());
+            OrganisaatioViestintaException organisaatioViestintaException = new OrganisaatioViestintaException(e.getMessage());
+            organisaatioViestintaException.initCause(e);
+            throw organisaatioViestintaException;
         }
     }
 
@@ -69,45 +58,16 @@ public class OrganisaatioViestintaClient extends OrganisaatioBaseClient {
 
     public String post(String json, String uri, boolean sanitize) {
         String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri, sanitize);
-        LOG.debug("POST " + viestintaServiceUrl );
-        LOG.debug("POST data=" + json);
-        authorize();
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(viestintaServiceUrl );
-        post.addHeader("ID", IDContextMessageHelper.getIDChain());
-        post.addHeader("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
-        post.addHeader(CSRF_HEADER_NAME, IDContextMessageHelper.getCsrfHeader());
-        post.addHeader("CasSecurityTicket", ticket);
-        post.addHeader("Content-Type", "application/json; charset=UTF-8");
-        try {
-            post.setEntity(new StringEntity(json, "UTF-8"));
-            HttpResponse resp = client.execute(post);
-            Header idHeader = resp.getFirstHeader("ID");
-            if (idHeader != null) {
-                IDContextMessageHelper.setReceivedIDChain(idHeader.getValue());
-            }
-            Header csrfHeader = resp.getFirstHeader(CSRF_HEADER_NAME);
-            if (csrfHeader != null) {
-                IDContextMessageHelper.setCsrfHeader(csrfHeader.getValue());
-            }
-            if (resp.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-                String err = "Invalid status code " + resp.getStatusLine().getStatusCode() + " from POST "
-                        + viestintaServiceUrl;
-                LOG.error(err);
-                LOG.debug("Response body: " + EntityUtils.toString(resp.getEntity()));
-                throw new OrganisaatioViestintaException(err);
-            } else {
-                LOG.info("Code " + viestintaServiceUrl  + " succesfully posted: return code "
-                        + resp.getStatusLine().getStatusCode());
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()))) {
-                    return reader.lines().collect(joining("\n"));
-                }
-            }
-        } catch (IOException e) {
-            String err = "Failed to POST " + viestintaServiceUrl  + ": " + e.getMessage();
-            LOG.error(err);
-            throw new OrganisaatioViestintaException(err);
-        }
+        OphHttpRequest request = OphHttpRequest.Builder.post(viestintaServiceUrl)
+                .setEntity(new OphHttpEntity.Builder()
+                        .content(json)
+                        .contentType(ContentType.APPLICATION_JSON)
+                        .build())
+                .build();
+        return wrapException(() -> httpClient.<String>execute(request)
+                .expectedStatus(200)
+                .mapWith(identity())
+                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", viestintaServiceUrl))));
     }
 }

@@ -194,7 +194,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
         oppilaitos.getNimi().put("en", "oppilaitos1-päivitetty (en)");
-        oppilaitos.getNimi().put("dk", "oppilaitos1-päivitetty (dk)");
         OrganisaatioResult oppilaitosAfterNameSave = service.save(oppilaitos, true);
 
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(toimipisteResult1.getOrganisaatio().getOid());

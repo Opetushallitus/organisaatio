@@ -13,11 +13,8 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     vm.initialiseModel = function() {
         var existingModel = $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot;
 
-        if (existingModel && Object.getOwnPropertyNames(existingModel).length) {
-            vm.model = existingModel;
-        }
-        else {
-            vm.model = {
+        if (!existingModel || !Object.getOwnPropertyNames(existingModel).length) {
+            $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = {
                 toimintamuoto: '',
                 kasvatusopillinenJarjestelma: '',
                 varhaiskasvatuksenToiminnallinenpainotukset: [],
@@ -25,8 +22,8 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
                 varhaiskasvatuksenJarjestamismuodot: [],
                 varhaiskasvatuksenKielipainotukset: []
             };
-            $scope.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot = vm.model;
         }
+        vm.model = $scope.model;
     };
 
     vm.koodisto = $scope.model.koodisto;
@@ -55,40 +52,36 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     };
 
     vm.addKielipainotus = function () {
-        addEntity(vm.model.varhaiskasvatuksenKielipainotukset, vm.kielipainotus, 'kielipainotus');
+        addEntity(vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset, vm.kielipainotus, 'kielipainotus');
     };
 
     vm.removeKielipainotus = function (poistettavaKielipainotus) {
-        var kielipainotukset = vm.model.varhaiskasvatuksenKielipainotukset;
-        vm.model.varhaiskasvatuksenKielipainotukset = kielipainotukset.filter(function (kielipainotus) {
-            return kielipainotus.kielipainotus !== poistettavaKielipainotus.kielipainotus
-                || !kielipainotus.alkupvm === poistettavaKielipainotus.alkupvm
-                || !kielipainotus.loppupvm === poistettavaKielipainotus.loppupvm;
+        var kielipainotukset = vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset;
+        vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset = kielipainotukset.filter(function (kielipainotus) {
+            return !angular.equals(kielipainotus, poistettavaKielipainotus);
         });
     };
 
     vm.addVarhaiskasvatuksenToiminnallinenpainotus = function () {
-        addEntity(vm.model.varhaiskasvatuksenToiminnallinenpainotukset, vm.toiminnallinenpainotus, 'toiminnallinenpainotus');
+        addEntity(vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset, vm.toiminnallinenpainotus, 'toiminnallinenpainotus');
     };
 
     vm.removeVarhaiskasvatuksenToiminnallinepainotus = function (poistettavaToiminnallinenpainotus) {
-        var toiminnallisetPainotukset = vm.model.varhaiskasvatuksenToiminnallinenpainotukset;
-        vm.model.varhaiskasvatuksenToiminnallinenpainotukset = toiminnallisetPainotukset.filter(function (toiminnallinenpainotus) {
-            return toiminnallinenpainotus.toiminnallinenpainotus !== poistettavaToiminnallinenpainotus.toiminnallinenpainotus
-                || !toiminnallinenpainotus.alkupvm === poistettavaToiminnallinenpainotus.alkupvm
-                || !toiminnallinenpainotus.loppupvm === poistettavaToiminnallinenpainotus.loppupvm;
+        var toiminnallisetPainotukset = vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset;
+        vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset = toiminnallisetPainotukset.filter(function (toiminnallinenpainotus) {
+            return !angular.equals(toiminnallinenpainotus, poistettavaToiminnallinenpainotus);
         });
     };
 
     vm.addVarhaiskasvatuksenJarjestamismuoto = function() {
-        if (vm.varhaiskasvatuksenJarjestamismuodot && vm.model.varhaiskasvatuksenJarjestamismuodot.indexOf(vm.varhaiskasvatuksenJarjestamismuodot) === -1) {
-            vm.model.varhaiskasvatuksenJarjestamismuodot.push(vm.varhaiskasvatuksenJarjestamismuodot);
+        if (vm.varhaiskasvatuksenJarjestamismuodot && vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.indexOf(vm.varhaiskasvatuksenJarjestamismuodot) === -1) {
+            vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.push(vm.varhaiskasvatuksenJarjestamismuodot);
         }
     };
 
     vm.removeVarhaiskasvatuksenJarjestamismuoto = function (poistettavaJarjestamismuoto) {
-        var jarjestamismuodot = vm.model.varhaiskasvatuksenJarjestamismuodot;
-        vm.model.varhaiskasvatuksenJarjestamismuodot = jarjestamismuodot.filter(function (jarjestamismuoto) {
+        var jarjestamismuodot = vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot;
+        vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot = jarjestamismuodot.filter(function (jarjestamismuoto) {
             return jarjestamismuoto !== poistettavaJarjestamismuoto;
         });
     };
@@ -116,7 +109,7 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
 
     vm.getUnselectedJarjestamismuodot = function () {
         return vm.koodisto.jarjestamismuoto.filter(function (jarjestamismuotoKoodi) {
-            return vm.model.varhaiskasvatuksenJarjestamismuodot.indexOf(jarjestamismuotoKoodi.uri) === -1;
+            return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.indexOf(jarjestamismuotoKoodi.uri) === -1;
         });
     };
 
