@@ -56,6 +56,11 @@ public abstract class OrganisaatioToSolrInputDocumentUtil extends SolrOrgFields 
             add(doc, NIMISEARCH, org.getOppilaitosKoodi());
         }
 
+        // Haku mahdollista myös oidilla
+        if (org.getOid() != null) {
+            add(doc, NIMISEARCH, org.getOid());
+        }
+
         add(doc, OID, org.getOid());
         add(doc, OPPILAITOSKOODI, org.getOppilaitosKoodi());
         add(doc, ALIORGANISAATIOIDEN_LKM, org.getChildCount(new Date()));

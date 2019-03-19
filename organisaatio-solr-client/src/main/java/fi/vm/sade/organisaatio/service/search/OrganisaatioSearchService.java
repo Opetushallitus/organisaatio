@@ -192,6 +192,7 @@ public class OrganisaatioSearchService extends SolrOrgFields {
             // nimi search
             queryParts.clear();
             addQuery(searchStr, queryParts, "%s:*%s*", NIMISEARCH, searchStr);
+
             q.addFilterQuery(Joiner.on(" ").join(queryParts));
 
         }
