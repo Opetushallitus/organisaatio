@@ -239,6 +239,24 @@ app.controller('YhteystietojentyyppiController', function YhteystietojentyyppiCo
         }
     });
 
+    Object.defineProperty(obj, 'varhaiskasvatuksenJarjestaja', {
+        get: function() {
+            return _orgTypeContains('organisaatiotyyppi_07');
+        },
+        set: function(t) {
+            _orgTypeMod(t, 'organisaatiotyyppi_07');
+        }
+    });
+
+    Object.defineProperty(obj, 'varhaiskasvatuksenToimipaikka', {
+        get: function() {
+            return _orgTypeContains('organisaatiotyyppi_08');
+        },
+        set: function(t) {
+            _orgTypeMod(t, 'organisaatiotyyppi_08');
+        }
+    });
+
     Object.defineProperty(obj, 'kaikkiOppilaitostyypit', {
         get: function() {
             return _orgTypeContains('organisaatiotyyppi_02');
