@@ -375,8 +375,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         BooleanExpression ytunnusMatch = qOrganisaatio.ytunnus.isNotNull().and(qOrganisaatio.ytunnus.toUpperCase().like(searchQueryStr));
         BooleanExpression opkoodiMatch = qOrganisaatio.oppilaitosKoodi.isNotNull().and(qOrganisaatio.oppilaitosKoodi.toUpperCase().like(searchQueryStr));
+        BooleanExpression oidMatch     = qOrganisaatio.oid.isNotNull().and(qOrganisaatio.oid.toUpperCase().like(searchQueryStr));
+
         strExpr = qOrganisaatio.nimihaku.toUpperCase().like(searchQueryStr)
-                .or(ytunnusMatch).or(opkoodiMatch);
+                .or(ytunnusMatch).or(opkoodiMatch).or(oidMatch);
+
         return strExpr;
     }
 
