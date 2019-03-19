@@ -879,6 +879,10 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return false;
         };
 
+        this.isVarhaiskasvatuksenJarjestaja = function() {
+            return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_07") !== -1;
+        };
+
         this.isVarhaiskasvatuksenToimipaikka = function() {
             return model.organisaatio.tyypit && model.organisaatio.tyypit.indexOf("organisaatiotyyppi_08") !== -1;
         };

@@ -84,7 +84,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
     </div>
-    <div class="control-group" ng-if="model.isKoulutustoimija()">
+    <div class="control-group" ng-if="model.isKoulutustoimija() || model.isVarhaiskasvatuksenJarjestaja()">
         <label class="control-label" tt="Organisaationtarkastelu.yritysmuoto">
             Yritysmuoto
         </label>
