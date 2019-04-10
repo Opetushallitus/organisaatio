@@ -163,6 +163,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getSearchStr()).ifPresent(searchStr -> {
             query.where(anyOf(
                     qOrganisaatio.nimihaku.containsIgnoreCase(searchStr),
+                    qOrganisaatio.oid.contains(searchStr),
                     qOrganisaatio.ytunnus.contains(searchStr),
                     qOrganisaatio.oppilaitosKoodi.contains(searchStr)
             ));
@@ -565,8 +566,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         BooleanExpression ytunnusMatch = qOrganisaatio.ytunnus.isNotNull().and(qOrganisaatio.ytunnus.toUpperCase().like(searchQueryStr));
         BooleanExpression opkoodiMatch = qOrganisaatio.oppilaitosKoodi.isNotNull().and(qOrganisaatio.oppilaitosKoodi.toUpperCase().like(searchQueryStr));
+
         strExpr = qOrganisaatio.nimihaku.toUpperCase().like(searchQueryStr)
                 .or(ytunnusMatch).or(opkoodiMatch);
+
         return strExpr;
     }
 
