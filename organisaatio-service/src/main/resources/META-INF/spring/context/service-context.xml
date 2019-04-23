@@ -39,10 +39,9 @@
                 <ref bean="lisatietoConverter"/>
                 <ref bean="ryhmaCriteriaV2ToV3Converter"/>
                 <ref bean="ryhmaCriteriaV3Converter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter"/>
             </list>
         </property>
     </bean>
-
-    <bean class="fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService"/>
 
 </beans>

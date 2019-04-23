@@ -40,8 +40,8 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -90,9 +90,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     @Autowired
     private ConversionService conversionService;
-
-    @Autowired
-    private OrganisaatioSearchService organisaatioSearchService;
 
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
@@ -144,11 +141,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, true);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         // Rakenna hierarkia
         tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
@@ -159,7 +158,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return tulos;
     }
 
-    private Set<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(Set<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
+    private Collection<OrganisaatioPerustietoSuppea> convertLaajaToSuppea(Collection<OrganisaatioPerustieto> organisaatiot, boolean tyypit) {
         Set<OrganisaatioPerustietoSuppea> opts = new HashSet<>();
 
         for (OrganisaatioPerustieto fullItem : organisaatiot) {
@@ -182,11 +181,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     private OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaSuppea(OrganisaatioSearchCriteriaDTOV2 hakuEhdot, boolean tyypit) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, false);
 
         // Hae organisaatiot
-        List<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchHierarchy(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         // Rakenna hierarkia
         tulos.setOrganisaatiot(OrganisaatioPerustietoUtil.createHierarchy(organisaatiot));
@@ -216,11 +217,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public OrganisaatioHakutulos searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(false, false, true);
 
         // Hae organisaatiot
-        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);
@@ -234,11 +237,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     private OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotSuppea(OrganisaatioSearchCriteriaDTOV2 hakuEhdot, boolean tyypit) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        // Map api search criteria to solr search criteria
+        // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
+        searchCriteria.setPoistettu(false);
+        SearchConfig searchConfig = new SearchConfig(false, false, false);
 
         // Hae organisaatiot
-        Set<OrganisaatioPerustieto> organisaatiot = organisaatioSearchService.searchExact(searchCriteria);
+        List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
 
         // Organisaatiot tuloksiin
         tulos.setOrganisaatiot(organisaatiot);

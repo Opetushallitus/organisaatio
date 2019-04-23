@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import org.assertj.core.groups.Tuple;
 import org.junit.After;
 import org.junit.Assert;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({"embedded-solr"})
 @Transactional
 public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
@@ -37,8 +34,6 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
     private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private OrganisaatioYtjService service;
-    @Autowired
-    private IndexerResource indexer;
 
     private List<OrganisaatioNimi> orgSortedNimet;
     private List<Yhteystieto> orgSortedYhteystiedot;
@@ -47,7 +42,6 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
     @Before
     public void setUp() {
         executeSqlScript("data/basic_organisaatio_data.sql", false);
-        indexer.reBuildIndex(true);
     }
 
     @After

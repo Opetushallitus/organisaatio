@@ -50,7 +50,6 @@
             <ref bean="organisaatioResourceImplV2"/>
             <ref bean="organisaatioResourceImplV3"/>
             <ref bean="organisaatioResourceImplV4"/>
-            <ref bean="indexerResource"/>
             <ref bean="ytjResource"/>
             <ref bean="yhteystietojenTyyppiResource"/>
             <ref bean="tempfileResource"/>

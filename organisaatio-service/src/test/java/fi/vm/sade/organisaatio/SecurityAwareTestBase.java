@@ -1,12 +1,6 @@
 package fi.vm.sade.organisaatio;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.service.search.OrganisaatioSearchService;
-import org.junit.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
@@ -40,8 +34,6 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
     
     
     private OidProvider oidProvider;
-    @Autowired
-    private OrganisaatioSearchService search;
 
     /**
      * Set permissions for current user, setup Mock oid provider
@@ -94,15 +86,5 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
     protected void printCurrentUser(){
         System.out.println("oph-oid: " + ophOid);
         System.out.println("current user: " + SecurityContextHolder.getContext().getAuthentication());
-    }
-
-
-    protected void assertChildCountFromIndex(String oid, int expectedChildCount) {
-        Set<String> oidSet = new HashSet<>();
-        oidSet.add(oid);
-        List<OrganisaatioPerustieto> list = search.findByOidSet(oidSet);
-        Assert.assertEquals("Search result size should match for oid: " + oid, 1, list.size());
-        OrganisaatioPerustieto fromIndex = list.get(0);
-        Assert.assertEquals("Sub organisation count should match for oid: " + oid, expectedChildCount, fromIndex.getAliOrganisaatioMaara());
     }
 }

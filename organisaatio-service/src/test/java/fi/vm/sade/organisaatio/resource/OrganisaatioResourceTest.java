@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,7 +39,6 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("embedded-solr")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
@@ -52,9 +50,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioResourceV2 res2;
 
-    @Autowired
-    private IndexerResource solrIndexer;
-
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -64,7 +59,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         super.before();
         Locale.setDefault(Locale.US); // because of validaton messages
         executeSqlScript("data/basic_organisaatio_data.sql", false);
-        solrIndexer.reBuildIndex(true); //rebuild index
     }
 
     @Override
@@ -83,12 +77,27 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    public void testParentOidsWithRoot() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid});
+
+        String s = res.parentoids(rootOrganisaatioOid);
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
+    public void testParentOidsWithoutOrg() throws Exception {
+        String reference = Joiner.on("/").join(
+                new String[]{rootOrganisaatioOid, "does_not_exist"});
+
+        String s = res.parentoids("does_not_exist");
+        Assert.assertEquals(reference, s);
+    }
+
+    @Test
     public void testChangeParentOid() throws Exception {
         String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
-
-        assertChildCountFromIndex(oldParentOid, 2);
-        assertChildCountFromIndex(parentOid, 0);
 
         // Change parent from root -> root2
         OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
@@ -104,9 +113,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
             Assert.assertEquals("Child parent oid path should match!",
                     updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
         }
-
-        assertChildCountFromIndex(oldParentOid, 1);
-        assertChildCountFromIndex(parentOid, 1);
     }
 
     @Test
@@ -140,6 +146,14 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         searchCriteria = createOrgSearchCriteria(null, "oppilaitostyyppi_41#1", null, true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits());
+
+        //Finding only organisaatios that are of organisaatiotyyppi Varhaiskasvatuksen jarjestaja
+        searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), null, null, true, null);
+        result = res.searchHierarchy(searchCriteria);
+        assertEquals(1, result.getNumHits());
+        assertThat(result.getOrganisaatiot())
+                .flatExtracting(OrganisaatioPerustieto::getOrganisaatiotyypit)
+                .containsExactlyInAnyOrder(OrganisaatioTyyppi.OPPILAITOS, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA);
     }
 
     private Stream<OrganisaatioPerustieto> allChildrenFlat(Collection<OrganisaatioPerustieto> organisaatioPerustieto) {

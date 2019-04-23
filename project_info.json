@@ -9,15 +9,5 @@
 
   "uses": [
     "ytj-service"
-  ],
-
-  "projects": [
-    {
-      "name": "organisaatio-solr-client",
-      "type": "library",
-      "properties": {
-        "solr.url": "/solr/organisaatio"
-      }
-    }
   ]
 }

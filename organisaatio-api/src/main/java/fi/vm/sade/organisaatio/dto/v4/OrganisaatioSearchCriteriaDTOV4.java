@@ -18,7 +18,7 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     private Set<String> oppilaitostyyppi = new HashSet<>();
     private Set<String> kieli = new HashSet<>();
 
-    private Set<String> oidResctrictionList = new HashSet<>();
+    private Set<String> oidRestrictionList = new HashSet<>();
 
     private String searchStr;
     private String oid;
@@ -98,14 +98,14 @@ public class OrganisaatioSearchCriteriaDTOV4 {
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public Set<String> getOidRestrictionList() {
-        if (this.oidResctrictionList == null) {
-            this.oidResctrictionList = new HashSet<>();
+        if (this.oidRestrictionList == null) {
+            this.oidRestrictionList = new HashSet<>();
         }
-        return this.oidResctrictionList;
+        return this.oidRestrictionList;
     }
 
     public void setOidRestrictionList(Set<String> oidRestrictionList) {
-        this.oidResctrictionList = oidRestrictionList;
+        this.oidRestrictionList = oidRestrictionList;
     }
 
     @ApiModelProperty(value = "Hakutermit", required = true)

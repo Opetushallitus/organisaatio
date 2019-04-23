@@ -18,7 +18,7 @@
         <deploy.to.server>tomcat</deploy.to.server>
         <webapp.port>7003</webapp.port>
         <skipDbDiagramGenerate>false</skipDbDiagramGenerate>
-        <spring-profiles>solr,default</spring-profiles>
+        <spring-profiles>default</spring-profiles>
     </properties>
 
     <build>
@@ -355,32 +355,6 @@
             <artifactId>auditlogger</artifactId>
         </dependency>
 
-        <!-- Solr indeksointia ja testejä varten -->
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>${solr.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-core</artifactId>
-            <version>${solr.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -534,12 +508,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.organisaatio</groupId>
-            <artifactId>organisaatio-solr-client</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-common</artifactId>
             <version>${generic.version}</version>
@@ -684,13 +652,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.organisaatio</groupId>
-            <artifactId>organisaatio-solr-client</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -881,21 +842,6 @@
             <properties>
                 <env>standalone</env>
             </properties>
-        </profile>
-
-        <profile>
-            <id>dev</id>
-            <properties>
-                <spring-profiles>embedded-solr</spring-profiles>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>fi.vm.sade.organisaatio</groupId>
-                    <artifactId>organisaatio-solr-client</artifactId>
-                    <version>${project.version}</version>
-                    <type>test-jar</type>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 

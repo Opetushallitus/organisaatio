@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @XmlRootElement
 @ApiModel(value = "Organisaation suppeat perustiedot")
@@ -29,13 +26,13 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
     private String oppilaitostyyppi;
 
-    private Set<OrganisaatioPerustietoSuppea> children = new HashSet<>();
+    private Collection<OrganisaatioPerustietoSuppea> children = new HashSet<>();
 
-    public Set<OrganisaatioPerustietoSuppea> getChildren() {
+    public Collection<OrganisaatioPerustietoSuppea> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<OrganisaatioPerustietoSuppea> children) {
+    public void setChildren(Collection<OrganisaatioPerustietoSuppea> children) {
         this.children = children;
     }
 

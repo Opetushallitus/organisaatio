@@ -5,8 +5,8 @@ import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
-import org.apache.solr.common.util.Base64;
 
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +60,7 @@ public class MetadataConverterUtils {
             return null;
         }
         BinaryData bd = new BinaryData();
-        bd.setData(Base64.base64ToByteArray(kuva));
+        bd.setData(Base64.getDecoder().decode(kuva));
         return bd;
     }
 
@@ -105,7 +105,7 @@ public class MetadataConverterUtils {
             return null;
         }
 
-        return Base64.byteArrayToBase64(kuva.getData(), 0, kuva.getData().length);
+        return Base64.getEncoder().encodeToString(kuva.getData());
     }
 
 

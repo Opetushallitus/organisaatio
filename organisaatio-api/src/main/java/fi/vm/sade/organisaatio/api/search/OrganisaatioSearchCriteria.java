@@ -21,7 +21,7 @@ public class OrganisaatioSearchCriteria {
 
     private Set<String> kunta = new HashSet<String>();
 
-    private Set<String> oidResctrictionList = new HashSet<>();
+    private Set<String> oidRestrictionList = new HashSet<>();
 
     private String searchStr;
 
@@ -38,7 +38,7 @@ public class OrganisaatioSearchCriteria {
     }
 
     public void setOidRestrictionList(Set<String> oidRestrictionList) {
-        this.oidResctrictionList.addAll(oidRestrictionList);
+        this.oidRestrictionList.addAll(oidRestrictionList);
     }
 
     /**
@@ -144,7 +144,7 @@ public class OrganisaatioSearchCriteria {
 
     @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
     public Set<String> getOidRestrictionList() {
-        return this.oidResctrictionList;
+        return this.oidRestrictionList;
     }
 
     @ApiModelProperty(value = "Hakutermit", required = true)

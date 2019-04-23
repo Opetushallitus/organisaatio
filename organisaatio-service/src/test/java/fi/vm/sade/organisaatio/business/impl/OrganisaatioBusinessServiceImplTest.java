@@ -15,7 +15,6 @@ import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
-import fi.vm.sade.organisaatio.resource.IndexerResource;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
@@ -26,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,7 +47,6 @@ import static org.assertj.core.data.MapEntry.entry;
  */
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({"embedded-solr"})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
@@ -58,8 +55,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private OrganisaatioBusinessService service;
-    @Autowired
-    private IndexerResource indexer;
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
     @Autowired
@@ -73,7 +68,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Before
     public void setUp() {
         executeSqlScript("data/basic_organisaatio_data.sql", false);
-        indexer.reBuildIndex(true);
     }
 
     @After
@@ -94,9 +88,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         long childId = 4L;
         String oldParentOid = "1.2.2004.1";
         String newParentOid = "1.2.2004.5";
-
-        assertChildCountFromIndex(oldParentOid, 2);
-        assertChildCountFromIndex(newParentOid, 0);
 
         int rowCount = countRowsInTable("organisaatiosuhde");
         // Make new organisaatiosuhde change
@@ -133,9 +124,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParent(modified, "1.2.2005.4");
         checkParent(org, "1.2.2005.5");
         checkParentOidPath(org, "1.2.2005.5");
-
-        assertChildCountFromIndex(oldParentOid, 1);
-        assertChildCountFromIndex(newParentOid, 1);
     }
 
 

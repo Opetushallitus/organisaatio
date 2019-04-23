@@ -135,7 +135,6 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         return new HashSet<>(s);
     }
 
-
     private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
         StringBuilder sb = new StringBuilder();
         for (String nimi : nimiMap.values()) {
