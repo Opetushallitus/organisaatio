@@ -157,7 +157,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     private String parentOidPath;
     private String parentIdPath;
-    private String organisaatiotyypitStr;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
@@ -711,14 +710,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      */
     public void setYhteishaunKoulukoodi(String yhteishaunKoulukoodi) {
         this.yhteishaunKoulukoodi = yhteishaunKoulukoodi;
-    }
-
-    public String getOrganisaatiotyypitStr() {
-        return organisaatiotyypitStr;
-    }
-
-    public void setOrganisaatiotyypitStr(String organisaatiotyypitStr) {
-        this.organisaatiotyypitStr = organisaatiotyypitStr;
     }
 
     public Date getTarkastusPvm() {

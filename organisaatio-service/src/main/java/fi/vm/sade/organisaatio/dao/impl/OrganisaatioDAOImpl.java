@@ -19,12 +19,9 @@ package fi.vm.sade.organisaatio.dao.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
-import static com.querydsl.core.group.GroupBy.groupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import static com.querydsl.core.types.dsl.Expressions.allOf;
-import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLOps;
@@ -35,8 +32,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
-import fi.vm.sade.organisaatio.dto.OrganisaatioPerustietoRivi;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.OrganisaatioPerustietoRivi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -47,8 +44,6 @@ import fi.vm.sade.organisaatio.model.dto.QOrgPerustieto;
 import fi.vm.sade.organisaatio.model.dto.QOrgStructure;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,16 +63,15 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
-
-import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
-import static java.util.Arrays.asList;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.reducing;
-import static java.util.stream.Collectors.toCollection;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toSet;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.types.dsl.Expressions.allOf;
+import static com.querydsl.core.types.dsl.Expressions.anyOf;
+import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
+import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author tommiha
@@ -452,7 +446,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .distinct()
                         //.orderBy(qOrganisaatio1.nimihaku.asc())
                 .limit(maxResults + 1)
-                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath))
                 .fetch();
 
         LOG.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
@@ -477,7 +471,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         OrgPerustieto po = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
-                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath))
                 .fetchFirst();
 
         if (po != null) {
@@ -498,7 +492,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         List<OrgPerustieto> pos = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .where(whereExpression)
-                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath, qOrganisaatio.organisaatiotyypitStr))
+                .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm, qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath))
                 .fetch();
 
         for (OrgPerustieto pt : pos) {
@@ -679,8 +673,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .distinct()
                             //.orderBy(qOrganisaatio.nimihaku.asc())
                     .select(new QOrgPerustieto(qOrganisaatio.oid, qOrganisaatio.version, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
-                            qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath,
-                            qOrganisaatio.organisaatiotyypitStr)).fetch());
+                            qOrganisaatio.nimi, qOrganisaatio.ytunnus, qOrganisaatio.oppilaitosKoodi, qOrganisaatio.parentOidPath))
+                    .fetch());
         }
 
         return result;
@@ -869,7 +863,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         // Select by Org tyyppi
         if (type != null) {
              whereExpr.and(org.tyypit.contains(type.koodiValue()));
-//            whereExpr.and(org.organisaatiotyypitStr.like("%" + type.koodiValue() + "%"));
         }
         if(requireYtunnus) {
             whereExpr.and(org.ytunnus.isNotNull());
@@ -1123,7 +1116,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
      * FROM organisaatio
      * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
      * AND organisaatiopoistettu = FALSE
-     * AND organisaatiotyypitstr = 'Ryhma|'
+     * AND id IN (SELECT organisaatio_id FROM organisaatio_tyypit WHERE tyypit = 'Ryhma')
      *
      *
      * Toinen tapa hakea on hakea kaikki ryhmät tyypit taulusta
@@ -1147,10 +1140,15 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
         QMonikielinenTeksti qKuvaus = new QMonikielinenTeksti("kuvaus");
 
+        QOrganisaatio qOrganisaatiotyyppiSub = new QOrganisaatio("organisaatiotyyppiSub");
+        StringPath qTyyppi = Expressions.stringPath("tyyppi");
+        JPQLQuery<Organisaatio> organisaatiotyyppiQuery = JPAExpressions.selectFrom(qOrganisaatiotyyppiSub)
+                .join(qOrganisaatiotyyppiSub.tyypit, qTyyppi).where(qTyyppi.eq("Ryhma"));
+
         JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager()).from(qOrganisaatio).select(qOrganisaatio)
                 .join(qOrganisaatio.nimi, qNimi).fetchJoin()
                 .join(qOrganisaatio.kuvaus2, qKuvaus).fetchJoin()
-                .where(qOrganisaatio.organisaatiotyypitStr.eq("Ryhma|"));
+                .where(qOrganisaatio.in(organisaatiotyyppiQuery));
 
         Optional.ofNullable(criteria.getQ()).ifPresent(q -> {
             QMonikielinenTeksti qNimiHaku = new QMonikielinenTeksti("nimiHaku");

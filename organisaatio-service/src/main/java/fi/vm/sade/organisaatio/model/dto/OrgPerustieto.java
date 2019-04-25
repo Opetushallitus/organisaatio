@@ -20,12 +20,11 @@ public class OrgPerustieto {
     private String parentOidPath;
     private String ytunnus;
     private String oppilaitosKoodi;
-    private String tyypitStr;
     
     @QueryProjection
     public OrgPerustieto(String oid, long version, Date alkuPvm, Date lakkautusPvm,
     					MonikielinenTeksti nimi, String ytunnus, String oppilaitosKoodi, 
-    					String parentOidPath, String tyypitStr) {
+    					String parentOidPath) {
     	this.oid = oid;
     	this.version = version;
     	this.alkuPvm = alkuPvm;
@@ -33,8 +32,7 @@ public class OrgPerustieto {
     	this.nimi = nimi;
     	this.ytunnus = ytunnus;
     	this.oppilaitosKoodi = oppilaitosKoodi;
-    	this.parentOidPath = parentOidPath;
-    	this.setTyypitStr(tyypitStr);
+		this.parentOidPath = parentOidPath;
     }
 	
     public String getOid() {
@@ -87,14 +85,6 @@ public class OrgPerustieto {
 
 	public void setNimi(MonikielinenTeksti nimi) {
 		this.nimi = nimi;
-	}
-
-	public String getTyypitStr() {
-		return tyypitStr;
-	}
-
-	public void setTyypitStr(String tyypitStr) {
-		this.tyypitStr = tyypitStr;
 	}
 	
 }
