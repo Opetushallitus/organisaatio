@@ -238,9 +238,17 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
         OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
 
+        Optional.ofNullable(result.getVarhaiskasvatuksenToimipaikkaTiedot())
+            .ifPresent ( tiedot -> {
+                result.setYhteystietoArvos (
+                    tiedot.getIsJulkinen() ?
+                        result.getYhteystietoArvos() :
+                        new HashSet<>()
+                );
+            });
+
         LOG.debug("  result={}", result);
         return result;
-
     }
 
     @Override
