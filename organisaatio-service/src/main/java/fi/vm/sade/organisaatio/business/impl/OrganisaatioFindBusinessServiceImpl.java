@@ -30,6 +30,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -236,20 +237,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             o.getMetadata().setIncludeImage(includeImage);
         }
 
-        OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
-
-        Optional.ofNullable(result.getVarhaiskasvatuksenToimipaikkaTiedot())
-            .ifPresent ( tiedot -> {
-                result.setYhteystietoArvos (
-                    tiedot.getIsJulkinen() ?
-                        result.getYhteystietoArvos() :
-                        new HashSet<>()
-                );
-            });
+        OrganisaatioRDTOV4 result = mapToOrganisaatioRdtoV4(o);
 
         LOG.debug("  result={}", result);
         return result;
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -271,6 +264,28 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     return conversionService.convert(child, OrganisaatioRDTOV4.class);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
+        OrganisaatioRDTOV4 organisaatio_result = Optional.ofNullable(conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
+            .map ( org -> {
+                VarhaiskasvatuksenToimipaikkaTiedotDto vkToimipaikkaTiedot = org.getVarhaiskasvatuksenToimipaikkaTiedot();
+
+                if(org.getTyypit().contains("organisaatiotyyppi_08")) {
+                    if(vkToimipaikkaTiedot != null && !vkToimipaikkaTiedot.getIsJulkinen()) {
+                        org.setYhteystietoArvos (
+                                new HashSet<>()
+                        );
+                    }
+                }
+                return org;
+
+            }).orElseThrow( () ->
+                new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found")
+            );
+
+        return organisaatio_result;
     }
 
     @Override
