@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +20,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -155,20 +153,6 @@ public class OrganisaatioDAOImplTest {
         b = organisaatioDAO.findByOid(b.getOid());
 
         Assert.assertEquals(a.getOid(), b.getParent().getOid());
-    }
-
-    @Test
-    public void testGetOrganizationStructure() {
-        Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        Organisaatio b = createOrganisaatio("B", a, false, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio c = createOrganisaatio("C", a, false, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio d = createOrganisaatio("D", b, false, generateParentOidPath(b), generateParentIdPath(b));
-        Organisaatio e = createOrganisaatio("E", c, false, generateParentOidPath(c), generateParentIdPath(c));
-        Organisaatio f = createOrganisaatio("F", a, true, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio g = createOrganisaatio("G", e, true, generateParentOidPath(e), generateParentIdPath(e));
-
-        List<OrgStructure> structure = organisaatioDAO.getOrganizationStructure(Arrays.asList(c.getOid()));
-        assertEquals(3, structure.size());
     }
 
     @Test

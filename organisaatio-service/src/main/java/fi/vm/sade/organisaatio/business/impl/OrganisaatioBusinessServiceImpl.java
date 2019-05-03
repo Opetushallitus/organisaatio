@@ -329,13 +329,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setNimi(nimi);
         }
 
-        // Asetetaan tyypit "organisaatio" taulun kenttään
-        StringBuilder tyypitStr = new StringBuilder();
-        for (String curTyyppi : entity.getTyypit()) {
-            tyypitStr.append(curTyyppi).append("|");
-        }
-        entity.setOrganisaatiotyypitStr(tyypitStr.toString());
-
         // Generate natural key, OVT-4954
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
