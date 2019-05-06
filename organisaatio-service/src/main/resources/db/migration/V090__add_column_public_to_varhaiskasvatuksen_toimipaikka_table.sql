@@ -1,0 +1,1 @@
+ALTER TABLE varhaiskasvatuksen_toimipaikka_tiedot ADD if not exists julkinen BOOLEAN;
