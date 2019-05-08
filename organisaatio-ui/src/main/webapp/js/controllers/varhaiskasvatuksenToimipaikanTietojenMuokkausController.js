@@ -20,7 +20,8 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
                 varhaiskasvatuksenToiminnallinenpainotukset: [],
                 paikkojenLukumaara: null,
                 varhaiskasvatuksenJarjestamismuodot: [],
-                varhaiskasvatuksenKielipainotukset: []
+                varhaiskasvatuksenKielipainotukset: [],
+                julkinen: false
             };
         }
         vm.model = $scope.model;

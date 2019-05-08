@@ -18,9 +18,9 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private boolean julkinen;
 
-    public  boolean getIsJulkinen(){ return this.julkinen; }
+    public  boolean getJulkinen(){ return this.julkinen; }
 
-    public void setIsJulkinen(boolean julkinen){
+    public void setJulkinen(boolean julkinen){
         this.julkinen = julkinen;
     }
 

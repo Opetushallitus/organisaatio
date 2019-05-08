@@ -189,9 +189,12 @@
             <div class="controls">
                 <div>
                     <input id="julkisuusasetus"
-                        name="julkisuus"
-                        class="oph-checkable-input"
-                        type="checkbox"
+                           ng-init   ="vakaeditctrl.julkinen = !vakaeditctrl.julkinen"
+                           ng-model  ="vakaeditctrl.julkinen"
+                           ng-change ="vakaeditctrl.julkinen = !vakaeditctrl.julkinen"
+                           name="julkisuus"
+                           class="oph-checkable-input"
+                           type="checkbox"
                     />
                 </div>
             </div>

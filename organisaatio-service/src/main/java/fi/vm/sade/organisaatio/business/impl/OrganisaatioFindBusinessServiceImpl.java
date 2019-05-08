@@ -50,6 +50,7 @@ import java.util.Collection;
 import static java.util.Collections.emptyMap;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -276,18 +277,31 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             .map ( org -> {
                 VarhaiskasvatuksenToimipaikkaTiedotDto vkToimipaikkaTiedot = org.getVarhaiskasvatuksenToimipaikkaTiedot();
 
+                // Hiding organisation contact infromation in certain cases.
                 if(org.getTyypit().contains("organisaatiotyyppi_08") && vkToimipaikkaTiedot != null) {
                     if(!permissionChecker.canReadOrganisation(org)){
 
                         String toimintaMuoto = vkToimipaikkaTiedot.getToimintamuoto();
 
-                        boolean hideYhteystiedot = !vkToimipaikkaTiedot.getIsJulkinen()
+                        boolean hideYhteystiedot = !vkToimipaikkaTiedot.getJulkinen()
                                 || toimintaMuoto.contains("tm02")
                                 || toimintaMuoto.contains("tm03");
 
                         if(hideYhteystiedot) {
                             org.setYhteystietoArvos (
                                     new HashSet<>()
+                            );
+
+                            org.setYhteystiedot (
+                                    new HashSet<>()
+                            );
+
+                            org.setKayntiosoite (
+                                    new HashMap<>()
+                            );
+
+                            org.setPostiosoite (
+                                    new HashMap<>()
                             );
                         }
                     }

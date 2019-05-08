@@ -43,9 +43,9 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     @Column(name = "julkinen", nullable = false, columnDefinition = "boolean default false")
     private boolean julkinen;
 
-    public  boolean getIsJulkinen(){ return this.julkinen; }
+    public  boolean getJulkinen(){ return this.julkinen; }
 
-    public void setIsJulkinen(boolean julkinen){
+    public void setJulkinen(boolean julkinen){
         this.julkinen = julkinen;
     }
 
