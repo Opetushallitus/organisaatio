@@ -68,7 +68,6 @@ public final class RyhmaBuilder {
         Organisaatio ryhma = new Organisaatio();
         ryhma.setOid(oid);
         ryhma.setTyypit(Stream.of(OrganisaatioTyyppi.RYHMA).map(OrganisaatioTyyppi::koodiValue).collect(Collectors.toSet()));
-        ryhma.setOrganisaatiotyypitStr("Ryhma|");
         ryhma.setRyhmatyypit(ryhmatyypit);
         ryhma.setKayttoryhmat(kayttoryhmat);
         ryhma.setNimi(nimi);

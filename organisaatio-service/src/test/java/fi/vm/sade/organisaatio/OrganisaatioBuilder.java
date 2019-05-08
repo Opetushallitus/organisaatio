@@ -4,14 +4,15 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
@@ -52,7 +53,6 @@ public final class OrganisaatioBuilder {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setOid(oid);
         organisaatio.setTyypit(tyypit.stream().map(OrganisaatioTyyppi::value).collect(toSet()));
-        organisaatio.setOrganisaatiotyypitStr(tyypit.stream().map(OrganisaatioTyyppi::value).collect(joining("|")));
         organisaatio.setNimi(nimi);
         organisaatio.setNimihaku(nimi.getValues().values().stream().collect(joining(",")));
         organisaatio.setAlkuPvm(alkuPvm);

@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.dto.OrgStructure;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
@@ -146,8 +145,6 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     Organisaatio findByOppilaitoskoodi(String oid);
 
     Organisaatio findByToimipistekoodi(String oid);
-
-    List<OrgStructure> getOrganizationStructure(List<String> oids);
 
     /**
      * Find childers for given Organisation with OID.
