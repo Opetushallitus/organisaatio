@@ -283,7 +283,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
                         String toimintaMuoto = vkToimipaikkaTiedot.getToimintamuoto();
 
-                        boolean hideYhteystiedot = !vkToimipaikkaTiedot.getJulkinen()
+                        boolean hideYhteystiedot = vkToimipaikkaTiedot.getPiilotettu()
                                 || toimintaMuoto.contains("tm02")
                                 || toimintaMuoto.contains("tm03");
 

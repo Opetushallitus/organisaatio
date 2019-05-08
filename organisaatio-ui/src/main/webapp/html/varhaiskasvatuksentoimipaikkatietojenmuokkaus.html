@@ -184,15 +184,14 @@
 
         <div class="control-group">
             <label class="control-label">
-                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.julkisuus')}}
+                {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.eijulkinen')}}
             </label>
             <div class="controls">
                 <div>
-                    <input id="julkisuusasetus"
-                           ng-init   ="vakaeditctrl.julkinen = !vakaeditctrl.julkinen"
-                           ng-model  ="vakaeditctrl.julkinen"
-                           ng-change ="vakaeditctrl.julkinen = !vakaeditctrl.julkinen"
-                           name="julkisuus"
+                    <input id="piilotettu"
+                           ng-model   ="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.piilotettu"
+                           name="piilotettu"
+                           ng-checked="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.piilotettu"
                            class="oph-checkable-input"
                            type="checkbox"
                     />

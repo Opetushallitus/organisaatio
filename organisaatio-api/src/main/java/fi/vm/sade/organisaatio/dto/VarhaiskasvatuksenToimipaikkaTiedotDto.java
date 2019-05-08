@@ -16,12 +16,12 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
-    private boolean julkinen;
+    private boolean piilotettu;
 
-    public  boolean getJulkinen(){ return this.julkinen; }
+    public  boolean getPiilotettu(){ return this.piilotettu; }
 
-    public void setJulkinen(boolean julkinen){
-        this.julkinen = julkinen;
+    public void setPiilotettu(boolean piilotettu){
+        this.piilotettu = piilotettu;
     }
 
     public String getToimintamuoto() {

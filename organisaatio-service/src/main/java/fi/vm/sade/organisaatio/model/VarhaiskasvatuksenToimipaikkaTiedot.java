@@ -40,13 +40,13 @@ public class VarhaiskasvatuksenToimipaikkaTiedot extends BaseEntity {
     @BatchSize(size = 100)
     private Set<VarhaiskasvatuksenToiminnallinenpainotus> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
-    @Column(name = "julkinen", nullable = false, columnDefinition = "boolean default false")
-    private boolean julkinen;
+    @Column(name = "piilotettu", nullable = false, columnDefinition = "boolean default false")
+    private boolean piilotettu;
 
-    public  boolean getJulkinen(){ return this.julkinen; }
+    public  boolean getPiilotettu(){ return this.piilotettu; }
 
-    public void setJulkinen(boolean julkinen){
-        this.julkinen = julkinen;
+    public void setPiilotettu(boolean piilotettu){
+        this.piilotettu = piilotettu;
     }
 
     public String getToimintamuoto() {
