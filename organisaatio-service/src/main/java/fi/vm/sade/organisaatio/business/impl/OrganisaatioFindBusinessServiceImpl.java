@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 
 import java.util.Collection;
 import static java.util.Collections.emptyMap;
@@ -83,6 +84,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -261,7 +265,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     if (child.getMetadata() != null) {
                         child.getMetadata().setIncludeImage(includeImage);
                     }
-                    return conversionService.convert(child, OrganisaatioRDTOV4.class);
+                    return mapToOrganisaatioRdtoV4(child);
                 })
                 .collect(Collectors.toList());
     }
@@ -272,13 +276,23 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             .map ( org -> {
                 VarhaiskasvatuksenToimipaikkaTiedotDto vkToimipaikkaTiedot = org.getVarhaiskasvatuksenToimipaikkaTiedot();
 
-                if(org.getTyypit().contains("organisaatiotyyppi_08")) {
-                    if(vkToimipaikkaTiedot != null && !vkToimipaikkaTiedot.getIsJulkinen()) {
-                        org.setYhteystietoArvos (
-                                new HashSet<>()
-                        );
+                if(org.getTyypit().contains("organisaatiotyyppi_08") && vkToimipaikkaTiedot != null) {
+                    if(!permissionChecker.canReadOrganisation(org)){
+
+                        String toimintaMuoto = vkToimipaikkaTiedot.getToimintamuoto();
+
+                        boolean hideYhteystiedot = !vkToimipaikkaTiedot.getIsJulkinen()
+                                || toimintaMuoto.contains("tm02")
+                                || toimintaMuoto.contains("tm03");
+
+                        if(hideYhteystiedot) {
+                            org.setYhteystietoArvos (
+                                    new HashSet<>()
+                            );
+                        }
                     }
                 }
+
                 return org;
 
             }).orElseThrow( () ->

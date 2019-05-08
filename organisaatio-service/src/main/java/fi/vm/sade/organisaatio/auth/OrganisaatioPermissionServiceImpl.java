@@ -46,6 +46,12 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         this.ophOid = ophOid;
     }
 
+    public boolean userCanReadOrganisation(OrganisaatioContext context){
+        Preconditions.checkNotNull(context.getOrgOid());
+        return checkAccess(context.getOrgOid(), ROLE_RYHMA);
+
+    }
+
     public boolean userCanUpdateOrganisation(OrganisaatioContext context) {
         Preconditions.checkNotNull(context.getOrgOid());
         /*

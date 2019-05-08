@@ -16,11 +16,11 @@ public class VarhaiskasvatuksenToimipaikkaTiedotDto {
 
     private Set<VarhaiskasvatuksenToiminnallinepainotusDto> varhaiskasvatuksenToiminnallinenpainotukset = new HashSet<>();
 
-    private Boolean julkinen;
+    private boolean julkinen;
 
-    public  Boolean getIsJulkinen(){ return this.julkinen; }
+    public  boolean getIsJulkinen(){ return this.julkinen; }
 
-    public void setIsJulkinen(Boolean julkinen){
+    public void setIsJulkinen(boolean julkinen){
         this.julkinen = julkinen;
     }
 
