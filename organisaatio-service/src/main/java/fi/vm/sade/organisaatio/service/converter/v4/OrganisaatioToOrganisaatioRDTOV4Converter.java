@@ -117,6 +117,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenKielipainotukset);
+        varhaiskasvatuksenToimipaikkaTiedotDto.setPiilotettu(toimipaikkaTiedot.getPiilotettu());
         return varhaiskasvatuksenToimipaikkaTiedotDto;
     }
 
