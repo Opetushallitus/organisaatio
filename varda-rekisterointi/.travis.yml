@@ -23,6 +23,7 @@ script:
   - ./mvnw clean install -Dbuild-number=${TRAVIS_BUILD_NUMBER}
 
   - mv target/$ARTIFACT_NAME.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+  - cp -vr oph-configuration $DOCKER_BUILD_DIR/config/
 
   - export BASE_IMAGE="baseimage-fatjar:jdk11"
   - ./ci-tools/common/pull-image.sh
