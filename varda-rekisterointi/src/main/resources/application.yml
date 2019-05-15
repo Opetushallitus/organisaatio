@@ -2,6 +2,15 @@ server:
   port: 8080
   servlet:
     context-path: /varda-rekisterointi
+    session:
+      timeout: 1h
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+        max-age: 1h
 spring:
   main:
     banner-mode: "off"
+varda-rekisterointi:
+  host-virkailija: http://localhost:8080
+  host-tunnistus: http://localhost:8080

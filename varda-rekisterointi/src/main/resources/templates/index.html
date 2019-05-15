@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>varda-rekisterointi</title>
+</head>
+<body>
+<a th:href="${loginUrl}">login</a>
+<a th:href="${logoutUrl}">logout</a>
+<div th:object="${user}">
+    <div th:text="*{nationalIdentificationNumber}" />
+    <div th:text="*{givenName}" />
+    <div th:text="*{surname}" />
+</div>
+</body>
+</html>

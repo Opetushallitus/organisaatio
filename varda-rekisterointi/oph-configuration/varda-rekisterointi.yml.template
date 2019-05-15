@@ -1,4 +1,9 @@
 server:
+    servlet:
+        session:
+            cookie:
+                domain: {{ host_oppija }}
+                secure: true
     tomcat:
         accesslog:
             enabled: true
@@ -10,3 +15,6 @@ server:
             rotate: true
             rename-on-rotate: true
             max-days: 7
+varda-rekisterointi:
+    host-virkailija: https://{{ host_virkailija }}
+    host-tunnistus: https://{{ host_tunnistus }}
