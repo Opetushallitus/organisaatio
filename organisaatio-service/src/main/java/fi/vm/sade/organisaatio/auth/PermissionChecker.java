@@ -51,6 +51,10 @@ public class PermissionChecker {
 
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
+    public boolean canReadOrganisation(OrganisaatioRDTOV4 organisaatio){
+        return permissionService.userCanReadOrganisation( OrganisaatioContext.get(organisaatioDAO.findByOid(organisaatio.getOid())));
+    }
+
     public void checkRemoveOrganisation(String oid) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioDAO.findByOid(oid));
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));

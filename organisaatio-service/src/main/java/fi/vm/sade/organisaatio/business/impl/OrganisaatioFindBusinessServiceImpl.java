@@ -30,6 +30,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -43,11 +44,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 
 import java.util.Collection;
 import static java.util.Collections.emptyMap;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +85,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -236,12 +242,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             o.getMetadata().setIncludeImage(includeImage);
         }
 
-        OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 result = mapToOrganisaatioRdtoV4(o);
 
         LOG.debug("  result={}", result);
         return result;
-
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -260,9 +266,54 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     if (child.getMetadata() != null) {
                         child.getMetadata().setIncludeImage(includeImage);
                     }
-                    return conversionService.convert(child, OrganisaatioRDTOV4.class);
+                    return mapToOrganisaatioRdtoV4(child);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
+        OrganisaatioRDTOV4 organisaatio_result = Optional.ofNullable(conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
+            .map ( org -> {
+                VarhaiskasvatuksenToimipaikkaTiedotDto vkToimipaikkaTiedot = org.getVarhaiskasvatuksenToimipaikkaTiedot();
+
+                // Hiding organisation contact infromation in certain cases.
+                if(org.getTyypit().contains("organisaatiotyyppi_08") && vkToimipaikkaTiedot != null) {
+                    if(!permissionChecker.canReadOrganisation(org)){
+
+                        String toimintaMuoto = vkToimipaikkaTiedot.getToimintamuoto();
+
+                        boolean hideYhteystiedot = vkToimipaikkaTiedot.getPiilotettu()
+                                || toimintaMuoto.contains("tm02")
+                                || toimintaMuoto.contains("tm03");
+
+                        if(hideYhteystiedot) {
+                            org.setYhteystietoArvos (
+                                    new HashSet<>()
+                            );
+
+                            org.setYhteystiedot (
+                                    new HashSet<>()
+                            );
+
+                            org.setKayntiosoite (
+                                    new HashMap<>()
+                            );
+
+                            org.setPostiosoite (
+                                    new HashMap<>()
+                            );
+                        }
+                    }
+                }
+
+                return org;
+
+            }).orElseThrow( () ->
+                new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found")
+            );
+
+        return organisaatio_result;
     }
 
     @Override
