@@ -18,3 +18,8 @@ server:
 varda-rekisterointi:
     host-virkailija: https://{{ host_virkailija }}
     host-tunnistus: https://{{ host_tunnistus }}
+    valtuudet:
+        host: {{ varda_rekisterointi_valtuudet_host }}
+        client-id: {{ varda_rekisterointi_valtuudet_client_id }}
+        api-key: {{ varda_rekisterointi_valtuudet_api_key }}
+        oauth-password: {{ varda_rekisterointi_valtuudet_oauth_password }}

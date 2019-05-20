@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -58,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public Filter authenticationProcessingFilter() throws Exception {
         ShibbolethAuthenticationFilter filter = new ShibbolethAuthenticationFilter("/initsession");
         filter.setAuthenticationManager(authenticationManager());
+        String authenticationSuccessUrl = properties.url("varda-rekisterointi.valtuudet.redirect");
+        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
         return filter;
     }
 
