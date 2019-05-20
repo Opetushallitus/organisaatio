@@ -118,4 +118,16 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
     };
 
+    vm.isPaivakoti = function(){
+        return vm.model.toimintamuoto === "vardatoimintamuoto_tm01";
+    };
+
+    vm.isPerhepaivakoti = function(){
+        return vm.model.toimintamuoto === "vardatoimintamuoto_tm02";
+    };
+
+    vm.isRyhmaperhepaivakoti = function(){
+        return vm.model.toimintamuoto === "vardatoimintamuoto_tm03";
+    };
+
 });
