@@ -23,8 +23,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,9 @@ public class YTJResource {
         
     @Autowired(required = true)
     private YTJService ytjService;
+
+    @Autowired
+    private ConversionService conversionService;
     
     /**
      * YTJ DTO as JSON.
@@ -77,6 +83,15 @@ public class YTJResource {
         }
         
         return ytj; 
+    }
+
+    @GET
+    @Path("{ytunnus}/v4")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
+    public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
+        Organisaatio organisaatio = conversionService.convert(findByYTunnus(ytunnus), Organisaatio.class);
+        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
     }
 
     @GET

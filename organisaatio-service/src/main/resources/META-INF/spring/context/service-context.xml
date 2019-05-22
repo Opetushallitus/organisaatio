@@ -40,6 +40,7 @@
                 <ref bean="ryhmaCriteriaV2ToV3Converter"/>
                 <ref bean="ryhmaCriteriaV3Converter"/>
                 <bean class="fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter"/>
+                <bean class="fi.vm.sade.organisaatio.service.converter.v4.YtjDtoToOrganisaatioConverter"/>
             </list>
         </property>
     </bean>
