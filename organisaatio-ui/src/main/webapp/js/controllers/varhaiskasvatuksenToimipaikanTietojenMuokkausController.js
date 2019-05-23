@@ -119,15 +119,15 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     };
 
     vm.isPaivakoti = function(){
-        return vm.model.toimintamuoto === "vardatoimintamuoto_tm01";
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm01";
     };
 
     vm.isPerhepaivakoti = function(){
-        return vm.model.toimintamuoto === "vardatoimintamuoto_tm02";
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm02";
     };
 
     vm.isRyhmaperhepaivakoti = function(){
-        return vm.model.toimintamuoto === "vardatoimintamuoto_tm03";
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm03";
     };
 
 });
