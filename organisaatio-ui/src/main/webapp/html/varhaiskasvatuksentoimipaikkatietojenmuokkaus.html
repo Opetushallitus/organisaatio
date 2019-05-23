@@ -187,9 +187,19 @@
                 {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.eijulkinen')}}
             </label>
             <div class="controls">
-                <div>
+                <div ng-if="vakaeditctrl.isPaivakoti();">
                     <input id="piilotettu"
                            ng-model="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.piilotettu"
+                           ng-disabled="true"
+                           name="piilotettu"
+                           class="oph-checkable-input"
+                           type="checkbox"
+                    />
+                </div>
+                <div ng-if="!vakaeditctrl.isPaivakoti();">
+                    <input id="piilotettu-indicator"
+                           ng-disabled="true"
+                           ng-checked="true"
                            name="piilotettu"
                            class="oph-checkable-input"
                            type="checkbox"
