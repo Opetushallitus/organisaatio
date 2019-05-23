@@ -18,6 +18,9 @@ server:
 varda-rekisterointi:
     host-virkailija: https://{{ host_virkailija }}
     host-tunnistus: https://{{ host_tunnistus }}
+    service:
+        username: {{ varda_rekisterointi_service_username }}
+        password: {{ varda_rekisterointi_service_password }}
     valtuudet:
         host: {{ varda_rekisterointi_valtuudet_host }}
         client-id: {{ varda_rekisterointi_valtuudet_client_id }}

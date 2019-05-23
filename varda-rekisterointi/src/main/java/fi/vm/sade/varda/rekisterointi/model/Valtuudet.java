@@ -11,5 +11,6 @@ public class Valtuudet {
     public String callbackUrl;
 
     public String businessId;
+    public Organisaatio organisaatio;
 
 }

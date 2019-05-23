@@ -5,6 +5,8 @@ import fi.vm.sade.suomifi.valtuudet.OrganisationDto;
 import fi.vm.sade.suomifi.valtuudet.SessionDto;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
+import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
+import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
 import fi.vm.sade.varda.rekisterointi.model.Valtuudet;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,11 +26,13 @@ public class ValtuudetController {
     private final OphProperties properties;
     private final Valtuudet valtuudet;
     private final ValtuudetClient valtuudetClient;
+    private final OrganisaatioClient organisaatioClient;
 
-    public ValtuudetController(OphProperties properties, Valtuudet valtuudet, ValtuudetClient valtuudetClient) {
+    public ValtuudetController(OphProperties properties, Valtuudet valtuudet, ValtuudetClient valtuudetClient, OrganisaatioClient organisaatioClient) {
         this.properties = properties;
         this.valtuudet = valtuudet;
         this.valtuudetClient = valtuudetClient;
+        this.organisaatioClient = organisaatioClient;
     }
 
     @GetMapping("/redirect")
@@ -49,6 +53,11 @@ public class ValtuudetController {
         String accessToken = valtuudetClient.getAccessToken(code, valtuudet.callbackUrl);
         OrganisationDto organisation = valtuudetClient.getSelectedOrganisation(valtuudet.sessionId, accessToken);
         valtuudet.businessId = organisation.identifier;
+
+        Organisaatio organisaatio = organisaatioClient.getByYtunnus(valtuudet.businessId)
+                .or(() -> organisaatioClient.getByYtunnusFromYtj(valtuudet.businessId))
+                .orElseGet(() -> Organisaatio.of(organisation));
+        valtuudet.organisaatio = organisaatio;
 
         String redirectUrl = properties.url("varda-rekisterointi.index");
         return new RedirectView(redirectUrl);

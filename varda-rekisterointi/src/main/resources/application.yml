@@ -14,3 +14,6 @@ spring:
 varda-rekisterointi:
   host-virkailija: http://localhost:8080
   host-tunnistus: http://localhost:8080
+  service:
+    username: varda-rekisterointi
+    password: varda-rekisterointi
