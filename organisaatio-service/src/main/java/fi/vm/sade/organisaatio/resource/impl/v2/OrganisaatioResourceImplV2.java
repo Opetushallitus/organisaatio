@@ -123,6 +123,9 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
                 hakuEhdot.getOidList(),
                 hakuEhdot.getLimit());
 
+        //Filtering out hidden organisations (Varda yksityiset)
+        organisaatiot = organisaatioFindBusinessService.filterHiddenOrganisaatiotToSet(organisaatiot);
+
         // Define the target list type for mapping
         Type organisaatioYhteystiedotDTOV2ListType = new TypeToken<List<OrganisaatioYhteystiedotDTOV2>>() {}.getType();
 
