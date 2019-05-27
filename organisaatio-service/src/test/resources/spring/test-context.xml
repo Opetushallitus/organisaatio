@@ -23,6 +23,12 @@
         <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
 
+    <bean id="httpClientBuilder" class="fi.vm.sade.javautils.http.OphHttpClient$Builder">
+        <constructor-arg value="organisaatio-test" />
+    </bean>
+
+    <bean id="koodistoHttpClient" class="fi.vm.sade.javautils.http.OphHttpClient" factory-bean="httpClientBuilder" factory-method="build"/>
+
     <import resource="classpath:META-INF/spring/context/service-context.xml"/>
     <import resource="classpath:META-INF/spring/context/dao-context.xml"/>
 </beans>
