@@ -17,11 +17,13 @@
 package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Objects;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -51,8 +53,37 @@ public class PermissionChecker {
 
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
+    public boolean canReadOrganisation(Organisaatio organisaatio){
+        return permissionService.userCanReadOrganisation( OrganisaatioContext.get(organisaatio));
+    }
+
+    public boolean canReadOrganisation(OrganisaatioContext organisaatioContext){
+        return permissionService.userCanReadOrganisation(organisaatioContext);
+    }
+
     public boolean canReadOrganisation(OrganisaatioRDTOV4 organisaatio){
         return permissionService.userCanReadOrganisation( OrganisaatioContext.get(organisaatioDAO.findByOid(organisaatio.getOid())));
+    }
+
+    public boolean canReadOrganisationIfHidden(Organisaatio organisaatio){
+        OrganisaatioContext context = OrganisaatioContext.get(organisaatio);
+        VarhaiskasvatuksenToimipaikkaTiedot vktp_tiedot;
+
+        boolean organisaatio_read = permissionService.userCanReadOrganisation(context),
+                varhaiskasvatuksen_toimipaikka = context.getOrgTypes().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA);
+
+        if(organisaatio_read || !varhaiskasvatuksen_toimipaikka){
+            return true;
+        }
+
+        if((vktp_tiedot = organisaatio.getVarhaiskasvatuksenToimipaikkaTiedot()) != null) {
+            return
+                ! (vktp_tiedot.getPiilotettu()
+                || vktp_tiedot.getToimintamuoto().contains("tm02")
+                || vktp_tiedot.getToimintamuoto().contains("tm03"));
+        }
+
+        return false;
     }
 
     public void checkRemoveOrganisation(String oid) {
