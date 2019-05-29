@@ -2,7 +2,10 @@ package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +16,13 @@ import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
 
 public class OrganisaatioToOrganisaatioPerustietoConverter implements org.springframework.core.convert.converter.Converter<Organisaatio, OrganisaatioPerustieto> {
+
+    private final PermissionChecker permissionChecker;
+
+    @Autowired
+    public OrganisaatioToOrganisaatioPerustietoConverter(PermissionChecker permissionChecker) {
+        this.permissionChecker = permissionChecker;
+    }
 
     @Override
     public OrganisaatioPerustieto convert(Organisaatio source) {
@@ -36,8 +46,12 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
         destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
         destination.setOppilaitostyyppi(source.getOppilaitosTyyppi());
         destination.setToimipistekoodi(source.getToimipisteKoodi());
+
         //destination.setMatch asetetaan muualla
-        destination.setNimi(source.getNimi().getValues());
+        if(permissionChecker.canReadOrganisationIfHidden(source)){
+            destination.setNimi(source.getNimi().getValues());
+        }
+
         source.getTyypit().stream()
                 .map(OrganisaatioTyyppi::fromKoodiValue)
                 .forEach(destination.getOrganisaatiotyypit()::add);
