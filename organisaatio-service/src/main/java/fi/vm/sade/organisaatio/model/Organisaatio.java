@@ -103,8 +103,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "organisaatio_muut_kotipaikat_uris", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @Column(name = "muut_kotipaikat", nullable = false)
     @BatchSize(size = 200)
-    private Set<String> muutKotipaikatUris;
+    private Set<String> muutKotipaikatUris = new HashSet<>();
 
     private String maa;
 

@@ -455,7 +455,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     };
 
     $scope.removeFromMuutKotipaikat = function(kunta){
-        var uris = $scope.model.organisaatio.muutKotipaikatUris;
+        var uris = $scope.model.organisaatio.muutKotipaikatUris || [];
         var atIndex;
 
         if ((atIndex = uris.indexOf(kunta)) !== -1){
@@ -480,7 +480,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     }
 
     $scope.localizeMuuKotipaikka = function(kuntakoodi){
-        var localisedKoodi = model.koodisto.kotipaikat.filter(function (koodi) {
+        var localisedKoodi = $scope.model.koodisto.kotipaikat.filter(function (koodi) {
             return koodi.uri === kuntakoodi;
         })[0];
         return localisedKoodi && localisedKoodi.nimi;

@@ -369,26 +369,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     </div>
 
     <!-- Muut kunnat -->
-    <div ng-if="model.organisaatio.kotipaikkaUri">
-        <div class="control-group">
-            <label class="control-label">
-                {{t('Organisaationtarkastelu.muutKunnat')}}
-            </label>
-            <div class="controls">
-                <span ng-repeat="kunta in model.organisaatio.muutKotipaikatUris">
-                    <button type="button"
-                            class="btn btn-small"
-                            ng-click="removeFromMuutKotipaikat(kunta);">
-                        {{:: localizeMuuKotipaikka(kunta)}}&nbsp;<i class="icon-remove"></i>
-                    </button>
-                </span>
+    <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
+        <label class="control-label">
+            {{t('Organisaationtarkastelu.muutKunnat')}}
+        </label>
+        <div class="controls">
+            <span ng-repeat="kunta in model.organisaatio.muutKotipaikatUris">
+                <button type="button"
+                        class="btn btn-small"
+                        ng-click="removeFromMuutKotipaikat(kunta);">
+                    {{:: localizeMuuKotipaikka(kunta)}}&nbsp;<i class="icon-remove"></i>
+                </button>
+            </span>
 
-                <select id="muutKunnatSelect"
-                        ng-options="kp.uri as kp.nimi for kp in model.koodisto.kotipaikat | orderBy:'nimi'"
-                        ng-change="addToMuutKotipaikat(this.options[this.selectedIndex]);">
-                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
-                </select>
-            </div>
+            <select id="muutKunnatSelect"
+                    ng-options="kp.uri as kp.nimi for kp in model.koodisto.kotipaikat | orderBy:'nimi'"
+                    ng-change="addToMuutKotipaikat(this.options[this.selectedIndex]);">
+                <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+            </select>
         </div>
     </div>
 
