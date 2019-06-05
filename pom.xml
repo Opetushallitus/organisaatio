@@ -18,7 +18,7 @@
         <oid.api.version>8.0</oid.api.version>
         <rajapinnat.ytj.version>11.0-SNAPSHOT</rajapinnat.ytj.version>
         <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
-        <auditlogger.version>5.0.0-SNAPSHOT</auditlogger.version>
+        <auditlogger.version>8.3.0-SNAPSHOT</auditlogger.version>
         <viestinta.version>14.8-SNAPSHOT</viestinta.version>
         <!--Java utils-->
         <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
