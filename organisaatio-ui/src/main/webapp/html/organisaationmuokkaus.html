@@ -382,7 +382,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 </button>
             </span>
 
-            <select id="muutKunnatSelect"
+            <select id="muutKunnatSelect" ng-model="model.koodisto.muutkunnatplaceholder"
                     ng-options="kp.uri as kp.nimi for kp in model.koodisto.kotipaikat | orderBy:'nimi'"
                     ng-change="addToMuutKotipaikat(this.options[this.selectedIndex]);">
                 <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
