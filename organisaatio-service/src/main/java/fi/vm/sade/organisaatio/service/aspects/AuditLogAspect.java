@@ -16,24 +16,30 @@ package fi.vm.sade.organisaatio.service.aspects;/*
  */
 
 
+import fi.vm.sade.auditlog.*;
+import fi.vm.sade.javautils.http.HttpServletRequestUtils;
+import fi.vm.sade.organisaatio.OrganisaatioOperation;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.Oid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
-import static fi.vm.sade.auditlog.organisaatio.LogMessage.builder;
-import fi.vm.sade.auditlog.ApplicationType;
-import fi.vm.sade.auditlog.organisaatio.OrganisaatioOperation;
-import fi.vm.sade.auditlog.organisaatio.LogMessage;
-import fi.vm.sade.auditlog.Audit;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.Principal;
+import java.util.Optional;
 
 /**
  * @author: Tuomas Katva Date: 9.8.2013
@@ -44,7 +50,7 @@ public class AuditLogAspect {
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
     public static final String serviceName = "organisaatio";
-    public Audit audit = new Audit(serviceName, ApplicationType.VIRKAILIJA);
+    public Audit audit = new Audit(LOG::info, serviceName, ApplicationType.VIRKAILIJA);
 
     // POST /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
@@ -251,17 +257,66 @@ public class AuditLogAspect {
             LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect {}", type.toString());
         }
 
-        LogMessage logMessage = builder().id(getTekija()).oidList(oid).setOperaatio(type).build();
-        audit.log(logMessage);
+        Target target = new Target.Builder().setField("oid", oid).build();
+        Changes changes = new Changes.Builder().build();
+        audit.log(getUser(), type, target, changes);
     }
 
-    private String getTekija() {
-        if (SecurityContextHolder.getContext() != null
-                && SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
-            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    public static User getUser() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            return getUser(((ServletRequestAttributes) requestAttributes).getRequest());
+        }
+        return new User(getIp(), null, null);
+    }
+
+    public static User getUser(HttpServletRequest request) {
+        Optional<Oid> oid = getOid(request);
+        InetAddress ip = getIp(request);
+        String session = getSession(request).orElse(null);
+        String userAgent = getUserAgent(request).orElse(null);
+
+        if (oid.isPresent()) {
+            return new User(oid.get(), ip, session, userAgent);
         } else {
-            return null;
+            return new User(ip, session, userAgent);
         }
     }
+
+    public static Optional<Oid> getOid(HttpServletRequest request) {
+        return Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).flatMap(AuditLogAspect::createOid);
+    }
+
+    private static Optional<Oid> createOid(String oid) {
+        try {
+            return Optional.of(new Oid(oid));
+        } catch (GSSException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static InetAddress getIp(HttpServletRequest request) {
+        try {
+            return InetAddress.getByName(HttpServletRequestUtils.getRemoteAddress(request));
+        } catch (UnknownHostException e) {
+            return getIp();
+        }
+    }
+
+    public static InetAddress getIp() {
+        try {
+            return InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            return InetAddress.getLoopbackAddress();
+        }
+    }
+
+    public static Optional<String> getSession(HttpServletRequest request) {
+        return Optional.ofNullable(request.getSession(false)).map(HttpSession::getId);
+    }
+
+    public static Optional<String> getUserAgent(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader("User-Agent"));
+    }
+
 }
