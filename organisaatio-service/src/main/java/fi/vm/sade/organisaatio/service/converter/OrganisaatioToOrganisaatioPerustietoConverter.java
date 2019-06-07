@@ -17,13 +17,6 @@ import java.util.stream.Stream;
 
 public class OrganisaatioToOrganisaatioPerustietoConverter implements org.springframework.core.convert.converter.Converter<Organisaatio, OrganisaatioPerustieto> {
 
-    private final PermissionChecker permissionChecker;
-
-    @Autowired
-    public OrganisaatioToOrganisaatioPerustietoConverter(PermissionChecker permissionChecker) {
-        this.permissionChecker = permissionChecker;
-    }
-
     @Override
     public OrganisaatioPerustieto convert(Organisaatio source) {
         OrganisaatioPerustieto destination = new OrganisaatioPerustieto();
@@ -48,9 +41,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
         destination.setToimipistekoodi(source.getToimipisteKoodi());
 
         //destination.setMatch asetetaan muualla
-        if(permissionChecker.canReadOrganisationIfHidden(source)){
-            destination.setNimi(source.getNimi().getValues());
-        }
+        destination.setNimi(source.getNimi().getValues());
 
         source.getTyypit().stream()
                 .map(OrganisaatioTyyppi::fromKoodiValue)
