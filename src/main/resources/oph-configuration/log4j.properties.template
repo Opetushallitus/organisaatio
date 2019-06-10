@@ -27,7 +27,7 @@ log4j.logger.org.apache.activemq.spring={{env_loglevel}}
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO
 # auditlogger
-log4j.additivity.fi.vm.sade.auditlog.Audit=false
+log4j.additivity.fi.vm.sade.organisaatio.service.aspects.AuditLogAspect=false
 log4j.logger.fi.vm.sade.organisaatio.service.aspects.AuditLogAspect=INFO, AUDIT
 log4j.appender.AUDIT=org.apache.log4j.FileAppender
 log4j.appender.AUDIT.immediateFlush=true
