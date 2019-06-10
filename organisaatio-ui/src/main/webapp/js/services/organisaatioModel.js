@@ -1159,13 +1159,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
         };
 
-
-        /*
-         * palauttaa true/false jos postiosoite (pätee myös sähköpostiin) on pakollinen annetulle kielelle
-         */
-        this.isPostiOsoiteRequired = function(lang) {
-            //$log.info("lang:" + model.ytlang + ", uris:" + model.organisaatio.kieletUris);
-            //switch (model.ytlang) {
+        this.isYhteystietoRequiredByLang = function(lang) {
             if(angular.isDefined(model.organisaatio.kieletUris)) {
                 switch (lang) {
                     case 'kieli_fi#1':
@@ -1184,9 +1178,24 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 }
             }
             else {
-                $log.warn('isPostiOsoiteRequired :: model.organisaatio.kieletUris is not defined.');
+                $log.warn('isYhteystietoRequired :: model.organisaatio.kieletUris is not defined.');
             }
             return false;
+        };
+
+        /*
+         * palauttaa true/false jos postiosoite (pätee myös sähköpostiin) on pakollinen annetulle kielelle
+         */
+        this.isPostiOsoiteRequired = function(lang) {
+            return model.isYhteystietoRequiredByLang(lang);
+        };
+
+        this.isKayntiosoiteRequired = function() {
+            return model.isYhteystietoRequiredByLang(model.ytlang) && model.isVarhaiskasvatuksenToimipaikka();
+        };
+
+        this.isPuhelinnumeroRequired = function() {
+            return model.isYhteystietoRequiredByLang(model.ytlang) && model.isVarhaiskasvatuksenToimipaikka();
         };
 
         this.updateYhteystiedotValidity = function(ytform) {
