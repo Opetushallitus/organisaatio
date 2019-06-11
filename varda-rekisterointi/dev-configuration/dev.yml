@@ -1,0 +1,9 @@
+server:
+  ssl:
+    enabled: true
+    keyStore: classpath:dev/keystore.jks
+    keyStorePassword: changeit
+    keyPassword: changeit
+varda-rekisterointi:
+  host-virkailija: https://localhost:8080
+  host-tunnistus: https://localhost:8080
