@@ -49,7 +49,12 @@ public class ValtuudetController {
     }
 
     @GetMapping("/callback")
-    public View end(@RequestParam String code, Principal principal) {
+    public View end(@RequestParam(required = false) String code) {
+        if (code == null) {
+            String redirectUrl = properties.url("varda-rekisterointi.logout");
+            return new RedirectView(redirectUrl);
+        }
+
         String accessToken = valtuudetClient.getAccessToken(code, valtuudet.callbackUrl);
         OrganisationDto organisation = valtuudetClient.getSelectedOrganisation(valtuudet.sessionId, accessToken);
         valtuudet.businessId = organisation.identifier;
