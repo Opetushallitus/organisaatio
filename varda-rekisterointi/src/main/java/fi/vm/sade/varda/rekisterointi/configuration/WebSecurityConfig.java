@@ -86,10 +86,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-            String nationalIdentificationNumber = request.getHeader("nationalidentificationnumber");
-            if (nationalIdentificationNumber == null) {
-                throw new PreAuthenticatedCredentialsNotFoundException("Unable to authenticate because required header doesn't exist");
-            }
+            String nationalIdentificationNumber = Optional.ofNullable(request.getHeader("nationalidentificationnumber"))
+                    .or(() -> Optional.ofNullable(request.getParameter("hetu"))) // for easier development
+                    .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Unable to authenticate because required header doesn't exist"));
 
             Charset iso8859 = Charset.forName("ISO-8859-1");
             Charset utf8 = Charset.forName("UTF-8");
