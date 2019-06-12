@@ -19,7 +19,7 @@ public class LogoutController {
         this.properties = properties;
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/hakija/logout")
     public View logout(HttpServletRequest request) {
         Optional.ofNullable(request.getSession(false)).ifPresent(HttpSession::invalidate);
 

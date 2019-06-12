@@ -37,4 +37,4 @@ Run with following parameters
     -Dvarda-rekisterointi.baseUrl=https://localhost:8080
 
 Service is available at <https://localhost:8080/varda-rekisterointi>.
-Login with <https://localhost:8080/varda-rekisterointi/initsession?hetu=010530-998L> (or with any other valid hetu).
+Login with <https://localhost:8080/varda-rekisterointi/hakija/login?hetu=010530-998L> (or with any other valid hetu).

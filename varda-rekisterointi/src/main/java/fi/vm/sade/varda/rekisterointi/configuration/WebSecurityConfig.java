@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -26,13 +27,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
 
     private final OphProperties properties;
 
@@ -43,8 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/actuator/info", "/actuator/health").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/hakija/**").hasRole(ROLE)
                 .and()
                 .addFilterBefore(authenticationProcessingFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
@@ -57,16 +60,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public Filter authenticationProcessingFilter() throws Exception {
-        ShibbolethAuthenticationFilter filter = new ShibbolethAuthenticationFilter("/initsession");
+        ShibbolethAuthenticationFilter filter = new ShibbolethAuthenticationFilter("/hakija/login");
         filter.setAuthenticationManager(authenticationManager());
-        String authenticationSuccessUrl = properties.url("varda-rekisterointi.valtuudet.redirect");
+        String authenticationSuccessUrl = properties.url("varda-rekisterointi.hakija.valtuudet.redirect");
         filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
         return filter;
     }
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        String loginCallbackUrl = properties.url("varda-rekisterointi.login");
+        String loginCallbackUrl = properties.url("varda-rekisterointi.hakija.login");
         String loginUrl = properties.url("shibbolethVirkailija.login", loginCallbackUrl);
         return new LoginUrlAuthenticationEntryPoint(loginUrl);
     }
@@ -100,7 +103,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .orElse("");
 
             PreAuthenticatedAuthenticationToken authRequest = new PreAuthenticatedAuthenticationToken(nationalIdentificationNumber, "N/A");
-            authRequest.setDetails(new ShibbolethWebAuthenticationDetails(request, emptyList(), givenName, surname));
+            List<? extends GrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority(String.format("ROLE_%s", ROLE)));
+            authRequest.setDetails(new ShibbolethWebAuthenticationDetails(request, authorities, givenName, surname));
             return getAuthenticationManager().authenticate(authRequest);
         }
 
