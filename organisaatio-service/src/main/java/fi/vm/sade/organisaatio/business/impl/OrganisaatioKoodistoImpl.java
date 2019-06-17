@@ -136,9 +136,12 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         uk.setTila("LUONNOS");
 
         for (String lang : entity.getNimi().getValues().keySet()) {
+            String nimi = entity.getNimi().getString(lang);
             OrganisaatioKoodistoKoodiMetadata umt = new OrganisaatioKoodistoKoodiMetadata();
             umt.setKieli(lang.toUpperCase());
-            umt.setNimi(entity.getNimi().getString(lang));
+            umt.setNimi(nimi);
+            umt.setLyhytNimi(nimi);
+            umt.setKuvaus(nimi);
             uk.getMetadata().add(umt);
         }
         if (lisaaKoodi(uk, uri)) {
@@ -375,10 +378,17 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                             if (!km.getNimi().equals(uusiNimi)) {
                                 LOG.debug("Nimi(" + kieli + ") muuttunut");
                                 km.setNimi(uusiNimi);
-                                // Olemassaolevia kenttiä lyhytNimi ja kuvaus ei ylikirjoiteta
                                 muuttunut = true;
-                            } else {
-                                LOG.debug("Nimi(" + kieli + ") ei ole muuttunut");
+                            }
+                            if (!Objects.equals(km.getLyhytNimi(), uusiNimi)) {
+                                LOG.debug("LyhytNimi(" + kieli + ") muuttunut");
+                                km.setLyhytNimi(uusiNimi);
+                                muuttunut = true;
+                            }
+                            if (!Objects.equals(km.getKuvaus(), uusiNimi)) {
+                                LOG.debug("Kuvaus(" + kieli + ") muuttunut");
+                                km.setKuvaus(uusiNimi);
+                                muuttunut = true;
                             }
                             koodiNyt.remove(kieli.toUpperCase());
                         } else {
@@ -386,6 +396,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                             OrganisaatioKoodistoKoodiMetadata ukm = new OrganisaatioKoodistoKoodiMetadata();
                             ukm.setKieli(kieli.toUpperCase());
                             ukm.setNimi(uusiNimi);
+                            ukm.setLyhytNimi(uusiNimi);
+                            ukm.setKuvaus(uusiNimi);
                             koodi.getMetadata().add(ukm);
                             LOG.debug("Nimi(" + kieli + ") lisätty");
                             muuttunut = true;
