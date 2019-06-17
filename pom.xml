@@ -40,7 +40,7 @@
         <daemon>false</daemon>
 
         <!-- UI libraries -->
-        <servlet.version>3.0.1</servlet.version>
+        <servlet.version>3.1.0</servlet.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
         <swagger.version>1.5.17</swagger.version>
         <frontend-plugin.version>1.5</frontend-plugin.version>
