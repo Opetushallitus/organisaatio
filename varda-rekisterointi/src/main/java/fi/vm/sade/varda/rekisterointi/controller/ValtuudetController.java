@@ -9,6 +9,8 @@ import fi.vm.sade.varda.rekisterointi.NameContainer;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
 import fi.vm.sade.varda.rekisterointi.model.Valtuudet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,8 @@ import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmp
 @Scope("session")
 public class ValtuudetController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValtuudetController.class);
+
     private final OphProperties properties;
     private final Valtuudet valtuudet;
     private final ValtuudetClient valtuudetClient;
@@ -42,7 +46,7 @@ public class ValtuudetController {
     }
 
     @GetMapping("/valtuudet/redirect")
-    public View start(Principal principal) {
+    public View getRedirect(Principal principal) {
         String nationalIdentificationNumber = principal.getName();
         String callbackUrl = properties.url("varda-rekisterointi.hakija.valtuudet.callback");
         SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
@@ -55,7 +59,19 @@ public class ValtuudetController {
     }
 
     @GetMapping("/valtuudet/callback")
-    public View end(@RequestParam(required = false) String code) {
+    public View getCallback(@RequestParam(required = false) String code) {
+        try {
+            return handleCallback(code);
+        } finally {
+            try {
+                valtuudetClient.destroySession(ValtuudetType.ORGANISATION, valtuudet.sessionId);
+            } catch (Exception e) {
+                LOGGER.warn("Unable to destroy valtuudet session", e);
+            }
+        }
+    }
+
+    private View handleCallback(String code) {
         if (code == null) {
             String redirectUrl = properties.url("varda-rekisterointi.hakija.logout");
             return new RedirectView(redirectUrl);
