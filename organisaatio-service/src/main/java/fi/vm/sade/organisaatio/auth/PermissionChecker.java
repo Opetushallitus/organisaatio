@@ -69,7 +69,7 @@ public class PermissionChecker {
         OrganisaatioContext context = OrganisaatioContext.get(organisaatio);
         VarhaiskasvatuksenToimipaikkaTiedot vktp_tiedot;
 
-        boolean organisaatio_read = permissionService.userCanReadOrganisation(context),
+        boolean organisaatio_read = context.getOrgOid() == null || permissionService.userCanReadOrganisation(context),
                 varhaiskasvatuksen_toimipaikka = context.getOrgTypes().contains(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA);
 
         if(organisaatio_read || !varhaiskasvatuksen_toimipaikka){
