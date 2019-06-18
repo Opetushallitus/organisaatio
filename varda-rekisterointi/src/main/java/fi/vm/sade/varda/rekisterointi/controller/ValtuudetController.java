@@ -22,6 +22,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.security.Principal;
 import java.util.Optional;
 
+import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
+
 @Controller
 @RequestMapping("/hakija")
 @Scope("session")
@@ -64,7 +66,7 @@ public class ValtuudetController {
         valtuudet.businessId = organisation.identifier;
 
         Organisaatio organisaatio = organisaatioClient.getByYtunnus(valtuudet.businessId)
-                .or(() -> organisaatioClient.getByYtunnusFromYtj(valtuudet.businessId))
+                .or(exceptionToEmptySupplier(() -> organisaatioClient.getByYtunnusFromYtj(valtuudet.businessId)))
                 .orElseGet(() -> Organisaatio.of(organisation));
         valtuudet.organisaatio = organisaatio;
 
