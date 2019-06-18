@@ -234,7 +234,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         Map<String, String> result = new HashMap<>();
 
         if (s != null) {
-            result.put("id", "" + s.getId());
+            result.put("id", s.getId() != null ? String.valueOf(s.getId()) : null);
             result.put("yhteystietoOid", s.getYhteystietoOid());
             result.put("kieli", s.getKieli());
 
