@@ -2,6 +2,8 @@ package fi.vm.sade.organisaatio.model;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrganisaatioTest {
@@ -54,6 +56,36 @@ public class OrganisaatioTest {
         String parentOid = organisaatio.getParentOid().orElse(null);
 
         assertThat(parentOid).isNull();
+    }
+
+    @Test
+    public void parentOidsFromNullPath() {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath(null);
+
+        List<String> parentOids = organisaatio.getParentOidsFromPath();
+
+        assertThat(parentOids).isEmpty();
+    }
+
+    @Test
+    public void parentOidsFromEmptyPath() {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath("");
+
+        List<String> parentOids = organisaatio.getParentOidsFromPath();
+
+        assertThat(parentOids).isEmpty();
+    }
+
+    @Test
+    public void parentOidsFromValidPath() {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath("|1.2.246.562.10.00000000001|1.2.246.562.10.81269623245|1.2.246.562.10.86638002385|");
+
+        List<String> parentOids = organisaatio.getParentOidsFromPath();
+
+        assertThat(parentOids).containsExactly("1.2.246.562.10.00000000001", "1.2.246.562.10.81269623245", "1.2.246.562.10.86638002385");
     }
 
 }
