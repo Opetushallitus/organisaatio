@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
 import static java.util.stream.Collectors.toSet;
 
 
@@ -670,6 +671,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setParentOidPath(String parentOidPath) {
         this.parentOidPath = parentOidPath;
+    }
+
+    public List<String> getParentOidsFromPath() {
+        return Optional.ofNullable(parentOidPath)
+                .map(path -> Arrays.stream(path.split("\\|"))
+                        .filter(not(String::isEmpty))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     public String getParentIdPath() {

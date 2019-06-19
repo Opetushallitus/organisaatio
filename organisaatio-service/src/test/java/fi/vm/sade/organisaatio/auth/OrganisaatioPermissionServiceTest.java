@@ -2,6 +2,8 @@ package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.collect.Lists;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
@@ -21,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Matchers.eq;
+
 //TODO combine permission service tests and make this a proper unit test
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/spring/test-context.xml")
@@ -35,16 +39,19 @@ public class OrganisaatioPermissionServiceTest {
 
     private OrganisaatioPermissionServiceImpl permissionService = new OrganisaatioPermissionServiceImpl(rootOrgOid);
 
+    private static Organisaatio withParentOidPath(String parentOidPath) {
+        Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setParentOidPath(parentOidPath);
+        return organisaatio;
+    }
+
     @Test
     public void testBasic() {
-
-        OidProvider oidProvider = Mockito.mock(OidProvider.class);
-        Mockito.stub(oidProvider.getSelfAndParentOids(otherOrgOid)).toReturn(
-                Lists.newArrayList(rootOrgOid, otherOrgOid));
-        Mockito.stub(oidProvider.getSelfAndParentOids(userOrgOid)).toReturn(
-                Lists.newArrayList(rootOrgOid, userOrgOid));
-        Mockito.stub(oidProvider.getSelfAndParentOids(rootOrgOid)).toReturn(
-                Lists.newArrayList(rootOrgOid));
+        OrganisaatioDAO organisaatioDaoMock = Mockito.mock(OrganisaatioDAO.class);
+        Mockito.when(organisaatioDaoMock.findByOid(eq(otherOrgOid))).thenReturn(withParentOidPath("|" + rootOrgOid + "|"));
+        Mockito.when(organisaatioDaoMock.findByOid(userOrgOid)).thenReturn(withParentOidPath("|" + rootOrgOid + "|"));
+        Mockito.when(organisaatioDaoMock.findByOid(rootOrgOid)).thenReturn(withParentOidPath(null));
+        OidProvider oidProvider = new OidProvider(rootOrgOid, organisaatioDaoMock);
         OrganisationHierarchyAuthorizer authorizer = new OrganisationHierarchyAuthorizer(oidProvider);
         permissionService.setAuthorizer(authorizer);
 
