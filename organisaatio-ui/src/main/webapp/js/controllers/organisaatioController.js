@@ -459,15 +459,16 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         var atIndex;
 
         if ((atIndex = uris.indexOf(kunta)) !== -1){
-            uris.splice(atIndex);
+            uris.splice(atIndex, 1);
             $scope.form.$setDirty();
         }
 
         $scope.model.organisaatio.muutKotipaikatUris = uris;
     }
 
-    $scope.addToMuutKotipaikat = function(kunta){
+    $scope.addToMuutKotipaikat = function(){
         var uris = $scope.model.organisaatio.muutKotipaikatUris || [];
+        var kunta = $scope.model.koodisto.muutkunnatplaceholder;
 
         $log.info('Add kunta to list: ' + kunta);
 
