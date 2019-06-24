@@ -28,8 +28,10 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -43,11 +45,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 
 import java.util.Collection;
 import static java.util.Collections.emptyMap;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +86,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -167,7 +174,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Organisaatio> findBySearchCriteria(
+    public Set<Organisaatio> findBySearchCriteria (
             Set<String> kieliList,
             Set<String> kuntaList,
             Set<String> oppilaitostyyppiList,
@@ -191,6 +198,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         }
         criteria.setParentOidPath("|" + rootOrganisaatioOid + "|");
         criteria.setPoistettu(false);
+
         return organisaatioDAO.findGroups(criteria);
     }
 
@@ -208,7 +216,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkArgument(oids.size() <= 1000);
         return organisaatioDAO.findByOids(oids, true).stream()
                 .map(this::markImagesNotIncluded)
-                .map(organisaatio -> this.conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
+                .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
     }
 
@@ -236,11 +244,10 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             o.getMetadata().setIncludeImage(includeImage);
         }
 
-        OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 result = mapToOrganisaatioRdtoV4(o);
 
         LOG.debug("  result={}", result);
         return result;
-
     }
 
     @Override
@@ -253,16 +260,33 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 : mapToOrganisaatioRdtoV4(parentOrg.getChildren(true), includeImage);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organisaatio> filterHiddenOrganisaatiotToList( Collection<Organisaatio> orglist ){
+        return orglist.stream().filter(org -> permissionChecker.canReadOrganisationIfHidden(org)).collect(toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<Organisaatio> filterHiddenOrganisaatiotToSet ( Collection<Organisaatio> orglist ){
+        return orglist.stream().filter(org -> permissionChecker.canReadOrganisationIfHidden(org)).collect(toSet());
+    }
+
     private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
-                .map(child -> {
-                    // Jätetään kuva pois, jos sitä ei haluta
-                    if (child.getMetadata() != null) {
-                        child.getMetadata().setIncludeImage(includeImage);
-                    }
-                    return conversionService.convert(child, OrganisaatioRDTOV4.class);
-                })
-                .collect(Collectors.toList());
+            .map(child -> {
+                // Jätetään kuva pois, jos sitä ei haluta
+                if (child.getMetadata() != null) {
+                    child.getMetadata().setIncludeImage(includeImage);
+                }
+                return mapToOrganisaatioRdtoV4(child);
+            })
+            .collect(Collectors.toList());
+    }
+
+    private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
+        OrganisaatioRDTOV4 organisaatio_result = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        return organisaatio_result;
     }
 
     @Override

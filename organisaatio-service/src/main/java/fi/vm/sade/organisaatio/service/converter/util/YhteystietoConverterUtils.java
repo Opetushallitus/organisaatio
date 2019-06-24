@@ -74,7 +74,7 @@ public class YhteystietoConverterUtils {
         Map<String, String> result = new HashMap<>();
 
         if (s != null) {
-            result.put("id", "" + s.getId());
+            result.put("id", s.getId() != null ? String.valueOf(s.getId()) : null);
             result.put("yhteystietoOid", s.getYhteystietoOid());
             result.put("kieli", s.getKieli());
 
@@ -185,7 +185,7 @@ public class YhteystietoConverterUtils {
                 if (s.get("email") != null) {
                     Email v = convertEmail(s.get("email"));
                     if (s.containsKey("yhteystietoOid")) {
-                        v.setId(Long.parseLong(s.get("id")));
+                        v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -195,7 +195,7 @@ public class YhteystietoConverterUtils {
                 } else if (s.get("www") != null) {
                     Www v = convertWww(s.get("www"));
                     if (s.containsKey("yhteystietoOid")) {
-                        v.setId(Long.parseLong(s.get("id")));
+                        v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -205,7 +205,7 @@ public class YhteystietoConverterUtils {
                 } else if (s.get("numero") != null) {
                     Puhelinnumero v = convertPuhelinnumero(s.get("numero"), s.get("tyyppi"));
                     if (s.containsKey("yhteystietoOid")) {
-                        v.setId(Long.parseLong(s.get("id")));
+                        v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -215,7 +215,7 @@ public class YhteystietoConverterUtils {
                 } else if (s.get("osoite") != null) {
                     Osoite v = convertMapToOsoite(s, null);
                     if (s.containsKey("yhteystietoOid")) {
-                        Long id = Long.parseLong(s.remove("id"));
+                        Long id = s.get("id") != null ? Long.parseLong(s.remove("id")) : null;
                         v.setId(id);
                     }
                     if (s.containsKey("kieli")) {

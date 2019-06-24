@@ -154,7 +154,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     qOrganisaatio.nimihaku.containsIgnoreCase(searchStr),
                     qOrganisaatio.oid.contains(searchStr),
                     qOrganisaatio.ytunnus.contains(searchStr),
-                    qOrganisaatio.oppilaitosKoodi.contains(searchStr)
+                    qOrganisaatio.oppilaitosKoodi.contains(searchStr),
+                    qOrganisaatio.oid.contains(searchStr)
             ));
         });
 

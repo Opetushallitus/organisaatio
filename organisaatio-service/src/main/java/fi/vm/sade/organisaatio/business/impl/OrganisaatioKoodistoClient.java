@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KOODISTO;
@@ -70,7 +71,7 @@ public class OrganisaatioKoodistoClient {
     public String get(String uri) throws OrganisaatioKoodistoException {
         return wrapException(() -> httpClient.<String>execute(OphHttpRequest.Builder.get(uri).build())
                 .handleErrorStatus(204).with(json -> { throw new RuntimeException(String.format("Osoite %s palautti 204", uri)); }) // ilman tätä 204 => Optional#empty
-                .handleErrorStatus(500).with(json -> null) // 500 => Koodia ei löydy
+                .handleErrorStatus(500).with(json -> Optional.empty()) // 500 => Koodia ei löydy
                 .expectedStatus(200)
                 .mapWith(identity())
                 .orElse(null)); // 404 => Koodia ei löydy

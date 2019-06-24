@@ -20,7 +20,8 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
                 varhaiskasvatuksenToiminnallinenpainotukset: [],
                 paikkojenLukumaara: null,
                 varhaiskasvatuksenJarjestamismuodot: [],
-                varhaiskasvatuksenKielipainotukset: []
+                varhaiskasvatuksenKielipainotukset: [],
+                piilotettu: false
             };
         }
         vm.model = $scope.model;
@@ -115,6 +116,18 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
 
     vm.dbFormatToUI = function (dbFormatDate) {
         return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
+    };
+
+    vm.isPaivakoti = function(){
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm01";
+    };
+
+    vm.isPerhepaivakoti = function(){
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm02";
+    };
+
+    vm.isRyhmaperhepaivakoti = function(){
+        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm03";
     };
 
 });

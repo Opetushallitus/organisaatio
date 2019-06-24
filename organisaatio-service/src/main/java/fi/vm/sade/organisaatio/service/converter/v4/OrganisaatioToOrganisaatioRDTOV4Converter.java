@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.service.converter.v4;
 
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
@@ -30,12 +31,14 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
+    private final PermissionChecker permissionChecker;
+
     @Autowired
-    public OrganisaatioToOrganisaatioRDTOV4Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
+    public OrganisaatioToOrganisaatioRDTOV4Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper, PermissionChecker permissionChecker) {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
+        this.permissionChecker = permissionChecker;
     }
-
 
     @Override
     public OrganisaatioRDTOV4 convert(Organisaatio s) {
@@ -49,8 +52,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setAlkuPvm(s.getAlkuPvm());
         t.setDomainNimi(s.getDomainNimi());
 
-        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
-
         t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setMuutKotipaikatUris(convertCollectionToSet(s.getMuutKotipaikatUris()));
@@ -58,9 +59,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
         t.setMetadata(MetadataConverterUtils.convertMetadata(s.getMetadata()));
-        t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
-
-        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -68,8 +66,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
         t.setParentOid(s.getParentOid().orElse(null));
         t.setParentOidPath(s.getParentOidPath());
-
-        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
@@ -92,10 +88,17 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
-        for (Yhteystieto y : s.getYhteystiedot()) {
-            t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
+        if(permissionChecker.canReadOrganisationIfHidden(s)) {
+            t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
+            t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
+            t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+            t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
+
+            for (Yhteystieto y : s.getYhteystiedot()) {
+                t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
+            }
+            YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
         }
-        YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
 
         Optional.ofNullable(s.getVarhaiskasvatuksenToimipaikkaTiedot())
                 .map(this::varhaiskasvatuksenToimipaikkaTiedotEntityToDto)
@@ -118,6 +121,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenKielipainotukset);
+        varhaiskasvatuksenToimipaikkaTiedotDto.setPiilotettu(toimipaikkaTiedot.getPiilotettu());
         return varhaiskasvatuksenToimipaikkaTiedotDto;
     }
 
