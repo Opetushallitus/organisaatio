@@ -472,7 +472,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
         $log.info('Add kunta to list: ' + kunta);
 
-        if (uris.indexOf(kunta) === -1){
+        if (uris.indexOf(kunta) === -1 && kunta !== null && typeof(kunta) !== "undefined"){
             uris.push(kunta);
             $scope.form.$setDirty();
         }
