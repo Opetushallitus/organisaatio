@@ -272,6 +272,14 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
         };
 
+        this.localiseKielipainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
+        };
+
+        this.localizeMuuKotipaikka = function (koodiUri){
+            return this.localiseKoodiUri(model.koodisto.kotipaikat, koodiUri);
+        }
+
         this.localiseKoodiUri = function (koodisto, koodiUri) {
             var matchingKoodi = koodisto.filter(function (kieliKoodi) {
                 return kieliKoodi.uri === koodiUri;

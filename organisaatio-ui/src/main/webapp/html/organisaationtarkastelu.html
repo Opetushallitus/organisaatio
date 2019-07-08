@@ -111,7 +111,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="kunta in model.organisaatio.muutKotipaikatUris">
-                    {{model.uriLocalizedNames[kunta]}}<br>
+                    {{model.localizeMuuKotipaikka(kunta)}}<br>
                 </div>
             </label>
         </div>
