@@ -161,3 +161,8 @@ INSERT INTO ORGANISAATIOSUHDE(ID, VERSION, ALKUPVM, LOPPUPVM, OPETUSPISTEENJARJN
 (7, 0, TIMESTAMP '2014-12-02 12:50:06.645', NULL, NULL, 'HISTORIA', 8, 7),
 (8, 0, TIMESTAMP '2014-12-02 12:50:06.645', NULL, NULL, 'HISTORIA', 9, 5),
 (9, 0, TIMESTAMP '2014-12-02 12:50:06.645', NULL, NULL, 'HISTORIA', 10, 1);
+
+INSERT INTO organisaatio_kielet(organisaatio_id, kielet) VALUES
+(10, 'oppilaitoksenopetuskieli_1#1'),
+(10, 'oppilaitoksenopetuskieli_2#1'),
+(10, 'oppilaitoksenopetuskieli_3#1');

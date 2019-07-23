@@ -446,6 +446,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         JPAQuery<Organisaatio> jpaQuery = new JPAQuery<Organisaatio>(getEntityManager())
                 .select(org)
+                .distinct()
                 .from(org)
                 .leftJoin(org.kuvaus2, kuvaus2).fetchJoin()
                 .innerJoin(org.nimi, currentnimi).fetchJoin()
