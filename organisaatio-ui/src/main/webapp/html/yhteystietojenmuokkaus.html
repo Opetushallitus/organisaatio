@@ -93,12 +93,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="control-group">
     <label class="control-label" tt="Organisaationtarkastelu.kayntiosoite">
         Organisaationtarkastelu.kayntiosoite
+        <span ng-if="model.isKayntiosoiteRequired()">*</span>
     </label>
     <div class="controls" ng-show="model.osoitemuoto.yt[model.ytlang] === 'suomalainen'">
         <input id="kayntiosoitefi" type="text" maxlength="100" name="kayntiosoitefi" class="span6" oph-null-if-zero-length oph-enter
                ng-model="model.yhteystiedot[model.ytlang].kaynti.osoite"
                ng-disabled="model.osoitemuoto.ytsamaosoite[model.ytlang] === true"
                ng-maxlength="100"
+               ng-required="model.isKayntiosoiteRequired()"
                ie-placeholder placeholder="{{t('Organisaationmuokkaus.osoite')}}"/>
         &nbsp;&nbsp;&nbsp;
         <input id="kayntipostifi" name="kayntipostifi" type="text" oph-validate-postcode="yt" oph-null-if-zero-length oph-enter
@@ -120,6 +122,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </span>
         </div>
         <div>
+            <span class="text-error" ng-show="yhteystiedot.kayntiosoitefi.$error.required">
+                {{t('Organisaationtarkastelu.kayntiosoite')}} {{t('Organisaationmuokkaus.validointi.pakollinen')}}
+            </span>
+        </div>
+        <div>
             <input type='checkbox' ng-model="model.osoitemuoto.ytsamaosoite[model.ytlang]"
                    ng-change="model.copyAddress(false, true)"/>{{t('Organisaationmuokkaus.samaosoite')}}
         </div>
@@ -138,15 +145,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 <div class="control-group">
     <label class="control-label" tt="Organisaationtarkastelu.puhelinnumero">
         Organisaationtarkastelu.puhelinnumero
+        <span ng-if="model.isPuhelinnumeroRequired()">*</span>
     </label>
     <div class="controls">
         <input id="puhelinnumero" type="text" name="puhelinnumero" ng-disabled="isFromYtj(model.ytlang)"
                ng-model="model.yhteystiedot[model.ytlang].puhelin.numero" oph-null-if-zero-length oph-enter
+               ng-required="model.isPuhelinnumeroRequired()"
                ie-placeholder placeholder="{{t('Organisaationtarkastelu.puhelinnumero')}}" ng-pattern="/^[\d \-\+]+$/"/>
         <div>
             <span class="text-error" ng-show="yhteystiedot.puhelinnumero.$error.pattern">
                 {{t('Organisaationtarkastelu.puhelinnumero')}}
                 {{t('Organisaationmuokkaus.validointi.virheellinen')}}
+            </span>
+        </div>
+        <div>
+            <span class="text-error" ng-show="yhteystiedot.puhelinnumero.$error.required">
+                {{t('Organisaationtarkastelu.puhelinnumero')}} {{t('Organisaationmuokkaus.validointi.pakollinen')}}
             </span>
         </div>
     </div>
