@@ -196,7 +196,7 @@
 
     <beans:bean id="userDetailsService" class="fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl">
         <beans:constructor-arg index="0" value="${host.alb}" />
-        <beans:constructor-arg index="1" value="organisaatio" />
+        <beans:constructor-arg index="1" value="1.2.246.562.10.00000000001.organisaatio-service" />
     </beans:bean>
 
     <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">

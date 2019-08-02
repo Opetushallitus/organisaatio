@@ -17,7 +17,7 @@ import java.io.IOException;
 import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
 
 // Pass on the received ID Chain intact. Load balancer will update this ID chain automatically. Add the same "Caller-Id"
-// (clientSubSystemCode) to every sent REST message.
+// to every sent REST message.
 @Component
 @Provider
 public class OutputFilter implements ContainerResponseFilter {
@@ -32,7 +32,7 @@ public class OutputFilter implements ContainerResponseFilter {
         if(responseContext != null && responseContext.getHeaders() != null) {
             MultivaluedMap<String, Object> responseHeaders = responseContext.getHeaders();
             responseHeaders.add("ID", IDChain);
-            responseHeaders.add("clientSubSystemCode", IDContextMessageHelper.getClientSubSystemCode());
+            responseHeaders.add("Caller-Id", IDContextMessageHelper.getCallerId());
             responseHeaders.add(CSRF_HEADER_NAME, csrfCookie);
         }
     }

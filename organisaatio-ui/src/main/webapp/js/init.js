@@ -28,7 +28,7 @@ function organisaatioInitialize() {
     }
 
     // Set default headers for this context.
-    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
+    $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.organisaatio-ui";
 
     //
     // Ladataan organisaatioiden lokalisoinnit ja käyttäjän kieli

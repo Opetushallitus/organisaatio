@@ -172,7 +172,7 @@ app.config(function(uibDatepickerConfig) {
 
 app.run(function($http, $cookies, OrganisaatioInitAuth, $location) {
     // Set headers. NOTE: init() sends auth messages so this needs to be done before that.
-    $http.defaults.headers.common['clientSubSystemCode'] = "organisaatio.organisaatio-ui.frontend";
+    $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.organisaatio-ui";
     if($cookies.get('CSRF')) {
         $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF');
     }
