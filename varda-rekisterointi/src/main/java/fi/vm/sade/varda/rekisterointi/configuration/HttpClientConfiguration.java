@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HttpClientConfiguration {
 
-    private static final String CALLER_ID = "varda-rekisterointi";
+    private static final String CALLER_ID = "1.2.246.562.10.00000000001.varda-rekisterointi";
 
     @Bean
     public OphHttpClient httpClient() {
