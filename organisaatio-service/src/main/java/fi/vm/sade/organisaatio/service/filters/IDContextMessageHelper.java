@@ -2,18 +2,18 @@ package fi.vm.sade.organisaatio.service.filters;
 
 import org.apache.cxf.phase.PhaseInterceptorChain;
 
-// Static class to provide ID chain in current message context or constant "caller-id" (clientsubsystemcode).
+// Static class to provide ID chain in current message context or constant "caller-id".
 public final class IDContextMessageHelper {
     public final static String CSRF_HEADER_NAME = "CSRF";
 
-    // Provides the "caller-id" (clientSubSystemCode) to be provided on header when sending messages.
-    private static final String localClientSubSystemCode = "organisaatio.organisaatio-service.backend";
+    // Provides the "caller-id" to be provided on header when sending messages.
+    private static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
 
     // Private constructor to prevent instantiating this class.
     private IDContextMessageHelper() { }
 
-    static public String getClientSubSystemCode() {
-        return localClientSubSystemCode;
+    static public String getCallerId() {
+        return CALLER_ID;
     }
 
     static public String getIDChain() {

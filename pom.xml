@@ -22,7 +22,7 @@
         <viestinta.version>14.8-SNAPSHOT</viestinta.version>
         <!--Java utils-->
         <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
-        <java-http.version>0.1.4-SNAPSHOT</java-http.version>
+        <java-http.version>0.2.0-SNAPSHOT</java-http.version>
 
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>
@@ -346,7 +346,7 @@ buildTtime=${maven.build.timestamp}
             <dependency>
                 <groupId>fi.vm.sade.java-utils</groupId>
                 <artifactId>opintopolku-user-details-service</artifactId>
-                <version>0.1.0-SNAPSHOT</version>
+                <version>0.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
