@@ -89,6 +89,7 @@ public class YTJServiceMock implements YTJService {
             dto.setYritysTunnus(new YTunnusDTO() {{
                 setAlkupvm("28.02.2011");
             }});
+            dto.setYritysmuoto(yritysmuoto);
         }
         else if(ytunnus.trim().equals("1492449-0")) {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
@@ -108,6 +109,7 @@ public class YTJServiceMock implements YTJService {
             dto.setYritysTunnus(new YTunnusDTO() {{
                 setAlkupvm("28.02.2011");
             }});
+            dto.setYritysmuoto(yritysmuoto);
         }
         else {
             YTJOsoiteDTO osoite = new YTJOsoiteDTO();
@@ -128,6 +130,7 @@ public class YTJServiceMock implements YTJService {
             dto.setYritysTunnus(new YTunnusDTO() {{
                 setAlkupvm("01.01.1999");
             }});
+            dto.setYritysmuoto(yritysmuoto);
         }
         return dto;
     }
