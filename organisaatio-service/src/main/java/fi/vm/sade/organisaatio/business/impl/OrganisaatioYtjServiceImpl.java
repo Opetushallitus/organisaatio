@@ -194,6 +194,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         boolean updatePuhelin = false;
         boolean updateWww = false;
         boolean updateAlkupvm = false;
+        boolean updateYritysmuoto = false;
         // don't update and notify if organisation is inactive in YTJ
         if(ytjOrg.getYritysTunnus().getYritysLopetettu()) {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.LOPPUPVM, "ilmoitukset.log.virhe.lopetettu");
@@ -266,8 +267,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             updateWww = updateWwwFromYTJToOrganisation(ytjOrg, www, forceUpdate);
         }
+        if (ytjOrg.getYritysmuoto() != null && !ytjOrg.getYritysmuoto().equals(organisaatio.getYritysmuoto())) {
+            organisaatio.setYritysmuoto(ytjOrg.getYritysmuoto());
+            updateYritysmuoto = true;
+        }
         // validate and update contact info according to YTJ lang
-        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm);
+        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm || updateYritysmuoto);
     }
 
     /* Date related stuff */
