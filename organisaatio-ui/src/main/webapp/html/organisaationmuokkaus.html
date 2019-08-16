@@ -351,7 +351,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
     <div class="control-group">
         <label class="control-label">
-            {{t('Organisaationtarkastelu.kotipaikka')}}*
+            {{t('Organisaationtarkastelu.paasijaintikunta')}}*
         </label>
         <div class="controls">
             <select id="kotipaikka" ng-model="model.organisaatio.kotipaikkaUri" class="span6"
@@ -363,6 +363,31 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                 <span class="text-error" ng-show="form.kotipaikka.$error.required">
                     {{t('Organisaationtarkastelu.kotipaikka')}}
                     {{t('Organisaationmuokkaus.validointi.pakollinen')}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Muut kunnat -->
+    <div class="control-group" ng-show="model.organisaatio.kotipaikkaUri">
+        <label class="control-label">
+            {{t('Organisaationtarkastelu.muutKunnat')}}
+        </label>
+        <div class="controls">
+            <div>
+                <select id="muutKunnatSelect" ng-model="model.koodisto.muutkunnatplaceholder"
+                        ng-options="kp.uri as kp.nimi for kp in model.koodisto.kotipaikat | orderBy:'nimi'"
+                        ng-change="addToMuutKotipaikat();">
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+            </div>
+            <div>
+                <span ng-repeat="kunta in model.organisaatio.muutKotipaikatUris">
+                    <button type="button"
+                            class="btn btn-small"
+                            ng-click="removeFromMuutKotipaikat(kunta);">
+                        {{:: localizeMuuKotipaikka(kunta)}}&nbsp;<i class="icon-remove"></i>
+                    </button>
                 </span>
             </div>
         </div>

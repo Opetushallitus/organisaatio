@@ -64,6 +64,8 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     private String _kotipaikkaUri;
 
+    private Set<String> _muutKotipaikatUris = new HashSet<>();
+
     private String _oppilaitosKoodi;
 
     private String _oppilaitosTyyppiUri;
@@ -199,6 +201,13 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     public void setKotipaikkaUri(String _kotipaikkaUri) {
         this._kotipaikkaUri = _kotipaikkaUri;
+    }
+
+    @ApiModelProperty(value = "Organisaation muiden kotipaikkojen URIt", required = true)
+    public Set<String> getMuutKotipaikatUris(){ return _muutKotipaikatUris; }
+
+    public void setMuutKotipaikatUris(Set<String> _muutKotipaikatUris){
+        this._muutKotipaikatUris = _muutKotipaikatUris;
     }
 
     @ApiModelProperty(value = "Nimi", required = true)

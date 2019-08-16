@@ -100,6 +100,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private Date lakkautusPvm;
 
     private String kotipaikka;
+
+    @ElementCollection
+    @CollectionTable(name = "organisaatio_muut_kotipaikat_uris", joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @Column(name = "muut_kotipaikat", nullable = false)
+    @BatchSize(size = 200)
+    private Set<String> muutKotipaikatUris = new HashSet<>();
+
     private String maa;
 
     @ElementCollection
@@ -299,6 +306,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setKotipaikka(String kotipaikka) {
         this.kotipaikka = kotipaikka;
+    }
+
+    public Set<String> getMuutKotipaikatUris(){ return muutKotipaikatUris; }
+
+    public void setMuutKotipaikatUris(Set<String> muutKotipaikatUris){
+        this.muutKotipaikatUris = muutKotipaikatUris;
     }
 
     public Date getAlkuPvm() {

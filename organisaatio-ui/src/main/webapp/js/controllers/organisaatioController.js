@@ -453,4 +453,41 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
             || currentOrganizationTypes.indexOf("organisaatiotyyppi_05") > -1 // Muu organisaatio
             || currentOrganizationTypes.indexOf("organisaatiotyyppi_06") > -1); // Tyoelamajarjesto
     };
+
+    $scope.removeFromMuutKotipaikat = function(kunta){
+        var uris = $scope.model.organisaatio.muutKotipaikatUris || [];
+        var atIndex;
+
+        if ((atIndex = uris.indexOf(kunta)) !== -1){
+            uris.splice(atIndex, 1);
+            $scope.form.$setDirty();
+        }
+
+        $scope.model.organisaatio.muutKotipaikatUris = uris;
+    }
+
+    $scope.addToMuutKotipaikat = function(){
+        var uris = $scope.model.organisaatio.muutKotipaikatUris || [];
+        var kunta = $scope.model.koodisto.muutkunnatplaceholder;
+
+        $log.info('Add kunta to list: ' + kunta);
+
+        if (uris.indexOf(kunta) === -1 && kunta !== null && typeof(kunta) !== "undefined"){
+            uris.push(kunta);
+            $scope.form.$setDirty();
+        }
+
+        $scope.model.organisaatio.muutKotipaikatUris = uris;
+    }
+
+    $scope.localizeMuuKotipaikka = function(kuntakoodi){
+        var localisedKoodi = $scope.model.kaikkiPaikkakunnat.filter(function (koodi) {
+            return koodi.koodiUri === kuntakoodi;
+        })[0];
+
+        if (localisedKoodi) {
+            return KoodistoKoodi.getLocalizedName(localisedKoodi);
+        }
+        return localisedKoodi;
+    }
 });

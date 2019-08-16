@@ -333,6 +333,13 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                     model.kaikkiOrganisaatiotyypit = organisaatioTyypit;
                 });
             }
+
+            if (!model.kaikkiPaikkakunnat || model.kaikkiPaikkakunnat.length === 0) {
+                KoodistoClient.koodistoPaikkakunnat.get({}, function (paikkakunnat) {
+                    model.kaikkiPaikkakunnat = paikkakunnat;
+                });
+            }
+
             if (model.organisaatio.tyypit.indexOf('organisaatiotyyppi_08') !== -1) {
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');

@@ -49,6 +49,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             opetuskielet: [],
             vuosiluokat: [],
             kieliplaceholder: $filter('i18n')("lisaakieli"),
+            muutkunnatplaceholder: "",
             postinumerot: [],
             nimetFI: {},
             nimetSV: {},
@@ -61,6 +62,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.kaikkiOrganisaatiotyypit = [];
+        this.kaikkiPaikkakunnat = [];
 
         this.henkilot = {
             virkailijat: []
@@ -270,6 +272,14 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         this.localiseKielipainotus = function (koodiUri) {
             return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
         };
+
+        this.localiseKielipainotus = function (koodiUri) {
+            return this.localiseKoodiUri(model.koodisto.kieli, koodiUri);
+        };
+
+        this.localizeMuuKotipaikka = function (koodiUri){
+            return this.localiseKoodiUri(model.koodisto.kotipaikat, koodiUri);
+        }
 
         this.localiseKoodiUri = function (koodisto, koodiUri) {
             var matchingKoodi = koodisto.filter(function (kieliKoodi) {
