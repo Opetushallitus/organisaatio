@@ -481,9 +481,13 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
     }
 
     $scope.localizeMuuKotipaikka = function(kuntakoodi){
-        var localisedKoodi = $scope.model.koodisto.kotipaikat.filter(function (koodi) {
-            return koodi.uri === kuntakoodi;
+        var localisedKoodi = $scope.model.kaikkiPaikkakunnat.filter(function (koodi) {
+            return koodi.koodiUri === kuntakoodi;
         })[0];
-        return localisedKoodi && localisedKoodi.nimi;
+
+        if (localisedKoodi) {
+            return KoodistoKoodi.getLocalizedName(localisedKoodi);
+        }
+        return localisedKoodi;
     }
 });

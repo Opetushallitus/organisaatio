@@ -62,6 +62,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
         };
 
         this.kaikkiOrganisaatiotyypit = [];
+        this.kaikkiPaikkakunnat = [];
 
         this.henkilot = {
             virkailijat: []
