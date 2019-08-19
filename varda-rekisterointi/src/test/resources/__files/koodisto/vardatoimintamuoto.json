@@ -1,0 +1,137 @@
+[
+  {
+    "koodiUri": "vardatoimintamuoto_tm01",
+    "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm01",
+    "version": 2,
+    "versio": 1,
+    "koodisto": {
+      "koodistoUri": "vardatoimintamuoto",
+      "organisaatioOid": "1.2.246.562.10.2013112012294919827487",
+      "koodistoVersios": [
+        1
+      ]
+    },
+    "koodiArvo": "TM01",
+    "paivitysPvm": 1540906414045,
+    "paivittajaOid": null,
+    "voimassaAlkuPvm": "2019-01-01",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Päiväkoti",
+        "kuvaus": "Päiväkoti",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Daghem",
+        "kuvaus": "Daghem",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vardatoimintamuoto_tm02",
+    "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm02",
+    "version": 2,
+    "versio": 1,
+    "koodisto": {
+      "koodistoUri": "vardatoimintamuoto",
+      "organisaatioOid": "1.2.246.562.10.2013112012294919827487",
+      "koodistoVersios": [
+        1
+      ]
+    },
+    "koodiArvo": "TM02",
+    "paivitysPvm": 1540907982997,
+    "paivittajaOid": null,
+    "voimassaAlkuPvm": "2019-01-01",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Familjedagvård",
+        "kuvaus": "Familjedagvård",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Perhepäivähoito",
+        "kuvaus": "Perhepäivähoito",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "FI"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vardatoimintamuoto_tm03",
+    "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm03",
+    "version": 2,
+    "versio": 1,
+    "koodisto": {
+      "koodistoUri": "vardatoimintamuoto",
+      "organisaatioOid": "1.2.246.562.10.2013112012294919827487",
+      "koodistoVersios": [
+        1
+      ]
+    },
+    "koodiArvo": "TM03",
+    "paivitysPvm": 1540908048897,
+    "paivittajaOid": null,
+    "voimassaAlkuPvm": "2019-01-01",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Gruppfamiljedagvård",
+        "kuvaus": "Gruppfamiljedagvård",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Ryhmäperhepäivähoito",
+        "kuvaus": "Ryhmäperhepäivähoito",
+        "lyhytNimi": "",
+        "kayttoohje": "",
+        "kasite": "",
+        "sisaltaaMerkityksen": "",
+        "eiSisallaMerkitysta": "",
+        "huomioitavaKoodi": "",
+        "sisaltaaKoodiston": "",
+        "kieli": "FI"
+      }
+    ]
+  }
+]
