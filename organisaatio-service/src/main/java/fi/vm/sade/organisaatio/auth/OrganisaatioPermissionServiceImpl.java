@@ -48,7 +48,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
 
     public boolean userCanReadOrganisation(OrganisaatioContext context){
         Preconditions.checkNotNull(context.getOrgOid());
-        return checkAccess(context.getOrgOid(), ROLE_RYHMA);
+        return checkAccess(context.getOrgOid(), ROLE_CRUD, ROLE_RU, ROLE_R);
 
     }
 
