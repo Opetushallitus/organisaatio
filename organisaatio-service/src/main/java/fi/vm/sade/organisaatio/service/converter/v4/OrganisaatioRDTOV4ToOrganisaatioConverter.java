@@ -43,6 +43,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
 
         target.setKielet(convertCollectionToSet(source.getKieletUris()));
         target.setKotipaikka(source.getKotipaikkaUri());
+        target.setMuutKotipaikatUris(convertCollectionToSet(source.getMuutKotipaikatUris()));
         target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
         target.setLakkautusPvm(source.getLakkautusPvm());
         target.setMaa(source.getMaaUri());

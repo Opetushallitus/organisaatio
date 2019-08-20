@@ -104,7 +104,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </label>
         </div>
     </div>
-
+    <div class="control-group" ng-show="model.organisaatio.muutKotipaikatUris">
+        <label class="control-label" tt="Organisaationtarkastelu.muutKunnat">
+            Organisaationtarkastelu.muutKunnat
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="kunta in model.organisaatio.muutKotipaikatUris">
+                    {{:: localizeMuuKotipaikka(kunta)}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
     <div class="control-group" ng-show="model.organisaatio.yritysmuoto" ng-if='model.isKoulutustoimija()'>
         <label class="control-label" tt="Organisaationtarkastelu.yritysmuoto">
             Organisaationtarkastelu.yritysmuoto

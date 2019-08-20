@@ -53,6 +53,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
         t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
+        t.setMuutKotipaikatUris(convertCollectionToSet(s.getMuutKotipaikatUris()));
         t.setKuvaus2(YhteystietoConverterUtils.convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());

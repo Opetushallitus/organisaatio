@@ -122,7 +122,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
 
         Optional.ofNullable(criteria.getKunta()).filter(not(Collection::isEmpty)).ifPresent(kunnat
-                -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
+                -> query.where(qOrganisaatio.muutKotipaikatUris.any().in(kunnat).or(qOrganisaatio.kotipaikka.in(kunnat))));
 
         ifPresentOrElse(Optional.ofNullable(criteria.getOrganisaatioTyyppi()).filter(not(Collection::isEmpty)), organisaatiotyypit -> {
             QOrganisaatio qOrganisaatio1 = new QOrganisaatio("organisaatio1");
