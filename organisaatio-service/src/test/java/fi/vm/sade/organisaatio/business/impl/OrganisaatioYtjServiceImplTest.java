@@ -72,6 +72,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                 .extracting(Osoite::getPostinumero)
                 .containsExactlyInAnyOrder("posti_00100", "posti_00100");
         assertThat(org)
+                .returns("Säätiö", Organisaatio::getYritysmuoto)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
                         organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV).getOsoite(),
@@ -107,6 +108,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                 .extracting(Osoite::getPostinumero)
                 .containsExactlyInAnyOrder("posti_00100", "posti_00100");
         assertThat(org)
+                .returns("Yksityinen elinkeinonharjoittaja", Organisaatio::getYritysmuoto)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
                         organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV),
@@ -142,6 +144,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                 .extracting(Osoite::getPostinumero)
                 .containsExactlyInAnyOrder("posti_00100", "posti_00100", "posti_00100");
         assertThat(org)
+                .returns("Yksityinen elinkeinonharjoittaja", Organisaatio::getYritysmuoto)
                 .extracting(organisaatio -> organisaatio.getNimi().getString("fi"),
                         organisaatio -> organisaatio.getNimi().getString("sv"),
                         organisaatio -> organisaatio.getPostiosoiteByKieli(KIELI_KOODI_SV).getOsoite(),

@@ -30,6 +30,9 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                                           RefreshKoodisto, RefreshOrganisaatio,
                                           LisaYhteystiedot) {
 
+    // copy from service
+    var EMAIL_PATTERN = /^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/;
+
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
     
@@ -433,7 +436,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             // yrityksenKieli, sitten kun koodiston kielet on saatu
             // postiOsoite, sitten kun koodiston postinumerot on saatu
             // kayntiOsoite, sitten kun koodiston postinumerot on saatu
-            if (yritystiedot.sahkoposti) {
+            if (yritystiedot.sahkoposti && EMAIL_PATTERN.test(yritystiedot.sahkoposti)) {
                 model.yhteystiedot['kieli_fi#1'].email.email = yritystiedot.sahkoposti;
             }
             if (yritystiedot.www) {
