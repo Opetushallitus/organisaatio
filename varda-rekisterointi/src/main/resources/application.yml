@@ -3,11 +3,11 @@ server:
   servlet:
     context-path: /varda-rekisterointi
     session:
-      timeout: 1h
+      timeout: 1d
       tracking-modes: cookie
       cookie:
         http-only: true
-        max-age: 1h
+        max-age: 1d
 spring:
   main:
     banner-mode: "off"

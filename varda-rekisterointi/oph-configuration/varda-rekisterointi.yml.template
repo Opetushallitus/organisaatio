@@ -2,9 +2,11 @@ server:
     port: 8080
     servlet:
         session:
+            timeout: 1h
             cookie:
                 domain: {{ host_oppija }}
                 secure: true
+                max-age: 1h
     tomcat:
         accesslog:
             enabled: true
