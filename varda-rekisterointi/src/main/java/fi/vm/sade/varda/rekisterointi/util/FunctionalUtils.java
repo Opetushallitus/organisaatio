@@ -1,6 +1,5 @@
 package fi.vm.sade.varda.rekisterointi.util;
 
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +10,7 @@ public class FunctionalUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FunctionalUtils.class);
 
-    public static Supplier<Optional<OrganisaatioV4Dto>> exceptionToEmptySupplier(Supplier<Optional<OrganisaatioV4Dto>> supplier) {
+    public static <T> Supplier<Optional<T>> exceptionToEmptySupplier(Supplier<Optional<T>> supplier) {
         return () -> {
             try {
                 return supplier.get();
