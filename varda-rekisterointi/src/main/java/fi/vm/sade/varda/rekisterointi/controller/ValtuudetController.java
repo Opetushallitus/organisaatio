@@ -7,7 +7,7 @@ import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
 import fi.vm.sade.varda.rekisterointi.NameContainer;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import fi.vm.sade.varda.rekisterointi.model.Valtuudet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,9 +81,9 @@ public class ValtuudetController {
         OrganisationDto organisation = valtuudetClient.getSelectedOrganisation(valtuudet.sessionId, accessToken);
         valtuudet.businessId = organisation.identifier;
 
-        Organisaatio organisaatio = organisaatioClient.getByYtunnus(valtuudet.businessId)
-                .or(exceptionToEmptySupplier(() -> organisaatioClient.getByYtunnusFromYtj(valtuudet.businessId)))
-                .orElseGet(() -> Organisaatio.of(organisation));
+        OrganisaatioV4Dto organisaatio = organisaatioClient.getV4ByYtunnus(valtuudet.businessId)
+                .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(valtuudet.businessId)))
+                .orElseGet(() -> OrganisaatioV4Dto.of(organisation));
         valtuudet.organisaatio = organisaatio;
 
         String redirectUrl = properties.url("varda-rekisterointi.hakija");

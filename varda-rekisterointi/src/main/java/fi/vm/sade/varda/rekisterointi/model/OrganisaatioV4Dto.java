@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Organisaatio extends BaseDto {
+public class OrganisaatioV4Dto extends BaseDto {
 
     public String oid;
 
@@ -27,8 +27,8 @@ public class Organisaatio extends BaseDto {
     public String maaUri; // koodisto 'maat ja valtiot 1'
     public String kotipaikkaUri; // koodisto 'kunta'
 
-    public static Organisaatio of(OrganisationDto dto) {
-        Organisaatio organisaatio = new Organisaatio();
+    public static OrganisaatioV4Dto of(OrganisationDto dto) {
+        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
         organisaatio.ytunnus = dto.identifier;
         organisaatio.nimi = Map.of("fi", dto.name);
         return organisaatio;

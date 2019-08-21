@@ -6,7 +6,7 @@ import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -45,23 +45,23 @@ public class OrganisaatioClient {
         }
     }
 
-    public Optional<Organisaatio> getByYtunnus(String ytunnus) {
+    public Optional<OrganisaatioV4Dto> getV4ByYtunnus(String ytunnus) {
         String url = properties.url("organisaatio-service.organisaatio.v4.byYtunnus", ytunnus);
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
-        return httpClient.<Organisaatio>execute(request)
+        return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, Organisaatio.class));
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
     }
 
-    public Optional<Organisaatio> getByYtunnusFromYtj(String ytunnus) {
+    public Optional<OrganisaatioV4Dto> getV4ByYtunnusFromYtj(String ytunnus) {
         String url = properties.url("organisaatio-service.vtj.ytunnus", ytunnus);
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
-        return httpClient.<Organisaatio>execute(request)
+        return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, Organisaatio.class));
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
     }
 
-    public Organisaatio save(Organisaatio organisaatio) {
+    public OrganisaatioV4Dto save(OrganisaatioV4Dto organisaatio) {
         if (organisaatio.oid == null) {
             return create(organisaatio);
         } else {
@@ -69,7 +69,7 @@ public class OrganisaatioClient {
         }
     }
 
-    public Organisaatio create(Organisaatio organisaatio) {
+    public OrganisaatioV4Dto create(OrganisaatioV4Dto organisaatio) {
         assert organisaatio.oid == null;
         String url = properties.url("organisaatio-service.organisaatio.v4", organisaatio.oid);
         OphHttpEntity entity = new OphHttpEntity.Builder()
@@ -80,13 +80,13 @@ public class OrganisaatioClient {
                 .post(url)
                 .setEntity(entity)
                 .build();
-        return httpClient.<Organisaatio>execute(request)
+        return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, Organisaatio.class))
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 
-    public Organisaatio update(Organisaatio organisaatio) {
+    public OrganisaatioV4Dto update(OrganisaatioV4Dto organisaatio) {
         assert organisaatio.oid != null;
         String url = properties.url("organisaatio-service.organisaatio.v4.byOid", organisaatio.oid);
         OphHttpEntity entity = new OphHttpEntity.Builder()
@@ -97,9 +97,9 @@ public class OrganisaatioClient {
                 .put(url)
                 .setEntity(entity)
                 .build();
-        return httpClient.<Organisaatio>execute(request)
+        return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, Organisaatio.class))
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 

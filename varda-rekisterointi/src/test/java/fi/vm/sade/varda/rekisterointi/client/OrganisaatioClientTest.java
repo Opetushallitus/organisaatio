@@ -2,7 +2,7 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class OrganisaatioClientTest {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/ytunnus123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
 
-        Optional<Organisaatio> organisaatio = client.getByYtunnus("ytunnus123");
+        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnus("ytunnus123");
 
         assertThat(organisaatio).isNotEmpty();
     }
@@ -49,7 +49,7 @@ public class OrganisaatioClientTest {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/ytunnus123"))
                 .willReturn(aResponse().withStatus(404)));
 
-        Optional<Organisaatio> organisaatio = client.getByYtunnus("ytunnus123");
+        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnus("ytunnus123");
 
         assertThat(organisaatio).isEmpty();
     }
@@ -59,7 +59,7 @@ public class OrganisaatioClientTest {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/ytj/ytunnus123/v4"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
 
-        Optional<Organisaatio> organisaatio = client.getByYtunnusFromYtj("ytunnus123");
+        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnusFromYtj("ytunnus123");
 
         assertThat(organisaatio).isNotEmpty();
     }
@@ -68,7 +68,7 @@ public class OrganisaatioClientTest {
     public void create() {
         stubFor(post(urlEqualTo("/organisaatio-service/rest/organisaatio/v4"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
-        Organisaatio organisaatio = new Organisaatio();
+        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
 
         organisaatio = client.save(organisaatio);
 
@@ -79,7 +79,7 @@ public class OrganisaatioClientTest {
     public void update() {
         stubFor(put(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/oid123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
-        Organisaatio organisaatio = new Organisaatio();
+        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
         organisaatio.oid = "oid123";
 
         organisaatio = client.save(organisaatio);
