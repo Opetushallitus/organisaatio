@@ -3,6 +3,9 @@ package fi.vm.sade.varda.rekisterointi.model;
 import java.util.Optional;
 
 public enum KoodistoType {
+    ORGANISAATIOTYYPPI("organisaatiotyyppi"),
+    KUNTA("kunta"),
+    MAAT_JA_VALTIOT_1("maatjavaltiot1"),
     VARDA_TOIMINTAMUOTO("vardatoimintamuoto");
 
     public final String uri;
