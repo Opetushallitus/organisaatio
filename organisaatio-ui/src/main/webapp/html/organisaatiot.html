@@ -48,17 +48,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </span>
             <a style="display: inline-block; width: 400px; vertical-align: top;" href='organisaatiot/{{data.oid}}'>{{data.i18nNimi | decodeAmp}}</a>
         </div>
-        <div class="span4">
-           {{data.oid}}
-        </div>
-        <div class="span2">
-           {{data.tila}}
+        <div class="span3">
+            {{data.tyypit}}
         </div>
         <div class="span2">
            {{data.tunnus}}
         </div>
-        <div class="span3">
-           {{data.tyypit}}
+        <div class="span2">
+            {{data.tila}}
+        </div>
+        <div class="span4">
+            {{data.oid}}
         </div>
     </div>
     <ol class="unstyled" ng-if="data.expanded">
