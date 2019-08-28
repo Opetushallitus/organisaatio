@@ -5,16 +5,13 @@ import fi.vm.sade.suomifi.valtuudet.OrganisationDto;
 import fi.vm.sade.suomifi.valtuudet.SessionDto;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
-import fi.vm.sade.varda.rekisterointi.NameContainer;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import fi.vm.sade.varda.rekisterointi.model.Valtuudet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +19,6 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-import java.util.Optional;
 
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
@@ -88,26 +84,6 @@ public class ValtuudetController {
 
         String redirectUrl = properties.url("varda-rekisterointi.hakija");
         return new RedirectView(redirectUrl);
-    }
-
-    @GetMapping
-    public String getIndex(Model model, Authentication authentication) {
-        String logoutUrl = properties.url("varda-rekisterointi.hakija.logout");
-        model.addAttribute("logoutUrl", logoutUrl);
-
-        model.addAttribute("nationalIdentificationNumber", authentication.getName());
-        if (authentication.getDetails() instanceof NameContainer) {
-            NameContainer nameContainer = (NameContainer) authentication.getDetails();
-            model.addAttribute("givenName", nameContainer.getGivenName());
-            model.addAttribute("surname", nameContainer.getSurname());
-        }
-
-        model.addAttribute("businessId", valtuudet.businessId);
-        String organisationName = Optional.ofNullable(valtuudet.organisaatio.nimi)
-                .map(nimi -> nimi.get("fi")).orElse("");
-        model.addAttribute("organisationName", organisationName);
-
-        return "hakija";
     }
 
 }
