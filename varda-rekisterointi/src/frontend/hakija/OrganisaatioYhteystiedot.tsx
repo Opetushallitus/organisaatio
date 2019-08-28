@@ -7,6 +7,7 @@ import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
+import InputMultiple from '../InputMultiple';
 
 type Props = {
     readOnly?: boolean,
@@ -102,11 +103,9 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
             </FormFieldContainer>
             <FormFieldContainer label="Sähköpostit prosessin etenemisen viestintään"
                                 helpText="Syötä osoitteet, jotka vastaanottavat viestit prosessista yksityisten varhaiskasvatustoimijoiden rekisteröitymisestä Vardaan.">
-                <input className="oph-input"
-                       type="text"
-                       value={sahkopostit[0]}
-                       disabled={readOnly}
-                       onChange={event => setSahkopostit([ event.currentTarget.value ])} />
+                <InputMultiple values={sahkopostit}
+                               disabled={readOnly}
+                               onChange={sahkopostit => setSahkopostit(sahkopostit)} />
             </FormFieldContainer>
             <FormFieldContainer label="Käyntiosoite" labelFor="kayntiosoite" required={!kayntiosoiteDisabled}>
                 <input className="oph-input"
