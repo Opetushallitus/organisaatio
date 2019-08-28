@@ -5,6 +5,7 @@ type Props = {
     label: string,
     labelFor?: string,
     required?: boolean,
+    errorText?: string,
     helpText?: string,
     children: React.ReactNode,
 }
@@ -18,8 +19,12 @@ export default function FormFieldContainer(props: Props) {
     return (
         <div className={classnames}>
             <label className="oph-label" htmlFor={props.labelFor}>{props.label}</label>
-            {props.helpText
-                ? <div className="oph-input-container">{props.children}<div className="oph-field-text">{props.helpText}</div></div>
+            {props.errorText || props.helpText
+                ? <div className="oph-input-container">
+                    {props.children}
+                    {props.errorText ? <div className="opg-field-text oph-error">{props.errorText}</div> : null}
+                    {props.helpText ? <div className="oph-field-text">{props.helpText}</div> : null}
+                  </div>
                 : props.children}
         </div>
     )
