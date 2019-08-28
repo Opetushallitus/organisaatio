@@ -42,3 +42,10 @@ Start frontend
 
 Service is available at <https://localhost:8080/varda-rekisterointi>.
 Login with <https://localhost:8080/varda-rekisterointi/hakija/login?hetu=010530-998L> (or with any other valid hetu).
+
+To develop backend only, start it with following parameters
+
+    -Dspring.config.additional-location=<path_to_varda_rekisterointi_git>/dev-configuration/dev.yml,<path_to_file_created_above>/dev.yml
+    -DbaseUrl=https://<test_environment_host>
+    -Dvarda-rekisterointi.baseUrl=https://localhost:8080
+    -Dserver.port=8080
