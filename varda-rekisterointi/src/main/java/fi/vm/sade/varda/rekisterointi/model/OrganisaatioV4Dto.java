@@ -22,13 +22,11 @@ public class OrganisaatioV4Dto extends BaseDto {
         OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
         organisaatio.ytunnus = dto.identifier;
         organisaatio.nimi = Map.of("fi", dto.name);
+        organisaatio.alkuPvm = LocalDate.now();
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.alkuPvm = organisaatio.alkuPvm;
         organisaatioNimi.nimi = organisaatio.nimi;
         organisaatio.nimet = singletonList(organisaatioNimi);
-
-        organisaatio.alkuPvm = LocalDate.now();
-
         return organisaatio;
     }
 
