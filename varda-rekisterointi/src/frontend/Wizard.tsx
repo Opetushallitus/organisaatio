@@ -25,6 +25,10 @@ export default function Wizard(props: Props) {
         return currentStep < steps - 1;
     }
 
+    function isLast() {
+        return currentStep >= steps - 1;
+    }
+
     function isSubmit() {
         return currentStep === steps - 1;
     }
@@ -50,7 +54,7 @@ export default function Wizard(props: Props) {
 
     return (
         <>
-            {props.getNavigation(currentStep)}
+            {isLast() ? null : props.getNavigation(currentStep)}
             <section>
                 {child}
                 <div className="buttons">
