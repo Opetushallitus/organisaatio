@@ -18,7 +18,7 @@ Project includes maven wrapper so it doesn't have to be installed. Just use `./m
 
     java -jar target/varda-rekisterointi.jar
 
-Service is available at <http://localhost:8080/varda-rekisterointi>.
+Service is available at <http://localhost:8081/varda-rekisterointi>.
 
 ### For development
 
