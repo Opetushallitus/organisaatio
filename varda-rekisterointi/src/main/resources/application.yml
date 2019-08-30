@@ -11,6 +11,12 @@ server:
 spring:
   main:
     banner-mode: "off"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/varda-rekisterointi
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+  flyway:
+    out-of-order: true
 varda-rekisterointi:
   host-virkailija: http://localhost:${server.port}
   host-tunnistus: http://localhost:${server.port}

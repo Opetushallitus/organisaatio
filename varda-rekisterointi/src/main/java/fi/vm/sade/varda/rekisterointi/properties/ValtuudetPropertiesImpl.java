@@ -2,9 +2,7 @@ package fi.vm.sade.varda.rekisterointi.properties;
 
 import fi.vm.sade.suomifi.valtuudet.ValtuudetProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @ConfigurationProperties("varda-rekisterointi.valtuudet")
 public class ValtuudetPropertiesImpl implements ValtuudetProperties {
 

@@ -18,6 +18,11 @@ server:
             rotate: true
             rename-on-rotate: true
             max-days: 7
+spring:
+    datasource:
+        url: jdbc:postgresql://{{ varda_rekisterointi_datasource_host }}:{{ varda_rekisterointi_datasource_port | default('5432') }}/{{ varda_rekisterointi_datasource_dbname | default('varda-rekisterointi') }}
+        username: {{ postgres_app_user }}
+        password: {{ varda_rekisterointi_datasource_password }}
 varda-rekisterointi:
     host-virkailija: https://{{ host_virkailija }}
     host-tunnistus: https://{{ host_tunnistus }}
