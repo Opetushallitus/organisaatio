@@ -17,7 +17,7 @@ const UI_FORMAT = 'dd.MM.yyyy';
 const LOCAL_DATE_FORMAT = 'yyyy-MM-dd';
 
 export default function DateSelect(props: Props) {
-    const language = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const value = props.value ? parseISO(props.value) : new Date();
     const classes = classNames({
         'oph-input': true,

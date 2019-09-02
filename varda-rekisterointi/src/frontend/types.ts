@@ -11,6 +11,9 @@ export type Koodi = {
     nimi: LocalizableText,
 };
 
+// lokalisointi
+export type Lokalisointi = Record<Language, Record<string, string>>;
+
 // organisaatio
 export type Yhteystieto = Record<string, string>;
 export type OrganisaatioNimi = {

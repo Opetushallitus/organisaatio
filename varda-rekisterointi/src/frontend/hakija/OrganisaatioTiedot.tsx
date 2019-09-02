@@ -21,7 +21,7 @@ type Props = {
 }
 
 export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
-    const language = useContext(LanguageContext);
+    const { language, i18n } = useContext(LanguageContext);
     const [{data: organisaatiotyypit, loading: organisaatiotyypitLoading, error: organisaatiotyypitError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/ORGANISAATIOTYYPPI/koodi');
     const [{data: kunnat, loading: kunnatLoading, error: kunnatError}]
@@ -55,13 +55,13 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
 
     return (
         <>
-            <FormFieldContainer label="Organisaation nimi" required={!nimiDisabled} errorText={errors.nimi}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} required={!nimiDisabled} errorText={errors.nimi}>
                 <LocalizableTextEdit value={organisaatio.nimi}
                                      disabled={nimiDisabled}
                                      hasError={!!errors.nimi}
                                      onChange={nimi => setOrganisaatio({ nimi: nimi, nimet: [ { alkuPvm: organisaatio.alkuPvm, nimi: nimi } ] })} />
             </FormFieldContainer>
-            <FormFieldContainer label="Y-tunnus" labelFor="ytunnus" required={!ytunnusDisabled} errorText={errors.ytunnus}>
+            <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="ytunnus" required={!ytunnusDisabled} errorText={errors.ytunnus}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.ytunnus })}
                        type="text"
                        id="ytunnus"
@@ -69,7 +69,7 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
                        disabled={ytunnusDisabled}
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label="Yritysmuoto" labelFor="yritysmuoto" required={!yritysmuotoDisabled} errorText={errors.yritysmuoto}>
+            <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" required={!yritysmuotoDisabled} errorText={errors.yritysmuoto}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.yritysmuoto })}
                        type="text"
                        id="yritysmuoto"
@@ -77,10 +77,10 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
                        disabled={yritysmuotoDisabled}
                        onChange={event => setOrganisaatio({ yritysmuoto: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label="Organisaatiotyyppi">
+            <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')}>
                 <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
-            <FormFieldContainer label="Kotipaikka" required={!kotipaikkaDisabled || !maaDisabled} errorText={errors.kotipaikkaUri}>
+            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} required={!kotipaikkaDisabled || !maaDisabled} errorText={errors.kotipaikkaUri}>
                 <div className="oph-input-container">
                     <KoodiSelect selectable={kunnat} selected={organisaatio.kotipaikkaUri}
                                 disabled={kotipaikkaDisabled}
@@ -90,7 +90,7 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
                     <span>{toLocalizedKoodi(maa, language)}</span>
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label="Toiminnan alkamisaika" required={!alkuPvmDisabled} errorText={errors.alkuPvm}>
+            <FormFieldContainer label={i18n.translate('TOIMINNAN_ALKAMISAIKA')} required={!alkuPvmDisabled} errorText={errors.alkuPvm}>
                 <div className="oph-input-container">
                     <DateSelect value={organisaatio.alkuPvm}
                                 disabled={alkuPvmDisabled}

@@ -19,7 +19,7 @@ type Props = {
 }
 
 export default function Select(props: Props) {
-    const language = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const classes = classNames({
         'oph-input': true,
         'oph-input-has-error': props.hasError,

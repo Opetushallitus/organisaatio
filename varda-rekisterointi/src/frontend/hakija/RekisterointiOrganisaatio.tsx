@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Organisaatio } from '../types';
 import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
+import { LanguageContext } from '../contexts';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -13,19 +14,20 @@ type Props = {
 }
 
 export default function RekisterointiOrganisaatio(props: Props) {
+    const { i18n } = useContext(LanguageContext);
     return (
         <form>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Organisaation tiedot</legend>
-                <div>Tarkista että tiedot ovat oikein. Jos esitäytetyissä tiedoissa on virheitä, tiedot tulee päivittää itse Yritys- ja yhteisötietojärjestelmään.</div>
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_TIEDOT')}</legend>
+                <div>{i18n.translate('ORGANISAATION_TIEDOT_KUVAUS')}</div>
                 <OrganisaatioTiedot initialOrganisaatio={props.initialOrganisaatio}
                                     organisaatio={props.organisaatio}
                                     setOrganisaatio={props.setOrganisaatio}
                                     errors={props.errors} />
             </fieldset>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Organisaation yhteystiedot</legend>
-                <div>Tarkista että tiedot ovat oikein ja täytä tarvittavat kohdat ennen jatkamista.</div>
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}</legend>
+                <div>{i18n.translate('ORGANISAATION_YHTEYSTIEDOT_KUVAUS')}</div>
                 <OrganisaatioYhteystiedot initialOrganisaatio={props.initialOrganisaatio}
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={props.setOrganisaatio}

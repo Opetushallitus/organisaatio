@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from './Button';
+import { LanguageContext } from './contexts';
 
 type Props = {
     values: string[],
@@ -8,6 +9,7 @@ type Props = {
 }
 
 export default function InputMultiple(props: Props) {
+    const { i18n } = useContext(LanguageContext);
     function add(value: string) {
         return [ ...props.values, value ];
     }
@@ -38,7 +40,7 @@ export default function InputMultiple(props: Props) {
         <Button type="button"
                 disabled={props.disabled}
                 styling="ghost"
-                onClick={() => props.onChange(add(''))}>+ Lisää sähköpostiosoite</Button>
+                onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
         </div>
     )
 }

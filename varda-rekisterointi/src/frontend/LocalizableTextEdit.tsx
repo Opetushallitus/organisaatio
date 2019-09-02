@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default function LocalizableTextEdit(props: Props) {
-    const language = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const localizedText = toLocalizedText(props.value, language);
     const classes = classNames({
         'oph-input': true,

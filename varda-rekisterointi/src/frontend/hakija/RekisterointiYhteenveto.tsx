@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Organisaatio, Kayttaja } from '../types';
 import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
 import KayttajaYhteystiedot from './KayttajaYhteystiedot';
+import { LanguageContext } from '../contexts';
 
 type Props = {
     organisaatio: Organisaatio,
@@ -16,14 +17,15 @@ function nop() {
 }
 
 export default function RekisterointiYhteenveto(props: Props) {
+    const { i18n } = useContext(LanguageContext);
     return (
         <form>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Yhteenveto</legend>
-                <div>Tarkista että tiedot ovat oikein. Jos havaitset antamissasi tiedoissa virheitä, palaa edelliseen vaiheeseen.</div>
+                <legend className="oph-label">{i18n.translate('YHTEENVETO')}</legend>
+                <div>{i18n.translate('YHTEENVETO_KUVAUS')}</div>
             </fieldset>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Organisaation tiedot</legend>
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_TIEDOT')}</legend>
                 <OrganisaatioTiedot readOnly={true}
                                     initialOrganisaatio={props.organisaatio}
                                     organisaatio={props.organisaatio}
@@ -31,7 +33,7 @@ export default function RekisterointiYhteenveto(props: Props) {
                                     errors={nop()} />
             </fieldset>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Organisaation yhteystiedot</legend>
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}</legend>
                 <OrganisaatioYhteystiedot readOnly={true}
                                           initialOrganisaatio={props.organisaatio}
                                           organisaatio={props.organisaatio}
@@ -41,7 +43,7 @@ export default function RekisterointiYhteenveto(props: Props) {
                                           errors={nop()} />
             </fieldset>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Varda-pääkäyttäjän yhteystiedot</legend>
+                <legend className="oph-label">{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}</legend>
                 <KayttajaYhteystiedot readOnly={true}
                                       toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={nop}

@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function KoodiSelectRadio(props: Props) {
-    const language = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     return (
         <div>
             {props.selectable.map(koodi => {

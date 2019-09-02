@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
 import { Organisaatio, Kayttaja, KoodiUri } from '../types';
@@ -10,6 +10,7 @@ import Header from './Header';
 import Wizard from '../Wizard';
 import Navigation from './Navigation';
 import Spinner from '../Spinner';
+import { LanguageContext } from '../contexts';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -49,6 +50,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
 }
 
 export default function Rekisterointi() {
+    const { i18n } = useContext(LanguageContext);
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
@@ -108,14 +110,14 @@ export default function Rekisterointi() {
                 const organisaatioErrors: Record<string, string> = {};
                 ['ytunnus', 'yritysmuoto', 'kotipaikkaUri']
                     .filter(field => !organisaatio[field])
-                    .forEach(field => organisaatioErrors[field] = 'Pakollinen tieto');
+                    .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
                 setOrganisaatioErrors(organisaatioErrors);
                 return Object.keys(organisaatioErrors).length === 0;
             case 2:
                 const kayttajaErrors: Record<string, string> = {};
                 ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
                     .filter(field => !kayttaja[field])
-                    .forEach(field => kayttajaErrors[field] = 'Pakollinen tieto');
+                    .forEach(field => kayttajaErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
                 setKayttajaErrors(kayttajaErrors);
                 return Object.keys(kayttajaErrors).length === 0;
         }

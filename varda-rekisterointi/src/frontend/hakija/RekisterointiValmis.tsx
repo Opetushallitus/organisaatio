@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { LanguageContext } from '../contexts';
 
 export default function RekisterointiValmis() {
+    const { i18n } = useContext(LanguageContext);
     return (
         <form>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Rekisteröinnin käsittely</legend>
+                <legend className="oph-label">{i18n.translate('REKISTEROINNIN_KASITTELY')}</legend>
             </fieldset>
-            <div>
-                Rekisteröitymisessä tallennetut varhaiskasvatustoimijan tiedot on lähetetty käsiteltäviksi.
-                Käsittelijänä toimii organisaatiosi kunta.
-                Vahvistus käsittelystä lähetetään kaikille niille henkilöille, joiden yhteystiedot on annettu rekisteröitymisessä.
-            </div>
-            <div>Voit sulkea tämän sivun.</div>
+            <div>{i18n.translate('REKISTEROINNIN_KASITTELY_KUVAUS')}</div>
+            <div>{i18n.translate('REKISTEROINNIN_KASITTELY_OHJE')}</div>
         </form>
     );
 }

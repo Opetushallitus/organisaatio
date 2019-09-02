@@ -15,7 +15,7 @@ type Props = {
 }
 
 export default function KoodiSelect(props: Props) {
-    const language = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const classes = classNames({
         'oph-input': true,
         'oph-select': true,

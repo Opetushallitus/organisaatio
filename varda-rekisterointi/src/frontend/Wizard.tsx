@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from './Button';
+import { LanguageContext } from './contexts';
 
 type Props = {
     getNavigation: (currentStep: number) => React.ReactNode,
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export default function Wizard(props: Props) {
+    const { i18n } = useContext(LanguageContext);
     const [currentStep, setCurrentStep] = useState(1);
 
     const steps = props.children.length;
@@ -64,13 +66,13 @@ export default function Wizard(props: Props) {
                     {isPrev()
                         ? <Button disabled={props.disabled || props.loading}
                                   styling="ghost"
-                                  onClick={prev}>Edellinen vaihe</Button>
+                                  onClick={prev}>{i18n.translate('EDELLINEN_VAIHE')}</Button>
                         : null}
                     {isNext()
                         ? <Button type="submit"
                                   disabled={props.disabled || props.loading}
                                   styling="primary"
-                                  onClick={next}>Seuraava vaihe</Button>
+                                  onClick={next}>{i18n.translate('SEURAAVA_VAIHE')}</Button>
                         : null}
                     {isSubmit()
                         ? <Button type="submit"
@@ -78,7 +80,7 @@ export default function Wizard(props: Props) {
                                   loading={props.loading}
                                   styling="primary"
                                   onClick={submit}>
-                              Lähetä hyväksyttäväksi
+                              {i18n.translate('LAHETA_HYVAKSYTTAVAKSI')}
                           </Button>
                         : null}
                 </div>

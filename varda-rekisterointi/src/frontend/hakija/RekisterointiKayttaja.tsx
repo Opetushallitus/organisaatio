@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import KayttajaYhteystiedot from './KayttajaYhteystiedot';
 import { Kayttaja } from '../types';
+import { LanguageContext } from '../contexts';
 
 type Props = {
     toimintamuoto: string,
@@ -11,11 +12,12 @@ type Props = {
 }
 
 export default function RekisterointiKayttaja(props: Props) {
+    const { i18n} = useContext(LanguageContext);
     return (
         <form>
             <fieldset className="oph-fieldset">
-                <legend className="oph-label">Varda-pääkäyttäjän yhteystiedot</legend>
-                <div>Varda-pääkäyttäjä vastaa organisaaton Varda-käyttöoikeuksista. Lomakkeella ilmoitettu henkilö saa kutsun Varda-pääkäyttäjäksi sen jälkeen, kun kunta on käsittelyt rekisteröitymisen.</div>
+                <legend className="oph-label">{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}</legend>
+                <div>{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS')}</div>
                 <KayttajaYhteystiedot toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={props.setToimintamuoto}
                                       kayttaja={props.kayttaja}
