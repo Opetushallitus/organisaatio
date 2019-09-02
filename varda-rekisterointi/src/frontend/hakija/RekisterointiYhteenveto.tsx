@@ -11,7 +11,9 @@ type Props = {
     kayttaja: Kayttaja,
 }
 
-function nop() {}
+function nop() {
+    return {};
+}
 
 export default function RekisterointiYhteenveto(props: Props) {
     return (
@@ -25,7 +27,8 @@ export default function RekisterointiYhteenveto(props: Props) {
                 <OrganisaatioTiedot readOnly={true}
                                     initialOrganisaatio={props.organisaatio}
                                     organisaatio={props.organisaatio}
-                                    setOrganisaatio={nop} />
+                                    setOrganisaatio={nop}
+                                    errors={nop()} />
             </fieldset>
             <fieldset className="oph-fieldset">
                 <legend className="oph-label">Organisaation yhteystiedot</legend>
@@ -34,7 +37,8 @@ export default function RekisterointiYhteenveto(props: Props) {
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={nop}
                                           sahkopostit={props.sahkopostit}
-                                          setSahkopostit={nop} />
+                                          setSahkopostit={nop}
+                                          errors={nop()} />
             </fieldset>
             <fieldset className="oph-fieldset">
                 <legend className="oph-label">Varda-pääkäyttäjän yhteystiedot</legend>
@@ -42,7 +46,8 @@ export default function RekisterointiYhteenveto(props: Props) {
                                       toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={nop}
                                       kayttaja={props.kayttaja}
-                                      setKayttaja={nop} />
+                                      setKayttaja={nop}
+                                      errors={nop()} />
             </fieldset>
         </form>
     );

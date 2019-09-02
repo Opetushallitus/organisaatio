@@ -8,7 +8,8 @@ type Props = {
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
     sahkopostit: string[],
-    setSahkopostit: (sahkopostit: string[]) => void
+    setSahkopostit: (sahkopostit: string[]) => void,
+    errors: Record<string, string>,
 }
 
 export default function RekisterointiOrganisaatio(props: Props) {
@@ -19,7 +20,8 @@ export default function RekisterointiOrganisaatio(props: Props) {
                 <div>Tarkista että tiedot ovat oikein. Jos esitäytetyissä tiedoissa on virheitä, tiedot tulee päivittää itse Yritys- ja yhteisötietojärjestelmään.</div>
                 <OrganisaatioTiedot initialOrganisaatio={props.initialOrganisaatio}
                                     organisaatio={props.organisaatio}
-                                    setOrganisaatio={props.setOrganisaatio} />
+                                    setOrganisaatio={props.setOrganisaatio}
+                                    errors={props.errors} />
             </fieldset>
             <fieldset className="oph-fieldset">
                 <legend className="oph-label">Organisaation yhteystiedot</legend>
@@ -28,7 +30,8 @@ export default function RekisterointiOrganisaatio(props: Props) {
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={props.setOrganisaatio}
                                           sahkopostit={props.sahkopostit}
-                                          setSahkopostit={props.setSahkopostit} />
+                                          setSahkopostit={props.setSahkopostit}
+                                          errors={props.errors} />
             </fieldset>
         </form>
     );

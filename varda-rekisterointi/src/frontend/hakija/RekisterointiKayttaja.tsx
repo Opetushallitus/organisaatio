@@ -7,6 +7,7 @@ type Props = {
     setToimintamuoto: (toimintamuoto: string) => void,
     kayttaja: Kayttaja,
     setKayttaja: (kayttaja: Partial<Kayttaja>) => void,
+    errors: Record<string, string>,
 }
 
 export default function RekisterointiKayttaja(props: Props) {
@@ -18,7 +19,8 @@ export default function RekisterointiKayttaja(props: Props) {
                 <KayttajaYhteystiedot toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={props.setToimintamuoto}
                                       kayttaja={props.kayttaja}
-                                      setKayttaja={props.setKayttaja} />
+                                      setKayttaja={props.setKayttaja}
+                                      errors={props.errors} />
             </fieldset>
         </form>
     );

@@ -10,15 +10,17 @@ import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import { toLocalizedKoodi } from '../KoodiUtils';
+import classNames from 'classnames/bind';
 
 type Props = {
     readOnly?: boolean,
     initialOrganisaatio: Organisaatio,
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
+    errors: Record<string, string>,
 }
 
-export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio}: Props) {
+export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
     const language = useContext(LanguageContext);
     const [{data: organisaatiotyypit, loading: organisaatiotyypitLoading, error: organisaatiotyypitError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/ORGANISAATIOTYYPPI/koodi');
@@ -49,23 +51,26 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
     const maaDisabled = readOnly || hasLength(initialOrganisaatio.maaUri);
     const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
 
+    const baseClasses = { 'oph-input': true };
+
     return (
         <>
-            <FormFieldContainer label="Organisaation nimi" required={!nimiDisabled}>
+            <FormFieldContainer label="Organisaation nimi" required={!nimiDisabled} errorText={errors.nimi}>
                 <LocalizableTextEdit value={organisaatio.nimi}
                                      disabled={nimiDisabled}
+                                     hasError={!!errors.nimi}
                                      onChange={nimi => setOrganisaatio({ nimi: nimi, nimet: [ { alkuPvm: organisaatio.alkuPvm, nimi: nimi } ] })} />
             </FormFieldContainer>
-            <FormFieldContainer label="Y-tunnus" labelFor="ytunnus" required={!ytunnusDisabled}>
-                <input className="oph-input"
+            <FormFieldContainer label="Y-tunnus" labelFor="ytunnus" required={!ytunnusDisabled} errorText={errors.ytunnus}>
+                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.ytunnus })}
                        type="text"
                        id="ytunnus"
                        value={organisaatio.ytunnus}
                        disabled={ytunnusDisabled}
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label="Yritysmuoto" labelFor="yritysmuoto" required={!yritysmuotoDisabled}>
-                <input className="oph-input"
+            <FormFieldContainer label="Yritysmuoto" labelFor="yritysmuoto" required={!yritysmuotoDisabled} errorText={errors.yritysmuoto}>
+                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.yritysmuoto })}
                        type="text"
                        id="yritysmuoto"
                        value={organisaatio.yritysmuoto}
@@ -75,19 +80,21 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
             <FormFieldContainer label="Organisaatiotyyppi">
                 <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
-            <FormFieldContainer label="Kotipaikka" required={!kotipaikkaDisabled || !maaDisabled}>
+            <FormFieldContainer label="Kotipaikka" required={!kotipaikkaDisabled || !maaDisabled} errorText={errors.kotipaikkaUri}>
                 <div className="oph-input-container">
                     <KoodiSelect selectable={kunnat} selected={organisaatio.kotipaikkaUri}
                                 disabled={kotipaikkaDisabled}
                                 required={!kotipaikkaDisabled}
+                                hasError={!!errors.kotipaikkaUri}
                                 onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
                     <span>{toLocalizedKoodi(maa, language)}</span>
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label="Toiminnan alkamisaika" required={!alkuPvmDisabled}>
+            <FormFieldContainer label="Toiminnan alkamisaika" required={!alkuPvmDisabled} errorText={errors.alkuPvm}>
                 <div className="oph-input-container">
                     <DateSelect value={organisaatio.alkuPvm}
                                 disabled={alkuPvmDisabled}
+                                hasError={!!errors.alkuPvm}
                                 onChange={alkuPvm => setOrganisaatio({ alkuPvm: alkuPvm, nimet: [ { alkuPvm: alkuPvm, nimi: organisaatio.nimi } ] })} />
                 </div>
             </FormFieldContainer>

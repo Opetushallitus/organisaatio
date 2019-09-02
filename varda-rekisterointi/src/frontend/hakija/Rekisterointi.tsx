@@ -51,9 +51,11 @@ function reducer<T>(state: T, data: Partial<T>): T {
 export default function Rekisterointi() {
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
+    const [organisaatioErrors, setOrganisaatioErrors] = useState({});
     const [sahkopostit, setSahkopostit] = useState(intialSahkopostit);
     const [toimintamuoto, setToimintamuoto] = useState(initialToimintamuoto);
     const [kayttaja, setKayttaja] = useReducer(reducer, initialKayttaja);
+    const [kayttajaErrors, setKayttajaErrors] = useState({});
     const [fetchLoading, setFetchLoading] = useState(true);
     const [fetchError, setFetchError] = useState(null);
     const [postLoading, setPostLoading] = useState(false);
@@ -99,6 +101,27 @@ export default function Rekisterointi() {
         }
     }
 
+    function validate(currentStep: number): boolean {
+        setPostError(null);
+        switch (currentStep) {
+            case 1:
+                const organisaatioErrors: Record<string, string> = {};
+                ['ytunnus', 'yritysmuoto', 'kotipaikkaUri']
+                    .filter(field => !organisaatio[field])
+                    .forEach(field => organisaatioErrors[field] = 'Pakollinen tieto');
+                setOrganisaatioErrors(organisaatioErrors);
+                return Object.keys(organisaatioErrors).length === 0;
+            case 2:
+                const kayttajaErrors: Record<string, string> = {};
+                ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
+                    .filter(field => !kayttaja[field])
+                    .forEach(field => kayttajaErrors[field] = 'Pakollinen tieto');
+                setKayttajaErrors(kayttajaErrors);
+                return Object.keys(kayttajaErrors).length === 0;
+        }
+        return true;
+    }
+
     if (fetchLoading) {
         return <Spinner />;
     }
@@ -111,7 +134,7 @@ export default function Rekisterointi() {
             <Header />
             <Wizard getNavigation={currentStep => <Navigation currentStep={currentStep} />}
                     disabled={false}
-                    changed={() => setPostError(null)}
+                    validate={validate}
                     submit={post}
                     loading={postLoading}
                     error={postError ? 'error, try again' : undefined}>
@@ -120,12 +143,14 @@ export default function Rekisterointi() {
                     organisaatio={organisaatio}
                     setOrganisaatio={setOrganisaatio}
                     sahkopostit={sahkopostit}
-                    setSahkopostit={setSahkopostit} />
+                    setSahkopostit={setSahkopostit}
+                    errors={organisaatioErrors} />
                 <RekisterointiKayttaja
                     toimintamuoto={toimintamuoto}
                     setToimintamuoto={setToimintamuoto}
                     kayttaja={kayttaja}
-                    setKayttaja={setKayttaja} />
+                    setKayttaja={setKayttaja}
+                    errors={kayttajaErrors} />
                 <RekisterointiYhteenveto
                     organisaatio={organisaatio}
                     sahkopostit={sahkopostit}

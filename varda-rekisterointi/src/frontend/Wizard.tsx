@@ -5,7 +5,7 @@ type Props = {
     getNavigation: (currentStep: number) => React.ReactNode,
     children: React.ReactNodeArray,
     disabled: boolean,
-    changed: () => void,
+    validate: (currentStep: number) => boolean,
     submit: () => Promise<void>,
     loading: boolean,
     error?: string,
@@ -35,12 +35,12 @@ export default function Wizard(props: Props) {
 
     function prev() {
         setCurrentStep(currentStep - 1);
-        props.changed();
     }
 
     function next() {
-        setCurrentStep(currentStep + 1);
-        props.changed();
+        if (props.validate(currentStep)) {
+            setCurrentStep(currentStep + 1);
+        }
     }
 
     async function submit() {
