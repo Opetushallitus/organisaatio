@@ -2,11 +2,9 @@
     background-color: #159ecb;
     color: #ffffff;
     padding: 0.5em;
-}
-
-.varda-rekisterointi-hakija header > div {
-    max-width: 1200px;
-    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .varda-rekisterointi-hakija nav {
@@ -92,4 +90,13 @@
 
 .varda-rekisterointi-hakija .center {
     text-align: center;
+}
+
+.varda-rekisterointi-hakija select.kielivalinta {
+    border: 0;
+    background-color: transparent;
+    color: #ffffff;
+}
+.varda-rekisterointi-hakija select.kielivalinta option {
+    background-color: #159ecb;
 }
