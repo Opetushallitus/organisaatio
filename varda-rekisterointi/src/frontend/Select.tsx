@@ -22,6 +22,7 @@ export default function Select(props: Props) {
     const { language } = useContext(LanguageContext);
     const classes = classNames({
         'oph-input': true,
+        'oph-select': true,
         'oph-input-has-error': props.hasError,
     });
     return (
