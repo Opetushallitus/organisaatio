@@ -233,6 +233,6 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     }
 
     public boolean isReadAccessToAll() {
-        return checkAccess(ophOid, ROLE_CRUD, ROLE_RU, ROLE_R);
+        return userCanReadOrganisation(ophOid);
     }
 }
