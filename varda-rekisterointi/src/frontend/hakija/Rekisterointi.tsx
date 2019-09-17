@@ -5,7 +5,7 @@ import { Organisaatio, Kayttaja, KoodiUri } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
-import './index.css';
+import './Rekisterointi.css';
 import Header from './Header';
 import Wizard from '../Wizard';
 import Navigation from './Navigation';

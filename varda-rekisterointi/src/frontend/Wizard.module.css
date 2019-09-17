@@ -1,0 +1,10 @@
+.section {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.buttons {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    float: right;
+}

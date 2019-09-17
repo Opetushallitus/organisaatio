@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import KayttajaYhteystiedot from './KayttajaYhteystiedot';
 import { Kayttaja } from '../types';
 import { LanguageContext } from '../contexts';
+import Fieldset from '../Fieldset';
 
 type Props = {
     toimintamuoto: string,
@@ -15,15 +16,14 @@ export default function RekisterointiKayttaja(props: Props) {
     const { i18n} = useContext(LanguageContext);
     return (
         <form>
-            <fieldset className="oph-fieldset">
-                <legend className="oph-label">{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}</legend>
-                <div>{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS')}</div>
+            <Fieldset title={i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}
+                      description={i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS')}>
                 <KayttajaYhteystiedot toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={props.setToimintamuoto}
                                       kayttaja={props.kayttaja}
                                       setKayttaja={props.setKayttaja}
                                       errors={props.errors} />
-            </fieldset>
+            </Fieldset>
         </form>
     );
 }

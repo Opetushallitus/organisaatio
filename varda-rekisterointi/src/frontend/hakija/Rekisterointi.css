@@ -1,0 +1,15 @@
+.varda-rekisterointi-hakija div.oph-field {
+    padding: 0.5em 0.5em 0.5em 2em;
+}
+
+.varda-rekisterointi-hakija div.oph-field label.oph-label {
+    width: 30%;
+}
+
+.varda-rekisterointi-hakija div.oph-field div.oph-select-container {
+    width: auto;
+}
+
+.varda-rekisterointi-hakija div.oph-field:nth-child(odd) {
+    background-color: #f5f5f5;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Button from './Button';
 import { LanguageContext } from './contexts';
+import styles from './Wizard.module.css';
 
 type Props = {
     getNavigation: (currentStep: number) => React.ReactNode,
@@ -57,9 +58,9 @@ export default function Wizard(props: Props) {
     return (
         <>
             {isLast() ? null : props.getNavigation(currentStep)}
-            <section>
+            <section className={styles.section}>
                 {child}
-                <div className="buttons">
+                <div className={styles.buttons}>
                     {props.error
                         ? <span className="oph-error">{props.error}</span>
                         : null}
