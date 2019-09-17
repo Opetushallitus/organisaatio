@@ -102,36 +102,6 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            email: event.currentTarget.value,
                         })})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" required={!kayntiosoiteDisabled} errorText={errors.kayntiosoite}>
-                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
-                       type="text"
-                       id="kayntiosoite"
-                       value={kayntiosoite}
-                       disabled={kayntiosoiteDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
-                           kieli: kieliUri,
-                           osoiteTyyppi: 'kaynti',
-                           osoite: event.currentTarget.value
-                       })})} />
-            </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTINUMERO')} labelFor="kayntiosoitteen-postinumero" required={!kayntiosoitteenPostinumeroDisabled} errorText={errors.kayntiosoitteenPostinumero}>
-                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoitteenPostinumero })}
-                       type="text"
-                       id="kayntiosoitteen-postinumero"
-                       value={kayntiosoitteenPostinumero}
-                       disabled={kayntiosoitteenPostinumeroDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
-                           kieli: kieliUri,
-                           osoiteTyyppi: 'kaynti',
-                           postinumeroUri: `posti_${event.currentTarget.value}`,
-                           postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : '',
-                       })})} />
-            </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTITOIMIPAIKKA')}>
-                <div className="oph-input-container">
-                    {kayntiosoitteenPostitoimipaikka}
-                </div>
-            </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTIOSOITE')} labelFor="postiosoite" errorText={errors.postiosoite}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.postiosoite })}
                        type="text"
@@ -160,6 +130,36 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
             <FormFieldContainer label={i18n.translate('POSTITOIMIPAIKKA')}>
                 <div className="oph-input-container">
                     {postitoimipaikka}
+                </div>
+            </FormFieldContainer>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" required={!kayntiosoiteDisabled} errorText={errors.kayntiosoite}>
+                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
+                       type="text"
+                       id="kayntiosoite"
+                       value={kayntiosoite}
+                       disabled={kayntiosoiteDisabled}
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
+                           kieli: kieliUri,
+                           osoiteTyyppi: 'kaynti',
+                           osoite: event.currentTarget.value
+                       })})} />
+            </FormFieldContainer>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTINUMERO')} labelFor="kayntiosoitteen-postinumero" required={!kayntiosoitteenPostinumeroDisabled} errorText={errors.kayntiosoitteenPostinumero}>
+                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoitteenPostinumero })}
+                       type="text"
+                       id="kayntiosoitteen-postinumero"
+                       value={kayntiosoitteenPostinumero}
+                       disabled={kayntiosoitteenPostinumeroDisabled}
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
+                           kieli: kieliUri,
+                           osoiteTyyppi: 'kaynti',
+                           postinumeroUri: `posti_${event.currentTarget.value}`,
+                           postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : '',
+                       })})} />
+            </FormFieldContainer>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTITOIMIPAIKKA')}>
+                <div className="oph-input-container">
+                    {kayntiosoitteenPostitoimipaikka}
                 </div>
             </FormFieldContainer>
         </>
