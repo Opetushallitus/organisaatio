@@ -165,6 +165,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @JoinColumn(name = "varhaiskasvatuksen_toimipaikka_tiedot_id")
     private VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot;
 
+    @Column(name = "piilotettu", nullable = false, columnDefinition = "boolean default false")
+    private boolean piilotettu;
+
     /**
      * Utility method to retrieve the current parent of the organisaatio.
      * @return the parent organisaatio
@@ -813,6 +816,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             }
         }
         return currentOrgNimi;
+    }
+
+    public boolean isPiilotettu() {
+        return piilotettu;
+    }
+
+    public void setPiilotettu(boolean piilotettu) {
+        this.piilotettu = piilotettu;
     }
 
     public Set<OrganisaatioLisatietotyyppi> getOrganisaatioLisatietotyypit() {

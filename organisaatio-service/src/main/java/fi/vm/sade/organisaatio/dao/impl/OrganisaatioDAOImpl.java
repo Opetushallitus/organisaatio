@@ -121,6 +121,9 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu
                 -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
 
+        Optional.ofNullable(criteria.getPiilotettu()).ifPresent(piilotettu
+                -> query.where(qOrganisaatio.piilotettu.eq(piilotettu)));
+
         Optional.ofNullable(criteria.getKunta()).filter(not(Collection::isEmpty)).ifPresent(kunnat
                 -> query.where(qOrganisaatio.kotipaikka.in(kunnat)));
 
@@ -336,12 +339,15 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public List<Organisaatio> findModifiedSince(Date lastModifiedSince) {
+    public List<Organisaatio> findModifiedSince(Boolean piilotettu, Date lastModifiedSince) {
         LOG.debug("findModifiedSince({})", lastModifiedSince);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
         BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
+        if(piilotettu != null){
+            whereExpression.and(qOrganisaatio.piilotettu.eq(piilotettu));
+        }
 
         return new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
@@ -458,7 +464,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .leftJoin(metaData.hakutoimistoEctsPuhelinmkt, hakutoimistoEctsPuhelinmkt).fetchJoin()
                 .leftJoin(metaData.hakutoimistoNimi, hakutoimistoNimi).fetchJoin()
                 .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, qVarhaiskasvatuksenToimipaikkaTiedot).fetchJoin()
-                .where(org.oid.in(oids));
+                .where(org.oid.in(oids))
+                .where(org.piilotettu.isFalse());
         if (excludePoistettu) {
             jpaQuery.where(org.organisaatioPoistettu.isFalse());
         }
@@ -589,6 +596,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QOrganisaatio org = QOrganisaatio.organisaatio;
         BooleanBuilder whereExpr = new BooleanBuilder();
         whereExpr.and(org.organisaatioPoistettu.isFalse());
+        whereExpr.and(org.piilotettu.isFalse());
         // Select by Org tyyppi
         if (type != null) {
              whereExpr.and(org.tyypit.contains(type.koodiValue()));

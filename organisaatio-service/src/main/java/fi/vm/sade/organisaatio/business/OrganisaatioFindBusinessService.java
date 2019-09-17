@@ -125,18 +125,4 @@ public interface OrganisaatioFindBusinessService {
      * @return Muuttuneet organisaatiot muodossa OrganisaatioRDTOV4
      */
     List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage);
-
-    /**
-     * Filtteröi pois organisaatio listauksesta kaikki piilotetut organisaatiot
-     * @param orglist organisaatio collection to be filtered
-     * @return filtered organisaatio domains as List
-     */
-    public List<Organisaatio> filterHiddenOrganisaatiotToList( Collection<Organisaatio> orglist );
-
-    /**
-     * Filtteröi pois organisaatio listauksesta kaikki piilotetut organisaatiot
-     * @param orglist organisaatio collection to be filtered
-     * @return filtered organisaatio domains as Set
-     */
-    public Set<Organisaatio> filterHiddenOrganisaatiotToSet ( Collection<Organisaatio> orglist );
 }

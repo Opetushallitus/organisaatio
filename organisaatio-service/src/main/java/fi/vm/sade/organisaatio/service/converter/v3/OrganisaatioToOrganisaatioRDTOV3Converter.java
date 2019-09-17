@@ -43,13 +43,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
-    private final PermissionChecker permissionChecker;
 
     @Autowired
-    public OrganisaatioToOrganisaatioRDTOV3Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper, PermissionChecker permissionChecker) {
+    public OrganisaatioToOrganisaatioRDTOV3Converter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
-        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -100,17 +98,15 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
-        if(permissionChecker.canReadOrganisationIfHidden(s)){
-            t.setNimi(convertMKTToMap(s.getNimi()));
-            t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
-            t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
-            t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
+        t.setNimi(convertMKTToMap(s.getNimi()));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
+        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
-            for (Yhteystieto y : s.getYhteystiedot()) {
-                t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
-            }
-            YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
+        for (Yhteystieto y : s.getYhteystiedot()) {
+            t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
         }
+        YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
 
         LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
 

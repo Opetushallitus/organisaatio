@@ -12,6 +12,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private boolean aktiiviset;
     private boolean suunnitellut;
     private boolean lakkautetut;
+    private Boolean piilotettu;
 
     private Set<String> kunta = new HashSet<String>();
     private String organisaatiotyyppi;
@@ -141,4 +142,11 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.oid = oid;
     }
 
+    public Boolean getPiilotettu() {
+        return piilotettu;
+    }
+
+    public void setPiilotettu(Boolean piilotettu) {
+        this.piilotettu = piilotettu;
+    }
 }

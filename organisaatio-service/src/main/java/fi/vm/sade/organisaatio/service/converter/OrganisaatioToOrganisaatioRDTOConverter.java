@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
+
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -28,13 +28,10 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final Type organisaatioNimiRDTOListType;
 
-    private final PermissionChecker permissionChecker;
-
     @Autowired
-    public OrganisaatioToOrganisaatioRDTOConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper, PermissionChecker permissionChecker) {
+    public OrganisaatioToOrganisaatioRDTOConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiRDTOListType = new TypeToken<List<OrganisaatioNimiRDTO>>() {}.getType();
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
-        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -82,47 +79,46 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
-        if(permissionChecker.canReadOrganisationIfHidden(s)){
-            t.setNimi(convertMKTToMap(s.getNimi()));
-            t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
-            t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
-            t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
-            for (Yhteystieto y : s.getYhteystiedot()) {
-                t.addYhteystieto(convertYhteystietoGeneric(y));
-            }
+        t.setNimi(convertMKTToMap(s.getNimi()));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
+        t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
-            for (YhteystietoArvo yhteystietoArvo : s.getYhteystietoArvos()) {
-                YhteystietoElementti yElementti;
-                YhteystietojenTyyppi yTyyppi;
+        for (Yhteystieto y : s.getYhteystiedot()) {
+            t.addYhteystieto(convertYhteystietoGeneric(y));
+        }
 
-                Map<String, String> val = new HashMap<>();
-                yhteystietoArvos.add(val);
+        for (YhteystietoArvo yhteystietoArvo : s.getYhteystietoArvos()) {
+            YhteystietoElementti yElementti;
+            YhteystietojenTyyppi yTyyppi;
 
-                val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
-                val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
+            Map<String, String> val = new HashMap<>();
+            yhteystietoArvos.add(val);
 
-                yElementti = yhteystietoArvo.getKentta();
+            val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
+            val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
 
-                if (yElementti != null) {
-                    val.put("YhteystietoElementti.nimi", yElementti.getNimi());
-                    val.put("YhteystietoElementti.nimiSv", yElementti.getNimiSv());
-                    val.put("YhteystietoElementti.oid", yElementti.getOid());
-                    val.put("YhteystietoElementti.tyyppi", yElementti.getTyyppi());
-                    val.put("YhteystietoElementti.kaytossa", "" + yElementti.isKaytossa());
-                    val.put("YhteystietoElementti.pakollinen", "" + yElementti.isPakollinen());
+            yElementti = yhteystietoArvo.getKentta();
 
-                    yTyyppi = yElementti.getYhteystietojenTyyppi();
+            if (yElementti != null) {
+                val.put("YhteystietoElementti.nimi", yElementti.getNimi());
+                val.put("YhteystietoElementti.nimiSv", yElementti.getNimiSv());
+                val.put("YhteystietoElementti.oid", yElementti.getOid());
+                val.put("YhteystietoElementti.tyyppi", yElementti.getTyyppi());
+                val.put("YhteystietoElementti.kaytossa", "" + yElementti.isKaytossa());
+                val.put("YhteystietoElementti.pakollinen", "" + yElementti.isPakollinen());
 
-                    if (yTyyppi != null) {
-                        Map<String, String> nimiMap = convertMKTToMap(yTyyppi.getNimi());
-                        for (String kieli : nimiMap.keySet()) {
-                            val.put("YhteystietojenTyyppi.nimi." + kieli, nimiMap.get(kieli));
+                yTyyppi = yElementti.getYhteystietojenTyyppi();
 
-                        }
+                if (yTyyppi != null) {
+                    Map<String, String> nimiMap = convertMKTToMap(yTyyppi.getNimi());
+                    for (String kieli : nimiMap.keySet()) {
+                        val.put("YhteystietojenTyyppi.nimi." + kieli, nimiMap.get(kieli));
 
-                        val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());
                     }
+
+                    val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());
                 }
             }
         }

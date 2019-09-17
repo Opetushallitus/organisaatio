@@ -121,13 +121,4 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
     vm.isPaivakoti = function(){
         return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm01";
     };
-
-    vm.isPerhepaivakoti = function(){
-        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm02";
-    };
-
-    vm.isRyhmaperhepaivakoti = function(){
-        return vm.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto === "vardatoimintamuoto_tm03";
-    };
-
 });

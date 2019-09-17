@@ -28,10 +28,9 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.model.VarhaiskasvatuksenToimipaikkaTiedot;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
-import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
+
 import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -51,7 +50,6 @@ import java.util.Collection;
 import static java.util.Collections.emptyMap;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -260,18 +258,6 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 : mapToOrganisaatioRdtoV4(parentOrg.getChildren(true), includeImage);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Organisaatio> filterHiddenOrganisaatiotToList( Collection<Organisaatio> orglist ){
-        return orglist.stream().filter(org -> permissionChecker.canReadOrganisationIfHidden(org)).collect(toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Set<Organisaatio> filterHiddenOrganisaatiotToSet ( Collection<Organisaatio> orglist ){
-        return orglist.stream().filter(org -> permissionChecker.canReadOrganisationIfHidden(org)).collect(toSet());
-    }
-
     private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
             .map(child -> {
@@ -317,7 +303,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
-        return organisaatioSuhdeDAO.findLiitokset(date);
+        return organisaatioSuhdeDAO.findLiitokset(permissionChecker.isReadAccessToAll() ? null : false, date);
     }
 
     @Override
@@ -333,7 +319,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
 

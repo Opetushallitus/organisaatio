@@ -46,9 +46,9 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         this.ophOid = ophOid;
     }
 
-    public boolean userCanReadOrganisation(OrganisaatioContext context){
-        Preconditions.checkNotNull(context.getOrgOid());
-        return checkAccess(context.getOrgOid(), ROLE_CRUD, ROLE_RU, ROLE_R);
+    public boolean userCanReadOrganisation(String oid){
+        Preconditions.checkNotNull(oid);
+        return checkAccess(oid, ROLE_CRUD, ROLE_RU, ROLE_R);
 
     }
 
@@ -232,4 +232,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         return checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
     }
 
+    public boolean isReadAccessToAll() {
+        return checkAccess(ophOid, ROLE_CRUD, ROLE_RU, ROLE_R);
+    }
 }

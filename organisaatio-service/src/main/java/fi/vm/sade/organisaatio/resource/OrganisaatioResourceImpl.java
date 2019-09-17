@@ -10,6 +10,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
+import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
@@ -77,6 +78,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Autowired
     private SearchCriteriaModelMapper searchCriteriaModelMapper;
 
+    @Autowired
+    private OrganisaatioPermissionServiceImpl organisaatioPermissionService;
+
     // GET /organisaatio/hae
     @Override
     public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
@@ -93,6 +97,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         // Map api search criteria to service search criteria
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(s, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
+        searchCriteria.setPiilotettu(Optional.ofNullable(s.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false));
         SearchConfig searchConfig = new SearchConfig(!s.getSkipParents(), true, true);
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
@@ -115,6 +120,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> children(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<OrganisaatioRDTO> childList = new LinkedList<>();
         if (parentOrg != null) {
@@ -134,6 +145,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public String childoids(String oid, boolean rekursiivisesti, boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) throws Exception {
         Preconditions.checkNotNull(oid);
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         List<String> childOidList = new LinkedList<>();
         if (rekursiivisesti) {
             ChildOidsCriteria criteria = new ChildOidsCriteria(oid, aktiiviset, suunnitellut, lakkautetut, LocalDate.now());
@@ -153,6 +170,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public String parentoids(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         // find parents
         return Optional.ofNullable(organisaatioFindBusinessService.findById(oid))
                 .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOidPath())
@@ -196,6 +219,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
         if (o == null) {
@@ -219,6 +249,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
         LOG.info("Saving " + oid);
+
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
@@ -326,6 +357,13 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     @Override
     public List<OrganisaatioRDTO> groups(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(new RyhmaCriteriaDtoV3());
