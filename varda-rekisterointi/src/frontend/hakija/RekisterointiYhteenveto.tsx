@@ -4,6 +4,7 @@ import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
 import KayttajaYhteystiedot from './KayttajaYhteystiedot';
 import { LanguageContext } from '../contexts';
+import OrganisaatioSahkopostit from './OrganisaatioSahkopostit';
 
 type Props = {
     organisaatio: Organisaatio,
@@ -38,9 +39,14 @@ export default function RekisterointiYhteenveto(props: Props) {
                                           initialOrganisaatio={props.organisaatio}
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={nop}
-                                          sahkopostit={props.sahkopostit}
-                                          setSahkopostit={nop}
                                           errors={nop()} />
+            </fieldset>
+            <fieldset className="oph-fieldset">
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_SAHKOPOSTIT')}</legend>
+                <OrganisaatioSahkopostit readOnly={true}
+                                         sahkopostit={props.sahkopostit}
+                                         setSahkopostit={nop}
+                                         errors={nop()} />
             </fieldset>
             <fieldset className="oph-fieldset">
                 <legend className="oph-label">{i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}</legend>

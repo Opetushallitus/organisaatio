@@ -3,6 +3,7 @@ import { Organisaatio } from '../types';
 import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
 import { LanguageContext } from '../contexts';
+import OrganisaatioSahkopostit from './OrganisaatioSahkopostit';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -31,9 +32,14 @@ export default function RekisterointiOrganisaatio(props: Props) {
                 <OrganisaatioYhteystiedot initialOrganisaatio={props.initialOrganisaatio}
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={props.setOrganisaatio}
-                                          sahkopostit={props.sahkopostit}
-                                          setSahkopostit={props.setSahkopostit}
                                           errors={props.errors} />
+            </fieldset>
+            <fieldset className="oph-fieldset">
+                <legend className="oph-label">{i18n.translate('ORGANISAATION_SAHKOPOSTIT')}</legend>
+                <div>{i18n.translate('ORGANISAATION_SAHKOPOSTIT_KUVAUS')}</div>
+                <OrganisaatioSahkopostit sahkopostit={props.sahkopostit}
+                                         setSahkopostit={props.setSahkopostit}
+                                         errors={props.errors} />
             </fieldset>
         </form>
     );

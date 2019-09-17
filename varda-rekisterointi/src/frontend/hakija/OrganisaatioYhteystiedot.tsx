@@ -7,7 +7,6 @@ import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
-import InputMultiple from '../InputMultiple';
 import classNames from 'classnames/bind';
 
 type Props = {
@@ -15,8 +14,6 @@ type Props = {
     initialOrganisaatio: Organisaatio,
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
-    sahkopostit: string[],
-    setSahkopostit: (sahkopostit: string[]) => void,
     errors: Record<string, string>,
 }
 
@@ -25,7 +22,7 @@ function koodiByArvoToLocalizedText(koodit: Koodi[], language: Language, arvo?: 
     return koodi ? toLocalizedText(koodi.nimi, language) : '';
 }
 
-export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, sahkopostit, setSahkopostit, errors}: Props) {
+export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
     const { language, i18n } = useContext(LanguageContext);
     const [{data: postinumerot, loading: postinumerotLoading, error: postinumerotError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/POSTI/koodi');
@@ -104,12 +101,6 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            kieli: kieliUri,
                            email: event.currentTarget.value,
                         })})} />
-            </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
-                                helpText={i18n.translate('ORGANISAATION_SAHKOPOSTIT_OHJE')}>
-                <InputMultiple values={sahkopostit}
-                               disabled={readOnly}
-                               onChange={sahkopostit => setSahkopostit(sahkopostit)} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" required={!kayntiosoiteDisabled} errorText={errors.kayntiosoite}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
