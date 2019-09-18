@@ -8,8 +8,8 @@ export default function Header() {
     const { language, setLanguage, i18n } = useContext(LanguageContext);
     return (
         <header className={styles.header}>
-            <div>{i18n.translate('OTSIKKO')}</div>
-            <div>{i18n.translate('SISALLON_KIELI')}:
+            <div className={styles.title}>{i18n.translate('OTSIKKO')}</div>
+            <div className={styles.language}>{i18n.translate('SISALLON_KIELI')}:
                 <select className={styles.select}
                         defaultValue={language}
                         onChange={event => setLanguage(event.currentTarget.value as Language)}>

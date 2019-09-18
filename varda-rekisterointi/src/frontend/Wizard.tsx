@@ -59,7 +59,7 @@ export default function Wizard(props: Props) {
         <>
             {isLast() ? null : props.getNavigation(currentStep)}
             <section className={styles.section}>
-                {child}
+                <div className={styles.child}>{child}</div>
                 <div className={styles.buttons}>
                     {props.error
                         ? <span className="oph-error">{props.error}</span>
