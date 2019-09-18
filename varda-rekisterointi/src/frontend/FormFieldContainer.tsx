@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 
 type Props = {
+    readOnly?: boolean,
     label: string,
     labelFor?: string,
     required?: boolean,
@@ -23,7 +24,7 @@ export default function FormFieldContainer(props: Props) {
                 ? <div className="oph-input-container">
                     {props.children}
                     {props.errorText ? <div className="oph-field-text oph-error">{props.errorText}</div> : null}
-                    {props.helpText ? <div className="oph-field-text">{props.helpText}</div> : null}
+                    {!props.readOnly && props.helpText ? <div className="oph-field-text">{props.helpText}</div> : null}
                   </div>
                 : props.children}
         </div>

@@ -4,6 +4,7 @@ import { toLocalizedText } from './LocalizableTextUtils';
 import { LanguageContext } from './contexts';
 
 type Props = {
+    readOnly?: boolean,
     selectable: Koodi[],
     selected?: string,
     disabled?: boolean,
@@ -12,6 +13,10 @@ type Props = {
 
 export default function KoodiSelectRadio(props: Props) {
     const { language } = useContext(LanguageContext);
+    if (props.readOnly) {
+        const value = props.selectable.find(koodi => koodi.uri === props.selected)
+        return <div>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
+    }
     return (
         <div>
             {props.selectable.map(koodi => {

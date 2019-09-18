@@ -38,6 +38,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                 <div className="oph-input-container">
                     <KoodiSelectRadio selectable={toimintamuodot}
                                       selected={toimintamuoto}
+                                      readOnly={readOnly}
                                       disabled={readOnly}
                                       onChange={setToimintamuoto} />
                 </div>

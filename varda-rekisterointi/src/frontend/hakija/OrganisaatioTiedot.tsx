@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import useAxios from 'axios-hooks';
 import DateSelect from '../DateSelect';
 import FormFieldContainer from '../FormFieldContainer';
-import { Organisaatio, Koodi } from '../types';
+import { Organisaatio, Koodi, Language } from '../types';
 import KoodiSelect from '../KoodiSelect';
 import { toLocalizedText, hasLengthInLang } from '../LocalizableTextUtils';
 import LocalizableTextEdit from '../LocalizableTextEdit';
@@ -48,7 +48,6 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
     const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
     const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
-    const maaDisabled = readOnly || hasLength(initialOrganisaatio.maaUri);
     const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
 
     const baseClasses = { 'oph-input': true };
@@ -80,14 +79,14 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
             <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')}>
                 <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} required={!kotipaikkaDisabled || !maaDisabled} errorText={errors.kotipaikkaUri}>
+            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} required={!kotipaikkaDisabled} errorText={errors.kotipaikkaUri}>
                 <div className="oph-input-container">
                     <KoodiSelect selectable={kunnat} selected={organisaatio.kotipaikkaUri}
                                 disabled={kotipaikkaDisabled}
                                 required={!kotipaikkaDisabled}
                                 hasError={!!errors.kotipaikkaUri}
+                                optionLabelFn={(koodi: Koodi, language: Language) => toLocalizedText(koodi.nimi, language, koodi.arvo) + ', ' + toLocalizedKoodi(maa, language)}
                                 onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
-                    <span>{toLocalizedKoodi(maa, language)}</span>
                 </div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('TOIMINNAN_ALKAMISAIKA')} required={!alkuPvmDisabled} errorText={errors.alkuPvm}>

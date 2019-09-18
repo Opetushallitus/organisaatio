@@ -15,7 +15,8 @@ export default function OrganisaatioSahkopostit({readOnly, sahkopostit, setSahko
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
+            <FormFieldContainer readOnly={readOnly}
+                                label={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
                                 helpText={i18n.translate('ORGANISAATION_SAHKOPOSTIT_OHJE')}>
                 <InputMultiple values={sahkopostit}
                                disabled={readOnly}

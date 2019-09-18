@@ -29,18 +29,22 @@ export default function InputMultiple(props: Props) {
                        value={value}
                        disabled={props.disabled}
                        onChange={event => props.onChange(edit(event.currentTarget.value, index))} />
+                {props.disabled ? null :
                 <button className="oph-button oph-button-close" style={{padding: '0px'}}
                         type="button"
                         disabled={props.disabled}
                         onClick={() => props.onChange(remove(index))}>
                     <span>x</span>
                 </button>
+                }
             </div>
         })}
+        {props.disabled ? null :
         <Button type="button"
                 disabled={props.disabled}
                 styling="ghost"
                 onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
+        }
         </div>
     )
 }
