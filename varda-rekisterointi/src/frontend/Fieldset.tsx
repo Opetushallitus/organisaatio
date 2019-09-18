@@ -12,7 +12,7 @@ export default function Fieldset(props: Props) {
     return (
         <fieldset className={classNames("oph-fieldset", styles.fieldset)}>
             {props.title ? <legend className="oph-label">{props.title}</legend> : null}
-            {props.description ? <div>{props.description}</div> : null}
+            {props.description ? <p>{props.description}</p> : null}
             {props.children}
         </fieldset>
     )
