@@ -21,14 +21,16 @@ export default function RekisterointiOrganisaatio(props: Props) {
         <form>
             <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}
                       description={i18n.translate('ORGANISAATION_TIEDOT_KUVAUS')}>
-                <OrganisaatioTiedot initialOrganisaatio={props.initialOrganisaatio}
+                <OrganisaatioTiedot readOnly={!!props.initialOrganisaatio.oid}
+                                    initialOrganisaatio={props.initialOrganisaatio}
                                     organisaatio={props.organisaatio}
                                     setOrganisaatio={props.setOrganisaatio}
                                     errors={props.errors} />
             </Fieldset>
             <Fieldset title={i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}
                       description={i18n.translate('ORGANISAATION_YHTEYSTIEDOT_KUVAUS')}>
-                <OrganisaatioYhteystiedot initialOrganisaatio={props.initialOrganisaatio}
+                <OrganisaatioYhteystiedot readOnly={!!props.initialOrganisaatio.oid}
+                                          initialOrganisaatio={props.initialOrganisaatio}
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={props.setOrganisaatio}
                                           errors={props.errors} />
