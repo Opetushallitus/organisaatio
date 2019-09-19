@@ -346,7 +346,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
         if(piilotettu != null){
-            whereExpression.and(qOrganisaatio.piilotettu.eq(piilotettu));
+            whereExpression = whereExpression.and(qOrganisaatio.piilotettu.eq(piilotettu));
         }
 
         return new JPAQuery<>(getEntityManager())

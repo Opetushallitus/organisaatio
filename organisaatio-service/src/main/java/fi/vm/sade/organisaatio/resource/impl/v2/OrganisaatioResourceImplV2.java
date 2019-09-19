@@ -149,7 +149,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
 
-        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false));
+        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false) ? null : false);
 
         SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, true);
 
@@ -192,7 +192,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
 
-        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false));
+        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false) ? null : false);
 
         SearchConfig searchConfig = new SearchConfig(!hakuEhdot.getSkipParents(), true, false);
 
@@ -231,7 +231,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
 
-        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false));
+        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false) ? null : false);
 
         SearchConfig searchConfig = new SearchConfig(false, false, true);
 
@@ -254,7 +254,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         SearchCriteria searchCriteria = searchCriteriaModelMapper.map(hakuEhdot, SearchCriteria.class);
         searchCriteria.setPoistettu(false);
 
-        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false));
+        searchCriteria.setPiilotettu(Optional.ofNullable(hakuEhdot.getOid()).map(organisaatioPermissionService::userCanReadOrganisation).orElse(false) ? null : false);
 
         SearchConfig searchConfig = new SearchConfig(false, false, false);
 

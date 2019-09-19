@@ -282,7 +282,7 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
         }
 
         if(piilotettu != null){
-            expression.and(qSuhde.parent.piilotettu.eq(piilotettu).or(qSuhde.child.piilotettu.eq(piilotettu)));
+            expression = expression.and(qSuhde.parent.piilotettu.eq(piilotettu).or(qSuhde.child.piilotettu.eq(piilotettu)));
         }
 
         return new JPAQuery<>(getEntityManager()).from(qSuhde)
