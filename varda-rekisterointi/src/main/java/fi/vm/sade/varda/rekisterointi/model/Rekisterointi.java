@@ -7,21 +7,83 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Rekisterointi {
 
     @Id
-    public Long id;
+    public final Long id;
+
     @NotNull
-    public ObjectNode organisaatio;
+    public final ObjectNode organisaatio;
     @NotEmpty
-    public Set<@NotNull String> kunnat;
-    public Set<@Email String> sahkopostit;
+    public final Set<@NotNull String> kunnat;
+    public final Set<@Email String> sahkopostit;
     @NotNull
-    public String toimintamuoto;
+    public final String toimintamuoto;
+
+    @NotNull @Valid
+    public final Kayttaja kayttaja;
+
     @NotNull
-    @Valid
-    public Kayttaja kayttaja;
+    public final LocalDateTime vastaanotettu;
+
+    public final Paatos paatos;
+
+    private Rekisterointi(
+            Long id,
+            ObjectNode organisaatio,
+            Set<String> kunnat,
+            Set<String> sahkopostit,
+            String toimintamuoto,
+            Kayttaja kayttaja,
+            LocalDateTime vastaanotettu,
+            Paatos paatos) {
+        this.id = id;
+        this.organisaatio = organisaatio;
+        this.kunnat = kunnat;
+        this.sahkopostit = sahkopostit;
+        this.toimintamuoto = toimintamuoto;
+        this.kayttaja = kayttaja;
+        this.vastaanotettu = vastaanotettu;
+        this.paatos = paatos;
+    }
+
+    public static Rekisterointi of(
+            ObjectNode organisaatio,
+            Set<String> kunnat,
+            Set<String> sahkopostit,
+            String toimintamuoto,
+            Kayttaja kayttaja) {
+        return new Rekisterointi(
+                null, organisaatio, kunnat, sahkopostit, toimintamuoto, kayttaja, LocalDateTime.now(), null);
+    }
+
+    public Rekisterointi withId(Long id) {
+        return new Rekisterointi(
+                id,
+                this.organisaatio,
+                this.kunnat,
+                this.sahkopostit,
+                this.toimintamuoto,
+                this.kayttaja,
+                this.vastaanotettu,
+                this.paatos
+        );
+    }
+
+    public Rekisterointi withPaatos(Paatos paatos) {
+        return new Rekisterointi(
+                this.id,
+                this.organisaatio,
+                this.kunnat,
+                this.sahkopostit,
+                this.toimintamuoto,
+                this.kayttaja,
+                this.vastaanotettu,
+                paatos
+        );
+    }
 
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'normalize.css';
 import 'oph-virkailija-style-guide/oph-styles.css'
 import Rekisterointi from './hakija/Rekisterointi';
+import Rekisteroinnit from "./virkailija/Rekisteroinnit";
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
 import { LanguageContext, I18nImpl } from './contexts';
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     <Router basename="/varda-rekisterointi">
       <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: new I18nImpl(data[language]) }}>
         <Route path="/hakija" exact component={Rekisterointi} />
+        <Route path="/virkailija" exact component={Rekisteroinnit} />
       </LanguageContext.Provider>
     </Router>
   );
