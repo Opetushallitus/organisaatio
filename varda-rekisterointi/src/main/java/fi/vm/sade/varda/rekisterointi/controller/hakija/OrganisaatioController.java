@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/hakija/api/organisaatio")
+@RequestMapping(OrganisaatioController.BASE_PATH)
 @Scope("session")
 public class OrganisaatioController {
 
+    static final String BASE_PATH = "/hakija/api/organisaatiot";
     private final Valtuudet valtuudet;
 
     public OrganisaatioController(Valtuudet valtuudet) {

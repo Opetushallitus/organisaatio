@@ -45,6 +45,8 @@ const initialKayttaja: Kayttaja = {
     asiointikieli: 'fi',
     saateteksti: '',
 }
+const organisaatiotUrl = "/varda-rekisterointi/hakija/api/organisaatiot";
+const rekisteroinnitUrl = "/varda-rekisterointi/hakija/api/rekisteroinnit";
 
 function reducer<T>(state: T, data: Partial<T>): T {
     return { ...state, ...data };
@@ -69,7 +71,7 @@ export default function Rekisterointi() {
             try {
                 setFetchLoading(true);
                 setFetchError(null);
-                const response = await Axios.get('/varda-rekisterointi/hakija/api/organisaatio');
+                const response = await Axios.get(organisaatiotUrl);
                 const data = response.data;
                 const tyypit: KoodiUri[] = data.tyypit ? data.tyypit : [];
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
@@ -90,7 +92,7 @@ export default function Rekisterointi() {
         try {
             setPostLoading(true);
             setPostError(null);
-            await Axios.post('/varda-rekisterointi/hakija/api/rekisterointi', {
+            await Axios.post(rekisteroinnitUrl, {
                 organisaatio: organisaatio,
                 sahkopostit: sahkopostit,
                 toimintamuoto: toimintamuoto,
