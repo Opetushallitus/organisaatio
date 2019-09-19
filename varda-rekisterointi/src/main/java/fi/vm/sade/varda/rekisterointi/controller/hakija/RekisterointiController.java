@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hakija/api/rekisterointi")
+@RequestMapping(RekisterointiController.BASE_PATH)
 public class RekisterointiController {
 
+    static final String BASE_PATH = "/hakija/api/rekisteroinnit";
     private final RekisterointiService service;
 
     public RekisterointiController(RekisterointiService service) {

@@ -50,7 +50,7 @@ public class RekisterointiControllerTest {
         Rekisterointi rekisterointi = newValidRekisterointi();
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
-        mvc.perform(post("/hakija/api/rekisterointi")
+        mvc.perform(post(RekisterointiController.BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(rekisterointiAsJson))
                 .andExpect(status().isOk());
@@ -63,7 +63,7 @@ public class RekisterointiControllerTest {
         rekisterointi.kayttaja.sahkoposti = "invalid";
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
-        mvc.perform(post("/hakija/api/rekisterointi")
+        mvc.perform(post(RekisterointiController.BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(rekisterointiAsJson))
                 .andExpect(status().isBadRequest());
