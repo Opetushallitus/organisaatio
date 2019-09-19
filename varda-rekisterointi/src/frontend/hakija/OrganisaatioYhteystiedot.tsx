@@ -82,7 +82,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('PUHELINNUMERO')} labelFor="puhelinnumero" required={!puhelinnumeroDisabled} errorText={errors.puhelinnumero}>
+            <FormFieldContainer label={i18n.translate('PUHELINNUMERO')} labelFor="puhelinnumero" errorText={errors.puhelinnumero}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.puhelinnumero })}
                        type="text"
                        id="puhelinnumero"
@@ -93,7 +93,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            numero: event.currentTarget.value,
                         })})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_SAHKOPOSTI')} labelFor="organisaation-sahkoposti" required={!sahkopostiDisabled} errorText={errors.sahkoposti}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_SAHKOPOSTI')} labelFor="organisaation-sahkoposti" errorText={errors.sahkoposti}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.sahkoposti })}
                        type="text"
                        id="organisaation-sahkoposti"
@@ -116,7 +116,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            osoite: event.currentTarget.value
                        })})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="postinumero" required={!postinumeroDisabled} errorText={errors.postinumero}>
+            <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="postinumero" errorText={errors.postinumero}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.postinumero })}
                        type="text"
                        id="postinumero"
@@ -134,7 +134,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                     {postitoimipaikka}
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" required={!kayntiosoiteDisabled} errorText={errors.kayntiosoite}>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" errorText={errors.kayntiosoite}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
                        type="text"
                        id="kayntiosoite"
@@ -146,7 +146,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            osoite: event.currentTarget.value
                        })})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTINUMERO')} labelFor="kayntiosoitteen-postinumero" required={!kayntiosoitteenPostinumeroDisabled} errorText={errors.kayntiosoitteenPostinumero}>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTINUMERO')} labelFor="kayntiosoitteen-postinumero" errorText={errors.kayntiosoitteenPostinumero}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoitteenPostinumero })}
                        type="text"
                        id="kayntiosoitteen-postinumero"
