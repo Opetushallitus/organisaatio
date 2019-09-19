@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import useAxios from 'axios-hooks';
 import FormFieldContainer from '../FormFieldContainer';
-import { Organisaatio, Koodi, Language } from '../types';
+import { Organisaatio, Koodi, Language, Yhteystieto } from '../types';
 import { getYhteystietoArvo, isPuhelinnumero, isSahkoposti, isKayntiosoite, isPostiosoite, updateYhteystiedot } from '../OrganisaatioYhteystietoUtils';
 import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
+import { and } from '../PredicateUtils';
 
 type Props = {
     readOnly?: boolean,
@@ -34,40 +35,41 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
         return <div>error, reload page</div>;
     }
 
-    const kieliUri = organisaatio.ytjkieli || 'kieli_fi#1';
+    const kieliUri = organisaatio.ytjkieli;
+    const isKieli = (yhteystieto: Yhteystieto) => yhteystieto.kieli === kieliUri;
 
     const initialPuhelinnumero = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isPuhelinnumero, yhteystieto => yhteystieto.numero);
+        and(isPuhelinnumero, isKieli), yhteystieto => yhteystieto.numero);
     const puhelinnumero = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isPuhelinnumero, yhteystieto => yhteystieto.numero);
+        and(isPuhelinnumero, isKieli), yhteystieto => yhteystieto.numero);
     const initialSahkoposti = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isSahkoposti, yhteystieto => yhteystieto.email);
+        and(isSahkoposti, isKieli), yhteystieto => yhteystieto.email);
     const sahkoposti = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isSahkoposti, yhteystieto => yhteystieto.email);
+        and(isSahkoposti, isKieli), yhteystieto => yhteystieto.email);
 
     const initialKayntiosoite = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isKayntiosoite, yhteystieto => yhteystieto.osoite);
+        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.osoite);
     const kayntiosoite = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isKayntiosoite, yhteystieto => yhteystieto.osoite);
+        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.osoite);
     const initialKayntiosoitteenPostinumeroUri = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isKayntiosoite, yhteystieto => yhteystieto.postinumeroUri);
+        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
     const kayntiosoitteenPostinumeroUri = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isKayntiosoite, yhteystieto => yhteystieto.postinumeroUri);
+        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
     const kayntiosoitteenPostinumero = kayntiosoitteenPostinumeroUri.replace('posti_', '');
     const kayntiosoitteenPostitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isKayntiosoite, yhteystieto => yhteystieto.postitoimipaikka);
+        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postitoimipaikka);
 
     const initialPostiosoite = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isPostiosoite, yhteystieto => yhteystieto.osoite);
+        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.osoite);
     const postiosoite = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isPostiosoite, yhteystieto => yhteystieto.osoite);
+        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.osoite);
     const initialPostinumeroUri = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        isPostiosoite, yhteystieto => yhteystieto.postinumeroUri);
+        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
     const postinumeroUri = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isPostiosoite, yhteystieto => yhteystieto.postinumeroUri);
+        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
     const postinumero = postinumeroUri.replace('posti_', '');
     const postitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot,
-        isPostiosoite, yhteystieto => yhteystieto.postitoimipaikka);
+        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postitoimipaikka);
 
     const puhelinnumeroDisabled = readOnly || hasLength(initialPuhelinnumero);
     const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
@@ -86,7 +88,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="puhelinnumero"
                        value={puhelinnumero}
                        disabled={puhelinnumeroDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isPuhelinnumero, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isPuhelinnumero, isKieli), {
                            kieli: kieliUri,
                            numero: event.currentTarget.value,
                         })})} />
@@ -97,7 +99,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="organisaation-sahkoposti"
                        value={sahkoposti}
                        disabled={sahkopostiDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isSahkoposti, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isSahkoposti, isKieli), {
                            kieli: kieliUri,
                            email: event.currentTarget.value,
                         })})} />
@@ -108,7 +110,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postiosoite"
                        value={postiosoite}
                        disabled={postiosoiteDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isPostiosoite, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isPostiosoite, isKieli), {
                            kieli: kieliUri,
                            osoiteTyyppi: 'posti',
                            osoite: event.currentTarget.value
@@ -120,7 +122,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postinumero"
                        value={postinumero}
                        disabled={postinumeroDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isPostiosoite, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isPostiosoite, isKieli), {
                            kieli: kieliUri,
                            osoiteTyyppi: 'posti',
                            postinumeroUri: `posti_${event.currentTarget.value}`,
@@ -138,7 +140,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="kayntiosoite"
                        value={kayntiosoite}
                        disabled={kayntiosoiteDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isKayntiosoite, isKieli), {
                            kieli: kieliUri,
                            osoiteTyyppi: 'kaynti',
                            osoite: event.currentTarget.value
@@ -150,7 +152,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="kayntiosoitteen-postinumero"
                        value={kayntiosoitteenPostinumero}
                        disabled={kayntiosoitteenPostinumeroDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, isKayntiosoite, {
+                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isKayntiosoite, isKieli), {
                            kieli: kieliUri,
                            osoiteTyyppi: 'kaynti',
                            postinumeroUri: `posti_${event.currentTarget.value}`,

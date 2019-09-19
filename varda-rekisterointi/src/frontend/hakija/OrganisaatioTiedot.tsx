@@ -4,7 +4,7 @@ import DateSelect from '../DateSelect';
 import FormFieldContainer from '../FormFieldContainer';
 import { Organisaatio, Koodi, Language } from '../types';
 import KoodiSelect from '../KoodiSelect';
-import { toLocalizedText, hasLengthInLang } from '../LocalizableTextUtils';
+import { toLocalizedText, hasLengthInLang, ytjKieliToLanguage } from '../LocalizableTextUtils';
 import LocalizableTextEdit from '../LocalizableTextEdit';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
@@ -44,7 +44,7 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
     }).map(koodi => toLocalizedText(koodi.nimi, language, koodi.arvo)).join(', ');
     const maa = maatJaValtiot1.find(koodi => koodi.uri === organisaatio.maaUri);
 
-    const nimiDisabled = readOnly || hasLengthInLang(initialOrganisaatio.nimi, language);
+    const nimiDisabled = readOnly || hasLengthInLang(initialOrganisaatio.nimi, ytjKieliToLanguage(initialOrganisaatio.ytjkieli));
     const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
     const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);

@@ -1,4 +1,4 @@
-import { Language, LocalizableText } from "./types";
+import { Language, LocalizableText, KoodiUri } from "./types";
 import { hasLength } from "./StringUtils";
 
 export function toLocalizedText(localizableText: LocalizableText | null | undefined,
@@ -26,3 +26,16 @@ export const asiointikielet = [
     {value: 'sv', label: {fi: 'ruotsi', sv: 'svenska', en: 'Swedish'}},
     {value: 'en', label: {fi: 'englanti', svn: 'engelska', en: 'English'}},
 ];
+
+export function ytjKieliToLanguage(ytjKieli: KoodiUri) {
+    switch (ytjKieli) {
+        case 'kieli_fi#1':
+            return 'fi';
+        case 'kieli_sv#1':
+            return 'sv';
+        case 'kieli_en#1':
+            return 'en';
+        default:
+            throw new Error('Unsupported language');
+    }
+}

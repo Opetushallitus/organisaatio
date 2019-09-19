@@ -32,7 +32,7 @@ export type Organisaatio = {
     kotipaikkaUri: KoodiUri,
     maaUri: KoodiUri,
     yhteystiedot: Yhteystieto[],
-    ytjkieli?: KoodiUri,
+    ytjkieli: KoodiUri,
 }
 
 // kayttooikeus

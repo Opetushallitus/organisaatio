@@ -34,6 +34,7 @@ const baseOrganisaatio: Organisaatio = {
     kotipaikkaUri: '',
     maaUri: 'maatjavaltiot1_fin',
     yhteystiedot: [],
+    ytjkieli: 'kieli_fi#1',
 };
 const intialSahkopostit = [''];
 const initialToimintamuoto = 'vardatoimintamuoto_tm01';
