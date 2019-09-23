@@ -1,6 +1,10 @@
 import React, { useContext } from 'react';
 import Button from './Button';
 import { LanguageContext } from './contexts';
+import styles from './InputMultiple.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames/bind';
 
 type Props = {
     values: string[],
@@ -23,18 +27,18 @@ export default function InputMultiple(props: Props) {
     }
     return (
         <div>{props.values.map((value, index) => {
-            return <div key={index} style={{position: 'relative'}}>
+            return <div key={index} className={styles.inputContainer}>
                 <input className="oph-input"
                        type="text"
                        value={value}
                        disabled={props.disabled}
                        onChange={event => props.onChange(edit(event.currentTarget.value, index))} />
                 {props.disabled ? null :
-                <button className="oph-button oph-button-close" style={{padding: '0px'}}
+                <button className={classNames("oph-button oph-button-close", styles.removeButton)}
                         type="button"
                         disabled={props.disabled}
                         onClick={() => props.onChange(remove(index))}>
-                    <span>x</span>
+                    <FontAwesomeIcon icon={faTimes} />
                 </button>
                 }
             </div>
