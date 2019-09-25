@@ -1,6 +1,6 @@
 spring:
   flyway:
-    enabled: false
+    enabled: true
   session:
     store-type: none
 db-scheduler:

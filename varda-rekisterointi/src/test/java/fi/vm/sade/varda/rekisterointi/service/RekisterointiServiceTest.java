@@ -1,0 +1,92 @@
+package fi.vm.sade.varda.rekisterointi.service;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fi.vm.sade.varda.rekisterointi.RekisterointiRepository;
+import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
+import fi.vm.sade.varda.rekisterointi.model.Paatos;
+import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(SpringRunner.class)
+public class RekisterointiServiceTest {
+
+    @TestConfiguration
+    static class RekisterointiServiceTestConfiguration {
+        @Bean
+        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository) {
+            return new RekisterointiService(rekisterointiRepository);
+        }
+    }
+
+    private static final Long SAVED_REKISTEROINTI_ID = 1L;
+    private static final Long INVALID_REKISTEROINTI_ID = 2L;
+    private static final Rekisterointi SAVED_REKISTEROINTI = Rekisterointi.of(
+            new ObjectNode(JsonNodeFactory.instance),
+            Collections.emptySet(),
+            "toimintamuoto",
+            new Kayttaja()
+    );
+
+    @MockBean
+    private RekisterointiRepository rekisterointiRepository;
+
+    @Autowired
+    private RekisterointiService rekisterointiService;
+
+    @Before
+    public void mockRepositoryCalls() {
+        when(rekisterointiRepository.save(any(Rekisterointi.class)))
+                .thenReturn(SAVED_REKISTEROINTI.withId(SAVED_REKISTEROINTI_ID));
+        when(rekisterointiRepository.findById(SAVED_REKISTEROINTI_ID))
+                .thenReturn(Optional.of(SAVED_REKISTEROINTI));
+        when(rekisterointiRepository.findById(INVALID_REKISTEROINTI_ID))
+                .thenReturn(Optional.empty());
+    }
+
+    @Test
+    public void createSavesRekisterointi() {
+        Long id = rekisterointiService.create(SAVED_REKISTEROINTI);
+        assertEquals(SAVED_REKISTEROINTI_ID, id);
+        verify(rekisterointiRepository).save(SAVED_REKISTEROINTI);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void resolveThrowsOnInvalidRekisterointiId() {
+        Paatos paatos = Paatos.of(
+                INVALID_REKISTEROINTI_ID,
+                true,
+                1L,
+                "Miksipä ei?"
+        );
+        rekisterointiService.resolve(paatos);
+    }
+
+    @Test
+    public void resolveSavesPaatosWithRekisterointi() {
+        Paatos paatos = Paatos.of(
+                SAVED_REKISTEROINTI_ID,
+                false,
+                1L,
+                "Rekisteröinti tehty 110% väärin."
+        );
+        Rekisterointi expected = SAVED_REKISTEROINTI.withPaatos(paatos);
+        rekisterointiService.resolve(paatos);
+        verify(rekisterointiRepository).save(expected);
+    }
+}

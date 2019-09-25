@@ -1,6 +1,8 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
@@ -84,6 +86,37 @@ public class Rekisterointi {
                 this.vastaanotettu,
                 paatos
         );
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other instanceof Rekisterointi) {
+            Rekisterointi toinen = (Rekisterointi) other;
+            return new EqualsBuilder()
+                    .append(id, toinen.id)
+                    .append(organisaatio, toinen.organisaatio)
+                    .append(sahkopostit, toinen.sahkopostit)
+                    .append(toimintamuoto, toinen.toimintamuoto)
+                    .append(kayttaja, toinen.kayttaja)
+                    .append(vastaanotettu, toinen.vastaanotettu)
+                    .append(paatos, toinen.paatos)
+                    .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(organisaatio)
+                .append(sahkopostit)
+                .append(toimintamuoto)
+                .append(kayttaja)
+                .append(vastaanotettu)
+                .append(paatos)
+                .hashCode();
     }
 
 }
