@@ -11,6 +11,7 @@ import Wizard from '../Wizard';
 import Navigation from './Navigation';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
+import EmailValidator from 'email-validator';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -121,6 +122,9 @@ export default function Rekisterointi() {
                 ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
                     .filter(field => !kayttaja[field])
                     .forEach(field => kayttajaErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                if (!!kayttaja.sahkoposti && !EmailValidator.validate(kayttaja.sahkoposti)) {
+                    kayttajaErrors.sahkoposti = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
+                }
                 setKayttajaErrors(kayttajaErrors);
                 return Object.keys(kayttajaErrors).length === 0;
         }
