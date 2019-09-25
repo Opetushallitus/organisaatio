@@ -2,14 +2,13 @@ import React, { useContext } from 'react';
 import useAxios from 'axios-hooks';
 import DateSelect from '../DateSelect';
 import FormFieldContainer from '../FormFieldContainer';
-import { Organisaatio, Koodi, Language } from '../types';
+import { Organisaatio, Koodi } from '../types';
 import KoodiSelect from '../KoodiSelect';
 import { toLocalizedText, hasLengthInLang, ytjKieliToLanguage } from '../LocalizableTextUtils';
 import LocalizableTextEdit from '../LocalizableTextEdit';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
-import { toLocalizedKoodi } from '../KoodiUtils';
 import classNames from 'classnames/bind';
 
 type Props = {
@@ -26,13 +25,11 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/ORGANISAATIOTYYPPI/koodi');
     const [{data: kunnat, loading: kunnatLoading, error: kunnatError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi');
-    const [{data: maatJaValtiot1, loading: maatJaValtiot1Loading, error: maatJaValtiot1Error}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/MAAT_JA_VALTIOT_1/koodi');
 
-    if (organisaatiotyypitLoading || kunnatLoading || maatJaValtiot1Loading) {
+    if (organisaatiotyypitLoading || kunnatLoading) {
         return <Spinner />;
     }
-    if (organisaatiotyypitError || kunnatError || maatJaValtiot1Error) {
+    if (organisaatiotyypitError || kunnatError) {
         return <div>error, reload page</div>;
     }
 
@@ -42,7 +39,6 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
         }
         return false;
     }).map(koodi => toLocalizedText(koodi.nimi, language, koodi.arvo)).join(', ');
-    const maa = maatJaValtiot1.find(koodi => koodi.uri === organisaatio.maaUri);
 
     const nimiDisabled = readOnly || hasLengthInLang(initialOrganisaatio.nimi, ytjKieliToLanguage(initialOrganisaatio.ytjkieli));
     const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
@@ -85,7 +81,6 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
                                 disabled={kotipaikkaDisabled}
                                 required={!kotipaikkaDisabled}
                                 hasError={!!errors.kotipaikkaUri}
-                                optionLabelFn={(koodi: Koodi, language: Language) => toLocalizedText(koodi.nimi, language, koodi.arvo) + ', ' + toLocalizedKoodi(maa, language)}
                                 onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
                 </div>
             </FormFieldContainer>
