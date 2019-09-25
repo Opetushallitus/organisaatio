@@ -51,7 +51,7 @@ public class RekisterointiControllerTest {
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
         mvc.perform(post(RekisterointiController.BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(rekisterointiAsJson))
                 .andExpect(status().isOk());
     }
@@ -64,7 +64,7 @@ public class RekisterointiControllerTest {
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
         mvc.perform(post(RekisterointiController.BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(rekisterointiAsJson))
                 .andExpect(status().isBadRequest());
     }
