@@ -7,10 +7,10 @@ import { LanguageContext } from './contexts';
 import classNames from 'classnames/bind';
 
 type Props = {
-    value?: LocalDate,
+    value: LocalDate | null,
     disabled?: boolean,
     hasError?: boolean,
-    onChange: (value?: LocalDate) => void,
+    onChange: (value: LocalDate | null) => void,
 }
 
 const UI_FORMAT = 'dd.MM.yyyy';
@@ -18,7 +18,7 @@ const LOCAL_DATE_FORMAT = 'yyyy-MM-dd';
 
 export default function DateSelect(props: Props) {
     const { language } = useContext(LanguageContext);
-    const value = props.value ? parseISO(props.value) : new Date();
+    const value = props.value ? parseISO(props.value) : null;
     const classes = classNames({
         'oph-input': true,
         'oph-input-has-error': props.hasError,
@@ -28,5 +28,5 @@ export default function DateSelect(props: Props) {
                        dateFormat={UI_FORMAT}
                        selected={value}
                        disabled={props.disabled}
-                       onChange={date => date != null ? props.onChange(format(date, LOCAL_DATE_FORMAT)) : null} />
+                       onChange={date => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)} />
 }

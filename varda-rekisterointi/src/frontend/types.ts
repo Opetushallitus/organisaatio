@@ -17,14 +17,14 @@ export type Lokalisointi = Record<Language, Record<string, string>>;
 // organisaatio
 export type Yhteystieto = Record<string, string>;
 export type OrganisaatioNimi = {
-    alkuPvm?: LocalDate,
+    alkuPvm: LocalDate | null,
     nimi: LocalizableText,
 }
 export type Organisaatio = {
     oid?: string,
     ytunnus: string,
     nimi: LocalizableText,
-    alkuPvm: LocalDate,
+    alkuPvm: LocalDate | null,
     nimet: OrganisaatioNimi[],
     yritysmuoto: string,
     kieletUris: KoodiUri[],

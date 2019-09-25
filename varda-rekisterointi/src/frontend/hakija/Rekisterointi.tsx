@@ -19,9 +19,9 @@ const baseOrganisaatio: Organisaatio = {
         sv: '',
         en: '',
     },
-    alkuPvm: '2019-01-01',
+    alkuPvm: null,
     nimet: [{
-        alkuPvm: '2019-01-01',
+        alkuPvm: null,
         nimi: {
             fi: '',
             sv: '',
@@ -111,7 +111,7 @@ export default function Rekisterointi() {
         switch (currentStep) {
             case 1:
                 const organisaatioErrors: Record<string, string> = {};
-                ['ytunnus', 'yritysmuoto', 'kotipaikkaUri']
+                ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
                     .filter(field => !organisaatio[field])
                     .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
                 setOrganisaatioErrors(organisaatioErrors);
