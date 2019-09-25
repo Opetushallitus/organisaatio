@@ -31,7 +31,10 @@ export default function KoodiSelect(props: Props) {
                     disabled={props.disabled}
                     onChange={event => props.onChange(event.currentTarget.value)}>
                 {props.required && props.selected ? null : <option value=""></option>}
-                {props.selectable.map(koodi => <option value={koodi.uri} key={koodi.uri}>{optionLabelFn(koodi, language)}</option>)}
+                {props.selectable
+                    .map(koodi => ({value: koodi.uri, label: optionLabelFn(koodi, language)}))
+                    .sort((item1, item2) => item1.label.localeCompare(item2.label, language))
+                    .map(item => <option value={item.value} key={item.value}>{item.label}</option>)}
             </select>
         </div>
     )
