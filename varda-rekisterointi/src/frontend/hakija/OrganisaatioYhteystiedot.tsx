@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import useAxios from 'axios-hooks';
 import FormFieldContainer from '../FormFieldContainer';
 import { Organisaatio, Koodi, Language, Yhteystieto } from '../types';
@@ -27,6 +27,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const { language, i18n } = useContext(LanguageContext);
     const [{data: postinumerot, loading: postinumerotLoading, error: postinumerotError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/POSTI/koodi');
+    const [ kayntiosoiteSamaKuinPostiosoite, setKayntiosoiteSamaKuinPostiosoite ] = useState(false);
 
     if (postinumerotLoading) {
         return <Spinner />;
@@ -73,10 +74,40 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
 
     const puhelinnumeroDisabled = readOnly || hasLength(initialPuhelinnumero);
     const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
-    const kayntiosoiteDisabled = readOnly || hasLength(initialKayntiosoite);
-    const kayntiosoitteenPostinumeroDisabled = readOnly || hasLength(initialKayntiosoitteenPostinumeroUri);
+    const kayntiosoiteDisabled = readOnly || hasLength(initialKayntiosoite) || kayntiosoiteSamaKuinPostiosoite;
+    const kayntiosoitteenPostinumeroDisabled = readOnly || hasLength(initialKayntiosoitteenPostinumeroUri) || kayntiosoiteSamaKuinPostiosoite;
     const postiosoiteDisabled = readOnly || hasLength(initialPostiosoite);
     const postinumeroDisabled = readOnly || hasLength(initialPostinumeroUri);
+
+    const handlePostiosoite = (values: Record<string, string>): void => {
+        let yhteystiedot = organisaatio.yhteystiedot;
+        yhteystiedot = updateYhteystiedot(yhteystiedot, and(isPostiosoite, isKieli), {
+            kieli: kieliUri,
+            osoiteTyyppi: 'posti',
+            ...values
+        });
+        if (kayntiosoiteSamaKuinPostiosoite) {
+            yhteystiedot = updateYhteystiedot(yhteystiedot, and(isKayntiosoite, isKieli), {
+                kieli: kieliUri,
+                osoiteTyyppi: 'kaynti',
+                ...values
+            });
+        }
+        setOrganisaatio({ yhteystiedot: yhteystiedot });
+    }
+
+    const handleKayntiosoiteSamaKuinPostiosoite = (value: boolean): void => {
+        setKayntiosoiteSamaKuinPostiosoite(value);
+        if (value) {
+            setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isKayntiosoite, isKieli), {
+                kieli: kieliUri,
+                osoiteTyyppi: 'kaynti',
+                osoite: postiosoite,
+                postinumeroUri: postinumeroUri,
+                postitoimipaikka: postitoimipaikka,
+            })});
+        }
+    }
 
     const baseClasses = { 'oph-input': true };
 
@@ -110,11 +141,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postiosoite"
                        value={postiosoite}
                        disabled={postiosoiteDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isPostiosoite, isKieli), {
-                           kieli: kieliUri,
-                           osoiteTyyppi: 'posti',
-                           osoite: event.currentTarget.value
-                       })})} />
+                       onChange={event => handlePostiosoite({ osoite: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="postinumero" errorText={errors.postinumero}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.postinumero })}
@@ -122,12 +149,10 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postinumero"
                        value={postinumero}
                        disabled={postinumeroDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isPostiosoite, isKieli), {
-                           kieli: kieliUri,
-                           osoiteTyyppi: 'posti',
+                       onChange={event => handlePostiosoite({
                            postinumeroUri: `posti_${event.currentTarget.value}`,
                            postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : '',
-                       })})} />
+                       })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTITOIMIPAIKKA')}>
                 <div className="oph-input-container">
@@ -135,16 +160,27 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                 </div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" errorText={errors.kayntiosoite}>
-                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
-                       type="text"
-                       id="kayntiosoite"
-                       value={kayntiosoite}
-                       disabled={kayntiosoiteDisabled}
-                       onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isKayntiosoite, isKieli), {
-                           kieli: kieliUri,
-                           osoiteTyyppi: 'kaynti',
-                           osoite: event.currentTarget.value
-                       })})} />
+                <div className="oph-input-container">
+                    <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoite })}
+                           type="text"
+                           id="kayntiosoite"
+                           value={kayntiosoite}
+                           disabled={kayntiosoiteDisabled}
+                           onChange={event => setOrganisaatio({ yhteystiedot: updateYhteystiedot(organisaatio.yhteystiedot, and(isKayntiosoite, isKieli), {
+                               kieli: kieliUri,
+                               osoiteTyyppi: 'kaynti',
+                               osoite: event.currentTarget.value
+                           })})} />
+                    {readOnly ? null :
+                    <label className="oph-checkable">
+                        <input type="checkbox"
+                               className="oph-checkable-input"
+                               checked={kayntiosoiteSamaKuinPostiosoite}
+                               onChange={event => handleKayntiosoiteSamaKuinPostiosoite(event.currentTarget.checked)} />
+                        <span className="oph-checkable-text">{i18n.translate('SAMA_KUIN_POSTIOSOITE')}</span>
+                    </label>
+                    }
+                </div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTINUMERO')} labelFor="kayntiosoitteen-postinumero" errorText={errors.kayntiosoitteenPostinumero}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kayntiosoitteenPostinumero })}
