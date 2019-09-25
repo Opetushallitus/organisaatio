@@ -9,6 +9,9 @@ type Props = {
 
 export default function RekisterointiLista({ rekisteroinnit } : Props) {
     const { i18n } = useContext(LanguageContext);
+    const dateTimeFormat = new Intl.DateTimeFormat(["fi-FI"], {
+        year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+    }); // TODO: lokalisaatio
     const otsikot = [
         i18n.translate("ORGANISAATION_NIMI"),
         i18n.translate("VASTUUHENKILO"),
@@ -21,7 +24,7 @@ export default function RekisterointiLista({ rekisteroinnit } : Props) {
             { data: rekisterointi.organisaatio.nimi.fi || "" }, // TODO: lokalisaatio
             { data: `${rekisterointi.kayttaja.etunimi} ${rekisterointi.kayttaja.sukunimi}` },
             { data: rekisterointi.organisaatio.ytunnus },
-            { data: rekisterointi.saapumisaika.toString() } // TODO: formatoi saapumisaika!
+            { data: dateTimeFormat.format(rekisterointi.saapumisaika) }
         ];
     };
     return (
