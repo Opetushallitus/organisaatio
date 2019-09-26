@@ -1,6 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.varda.rekisterointi.RekisterointiRepository;
+import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
