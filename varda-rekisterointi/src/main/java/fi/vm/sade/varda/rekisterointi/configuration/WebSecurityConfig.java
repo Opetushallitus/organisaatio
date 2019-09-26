@@ -25,8 +25,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
+import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;
+import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
 import static java.util.Collections.singletonList;
 
 @Configuration
@@ -68,8 +71,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         String loginCallbackUrl = properties.url("varda-rekisterointi.hakija.login");
-        String loginUrl = properties.url("shibbolethVirkailija.login", loginCallbackUrl);
-        return new LoginUrlAuthenticationEntryPoint(loginUrl);
+        String defaultLoginUrl = properties.url("shibbolethVirkailija.login", "FI", loginCallbackUrl);
+        return new AuthenticationEntryPointImpl(defaultLoginUrl, properties, loginCallbackUrl);
+    }
+
+    private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
+
+        private final OphProperties properties;
+        private final String loginCallbackUrl;
+
+        public AuthenticationEntryPointImpl(String loginFormUrl, OphProperties properties, String loginCallbackUrl) {
+            super(loginFormUrl);
+            this.properties = properties;
+            this.loginCallbackUrl = loginCallbackUrl;
+        }
+
+        @Override
+        protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
+            Locale locale = Optional.ofNullable(request.getSession(false))
+                    .flatMap(session -> Optional.ofNullable(session.getAttribute(SESSION_ATTRIBUTE_NAME_LOCALE)))
+                    .filter(Locale.class::isInstance)
+                    .map(Locale.class::cast)
+                    .orElse(DEFAULT_LOCALE);
+            String language = locale.getLanguage();
+            return properties.url("shibbolethVirkailija.login", language.toUpperCase(), loginCallbackUrl);
+        }
     }
 
     @Bean

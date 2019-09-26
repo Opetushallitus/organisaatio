@@ -19,6 +19,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
+import java.util.Locale;
 
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
@@ -42,11 +43,11 @@ public class ValtuudetController {
     }
 
     @GetMapping("/valtuudet/redirect")
-    public View getRedirect(Principal principal) {
+    public View getRedirect(Principal principal, Locale locale) {
         String nationalIdentificationNumber = principal.getName();
         String callbackUrl = properties.url("varda-rekisterointi.hakija.valtuudet.callback");
         SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
-        String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, "fi");
+        String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, locale.getLanguage());
 
         valtuudet.sessionId = session.sessionId;
         valtuudet.callbackUrl = callbackUrl;
