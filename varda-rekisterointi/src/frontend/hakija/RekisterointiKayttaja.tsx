@@ -17,7 +17,7 @@ export default function RekisterointiKayttaja(props: Props) {
     return (
         <form>
             <Fieldset title={i18n.translate('KAYTTAJAN_YHTEYSTIEDOT')}
-                      description={i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS')}>
+                      description={[i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS'), i18n.translate('KAYTTAJAN_YHTEYSTIEDOT_KUVAUS2')]}>
                 <KayttajaYhteystiedot toimintamuoto={props.toimintamuoto}
                                       setToimintamuoto={props.setToimintamuoto}
                                       kayttaja={props.kayttaja}

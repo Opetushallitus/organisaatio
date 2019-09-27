@@ -4,15 +4,23 @@ import classNames from 'classnames/bind';
 
 type Props = {
     title?: string,
-    description?: string,
+    description?: string | string[],
     children?: React.ReactNode,
+}
+
+function renderDesc(description: string) {
+    return <p>{description}</p>
 }
 
 export default function Fieldset(props: Props) {
     return (
         <fieldset className={classNames("oph-fieldset", styles.fieldset)}>
             {props.title ? <legend className="oph-label">{props.title}</legend> : null}
-            {props.description ? <p>{props.description}</p> : null}
+            {props.description
+                ? Array.isArray(props.description)
+                    ? props.description.map(renderDesc)
+                    : renderDesc(props.description)
+                : null}
             {props.children}
         </fieldset>
     )
