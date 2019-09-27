@@ -12,6 +12,7 @@ import Navigation from './Navigation';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import EmailValidator from 'email-validator';
+import { useBeforeunload } from 'react-beforeunload';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -66,6 +67,12 @@ export default function Rekisterointi() {
     const [fetchError, setFetchError] = useState(null);
     const [postLoading, setPostLoading] = useState(false);
     const [postError, setPostError] = useState(null);
+    const [ready, setReady] = useState(false);
+    useBeforeunload(event => {
+        if (!ready) {
+            event.preventDefault();
+        }
+    });
 
     useEffect(() => {
         async function fetch() {
@@ -99,6 +106,7 @@ export default function Rekisterointi() {
                 toimintamuoto: toimintamuoto,
                 kayttaja: kayttaja,
             });
+            setReady(true);
         } catch (error) {
             setPostError(error);
             throw error;
