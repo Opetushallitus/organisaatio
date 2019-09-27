@@ -37,9 +37,8 @@ public class ValtuudetController {
     }
 
     @GetMapping("/valtuudet/redirect")
-    public View getRedirect(HttpServletRequest request) {
+    public View getRedirect(HttpServletRequest request, Locale locale) {
         Principal principal = request.getUserPrincipal();
-        Locale locale = request.getLocale();
         String nationalIdentificationNumber = principal.getName();
         String callbackUrl = properties.url("varda-rekisterointi.hakija.valtuudet.callback");
         SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
