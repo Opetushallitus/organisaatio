@@ -8,11 +8,11 @@ export default function RekisterointiValmis() {
     const { i18n } = useContext(LanguageContext);
     return (
         <form>
-            <Fieldset title={i18n.translate('REKISTEROINNIN_KASITTELY')}>
+            <Fieldset title={i18n.translate('REKISTEROINNIN_KASITTELY')}
+                      description={i18n.translate('REKISTEROINNIN_KASITTELY_KUVAUS')}>
             </Fieldset>
-            <div>{i18n.translate('REKISTEROINNIN_KASITTELY_KUVAUS')}</div>
-            <div>{i18n.translate('REKISTEROINNIN_KASITTELY_OHJE')}</div>
-            <div className={styles.center}><Image /></div>
+            <p>{i18n.translate('REKISTEROINNIN_KASITTELY_OHJE')}</p>
+            <p className={styles.center}><Image /></p>
         </form>
     );
 }
