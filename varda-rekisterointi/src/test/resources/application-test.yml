@@ -1,3 +1,5 @@
 spring:
   flyway:
     enabled: false
+  session:
+    store-type: none
