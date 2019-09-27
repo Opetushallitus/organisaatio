@@ -17,6 +17,8 @@ spring:
     password: varda-rekisterointi
   flyway:
     out-of-order: true
+  session:
+    store-type: jdbc
 varda-rekisterointi:
   host-virkailija: http://localhost:${server.port}
   host-tunnistus: http://localhost:${server.port}

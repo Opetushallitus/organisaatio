@@ -5,83 +5,85 @@ import fi.vm.sade.suomifi.valtuudet.OrganisationDto;
 import fi.vm.sade.suomifi.valtuudet.SessionDto;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
-import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
-import fi.vm.sade.varda.rekisterointi.model.Valtuudet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Locale;
+import java.util.Optional;
 
-import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
+import static fi.vm.sade.varda.rekisterointi.util.Constants.*;
+import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
+import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.setSessionAttribute;
 
 @Controller
 @RequestMapping("/hakija")
-@Scope("session")
 public class ValtuudetController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValtuudetController.class);
 
     private final OphProperties properties;
-    private final Valtuudet valtuudet;
     private final ValtuudetClient valtuudetClient;
-    private final OrganisaatioClient organisaatioClient;
 
-    public ValtuudetController(OphProperties properties, Valtuudet valtuudet, ValtuudetClient valtuudetClient, OrganisaatioClient organisaatioClient) {
+    public ValtuudetController(OphProperties properties, ValtuudetClient valtuudetClient) {
         this.properties = properties;
-        this.valtuudet = valtuudet;
         this.valtuudetClient = valtuudetClient;
-        this.organisaatioClient = organisaatioClient;
     }
 
     @GetMapping("/valtuudet/redirect")
-    public View getRedirect(Principal principal, Locale locale) {
+    public View getRedirect(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        Locale locale = request.getLocale();
         String nationalIdentificationNumber = principal.getName();
         String callbackUrl = properties.url("varda-rekisterointi.hakija.valtuudet.callback");
         SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
         String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, locale.getLanguage());
 
-        valtuudet.sessionId = session.sessionId;
-        valtuudet.callbackUrl = callbackUrl;
+        setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_SESSION_ID, session.sessionId);
+        setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_CALLBACK_URL, callbackUrl);
 
         return new RedirectView(redirectUrl);
     }
 
     @GetMapping("/valtuudet/callback")
-    public View getCallback(@RequestParam(required = false) String code) {
+    public View getCallback(HttpServletRequest request) {
         try {
-            return handleCallback(code);
+            return handleCallback(request);
         } finally {
             try {
-                valtuudetClient.destroySession(ValtuudetType.ORGANISATION, valtuudet.sessionId);
+                findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_SESSION_ID, String.class)
+                        .ifPresent(sessionId -> valtuudetClient.destroySession(ValtuudetType.ORGANISATION, sessionId));
             } catch (Exception e) {
                 LOGGER.warn("Unable to destroy valtuudet session", e);
             }
         }
     }
 
-    private View handleCallback(String code) {
+    private View handleCallback(HttpServletRequest request) {
+        String code = request.getParameter("code");
         if (code == null) {
             String redirectUrl = properties.url("varda-rekisterointi.hakija.logout");
             return new RedirectView(redirectUrl);
         }
 
-        String accessToken = valtuudetClient.getAccessToken(code, valtuudet.callbackUrl);
-        OrganisationDto organisation = valtuudetClient.getSelectedOrganisation(valtuudet.sessionId, accessToken);
-        valtuudet.businessId = organisation.identifier;
+        Optional<String> callbackUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_CALLBACK_URL, String.class);
+        Optional<String> sessionId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_SESSION_ID, String.class);
+        if (!callbackUrl.isPresent() || !sessionId.isPresent()) {
+            String redirectUrl = properties.url("varda-rekisterointi.hakija.logout");
+            return new RedirectView(redirectUrl);
+        }
 
-        OrganisaatioV4Dto organisaatio = organisaatioClient.getV4ByYtunnus(valtuudet.businessId)
-                .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(valtuudet.businessId)))
-                .orElseGet(() -> OrganisaatioV4Dto.of(organisation));
-        valtuudet.organisaatio = organisaatio;
+        String accessToken = valtuudetClient.getAccessToken(code, callbackUrl.get());
+        OrganisationDto organisation = valtuudetClient.getSelectedOrganisation(sessionId.get(), accessToken);
+
+        setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, organisation.identifier);
+        setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, organisation.name);
 
         String redirectUrl = properties.url("varda-rekisterointi.hakija");
         return new RedirectView(redirectUrl);
