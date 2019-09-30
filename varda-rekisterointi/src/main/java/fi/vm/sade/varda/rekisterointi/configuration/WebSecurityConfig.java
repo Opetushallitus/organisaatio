@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;
 import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
+import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
 import static java.util.Collections.singletonList;
 
 @Configuration
@@ -88,10 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-            Locale locale = Optional.ofNullable(request.getSession(false))
-                    .flatMap(session -> Optional.ofNullable(session.getAttribute(SESSION_ATTRIBUTE_NAME_LOCALE)))
-                    .filter(Locale.class::isInstance)
-                    .map(Locale.class::cast)
+            Locale locale = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_LOCALE, Locale.class)
                     .orElse(DEFAULT_LOCALE);
             String language = locale.getLanguage();
             return properties.url("shibbolethVirkailija.login", language.toUpperCase(), loginCallbackUrl);
