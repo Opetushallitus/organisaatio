@@ -20,8 +20,8 @@ spring:
   session:
     store-type: jdbc
 varda-rekisterointi:
-  host-virkailija: http://localhost:${server.port}
-  host-tunnistus: http://localhost:${server.port}
+  url-virkailija: http://localhost:${server.port}
+  url-tunnistus: http://localhost:${server.port}
   service:
     username: varda-rekisterointi
     password: varda-rekisterointi

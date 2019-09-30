@@ -33,7 +33,7 @@ public class LokalisointiClientTest {
 
     @Before
     public void setup() {
-        properties.addOverride("host-virkailija", "http://localhost:" + wireMockRule.port());
+        properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
     }
 
     @Test
