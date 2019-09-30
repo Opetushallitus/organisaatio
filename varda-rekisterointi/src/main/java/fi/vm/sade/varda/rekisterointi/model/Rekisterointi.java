@@ -28,7 +28,6 @@ public class Rekisterointi {
     @NotNull @Valid
     public final Kayttaja kayttaja;
 
-    @NotNull
     public final LocalDateTime vastaanotettu;
 
     public final Paatos paatos;
@@ -48,7 +47,7 @@ public class Rekisterointi {
         this.sahkopostit = sahkopostit;
         this.toimintamuoto = toimintamuoto;
         this.kayttaja = kayttaja;
-        this.vastaanotettu = vastaanotettu;
+        this.vastaanotettu = vastaanotettu != null ? vastaanotettu : LocalDateTime.now();
         this.paatos = paatos;
     }
 

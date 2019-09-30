@@ -3,6 +3,7 @@ package fi.vm.sade.varda.rekisterointi.controller.hakija;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +54,7 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void ok() throws Exception {
-        Rekisterointi rekisterointi = newValidRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
         mvc.perform(post(RekisterointiController.BASE_PATH)
@@ -65,7 +66,7 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void notOk() throws Exception {
-        Rekisterointi rekisterointi = newValidRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
         rekisterointi.kayttaja.sahkoposti = "invalid";
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 

@@ -1,6 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
+import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,17 @@ public class RekisterointiService {
         this.repository = repository;
     }
 
+    public Iterable<Rekisterointi> list() {
+        return repository.findAll(); // TODO: rajaus kunnan/päättäjän perusteella?
+    }
+
     public long create(Rekisterointi rekisterointi) {
         return repository.save(rekisterointi).id;
     }
 
     public Rekisterointi resolve(Paatos paatos) {
         Rekisterointi rekisterointi = repository.findById(paatos.rekisterointi).orElseThrow(
-                () -> new IllegalArgumentException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
+                () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
         return repository.save(rekisterointi.withPaatos(paatos));
     }
 

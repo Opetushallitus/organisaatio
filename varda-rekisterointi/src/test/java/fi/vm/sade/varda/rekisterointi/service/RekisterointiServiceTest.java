@@ -2,10 +2,11 @@ package fi.vm.sade.varda.rekisterointi.service;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fi.vm.sade.varda.rekisterointi.RekisterointiRepository;
+import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,7 @@ public class RekisterointiServiceTest {
     private static final Long INVALID_REKISTEROINTI_ID = 2L;
     private static final Rekisterointi SAVED_REKISTEROINTI = Rekisterointi.of(
             new ObjectNode(JsonNodeFactory.instance),
+            Collections.singleton("Helsinki"),
             Collections.emptySet(),
             "toimintamuoto",
             new Kayttaja()
@@ -66,7 +68,7 @@ public class RekisterointiServiceTest {
         verify(rekisterointiRepository).save(SAVED_REKISTEROINTI);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = InvalidInputException.class)
     public void resolveThrowsOnInvalidRekisterointiId() {
         Paatos paatos = Paatos.of(
                 INVALID_REKISTEROINTI_ID,
