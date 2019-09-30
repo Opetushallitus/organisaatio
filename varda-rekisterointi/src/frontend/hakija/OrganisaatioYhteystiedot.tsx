@@ -172,7 +172,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                                osoite: event.currentTarget.value
                            })})} />
                     {readOnly ? null :
-                    <label className="oph-checkable">
+                    <label>
                         <input type="checkbox"
                                className="oph-checkable-input"
                                checked={kayntiosoiteSamaKuinPostiosoite}
