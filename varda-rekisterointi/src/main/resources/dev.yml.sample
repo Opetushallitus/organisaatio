@@ -1,4 +1,5 @@
 varda-rekisterointi:
+    base-url: https://localhost:8080
     service:
         username: <your_username>
         password: <your_password>

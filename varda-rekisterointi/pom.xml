@@ -206,4 +206,36 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <mainClass>fi.vm.sade.varda.rekisterointi.Application</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>spring.profiles.active</key>
+                                    <value>dev</value>
+                                </systemProperty>
+                                <systemProperty>
+                                    <key>spring.config.additional-location</key>
+                                    <value>src/main/resources/dev.yml</value>
+                                </systemProperty>
+                                <systemProperty>
+                                    <key>baseUrl</key>
+                                    <value>https://virkailija.untuvaopintopolku.fi</value>
+                                </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
