@@ -38,7 +38,7 @@ const baseOrganisaatio: Organisaatio = {
     yhteystiedot: [],
     ytjkieli: 'kieli_fi#1',
 };
-const intialSahkopostit = [''];
+const intialSahkopostit: string[] = [];
 const initialToimintamuoto = 'vardatoimintamuoto_tm01';
 const initialKayttaja: Kayttaja = {
     etunimi: '',
@@ -123,6 +123,9 @@ export default function Rekisterointi() {
                 ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
                     .filter(field => !organisaatio[field])
                     .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                if (sahkopostit.some(sahkoposti => !EmailValidator.validate(sahkoposti))) {
+                    organisaatioErrors.sahkopostit = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
+                }
                 setOrganisaatioErrors(organisaatioErrors);
                 return Object.keys(organisaatioErrors).length === 0;
             case 2:

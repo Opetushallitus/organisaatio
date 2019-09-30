@@ -16,10 +16,12 @@ export default function OrganisaatioSahkopostit({readOnly, sahkopostit, setSahko
     return (
         <>
             <FormFieldContainer readOnly={readOnly}
+                                errorText={errors.sahkopostit}
                                 label={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
                                 helpText={i18n.translate('ORGANISAATION_SAHKOPOSTIT_OHJE')}>
                 <InputMultiple values={sahkopostit}
                                disabled={readOnly}
+                               hasError={!!errors.sahkopostit}
                                onChange={sahkopostit => setSahkopostit(sahkopostit)} />
             </FormFieldContainer>
         </>

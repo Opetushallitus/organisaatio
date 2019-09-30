@@ -9,6 +9,7 @@ import classNames from 'classnames/bind';
 type Props = {
     values: string[],
     disabled?: boolean,
+    hasError?: boolean,
     onChange: (values: string[]) => void,
 }
 
@@ -25,10 +26,14 @@ export default function InputMultiple(props: Props) {
         props.values.splice(index, 1);
         return [ ...props.values ];
     }
+    const classes = classNames({
+        'oph-input': true,
+        'oph-input-has-error': props.hasError,
+    });
     return (
         <div>{props.values.map((value, index) => {
             return <div key={index} className={styles.inputContainer}>
-                <input className="oph-input"
+                <input className={classes}
                        type="text"
                        value={value}
                        disabled={props.disabled}
