@@ -15,10 +15,10 @@
     "http-proxy-middleware": "^0.19.1",
     "normalize.css": "^8.0.1",
     "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
-    "react": "^16.9.0",
+    "react": "^16.10.1",
     "react-beforeunload": "^2.1.0",
     "react-datepicker": "^2.9.6",
-    "react-dom": "^16.9.0",
+    "react-dom": "^16.10.1",
     "react-router-dom": "^5.1.0",
     "react-scripts": "3.1.2",
     "typescript": "3.6.3"
