@@ -12,16 +12,19 @@ export default function Rekisteroinnit() {
     const { i18n } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaLista);
     const [latausKesken, asetaLatausKesken] = useState(true);
+    const [latausVirhe, asetaLatausVirhe] = useState(false);
 
     useEffect(() => {
         async function lataa() {
             try {
                 asetaLatausKesken(true);
+                asetaLatausVirhe(false);
                 const response = await Axios.get(rekisteroinnitUrl);
                 const data = response.data;
                 asetaRekisteroinnit(data);
             } catch (e) {
-                console.log(e); // TODO: error handling
+                asetaLatausVirhe(true);
+                console.error(e);
             } finally {
                 asetaLatausKesken(false);
             }
@@ -32,6 +35,11 @@ export default function Rekisteroinnit() {
     if (latausKesken) {
         return <Spinner/>;
     }
+
+    if (latausVirhe) {
+        return <div className="virhe">{i18n.translate('REKISTEROINNIT_LATAUSVIRHE')}</div>
+    }
+
     return (
         <div className="varda-rekisteroinnit">
             <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
