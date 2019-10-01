@@ -18,7 +18,7 @@ public class RekisterointiService {
     }
 
     public Iterable<Rekisterointi> list() {
-        return repository.findAll(); // TODO: rajaus kunnan/päättäjän perusteella?
+        return repository.findAll(); // TODO: rajaus kunnan/päättäjän perusteella? KJHH-1709
     }
 
     public long create(Rekisterointi rekisterointi) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -30,6 +31,7 @@ public class Rekisterointi {
 
     public final LocalDateTime vastaanotettu;
 
+    @Column("rekisterointi_id")
     public final Paatos paatos;
 
     private Rekisterointi(
