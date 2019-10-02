@@ -49,5 +49,5 @@ export type Rekisterointi = {
     organisaatio: Organisaatio,
     sahkopostit: string[],
     toimintamuoto: string,
-    kayttaja: Kayttaja,
+    kayttaja: Kayttaja
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 
 import javax.validation.Valid;
@@ -34,6 +35,9 @@ public class Rekisterointi {
     @Column("rekisterointi_id")
     public final Paatos paatos;
 
+    @Transient
+    public final Tila tila;
+
     private Rekisterointi(
             Long id,
             ObjectNode organisaatio,
@@ -51,6 +55,7 @@ public class Rekisterointi {
         this.kayttaja = kayttaja;
         this.vastaanotettu = vastaanotettu != null ? vastaanotettu : LocalDateTime.now();
         this.paatos = paatos;
+        this.tila = paatos == null ? Tila.KASITTELYSSA : (paatos.hyvaksytty ? Tila.HYVAKSYTTY : Tila.HYLATTY);
     }
 
     public static Rekisterointi of(
@@ -118,6 +123,12 @@ public class Rekisterointi {
                 .append(vastaanotettu)
                 .append(paatos)
                 .hashCode();
+    }
+
+    enum Tila {
+        KASITTELYSSA,
+        HYVAKSYTTY,
+        HYLATTY
     }
 
 }
