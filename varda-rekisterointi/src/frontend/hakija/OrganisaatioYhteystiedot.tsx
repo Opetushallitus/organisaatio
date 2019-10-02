@@ -171,7 +171,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                                osoiteTyyppi: 'kaynti',
                                osoite: event.currentTarget.value
                            })})} />
-                    {readOnly ? null :
+                    {readOnly || kayntiosoiteDisabled ? null :
                     <label>
                         <input type="checkbox"
                                className="oph-checkable-input"
