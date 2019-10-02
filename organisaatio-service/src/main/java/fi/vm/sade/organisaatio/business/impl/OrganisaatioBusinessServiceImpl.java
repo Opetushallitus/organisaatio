@@ -14,7 +14,6 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
@@ -629,6 +628,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void setParentPath(Organisaatio entity, String parentOid) {
+        setParentPath(entity, parentOid, null);
+    }
+
+    private void setParentPath(Organisaatio entity, String parentOid, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
         }
@@ -636,10 +639,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         StringBuilder parentIdPath = new StringBuilder();
         List<Organisaatio> parents = organisaatioDAO.findParentsTo(parentOid);
         for (Organisaatio curParent : parents) {
+            if (OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(tyyppi) && parentOid.equals(curParent.getOid())) {
+                continue;
+            }
             parentOidPath.append(parentSeparator).append(curParent.getOid());
             parentIdPath.append(parentSeparator).append(curParent.getId());
         }
-        if (!parents.isEmpty()) {
+        if (parentOidPath.length() > 0) {
             parentOidPath.append(parentSeparator);
             parentIdPath.append(parentSeparator);
         }
@@ -994,7 +1000,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.info("Processing {}", os);
 
             Organisaatio child = os.getChild();
-            setParentPath(child, os.getParent().getOid());
+            setParentPath(child, os.getParent().getOid(), os.getSuhdeTyyppi());
             organisaatioDAO.update(child);
 
             updateChildrenRecursive(child);
