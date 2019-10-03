@@ -110,7 +110,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         @Override
-        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
             String nationalIdentificationNumber = Optional.ofNullable(request.getHeader("nationalidentificationnumber"))
                     .or(() -> Optional.ofNullable(request.getParameter("hetu"))) // for easier development
                     .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Unable to authenticate because required header doesn't exist"));
