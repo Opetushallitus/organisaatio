@@ -8,6 +8,7 @@
             </label>
             <div class="controls">
                 <select id="toimintamuoto" ng-model="vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto"
+                                           ng-change="vakaeditctrl.toimintamuotoChanged(vakaeditctrl.model.organisaatio.varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto)"
                         ng-options="toimintamuoto.uri as toimintamuoto.nimi for toimintamuoto in vakaeditctrl.koodisto.varhaiskasvatuksenToimintamuodot | orderBy:'uri'" required>
                     <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
                 </select>
@@ -187,18 +188,9 @@
                 {{:: vakaeditctrl.t('Organisaationmuokkaus.ohje.eijulkinen')}}
             </label>
             <div class="controls">
-                <div ng-if="vakaeditctrl.isPaivakoti();">
+                <div>
                     <input id="piilotettu"
                            ng-model="vakaeditctrl.model.organisaatio.piilotettu"
-                           name="piilotettu"
-                           class="oph-checkable-input"
-                           type="checkbox"
-                    />
-                </div>
-                <div ng-if="!vakaeditctrl.isPaivakoti();">
-                    <input id="piilotettu-indicator"
-                           ng-disabled="true"
-                           ng-checked="true"
                            name="piilotettu"
                            class="oph-checkable-input"
                            type="checkbox"
