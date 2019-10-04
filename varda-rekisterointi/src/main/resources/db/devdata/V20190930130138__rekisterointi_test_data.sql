@@ -1,8 +1,9 @@
-INSERT INTO rekisterointi (id, organisaatio, toimintamuoto, sahkopostit)
+INSERT INTO rekisterointi (id, organisaatio, toimintamuoto, kunnat, sahkopostit)
  VALUES (
      1,
      '{"oid":null,"ytunnus":"0000000-0","nimi":{"fi":"Testi Yritys"},"nimet":[{"nimi":{"fi":"Testi Yritys Oy","se":"Test Bolag Ab"}}],"alkuPvm":null}'::jsonb,
      'perhepäivähoitaja',
+     '{"Helsinki"}',
      '{"testi.yritys@testiyrit.ys"}'
  );
 
