@@ -628,10 +628,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void setParentPath(Organisaatio entity, String parentOid) {
-        setParentPath(entity, parentOid, null);
-    }
-
-    private void setParentPath(Organisaatio entity, String parentOid, OrganisaatioSuhde.OrganisaatioSuhdeTyyppi tyyppi) {
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
         }
@@ -639,13 +635,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         StringBuilder parentIdPath = new StringBuilder();
         List<Organisaatio> parents = organisaatioDAO.findParentsTo(parentOid);
         for (Organisaatio curParent : parents) {
-            if (OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(tyyppi) && parentOid.equals(curParent.getOid())) {
-                continue;
-            }
             parentOidPath.append(parentSeparator).append(curParent.getOid());
             parentIdPath.append(parentSeparator).append(curParent.getId());
         }
-        if (parentOidPath.length() > 0) {
+        if (!parents.isEmpty()) {
             parentOidPath.append(parentSeparator);
             parentIdPath.append(parentSeparator);
         }
@@ -1000,8 +993,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.info("Processing {}", os);
 
             Organisaatio child = os.getChild();
-            setParentPath(child, os.getParent().getOid(), os.getSuhdeTyyppi());
-            organisaatioDAO.update(child);
+            // Liitos ei muuta parenttia (kts. Organisaatio#getParent)
+            if (!OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(os.getSuhdeTyyppi())) {
+                setParentPath(child, os.getParent().getOid());
+                organisaatioDAO.update(child);
+            }
 
             updateChildrenRecursive(child);
 
