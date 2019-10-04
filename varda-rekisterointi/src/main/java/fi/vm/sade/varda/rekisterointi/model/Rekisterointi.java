@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.relational.core.mapping.Column;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -32,13 +30,10 @@ public class Rekisterointi {
 
     public final LocalDateTime vastaanotettu;
 
-    @Column("rekisterointi_id")
-    public final Paatos paatos;
-
-    @Transient
+    @NotNull
     public final Tila tila;
 
-    private Rekisterointi(
+    public Rekisterointi(
             Long id,
             ObjectNode organisaatio,
             Set<String> kunnat,
@@ -46,16 +41,15 @@ public class Rekisterointi {
             String toimintamuoto,
             Kayttaja kayttaja,
             LocalDateTime vastaanotettu,
-            Paatos paatos) {
+            Tila tila) {
         this.id = id;
         this.organisaatio = organisaatio;
         this.kunnat = kunnat;
         this.sahkopostit = sahkopostit;
         this.toimintamuoto = toimintamuoto;
         this.kayttaja = kayttaja;
-        this.vastaanotettu = vastaanotettu != null ? vastaanotettu : LocalDateTime.now();
-        this.paatos = paatos;
-        this.tila = paatos == null ? Tila.KASITTELYSSA : (paatos.hyvaksytty ? Tila.HYVAKSYTTY : Tila.HYLATTY);
+        this.vastaanotettu = vastaanotettu;
+        this.tila = tila;
     }
 
     public static Rekisterointi of(
@@ -64,8 +58,8 @@ public class Rekisterointi {
             Set<String> sahkopostit,
             String toimintamuoto,
             Kayttaja kayttaja) {
-        return new Rekisterointi(
-                null, organisaatio, kunnat, sahkopostit, toimintamuoto, kayttaja, LocalDateTime.now(), null);
+        return new Rekisterointi(null, organisaatio, kunnat, sahkopostit, toimintamuoto, kayttaja,
+                LocalDateTime.now(), Tila.KASITTELYSSA);
     }
 
     public Rekisterointi withId(Long id) {
@@ -77,11 +71,11 @@ public class Rekisterointi {
                 this.toimintamuoto,
                 this.kayttaja,
                 this.vastaanotettu,
-                this.paatos
+                this.tila
         );
     }
 
-    public Rekisterointi withPaatos(Paatos paatos) {
+    public Rekisterointi withTila(Tila tila) {
         return new Rekisterointi(
                 this.id,
                 this.organisaatio,
@@ -90,7 +84,7 @@ public class Rekisterointi {
                 this.toimintamuoto,
                 this.kayttaja,
                 this.vastaanotettu,
-                paatos
+                tila
         );
     }
 
@@ -106,7 +100,7 @@ public class Rekisterointi {
                     .append(toimintamuoto, toinen.toimintamuoto)
                     .append(kayttaja, toinen.kayttaja)
                     .append(vastaanotettu, toinen.vastaanotettu)
-                    .append(paatos, toinen.paatos)
+                    .append(tila, toinen.tila)
                     .isEquals();
         }
         return false;
@@ -121,11 +115,11 @@ public class Rekisterointi {
                 .append(toimintamuoto)
                 .append(kayttaja)
                 .append(vastaanotettu)
-                .append(paatos)
+                .append(tila)
                 .hashCode();
     }
 
-    enum Tila {
+    public enum Tila {
         KASITTELYSSA,
         HYVAKSYTTY,
         HYLATTY

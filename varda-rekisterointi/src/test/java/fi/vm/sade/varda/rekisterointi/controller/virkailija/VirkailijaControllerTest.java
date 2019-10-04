@@ -3,6 +3,7 @@ package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
+import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import org.junit.Test;
@@ -47,8 +48,8 @@ public class VirkailijaControllerTest {
 
     @Test
     public void listaaRekisteroinnitReturnsOk() throws Exception {
-        when(rekisterointiService.list()).thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
-        mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH)
+        when(rekisterointiService.listByTila(Rekisterointi.Tila.KASITTELYSSA)).thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
+        mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH + "?tila={tila}", Rekisterointi.Tila.KASITTELYSSA.toString())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
     }
@@ -56,7 +57,7 @@ public class VirkailijaControllerTest {
     @Test
     public void luoPaatosReturnsOk() throws Exception {
         when(rekisterointiService.resolve(TESTI_PAATOS))
-                .thenReturn(TestiRekisterointi.validiRekisterointi().withPaatos(TESTI_PAATOS));
+                .thenReturn(TestiRekisterointi.validiRekisterointi().withTila(Rekisterointi.Tila.HYVAKSYTTY));
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS))

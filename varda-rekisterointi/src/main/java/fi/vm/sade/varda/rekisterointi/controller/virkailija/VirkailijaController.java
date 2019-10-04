@@ -22,8 +22,8 @@ public class VirkailijaController {
     }
 
     @GetMapping(REKISTEROINNIT_PATH)
-    public Iterable<Rekisterointi> listaaRekisteroinnit() {
-        return rekisterointiService.list(); // TODO: kaiva virkailija, rajaa hakua, ks. KJHH-1709
+    public Iterable<Rekisterointi> listaaRekisteroinnit(@RequestParam("tila") Rekisterointi.Tila tila) {
+        return rekisterointiService.listByTila(tila); // TODO: kaiva virkailija, rajaa hakua, ks. KJHH-1709
     }
 
     @PostMapping(PAATOKSET_PATH)

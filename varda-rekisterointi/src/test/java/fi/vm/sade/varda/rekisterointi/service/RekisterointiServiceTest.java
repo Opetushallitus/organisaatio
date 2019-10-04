@@ -6,6 +6,7 @@ import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +31,8 @@ public class RekisterointiServiceTest {
     @TestConfiguration
     static class RekisterointiServiceTestConfiguration {
         @Bean
-        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository) {
-            return new RekisterointiService(rekisterointiRepository);
+        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository, PaatosRepository paatosRepository) {
+            return new RekisterointiService(rekisterointiRepository, paatosRepository);
         }
     }
 
@@ -44,9 +45,18 @@ public class RekisterointiServiceTest {
             "toimintamuoto",
             new Kayttaja()
     );
+    private static final Paatos SAVED_PAATOS = Paatos.of(
+            SAVED_REKISTEROINTI_ID,
+            false,
+            1L,
+            null
+    );
 
     @MockBean
     private RekisterointiRepository rekisterointiRepository;
+
+    @MockBean
+    private PaatosRepository paatosRepository;
 
     @Autowired
     private RekisterointiService rekisterointiService;
@@ -55,6 +65,8 @@ public class RekisterointiServiceTest {
     public void mockRepositoryCalls() {
         when(rekisterointiRepository.save(any(Rekisterointi.class)))
                 .thenReturn(SAVED_REKISTEROINTI.withId(SAVED_REKISTEROINTI_ID));
+        when(paatosRepository.save(any(Paatos.class)))
+                .thenReturn(SAVED_PAATOS);
         when(rekisterointiRepository.findById(SAVED_REKISTEROINTI_ID))
                 .thenReturn(Optional.of(SAVED_REKISTEROINTI));
         when(rekisterointiRepository.findById(INVALID_REKISTEROINTI_ID))
@@ -87,7 +99,7 @@ public class RekisterointiServiceTest {
                 1L,
                 "Rekisteröinti tehty 110% väärin."
         );
-        Rekisterointi expected = SAVED_REKISTEROINTI.withPaatos(paatos);
+        Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYLATTY);
         rekisterointiService.resolve(paatos);
         verify(rekisterointiRepository).save(expected);
     }

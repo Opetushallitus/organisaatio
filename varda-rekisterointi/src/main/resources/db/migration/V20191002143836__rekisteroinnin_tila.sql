@@ -1,0 +1,3 @@
+CREATE TYPE rekisteroinnin_tila AS ENUM ('KASITTELYSSA', 'HYVAKSYTTY', 'HYLATTY');
+
+ALTER TABLE rekisterointi ADD COLUMN tila rekisteroinnin_tila NOT NULL DEFAULT 'KASITTELYSSA';
