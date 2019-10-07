@@ -14,7 +14,6 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
@@ -994,8 +993,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.info("Processing {}", os);
 
             Organisaatio child = os.getChild();
-            setParentPath(child, os.getParent().getOid());
-            organisaatioDAO.update(child);
+            // Liitos ei muuta parenttia (kts. Organisaatio#getParent)
+            if (!OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(os.getSuhdeTyyppi())) {
+                setParentPath(child, os.getParent().getOid());
+                organisaatioDAO.update(child);
+            }
 
             updateChildrenRecursive(child);
 

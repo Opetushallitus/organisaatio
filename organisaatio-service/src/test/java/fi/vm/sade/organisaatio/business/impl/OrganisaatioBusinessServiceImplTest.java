@@ -126,6 +126,140 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         checkParentOidPath(org, "1.2.2005.5");
     }
 
+    @Test
+    @Transactional
+    public void processNewOrganisaatioSuhdeChangesWithHistoria() {
+        Organisaatio koulutustoimija1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid), false)
+                .getOrganisaatio();
+        assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
+        Organisaatio koulutustoimija2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid), false)
+                .getOrganisaatio();
+        assertThat(koulutustoimija2).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
+
+        Organisaatio oppilaitos = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos", koulutustoimija1.getOid()), false)
+                .getOrganisaatio();
+        assertThat(oppilaitos)
+                .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio toimipiste = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste", oppilaitos.getOid()), false)
+                .getOrganisaatio();
+        assertThat(toimipiste)
+                .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
+
+        service.changeOrganisaatioParent(oppilaitos, koulutustoimija2, new Date());
+
+        Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
+        assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos.getOid());
+
+        assertThat(organisaatioDAO.findByOid(oppilaitos.getOid()))
+                .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
+        assertThat(organisaatioDAO.findByOid(toimipiste.getOid()))
+                .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
+    }
+
+    @Test
+    @Transactional
+    public void processNewOrganisaatioSuhdeChangesWithLiitos() {
+        Organisaatio koulutustoimija = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija", rootOid), false)
+                .getOrganisaatio();
+        assertThat(koulutustoimija).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
+
+        Organisaatio oppilaitos1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija.getOid()), false)
+                .getOrganisaatio();
+        assertThat(oppilaitos1)
+                .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio toimipiste1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid()), false)
+                .getOrganisaatio();
+        assertThat(toimipiste1)
+                .returns(oppilaitos1.getParentOidPath() + oppilaitos1.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos1.getParentIdPath() + oppilaitos1.getId() + "|", Organisaatio::getParentIdPath);
+
+        Organisaatio oppilaitos2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija.getOid()), false)
+                .getOrganisaatio();
+        assertThat(oppilaitos2)
+                .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio toimipiste2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid()), false)
+                .getOrganisaatio();
+        assertThat(toimipiste2)
+                .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
+
+        service.mergeOrganisaatio(oppilaitos1, oppilaitos2, new Date());
+
+        Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
+        assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
+
+        assertThat(organisaatioDAO.findByOid(oppilaitos1.getOid()))
+                .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
+        assertThat(organisaatioDAO.findByOid(toimipiste1.getOid()))
+                .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
+    }
+
+    @Test
+    @Transactional
+    public void processNewOrganisaatioSuhdeChangesWithLiitosToAnotherTree() {
+        Organisaatio koulutustoimija1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid), false)
+                .getOrganisaatio();
+        assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
+        Organisaatio oppilaitos1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija1.getOid()), false)
+                .getOrganisaatio();
+        assertThat(oppilaitos1)
+                .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio toimipiste1 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid()), false)
+                .getOrganisaatio();
+        assertThat(toimipiste1)
+                .returns(oppilaitos1.getParentOidPath() + oppilaitos1.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos1.getParentIdPath() + oppilaitos1.getId() + "|", Organisaatio::getParentIdPath);
+
+        Organisaatio koulutustoimija2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid), false)
+                .getOrganisaatio();
+        Organisaatio oppilaitos2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija2.getOid()), false)
+                .getOrganisaatio();
+        assertThat(oppilaitos2)
+                .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio toimipiste2 = service
+                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid()), false)
+                .getOrganisaatio();
+        assertThat(toimipiste2)
+                .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
+
+        service.mergeOrganisaatio(oppilaitos1, oppilaitos2, new Date());
+
+        Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
+        assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
+
+        assertThat(organisaatioDAO.findByOid(oppilaitos1.getOid()))
+                .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
+        assertThat(organisaatioDAO.findByOid(toimipiste1.getOid()))
+                .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
+                .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
+    }
+
 
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioDAO.findByOid(oid);
