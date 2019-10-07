@@ -22,7 +22,7 @@
         <viestinta.version>14.8-SNAPSHOT</viestinta.version>
         <!--Java utils-->
         <oidgenerator.version>0.0.1-SNAPSHOT</oidgenerator.version>
-        <java-http.version>0.2.0-SNAPSHOT</java-http.version>
+        <java-http.version>0.5.0-SNAPSHOT</java-http.version>
 
         <!--Default properties-->
         <jmeter.username>xxx</jmeter.username>
@@ -315,6 +315,11 @@ buildTtime=${maven.build.timestamp}
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>fi.vm.sade.java-utils</groupId>
+                <artifactId>java-cas</artifactId>
+                <version>0.5.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-support-distributed-ehcache</artifactId>
