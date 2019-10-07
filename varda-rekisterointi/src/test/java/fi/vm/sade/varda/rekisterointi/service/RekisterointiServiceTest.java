@@ -43,7 +43,12 @@ public class RekisterointiServiceTest {
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
             "toimintamuoto",
-            new Kayttaja()
+            Kayttaja.builder()
+                    .etunimi("Testi")
+                    .sukunimi("Henkilö")
+                    .sahkoposti("testi.henkilo@foo.bar")
+                    .asiointikieli("fi")
+                    .build()
     );
     private static final Paatos SAVED_PAATOS = Paatos.of(
             SAVED_REKISTEROINTI_ID,

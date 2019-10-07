@@ -66,8 +66,13 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void notOk() throws Exception {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
-        rekisterointi.kayttaja.sahkoposti = "invalid";
+        Rekisterointi rekisterointi = TestiRekisterointi.rekisterointi(Kayttaja.builder()
+                .etunimi("Testi")
+                .sukunimi("Henkilö")
+                .asiointikieli("fi")
+                .sahkoposti("invalid")
+                .build()
+        );
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
 
         mvc.perform(post(RekisterointiController.BASE_PATH)

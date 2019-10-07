@@ -22,12 +22,12 @@ public class TestiRekisterointi {
     }
 
     private static Kayttaja validiKayttaja() {
-        Kayttaja kayttaja = new Kayttaja();
-        kayttaja.etunimi = "John";
-        kayttaja.sukunimi = "Smith";
-        kayttaja.sahkoposti = "john.smith@example.com";
-        kayttaja.asiointikieli = "en";
-        return kayttaja;
+        return Kayttaja.builder()
+                .etunimi("John")
+                .sukunimi("Smith")
+                .sahkoposti("john.smith@example.com")
+                .asiointikieli("en")
+                .build();
     }
 
 }
