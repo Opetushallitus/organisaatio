@@ -14,11 +14,12 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.google.common.collect.Iterables;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
@@ -30,13 +31,10 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
-
-import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioTyyppiUtil;
-import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,23 +42,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
 
-import java.util.Collection;
-import static java.util.Collections.emptyMap;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  *
@@ -163,6 +152,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         to.setSuunnitellut(from.getSuunnitellut());
         to.setLakkautetut(from.getLakkautetut());
         to.setPoistettu(from.getPoistettu());
+        to.setPiilotettu(from.getPiilotettu());
         to.setOrganisaatioTyyppi(from.getOrganisaatioTyyppi().stream()
                 .flatMap(organisaatiotyyppi -> OrganisaatioTyyppiUtil.getOrgTypeLimit(organisaatiotyyppi).stream())
                 .collect(toList()));
