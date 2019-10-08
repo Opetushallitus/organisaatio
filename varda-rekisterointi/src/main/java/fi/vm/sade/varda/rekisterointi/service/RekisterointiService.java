@@ -32,7 +32,8 @@ public class RekisterointiService {
         Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
                 () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
         paatosRepository.save(paatos);
-        return rekisterointiRepository.save(rekisterointi.withTila(paatos.hyvaksytty ? Rekisterointi.Tila.HYVAKSYTTY : Rekisterointi.Tila.HYLATTY));
+        return rekisterointiRepository.save(
+                rekisterointi.withTila(paatos.hyvaksytty ? Rekisterointi.Tila.HYVAKSYTTY : Rekisterointi.Tila.HYLATTY));
     }
 
 }

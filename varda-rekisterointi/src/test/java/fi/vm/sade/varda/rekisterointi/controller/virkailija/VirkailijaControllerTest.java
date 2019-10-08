@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.mockito.Mockito.when;
@@ -30,9 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class VirkailijaControllerTest {
 
-    private static final Paatos TESTI_PAATOS = Paatos.of(
+    private static final Paatos TESTI_PAATOS = new Paatos(
             1L,
             true,
+            LocalDateTime.now(),
             2L,
             "Ihan okei."
     );
@@ -56,8 +58,8 @@ public class VirkailijaControllerTest {
 
     @Test
     public void luoPaatosReturnsOk() throws Exception {
-        when(rekisterointiService.resolve(TESTI_PAATOS))
-                .thenReturn(TestiRekisterointi.validiRekisterointi().withTila(Rekisterointi.Tila.HYVAKSYTTY));
+        Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withTila(Rekisterointi.Tila.HYVAKSYTTY);
+        when(rekisterointiService.resolve(TESTI_PAATOS)).thenReturn(resolved);
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS))

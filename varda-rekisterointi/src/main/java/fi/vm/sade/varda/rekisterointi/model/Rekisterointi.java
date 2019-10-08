@@ -1,8 +1,8 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.With;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
@@ -12,9 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@EqualsAndHashCode
 public class Rekisterointi {
 
-    @Id
+    @With @Id
     public final Long id;
 
     @NotNull
@@ -25,12 +26,13 @@ public class Rekisterointi {
     @NotNull
     public final String toimintamuoto;
 
-    @NotNull @Valid
+    @With @NotNull @Valid
     public final Kayttaja kayttaja;
 
+    @With
     public final LocalDateTime vastaanotettu;
 
-    @NotNull
+    @With
     public final Tila tila;
 
     public Rekisterointi(
@@ -48,8 +50,8 @@ public class Rekisterointi {
         this.sahkopostit = sahkopostit;
         this.toimintamuoto = toimintamuoto;
         this.kayttaja = kayttaja;
-        this.vastaanotettu = vastaanotettu;
-        this.tila = tila;
+        this.vastaanotettu = vastaanotettu != null ? vastaanotettu : LocalDateTime.now();
+        this.tila = tila != null ? tila : Tila.KASITTELYSSA;
     }
 
     public static Rekisterointi of(
@@ -58,8 +60,8 @@ public class Rekisterointi {
             Set<String> sahkopostit,
             String toimintamuoto,
             Kayttaja kayttaja) {
-        return new Rekisterointi(null, organisaatio, kunnat, sahkopostit, toimintamuoto, kayttaja,
-                LocalDateTime.now(), Tila.KASITTELYSSA);
+        return new Rekisterointi(
+                null, organisaatio, kunnat, sahkopostit, toimintamuoto, kayttaja, null, null);
     }
 
     public Rekisterointi withId(Long id) {
@@ -86,37 +88,6 @@ public class Rekisterointi {
                 this.vastaanotettu,
                 tila
         );
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other instanceof Rekisterointi) {
-            Rekisterointi toinen = (Rekisterointi) other;
-            return new EqualsBuilder()
-                    .append(id, toinen.id)
-                    .append(organisaatio, toinen.organisaatio)
-                    .append(sahkopostit, toinen.sahkopostit)
-                    .append(toimintamuoto, toinen.toimintamuoto)
-                    .append(kayttaja, toinen.kayttaja)
-                    .append(vastaanotettu, toinen.vastaanotettu)
-                    .append(tila, toinen.tila)
-                    .isEquals();
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(id)
-                .append(organisaatio)
-                .append(sahkopostit)
-                .append(toimintamuoto)
-                .append(kayttaja)
-                .append(vastaanotettu)
-                .append(tila)
-                .hashCode();
     }
 
     public enum Tila {

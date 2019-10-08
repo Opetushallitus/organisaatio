@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -38,7 +39,8 @@ public class RekisterointiServiceTest {
 
     private static final Long SAVED_REKISTEROINTI_ID = 1L;
     private static final Long INVALID_REKISTEROINTI_ID = 2L;
-    private static final Rekisterointi SAVED_REKISTEROINTI = Rekisterointi.of(
+    private static final Rekisterointi SAVED_REKISTEROINTI = new Rekisterointi(
+            SAVED_REKISTEROINTI_ID,
             new ObjectNode(JsonNodeFactory.instance),
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
@@ -48,11 +50,14 @@ public class RekisterointiServiceTest {
                     .sukunimi("Henkilö")
                     .sahkoposti("testi.henkilo@foo.bar")
                     .asiointikieli("fi")
-                    .build()
+                    .build(),
+            LocalDateTime.now(),
+            Rekisterointi.Tila.KASITTELYSSA
     );
-    private static final Paatos SAVED_PAATOS = Paatos.of(
+    private static final Paatos SAVED_PAATOS = new Paatos(
             SAVED_REKISTEROINTI_ID,
             false,
+            LocalDateTime.now(),
             1L,
             null
     );
@@ -87,9 +92,10 @@ public class RekisterointiServiceTest {
 
     @Test(expected = InvalidInputException.class)
     public void resolveThrowsOnInvalidRekisterointiId() {
-        Paatos paatos = Paatos.of(
+        Paatos paatos = new Paatos(
                 INVALID_REKISTEROINTI_ID,
                 true,
+                LocalDateTime.now(),
                 1L,
                 "Miksipä ei?"
         );
@@ -98,9 +104,10 @@ public class RekisterointiServiceTest {
 
     @Test
     public void resolveSavesPaatosWithRekisterointi() {
-        Paatos paatos = Paatos.of(
+        Paatos paatos = new Paatos(
                 SAVED_REKISTEROINTI_ID,
                 false,
+                LocalDateTime.now(),
                 1L,
                 "Rekisteröinti tehty 110% väärin."
         );

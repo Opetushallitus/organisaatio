@@ -37,11 +37,12 @@ public class RekisterointiControllerTest {
     private RekisterointiService service;
 
     private Rekisterointi newValidRekisterointi() {
-        Kayttaja kayttaja = new Kayttaja();
-        kayttaja.etunimi = "John";
-        kayttaja.sukunimi = "Smith";
-        kayttaja.sahkoposti = "john.smith@example.com";
-        kayttaja.asiointikieli = "en";
+        Kayttaja kayttaja = Kayttaja.builder()
+            .etunimi("John")
+            .sukunimi("Smith")
+            .sahkoposti("john.smith@example.com")
+            .asiointikieli("en")
+            .build();
         return Rekisterointi.of(
                 objectMapper.createObjectNode(),
                 Set.of("kunta1", "kunta2"),

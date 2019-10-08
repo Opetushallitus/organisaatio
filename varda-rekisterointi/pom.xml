@@ -71,6 +71,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-properties</artifactId>
             <version>0.1.0-SNAPSHOT</version>
@@ -84,11 +90,6 @@
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>suomifi-valtuudet-client</artifactId>
             <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
         </dependency>
 
         <dependency>
@@ -225,6 +226,10 @@
                                 <systemProperty>
                                     <key>spring.config.additional-location</key>
                                     <value>src/main/resources/dev.yml</value>
+                                </systemProperty>
+                                <systemProperty>
+                                    <key>varda-rekisterointi.baseUrl</key>
+                                    <value>https://localhost:8080</value>
                                 </systemProperty>
                                 <systemProperty>
                                     <key>baseUrl</key>
