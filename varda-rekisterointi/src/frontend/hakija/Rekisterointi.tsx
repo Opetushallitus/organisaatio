@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
-import { Organisaatio, Kayttaja, KoodiUri } from '../types';
+import { Organisaatio, Kayttaja, KoodiUri, Koodi } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
@@ -13,6 +13,7 @@ import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import EmailValidator from 'email-validator';
 import { useBeforeunload } from 'react-beforeunload';
+import useAxios from 'axios-hooks';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -38,6 +39,7 @@ const baseOrganisaatio: Organisaatio = {
     yhteystiedot: [],
     ytjkieli: 'kieli_fi#1',
 };
+const initialKunnat: string[] = [];
 const intialSahkopostit: string[] = [];
 const initialToimintamuoto = 'vardatoimintamuoto_tm01';
 const initialKayttaja: Kayttaja = {
@@ -56,9 +58,12 @@ function reducer<T>(state: T, data: Partial<T>): T {
 
 export default function Rekisterointi() {
     const { i18n } = useContext(LanguageContext);
+    const [{data: kaikkiKunnat, loading: kaikkiKunnatLoading, error: kaikkiKunnatError}]
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi');
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
+    const [kunnat, setKunnat] = useState(initialKunnat);
     const [sahkopostit, setSahkopostit] = useState(intialSahkopostit);
     const [toimintamuoto, setToimintamuoto] = useState(initialToimintamuoto);
     const [kayttaja, setKayttaja] = useReducer(reducer, initialKayttaja);
@@ -102,6 +107,7 @@ export default function Rekisterointi() {
             setPostError(null);
             await Axios.post(rekisteroinnitUrl, {
                 organisaatio: organisaatio,
+                kunnat: kunnat,
                 sahkopostit: sahkopostit,
                 toimintamuoto: toimintamuoto,
                 kayttaja: kayttaja,
@@ -123,6 +129,9 @@ export default function Rekisterointi() {
                 ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
                     .filter(field => !organisaatio[field])
                     .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                if (kunnat.length === 0) {
+                    organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');
+                }
                 if (sahkopostit.some(sahkoposti => !EmailValidator.validate(sahkoposti))) {
                     organisaatioErrors.sahkopostit = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
                 }
@@ -142,10 +151,10 @@ export default function Rekisterointi() {
         return true;
     }
 
-    if (fetchLoading) {
+    if (fetchLoading || kaikkiKunnatLoading) {
         return <Spinner />;
     }
-    if (fetchError) {
+    if (fetchError || kaikkiKunnatError) {
         return <div>error, reload page</div>;
     }
 
@@ -162,6 +171,9 @@ export default function Rekisterointi() {
                     initialOrganisaatio={initialOrganisaatio}
                     organisaatio={organisaatio}
                     setOrganisaatio={setOrganisaatio}
+                    kaikkiKunnat={kaikkiKunnat}
+                    kunnat={kunnat}
+                    setKunnat={setKunnat}
                     sahkopostit={sahkopostit}
                     setSahkopostit={setSahkopostit}
                     errors={organisaatioErrors} />
@@ -173,6 +185,8 @@ export default function Rekisterointi() {
                     errors={kayttajaErrors} />
                 <RekisterointiYhteenveto
                     organisaatio={organisaatio}
+                    kaikkiKunnat={kaikkiKunnat}
+                    kunnat={kunnat}
                     sahkopostit={sahkopostit}
                     toimintamuoto={toimintamuoto}
                     kayttaja={kayttaja} />

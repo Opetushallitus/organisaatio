@@ -1,15 +1,19 @@
 import React, { useContext } from 'react';
-import { Organisaatio } from '../types';
+import { Organisaatio, Koodi } from '../types';
 import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
 import { LanguageContext } from '../contexts';
 import OrganisaatioSahkopostit from './OrganisaatioSahkopostit';
 import Fieldset from '../Fieldset';
+import OrganisaatioKunnat from './OrganisaatioKunnat';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
+    kaikkiKunnat: Koodi[],
+    kunnat: string[],
+    setKunnat: (kunnat: string[]) => void,
     sahkopostit: string[],
     setSahkopostit: (sahkopostit: string[]) => void,
     errors: Record<string, string>,
@@ -22,6 +26,7 @@ export default function RekisterointiOrganisaatio(props: Props) {
             <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}
                       description={i18n.translate('ORGANISAATION_TIEDOT_KUVAUS')}>
                 <OrganisaatioTiedot readOnly={!!props.initialOrganisaatio.oid}
+                                    kaikkiKunnat={props.kaikkiKunnat}
                                     initialOrganisaatio={props.initialOrganisaatio}
                                     organisaatio={props.organisaatio}
                                     setOrganisaatio={props.setOrganisaatio}
@@ -34,6 +39,13 @@ export default function RekisterointiOrganisaatio(props: Props) {
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={props.setOrganisaatio}
                                           errors={props.errors} />
+            </Fieldset>
+            <Fieldset title={i18n.translate('ORGANISAATION_KUNNAT')}>
+                <OrganisaatioKunnat readOnly={false}
+                                    kaikkiKunnat={props.kaikkiKunnat}
+                                    kunnat={props.kunnat}
+                                    setKunnat={props.setKunnat}
+                                    errors={props.errors} />
             </Fieldset>
             <Fieldset title={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
                       description={i18n.translate('ORGANISAATION_SAHKOPOSTIT_KUVAUS')}>

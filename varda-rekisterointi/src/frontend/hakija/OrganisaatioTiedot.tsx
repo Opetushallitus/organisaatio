@@ -13,23 +13,22 @@ import classNames from 'classnames/bind';
 
 type Props = {
     readOnly?: boolean,
+    kaikkiKunnat: Koodi[],
     initialOrganisaatio: Organisaatio,
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
     errors: Record<string, string>,
 }
 
-export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
+export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
     const { language, i18n } = useContext(LanguageContext);
     const [{data: organisaatiotyypit, loading: organisaatiotyypitLoading, error: organisaatiotyypitError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/ORGANISAATIOTYYPPI/koodi');
-    const [{data: kunnat, loading: kunnatLoading, error: kunnatError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi');
 
-    if (organisaatiotyypitLoading || kunnatLoading) {
+    if (organisaatiotyypitLoading) {
         return <Spinner />;
     }
-    if (organisaatiotyypitError || kunnatError) {
+    if (organisaatiotyypitError) {
         return <div>error, reload page</div>;
     }
 
@@ -77,7 +76,7 @@ export default function OrganisaatioTiedot({readOnly, initialOrganisaatio, organ
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} errorText={errors.kotipaikkaUri}>
                 <div className="oph-input-container">
-                    <KoodiSelect selectable={kunnat} selected={organisaatio.kotipaikkaUri}
+                    <KoodiSelect selectable={kaikkiKunnat} selected={organisaatio.kotipaikkaUri}
                                 disabled={kotipaikkaDisabled}
                                 required={!kotipaikkaDisabled}
                                 hasError={!!errors.kotipaikkaUri}

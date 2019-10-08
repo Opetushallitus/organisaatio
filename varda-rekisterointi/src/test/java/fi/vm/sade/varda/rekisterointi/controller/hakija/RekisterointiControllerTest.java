@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Set;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +37,7 @@ public class RekisterointiControllerTest {
     private Rekisterointi newValidRekisterointi() {
         Rekisterointi rekisterointi = new Rekisterointi();
         rekisterointi.organisaatio = objectMapper.createObjectNode();
+        rekisterointi.kunnat = Set.of("kunta1", "kunta2");
         rekisterointi.kayttaja = new Kayttaja();
         rekisterointi.kayttaja.etunimi = "John";
         rekisterointi.kayttaja.sukunimi = "Smith";

@@ -1,14 +1,17 @@
 import React, { useContext } from 'react';
-import { Organisaatio, Kayttaja } from '../types';
+import { Organisaatio, Kayttaja, Koodi } from '../types';
 import OrganisaatioYhteystiedot from './OrganisaatioYhteystiedot';
 import OrganisaatioTiedot from './OrganisaatioTiedot';
 import KayttajaYhteystiedot from './KayttajaYhteystiedot';
 import { LanguageContext } from '../contexts';
 import OrganisaatioSahkopostit from './OrganisaatioSahkopostit';
 import Fieldset from '../Fieldset';
+import OrganisaatioKunnat from './OrganisaatioKunnat';
 
 type Props = {
     organisaatio: Organisaatio,
+    kaikkiKunnat: Koodi[],
+    kunnat: string[],
     sahkopostit: string[],
     toimintamuoto: string,
     kayttaja: Kayttaja,
@@ -27,6 +30,7 @@ export default function RekisterointiYhteenveto(props: Props) {
             </Fieldset>
             <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}>
                 <OrganisaatioTiedot readOnly={true}
+                                    kaikkiKunnat={props.kaikkiKunnat}
                                     initialOrganisaatio={props.organisaatio}
                                     organisaatio={props.organisaatio}
                                     setOrganisaatio={nop}
@@ -38,6 +42,13 @@ export default function RekisterointiYhteenveto(props: Props) {
                                           organisaatio={props.organisaatio}
                                           setOrganisaatio={nop}
                                           errors={nop()} />
+            </Fieldset>
+            <Fieldset title={i18n.translate('ORGANISAATION_KUNNAT')}>
+                <OrganisaatioKunnat readOnly={true}
+                                    kaikkiKunnat={props.kaikkiKunnat}
+                                    kunnat={props.kunnat}
+                                    setKunnat={nop}
+                                    errors={nop()} />
             </Fieldset>
             <Fieldset title={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}>
                 <OrganisaatioSahkopostit readOnly={true}
