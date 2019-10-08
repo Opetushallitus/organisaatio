@@ -30,3 +30,11 @@ export const LanguageContext = React.createContext<LanguageContextType>({
     setLanguage: (language: Language) => {},
     i18n: new I18nImpl({}),
 });
+
+type ConfigurationContextType = {
+    virkailijaRaamitUrl: string
+}
+
+export const ConfigurationContext = React.createContext<ConfigurationContextType>({
+    virkailijaRaamitUrl: "https://virkailija.hahtuvaopintopolku.fi/virkailija-raamit/apply-raamit.js"
+});
