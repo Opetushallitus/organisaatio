@@ -76,6 +76,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
     const kayntiosoiteDisabled = readOnly || hasLength(initialKayntiosoite) || kayntiosoiteSamaKuinPostiosoite;
     const kayntiosoitteenPostinumeroDisabled = readOnly || hasLength(initialKayntiosoitteenPostinumeroUri) || kayntiosoiteSamaKuinPostiosoite;
+    const samaKuinPostiosoiteDisabled = readOnly || hasLength(initialKayntiosoite);
     const postiosoiteDisabled = readOnly || hasLength(initialPostiosoite);
     const postinumeroDisabled = readOnly || hasLength(initialPostinumeroUri);
 
@@ -171,7 +172,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                                osoiteTyyppi: 'kaynti',
                                osoite: event.currentTarget.value
                            })})} />
-                    {readOnly || kayntiosoiteDisabled ? null :
+                    {samaKuinPostiosoiteDisabled ? null :
                     <label>
                         <input type="checkbox"
                                className="oph-checkable-input"
