@@ -7,6 +7,7 @@ import {Lista} from "../Lista";
 
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
+import {Organisaatio} from "../types";
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const tyhjaLista: Rekisterointihakemus[] = [];
@@ -16,11 +17,10 @@ type Props = {
 }
 
 export default function RekisterointiLista({ tila = Tila.KASITTELYSSA } : Props) {
-    const { i18n } = useContext(LanguageContext);
+    const { i18n, language } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaLista);
     const [latausKesken, asetaLatausKesken] = useState(true);
     const [latausVirhe, asetaLatausVirhe] = useState(false);
-    const [hakutermi, asetaHakutermi] = useState("");
     const saapumisAikaFormat = 'd.M.y HH:mm';
     const otsikot = [
         i18n.translate("ORGANISAATION_NIMI"),
@@ -31,12 +31,20 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA } : Props)
     const tunnisteGeneraattori = (rekisterointi: Rekisterointihakemus) => rekisterointi.id.toString();
     const sarakeGeneraattori = (rekisterointi: Rekisterointihakemus) => {
         return [
-            { data: rekisterointi.organisaatio.nimi.fi || "" }, // TODO: lokalisaatio
+            { data: organisaatioNimi(rekisterointi.organisaatio) }, // TODO: lokalisaatio
             { data: `${rekisterointi.kayttaja.etunimi} ${rekisterointi.kayttaja.sukunimi}` },
             { data: rekisterointi.organisaatio.ytunnus },
             { data: format(parseISO(rekisterointi.vastaanotettu), saapumisAikaFormat) }
         ];
     };
+
+    function organisaatioNimi(organisaatio: Organisaatio): string {
+        let nimi = "";
+        if (organisaatio.nimi) {
+            nimi = organisaatio.nimi[language] || organisaatio.nimi.fi || "";
+        }
+        return nimi;
+    }
 
     useEffect(() => {
         async function lataa() {
