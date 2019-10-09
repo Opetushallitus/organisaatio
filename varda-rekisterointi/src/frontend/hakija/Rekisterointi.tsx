@@ -59,7 +59,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
 export default function Rekisterointi() {
     const { i18n } = useContext(LanguageContext);
     const [{data: kaikkiKunnat, loading: kaikkiKunnatLoading, error: kaikkiKunnatError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi');
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true');
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});

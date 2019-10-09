@@ -21,7 +21,7 @@ type Props = {
 export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimintamuoto, kayttaja, setKayttaja, errors}: Props) {
     const { i18n } = useContext(LanguageContext);
     const [{data: toimintamuodot, loading: toimintamuodotLoading, error: toimintamuodotError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi');
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true');
 
     if (toimintamuodotLoading) {
         return <Spinner />;

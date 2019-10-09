@@ -26,7 +26,7 @@ function koodiByArvoToLocalizedText(koodit: Koodi[], language: Language, arvo?: 
 export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
     const { language, i18n } = useContext(LanguageContext);
     const [{data: postinumerot, loading: postinumerotLoading, error: postinumerotError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/POSTI/koodi');
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/POSTI/koodi?onlyValid=true');
     const [ kayntiosoiteSamaKuinPostiosoite, setKayntiosoiteSamaKuinPostiosoite ] = useState(false);
 
     if (postinumerotLoading) {
