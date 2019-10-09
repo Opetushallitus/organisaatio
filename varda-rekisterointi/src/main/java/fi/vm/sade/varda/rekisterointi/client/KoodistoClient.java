@@ -28,9 +28,13 @@ public class KoodistoClient {
     }
 
     public Collection<Koodi> listKoodit(KoodistoType koodisto) {
+        return listKoodit(koodisto, Optional.empty(), Optional.empty());
+    }
+
+    public Collection<Koodi> listKoodit(KoodistoType koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         Map<String, Object> parameters = new LinkedHashMap<>();
-        koodisto.versio.ifPresent(versio -> parameters.put("koodistoVersio", versio));
-        koodisto.onlyValid.ifPresent(onlyValid -> parameters.put("onlyValidKoodis", onlyValid));
+        versio.ifPresent(value -> parameters.put("koodistoVersio", value));
+        onlyValid.ifPresent(value -> parameters.put("onlyValidKoodis", value));
         String url = properties.url("koodisto-service.koodi", koodisto.uri, parameters);
         return listKoodit(url);
     }
