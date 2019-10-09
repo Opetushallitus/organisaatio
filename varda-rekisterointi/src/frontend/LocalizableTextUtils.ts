@@ -24,7 +24,6 @@ export function hasLengthInLang(localizableText: LocalizableText | null | undefi
 export const asiointikielet = [
     {value: 'fi', label: {fi: 'suomi', sv: 'finska', en: 'Finnish'}},
     {value: 'sv', label: {fi: 'ruotsi', sv: 'svenska', en: 'Swedish'}},
-    {value: 'en', label: {fi: 'englanti', svn: 'engelska', en: 'English'}},
 ];
 
 export function ytjKieliToLanguage(ytjKieli: KoodiUri) {
