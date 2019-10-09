@@ -40,7 +40,8 @@ export default function RekisterointiOrganisaatio(props: Props) {
                                           setOrganisaatio={props.setOrganisaatio}
                                           errors={props.errors} />
             </Fieldset>
-            <Fieldset title={i18n.translate('ORGANISAATION_KUNNAT')}>
+            <Fieldset title={i18n.translate('ORGANISAATION_KUNNAT')}
+                      description={i18n.translate('ORGANISAATION_KUNNAT_OHJE')}>
                 <OrganisaatioKunnat readOnly={false}
                                     kaikkiKunnat={props.kaikkiKunnat}
                                     kunnat={props.kunnat}
