@@ -14,6 +14,7 @@
     "date-fns": "^2.4.1",
     "email-validator": "^2.0.4",
     "http-proxy-middleware": "^0.19.1",
+    "mdi-react": "^6.2.0",
     "normalize.css": "^8.0.1",
     "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
     "react": "^16.10.1",
