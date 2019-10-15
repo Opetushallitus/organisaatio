@@ -1,14 +1,13 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
-import lombok.Builder;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-@Value(staticConstructor = "of")
+@EqualsAndHashCode
+@AllArgsConstructor(staticName = "of")
 @Builder
 public class Kayttaja {
 

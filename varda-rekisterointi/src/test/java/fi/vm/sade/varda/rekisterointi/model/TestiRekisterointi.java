@@ -1,8 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
@@ -15,10 +13,11 @@ public class TestiRekisterointi {
     public static Rekisterointi rekisterointi(Kayttaja kayttaja) {
         return new Rekisterointi(
                 null,
-                new ObjectNode(JsonNodeFactory.instance),
+                Organisaatio.of("0000000-1", null, LocalDate.now(),
+                        KielistettyNimi.of("Testiyritys", "fi", LocalDate.now()),
+                        "vardatoimintamuoto_tm01", "tyyppi", "Helsinki", "Suomi"),
                 Collections.singleton("Helsinki"),
                 Collections.emptySet(),
-                "vardatoimintamuoto_tm01",
                 kayttaja,
                 LocalDateTime.now(),
                 Rekisterointi.Tila.KASITTELYSSA

@@ -1,11 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
-import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
-import fi.vm.sade.varda.rekisterointi.model.Paatos;
-import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Before;
@@ -17,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -41,10 +38,19 @@ public class RekisterointiServiceTest {
     private static final Long INVALID_REKISTEROINTI_ID = 2L;
     private static final Rekisterointi SAVED_REKISTEROINTI = new Rekisterointi(
             SAVED_REKISTEROINTI_ID,
-            new ObjectNode(JsonNodeFactory.instance),
+            Organisaatio.of(
+                    "0000000-0",
+                    null,
+                    LocalDate.now(),
+                    KielistettyNimi.of(
+                            "fi", "Testiyritys", null
+                    ),
+                    "toimintamuoto",
+                    "tyyppi",
+                    "Helsinki",
+                    "Suomi"),
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
-            "toimintamuoto",
             Kayttaja.builder()
                     .etunimi("Testi")
                     .sukunimi("Henkilö")

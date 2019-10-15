@@ -17,9 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Set;
-import java.util.Collections;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,22 +32,6 @@ public class RekisterointiControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private RekisterointiService service;
-
-    private Rekisterointi newValidRekisterointi() {
-        Kayttaja kayttaja = Kayttaja.builder()
-            .etunimi("John")
-            .sukunimi("Smith")
-            .sahkoposti("john.smith@example.com")
-            .asiointikieli("en")
-            .build();
-        return Rekisterointi.of(
-                objectMapper.createObjectNode(),
-                Set.of("kunta1", "kunta2"),
-                Collections.emptySet(),
-                "vardatoimintamuoto_tm01",
-                kayttaja
-        );
-    }
 
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
