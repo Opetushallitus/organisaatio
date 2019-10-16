@@ -46,7 +46,7 @@ public class RekisterointiServiceTest {
                             "fi", "Testiyritys", null
                     ),
                     "toimintamuoto",
-                    "tyyppi",
+                    Collections.singleton("tyyppi"),
                     "Helsinki",
                     "Suomi"),
             Collections.singleton("Helsinki"),

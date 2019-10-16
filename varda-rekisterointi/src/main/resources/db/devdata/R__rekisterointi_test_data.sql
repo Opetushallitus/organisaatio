@@ -8,13 +8,13 @@ INSERT INTO rekisterointi (id, kunnat, sahkopostit)
      '{"testi.yritys@testiyrit.ys"}'
  );
 
-INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, toimintamuoto, tyyppi, kotipaikka, maa, nimi, nimi_alkupvm)
+INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypit, kotipaikka, maa, nimi, nimi_alkupvm)
  VALUES (
      0,
      '0000000-0',
      CURRENT_DATE,
-     'perhepäivähoitaja',
-     'yksityinen_palvelutuottaja',
+     'toiminimi',
+     '{"vardatoimintamuoto_tm01"}',
      'Helsinki',
      'Suomi',
      'Testiyritys',

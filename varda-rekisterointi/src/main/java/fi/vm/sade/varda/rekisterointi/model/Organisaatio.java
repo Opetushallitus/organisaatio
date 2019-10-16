@@ -7,6 +7,7 @@ import org.springframework.data.relational.core.mapping.Embedded;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Set;
 
 @EqualsAndHashCode
 @AllArgsConstructor(staticName = "of")
@@ -21,13 +22,13 @@ public class Organisaatio {
     public final LocalDate alkuPvm;
 
     @NotNull @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
-    public final KielistettyNimi nimi;
+    public final KielistettyNimi ytjNimi;
 
     @NotNull
-    public final String toimintamuoto;
+    public final String yritysmuoto;
 
     @NotNull
-    public final String tyyppi;
+    public final Set<String> tyypit;
 
     @NotNull @Column("kotipaikka")
     public final String kotipaikkaUri;

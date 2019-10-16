@@ -15,7 +15,7 @@ public class TestiRekisterointi {
                 null,
                 Organisaatio.of("0000000-1", null, LocalDate.now(),
                         KielistettyNimi.of("Testiyritys", "fi", LocalDate.now()),
-                        "vardatoimintamuoto_tm01", "tyyppi", "Helsinki", "Suomi"),
+                        "vardatoimintamuoto_tm01", Collections.singleton("tyyppi"), "Helsinki", "Suomi"),
                 Collections.singleton("Helsinki"),
                 Collections.emptySet(),
                 kayttaja,

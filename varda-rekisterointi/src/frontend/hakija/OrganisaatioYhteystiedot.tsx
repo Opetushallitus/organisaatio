@@ -36,7 +36,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
         return <div>error, reload page</div>;
     }
 
-    const kieliUri = organisaatio.ytjkieli;
+    const kieliUri = organisaatio.ytjNimi.kieli;
     const isKieli = (yhteystieto: Yhteystieto) => yhteystieto.kieli === kieliUri;
 
     const initialPuhelinnumero = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,

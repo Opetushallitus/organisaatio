@@ -17,27 +17,17 @@ import useAxios from 'axios-hooks';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
-    nimi: {
-        fi: '',
-        sv: '',
-        en: '',
+    ytjNimi: {
+        nimi: '',
+        alkuPvm: null,
+        kieli: 'fi'
     },
     alkuPvm: null,
-    nimet: [{
-        alkuPvm: null,
-        nimi: {
-            fi: '',
-            sv: '',
-            en: '',
-        },
-    }],
     yritysmuoto: '',
-    kieletUris: [],
     tyypit: [],
     kotipaikkaUri: '',
     maaUri: 'maatjavaltiot1_fin',
-    yhteystiedot: [],
-    ytjkieli: 'kieli_fi#1',
+    yhteystiedot: []
 };
 const initialKunnat: string[] = [];
 const intialSahkopostit: string[] = [];

@@ -4,8 +4,7 @@ import DateSelect from '../DateSelect';
 import FormFieldContainer from '../FormFieldContainer';
 import { Organisaatio, Koodi } from '../types';
 import KoodiSelect from '../KoodiSelect';
-import { toLocalizedText, hasLengthInLang, ytjKieliToLanguage } from '../LocalizableTextUtils';
-import LocalizableTextEdit from '../LocalizableTextEdit';
+import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
@@ -39,7 +38,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
         return false;
     }).map(koodi => toLocalizedText(koodi.nimi, language, koodi.arvo)).join(', ');
 
-    const nimiDisabled = readOnly || hasLengthInLang(initialOrganisaatio.nimi, ytjKieliToLanguage(initialOrganisaatio.ytjkieli));
+    const nimiDisabled = readOnly || !!initialOrganisaatio.ytjNimi;
     const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
     const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
@@ -50,10 +49,12 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     return (
         <>
             <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} errorText={errors.nimi}>
-                <LocalizableTextEdit value={organisaatio.nimi}
-                                     disabled={nimiDisabled}
-                                     hasError={!!errors.nimi}
-                                     onChange={nimi => setOrganisaatio({ nimi: nimi, nimet: [ { alkuPvm: organisaatio.alkuPvm, nimi: nimi } ] })} />
+                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.nimi })}
+                       type="text"
+                       id="nimi"
+                       value={organisaatio.ytjNimi.nimi}
+                       disabled={nimiDisabled}
+                       onChange={event => setOrganisaatio({ ytjNimi: { nimi: event.currentTarget.value, alkuPvm: organisaatio.alkuPvm, kieli: organisaatio.ytjNimi.kieli }})} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="ytunnus" errorText={errors.ytunnus}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.ytunnus })}
@@ -88,7 +89,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                     <DateSelect value={organisaatio.alkuPvm}
                                 disabled={alkuPvmDisabled}
                                 hasError={!!errors.alkuPvm}
-                                onChange={alkuPvm => setOrganisaatio({ alkuPvm: alkuPvm, nimet: [ { alkuPvm: alkuPvm, nimi: organisaatio.nimi } ] })} />
+                                onChange={alkuPvm => setOrganisaatio({ alkuPvm: alkuPvm, ytjNimi: { alkuPvm: alkuPvm, nimi: organisaatio.ytjNimi.nimi, kieli: organisaatio.ytjNimi.kieli }})} />
                 </div>
             </FormFieldContainer>
         </>
