@@ -22,7 +22,7 @@
     "react-router-dom": "^5.1.1",
     "react-scripts": "3.2.0",
     "react-select": "^3.0.8",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.9",
