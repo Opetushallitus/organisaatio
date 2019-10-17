@@ -1,0 +1,15 @@
+<!doctype html>
+<html layout:decorate="~{email/pohja}">
+<head>
+    <title th:text="#{rekisteroityminen.kunta.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <span th:text="#{hei}">Hei</span>
+    <span th:text="${etunimi}">etunimi</span>
+    <span th:text="${sukunimi}">sukunimi</span>,<br>
+    <span th:text="#{rekisteroityminen.kunta.teksti}">teksti</span>
+    <p th:text="#{rekisteroityminen.kunta.lisatieto(${organisaatioLkm})}">lisätieto</p>
+</div>
+</body>
+</html>

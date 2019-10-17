@@ -1,0 +1,13 @@
+<!doctype html>
+<html layout:decorate="~{email/pohja}">
+<head>
+    <title th:text="#{rekisteroityminen.hyvaksytty.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <span th:text="#{hei}">Hei</span>,<br>
+    <span th:text="#{rekisteroityminen.hyvaksytty.teksti}">teksti</span>
+    <p th:text="#{rekisteroityminen.hyvaksytty.lisatieto}">lisätieto</p>
+</div>
+</body>
+</html>
