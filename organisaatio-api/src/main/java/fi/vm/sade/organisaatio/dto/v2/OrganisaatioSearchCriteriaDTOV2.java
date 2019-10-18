@@ -13,6 +13,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     private boolean suunnitellut;
     private boolean lakkautetut;
 
+    private Set<String> yritysmuoto = new HashSet<>();
     private Set<String> kunta = new HashSet<String>();
     private String organisaatiotyyppi;
     private Set<String> oppilaitostyyppi = new HashSet<String>();
@@ -58,6 +59,15 @@ public class OrganisaatioSearchCriteriaDTOV2 {
 
     public void setLakkautetut(boolean lakkautetut) {
         this.lakkautetut = lakkautetut;
+    }
+
+    @ApiModelProperty(value = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", required = true)
+    public Set<String> getYritysmuoto() {
+        return yritysmuoto;
+    }
+
+    public void setYritysmuoto(Set<String> yritysmuoto) {
+        this.yritysmuoto = yritysmuoto;
     }
 
     @ApiModelProperty(value = "Haettavan organisaation kunta tai lista kunnista", required = true)
