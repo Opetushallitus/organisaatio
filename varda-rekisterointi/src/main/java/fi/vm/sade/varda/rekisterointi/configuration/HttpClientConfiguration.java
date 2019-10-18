@@ -28,6 +28,19 @@ public class HttpClientConfiguration {
     }
 
     @Bean
+    public fi.vm.sade.javautils.http.OphHttpClient httpClientKayttooikeus(OphProperties properties) {
+        Authenticator authenticator = new CasAuthenticator.Builder()
+                .username(properties.require("varda-rekisterointi.service.username"))
+                .password(properties.require("varda-rekisterointi.service.password"))
+                .webCasUrl(properties.url("cas.base"))
+                .casServiceUrl(properties.url("kayttooikeus-service.login"))
+                .build();
+        return new fi.vm.sade.javautils.http.OphHttpClient.Builder(CALLER_ID)
+                .authenticator(authenticator)
+                .build();
+    }
+
+    @Bean
     public fi.vm.sade.javautils.http.OphHttpClient httpClientOrganisaatio(OphProperties properties) {
         Authenticator authenticator = new CasAuthenticator.Builder()
                 .username(properties.require("varda-rekisterointi.service.username"))
