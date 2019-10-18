@@ -126,6 +126,7 @@ public interface OrganisaatioResourceV4 {
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
             @ApiImplicitParam(dataType = "boolean", name = "suunnitellut", value = "Suunnitellut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
             @ApiImplicitParam(dataType = "boolean", name = "lakkautetut", value = "Lakkautetut organisaatiot mukaan hakutuloksiin", paramType = "query", required = true, defaultValue = "false"),
+            @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "yritysmuoto", value = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", paramType = "query"),
             @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "kunta", value = "Haettavan organisaation kunta tai lista kunnista", paramType = "query"),
             @ApiImplicitParam(dataType = "String",  name = "organisaatiotyyppi", value = "Haettavan organisaation tyyppi koodiarvona", paramType = "query"),
             @ApiImplicitParam(dataType = "String", allowMultiple = true,  name = "oppilaitostyyppi", value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", paramType = "query"),
