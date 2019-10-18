@@ -1,6 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.varda.rekisterointi.NameContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,10 +21,11 @@ import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -115,10 +117,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .or(() -> Optional.ofNullable(request.getParameter("hetu"))) // for easier development
                     .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Unable to authenticate because required header doesn't exist"));
 
+            String firstName = Optional.ofNullable(request.getHeader("firstname"))
+                    .map(str -> new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8))
+                    .orElse("");
+            String surname = Optional.ofNullable(request.getHeader("sn"))
+                    .map(str -> new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8))
+                    .orElse("");
+
             PreAuthenticatedAuthenticationToken authRequest = new PreAuthenticatedAuthenticationToken(nationalIdentificationNumber, "N/A");
             List<? extends GrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority(String.format("ROLE_%s", ROLE)));
-            authRequest.setDetails(new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(request, authorities));
+            authRequest.setDetails(new ShibbolethWebAuthenticationDetails(request, authorities, firstName, surname));
             return getAuthenticationManager().authenticate(authRequest);
+        }
+
+    }
+
+    private static class ShibbolethWebAuthenticationDetails extends PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails implements NameContainer {
+
+        private final String firstName;
+        private final String surname;
+
+        public ShibbolethWebAuthenticationDetails(HttpServletRequest request, Collection<? extends GrantedAuthority> authorities, String firstName, String surname) {
+            super(request, authorities);
+            this.firstName = firstName;
+            this.surname = surname;
+        }
+
+        @Override
+        public String getFirstName() {
+            return firstName;
+        }
+
+        @Override
+        public String getSurname() {
+            return surname;
         }
 
     }
