@@ -6,13 +6,17 @@ import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Optional;
+
+import static java.util.Arrays.asList;
 
 @Component
 public class OrganisaatioClient {
@@ -100,6 +104,15 @@ public class OrganisaatioClient {
         return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
+                .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+    }
+
+    public Collection<OrganisaatioV4Dto> listBy(OrganisaatioCriteria criteria) {
+        String url = properties.url("organisaatio-service.organisaatio.v4.hae", criteria.asMap());
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+        return httpClient.<Collection<OrganisaatioV4Dto>>execute(request)
+                .expectedStatus(200)
+                .mapWith(json -> asList(fromJson(json, OrganisaatioV4Dto[].class)))
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 

@@ -2,6 +2,7 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -87,6 +90,20 @@ public class OrganisaatioClientTest {
         organisaatio = client.save(organisaatio);
 
         assertThat(organisaatio).extracting(t -> t.ytunnus).isEqualTo("ytunnus123");
+    }
+
+    @Test
+    public void listBy() {
+        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
+                .willReturn(aResponse().withStatus(200).withBody("[{\"oid\": \"oid1\"}, {\"oid\": \"oid2\"}]")));
+        OrganisaatioCriteria criteria = new OrganisaatioCriteria();
+        criteria.aktiiviset = true;
+        criteria.yritysmuoto = List.of("Kunta");
+        criteria.kunta = List.of("kunta_020", "kunta_030");
+
+        Collection<OrganisaatioV4Dto> list = client.listBy(criteria);
+
+        assertThat(list).extracting(organisaatio -> organisaatio.oid).containsExactly("oid1", "oid2");
     }
 
 }
