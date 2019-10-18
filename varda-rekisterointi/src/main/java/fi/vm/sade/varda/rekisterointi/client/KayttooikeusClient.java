@@ -47,7 +47,7 @@ public class KayttooikeusClient {
         }
     }
 
-    Collection<VirkailijaDto> listVirkailijaBy(VirkailijaCriteria criteria) {
+    public Collection<VirkailijaDto> listVirkailijaBy(VirkailijaCriteria criteria) {
         String url = properties.url("kayttooikeus-service.virkailija.haku");
         OphHttpEntity entity = new OphHttpEntity.Builder()
                 .content(toJson(criteria))
