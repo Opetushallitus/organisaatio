@@ -457,7 +457,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             }
             // kotipaikka / kotipaikkaKoodi, sitten kun koodiston kotipaikat on saatu
             if (yritystiedot.aloitusPvm) {
-                model.organisaatio.alkuPvm = yritystiedot.aloitusPvm;
+                model.organisaatio.alkuPvm = moment(yritystiedot.aloitusPvm, 'DD.MM.YYYY').format('YYYY-MM-DD');
             }
 
             // YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
