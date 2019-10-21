@@ -127,7 +127,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div class="control-group" ng-show="model.organisaatio.ytunnus" ng-if='model.isKoulutustoimija()'>
+    <div class="control-group" ng-show="model.organisaatio.ytunnus" ng-if='model.isKoulutustoimija() || model.isVarhaiskasvatuksenJarjestaja()'>
         <label class="control-label" tt="Organisaationtarkastelu.ytunnus">
             Organisaationtarkastelu.ytunnus
         </label>
