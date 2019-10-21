@@ -4,7 +4,6 @@ jdk:
   - openjdk11
 services:
   - docker
-  - postgresql
 cache:
   directories:
     - $HOME/.m2
@@ -20,10 +19,6 @@ install:
   - git clone https://github.com/Opetushallitus/ci-tools.git
   - source ci-tools/common/setup-tools.sh
   - export ARTIFACT_NAME="varda-rekisterointi"
-
-before_script:
-  - psql -c "CREATE USER \"varda-rekisterointi\" PASSWORD 'varda-rekisterointi';" -U postgres
-  - psql -c "CREATE DATABASE \"varda-rekisterointi\" OWNER 'varda-rekisterointi';" -U postgres
 
 script:
   - ./mvnw clean install -Dbuild-number=${TRAVIS_BUILD_NUMBER} -B

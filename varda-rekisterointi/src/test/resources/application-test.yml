@@ -1,6 +1,6 @@
 spring:
   flyway:
-    locations: classpath:db/migration,classpath:db/devdata
+    enabled: false
   session:
     store-type: none
 db-scheduler:

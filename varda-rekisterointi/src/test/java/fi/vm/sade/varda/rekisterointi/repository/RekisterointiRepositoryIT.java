@@ -14,9 +14,9 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @Transactional
-public class RekisterointiRepositoryTest {
+public class RekisterointiRepositoryIT {
 
     @Autowired
     private RekisterointiRepository rekisterointiRepository;
