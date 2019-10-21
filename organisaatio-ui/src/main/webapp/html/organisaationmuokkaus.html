@@ -95,7 +95,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
-    <div class="control-group" ng-if="model.isKoulutustoimija()">
+    <div class="control-group" ng-if="model.isKoulutustoimija() || model.isVarhaiskasvatuksenJarjestaja()">
         <label class="control-label" tt="Organisaationtarkastelu.ytunnus">
             ytunnus
         </label>
@@ -104,7 +104,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                    auth="updateOph" auth-service="APP_ORGANISAATIOHALLINTA" auth-disable="true"
                    ng-model="model.organisaatio.ytunnus"
                    ie-placeholder placeholder="{{t('Organisaationtarkastelu.ytunnus')}}" ng-pattern="/^\d{7}-./"/>
-            <button auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija()"
+            <button auth="crudOph" auth-service="APP_ORGANISAATIOHALLINTA" ng-if="model.isKoulutustoimija() || model.isVarhaiskasvatuksenJarjestaja()"
                     class="btn" ng-click="haeYtjTiedot(model.organisaatio.ytunnus)"
                     uib-tooltip="{{t('Organisaatiot.ohje.haeytjtiedot')}}" tt="Organisaationmuokkaus.paivitaYtj">
                 Päivitä YTJ
