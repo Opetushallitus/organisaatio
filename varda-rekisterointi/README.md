@@ -2,13 +2,18 @@
 
 ## Requirements
 
-Java 11
+* Java 11 ([SDKMan!](https://sdkman.io/) or similar recommended to manage JDKs)
+* Docker
 
 Project includes maven wrapper so it doesn't have to be installed. Just use `./mvnw` (unix) and `mvnw.cmd` (win).
 
 ## Database
 
+Create database by running:
+
     docker run --name varda-rekisterointi-db -p 5432:5432 -e POSTGRES_USER=varda-rekisterointi -e POSTGRES_PASSWORD=varda-rekisterointi -e POSTGRES_DB=varda-rekisterointi -d postgres:10.9
+
+This will start the container. Later, it can be started and stopped with `docker <start|stop> varda-rekisterointi-db`. Integration tests automatically start and stop a database server.
 
 ## Build
 
@@ -22,7 +27,7 @@ Service is available at <http://localhost:8081/varda-rekisterointi>.
 
 ### For development
 
-Create dev.yml file outside git with following content:
+Create dev.yml file in `src/main/resources`, based on the sample file:
 
     varda-rekisterointi:
         service:
@@ -39,6 +44,8 @@ Start backend with following parameters
     -Dspring.config.additional-location=<path_to_file_created_above>/dev.yml
     -DbaseUrl=https://<test_environment_host>
     -Dvarda-rekisterointi.baseUrl=https://localhost:8080
+    
+Alternatively, run `mvn -P dev exec:java` to utilize configuration in POM. This requires having the config file `src/main/resources/dev.yml`.
 
 Start frontend
 

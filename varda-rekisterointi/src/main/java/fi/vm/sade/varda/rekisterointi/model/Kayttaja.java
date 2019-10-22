@@ -1,23 +1,27 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode
+@AllArgsConstructor(staticName = "of")
+@Builder
 public class Kayttaja {
 
-    @Id
-    public Long id;
+    @With @Id
+    public final Long id;
     @NotNull
-    public String etunimi;
+    public final String etunimi;
     @NotNull
-    public String sukunimi;
+    public final String sukunimi;
     @NotNull
     @Email
-    public String sahkoposti;
+    public final String sahkoposti;
     @NotNull
-    public String asiointikieli;
-    public String saateteksti;
+    public final String asiointikieli;
+    public final String saateteksti;
 
 }
