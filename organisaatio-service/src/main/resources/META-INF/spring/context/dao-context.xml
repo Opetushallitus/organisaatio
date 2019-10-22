@@ -50,6 +50,7 @@
                 <property name="targetDataSource" ref="dbDataSource" />
             </bean>
         </property>
+        <property name="outOfOrder" value="true" />
     </bean>
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
