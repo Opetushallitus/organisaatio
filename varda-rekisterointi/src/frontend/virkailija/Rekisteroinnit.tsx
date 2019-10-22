@@ -12,6 +12,7 @@ import Tabs from "@opetushallitus/virkailija-ui-components/Tabs";
 import Tab from "@opetushallitus/virkailija-ui-components/Tab";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import FilterVariantIcon from "mdi-react/FilterVariantIcon";
+import styles from "./Rekisteroinnit.module.css";
 
 const theme = createTheme();
 
@@ -35,17 +36,21 @@ export default function Rekisteroinnit() {
         <ConfigurationContext.Provider value={configuration}>
             <VirkailijaRaamit scriptUrl={configuration.virkailijaRaamitUrl} />
             <ThemeProvider theme={theme}>
-                <Box className="varda-rekisteroinnit">
+                <Box className={styles.rekisteroinnit}>
                     <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
                     <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
-                    <Input type="text"
-                           placeholder={i18n.translate('REKISTEROINNIT_SUODATA')} value={hakutermiInput}
-                           prefix={<FilterVariantIcon />} onChange={e => vaihdaHakutermi(e.target.value)} />
-                    <Tabs value={tila} onChange={vaihdaTila}>
-                        <Tab value={Tila.KASITTELYSSA}>{ i18n.translate(`REKISTEROINNIT_TILA_KASITTELYSSA`) }</Tab>
-                        <Tab value={Tila.HYVAKSYTTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYVAKSYTTY`) }</Tab>
-                        <Tab value={Tila.HYLATTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`) }</Tab>
-                    </Tabs>
+                    <div className={styles.vasen}>
+                        <Input className={styles.suodata} type="text"
+                               placeholder={i18n.translate('REKISTEROINNIT_SUODATA')} value={hakutermiInput}
+                               prefix={<FilterVariantIcon className={styles.suodataIcon}/>} onChange={e => vaihdaHakutermi(e.target.value)} />
+                    </div>
+                    <div className={styles.oikea}>
+                        <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
+                            <Tab value={Tila.KASITTELYSSA}>{ i18n.translate(`REKISTEROINNIT_TILA_KASITTELYSSA`) }</Tab>
+                            <Tab value={Tila.HYVAKSYTTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYVAKSYTTY`) }</Tab>
+                            <Tab value={Tila.HYLATTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`) }</Tab>
+                        </Tabs>
+                    </div>
                     <RekisterointiLista tila={tila} hakutermi={hakutermi}/>
                 </Box>
             </ThemeProvider>

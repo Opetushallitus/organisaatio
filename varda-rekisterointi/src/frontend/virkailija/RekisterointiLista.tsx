@@ -8,6 +8,8 @@ import {Lista} from "../Lista";
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
+import styles from "./RekisterointiLista.module.css";
+
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const tyhjaLista: Rekisterointihakemus[] = [];
 
@@ -65,7 +67,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
     }
 
     return (
-        <Box className="varda-rekisterointi-lista">
+        <Box className={styles.vardaRekisterointiLista}>
             <Lista
                 otsikot={otsikot}
                 rivit={rekisteroinnit}

@@ -1,0 +1,28 @@
+.rekisteroinnit {
+    margin: 2em 4em;
+}
+
+.vasen {
+    clear: left;
+    float: left;
+    width: 25%;
+}
+
+.oikea {
+    clear: right;
+    float: left;
+    width: 75%;
+}
+
+.suodata {
+    max-width: 20em;
+}
+
+.suodataIcon {
+    color: darkgray;
+    font-weight: lighter;
+}
+
+.tilaTabit {
+
+}
