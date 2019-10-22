@@ -50,7 +50,8 @@ public class VirkailijaControllerTest {
 
     @Test
     public void listaaRekisteroinnitReturnsOk() throws Exception {
-        when(rekisterointiService.listByTila(Rekisterointi.Tila.KASITTELYSSA)).thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
+        when(rekisterointiService.listByTilaAndOrganisaatio(Rekisterointi.Tila.KASITTELYSSA, null))
+                .thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
         mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH + "?tila={tila}", Rekisterointi.Tila.KASITTELYSSA.toString())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());

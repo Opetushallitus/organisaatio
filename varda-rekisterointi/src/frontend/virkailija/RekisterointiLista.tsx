@@ -12,10 +12,11 @@ const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const tyhjaLista: Rekisterointihakemus[] = [];
 
 type Props = {
-    tila?: Tila
+    tila?: Tila,
+    hakutermi?: string
 }
 
-export default function RekisterointiLista({ tila = Tila.KASITTELYSSA } : Props) {
+export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi } : Props) {
     const { i18n } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaLista);
     const [latausKesken, asetaLatausKesken] = useState(true);
@@ -42,7 +43,8 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA } : Props)
             try {
                 asetaLatausKesken(true);
                 asetaLatausVirhe(false);
-                const response = await Axios.get(rekisteroinnitUrl, { params: { tila }});
+                const params = { tila, hakutermi};
+                const response = await Axios.get(rekisteroinnitUrl, { params });
                 asetaRekisteroinnit(response.data);
             } catch (e) {
                 asetaLatausVirhe(true);
@@ -52,7 +54,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA } : Props)
             }
         }
         lataa();
-    }, [tila]);
+    }, [tila, hakutermi]);
 
     if (latausKesken) {
         return <Spin />;

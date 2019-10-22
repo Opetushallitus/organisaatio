@@ -20,8 +20,12 @@ public class RekisterointiService {
         this.paatosRepository = paatosRepository;
     }
 
-    public Iterable<Rekisterointi> listByTila(Rekisterointi.Tila tila) {
-        return rekisterointiRepository.findByTila(tila.toString()); // TODO: rajaus kunnan/päättäjän perusteella? KJHH-1709
+    public Iterable<Rekisterointi> listByTilaAndOrganisaatio(Rekisterointi.Tila tila, String organisaatio) {
+        // TODO: rajaus kunnan/päättäjän perusteella? KJHH-1709
+        if (organisaatio == null || organisaatio.length() == 0) {
+            return rekisterointiRepository.findByTila(tila.toString());
+        }
+        return rekisterointiRepository.findByTilaAndOrganisaatioContaining(tila.toString(), organisaatio);
     }
 
     public long create(Rekisterointi rekisterointi) {

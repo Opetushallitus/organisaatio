@@ -25,5 +25,11 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila")
     Iterable<Rekisterointi> findByTila(@Param("tila") String tila); // eikä tunnu hanskaavan queryssä enumin muunnosta, joten...
 
+    @Query(value = REKISTEROINTI_SELECT + " WHERE o.nimi LIKE '%' || :organisaatio || '%'")
+    Iterable<Rekisterointi> findByOrganisaatioContaining(@Param("organisaatio") String organisaatio);
+
+    @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND o.nimi LIKE '%' || :organisaatio || '%'")
+    Iterable<Rekisterointi> findByTilaAndOrganisaatioContaining(@Param("tila") String tila, @Param("organisaatio") String organisaatio);
+
 
 }
