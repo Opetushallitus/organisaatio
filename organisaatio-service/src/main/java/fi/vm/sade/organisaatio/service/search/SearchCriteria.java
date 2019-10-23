@@ -16,7 +16,6 @@
 package fi.vm.sade.organisaatio.service.search;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,6 +26,7 @@ public class SearchCriteria {
     private boolean lakkautetut;
     private Boolean poistettu;
 
+    private List<String> yritysmuoto = new ArrayList<>();
     private List<String> kunta = new ArrayList<String>();
     private List<String> organisaatiotyyppi = new ArrayList<String>();
     private List<String> oppilaitostyyppi = new ArrayList<String>();
@@ -77,6 +77,14 @@ public class SearchCriteria {
 
     public void setPoistettu(Boolean poistettu) {
         this.poistettu = poistettu;
+    }
+
+    public List<String> getYritysmuoto() {
+        return yritysmuoto;
+    }
+
+    public void setYritysmuoto(List<String> yritysmuoto) {
+        this.yritysmuoto = yritysmuoto;
     }
 
     public List<String> getKunta() {
