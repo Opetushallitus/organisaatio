@@ -1,5 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
+import com.github.kagkarlsson.scheduler.SchedulerClient;
+import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
@@ -29,8 +31,9 @@ public class RekisterointiServiceTest {
     @TestConfiguration
     static class RekisterointiServiceTestConfiguration {
         @Bean
-        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository, PaatosRepository paatosRepository) {
-            return new RekisterointiService(rekisterointiRepository, paatosRepository);
+        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository, PaatosRepository paatosRepository,
+                                                         SchedulerClient schedulerClient, Task<Long> task) {
+            return new RekisterointiService(rekisterointiRepository, paatosRepository, schedulerClient, task, task);
         }
     }
 
@@ -73,6 +76,12 @@ public class RekisterointiServiceTest {
 
     @MockBean
     private PaatosRepository paatosRepository;
+
+    @MockBean
+    private SchedulerClient schedulerClient;
+
+    @MockBean
+    private Task<Long> taskWithLongData;
 
     @Autowired
     private RekisterointiService rekisterointiService;

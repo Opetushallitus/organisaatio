@@ -1,3 +1,5 @@
 spring:
   session:
     store-type: none
+db-scheduler:
+  enabled: true
