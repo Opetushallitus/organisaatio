@@ -8,13 +8,13 @@ export enum Tila {
 
 export type Paatos = {
     hyvaksytty: boolean;
-    aikaleima: Date;
+    aikaleima: string;
     perustelu?: string; // vain, jos HYLATTY
 }
 
 export interface Rekisterointihakemus extends Rekisterointi {
     id: number;
-    vastaanotettu: string; // Date ongelmallinen JSONista deserialisoidessa :(
+    vastaanotettu: string;
     tila: Tila;
     paatos?: Paatos; // puuttuu, jos tila on KASITTELYSSA
 }

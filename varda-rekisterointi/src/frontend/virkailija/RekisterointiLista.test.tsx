@@ -3,7 +3,12 @@ import {render, unmountComponentAtNode} from "react-dom";
 import {act} from "react-dom/test-utils";
 import RekisterointiLista from "./RekisterointiLista";
 import {Rekisterointihakemus, Tila} from "./rekisterointihakemus";
+import Axios from "axios";
 import {Kayttaja, Organisaatio} from "../types";
+import createTheme from "@opetushallitus/virkailija-ui-components/createTheme";
+import {ThemeProvider} from "styled-components";
+
+const theme = createTheme();
 
 const dummyKayttaja: Kayttaja = {
     asiointikieli: "fi",
@@ -13,15 +18,15 @@ const dummyKayttaja: Kayttaja = {
     saateteksti: "foo"
 };
 const dummyOrganisaatio: Organisaatio = {
-    nimi: {
-        "fi": "Oy Firma Ab"
+    ytjNimi: {
+        nimi: "Oy Firma Ab",
+        alkuPvm: null,
+        kieli: "fi"
     },
     ytunnus: "12345678-9",
     alkuPvm: "1999-01-01",
-    kieletUris: [],
     kotipaikkaUri: "",
     maaUri: "",
-    nimet: [],
     oid: "12345",
     tyypit: [],
     yhteystiedot: [],
@@ -38,29 +43,33 @@ describe('RekisterointiLista', () => {
         unmountComponentAtNode(container);
         container.remove();
     });
-
-    it('tulostuu tyhjänä', () => {
-        const rekisteroinnit: Rekisterointihakemus[] = [];
-        act(() => {
-            render(<RekisterointiLista rekisteroinnit={rekisteroinnit}/>, container);
-        });
-        expect(container.querySelector("table.varda-lista")).not.toBeNull();
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
-    it('tulostaa rivejä', () => {
+    it('tulostuu tyhjänä', async() => {
+        const rekisteroinnit: Rekisterointihakemus[] = [];
+        jest.spyOn(Axios, "get").mockImplementation(() => Promise.resolve({ data: rekisteroinnit }));
+        await act(async() => {
+            render(<ThemeProvider theme={theme}><RekisterointiLista /></ThemeProvider>, container);
+        });
+        expect(container.querySelector("table.vardaRekisterointiLista")).not.toBeNull();
+    });
+
+    it('tulostaa rivejä', async () => {
         const rekisterointi: Rekisterointihakemus = {
             kayttaja: dummyKayttaja,
             organisaatio: dummyOrganisaatio,
-            toimintamuoto: "",
             sahkopostit: [],
-            saapumisaika: new Date(),
+            vastaanotettu: "",
             id: 1,
             tila: Tila.KASITTELYSSA
         };
         const rekisteroinnit = [rekisterointi];
-        act(() => {
-            render(<RekisterointiLista rekisteroinnit={rekisteroinnit}/>, container);
+        jest.spyOn(Axios, "get").mockImplementation(() => Promise.resolve({ data: rekisteroinnit }));
+        await act(async () => {
+            render(<ThemeProvider theme={theme}><RekisterointiLista /></ThemeProvider>, container);
         });
-        expect(container.querySelectorAll("tr.varda-lista-rivi")).toHaveLength(rekisteroinnit.length);
+        expect(container.querySelectorAll("table tbody tr")).toHaveLength(rekisteroinnit.length);
     });
 });
