@@ -4,12 +4,12 @@ import com.github.kagkarlsson.scheduler.task.Task;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
 import fi.vm.sade.varda.rekisterointi.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
-import java.time.LocalTime;
-
-import static com.github.kagkarlsson.scheduler.task.schedule.Schedules.daily;
+import static com.github.kagkarlsson.scheduler.task.schedule.Schedules.parseSchedule;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,8 +30,10 @@ public class SchedulingConfiguration {
     }
 
     @Bean
-    public Task<Void> kuntaEmailTask() {
-        return Tasks.recurring("kunta-email-task", daily(LocalTime.of(6, 0)))
+    @ConditionalOnProperty("varda-rekisterointi.schedule.kunta-email-task")
+    public Task<Void> kuntaEmailTask(Environment environment) {
+        String scheduleString = environment.getRequiredProperty("varda-rekisterointi.schedule.kunta-email-task");
+        return Tasks.recurring("kunta-email-task", parseSchedule(scheduleString))
                 .execute((instance, ctx) -> emailService.lahetaKuntaEmail());
     }
 
