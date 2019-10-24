@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-
 @Component
 public class OrganisaatioClient {
 
@@ -112,8 +110,13 @@ public class OrganisaatioClient {
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
         return httpClient.<Collection<OrganisaatioV4Dto>>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> asList(fromJson(json, OrganisaatioV4Dto[].class)))
+                .mapWith(json -> fromJson(json, OrganisaatioListDto.class).organisaatiot)
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+    }
+
+    private static class OrganisaatioListDto {
+        public long numHits;
+        public Collection<OrganisaatioV4Dto> organisaatiot;
     }
 
 }

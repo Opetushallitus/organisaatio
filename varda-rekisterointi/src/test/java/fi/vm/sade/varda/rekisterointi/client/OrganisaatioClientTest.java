@@ -95,7 +95,7 @@ public class OrganisaatioClientTest {
     @Test
     public void listBy() {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
-                .willReturn(aResponse().withStatus(200).withBody("[{\"oid\": \"oid1\"}, {\"oid\": \"oid2\"}]")));
+                .willReturn(aResponse().withStatus(200).withBody("{\"numHits\": 2, \"organisaatiot\": [{\"oid\": \"oid1\"}, {\"oid\": \"oid2\"}]}")));
         OrganisaatioCriteria criteria = new OrganisaatioCriteria();
         criteria.aktiiviset = true;
         criteria.yritysmuoto = List.of("Kunta");
