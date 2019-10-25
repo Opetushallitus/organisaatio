@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
-import { Organisaatio, Kayttaja, KoodiUri, Koodi, Yhteystieto } from '../types';
+import { Organisaatio, Kayttaja, KoodiUri, Koodi } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
