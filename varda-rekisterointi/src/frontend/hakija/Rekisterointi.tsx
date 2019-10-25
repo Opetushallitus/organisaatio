@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
-import { Organisaatio, Kayttaja, KoodiUri, Koodi } from '../types';
+import { Organisaatio, Kayttaja, KoodiUri, Koodi, Yhteystieto } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
@@ -14,6 +14,7 @@ import { LanguageContext } from '../contexts';
 import EmailValidator from 'email-validator';
 import { useBeforeunload } from 'react-beforeunload';
 import useAxios from 'axios-hooks';
+import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri } from '../OrganisaatioYhteystietoUtils';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -119,6 +120,15 @@ export default function Rekisterointi() {
                 ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
                     .filter(field => !organisaatio[field])
                     .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                [
+                    { name: 'puhelinnumero', filter: isPuhelinnumero, mapper: toPuhelinnumero },
+                    { name: 'sahkoposti', filter: isSahkoposti, mapper: toSahkoposti },
+                    { name: 'postiosoite', filter: isPostiosoite, mapper: toOsoite },
+                    { name: 'postinumero', filter: isPostiosoite, mapper: toPostinumeroUri },
+                    { name: 'kayntiosoite', filter: isKayntiosoite, mapper: toOsoite, },
+                    { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, mapper: toPostinumeroUri, },
+                ].filter(field => !getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.mapper))
+                 .forEach(field => organisaatioErrors[field.name] = i18n.translate('PAKOLLINEN_TIETO'));
                 if (kunnat.length === 0) {
                     organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');
                 }

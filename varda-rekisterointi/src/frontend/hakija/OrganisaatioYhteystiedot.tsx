@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import useAxios from 'axios-hooks';
 import FormFieldContainer from '../FormFieldContainer';
 import { Organisaatio, Koodi, Language, Yhteystieto } from '../types';
-import { getYhteystietoArvo, isPuhelinnumero, isSahkoposti, isKayntiosoite, isPostiosoite, updateYhteystiedot } from '../OrganisaatioYhteystietoUtils';
+import { getYhteystietoArvo, isPuhelinnumero, isSahkoposti, isKayntiosoite, isPostiosoite, updateYhteystiedot, toPuhelinnumero, toSahkoposti, toOsoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
@@ -40,37 +40,37 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const isKieli = (yhteystieto: Yhteystieto) => yhteystieto.kieli === kieliUri;
 
     const initialPuhelinnumero = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isPuhelinnumero, isKieli), yhteystieto => yhteystieto.numero);
+        and(isPuhelinnumero, isKieli), toPuhelinnumero);
     const puhelinnumero = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isPuhelinnumero, isKieli), yhteystieto => yhteystieto.numero);
+        and(isPuhelinnumero, isKieli), toPuhelinnumero);
     const initialSahkoposti = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isSahkoposti, isKieli), yhteystieto => yhteystieto.email);
+        and(isSahkoposti, isKieli), toSahkoposti);
     const sahkoposti = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isSahkoposti, isKieli), yhteystieto => yhteystieto.email);
+        and(isSahkoposti, isKieli), toSahkoposti);
 
     const initialKayntiosoite = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.osoite);
+        and(isKayntiosoite, isKieli), toOsoite);
     const kayntiosoite = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.osoite);
+        and(isKayntiosoite, isKieli), toOsoite);
     const initialKayntiosoitteenPostinumeroUri = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
+        and(isKayntiosoite, isKieli), toPostinumeroUri);
     const kayntiosoitteenPostinumeroUri = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
+        and(isKayntiosoite, isKieli), toPostinumeroUri);
     const kayntiosoitteenPostinumero = kayntiosoitteenPostinumeroUri.replace('posti_', '');
     const kayntiosoitteenPostitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isKayntiosoite, isKieli), yhteystieto => yhteystieto.postitoimipaikka);
+        and(isKayntiosoite, isKieli), toPostitoimipaikka);
 
     const initialPostiosoite = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.osoite);
+        and(isPostiosoite, isKieli), toOsoite);
     const postiosoite = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.osoite);
+        and(isPostiosoite, isKieli), toOsoite);
     const initialPostinumeroUri = getYhteystietoArvo(initialOrganisaatio.yhteystiedot,
-        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
+        and(isPostiosoite, isKieli), toPostinumeroUri);
     const postinumeroUri = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postinumeroUri);
+        and(isPostiosoite, isKieli), toPostinumeroUri);
     const postinumero = postinumeroUri.replace('posti_', '');
     const postitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot,
-        and(isPostiosoite, isKieli), yhteystieto => yhteystieto.postitoimipaikka);
+        and(isPostiosoite, isKieli), toPostitoimipaikka);
 
     const puhelinnumeroDisabled = readOnly || hasLength(initialPuhelinnumero);
     const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
