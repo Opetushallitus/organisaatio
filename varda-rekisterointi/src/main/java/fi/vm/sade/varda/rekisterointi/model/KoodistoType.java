@@ -1,6 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
 public enum KoodistoType {
+    YRITYSMUOTO("yritysmuoto"),
     ORGANISAATIOTYYPPI("organisaatiotyyppi"),
     KUNTA("kunta"),
     MAAT_JA_VALTIOT_1("maatjavaltiot1"),

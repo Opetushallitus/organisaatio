@@ -21,13 +21,15 @@ type Props = {
 
 export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrganisaatio, organisaatio, setOrganisaatio, errors}: Props) {
     const { language, i18n } = useContext(LanguageContext);
+    const [{data: yritysmuodot, loading: yritysmuotoLoading, error: yritysmuodotError}]
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true');
     const [{data: organisaatiotyypit, loading: organisaatiotyypitLoading, error: organisaatiotyypitError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/ORGANISAATIOTYYPPI/koodi?onlyValid=true');
 
-    if (organisaatiotyypitLoading) {
+    if (organisaatiotyypitLoading || yritysmuotoLoading) {
         return <Spinner />;
     }
-    if (organisaatiotyypitError) {
+    if (organisaatiotyypitError || yritysmuodotError) {
         return <div>error, reload page</div>;
     }
 
@@ -65,12 +67,14 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto}>
-                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.yritysmuoto })}
-                       type="text"
-                       id="yritysmuoto"
-                       value={organisaatio.yritysmuoto}
-                       disabled={yritysmuotoDisabled}
-                       onChange={event => setOrganisaatio({ yritysmuoto: event.currentTarget.value })} />
+                <div className="oph-input-container">
+                    <KoodiSelect selectable={yritysmuodot} selected={organisaatio.yritysmuoto}
+                                 disabled={yritysmuotoDisabled}
+                                 required={!yritysmuotoDisabled}
+                                 hasError={!!errors.yritysmuoto}
+                                 valueFn={koodi => koodi.nimi.fi || koodi.uri}
+                                 onChange={yritysmuoto => setOrganisaatio({ yritysmuoto: yritysmuoto })} />
+                </div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')}>
                 <div className="oph-input-container">{tyypit}</div>
