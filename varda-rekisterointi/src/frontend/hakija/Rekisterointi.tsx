@@ -132,6 +132,9 @@ export default function Rekisterointi() {
                 if (kunnat.length === 0) {
                     organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');
                 }
+                if (sahkopostit.length === 0) {
+                    organisaatioErrors.sahkopostit = i18n.translate('PAKOLLINEN_TIETO');
+                }
                 if (sahkopostit.some(sahkoposti => !EmailValidator.validate(sahkoposti))) {
                     organisaatioErrors.sahkopostit = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
                 }
