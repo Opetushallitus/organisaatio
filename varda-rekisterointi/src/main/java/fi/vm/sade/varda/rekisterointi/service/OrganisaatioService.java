@@ -10,23 +10,16 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toMap;
-
 @Service
 public class OrganisaatioService {
 
-    private static final String DEFAULT_NAME_LANGUAGE = "kieli_fi#1";
-    private static final Map<String, String> KIELI_KOODI_ARVO_TO_URI_VERSION = Map.of(
-            "fi", "kieli_fi#1",
-            "sv", "kieli_sv#1",
-            "en", "kieli_en#1"
+    private static final String DEFAULT_KIELI_KOODI_URI_VERSION = "kieli_fi#1";
+    private static final String DEFAULT_KIELI_KOODI_ARVO = "fi";
+    private static final Map<String, String> KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO = Map.of(
+            "kieli_fi#1", "fi",
+            "kieli_sv#1", "sv",
+            "kieli_en#1", "en"
     );
-    private static final Map<String, String> KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO;
-
-    static {
-        KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO = KIELI_KOODI_ARVO_TO_URI_VERSION.entrySet().stream()
-                .collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
-    }
 
     public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
         return Organisaatio.of(
@@ -46,12 +39,13 @@ public class OrganisaatioService {
                 .filter(nimi -> nullSafeDate(nimi.alkuPvm).isBefore(now) || nullSafeDate(nimi.alkuPvm).equals(now))
                 .max(Comparator.comparing(nimi -> nullSafeDate(nimi.alkuPvm)))
                 .orElseThrow(() -> new IllegalStateException("Ei voimassa olevaa nimeä organisaatiolle: " + dto.ytunnus));
-        String ytjKieli = dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_NAME_LANGUAGE;
-        String ytjKielinen = kurantti.nimi.getOrDefault(kieliKoodiUriVersionToKoodiArvo(ytjKieli), kurantti.nimi.get(DEFAULT_NAME_LANGUAGE));
+        String ytjKieli = dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_KIELI_KOODI_URI_VERSION;
+        String kieli = kieliKoodiUriVersionToKoodiArvo(ytjKieli);
+        String ytjKielinen = kurantti.nimi.getOrDefault(kieli, kurantti.nimi.get(DEFAULT_KIELI_KOODI_ARVO));
         if (ytjKielinen == null) {
             throw new IllegalStateException("Ei YTJ-kielen tai oletuskielen mukaista nimeä organisaatiolle: " + dto.ytunnus);
         }
-        return KielistettyNimi.of(ytjKielinen, kieliKoodiUriVersionToKoodiArvo(ytjKieli), kurantti.alkuPvm);
+        return KielistettyNimi.of(ytjKielinen, kieli, kurantti.alkuPvm);
     }
 
     private LocalDate nullSafeDate(LocalDate date) {
@@ -59,10 +53,6 @@ public class OrganisaatioService {
             return LocalDate.MIN;
         }
         return date;
-    }
-
-    private static String koodiArvoToKieliKoodiUriVersion(String koodiArvo) {
-        return KIELI_KOODI_ARVO_TO_URI_VERSION.getOrDefault(koodiArvo, DEFAULT_NAME_LANGUAGE);
     }
 
     private static String kieliKoodiUriVersionToKoodiArvo(String koodiUriVersion) {
