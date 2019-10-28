@@ -1,11 +1,9 @@
-package fi.vm.sade.varda.rekisterointi.controller.hakija;
+package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.KielistettyNimi;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioNimi;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -13,16 +11,15 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class OrganisaatioControllerTest {
+public class OrganisaatioServiceTest {
 
-    private final OrganisaatioClient organisaatioClient = Mockito.mock(OrganisaatioClient.class);
-    private final OrganisaatioController controller = new OrganisaatioController(organisaatioClient);
+    private final OrganisaatioService service = new OrganisaatioService();
 
     @Test(expected = IllegalStateException.class)
     public void kuranttiNimiThrowsWhenNoCurrentName() {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
         dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MAX, null, null));
-        controller.kuranttiNimi(dto);
+        service.kuranttiNimi(dto);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -30,7 +27,7 @@ public class OrganisaatioControllerTest {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
         dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", null));
         dto.ytjkieli = "sv";
-        controller.kuranttiNimi(dto);
+        service.kuranttiNimi(dto);
     }
 
     @Test
@@ -41,7 +38,7 @@ public class OrganisaatioControllerTest {
                 organisaatioNimi(LocalDate.now(), "fi", "Uusi")
         );
         dto.ytjkieli = "fi";
-        KielistettyNimi nimi = controller.kuranttiNimi(dto);
+        KielistettyNimi nimi = service.kuranttiNimi(dto);
         assertEquals(dto.ytjkieli, nimi.kieli);
         assertEquals("Uusi", nimi.nimi);
     }
