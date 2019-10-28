@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'normalize.css';
 import 'oph-virkailija-style-guide/oph-styles.css'
-import Rekisterointi from './hakija/Rekisterointi';
+import RekisterointiHakija from './hakija/RekisterointiHakija';
 import Rekisteroinnit from "./virkailija/Rekisteroinnit";
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Language, Lokalisointi } from './types';
 import useAxios from 'axios-hooks';
 import Spinner from './Spinner';
+import RekisterointiVirkailija from './virkailija/RekisterointiVirkailija';
 
 const App: React.FC = () => {
   registerLocale('fi', fi);
@@ -26,8 +27,9 @@ const App: React.FC = () => {
   return (
     <Router basename="/varda-rekisterointi">
       <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: new I18nImpl(data[language]) }}>
-        <Route path="/hakija" exact component={Rekisterointi} />
+        <Route path="/hakija" exact component={RekisterointiHakija} />
         <Route path="/virkailija" exact component={Rekisteroinnit} />
+        <Route path="/virkailija/rekisterointi/luonti" exact component={RekisterointiVirkailija} />
       </LanguageContext.Provider>
     </Router>
   );

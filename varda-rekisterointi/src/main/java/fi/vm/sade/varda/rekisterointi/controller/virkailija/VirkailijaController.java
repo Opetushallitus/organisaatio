@@ -21,6 +21,11 @@ public class VirkailijaController {
         this.rekisterointiService = rekisterointiService;
     }
 
+    @PostMapping(REKISTEROINNIT_PATH)
+    public void luoRekisterointi(@RequestBody @Validated Rekisterointi dto) {
+        rekisterointiService.create(dto);
+    }
+
     @GetMapping(REKISTEROINNIT_PATH)
     public Iterable<Rekisterointi> listaaRekisteroinnit(
             @RequestParam("tila") Rekisterointi.Tila tila,

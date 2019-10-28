@@ -1,7 +1,7 @@
-import React, { useState, useReducer, useEffect, useContext } from 'react';
+import React, { useState, useReducer, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
-import { Organisaatio, Kayttaja, KoodiUri, Koodi } from '../types';
+import { Organisaatio, Kayttaja, Koodi } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
@@ -15,21 +15,15 @@ import EmailValidator from 'email-validator';
 import { useBeforeunload } from 'react-beforeunload';
 import useAxios from 'axios-hooks';
 import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri } from '../OrganisaatioYhteystietoUtils';
+import * as YtunnusValidator from '../YtunnusValidator';
 
-const baseOrganisaatio: Organisaatio = {
-    ytunnus: '',
-    ytjNimi: {
-        nimi: '',
-        alkuPvm: null,
-        kieli: 'fi'
-    },
-    alkuPvm: null,
-    yritysmuoto: '',
-    tyypit: [],
-    kotipaikkaUri: '',
-    maaUri: 'maatjavaltiot1_fin',
-    yhteystiedot: []
-};
+type Props = {
+    initialOrganisaatio: Organisaatio,
+    organisaatio: Organisaatio,
+    setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
+    rekisteroinnitUrl: string,
+}
+
 const initialKunnat: string[] = [];
 const intialSahkopostit: string[] = [];
 const initialToimintamuoto = 'vardatoimintamuoto_tm01';
@@ -40,27 +34,21 @@ const initialKayttaja: Kayttaja = {
     asiointikieli: 'fi',
     saateteksti: '',
 }
-const organisaatiotUrl = "/varda-rekisterointi/hakija/api/organisaatiot";
-const rekisteroinnitUrl = "/varda-rekisterointi/hakija/api/rekisteroinnit";
 
 function reducer<T>(state: T, data: Partial<T>): T {
     return { ...state, ...data };
 }
 
-export default function Rekisterointi() {
+export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrganisaatio, rekisteroinnitUrl}: Props) {
     const { i18n } = useContext(LanguageContext);
     const [{data: kaikkiKunnat, loading: kaikkiKunnatLoading, error: kaikkiKunnatError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true');
-    const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
-    const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
     const [kunnat, setKunnat] = useState(initialKunnat);
     const [sahkopostit, setSahkopostit] = useState(intialSahkopostit);
     const [toimintamuoto, setToimintamuoto] = useState(initialToimintamuoto);
     const [kayttaja, setKayttaja] = useReducer(reducer, initialKayttaja);
     const [kayttajaErrors, setKayttajaErrors] = useState({});
-    const [fetchLoading, setFetchLoading] = useState(true);
-    const [fetchError, setFetchError] = useState(null);
     const [postLoading, setPostLoading] = useState(false);
     const [postError, setPostError] = useState(null);
     const [ready, setReady] = useState(false);
@@ -69,28 +57,6 @@ export default function Rekisterointi() {
             event.preventDefault();
         }
     });
-
-    useEffect(() => {
-        async function fetch() {
-            try {
-                setFetchLoading(true);
-                setFetchError(null);
-                const response = await Axios.get(organisaatiotUrl);
-                const data = response.data;
-                const tyypit: KoodiUri[] = data.tyypit ? data.tyypit : [];
-                if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
-                    tyypit.push('organisaatiotyyppi_07');
-                }
-                setInitialOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
-                setOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
-            } catch (error) {
-                setFetchError(error);
-            } finally {
-                setFetchLoading(false);
-            }
-        }
-        fetch();
-    }, []);
 
     async function post() {
         try {
@@ -118,8 +84,11 @@ export default function Rekisterointi() {
             case 1:
                 const organisaatioErrors: Record<string, string> = {};
                 ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
-                    .filter(field => !organisaatio[field])
+                    .filter(field => !(organisaatio as any)[field])
                     .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
+                    organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
+                }
                 [
                     { name: 'puhelinnumero', filter: isPuhelinnumero, mapper: toPuhelinnumero },
                     { name: 'sahkoposti', filter: isSahkoposti, mapper: toSahkoposti },
@@ -154,10 +123,10 @@ export default function Rekisterointi() {
         return true;
     }
 
-    if (fetchLoading || kaikkiKunnatLoading) {
+    if (kaikkiKunnatLoading) {
         return <Spinner />;
     }
-    if (fetchError || kaikkiKunnatError) {
+    if (kaikkiKunnatError) {
         return <div>error, reload page</div>;
     }
 

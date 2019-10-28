@@ -40,7 +40,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
         return false;
     }).map(koodi => toLocalizedText(koodi.nimi, language, koodi.arvo)).join(', ');
 
-    const nimiDisabled = readOnly || !!initialOrganisaatio.ytjNimi;
+    const nimiDisabled = readOnly || !!initialOrganisaatio.ytjNimi.nimi;
     const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
     const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
