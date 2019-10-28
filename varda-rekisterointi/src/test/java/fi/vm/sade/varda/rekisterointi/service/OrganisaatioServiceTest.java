@@ -37,9 +37,9 @@ public class OrganisaatioServiceTest {
                 organisaatioNimi(LocalDate.MIN, "fi", "Vanha"),
                 organisaatioNimi(LocalDate.now(), "fi", "Uusi")
         );
-        dto.ytjkieli = "fi";
+        dto.ytjkieli = "kieli_fi#1";
         KielistettyNimi nimi = service.kuranttiNimi(dto);
-        assertEquals(dto.ytjkieli, nimi.kieli);
+        assertEquals("fi", nimi.kieli);
         assertEquals("Uusi", nimi.nimi);
     }
 
