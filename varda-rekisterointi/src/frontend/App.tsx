@@ -29,7 +29,7 @@ const App: React.FC = () => {
       <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: new I18nImpl(data[language]) }}>
         <Route path="/hakija" exact component={RekisterointiHakija} />
         <Route path="/virkailija" exact component={Rekisteroinnit} />
-        <Route path="/virkailija/rekisterointi/luonti" exact component={RekisterointiVirkailija} />
+        <Route path="/virkailija/rekisterointi/luonti/:ytunnus" exact component={RekisterointiVirkailija} />
       </LanguageContext.Provider>
     </Router>
   );

@@ -26,3 +26,18 @@
 .tilaTabit {
 
 }
+
+a.nappi {
+    border-radius: 4px;
+    border-color: #159ecb;
+    background-color: #159ecb;
+    padding: 6px 16px;
+    color: #ffffff;
+    text-decoration: none;
+    float: left;
+}
+
+a.nappiDisabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

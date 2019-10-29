@@ -13,6 +13,10 @@ import Tab from "@opetushallitus/virkailija-ui-components/Tab";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import FilterVariantIcon from "mdi-react/FilterVariantIcon";
 import styles from "./Rekisteroinnit.module.css";
+import Divider from "@opetushallitus/virkailija-ui-components/Divider";
+import * as YtunnusValidator from '../YtunnusValidator';
+import { Link } from "react-router-dom";
+import classNames from "classnames/bind";
 
 const theme = createTheme();
 
@@ -22,6 +26,9 @@ export default function Rekisteroinnit() {
     const [hakutermiInput, asetaHakutermiInput] = useState("");
     const [hakutermi] = useDebounce(hakutermiInput, 500);
     const [tila, asetaTila] = useState(Tila.KASITTELYSSA);
+    const [ytunnus, setYtunnus] = useState('');
+    const ytunnusDisabled = !YtunnusValidator.validate(ytunnus);
+    const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]:  ytunnusDisabled });
 
     function vaihdaTila(uusiTila: string) {
         asetaTila(uusiTila as Tila);
@@ -52,6 +59,20 @@ export default function Rekisteroinnit() {
                         </Tabs>
                     </div>
                     <RekisterointiLista tila={tila} hakutermi={hakutermi}/>
+                    <Divider />
+                    <Input type="text"
+                           placeholder={i18n.translate('YTUNNUS')}
+                           value={ytunnus}
+                           onChange={event => setYtunnus(event.currentTarget.value)} />
+                    <Link to={`/virkailija/rekisterointi/luonti/${ytunnus}`}
+                        className={ytunnusClassNames}
+                        onClick={event => {
+                            if (!YtunnusValidator.validate(ytunnus)) {
+                                event.preventDefault();
+                            }
+                        }}>
+                        {i18n.translate('REKISTEROINNIT_LUONTI')}
+                    </Link>
                 </Box>
             </ThemeProvider>
         </ConfigurationContext.Provider>
