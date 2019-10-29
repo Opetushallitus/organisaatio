@@ -83,21 +83,23 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
         switch (currentStep) {
             case 1:
                 const organisaatioErrors: Record<string, string> = {};
-                ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
-                    .filter(field => !(organisaatio as any)[field])
-                    .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
-                if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
-                    organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
+                if (!organisaatio.oid) {
+                    ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
+                        .filter(field => !(organisaatio as any)[field])
+                        .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                    if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
+                        organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
+                    }
+                    [
+                        { name: 'puhelinnumero', filter: isPuhelinnumero, mapper: toPuhelinnumero },
+                        { name: 'sahkoposti', filter: isSahkoposti, mapper: toSahkoposti },
+                        { name: 'postiosoite', filter: isPostiosoite, mapper: toOsoite },
+                        { name: 'postinumero', filter: isPostiosoite, mapper: toPostinumeroUri },
+                        { name: 'kayntiosoite', filter: isKayntiosoite, mapper: toOsoite, },
+                        { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, mapper: toPostinumeroUri, },
+                    ].filter(field => !getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.mapper))
+                     .forEach(field => organisaatioErrors[field.name] = i18n.translate('PAKOLLINEN_TIETO'));
                 }
-                [
-                    { name: 'puhelinnumero', filter: isPuhelinnumero, mapper: toPuhelinnumero },
-                    { name: 'sahkoposti', filter: isSahkoposti, mapper: toSahkoposti },
-                    { name: 'postiosoite', filter: isPostiosoite, mapper: toOsoite },
-                    { name: 'postinumero', filter: isPostiosoite, mapper: toPostinumeroUri },
-                    { name: 'kayntiosoite', filter: isKayntiosoite, mapper: toOsoite, },
-                    { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, mapper: toPostinumeroUri, },
-                ].filter(field => !getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.mapper))
-                 .forEach(field => organisaatioErrors[field.name] = i18n.translate('PAKOLLINEN_TIETO'));
                 if (kunnat.length === 0) {
                     organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');
                 }
