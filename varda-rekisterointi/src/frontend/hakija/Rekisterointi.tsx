@@ -14,7 +14,7 @@ import { LanguageContext } from '../contexts';
 import EmailValidator from 'email-validator';
 import { useBeforeunload } from 'react-beforeunload';
 import useAxios from 'axios-hooks';
-import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri } from '../OrganisaatioYhteystietoUtils';
+import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
 
 type Props = {
@@ -99,6 +99,14 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                         { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, mapper: toPostinumeroUri, },
                     ].filter(field => !getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.mapper))
                      .forEach(field => organisaatioErrors[field.name] = i18n.translate('PAKOLLINEN_TIETO'));
+                    [
+                        { name: 'postinumero', filter: isPostiosoite, postinumeroFn: toPostinumeroUri, postitoimipaikkaFn: toPostitoimipaikka },
+                        { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, postinumeroFn: toPostinumeroUri, postitoimipaikkaFn: toPostitoimipaikka },
+                    ].filter(field => {
+                        const postinumero = getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.postinumeroFn);
+                        const postitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.postitoimipaikkaFn);
+                        return postinumero && !postitoimipaikka;
+                    }).forEach(field => organisaatioErrors[field.name] = i18n.translate('VIRHEELLINEN_POSTINUMERO'));
                 }
                 if (kunnat.length === 0) {
                     organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');
