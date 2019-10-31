@@ -15,8 +15,8 @@ public class Paatos {
     public final boolean hyvaksytty;
     @NotNull
     public final LocalDateTime paatetty;
-    @NotNull @Column("paattaja_id")
-    public final Long paattaja;
+    @NotNull @Column("paattaja_oid")
+    public final String paattaja;
     public final String perustelu;
 
 }

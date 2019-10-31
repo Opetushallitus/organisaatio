@@ -4,6 +4,8 @@ import com.github.kagkarlsson.scheduler.SchedulerClient;
 import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
+import fi.vm.sade.varda.rekisterointi.model.PaatosBatch;
+import fi.vm.sade.varda.rekisterointi.model.PaatosDto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -50,7 +53,8 @@ public class RekisterointiService {
         return saved.id;
     }
 
-    public Rekisterointi resolve(Paatos paatos) {
+    public Rekisterointi resolve(String paattajaOid, PaatosDto paatosDto) {
+        Paatos paatos = new Paatos(paatosDto.rekisterointi, paatosDto.hyvaksytty, LocalDateTime.now(),paattajaOid, paatosDto.perustelu);
         Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
                 () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
         paatosRepository.save(paatos);
@@ -59,6 +63,17 @@ public class RekisterointiService {
         String taskId = String.format("%s-%d", paatosEmailTask.getName(), saved.id);
         schedulerClient.schedule(paatosEmailTask.instance(taskId, saved.id), Instant.now());
         return saved;
+    }
+
+    public void resolveBatch(String paattajaOid, PaatosBatch paatokset) {
+        paatokset.hakemukset.forEach(id -> resolve(
+                paattajaOid,
+                new PaatosDto(
+                        id,
+                        paatokset.hyvaksytty,
+                        paatokset.perustelu
+                )
+        ));
     }
 
 }

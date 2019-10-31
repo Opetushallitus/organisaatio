@@ -1,10 +1,18 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
+import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
+import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.NameContainer;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
+import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.cas.ServiceProperties;
+import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +27,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -39,43 +48,83 @@ import static java.util.Collections.singletonList;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
+    private static final String HAKIJA_ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
+    private static final String VIRKAILIJA_ROLE = "APP_YKSITYISTEN_REKISTEROITYMINEN_CRUD";
+    private static final String HAKIJA_PATH_CLOB = "/hakija/**";
+    private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
-    private final OphProperties properties;
+    private final OphProperties ophProperties;
+    private final CasProperties casProperties;
 
-    public WebSecurityConfig(OphProperties properties) {
-        this.properties = properties;
+    public WebSecurityConfig(OphProperties ophProperties, CasProperties casProperties) {
+        this.ophProperties = ophProperties;
+        this.casProperties = casProperties;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/hakija/**").hasRole(ROLE)
+                .antMatchers(HAKIJA_PATH_CLOB).hasRole(HAKIJA_ROLE)
+                .antMatchers(VIRKAILIJA_PATH_CLOB).hasRole(VIRKAILIJA_ROLE)
                 .and()
-                .addFilterBefore(authenticationProcessingFilter(), BasicAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
+                .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(virkailijaAuthenticationProcessingFilter(), ShibbolethAuthenticationFilter.class)
+                .exceptionHandling()
+                .defaultAuthenticationEntryPointFor(
+                        hakijaAuthenticationEntryPoint(),
+                        new AntPathRequestMatcher(HAKIJA_PATH_CLOB))
+                .defaultAuthenticationEntryPointFor(
+                        virkailijaAuthenticationEntryPoint(),
+                        new AntPathRequestMatcher(VIRKAILIJA_PATH_CLOB)
+                );
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(hakijaAuthenticationProvider());
+        auth.authenticationProvider(virkailijaAuthenticationProvider());
     }
 
     @Bean
-    public Filter authenticationProcessingFilter() throws Exception {
+    public ServiceProperties serviceProperties() {
+        ServiceProperties serviceProperties = new ServiceProperties();
+        serviceProperties.setService(casProperties.getService() + "/j_spring_cas_security_check");
+        serviceProperties.setSendRenew(casProperties.getSendRenew());
+        serviceProperties.setAuthenticateAllArtifacts(true);
+        return serviceProperties;
+    }
+
+    @Bean
+    public Filter hakijaAuthenticationProcessingFilter() throws Exception {
         ShibbolethAuthenticationFilter filter = new ShibbolethAuthenticationFilter("/hakija/login");
         filter.setAuthenticationManager(authenticationManager());
-        String authenticationSuccessUrl = properties.url("varda-rekisterointi.hakija.valtuudet.redirect");
+        String authenticationSuccessUrl = ophProperties.url("varda-rekisterointi.hakija.valtuudet.redirect");
         filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
         return filter;
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        String loginCallbackUrl = properties.url("varda-rekisterointi.hakija.login");
-        String defaultLoginUrl = properties.url("shibbolethVirkailija.login", "FI", loginCallbackUrl);
-        return new AuthenticationEntryPointImpl(defaultLoginUrl, properties, loginCallbackUrl);
+    public Filter virkailijaAuthenticationProcessingFilter() throws Exception {
+        OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
+        casAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
+        return casAuthenticationFilter;
+    }
+
+    @Bean
+    public AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
+        String loginCallbackUrl = ophProperties.url("varda-rekisterointi.hakija.login");
+        String defaultLoginUrl = ophProperties.url("shibbolethVirkailija.login", "FI", loginCallbackUrl);
+        return new AuthenticationEntryPointImpl(defaultLoginUrl, ophProperties, loginCallbackUrl);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint virkailijaAuthenticationEntryPoint() {
+        CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
+        casAuthenticationEntryPoint.setLoginUrl(ophProperties.url("cas.login"));
+        casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
+        return casAuthenticationEntryPoint;
     }
 
     private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
@@ -99,10 +148,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider hakijaAuthenticationProvider() {
         PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
         return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider virkailijaAuthenticationProvider() {
+        CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
+        String host = ophProperties.url("kayttooikeus-service.host"); // TODO: järjelliset konffit
+        casAuthenticationProvider.setUserDetailsService(new OphUserDetailsServiceImpl(host, Constants.CALLER_ID));
+        casAuthenticationProvider.setServiceProperties(serviceProperties());
+        casAuthenticationProvider.setTicketValidator(ticketValidator());
+        casAuthenticationProvider.setKey(casProperties.getKey());
+        return casAuthenticationProvider;
+    }
+
+    @Bean
+    public TicketValidator ticketValidator() {
+        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(ophProperties.url("cas.base"));
+        ticketValidator.setAcceptAnyProxy(true);
+        return ticketValidator;
     }
 
     private static class ShibbolethAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -125,7 +192,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .orElse("");
 
             PreAuthenticatedAuthenticationToken authRequest = new PreAuthenticatedAuthenticationToken(nationalIdentificationNumber, "N/A");
-            List<? extends GrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority(String.format("ROLE_%s", ROLE)));
+            List<? extends GrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
             authRequest.setDetails(new ShibbolethWebAuthenticationDetails(request, authorities, firstName, surname));
             return getAuthenticationManager().authenticate(authRequest);
         }
