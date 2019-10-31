@@ -54,11 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
     private final OphProperties ophProperties;
-    private final CasProperties casProperties;
 
-    public WebSecurityConfig(OphProperties ophProperties, CasProperties casProperties) {
+    public WebSecurityConfig(OphProperties ophProperties) {
         this.ophProperties = ophProperties;
-        this.casProperties = casProperties;
     }
 
     @Override
@@ -89,8 +87,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(casProperties.getService() + "/j_spring_cas_security_check");
-        serviceProperties.setSendRenew(casProperties.getSendRenew());
+        serviceProperties.setService(ophProperties.getProperty("cas.base") + "/j_spring_cas_security_check");
+        serviceProperties.setSendRenew(Boolean.parseBoolean(ophProperties.getProperty("cas.send-renew")));
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -161,7 +159,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setUserDetailsService(new OphUserDetailsServiceImpl(host, Constants.CALLER_ID));
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
-        casAuthenticationProvider.setKey(casProperties.getKey());
+        casAuthenticationProvider.setKey(ophProperties.getProperty("cas.key"));
         return casAuthenticationProvider;
     }
 
