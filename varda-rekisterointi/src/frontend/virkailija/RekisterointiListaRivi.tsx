@@ -32,19 +32,25 @@ export class ListaRivi {
 
 type Props = {
     rekisterointi: ListaRivi
-    kaikkiValittu: boolean
+    riviValittu: boolean
+    valitseHakemusCallback: (id: number, valittu: boolean) => void
 }
 
-export default function RekisterointiListaRivi({ rekisterointi, kaikkiValittu } : Props) {
+export default function RekisterointiListaRivi({ rekisterointi, riviValittu, valitseHakemusCallback } : Props) {
     const [valittu, asetaValittu] = useState(false);
 
     useEffect(() => {
-        asetaValittu(kaikkiValittu);
-    }, [kaikkiValittu]);
+        asetaValittu(riviValittu);
+    }, [riviValittu]);
+
+    function valitse() {
+        asetaValittu(vanhaTila => !vanhaTila);
+        valitseHakemusCallback(rekisterointi.hakemus.id, valittu);
+    }
 
     return (
         <tr>
-            <td><Checkbox checked={valittu} onChange={_ => asetaValittu(!valittu)} /></td>
+            <td><Checkbox checked={valittu} onChange={_ => valitse()} /></td>
             <td>{rekisterointi.organisaatio}</td>
             <td>{rekisterointi.vastuuhenkilo}</td>
             <td>{rekisterointi.ytunnus}</td>

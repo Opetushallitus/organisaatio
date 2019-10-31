@@ -9,9 +9,11 @@ import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 import styles from "./RekisterointiLista.module.css";
 import RekisterointiListaOtsikko from "./RekisterointiListaOtsikko";
 import RekisterointiListaRivi, {ListaRivi} from "./RekisterointiListaRivi";
+import PaatosKontrollit from "./PaatosKontrollit";
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
-const tyhjaLista: Rekisterointihakemus[] = [];
+const tyhjaHakemusLista: Rekisterointihakemus[] = [];
+const tyhjaValintaLista: number[] = [];
 
 type Props = {
     tila?: Tila,
@@ -20,10 +22,11 @@ type Props = {
 
 export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi } : Props) {
     const { i18n } = useContext(LanguageContext);
-    const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaLista);
+    const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaHakemusLista);
     const [latausKesken, asetaLatausKesken] = useState(true);
     const [latausVirhe, asetaLatausVirhe] = useState(false);
     const [kaikkiValittu, asetaKaikkiValittu] = useState(false);
+    const [valitutHakemukset, asetaValitutHakemukset] = useState(tyhjaValintaLista);
 
     useEffect(() => {
         async function lataa() {
@@ -43,8 +46,14 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         lataa();
     }, [tila, hakutermi]);
 
-    function vaihdaKaikkiValittu() {
-        asetaKaikkiValittu(!kaikkiValittu);
+    function vaihdaKaikkiValittu(valitseKaikki: boolean) {
+        asetaKaikkiValittu(valitseKaikki);
+        asetaValitutHakemukset(valitseKaikki ? rekisteroinnit.map(r => r.id) : tyhjaValintaLista);
+    }
+
+    function vaihdaHakemusValittu(id: number, valittu: boolean) {
+        asetaKaikkiValittu(false);
+        asetaValitutHakemukset(valittu ? valitutHakemukset.filter(h => h !== id) : valitutHakemukset.concat(id));
     }
 
     if (latausKesken) {
@@ -64,10 +73,14 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 <tbody>
             {
                 rekisteroinnit.map(rekisterointi =>
-                    <RekisterointiListaRivi key={rekisterointi.id} rekisterointi={new ListaRivi(rekisterointi)} kaikkiValittu={kaikkiValittu}/>)
+                    <RekisterointiListaRivi key={rekisterointi.id}
+                                            rekisterointi={new ListaRivi(rekisterointi)}
+                                            riviValittu={valitutHakemukset.some(h => h === rekisterointi.id)}
+                                            valitseHakemusCallback={vaihdaHakemusValittu}/>)
             }
                 </tbody>
             </table>
+            <PaatosKontrollit valitut={valitutHakemukset}/>
         </Box>
     )
 }
