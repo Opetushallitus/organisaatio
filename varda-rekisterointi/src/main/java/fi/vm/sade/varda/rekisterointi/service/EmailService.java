@@ -12,7 +12,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.function.Function.identity;
@@ -74,14 +73,11 @@ public class EmailService {
         rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
             paatosRepository.findById(id).ifPresent(paatos -> {
                 String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
-                EmailMessageDto viesti = luoViesti(paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi);
-                Stream.concat(Stream.of(rekisterointi.kayttaja.sahkoposti), rekisterointi.sahkopostit.stream())
-                        .distinct()
-                        .map(sahkoposti -> EmailDto.builder()
-                                .email(sahkoposti)
-                                .message(viesti)
-                                .build())
-                        .forEach(email -> viestintaClient.save(email, false));
+                EmailDto email = EmailDto.builder()
+                        .emails(rekisterointi.sahkopostit)
+                        .message(luoViesti(paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi))
+                        .build();
+                viestintaClient.save(email, false);
             });
         });
     }
