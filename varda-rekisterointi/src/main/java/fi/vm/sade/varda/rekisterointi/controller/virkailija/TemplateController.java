@@ -28,12 +28,15 @@ public class TemplateController {
     private static Map<String, Object> getDefaultVariables(Template template) {
         switch (template) {
             case REKISTEROITYMINEN_KAYTTAJA:
+                return Map.of("organisaatioNimi", "Päiväkoti oy");
             case REKISTEROITYMINEN_PAAKAYTTAJA:
-                return Map.of("etunimi", "Ella", "sukunimi", "Esimerkki");
+                return Map.of("etunimi", "Ella");
             case REKISTEROITYMINEN_KUNTA:
                 return Map.of("organisaatioLkm", 19);
             case REKISTEROITYMINEN_HYLATTY:
-                return Map.of("perustelu", "Väärä kunta");
+                return Map.of("organisaatioNimi", "Päiväkoti oy", "perustelu", "Väärä kunta");
+            case REKISTEROITYMINEN_HYVAKSYTTY:
+                return Map.of("organisaatioNimi", "Päiväkoti oy");
             default:
                 return emptyMap();
         }

@@ -5,10 +5,8 @@
 </head>
 <body>
 <div layout:fragment="sisalto">
-    <span th:text="#{hei}">Hei</span>
-    <span th:text="${etunimi}">etunimi</span>
-    <span th:text="${sukunimi}">sukunimi</span>,<br>
-    <span th:text="#{rekisteroityminen.kayttaja.teksti}">teksti</span>
+    <span th:text="#{hei}">Hei</span>,<br>
+    <span th:text="#{rekisteroityminen.kayttaja.teksti(${organisaatioNimi})}">teksti</span>
     <p th:text="#{rekisteroityminen.kayttaja.lisatieto}">lisätieto</p>
 </div>
 </body>

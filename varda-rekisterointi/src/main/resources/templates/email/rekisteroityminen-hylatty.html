@@ -6,7 +6,7 @@
 <body>
 <div layout:fragment="sisalto">
     <span th:text="#{hei}">Hei</span>,<br>
-    <span th:text="#{rekisteroityminen.hylatty.teksti(${perustelu})}">teksti</span>
+    <span th:text="#{rekisteroityminen.hylatty.teksti(${organisaatioNimi},${perustelu})}">teksti</span>
     <p th:text="#{rekisteroityminen.hylatty.lisatieto}">lisätieto</p>
 </div>
 </body>

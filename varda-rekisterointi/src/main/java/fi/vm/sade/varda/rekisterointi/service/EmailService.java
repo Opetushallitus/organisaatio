@@ -44,7 +44,7 @@ public class EmailService {
     private void lahetaRekisterointiEmail(Kayttaja kayttaja) {
         Locale locale = new Locale(kayttaja.asiointikieli);
         String body = templateService.getContent(Template.REKISTEROITYMINEN_PAAKAYTTAJA, locale,
-                Map.of("etunimi", kayttaja.etunimi, "sukunimi", kayttaja.sukunimi));
+                Map.of("etunimi", kayttaja.etunimi));
         EmailDto email = EmailDto.builder()
                 .email(kayttaja.sahkoposti)
                 .message(EmailMessageDto.builder()
@@ -59,7 +59,8 @@ public class EmailService {
     public void lahetaPaatosEmail(long id) {
         rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
             paatosRepository.findById(id).ifPresent(paatos -> {
-                EmailMessageDto viesti = luoViesti(paatos, new Locale(rekisterointi.kayttaja.asiointikieli));
+                String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
+                EmailMessageDto viesti = luoViesti(paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi);
                 Stream.concat(Stream.of(rekisterointi.kayttaja.sahkoposti), rekisterointi.sahkopostit.stream())
                         .distinct()
                         .map(sahkoposti -> EmailDto.builder()
@@ -71,18 +72,19 @@ public class EmailService {
         });
     }
 
-    private EmailMessageDto luoViesti(Paatos paatos, Locale locale) {
+    private EmailMessageDto luoViesti(Paatos paatos, Locale locale, String organisaatioNimi) {
         if (paatos.hyvaksytty) {
             return EmailMessageDto.builder()
                     .subject(messageSource.getMessage("rekisteroityminen.hyvaksytty.otsikko", null, locale))
-                    .body(templateService.getContent(Template.REKISTEROITYMINEN_HYVAKSYTTY, locale))
+                    .body(templateService.getContent(Template.REKISTEROITYMINEN_HYVAKSYTTY, locale,
+                            Map.of("organisaatioNimi", organisaatioNimi)))
                     .html(true)
                     .build();
         }
         return EmailMessageDto.builder()
                 .subject(messageSource.getMessage("rekisteroityminen.hylatty.otsikko", null, locale))
                 .body(templateService.getContent(Template.REKISTEROITYMINEN_HYLATTY, locale,
-                        Map.of("perustelu", paatos.perustelu)))
+                        Map.of("organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu)))
                 .html(true)
                 .build();
     }

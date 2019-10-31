@@ -6,7 +6,7 @@
 <body>
 <div layout:fragment="sisalto">
     <span th:text="#{hei}">Hei</span>,<br>
-    <span th:text="#{rekisteroityminen.hyvaksytty.teksti}">teksti</span>
+    <span th:text="#{rekisteroityminen.hyvaksytty.teksti(${organisaatioNimi})}">teksti</span>
     <p th:text="#{rekisteroityminen.hyvaksytty.lisatieto}">lisätieto</p>
 </div>
 </body>
