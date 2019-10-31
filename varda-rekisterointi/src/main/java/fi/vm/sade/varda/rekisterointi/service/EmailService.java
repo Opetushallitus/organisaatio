@@ -38,7 +38,21 @@ public class EmailService {
     }
 
     private void lahetaRekisterointiEmail(Rekisterointi rekisterointi) {
-        // TODO: KJHH-1725
+        EmailDto email = EmailDto.builder()
+                .emails(rekisterointi.sahkopostit)
+                .message(luoViesti(rekisterointi, new Locale("fi")))
+                .build();
+        viestintaClient.save(email, false);
+    }
+
+    private EmailMessageDto luoViesti(Rekisterointi rekisterointi, Locale locale) {
+        String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
+        return EmailMessageDto.builder()
+                .subject(messageSource.getMessage("rekisteroityminen.kayttaja.otsikko", null, locale))
+                .body(templateService.getContent(Template.REKISTEROITYMINEN_KAYTTAJA, locale,
+                        Map.of("organisaatioNimi", organisaatioNimi)))
+                .html(true)
+                .build();
     }
 
     private void lahetaRekisterointiEmail(Kayttaja kayttaja) {
