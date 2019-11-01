@@ -87,7 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(ophProperties.getProperty("cas.base") + "/j_spring_cas_security_check");
+        serviceProperties.setService(ophProperties.getProperty("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
         serviceProperties.setSendRenew(Boolean.parseBoolean(ophProperties.getProperty("cas.send-renew")));
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
@@ -106,7 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public Filter virkailijaAuthenticationProcessingFilter() throws Exception {
         OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
+        casAuthenticationFilter.setFilterProcessesUrl("/virkailija/j_spring_cas_security_check");
         return casAuthenticationFilter;
     }
 
