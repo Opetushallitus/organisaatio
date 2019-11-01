@@ -22,6 +22,7 @@ spring:
 varda-rekisterointi:
   url-virkailija: http://localhost:${server.port}
   url-tunnistus: http://localhost:${server.port}
+  url-alb: http://localhost:${server.port}
   service:
     username: varda-rekisterointi
     password: varda-rekisterointi
