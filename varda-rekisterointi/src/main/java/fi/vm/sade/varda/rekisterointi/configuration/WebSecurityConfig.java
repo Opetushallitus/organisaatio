@@ -27,6 +27,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
@@ -62,6 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().csrf().disable();
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
+        http.requestCache().requestCache(requestCache);
         http.authorizeRequests()
                 .antMatchers(HAKIJA_PATH_CLOB).hasRole(HAKIJA_ROLE)
                 .antMatchers(VIRKAILIJA_PATH_CLOB).hasRole(VIRKAILIJA_ROLE)
