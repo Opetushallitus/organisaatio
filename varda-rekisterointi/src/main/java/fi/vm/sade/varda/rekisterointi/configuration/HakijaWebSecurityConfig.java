@@ -1,18 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
-import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.NameContainer;
-import fi.vm.sade.varda.rekisterointi.util.Constants;
-import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,7 +21,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -46,17 +38,16 @@ import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttrib
 import static java.util.Collections.singletonList;
 
 @Configuration
+@Order(2)
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String HAKIJA_ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
-    private static final String VIRKAILIJA_ROLE = "APP_YKSITYISTEN_REKISTEROITYMINEN_CRUD";
     private static final String HAKIJA_PATH_CLOB = "/hakija/**";
-    private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
     private final OphProperties ophProperties;
 
-    public WebSecurityConfig(OphProperties ophProperties) {
+    public HakijaWebSecurityConfig(OphProperties ophProperties) {
         this.ophProperties = ophProperties;
     }
 
@@ -68,33 +59,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.requestCache().requestCache(requestCache);
         http.authorizeRequests()
                 .antMatchers(HAKIJA_PATH_CLOB).hasRole(HAKIJA_ROLE)
-                .antMatchers(VIRKAILIJA_PATH_CLOB).hasRole(VIRKAILIJA_ROLE)
                 .and()
                 .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(virkailijaAuthenticationProcessingFilter(), ShibbolethAuthenticationFilter.class)
                 .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(
-                        hakijaAuthenticationEntryPoint(),
-                        new AntPathRequestMatcher(HAKIJA_PATH_CLOB))
-                .defaultAuthenticationEntryPointFor(
-                        virkailijaAuthenticationEntryPoint(),
-                        new AntPathRequestMatcher(VIRKAILIJA_PATH_CLOB)
-                );
+                .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(hakijaAuthenticationProvider());
-        auth.authenticationProvider(virkailijaAuthenticationProvider());
-    }
-
-    @Bean
-    public ServiceProperties serviceProperties() {
-        ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(ophProperties.getProperty("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
-        serviceProperties.setSendRenew(false);
-        serviceProperties.setAuthenticateAllArtifacts(true);
-        return serviceProperties;
     }
 
     @Bean
@@ -107,26 +80,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public Filter virkailijaAuthenticationProcessingFilter() throws Exception {
-        OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
-        casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl("/virkailija/j_spring_cas_security_check");
-        return casAuthenticationFilter;
-    }
-
-    @Bean
     public AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
         String loginCallbackUrl = ophProperties.url("varda-rekisterointi.hakija.login");
         String defaultLoginUrl = ophProperties.url("shibbolethVirkailija.login", "FI", loginCallbackUrl);
         return new AuthenticationEntryPointImpl(defaultLoginUrl, ophProperties, loginCallbackUrl);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint virkailijaAuthenticationEntryPoint() {
-        CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl(ophProperties.url("cas.login"));
-        casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
-        return casAuthenticationEntryPoint;
     }
 
     private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
@@ -154,24 +111,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
         return authenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationProvider virkailijaAuthenticationProvider() {
-        CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        String host = ophProperties.url("kayttooikeus-service.host");
-        casAuthenticationProvider.setUserDetailsService(new OphUserDetailsServiceImpl(host, Constants.CALLER_ID));
-        casAuthenticationProvider.setServiceProperties(serviceProperties());
-        casAuthenticationProvider.setTicketValidator(ticketValidator());
-        casAuthenticationProvider.setKey("varda-rekisterointi");
-        return casAuthenticationProvider;
-    }
-
-    @Bean
-    public TicketValidator ticketValidator() {
-        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(ophProperties.url("cas.base"));
-        ticketValidator.setAcceptAnyProxy(true);
-        return ticketValidator;
     }
 
     private static class ShibbolethAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
