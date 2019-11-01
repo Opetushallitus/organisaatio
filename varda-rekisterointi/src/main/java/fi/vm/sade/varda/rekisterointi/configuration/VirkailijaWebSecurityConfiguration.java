@@ -1,9 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
-import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.varda.rekisterointi.util.Constants;
 import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
@@ -17,23 +15,27 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
+
+import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
 
 @Configuration
 @Order(1)
 @EnableWebSecurity
 public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String VIRKAILIJA_ROLE = "APP_YKSITYISTEN_REKISTEROITYMINEN_CRUD";
     private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
     private final OphProperties ophProperties;
+    private final UserDetailsService userDetailsService;
 
-    VirkailijaWebSecurityConfiguration(OphProperties ophProperties) {
+    VirkailijaWebSecurityConfiguration(OphProperties ophProperties, UserDetailsService userDetailsService) {
         this.ophProperties = ophProperties;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -80,8 +82,7 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     @Bean
     public AuthenticationProvider virkailijaAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        String host = ophProperties.url("kayttooikeus-service.host");
-        casAuthenticationProvider.setUserDetailsService(new OphUserDetailsServiceImpl(host, Constants.CALLER_ID));
+        casAuthenticationProvider.setUserDetailsService(userDetailsService);
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
         casAuthenticationProvider.setKey("varda-rekisterointi");
