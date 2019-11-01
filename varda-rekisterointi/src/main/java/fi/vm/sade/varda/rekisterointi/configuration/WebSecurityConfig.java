@@ -88,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
         serviceProperties.setService(ophProperties.getProperty("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
-        serviceProperties.setSendRenew(Boolean.parseBoolean(ophProperties.getProperty("cas.send-renew")));
+        serviceProperties.setSendRenew(false);
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -159,7 +159,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setUserDetailsService(new OphUserDetailsServiceImpl(host, Constants.CALLER_ID));
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
-        casAuthenticationProvider.setKey(ophProperties.getProperty("cas.key"));
+        casAuthenticationProvider.setKey("varda-rekisterointi");
         return casAuthenticationProvider;
     }
 
