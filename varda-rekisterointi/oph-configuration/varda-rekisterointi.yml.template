@@ -1,3 +1,5 @@
+logging:
+    config: {{ varda_rekisterointi_logging_config }}
 server:
     port: 8080
     servlet:
