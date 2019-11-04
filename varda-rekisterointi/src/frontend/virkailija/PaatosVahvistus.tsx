@@ -1,7 +1,8 @@
 import React, {useContext} from "react";
 import Axios from "axios";
 import {LanguageContext} from '../contexts';
-//import Button from "@opetushallitus/virkailija-ui-components/Button";
+import Box from "@opetushallitus/virkailija-ui-components/Box";
+import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Modal from "@opetushallitus/virkailija-ui-components/Modal"
 import ModalBody from "@opetushallitus/virkailija-ui-components/ModalBody"
 import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
@@ -33,6 +34,7 @@ export default function PaatosVahvistus({ valitut, hyvaksy, nayta, tyhjennaValin
         try {
             const response = await Axios.post(paatoksetBatchUrl, paatokset);
             tyhjennaValinnatCallback();
+            suljeCallback();
         } catch (e) {
             // TODO: virheenkäsittely
             console.log(e);
@@ -46,7 +48,10 @@ export default function PaatosVahvistus({ valitut, hyvaksy, nayta, tyhjennaValin
                 Blabla!
             </ModalBody>
             <ModalFooter>
-                Yadda yadda!
+                <Box display="flex" justifyContent="flex-end">
+                    <Button variant="text" onClick={suljeCallback}>{i18n.translate('REKISTEROINTI_PERUUTA')}</Button>
+                    <Button onClick={laheta}>{i18n.translate('REKISTEROINTI_LAHETA')}</Button>
+                </Box>
             </ModalFooter>
         </Modal>
     );
