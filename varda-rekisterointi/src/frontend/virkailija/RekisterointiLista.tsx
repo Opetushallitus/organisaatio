@@ -84,7 +84,10 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
             }
                 </tbody>
             </table>
-            <PaatosKontrollit valitut={valitutHakemukset} tyhjennaValinnatCallback={tyhjennaValinnat} />
+            {
+                tila === Tila.KASITTELYSSA &&
+                <PaatosKontrollit valitut={valitutHakemukset} tyhjennaValinnatCallback={tyhjennaValinnat} />
+            }
         </Box>
     )
 }

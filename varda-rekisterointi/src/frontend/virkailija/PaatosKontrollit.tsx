@@ -1,14 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
-import Axios from "axios";
 import {LanguageContext} from '../contexts';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
-
-const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
-
-type PaatosBatch = {
-    hyvaksytty: boolean
-    hakemukset: number[]
-}
+import PaatosVahvistus from "./PaatosVahvistus";
 
 type Props = {
     valitut: number[]
@@ -18,23 +11,12 @@ type Props = {
 export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [kaytossa, asetaKaytossa] = useState(false);
+    const [hyvaksytty, asetaHyvaksytty] = useState(false);
+    const [naytaVahvistus, asetaNaytaVahvistus] = useState(false);
 
-    function paatos(hyvaksytty: boolean) {
-        const batch = {
-            hyvaksytty,
-            hakemukset: valitut
-        };
-        laheta(batch);
-    }
-
-    async function laheta(paatokset: PaatosBatch) {
-        try {
-            const response = await Axios.post(paatoksetBatchUrl, paatokset);
-            tyhjennaValinnatCallback();
-        } catch (e) {
-            // TODO: virheenkäsittely
-            console.log(e);
-        }
+    function vahvista(hyvaksytty: boolean) {
+        asetaNaytaVahvistus(true);
+        asetaHyvaksytty(hyvaksytty);
     }
 
     useEffect(() => {
@@ -43,12 +25,17 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
 
     return (
         <div>
-            <Button disabled={!kaytossa} onClick={_ => paatos(false)}>
+            <Button disabled={!kaytossa} onClick={_ => vahvista(false)}>
                 {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
             </Button>
-            <Button disabled={!kaytossa} onClick={_ => paatos(true)}>
+            <Button disabled={!kaytossa} onClick={_ => vahvista(true)}>
                 {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
+            <PaatosVahvistus valitut={valitut}
+                             hyvaksy={hyvaksytty}
+                             nayta={naytaVahvistus}
+                             tyhjennaValinnatCallback={tyhjennaValinnatCallback}
+                             suljeCallback={() => asetaNaytaVahvistus(false)}/>
         </div>
     );
 }
