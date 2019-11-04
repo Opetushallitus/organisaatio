@@ -12,9 +12,10 @@ type PaatosBatch = {
 
 type Props = {
     valitut: number[]
+    tyhjennaValinnatCallback: () => void
 }
 
-export default function PaatosKontrollit({ valitut }: Props) {
+export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [kaytossa, asetaKaytossa] = useState(false);
 
@@ -29,8 +30,9 @@ export default function PaatosKontrollit({ valitut }: Props) {
     async function laheta(paatokset: PaatosBatch) {
         try {
             const response = await Axios.post(paatoksetBatchUrl, paatokset);
-            console.log(response);
+            tyhjennaValinnatCallback();
         } catch (e) {
+            // TODO: virheenkäsittely
             console.log(e);
         }
     }

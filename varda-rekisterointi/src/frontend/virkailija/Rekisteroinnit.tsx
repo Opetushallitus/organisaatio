@@ -35,7 +35,6 @@ export default function Rekisteroinnit() {
     }
 
     function vaihdaHakutermi(uusiHakutermi: string) {
-        console.log(`Hakutermi: ${uusiHakutermi}`);
         asetaHakutermiInput(uusiHakutermi);
     }
 

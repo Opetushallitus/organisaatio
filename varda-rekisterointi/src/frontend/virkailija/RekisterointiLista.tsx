@@ -56,6 +56,10 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         asetaValitutHakemukset(valittu ? valitutHakemukset.filter(h => h !== id) : valitutHakemukset.concat(id));
     }
 
+    function tyhjennaValinnat() {
+        vaihdaKaikkiValittu(false);
+    }
+
     if (latausKesken) {
         return <Spin />;
     }
@@ -80,7 +84,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
             }
                 </tbody>
             </table>
-            <PaatosKontrollit valitut={valitutHakemukset}/>
+            <PaatosKontrollit valitut={valitutHakemukset} tyhjennaValinnatCallback={tyhjennaValinnat} />
         </Box>
     )
 }
