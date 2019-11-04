@@ -72,6 +72,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         <Box>
             <table className={styles.vardaRekisterointiLista}>
             <RekisterointiListaOtsikko
+                valintaKaytossa={tila === Tila.KASITTELYSSA}
                 kaikkiValittu={kaikkiValittu}
                 kaikkiValittuCallback={vaihdaKaikkiValittu}/>
                 <tbody>
@@ -79,6 +80,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 rekisteroinnit.map(rekisterointi =>
                     <RekisterointiListaRivi key={rekisterointi.id}
                                             rekisterointi={new ListaRivi(rekisterointi)}
+                                            valintaKaytossa={tila === Tila.KASITTELYSSA}
                                             riviValittu={valitutHakemukset.some(h => h === rekisterointi.id)}
                                             valitseHakemusCallback={vaihdaHakemusValittu}/>)
             }
