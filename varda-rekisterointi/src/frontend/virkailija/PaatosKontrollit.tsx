@@ -1,6 +1,14 @@
 import React, {useContext, useEffect, useState} from "react";
+import Axios from "axios";
 import {LanguageContext} from '../contexts';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
+
+const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
+
+type PaatosBatch = {
+    hyvaksytty: boolean
+    hakemukset: number[]
+}
 
 type Props = {
     valitut: number[]
@@ -10,12 +18,21 @@ export default function PaatosKontrollit({ valitut }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [kaytossa, asetaKaytossa] = useState(false);
 
-    function hylkaa() {
-
+    function paatos(hyvaksytty: boolean) {
+        const batch = {
+            hyvaksytty,
+            hakemukset: valitut
+        };
+        laheta(batch);
     }
 
-    function hyvaksy() {
-
+    async function laheta(paatokset: PaatosBatch) {
+        try {
+            const response = await Axios.post(paatoksetBatchUrl, paatokset);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     useEffect(() => {
@@ -24,10 +41,10 @@ export default function PaatosKontrollit({ valitut }: Props) {
 
     return (
         <div>
-            <Button disabled={!kaytossa} onClick={hylkaa}>
+            <Button disabled={!kaytossa} onClick={_ => paatos(false)}>
                 {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
             </Button>
-            <Button disabled={!kaytossa} onClick={hyvaksy}>
+            <Button disabled={!kaytossa} onClick={_ => paatos(true)}>
                 {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
         </div>

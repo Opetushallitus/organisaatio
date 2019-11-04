@@ -38,7 +38,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 asetaRekisteroinnit(response.data);
             } catch (e) {
                 asetaLatausVirhe(true);
-                console.error(e);
+                console.error(e); // TODO: vain dev modessa?
             } finally {
                 asetaLatausKesken(false);
             }
