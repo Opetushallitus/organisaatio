@@ -28,6 +28,7 @@ spring:
 varda-rekisterointi:
     url-virkailija: https://{{ host_virkailija }}
     url-tunnistus: https://{{ host_tunnistus }}
+    url-alb: {{ host_alb }}
     service:
         username: {{ varda_rekisterointi_service_username }}
         password: {{ varda_rekisterointi_service_password }}

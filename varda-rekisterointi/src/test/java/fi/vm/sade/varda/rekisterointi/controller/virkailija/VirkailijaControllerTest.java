@@ -2,9 +2,7 @@ package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
-import fi.vm.sade.varda.rekisterointi.model.Paatos;
-import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
-import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,17 +11,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static fi.vm.sade.varda.rekisterointi.controller.virkailija.WithMockVirkailijaUser.MOCK_VIRKAILIJA_OID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,12 +34,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class VirkailijaControllerTest {
 
-    private static final Paatos TESTI_PAATOS = new Paatos(
+    private static final PaatosDto TESTI_PAATOS_DTO = new PaatosDto(
             1L,
             true,
-            LocalDateTime.now(),
-            2L,
             "Ihan okei."
+    );
+    private static final PaatosBatch TESTI_PAATOS_BATCH = new PaatosBatch(
+            true,
+            "Tosi kiva!",
+            List.of(1L)
     );
 
     @Autowired
@@ -49,6 +55,15 @@ public class VirkailijaControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithAnonymousUser
+    public void unauthorizedRedirectsToLogin() throws Exception {
+        mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH + "?tila={tila}", Rekisterointi.Tila.KASITTELYSSA.toString())
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isFound());
+    }
+
+    @Test
+    @WithMockVirkailijaUser
     public void listaaRekisteroinnitReturnsOk() throws Exception {
         when(rekisterointiService.listByTilaAndOrganisaatio(Rekisterointi.Tila.KASITTELYSSA, null))
                 .thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
@@ -58,21 +73,33 @@ public class VirkailijaControllerTest {
     }
 
     @Test
-    public void luoPaatosReturnsOk() throws Exception {
+    @WithMockVirkailijaUser
+    public void luoPaatosReturnsCreated() throws Exception {
         Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withTila(Rekisterointi.Tila.HYVAKSYTTY);
-        when(rekisterointiService.resolve(TESTI_PAATOS)).thenReturn(resolved);
+        when(rekisterointiService.resolve(MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO)).thenReturn(resolved);
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(TESTI_PAATOS))
-        ).andExpect(status().isOk());
+                .content(objectMapper.writeValueAsString(TESTI_PAATOS_DTO))
+        ).andExpect(status().isCreated());
     }
 
     @Test
+    @WithMockVirkailijaUser
     public void luoPaatosReturnsBadRequestOnInvalidRekisterointiId() throws Exception {
-        when(rekisterointiService.resolve(TESTI_PAATOS)).thenThrow(new InvalidInputException("Ouch!"));
+        when(rekisterointiService.resolve(MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO)).thenThrow(new InvalidInputException("Ouch!"));
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(TESTI_PAATOS))
+                .content(objectMapper.writeValueAsString(TESTI_PAATOS_DTO))
         ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockVirkailijaUser
+    public void luoPaatoksetReturnsCreated() throws Exception {
+        doNothing().when(rekisterointiService).resolveBatch(anyString(), any(PaatosBatch.class));
+        mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_BATCH_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TESTI_PAATOS_BATCH))
+        ).andExpect(status().isCreated());
     }
 }

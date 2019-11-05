@@ -1,28 +1,29 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
-import fi.vm.sade.varda.rekisterointi.model.Paatos;
-import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
 @RestController
+@PreAuthorize("hasAnyRole('ROLE_APP_YKSITYISTEN_REKISTEROITYMINEN_CRUD')")
 @RequestMapping(VirkailijaController.BASE_PATH)
 @RequiredArgsConstructor
 public class VirkailijaController {
-    // TODO: rajaa pääsy ainoastaan virkailijoille
 
     static final String BASE_PATH = "/virkailija/api";
     static final String ORGANISAATIOT_PATH = "/organisaatiot";
     static final String REKISTEROINNIT_PATH = "/rekisteroinnit";
     static final String PAATOKSET_PATH = "/paatokset";
+    static final String PAATOKSET_BATCH_PATH = PAATOKSET_PATH + "/batch";
 
     private final OrganisaatioClient organisaatioClient;
     private final OrganisaatioService organisaatioService;
@@ -48,7 +49,14 @@ public class VirkailijaController {
     }
 
     @PostMapping(PAATOKSET_PATH)
-    public Rekisterointi luoPaatos(@RequestBody @Validated Paatos paatos) {
-        return rekisterointiService.resolve(paatos);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Rekisterointi luoPaatos(Authentication authentication, @RequestBody @Validated PaatosDto paatos) {
+        return rekisterointiService.resolve(authentication.getName(), paatos);
+    }
+
+    @PostMapping(PAATOKSET_BATCH_PATH)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void luoPaatokset(Authentication authentication, @RequestBody @Validated PaatosBatch paatokset) {
+        rekisterointiService.resolveBatch(authentication.getName(), paatokset);
     }
 }

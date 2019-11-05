@@ -38,7 +38,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 asetaRekisteroinnit(response.data);
             } catch (e) {
                 asetaLatausVirhe(true);
-                console.error(e);
+                console.error(e); // TODO: vain dev modessa?
             } finally {
                 asetaLatausKesken(false);
             }
@@ -56,6 +56,10 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         asetaValitutHakemukset(valittu ? valitutHakemukset.filter(h => h !== id) : valitutHakemukset.concat(id));
     }
 
+    function tyhjennaValinnat() {
+        vaihdaKaikkiValittu(false);
+    }
+
     if (latausKesken) {
         return <Spin />;
     }
@@ -68,6 +72,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         <Box>
             <table className={styles.vardaRekisterointiLista}>
             <RekisterointiListaOtsikko
+                valintaKaytossa={tila === Tila.KASITTELYSSA}
                 kaikkiValittu={kaikkiValittu}
                 kaikkiValittuCallback={vaihdaKaikkiValittu}/>
                 <tbody>
@@ -75,12 +80,16 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 rekisteroinnit.map(rekisterointi =>
                     <RekisterointiListaRivi key={rekisterointi.id}
                                             rekisterointi={new ListaRivi(rekisterointi)}
+                                            valintaKaytossa={tila === Tila.KASITTELYSSA}
                                             riviValittu={valitutHakemukset.some(h => h === rekisterointi.id)}
                                             valitseHakemusCallback={vaihdaHakemusValittu}/>)
             }
                 </tbody>
             </table>
-            <PaatosKontrollit valitut={valitutHakemukset}/>
+            {
+                tila === Tila.KASITTELYSSA &&
+                <PaatosKontrollit valitut={valitutHakemukset} tyhjennaValinnatCallback={tyhjennaValinnat} />
+            }
         </Box>
     )
 }

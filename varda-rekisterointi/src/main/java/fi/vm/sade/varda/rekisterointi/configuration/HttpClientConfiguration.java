@@ -12,10 +12,10 @@ import fi.vm.sade.suomifi.valtuudet.ValtuudetProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static fi.vm.sade.varda.rekisterointi.util.Constants.CALLER_ID;
+
 @Configuration
 public class HttpClientConfiguration {
-
-    private static final String CALLER_ID = "1.2.246.562.10.00000000001.varda-rekisterointi";
 
     @Bean
     public OphHttpClient httpClient() {

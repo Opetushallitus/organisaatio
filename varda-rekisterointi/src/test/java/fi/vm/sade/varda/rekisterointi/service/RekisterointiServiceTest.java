@@ -18,12 +18,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 public class RekisterointiServiceTest {
@@ -39,6 +39,7 @@ public class RekisterointiServiceTest {
 
     private static final Long SAVED_REKISTEROINTI_ID = 1L;
     private static final Long INVALID_REKISTEROINTI_ID = 2L;
+    private static final String PAATTAJA_OID = "1.234.56789";
     private static final Rekisterointi SAVED_REKISTEROINTI = new Rekisterointi(
             SAVED_REKISTEROINTI_ID,
             Organisaatio.of(
@@ -67,7 +68,7 @@ public class RekisterointiServiceTest {
             SAVED_REKISTEROINTI_ID,
             false,
             LocalDateTime.now(),
-            1L,
+            PAATTAJA_OID,
             null
     );
 
@@ -107,27 +108,38 @@ public class RekisterointiServiceTest {
 
     @Test(expected = InvalidInputException.class)
     public void resolveThrowsOnInvalidRekisterointiId() {
-        Paatos paatos = new Paatos(
+        PaatosDto paatos = new PaatosDto(
                 INVALID_REKISTEROINTI_ID,
                 true,
-                LocalDateTime.now(),
-                1L,
                 "Miksipä ei?"
         );
-        rekisterointiService.resolve(paatos);
+        rekisterointiService.resolve(PAATTAJA_OID, paatos);
     }
 
     @Test
-    public void resolveSavesPaatosWithRekisterointi() {
-        Paatos paatos = new Paatos(
+    public void resolveSavesPaatosAndUpdatesRekisterointiTila() {
+        PaatosDto paatos = new PaatosDto(
                 SAVED_REKISTEROINTI_ID,
                 false,
-                LocalDateTime.now(),
-                1L,
                 "Rekisteröinti tehty 110% väärin."
         );
         Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYLATTY);
-        rekisterointiService.resolve(paatos);
+        rekisterointiService.resolve(PAATTAJA_OID, paatos);
         verify(rekisterointiRepository).save(expected);
+        verify(paatosRepository).save(any(Paatos.class));
+    }
+
+    @Test
+    public void resolveBatchSavesEachPaatosAndUpdatesRekisterointiTila() {
+        List<Long> hakemusTunnukset = List.of(1L, 1L);
+        PaatosBatch paatokset = new PaatosBatch(
+                true,
+                "OK!",
+                hakemusTunnukset
+        );
+        Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYVAKSYTTY);
+        rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset);
+        verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(expected);
+        verify(paatosRepository, times(hakemusTunnukset.size())).save(any(Paatos.class));
     }
 }

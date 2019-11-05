@@ -4,18 +4,25 @@ import com.github.kagkarlsson.scheduler.SchedulerClient;
 import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
+import fi.vm.sade.varda.rekisterointi.model.PaatosBatch;
+import fi.vm.sade.varda.rekisterointi.model.PaatosDto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
 public class RekisterointiService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiService.class);
 
     private final RekisterointiRepository rekisterointiRepository;
     private final PaatosRepository paatosRepository;
@@ -47,18 +54,33 @@ public class RekisterointiService {
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi);
         String taskId = String.format("%s-%d", rekisterointiEmailTask.getName(), saved.id);
         schedulerClient.schedule(rekisterointiEmailTask.instance(taskId, saved.id), Instant.now());
+        LOGGER.info("Rekisteröinti luotu tunnuksella: {}", saved.id);
         return saved.id;
     }
 
-    public Rekisterointi resolve(Paatos paatos) {
+    public Rekisterointi resolve(String paattajaOid, PaatosDto paatosDto) {
+        Paatos paatos = new Paatos(paatosDto.rekisterointi, paatosDto.hyvaksytty, LocalDateTime.now(),paattajaOid, paatosDto.perustelu);
         Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
                 () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
         paatosRepository.save(paatos);
+        LOGGER.info("Päätös tallennettu rekisteröinnille: {}", rekisterointi.id);
         Rekisterointi saved = rekisterointiRepository.save(
                 rekisterointi.withTila(paatos.hyvaksytty ? Rekisterointi.Tila.HYVAKSYTTY : Rekisterointi.Tila.HYLATTY));
+        LOGGER.debug("Rekisteröinnin {} tila päivitetty: {}", saved.id, saved.tila);
         String taskId = String.format("%s-%d", paatosEmailTask.getName(), saved.id);
         schedulerClient.schedule(paatosEmailTask.instance(taskId, saved.id), Instant.now());
         return saved;
+    }
+
+    public void resolveBatch(String paattajaOid, PaatosBatch paatokset) {
+        paatokset.hakemukset.forEach(id -> resolve(
+                paattajaOid,
+                new PaatosDto(
+                        id,
+                        paatokset.hyvaksytty,
+                        paatokset.perustelu
+                )
+        ));
     }
 
 }
