@@ -32,7 +32,7 @@ export default function PaatosVahvistus({ valitut, hyvaksy, nayta, tyhjennaValin
             hakemukset: valitut
         };
         try {
-            const response = await Axios.post(paatoksetBatchUrl, paatokset);
+            await Axios.post(paatoksetBatchUrl, paatokset);
             tyhjennaValinnatCallback();
             suljeCallback();
         } catch (e) {
