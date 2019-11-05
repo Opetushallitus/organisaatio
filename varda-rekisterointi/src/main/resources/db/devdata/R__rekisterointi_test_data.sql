@@ -14,13 +14,24 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      0,
      '0000000-0',
      CURRENT_DATE,
-     'toiminimi',
+     'yritysmuoto_26',
      '{"organisaatiotyyppi_07"}',
-     'Helsinki',
-     'Suomi',
+     'kunta_091',
+     'maatjavaltiot1_fin',
      'Testiyritys',
      CURRENT_DATE
  );
+
+INSERT INTO yhteystiedot (
+    rekisterointi_id, puhelinnumero, sahkoposti, posti_katuosoite, posti_postinumero_uri, posti_postitoimipaikka,
+    kaynti_katuosoite, kaynti_postinumero_uri, kaynti_postitoimipaikka
+) VALUES (
+    0,
+    '+358101234567',
+    'testi.yritys@testiyrit.ys',
+    'Haapaniemenkatu 14', 'posti_00530', 'kunta_091',
+    'Haapaniemenkatu 14', 'posti_00530', 'kunta_091'
+);
 
 INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saateteksti, rekisterointi)
  VALUES (

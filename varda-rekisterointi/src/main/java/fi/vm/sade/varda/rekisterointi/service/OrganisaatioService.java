@@ -1,14 +1,12 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.varda.rekisterointi.model.KielistettyNimi;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioNimi;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -22,6 +20,10 @@ public class OrganisaatioService {
             "kieli_sv#1", "sv",
             "kieli_en#1", "en"
     );
+    private static final List<String> HALUTUT_OSOITETYYPIT = List.of(
+            YhteystietoDto.OSOITETYYPPI_POSTI,
+            YhteystietoDto.OSOITETYYPPI_KAYNTI
+    );
 
     public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
         return Organisaatio.of(
@@ -33,7 +35,8 @@ public class OrganisaatioService {
                 dto.tyypit,
                 dto.kotipaikkaUri,
                 dto.maaUri,
-                dto.kieletUris);
+                dto.kieletUris,
+                muunnaYhteystiedot(dto));
     }
 
     public OrganisaatioV4Dto muunnaOrganisaatio(Organisaatio organisaatio) {
@@ -62,7 +65,7 @@ public class OrganisaatioService {
                     return nimi1;
                 })
                 .orElseThrow(() -> new IllegalStateException("Ei voimassa olevaa nimeä organisaatiolle: " + dto.ytunnus));
-        String ytjKieli = dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_KIELI_KOODI_URI_VERSION;
+        String ytjKieli = ytjKieliTaiOletusKieli(dto);
         String kieli = kieliKoodiUriVersionToKoodiArvo(ytjKieli);
         String ytjKielinen = kurantti.nimi.getOrDefault(kieli, kurantti.nimi.get(DEFAULT_KIELI_KOODI_ARVO));
         if (ytjKielinen == null) {
@@ -78,6 +81,10 @@ public class OrganisaatioService {
         return List.of(organisaatioNimi);
     }
 
+    private static String ytjKieliTaiOletusKieli(OrganisaatioV4Dto dto) {
+        return dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_KIELI_KOODI_URI_VERSION;
+    }
+
     private LocalDate nullSafeDate(LocalDate date) {
         if (date == null) {
             return LocalDate.MIN;
@@ -87,6 +94,24 @@ public class OrganisaatioService {
 
     private static String kieliKoodiUriVersionToKoodiArvo(String koodiUriVersion) {
         return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.getOrDefault(koodiUriVersion, "fi");
+    }
+
+    private static Yhteystiedot muunnaYhteystiedot(OrganisaatioV4Dto dto) {
+        String ytjKieli = ytjKieliTaiOletusKieli(dto);
+        Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = dto.yhteystiedot.stream()
+                .filter(yhteystietoDto -> yhteystietoDto.kieli.equals(ytjKieli)
+                        && HALUTUT_OSOITETYYPIT.contains(yhteystietoDto.osoiteTyyppi))
+                .collect(Collectors.groupingBy(yhteystietoDto -> yhteystietoDto.osoiteTyyppi));
+        return yhteystiedotTyypeittain.getOrDefault(YhteystietoDto.OSOITETYYPPI_POSTI, List.of()).stream()
+                .findAny()
+                .map(yhteystietoDto -> {
+                    Osoite postiosoite = Osoite.builder()
+                            .katuosoite(yhteystietoDto.osoite)
+                            .postinumeroUri(yhteystietoDto.postinumeroUri)
+                            .postitoimipaikka(yhteystietoDto.postitoimipaikka)
+                            .build();
+                    return Yhteystiedot.of(yhteystietoDto.numero, yhteystietoDto.email, postiosoite, Osoite.TYHJA);
+                }).orElse(Yhteystiedot.of("", "", Osoite.TYHJA, Osoite.TYHJA));
     }
 
 }
