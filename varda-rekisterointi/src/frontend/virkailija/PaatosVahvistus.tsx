@@ -17,18 +17,18 @@ type PaatosBatch = {
 
 type Props = {
     valitut: number[]
-    hyvaksy: boolean
+    hyvaksytty: boolean
     nayta: boolean
     tyhjennaValinnatCallback: () => void
     suljeCallback: () => void
 }
 
-export default function PaatosVahvistus({ valitut, hyvaksy, nayta, tyhjennaValinnatCallback, suljeCallback }: Props) {
+export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaValinnatCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
 
     async function laheta() {
-        const paatokset = {
-            hyvaksy,
+        const paatokset: PaatosBatch = {
+            hyvaksytty,
             hakemukset: valitut
         };
         try {
@@ -43,7 +43,7 @@ export default function PaatosVahvistus({ valitut, hyvaksy, nayta, tyhjennaValin
 
     return (
         <Modal open={nayta} onClose={suljeCallback}>
-            <ModalHeader onClose={suljeCallback}>{i18n.translate(hyvaksy ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}</ModalHeader>
+            <ModalHeader onClose={suljeCallback}>{i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}</ModalHeader>
             <ModalBody>
                 Blabla!
             </ModalBody>

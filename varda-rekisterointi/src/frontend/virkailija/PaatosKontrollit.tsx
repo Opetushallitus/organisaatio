@@ -15,8 +15,8 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
     const [naytaVahvistus, asetaNaytaVahvistus] = useState(false);
 
     function vahvista(hyvaksytty: boolean) {
-        asetaNaytaVahvistus(true);
         asetaHyvaksytty(hyvaksytty);
+        asetaNaytaVahvistus(true);
     }
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
                 {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
             <PaatosVahvistus valitut={valitut}
-                             hyvaksy={hyvaksytty}
+                             hyvaksytty={hyvaksytty}
                              nayta={naytaVahvistus}
                              tyhjennaValinnatCallback={tyhjennaValinnatCallback}
                              suljeCallback={() => asetaNaytaVahvistus(false)}/>
