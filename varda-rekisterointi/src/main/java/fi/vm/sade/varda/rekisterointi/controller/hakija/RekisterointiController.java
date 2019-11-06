@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.controller.hakija;
 
+import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import org.springframework.validation.annotation.Validated;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(RekisterointiController.BASE_PATH)
@@ -20,8 +23,8 @@ public class RekisterointiController {
     }
 
     @PostMapping
-    public void register(@RequestBody @Validated Rekisterointi dto) {
-        service.create(dto);
+    public void register(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
+        service.create(dto, RequestContextImpl.of(request));
     }
 
 }

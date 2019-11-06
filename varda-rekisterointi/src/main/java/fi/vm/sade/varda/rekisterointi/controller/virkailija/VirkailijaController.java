@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
+import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
@@ -37,8 +40,8 @@ public class VirkailijaController {
     }
 
     @PostMapping(REKISTEROINNIT_PATH)
-    public void luoRekisterointi(@RequestBody @Validated Rekisterointi dto) {
-        rekisterointiService.create(dto);
+    public void luoRekisterointi(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
+        rekisterointiService.create(dto, RequestContextImpl.of(request));
     }
 
     @GetMapping(REKISTEROINNIT_PATH)
@@ -50,13 +53,13 @@ public class VirkailijaController {
 
     @PostMapping(PAATOKSET_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public Rekisterointi luoPaatos(Authentication authentication, @RequestBody @Validated PaatosDto paatos) {
-        return rekisterointiService.resolve(authentication.getName(), paatos);
+    public Rekisterointi luoPaatos(Authentication authentication, @RequestBody @Validated PaatosDto paatos, HttpServletRequest request) {
+        return rekisterointiService.resolve(authentication.getName(), paatos, RequestContextImpl.of(request));
     }
 
     @PostMapping(PAATOKSET_BATCH_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public void luoPaatokset(Authentication authentication, @RequestBody @Validated PaatosBatch paatokset) {
-        rekisterointiService.resolveBatch(authentication.getName(), paatokset);
+    public void luoPaatokset(Authentication authentication, @RequestBody @Validated PaatosBatch paatokset, HttpServletRequest request) {
+        rekisterointiService.resolveBatch(authentication.getName(), paatokset, RequestContextImpl.of(request));
     }
 }

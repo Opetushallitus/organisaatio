@@ -2,6 +2,8 @@ package fi.vm.sade.varda.rekisterointi.service;
 
 import com.github.kagkarlsson.scheduler.SchedulerClient;
 import com.github.kagkarlsson.scheduler.task.Task;
+import fi.vm.sade.varda.rekisterointi.RequestContext;
+import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -32,8 +35,9 @@ public class RekisterointiServiceTest {
     static class RekisterointiServiceTestConfiguration {
         @Bean
         public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository, PaatosRepository paatosRepository,
+                                                         ApplicationEventPublisher eventPublisher,
                                                          SchedulerClient schedulerClient, Task<Long> task) {
-            return new RekisterointiService(rekisterointiRepository, paatosRepository, schedulerClient, task, task);
+            return new RekisterointiService(rekisterointiRepository, paatosRepository, eventPublisher, schedulerClient, task, task);
         }
     }
 
@@ -101,7 +105,8 @@ public class RekisterointiServiceTest {
 
     @Test
     public void createSavesRekisterointi() {
-        Long id = rekisterointiService.create(SAVED_REKISTEROINTI);
+        RequestContext requestContext = new RequestContextImpl("user1", "127.0.0.1");
+        Long id = rekisterointiService.create(SAVED_REKISTEROINTI, requestContext);
         assertEquals(SAVED_REKISTEROINTI_ID, id);
         verify(rekisterointiRepository).save(SAVED_REKISTEROINTI);
     }
@@ -113,7 +118,8 @@ public class RekisterointiServiceTest {
                 true,
                 "Miksipä ei?"
         );
-        rekisterointiService.resolve(PAATTAJA_OID, paatos);
+        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
+        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext);
     }
 
     @Test
@@ -124,7 +130,8 @@ public class RekisterointiServiceTest {
                 "Rekisteröinti tehty 110% väärin."
         );
         Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYLATTY);
-        rekisterointiService.resolve(PAATTAJA_OID, paatos);
+        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
+        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext);
         verify(rekisterointiRepository).save(expected);
         verify(paatosRepository).save(any(Paatos.class));
     }
@@ -138,7 +145,8 @@ public class RekisterointiServiceTest {
                 hakemusTunnukset
         );
         Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYVAKSYTTY);
-        rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset);
+        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
+        rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset, requestContext);
         verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(expected);
         verify(paatosRepository, times(hakemusTunnukset.size())).save(any(Paatos.class));
     }

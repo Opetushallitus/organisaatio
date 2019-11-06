@@ -1,7 +1,10 @@
 package fi.vm.sade.varda.rekisterointi.util;
 
+import fi.vm.sade.javautils.http.HttpServletRequestUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.Optional;
 
 public final class ServletUtils {
@@ -20,6 +23,22 @@ public final class ServletUtils {
         HttpSession session = request.getSession();
         session.setAttribute(name, value);
         return value;
+    }
+
+    public static Optional<String> resolveUsername(HttpServletRequest request) {
+        return Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName);
+    }
+
+    public static String resolveIp(HttpServletRequest request) {
+        return HttpServletRequestUtils.getRemoteAddress(request);
+    }
+
+    public static Optional<String> resolveSession(HttpServletRequest request) {
+        return Optional.ofNullable(request.getSession(false)).map(HttpSession::getId);
+    }
+
+    public static Optional<String> resolveUserAgent(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader("User-Agent"));
     }
 
 }
