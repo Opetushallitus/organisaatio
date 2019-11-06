@@ -17,7 +17,7 @@ export default function RekisterointiListaOtsikko({ valintaKaytossa, kaikkiValit
             <tr key="otsikko">
             {
                 valintaKaytossa &&
-                <th><Checkbox checked={kaikkiValittu} onChange={_ => kaikkiValittuCallback(!kaikkiValittu)}/></th>
+                <th id="valitseKaikki"><Checkbox checked={kaikkiValittu} onChange={_ => kaikkiValittuCallback(!kaikkiValittu)}/></th>
             }
                 <th>{i18n.translate("ORGANISAATION_NIMI")}</th>
                 <th>{i18n.translate("VASTUUHENKILO")}</th>

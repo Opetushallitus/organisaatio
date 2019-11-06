@@ -25,10 +25,10 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
 
     return (
         <div>
-            <Button disabled={!kaytossa} onClick={_ => vahvista(false)}>
+            <Button id="hylkaaButton" disabled={!kaytossa} onClick={_ => vahvista(false)}>
                 {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
             </Button>
-            <Button disabled={!kaytossa} onClick={_ => vahvista(true)}>
+            <Button id="hyvaksyButton" disabled={!kaytossa} onClick={_ => vahvista(true)}>
                 {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
             <PaatosVahvistus valitut={valitut}
