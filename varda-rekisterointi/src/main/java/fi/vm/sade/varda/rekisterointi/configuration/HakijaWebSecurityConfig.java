@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +53,6 @@ public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().csrf().disable();
-        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-        requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
-        http.requestCache().requestCache(requestCache);
         http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
                 .anyRequest().hasRole(HAKIJA_ROLE)
                 .and()

@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import javax.servlet.Filter;
 
@@ -41,6 +42,9 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().csrf().disable();
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
+        http.requestCache().requestCache(requestCache);
         http.antMatcher(VIRKAILIJA_PATH_CLOB).authorizeRequests()
                 .anyRequest().hasRole(VIRKAILIJA_ROLE)
                 .and()
