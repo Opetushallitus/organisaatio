@@ -41,8 +41,8 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().csrf().disable();
-        http.authorizeRequests()
-                .antMatchers(VIRKAILIJA_PATH_CLOB).hasRole(VIRKAILIJA_ROLE)
+        http.antMatcher(VIRKAILIJA_PATH_CLOB).authorizeRequests()
+                .anyRequest().hasRole(VIRKAILIJA_ROLE)
                 .and()
                 .addFilterBefore(virkailijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling()

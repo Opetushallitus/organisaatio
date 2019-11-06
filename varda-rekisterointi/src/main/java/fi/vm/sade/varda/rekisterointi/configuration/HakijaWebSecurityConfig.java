@@ -57,8 +57,8 @@ public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
         http.requestCache().requestCache(requestCache);
-        http.authorizeRequests()
-                .antMatchers(HAKIJA_PATH_CLOB).hasRole(HAKIJA_ROLE)
+        http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
+                .anyRequest().hasRole(HAKIJA_ROLE)
                 .and()
                 .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling()
