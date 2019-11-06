@@ -61,7 +61,7 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(ophProperties.getProperty("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
+        serviceProperties.setService(ophProperties.url("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
         serviceProperties.setSendRenew(false);
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
