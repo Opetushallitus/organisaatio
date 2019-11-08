@@ -18,9 +18,12 @@ const App: React.FC = () => {
   registerLocale('sv', sv);
   registerLocale('en', enGB);
   const [ language, setLanguage ] = useState<Language>('fi');
-  const [{ data, loading }] = useAxios<Lokalisointi>('/varda-rekisterointi/api/lokalisointi');
+  const [{ data, loading, error }] = useAxios<Lokalisointi>('/varda-rekisterointi/api/lokalisointi');
   if (loading) {
     return <Spinner />;
+  }
+  if (error) {
+    return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
   const i18n = new I18nImpl(data[language]);
   return (
