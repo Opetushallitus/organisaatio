@@ -1,9 +1,11 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect, useContext } from 'react';
 import Rekisterointi from '../hakija/Rekisterointi';
 import { Organisaatio, KoodiUri } from '../types';
 import { useParams } from 'react-router';
 import Axios from 'axios';
 import Spinner from '../Spinner';
+import ErrorPage from '../ErrorPage';
+import { LanguageContext } from '../contexts';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -28,6 +30,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
 }
 
 export default function RekisterointiVirkailija() {
+    const { i18n } = useContext(LanguageContext);
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [fetchLoading, setFetchLoading] = useState(true);
@@ -59,7 +62,7 @@ export default function RekisterointiVirkailija() {
         return <Spinner />;
     }
     if (fetchError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     return <Rekisterointi initialOrganisaatio={initialOrganisaatio}

@@ -8,6 +8,7 @@ import Spinner from '../Spinner';
 import { asiointikielet } from '../LocalizableTextUtils';
 import classNames from 'classnames/bind';
 import { LanguageContext } from '../contexts';
+import ErrorPage from '../ErrorPage';
 
 type Props = {
     readOnly?: boolean,
@@ -27,7 +28,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
         return <Spinner />;
     }
     if (toimintamuodotError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     const baseClasses = { 'oph-input': true };

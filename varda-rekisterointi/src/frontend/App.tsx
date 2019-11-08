@@ -17,12 +17,9 @@ const App: React.FC = () => {
   registerLocale('sv', sv);
   registerLocale('en', enGB);
   const [ language, setLanguage ] = useState<Language>('fi');
-  const [{ data, loading, error }] = useAxios<Lokalisointi>('/varda-rekisterointi/api/lokalisointi');
+  const [{ data, loading }] = useAxios<Lokalisointi>('/varda-rekisterointi/api/lokalisointi');
   if (loading) {
     return <Spinner />;
-  }
-  if (error) {
-    return <div>error, reload page</div>;
   }
   return (
     <Router basename="/varda-rekisterointi">

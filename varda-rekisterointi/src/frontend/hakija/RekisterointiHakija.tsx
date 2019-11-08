@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useState, useReducer, useContext } from 'react';
 import { Organisaatio, KoodiUri } from '../types';
 import Spinner from '../Spinner';
 import Axios from 'axios';
 import Rekisterointi from './Rekisterointi';
+import ErrorPage from '../ErrorPage';
+import { LanguageContext } from '../contexts';
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -27,6 +29,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
 }
 
 export default function RekisterointiHakija() {
+    const { i18n } = useContext(LanguageContext);
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
     const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
     const [fetchLoading, setFetchLoading] = useState(true);
@@ -57,7 +60,7 @@ export default function RekisterointiHakija() {
         return <Spinner />;
     }
     if (fetchError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     return <Rekisterointi initialOrganisaatio={initialOrganisaatio}

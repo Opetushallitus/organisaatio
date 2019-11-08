@@ -16,6 +16,7 @@ import { useBeforeunload } from 'react-beforeunload';
 import useAxios from 'axios-hooks';
 import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
+import ErrorPage from '../ErrorPage';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -137,7 +138,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
         return <Spinner />;
     }
     if (kaikkiKunnatError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     return (
@@ -148,7 +149,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     validate={validate}
                     submit={post}
                     loading={postLoading}
-                    error={postError ? 'error, try again' : undefined}>
+                    error={postError ? i18n.translate('ERROR_SAVE') : undefined}>
                 <RekisterointiOrganisaatio
                     initialOrganisaatio={initialOrganisaatio}
                     organisaatio={organisaatio}

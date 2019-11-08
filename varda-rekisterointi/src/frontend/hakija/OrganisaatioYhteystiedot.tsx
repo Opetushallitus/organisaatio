@@ -9,6 +9,7 @@ import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
 import { and } from '../PredicateUtils';
+import ErrorPage from '../ErrorPage';
 
 type Props = {
     readOnly?: boolean,
@@ -33,7 +34,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
         return <Spinner />;
     }
     if (postinumerotError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     const kieliUri = organisaatio.ytjNimi.kieli;

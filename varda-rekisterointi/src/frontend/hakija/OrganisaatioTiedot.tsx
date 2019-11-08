@@ -9,6 +9,7 @@ import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
+import ErrorPage from '../ErrorPage';
 
 type Props = {
     readOnly?: boolean,
@@ -30,7 +31,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
         return <Spinner />;
     }
     if (organisaatiotyypitError || yritysmuodotError) {
-        return <div>error, reload page</div>;
+        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
     const tyypit = organisaatiotyypit.filter(koodi => {
