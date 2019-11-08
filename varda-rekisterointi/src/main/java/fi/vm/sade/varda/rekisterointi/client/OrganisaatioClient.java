@@ -19,7 +19,7 @@ import java.util.Optional;
 @Component
 public class OrganisaatioClient {
 
-    private static final String KUNTA_ORGANISAATIOTYYPPI = "";
+    private static final String KUNTA_YRITYSMUOTO = "Kunta";
     private final OphHttpClient httpClient;
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
@@ -120,8 +120,8 @@ public class OrganisaatioClient {
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
         return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
-                //.filter(organisaatioV4Dto -> organisaatioV4Dto.tyypit.contains(KUNTA_ORGANISAATIOTYYPPI));
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
+                .filter(organisaatioV4Dto -> organisaatioV4Dto.yritysmuoto.equals(KUNTA_YRITYSMUOTO));
     }
 
     private static class OrganisaatioListDto {
