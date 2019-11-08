@@ -19,6 +19,7 @@ import java.util.Optional;
 @Component
 public class OrganisaatioClient {
 
+    private static final String KUNTA_ORGANISAATIOTYYPPI = "";
     private final OphHttpClient httpClient;
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
@@ -112,6 +113,15 @@ public class OrganisaatioClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, OrganisaatioListDto.class).organisaatiot)
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+    }
+
+    public Optional<OrganisaatioV4Dto> getKuntaByOid(String oid) {
+        String url = properties.url("organisaatio-service.organisaatio.v4.byOid", oid);
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+        return httpClient.<OrganisaatioV4Dto>execute(request)
+                .expectedStatus(200)
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
+                //.filter(organisaatioV4Dto -> organisaatioV4Dto.tyypit.contains(KUNTA_ORGANISAATIOTYYPPI));
     }
 
     private static class OrganisaatioListDto {

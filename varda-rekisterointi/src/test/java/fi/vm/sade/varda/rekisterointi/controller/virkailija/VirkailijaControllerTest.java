@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static fi.vm.sade.varda.rekisterointi.controller.virkailija.WithMockVirkailijaUser.MOCK_VIRKAILIJA_OID;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -103,5 +105,16 @@ public class VirkailijaControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS_BATCH))
         ).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void haeOrganisaatioOiditReturnsOidSuffix() {
+        String oid = "1.23.456.7890";
+        String authorityValue = String.format(VirkailijaController.VIRKAILIJA_ROOLI + "_%s", oid);
+        VirkailijaController controller = new VirkailijaController(null, null, null);
+        GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
+        List<String> returnedOids = controller.haeOrganisaatioOidit(List.of(authority));
+        assertEquals(1, returnedOids.size());
+        assertEquals(oid, returnedOids.get(0));
     }
 }
