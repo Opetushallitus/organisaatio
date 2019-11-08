@@ -21,15 +21,26 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
             "FROM rekisterointi AS r " +
             "INNER JOIN kayttaja AS k ON (k.rekisterointi = r.id) " +
             "INNER JOIN organisaatio AS o ON (o.rekisterointi_id = r.id)";
+    // eikä tunnu hanskaavan queryssä enumin muunnosta, joten tila on välitettävä Stringinä :(
 
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila")
-    Iterable<Rekisterointi> findByTila(@Param("tila") String tila); // eikä tunnu hanskaavan queryssä enumin muunnosta, joten...
+    Iterable<Rekisterointi> findByTila(@Param("tila") String tila);
 
     @Query(value = REKISTEROINTI_SELECT + " WHERE o.nimi LIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByOrganisaatioContaining(@Param("organisaatio") String organisaatio);
 
+    @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND :kunta = ANY (r.kunnat)")
+    Iterable<Rekisterointi> findByTilaAndKunta(@Param("tila") String tila, @Param("kunta") String kunta);
+
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND o.nimi LIKE '%' || :organisaatio || '%'")
-    Iterable<Rekisterointi> findByTilaAndOrganisaatioContaining(@Param("tila") String tila, @Param("organisaatio") String organisaatio);
+    Iterable<Rekisterointi> findByTilaAndOrganisaatioContaining(@Param("tila") String tila,
+                                                                @Param("organisaatio") String organisaatio);
+
+    @Query(value = REKISTEROINTI_SELECT +
+            " WHERE r.tila = :tila AND :kunta = ANY (r.kunnat) AND o.nimi LIKE '%' || :organisaatio || '%'")
+    Iterable<Rekisterointi> findByTilaAndKuntaAndOrganisaatioContaining(@Param("tila") String tila,
+                                                                        @Param("kunta") String kunta,
+                                                                        @Param("organisaatio") String organisaatio);
 
 
 }
