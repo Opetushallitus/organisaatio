@@ -121,7 +121,7 @@ public class OrganisaatioClient {
         return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
-                .filter(organisaatioV4Dto -> organisaatioV4Dto.yritysmuoto.equals(KUNTA_YRITYSMUOTO));
+                .filter(organisaatioV4Dto -> KUNTA_YRITYSMUOTO.equals(organisaatioV4Dto.yritysmuoto));
     }
 
     private static class OrganisaatioListDto {
