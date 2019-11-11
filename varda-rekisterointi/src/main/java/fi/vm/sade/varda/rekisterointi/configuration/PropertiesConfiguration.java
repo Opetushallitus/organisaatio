@@ -1,11 +1,13 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.properties.OphProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
+@ConfigurationPropertiesScan("fi.vm.sade.varda.rekisterointi.properties")
 public class PropertiesConfiguration {
 
     @Bean
