@@ -39,7 +39,7 @@ public class VirkailijaController {
     static final String ROOLI_TARKISTUS = "hasAnyRole('" + VIRKAILIJA_ROOLI + "')";
 
     private static final String ORGANISAATIOT_PATH = "/organisaatiot";
-    private static final String OPH_OID = "1.2.246.562.10.00000000001 "; // TODO: ei-kovakoodattuna jostain?
+    private static final String OPH_OID = "1.2.246.562.10.00000000001"; // TODO: ei-kovakoodattuna jostain?
     private static final Logger LOGGER = LoggerFactory.getLogger(VirkailijaController.class);
 
     private final OrganisaatioClient organisaatioClient;
