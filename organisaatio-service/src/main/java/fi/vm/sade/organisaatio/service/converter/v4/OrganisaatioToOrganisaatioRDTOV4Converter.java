@@ -66,6 +66,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
 
         t.setOppilaitosKoodi(s.getOppilaitosKoodi());
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
+        t.setMuutOppilaitosTyyppiUris(s.getMuutOppilaitosTyyppiUris());
         t.setParentOid(s.getParentOid().orElse(null));
         t.setParentOidPath(s.getParentOidPath());
 

@@ -127,6 +127,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String oppilaitosTyyppi;
 
+    @ElementCollection
+    @CollectionTable(name = "organisaatio_muut_oppilaitostyypit", joinColumns = @JoinColumn(name = "organisaatio_id"),
+            foreignKey = @ForeignKey(name = "organisaatio_muut_oppilaitostyypit_organisaatio_id_fkey"))
+    @Column(name = "oppilaitostyyppi", nullable = false)
+    @BatchSize(size = 200)
+    private Set<String> muutOppilaitosTyyppiUris = new HashSet<>();
+
     @NotNull
     private String oid;
 
@@ -398,6 +405,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setOppilaitosTyyppi(String oppilaitosTyyppi) {
         this.oppilaitosTyyppi = oppilaitosTyyppi;
+    }
+
+    public Set<String> getMuutOppilaitosTyyppiUris() {
+        return muutOppilaitosTyyppiUris;
+    }
+
+    public void setMuutOppilaitosTyyppiUris(Set<String> muutOppilaitosTyyppiUris) {
+        this.muutOppilaitosTyyppiUris = muutOppilaitosTyyppiUris;
     }
 
     public String getOid() {
