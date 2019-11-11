@@ -32,12 +32,13 @@ import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmp
 public class VirkailijaController {
 
     static final String BASE_PATH = "/virkailija/api";
-    static final String ORGANISAATIOT_PATH = "/organisaatiot";
     static final String REKISTEROINNIT_PATH = "/rekisteroinnit";
     static final String PAATOKSET_PATH = "/paatokset";
     static final String PAATOKSET_BATCH_PATH = PAATOKSET_PATH + "/batch";
     static final String VIRKAILIJA_ROOLI = "ROLE_" + Constants.VIRKAILIJA_ROLE;
     static final String ROOLI_TARKISTUS = "hasAnyRole('" + VIRKAILIJA_ROOLI + "')";
+
+    private static final String ORGANISAATIOT_PATH = "/organisaatiot";
     private static final String OPH_OID = "1.2.246.562.10.00000000001 "; // TODO: ei-kovakoodattuna jostain?
     private static final Logger LOGGER = LoggerFactory.getLogger(VirkailijaController.class);
 
@@ -62,7 +63,9 @@ public class VirkailijaController {
             Authentication authentication,
             @RequestParam("tila") Rekisterointi.Tila tila,
             @RequestParam(value = "hakutermi", required = false) String hakutermi) {
+        LOGGER.info("Authorities: {}", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining((", "))));
         List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
+        LOGGER.info("OIDS: {}", String.join(", ", organisaatioOidit));
         if (onOphVirkailija(organisaatioOidit)) {
             LOGGER.info("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
             return rekisterointiService.listByTilaAndOrganisaatio(tila, hakutermi);
@@ -90,7 +93,7 @@ public class VirkailijaController {
 
     List<String> haeOrganisaatioOidit(Collection<? extends GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(VIRKAILIJA_ROOLI + '_'))
+                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VIRKAILIJA_ROLE + '_'))
                 .map(grantedAuthority -> {
                     String authority = grantedAuthority.getAuthority();
                     return authority.substring(authority.lastIndexOf('_') + 1);
@@ -101,7 +104,8 @@ public class VirkailijaController {
         return organisaatioOidit.contains(OPH_OID);
     }
 
-    List<String> virkailijanKunnat(List<String> organisaatioOidit) {
+    private List<String> virkailijanKunnat(List<String> organisaatioOidit) {
+        // TODO: batch API useammalle kunnalle tai cachetus?
         return organisaatioOidit.stream()
                 .map(organisaatioClient::getKuntaByOid)
                 .filter(Optional::isPresent)
