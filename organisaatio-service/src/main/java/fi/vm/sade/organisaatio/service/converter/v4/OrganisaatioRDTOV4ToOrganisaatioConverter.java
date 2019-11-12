@@ -65,7 +65,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setOpetuspisteenJarjNro(source.getOpetuspisteenJarjNro());
         target.setOppilaitosKoodi(source.getOppilaitosKoodi());
         target.setOppilaitosTyyppi(source.getOppilaitosTyyppiUri());
-        target.setMuutOppilaitosTyyppiUris(source.getMuutOppilaitosTyyppiUris());
+        target.setMuutOppilaitosTyyppiUris(convertCollectionToSet(source.getMuutOppilaitosTyyppiUris()));
         target.setParentOidPath(source.getParentOidPath());
 
         target.setToimipisteKoodi(source.getToimipistekoodi());
