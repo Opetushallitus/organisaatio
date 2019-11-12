@@ -340,6 +340,12 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
                 });
             }
 
+            if (!model.kaikkiOppilaitostyypit || model.kaikkiOppilaitostyypit.length === 0) {
+                KoodistoClient.koodistoOppilaitostyypit.get({}, function (oppilaitostyypit) {
+                    model.oppilaitostyypit = oppilaitostyypit;
+                });
+            }
+
             if (model.organisaatio.tyypit.indexOf('organisaatiotyyppi_08') !== -1) {
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoJarjestamismuoto, model.koodisto, 'jarjestamismuoto');
                 KoodistoKoodi.refreshKoodistoIfNeeded(KoodistoClient.koodistoKasvatusopillinenJarjestelma, model.koodisto, 'kasvatusopillinenJarjestelma');

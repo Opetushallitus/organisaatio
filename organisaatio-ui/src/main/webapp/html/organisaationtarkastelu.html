@@ -254,6 +254,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
+    <div class="control-group" ng-show="model.organisaatio.muutOppilaitosTyyppiUris" ng-if='model.isOppilaitos()'>
+        <label class="control-label" tt="Organisaationtarkastelu.muutOppilaitostyypit">
+            Organisaationtarkastelu.muutOppilaitostyypit
+        </label>
+        <div class="controls">
+            <label class="control-label control-label-left">
+                <div ng-repeat="oppilaitostyyppi in model.organisaatio.muutOppilaitosTyyppiUris">
+                    {{:: localizeMuuOppilaitostyyppi(oppilaitostyyppi)}}<br>
+                </div>
+            </label>
+        </div>
+    </div>
+
     <div class="control-group" ng-show="model.organisaatio.vuosiluokat" ng-if="model.hasVuosiluokat()">
         <label class="control-label" tt="Organisaationtarkastelu.vuosiluokat">
             Organisaationtarkastelu.vuosiluokat

@@ -176,6 +176,30 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         </div>
     </div>
 
+    <div class="control-group" ng-if="model.isOppilaitos()">
+        <label class="control-label">
+            {{t('Organisaationtarkastelu.muutOppilaitostyypit')}}
+        </label>
+        <div class="controls">
+            <div>
+                <select id="muutOppilaitostyypitSelect" ng-model="model.koodisto.muutoppilaitostyypitplaceholder"
+                        ng-options="olTyyppi.uri as olTyyppi.nimi for olTyyppi in model.koodisto.oppilaitostyypit | orderBy:'nimi'"
+                        ng-change="addToMuutOppilaitostyypit();">
+                    <option value="" tt="Organisaationmuokkaus.valitse">Valitse</option>
+                </select>
+            </div>
+            <div>
+                <span ng-repeat="oppilaitostyyppi in model.organisaatio.muutOppilaitosTyyppiUris">
+                    <button type="button"
+                            class="btn btn-small"
+                            ng-click="removeFromMuutOppilaitostyypit(kunta);">
+                        {{:: localizeMuuOppilaitostyyppi(oppilaitostyyppi)}}&nbsp;<i class="icon-remove"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="control-group" ng-if="model.hasVuosiluokat()">
         <label class="control-label" tt="Organisaationtarkastelu.vuosiluokat">
             Vuosiluokat
