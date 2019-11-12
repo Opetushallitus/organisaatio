@@ -63,16 +63,14 @@ public class VirkailijaController {
             Authentication authentication,
             @RequestParam("tila") Rekisterointi.Tila tila,
             @RequestParam(value = "hakutermi", required = false) String hakutermi) {
-        LOGGER.info("Authorities: {}", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining((", "))));
         List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
-        LOGGER.info("OIDS: {}", String.join(", ", organisaatioOidit));
         if (onOphVirkailija(organisaatioOidit)) {
-            LOGGER.info("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
+            LOGGER.debug("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
             return rekisterointiService.listByTilaAndOrganisaatio(tila, hakutermi);
         }
         List<String> kunnat = virkailijanKunnat(organisaatioOidit);
         if (kunnat.isEmpty()) {
-            LOGGER.info("Käyttäjällä ei ole oikeutta nähdä yhdenkään kunnan rekisteröintejä.");
+            LOGGER.debug("Käyttäjällä ei ole oikeutta nähdä yhdenkään kunnan rekisteröintejä.");
             return List.of();
         }
         return rekisterointiService.listByTilaAndKunnatAndOrganisaatio(
