@@ -17,6 +17,11 @@ import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
 @Profile("dev")
 public class DevUserDetailsServiceConfiguration {
 
+    private static final SimpleGrantedAuthority[] AUTHORITIES = new SimpleGrantedAuthority[] {
+        new SimpleGrantedAuthority("ROLE_" + VIRKAILIJA_ROLE),
+        new SimpleGrantedAuthority("ROLE_" + VIRKAILIJA_ROLE + "_1.2.246.562.10.00000000001")
+    };
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new DevUserDetailsService();
@@ -29,7 +34,7 @@ public class DevUserDetailsServiceConfiguration {
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             return User.builder()
-                    .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + VIRKAILIJA_ROLE)))
+                    .authorities(List.of(AUTHORITIES))
                     .password("Suits you, Sir!")
                     .username(username)
                     .build();

@@ -51,11 +51,19 @@ public class RekisterointiService {
     }
 
     public Iterable<Rekisterointi> listByTilaAndOrganisaatio(Rekisterointi.Tila tila, String organisaatio) {
-        // TODO: rajaus kunnan/päättäjän perusteella? KJHH-1709
         if (organisaatio == null || organisaatio.length() == 0) {
             return rekisterointiRepository.findByTila(tila.toString());
         }
         return rekisterointiRepository.findByTilaAndOrganisaatioContaining(tila.toString(), organisaatio);
+    }
+
+    public Iterable<Rekisterointi> listByTilaAndKunnatAndOrganisaatio(Rekisterointi.Tila tila, String[] kunnat,
+                                                                      String organisaatio) {
+        if (organisaatio == null || organisaatio.length() == 0) {
+            return rekisterointiRepository.findByTilaAndKunnat(tila.toString(), kunnat);
+        }
+        return rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
+                tila.toString(), kunnat, organisaatio);
     }
 
     public long create(Rekisterointi rekisterointi, RequestContext requestContext) {
