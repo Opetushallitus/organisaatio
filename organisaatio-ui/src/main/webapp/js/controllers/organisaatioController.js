@@ -519,7 +519,7 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
 
     $scope.localizeMuuOppilaitostyyppi = function(oppilaitostyyppi) {
         var localisedKoodi = $scope.model.kaikkiOppilaitostyypit.filter(function (koodi) {
-            return koodi.koodiUri === oppilaitostyyppi;
+            return koodi.koodiUri + '#' + koodi.versio === oppilaitostyyppi;
         })[0];
 
         if (localisedKoodi) {

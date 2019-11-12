@@ -342,7 +342,7 @@ app.factory('RefreshOrganisaatio', function ($filter, $log, $timeout, $injector,
 
             if (!model.kaikkiOppilaitostyypit || model.kaikkiOppilaitostyypit.length === 0) {
                 KoodistoClient.koodistoOppilaitostyypit.get({}, function (oppilaitostyypit) {
-                    model.oppilaitostyypit = oppilaitostyypit;
+                    model.kaikkiOppilaitostyypit = oppilaitostyypit;
                 });
             }
 
