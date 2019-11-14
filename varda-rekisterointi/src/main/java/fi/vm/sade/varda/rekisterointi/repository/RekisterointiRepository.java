@@ -17,7 +17,7 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
             "o.tyypit AS organisaatio_tyypit, o.kotipaikka AS organisaatio_kotipaikka, o.maa AS organisaatio_maa, " +
             "r.sahkopostit, k.id AS kayttaja_id, k.etunimi AS kayttaja_etunimi, k.sukunimi AS kayttaja_sukunimi, " +
             "k.sahkoposti AS kayttaja_sahkoposti, k.asiointikieli AS kayttaja_asiointikieli, " +
-            "k.saateteksti AS kayttaja_saateteksti, r.vastaanotettu, r.tila " +
+            "k.saateteksti AS kayttaja_saateteksti, r.vastaanotettu, r.tila, o.kielet_uris AS organisaatio_kielet_uris " +
             "FROM rekisterointi AS r " +
             "INNER JOIN kayttaja AS k ON (k.rekisterointi = r.id) " +
             "INNER JOIN organisaatio AS o ON (o.rekisterointi_id = r.id)";

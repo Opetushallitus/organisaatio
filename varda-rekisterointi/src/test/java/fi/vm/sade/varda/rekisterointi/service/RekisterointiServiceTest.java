@@ -56,7 +56,8 @@ public class RekisterointiServiceTest {
                     "toimintamuoto",
                     Collections.singleton("tyyppi"),
                     "Helsinki",
-                    "Suomi"),
+                    "Suomi",
+                    Collections.singleton("kieli")),
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
             Kayttaja.builder()
