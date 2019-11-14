@@ -24,6 +24,33 @@ type Props = {
     suljeCallback: () => void
 }
 
+class PaatosRivi {
+
+    constructor(readonly hakemus: Rekisterointihakemus) {}
+
+    get organisaatio(): string {
+        return this.hakemus.organisaatio.ytjNimi.nimi;
+    }
+
+    get vastuuhenkilo(): string {
+        return `${this.hakemus.kayttaja.etunimi} ${this.hakemus.kayttaja.sukunimi}`
+    }
+
+    get ytunnus(): string {
+        return this.hakemus.organisaatio.ytunnus;
+    }
+
+    get kotipaikka(): string {
+        // TODO: uri -> kunta/maa
+        return `${this.hakemus.organisaatio.kotipaikkaUri}, ${this.hakemus.organisaatio.maaUri}`;
+    }
+
+    get opetuskieli(): string {
+        // TODO: monta opetuskieltä? kieliuri -> kieli
+        return "Suomi";
+    }
+}
+
 export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaValinnatCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
 
@@ -46,7 +73,30 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaVa
         <Modal open={nayta} onClose={suljeCallback}>
             <ModalHeader onClose={suljeCallback}>{i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}</ModalHeader>
             <ModalBody>
-                Blabla!
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
+                            <th>{i18n.translate('VASTUUHENKILO')}</th>
+                            <th>{i18n.translate('YTUNNUS')}</th>
+                            <th>{i18n.translate('ORGANISAATION_KOTIPAIKKA')}</th>
+                            <th>{i18n.translate('OPETUSKIELI')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        valitut.map(hakemus => new PaatosRivi(hakemus)).map(rivi =>
+                        <tr>
+                            <td>{rivi.organisaatio}</td>
+                            <td>{rivi.vastuuhenkilo}</td>
+                            <td>{rivi.ytunnus}</td>
+                            <td>{rivi.kotipaikka}</td>
+                            <td>{rivi.opetuskieli}</td>
+                        </tr>
+                        )
+                    }
+                    </tbody>
+                </table>
             </ModalBody>
             <ModalFooter>
                 <Box display="flex" justifyContent="flex-end">

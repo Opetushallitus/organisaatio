@@ -18,6 +18,7 @@ const baseOrganisaatio: Organisaatio = {
     tyypit: [],
     kotipaikkaUri: '',
     maaUri: 'maatjavaltiot1_fin',
+    kieletUris: [],
     yhteystiedot: []
 };
 

@@ -4,6 +4,8 @@ import {act} from "react-dom/test-utils";
 import createTheme from "@opetushallitus/virkailija-ui-components/createTheme";
 import {ThemeProvider} from "styled-components";
 import PaatosKontrollit from "./PaatosKontrollit";
+import {Rekisterointihakemus} from "./rekisterointihakemus";
+import {dummyHakemus} from "../testTypes";
 
 const theme = createTheme();
 const buttonIds = ['hylkaaButton', 'hyvaksyButton'];
@@ -36,9 +38,10 @@ describe('PaatosKontrollit', () => {
     });
 
     it('enabloi Buttonit, kun hakemuksia valittu', async () => {
+        const hakemus: Rekisterointihakemus = dummyHakemus;
         await act(async() => {
             render(<ThemeProvider theme={theme}>
-                <PaatosKontrollit valitut={[1]} tyhjennaValinnatCallback={dummyTyhjennaCallback}/>
+                <PaatosKontrollit valitut={[hakemus]} tyhjennaValinnatCallback={dummyTyhjennaCallback}/>
             </ThemeProvider>, container);
         });
         buttonIds.forEach(id => {
