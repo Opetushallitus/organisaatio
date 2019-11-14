@@ -2,9 +2,10 @@ import React, {useContext, useEffect, useState} from "react";
 import {LanguageContext} from '../contexts';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import PaatosVahvistus from "./PaatosVahvistus";
+import {Rekisterointihakemus} from "./rekisterointihakemus";
 
 type Props = {
-    valitut: number[]
+    valitut: Rekisterointihakemus[]
     tyhjennaValinnatCallback: () => void
 }
 

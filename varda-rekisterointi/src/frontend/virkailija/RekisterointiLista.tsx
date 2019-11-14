@@ -13,7 +13,6 @@ import PaatosKontrollit from "./PaatosKontrollit";
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const tyhjaHakemusLista: Rekisterointihakemus[] = [];
-const tyhjaValintaLista: number[] = [];
 
 type Props = {
     tila?: Tila,
@@ -26,7 +25,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
     const [latausKesken, asetaLatausKesken] = useState(true);
     const [latausVirhe, asetaLatausVirhe] = useState(false);
     const [kaikkiValittu, asetaKaikkiValittu] = useState(false);
-    const [valitutHakemukset, asetaValitutHakemukset] = useState(tyhjaValintaLista);
+    const [valitutHakemukset, asetaValitutHakemukset] = useState(tyhjaHakemusLista);
 
     useEffect(() => {
         async function lataa() {
@@ -48,12 +47,12 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
 
     function vaihdaKaikkiValittu(valitseKaikki: boolean) {
         asetaKaikkiValittu(valitseKaikki);
-        asetaValitutHakemukset(valitseKaikki ? rekisteroinnit.map(r => r.id) : tyhjaValintaLista);
+        asetaValitutHakemukset(valitseKaikki ? [...rekisteroinnit] : tyhjaHakemusLista);
     }
 
-    function vaihdaHakemusValittu(id: number, valittu: boolean) {
+    function vaihdaHakemusValittu(hakemus: Rekisterointihakemus, valittu: boolean) {
         asetaKaikkiValittu(false);
-        asetaValitutHakemukset(valittu ? valitutHakemukset.filter(h => h !== id) : valitutHakemukset.concat(id));
+        asetaValitutHakemukset((valittu ? valitutHakemukset.filter(h => h.id !== hakemus.id) : valitutHakemukset.concat(hakemus)));
     }
 
     function tyhjennaValinnat() {
@@ -81,7 +80,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                     <RekisterointiListaRivi key={rekisterointi.id}
                                             rekisterointi={new ListaRivi(rekisterointi)}
                                             valintaKaytossa={tila === Tila.KASITTELYSSA}
-                                            riviValittu={valitutHakemukset.some(h => h === rekisterointi.id)}
+                                            riviValittu={valitutHakemukset.some(h => h.id === rekisterointi.id)}
                                             valitseHakemusCallback={vaihdaHakemusValittu}/>)
             }
                 </tbody>

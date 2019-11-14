@@ -34,7 +34,7 @@ type Props = {
     valintaKaytossa: boolean
     rekisterointi: ListaRivi
     riviValittu: boolean
-    valitseHakemusCallback: (id: number, valittu: boolean) => void
+    valitseHakemusCallback: (hakemus: Rekisterointihakemus, valittu: boolean) => void
 }
 
 export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi, riviValittu, valitseHakemusCallback } : Props) {
@@ -46,7 +46,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
 
     function valitse() {
         asetaValittu(vanhaTila => !vanhaTila);
-        valitseHakemusCallback(rekisterointi.hakemus.id, valittu);
+        valitseHakemusCallback(rekisterointi.hakemus, valittu);
     }
 
     return (

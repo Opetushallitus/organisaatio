@@ -7,6 +7,7 @@ import Modal from "@opetushallitus/virkailija-ui-components/Modal"
 import ModalBody from "@opetushallitus/virkailija-ui-components/ModalBody"
 import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader"
+import {Rekisterointihakemus} from "./rekisterointihakemus";
 
 const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
 
@@ -16,7 +17,7 @@ type PaatosBatch = {
 }
 
 type Props = {
-    valitut: number[]
+    valitut: Rekisterointihakemus[]
     hyvaksytty: boolean
     nayta: boolean
     tyhjennaValinnatCallback: () => void
@@ -29,7 +30,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaVa
     async function laheta() {
         const paatokset: PaatosBatch = {
             hyvaksytty,
-            hakemukset: valitut
+            hakemukset: valitut.map(h => h.id)
         };
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
