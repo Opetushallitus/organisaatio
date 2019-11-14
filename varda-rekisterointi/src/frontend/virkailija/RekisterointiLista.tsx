@@ -55,8 +55,10 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         asetaValitutHakemukset((valittu ? valitutHakemukset.filter(h => h.id !== hakemus.id) : valitutHakemukset.concat(hakemus)));
     }
 
-    function tyhjennaValinnat() {
+    function valitutKasiteltyCallback() {
         vaihdaKaikkiValittu(false);
+        asetaRekisteroinnit(vanhat => vanhat.filter(rekisterointi => !valitutHakemukset.some(valittu => rekisterointi.id === valittu.id)));
+        asetaValitutHakemukset(tyhjaHakemusLista);
     }
 
     if (latausKesken) {
@@ -87,7 +89,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
             </table>
             {
                 tila === Tila.KASITTELYSSA &&
-                <PaatosKontrollit valitut={valitutHakemukset} tyhjennaValinnatCallback={tyhjennaValinnat} />
+                <PaatosKontrollit valitut={valitutHakemukset} valitutKasiteltyCallback={valitutKasiteltyCallback} />
             }
         </Box>
     )

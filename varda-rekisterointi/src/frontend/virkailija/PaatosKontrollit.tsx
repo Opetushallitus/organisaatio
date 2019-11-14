@@ -6,10 +6,10 @@ import {Rekisterointihakemus} from "./rekisterointihakemus";
 
 type Props = {
     valitut: Rekisterointihakemus[]
-    tyhjennaValinnatCallback: () => void
+    valitutKasiteltyCallback: () => void
 }
 
-export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: Props) {
+export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [kaytossa, asetaKaytossa] = useState(false);
     const [hyvaksytty, asetaHyvaksytty] = useState(false);
@@ -35,7 +35,7 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
             <PaatosVahvistus valitut={valitut}
                              hyvaksytty={hyvaksytty}
                              nayta={naytaVahvistus}
-                             tyhjennaValinnatCallback={tyhjennaValinnatCallback}
+                             valitutKasiteltyCallback={valitutKasiteltyCallback}
                              suljeCallback={() => asetaNaytaVahvistus(false)}/>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import Axios from "axios";
 import {LanguageContext} from '../contexts';
 import Box from "@opetushallitus/virkailija-ui-components/Box";
@@ -8,19 +8,21 @@ import ModalBody from "@opetushallitus/virkailija-ui-components/ModalBody"
 import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader"
 import {Rekisterointihakemus} from "./rekisterointihakemus";
+import {hasLength} from "../StringUtils";
 
 const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
 
 type PaatosBatch = {
     hyvaksytty: boolean
-    hakemukset: number[]
+    hakemukset: number[],
+    perustelu?: string
 }
 
 type Props = {
     valitut: Rekisterointihakemus[]
     hyvaksytty: boolean
     nayta: boolean
-    tyhjennaValinnatCallback: () => void
+    valitutKasiteltyCallback: () => void
     suljeCallback: () => void
 }
 
@@ -51,17 +53,21 @@ class PaatosRivi {
     }
 }
 
-export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaValinnatCallback, suljeCallback }: Props) {
+export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKasiteltyCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
+    const [ perustelu, asetaPerustelu ] = useState("");
 
     async function laheta() {
         const paatokset: PaatosBatch = {
             hyvaksytty,
             hakemukset: valitut.map(h => h.id)
         };
+        if (hasLength(perustelu)) {
+            paatokset.perustelu = perustelu;
+        }
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
-            tyhjennaValinnatCallback();
+            valitutKasiteltyCallback();
             suljeCallback();
         } catch (e) {
             // TODO: virheenkäsittely
@@ -75,7 +81,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaVa
             <ModalBody>
                 <table>
                     <thead>
-                        <tr>
+                        <tr key="otsikot">
                             <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
                             <th>{i18n.translate('VASTUUHENKILO')}</th>
                             <th>{i18n.translate('YTUNNUS')}</th>
@@ -86,7 +92,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaVa
                     <tbody>
                     {
                         valitut.map(hakemus => new PaatosRivi(hakemus)).map(rivi =>
-                        <tr>
+                        <tr key={rivi.hakemus.id}>
                             <td>{rivi.organisaatio}</td>
                             <td>{rivi.vastuuhenkilo}</td>
                             <td>{rivi.ytunnus}</td>
@@ -97,6 +103,10 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, tyhjennaVa
                     }
                     </tbody>
                 </table>
+            { hyvaksytty ? null :
+                <textarea value={perustelu}
+                          onChange={(event) => asetaPerustelu(event.currentTarget.value)} />
+            }
             </ModalBody>
             <ModalFooter>
                 <Box display="flex" justifyContent="flex-end">
