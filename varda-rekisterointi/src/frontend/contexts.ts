@@ -70,7 +70,12 @@ type KoodistoContextType = {
     koodisto: Koodisto
 }
 
-export const KoodistoContext = React.createContext<KoodistoContextType>({
+export const KuntaKoodistoContext = React.createContext<KoodistoContextType>({
+    kieli: "fi",
+    koodisto: new KoodistoImpl([], "fi")
+});
+
+export const KieliKoodistoContext = React.createContext<KoodistoContextType>({
     kieli: "fi",
     koodisto: new KoodistoImpl([], "fi")
 });
