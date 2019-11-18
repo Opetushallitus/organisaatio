@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,6 +35,19 @@ public class OrganisaatioService {
                 dto.kieletUris);
     }
 
+    public OrganisaatioV4Dto muunnaOrganisaatio(Organisaatio organisaatio) {
+        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        dto.ytunnus = organisaatio.ytunnus;
+        dto.alkuPvm = organisaatio.alkuPvm;
+        dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
+        dto.yritysmuoto = organisaatio.yritysmuoto;
+        dto.tyypit = organisaatio.tyypit;
+        dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
+        dto.maaUri = organisaatio.maaUri;
+        dto.kieletUris = organisaatio.kieletUris;
+        return dto;
+    }
+
     KielistettyNimi kuranttiNimi(OrganisaatioV4Dto dto) {
         LocalDate now = LocalDate.now();
         OrganisaatioNimi kurantti = dto.nimet.stream()
@@ -49,6 +63,13 @@ public class OrganisaatioService {
         return KielistettyNimi.of(ytjKielinen, kieli, kurantti.alkuPvm);
     }
 
+    List<OrganisaatioNimi> organisaatioNimet(KielistettyNimi kielistettyNimi) {
+        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
+        organisaatioNimi.nimi = Map.of(kieliKoodiArvoToUri(kielistettyNimi.kieli), kielistettyNimi.nimi);
+        organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm;
+        return List.of(organisaatioNimi);
+    }
+
     private LocalDate nullSafeDate(LocalDate date) {
         if (date == null) {
             return LocalDate.MIN;
@@ -58,6 +79,12 @@ public class OrganisaatioService {
 
     private static String kieliKoodiUriVersionToKoodiArvo(String koodiUriVersion) {
         return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.getOrDefault(koodiUriVersion, "fi");
+    }
+
+    private static String kieliKoodiArvoToUri(String arvo) {
+        return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.entrySet().stream().filter(
+                entry -> entry.getValue().equals(arvo)
+        ).map(Map.Entry::getKey).findAny().orElse(DEFAULT_KIELI_KOODI_URI_VERSION);
     }
 
 }

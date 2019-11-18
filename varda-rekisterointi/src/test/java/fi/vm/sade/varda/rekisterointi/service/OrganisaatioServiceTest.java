@@ -43,6 +43,17 @@ public class OrganisaatioServiceTest {
         assertEquals("Uusi", nimi.nimi);
     }
 
+    @Test
+    public void organisaationimetConvertsAllFields() {
+        KielistettyNimi nimi = KielistettyNimi.of("Testi", "fi", LocalDate.now());
+        String kieliUri = "kieli_fi#1";
+        List<OrganisaatioNimi> nimet = service.organisaatioNimet(nimi);
+        assertEquals(1, nimet.size());
+        OrganisaatioNimi muunnettu = nimet.get(0);
+        assertEquals(nimi.nimi, muunnettu.nimi.get(kieliUri));
+        assertEquals(nimi.alkuPvm, muunnettu.alkuPvm);
+    }
+
     private OrganisaatioNimi organisaatioNimi(LocalDate alkuPvm, String kieli, String nimi) {
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.alkuPvm = alkuPvm;
