@@ -2,6 +2,7 @@ package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.properties.OphProperties;
+import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
+import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -49,6 +51,7 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
                 .anyRequest().hasRole(VIRKAILIJA_ROLE)
                 .and()
                 .addFilterBefore(virkailijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(virkailijaAuthenticationEntryPoint());
     }
@@ -100,5 +103,12 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
         return ticketValidator;
     }
 
+    @Bean
+    public SingleSignOutFilter singleSignOutFilter() {
+        SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
+        singleSignOutFilter.setIgnoreInitConfiguration(true);
+        singleSignOutFilter.setCasServerUrlPrefix(ophProperties.url("cas.base"));
+        return singleSignOutFilter;
+    }
 
 }
