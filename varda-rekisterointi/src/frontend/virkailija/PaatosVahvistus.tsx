@@ -70,9 +70,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
 
     function opetuskielet(kieliUris: string[]): string {
         if (!kieliUris || kieliUris.length === 0) return "";
-        return kieliUris.filter(
-            kieliUri => kieliUri.startsWith("oppilaitoksenopetuskieli_")
-        ).map(
+        return kieliUris.map(
             kieliUri => opetuskieliKoodisto.uri2Nimi(kieliUri)
         ).join(", ");
     }
