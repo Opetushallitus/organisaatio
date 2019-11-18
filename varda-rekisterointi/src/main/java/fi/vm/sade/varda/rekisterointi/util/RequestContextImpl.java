@@ -1,12 +1,19 @@
 package fi.vm.sade.varda.rekisterointi.util;
 
+import fi.vm.sade.varda.rekisterointi.NameContainer;
 import fi.vm.sade.varda.rekisterointi.RequestContext;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.*;
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
 
 public class RequestContextImpl implements RequestContext {
 
@@ -32,7 +39,32 @@ public class RequestContextImpl implements RequestContext {
 
     public static RequestContextImpl of(HttpServletRequest request) {
         return new RequestContextImpl(resolveUsername(request), resolveIp(request),
-                resolveSession(request), resolveUserAgent(request));
+                ServletUtils.resolveSession(request), resolveUserAgent(request));
+    }
+
+    public static RequestContextImpl of(HttpServletRequest request, Authentication authentication) {
+        return new RequestContextImpl(resolveUsername(request), resolveIp(request),
+                resolveSession(request, authentication), resolveUserAgent(request));
+    }
+
+    private static Optional<String> resolveSession(HttpServletRequest request, Authentication authentication) {
+        String session = Stream.of(ServletUtils.resolveSession(request), resolveUsername(request), resolveName(authentication))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(not(String::isEmpty))
+                .collect(Collectors.joining(","));
+        return Optional.ofNullable(session);
+    }
+
+    private static Optional<String> resolveName(Authentication authentication) {
+        if (authentication.getDetails() instanceof NameContainer) {
+            NameContainer nameContainer = (NameContainer) authentication.getDetails();
+            String name = Stream.of(nameContainer.getFirstName(), nameContainer.getSurname())
+                    .filter(Objects::nonNull)
+                    .collect(joining(" "));
+            return Optional.of(name);
+        }
+        return Optional.empty();
     }
 
     @Override
