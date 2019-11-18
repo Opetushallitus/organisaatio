@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import Axios from "axios";
-import {KuntaKoodistoContext, LanguageContext} from '../contexts';
+import {KuntaKoodistoContext, LanguageContext, OpetuskieliKoodistoContext} from '../contexts';
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Modal from "@opetushallitus/virkailija-ui-components/Modal"
@@ -47,6 +47,7 @@ class PaatosRivi {
 export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKasiteltyCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { koodisto: opetuskieliKoodisto } = useContext(OpetuskieliKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
 
     async function laheta() {
@@ -67,6 +68,15 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
         }
     }
 
+    function opetuskielet(kieliUris: string[]): string {
+        if (!kieliUris || kieliUris.length === 0) return "";
+        return kieliUris.filter(
+            kieliUri => kieliUri.startsWith("oppilaitoksenopetuskieli_")
+        ).map(
+            kieliUri => opetuskieliKoodisto.uri2Nimi(kieliUri)
+        ).join(", ");
+    }
+
     return (
         <Modal open={nayta} onClose={suljeCallback}>
             <ModalHeader onClose={suljeCallback}>{i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}</ModalHeader>
@@ -84,7 +94,9 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     <tbody>
                     {
                         valitut.map(hakemus => new PaatosRivi(
-                            hakemus, `${kuntaKoodisto.uri2Nimi(hakemus.organisaatio.kotipaikkaUri)}`, "Suomi"
+                            hakemus,
+                            `${kuntaKoodisto.uri2Nimi(hakemus.organisaatio.kotipaikkaUri)}`,
+                            opetuskielet(hakemus.organisaatio.kieletUris)
                         )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
                             <td>{rivi.organisaatio}</td>
