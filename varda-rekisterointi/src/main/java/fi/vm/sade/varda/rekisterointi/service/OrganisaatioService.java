@@ -30,7 +30,8 @@ public class OrganisaatioService {
                 dto.yritysmuoto,
                 dto.tyypit,
                 dto.kotipaikkaUri,
-                dto.maaUri);
+                dto.maaUri,
+                dto.kieletUris);
     }
 
     KielistettyNimi kuranttiNimi(OrganisaatioV4Dto dto) {

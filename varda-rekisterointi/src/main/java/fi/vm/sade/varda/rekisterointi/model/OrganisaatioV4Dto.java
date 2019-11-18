@@ -19,6 +19,7 @@ public class OrganisaatioV4Dto extends BaseDto {
     public String kotipaikkaUri;
     public String maaUri;
     public String ytjkieli;
+    public Set<String> kieletUris;
 
     public static OrganisaatioV4Dto of(String businessId, String organisationName) {
         OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
@@ -30,6 +31,7 @@ public class OrganisaatioV4Dto extends BaseDto {
         organisaatioNimi.nimi = organisaatio.nimi;
         organisaatio.nimet = singletonList(organisaatioNimi);
         organisaatio.maaUri = "maatjavaltiot1_fin";
+        organisaatio.kieletUris = Set.of();
         return organisaatio;
     }
 

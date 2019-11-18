@@ -2,13 +2,14 @@ import React, {useContext, useEffect, useState} from "react";
 import {LanguageContext} from '../contexts';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import PaatosVahvistus from "./PaatosVahvistus";
+import {Rekisterointihakemus} from "./rekisterointihakemus";
 
 type Props = {
-    valitut: number[]
-    tyhjennaValinnatCallback: () => void
+    valitut: Rekisterointihakemus[]
+    valitutKasiteltyCallback: () => void
 }
 
-export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: Props) {
+export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [kaytossa, asetaKaytossa] = useState(false);
     const [hyvaksytty, asetaHyvaksytty] = useState(false);
@@ -34,7 +35,7 @@ export default function PaatosKontrollit({ valitut, tyhjennaValinnatCallback }: 
             <PaatosVahvistus valitut={valitut}
                              hyvaksytty={hyvaksytty}
                              nayta={naytaVahvistus}
-                             tyhjennaValinnatCallback={tyhjennaValinnatCallback}
+                             valitutKasiteltyCallback={valitutKasiteltyCallback}
                              suljeCallback={() => asetaNaytaVahvistus(false)}/>
         </div>
     );

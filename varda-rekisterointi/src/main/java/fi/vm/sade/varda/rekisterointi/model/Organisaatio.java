@@ -36,4 +36,7 @@ public class Organisaatio {
     @NotNull @Column("maa")
     public final String maaUri;
 
+    @NotNull @Column("kielet_uris")
+    public final Set<String> kieletUris;
+
 }

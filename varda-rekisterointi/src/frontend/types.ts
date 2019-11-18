@@ -32,6 +32,7 @@ export type Organisaatio = {
     tyypit: KoodiUri[],
     kotipaikkaUri: KoodiUri,
     maaUri: KoodiUri,
+    kieletUris: KoodiUri[],
     yhteystiedot: Yhteystieto[]
 }
 

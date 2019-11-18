@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useContext } from 'react';
 import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
-import { Organisaatio, Kayttaja, Koodi } from '../types';
+import { Organisaatio, Kayttaja } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
 import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
@@ -9,14 +9,11 @@ import './Rekisterointi.css';
 import Header from './Header';
 import Wizard from '../Wizard';
 import Navigation from './Navigation';
-import Spinner from '../Spinner';
-import { LanguageContext } from '../contexts';
+import {KuntaKoodistoContext, LanguageContext} from '../contexts';
 import EmailValidator from 'email-validator';
 import { useBeforeunload } from 'react-beforeunload';
-import useAxios from 'axios-hooks';
 import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
-import ErrorPage from '../ErrorPage';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -34,7 +31,7 @@ const initialKayttaja: Kayttaja = {
     sahkoposti: '',
     asiointikieli: 'fi',
     saateteksti: '',
-}
+};
 
 function reducer<T>(state: T, data: Partial<T>): T {
     return { ...state, ...data };
@@ -42,8 +39,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
 
 export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrganisaatio, rekisteroinnitUrl}: Props) {
     const { i18n } = useContext(LanguageContext);
-    const [{data: kaikkiKunnat, loading: kaikkiKunnatLoading, error: kaikkiKunnatError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true');
+    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
     const [kunnat, setKunnat] = useState(initialKunnat);
     const [sahkopostit, setSahkopostit] = useState(intialSahkopostit);
@@ -133,13 +129,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
         }
         return true;
     }
-
-    if (kaikkiKunnatLoading) {
-        return <Spinner />;
-    }
-    if (kaikkiKunnatError) {
-        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
-    }
+    const kaikkiKunnat = kuntaKoodisto.koodit();
 
     return (
         <div className="varda-rekisterointi-hakija">
