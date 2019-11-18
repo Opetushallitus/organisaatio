@@ -62,7 +62,7 @@ export class KoodistoImpl implements Koodisto {
     }
 
     koodit(): Koodi[] {
-        return [... this.koodisto];
+        return [...this.koodisto];
     }
 
     private nimi(predikaatti: (koodi: Koodi) => boolean): string {
