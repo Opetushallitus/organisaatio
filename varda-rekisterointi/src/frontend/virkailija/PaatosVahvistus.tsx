@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import Axios from "axios";
-import {LanguageContext} from '../contexts';
+import {KuntaKoodistoContext, LanguageContext} from '../contexts';
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Modal from "@opetushallitus/virkailija-ui-components/Modal"
@@ -28,7 +28,7 @@ type Props = {
 
 class PaatosRivi {
 
-    constructor(readonly hakemus: Rekisterointihakemus) {}
+    constructor(readonly hakemus: Rekisterointihakemus, readonly kotipaikka: string, readonly opetuskieli: string) {}
 
     get organisaatio(): string {
         return this.hakemus.organisaatio.ytjNimi.nimi;
@@ -42,19 +42,11 @@ class PaatosRivi {
         return this.hakemus.organisaatio.ytunnus;
     }
 
-    get kotipaikka(): string {
-        // TODO: uri -> kunta/maa
-        return `${this.hakemus.organisaatio.kotipaikkaUri}, ${this.hakemus.organisaatio.maaUri}`;
-    }
-
-    get opetuskieli(): string {
-        // TODO: monta opetuskieltä? kieliuri -> kieli
-        return "Suomi";
-    }
 }
 
 export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKasiteltyCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
+    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
 
     async function laheta() {
@@ -91,7 +83,9 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     </thead>
                     <tbody>
                     {
-                        valitut.map(hakemus => new PaatosRivi(hakemus)).map(rivi =>
+                        valitut.map(hakemus => new PaatosRivi(
+                            hakemus, `${kuntaKoodisto.uri2Nimi(hakemus.organisaatio.kotipaikkaUri)}`, "Suomi"
+                        )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
                             <td>{rivi.organisaatio}</td>
                             <td>{rivi.vastuuhenkilo}</td>

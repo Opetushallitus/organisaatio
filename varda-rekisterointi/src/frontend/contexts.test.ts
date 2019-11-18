@@ -36,4 +36,16 @@ describe('KoodistoImpl', () => {
         const nimi = impl.arvo2Nimi("0");
         expect(nimi).toEqual("");
     });
+
+    it('palauttaa kaikki nimet', () => {
+        const nimet = impl.nimet();
+        expect(nimet.length).toEqual(1);
+        expect(nimet[0]).toEqual("Koodi");
+    });
+
+    it('palauttaa kaikki koodit', () => {
+        const koodit = impl.koodit();
+        expect(koodit.length).toEqual(1);
+        expect(koodit[0].uri).toEqual("koodi_1#1");
+    })
 });
