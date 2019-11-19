@@ -64,6 +64,14 @@ public class OrganisaatioClient {
                 .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
     }
 
+    public Optional<OrganisaatioV4Dto> getV4ByOid(String oid) {
+        String url = properties.url("organisaatio-service.organisaatio.v4.byOid", oid);
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+        return httpClient.<OrganisaatioV4Dto>execute(request)
+                .expectedStatus(200)
+                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class));
+    }
+
     public OrganisaatioV4Dto save(OrganisaatioV4Dto organisaatio) {
         if (organisaatio.oid == null) {
             return create(organisaatio);
@@ -116,12 +124,7 @@ public class OrganisaatioClient {
     }
 
     public Optional<OrganisaatioV4Dto> getKuntaByOid(String oid) {
-        String url = properties.url("organisaatio-service.organisaatio.v4.byOid", oid);
-        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
-        return httpClient.<OrganisaatioV4Dto>execute(request)
-                .expectedStatus(200)
-                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
-                .filter(organisaatioV4Dto -> KUNTA_YRITYSMUOTO.equals(organisaatioV4Dto.yritysmuoto));
+        return getV4ByOid(oid).filter(organisaatioV4Dto -> KUNTA_YRITYSMUOTO.equals(organisaatioV4Dto.yritysmuoto));
     }
 
     private static class OrganisaatioListDto {

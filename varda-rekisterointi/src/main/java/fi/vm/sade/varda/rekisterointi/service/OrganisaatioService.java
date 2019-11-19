@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,6 +35,20 @@ public class OrganisaatioService {
                 dto.kieletUris);
     }
 
+    public OrganisaatioV4Dto muunnaOrganisaatio(Organisaatio organisaatio) {
+        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        dto.ytunnus = organisaatio.ytunnus;
+        dto.alkuPvm = organisaatio.alkuPvm;
+        dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
+        dto.nimi = dto.nimet.get(0).nimi;
+        dto.yritysmuoto = organisaatio.yritysmuoto;
+        dto.tyypit = organisaatio.tyypit;
+        dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
+        dto.maaUri = organisaatio.maaUri;
+        dto.kieletUris = organisaatio.kieletUris;
+        return dto;
+    }
+
     KielistettyNimi kuranttiNimi(OrganisaatioV4Dto dto) {
         LocalDate now = LocalDate.now();
         OrganisaatioNimi kurantti = dto.nimet.stream()
@@ -47,6 +62,13 @@ public class OrganisaatioService {
             throw new IllegalStateException("Ei YTJ-kielen tai oletuskielen mukaista nimeä organisaatiolle: " + dto.ytunnus);
         }
         return KielistettyNimi.of(ytjKielinen, kieli, kurantti.alkuPvm);
+    }
+
+    List<OrganisaatioNimi> organisaatioNimet(KielistettyNimi kielistettyNimi) {
+        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
+        organisaatioNimi.nimi = Map.of(kielistettyNimi.kieli, kielistettyNimi.nimi);
+        organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm != null ? kielistettyNimi.alkuPvm : LocalDate.now();
+        return List.of(organisaatioNimi);
     }
 
     private LocalDate nullSafeDate(LocalDate date) {

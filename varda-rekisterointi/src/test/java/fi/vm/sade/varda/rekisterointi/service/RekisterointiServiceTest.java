@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,10 +35,13 @@ public class RekisterointiServiceTest {
     @TestConfiguration
     static class RekisterointiServiceTestConfiguration {
         @Bean
-        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository, PaatosRepository paatosRepository,
+        public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository,
+                                                         PaatosRepository paatosRepository,
                                                          ApplicationEventPublisher eventPublisher,
-                                                         SchedulerClient schedulerClient, Task<Long> task) {
-            return new RekisterointiService(rekisterointiRepository, paatosRepository, eventPublisher, schedulerClient, task, task);
+                                                         SchedulerClient schedulerClient, Task<Long> task,
+                                                         RekisterointiFinalizer rekisterointiFinalizer) {
+            return new RekisterointiService(rekisterointiRepository, paatosRepository, eventPublisher, schedulerClient,
+                    task, task, rekisterointiFinalizer);
         }
     }
 
@@ -53,11 +57,12 @@ public class RekisterointiServiceTest {
                     KielistettyNimi.of(
                             "fi", "Testiyritys", null
                     ),
-                    "toimintamuoto",
+                    "yritysmuoto",
                     Collections.singleton("tyyppi"),
                     "Helsinki",
                     "Suomi",
                     Collections.singleton("kieli")),
+            "vardatoimintamuoto_tm01",
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
             Kayttaja.builder()
@@ -88,6 +93,9 @@ public class RekisterointiServiceTest {
 
     @MockBean
     private Task<Long> taskWithLongData;
+
+    @MockBean
+    private RekisterointiFinalizer rekisterointiFinalizer;
 
     @Autowired
     private RekisterointiService rekisterointiService;
