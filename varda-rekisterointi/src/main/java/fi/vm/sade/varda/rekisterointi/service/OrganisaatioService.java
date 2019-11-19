@@ -40,6 +40,7 @@ public class OrganisaatioService {
         dto.ytunnus = organisaatio.ytunnus;
         dto.alkuPvm = organisaatio.alkuPvm;
         dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
+        dto.nimi = dto.nimet.get(0).nimi;
         dto.yritysmuoto = organisaatio.yritysmuoto;
         dto.tyypit = organisaatio.tyypit;
         dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
@@ -66,7 +67,7 @@ public class OrganisaatioService {
     List<OrganisaatioNimi> organisaatioNimet(KielistettyNimi kielistettyNimi) {
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.nimi = Map.of(kielistettyNimi.kieli, kielistettyNimi.nimi);
-        organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm;
+        organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm != null ? kielistettyNimi.alkuPvm : LocalDate.now();
         return List.of(organisaatioNimi);
     }
 

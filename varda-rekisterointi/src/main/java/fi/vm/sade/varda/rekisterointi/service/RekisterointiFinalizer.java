@@ -41,7 +41,7 @@ public class RekisterointiFinalizer {
     void luoOrganisaatio(Organisaatio organisaatio) {
         OrganisaatioV4Dto dto = organisaatioService.muunnaOrganisaatio(organisaatio);
         OrganisaatioV4Dto luotu = organisaatioClient.create(dto);
-        LOGGER.info("Luotu rekisteröinnin pohjalta organisaatio: {}", luotu.oid);
+        LOGGER.info("Luotu rekisteröinnin pohjalta organisaatio, y-tunnus: {}", luotu.ytunnus);
     }
 
     void lisaaVardaToimintamuoto(Organisaatio organisaatio) {
