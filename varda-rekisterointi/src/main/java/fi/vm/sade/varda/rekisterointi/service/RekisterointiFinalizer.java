@@ -53,9 +53,9 @@ public class RekisterointiFinalizer {
         if (!dto.tyypit.contains(VARDA_ORGANISAATIOTYYPPI)) {
             dto.tyypit = new HashSet<>(dto.tyypit);
             dto.tyypit.add(VARDA_ORGANISAATIOTYYPPI);
-            LOGGER.info("Lisätty Varda-toimintamuoto organisaatiolle, oid: {}", oid);
+            LOGGER.info("Lisätty varhaiskasvatuksen organisaatiotyyppi organisaatiolle, oid: {}", oid);
         } else {
-            LOGGER.info("Organisaatiolla {} on jo ennestään Varda-toimintamuoto.", oid);
+            LOGGER.debug("Organisaatiolla {} on jo ennestään varhaiskasvatuksen organisaatiotyyppi.", oid);
         }
         dto.piilotettu = piilotettavaToimintamuoto(rekisterointi.toimintamuoto);
         organisaatioClient.save(dto);
