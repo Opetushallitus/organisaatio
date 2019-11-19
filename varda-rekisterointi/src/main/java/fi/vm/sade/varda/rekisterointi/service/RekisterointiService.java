@@ -35,19 +35,22 @@ public class RekisterointiService {
     private final SchedulerClient schedulerClient;
     private final Task<Long> rekisterointiEmailTask;
     private final Task<Long> paatosEmailTask;
+    private final RekisterointiFinalizer rekisterointiFinalizer;
 
     public RekisterointiService(RekisterointiRepository rekisterointiRepository,
                                 PaatosRepository paatosRepository,
                                 ApplicationEventPublisher eventPublisher,
                                 SchedulerClient schedulerClient,
                                 @Qualifier("rekisterointiEmailTask") Task<Long> rekisterointiEmailTask,
-                                @Qualifier("paatosEmailTask") Task<Long> paatosEmailTask) {
+                                @Qualifier("paatosEmailTask") Task<Long> paatosEmailTask,
+                                RekisterointiFinalizer rekisterointiFinalizer) {
         this.rekisterointiRepository = rekisterointiRepository;
         this.paatosRepository = paatosRepository;
         this.eventPublisher = eventPublisher;
         this.schedulerClient = schedulerClient;
         this.rekisterointiEmailTask = rekisterointiEmailTask;
         this.paatosEmailTask = paatosEmailTask;
+        this.rekisterointiFinalizer = rekisterointiFinalizer;
     }
 
     public Iterable<Rekisterointi> listByTilaAndOrganisaatio(Rekisterointi.Tila tila, String organisaatio) {
@@ -90,6 +93,7 @@ public class RekisterointiService {
         schedulerClient.schedule(paatosEmailTask.instance(taskId, saved.id), Instant.now());
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,
                 auditBeforeDto, auditAfterDto));
+        rekisterointiFinalizer.finalize(rekisterointi, paatos);
         return saved;
     }
 
