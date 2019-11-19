@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -95,7 +97,10 @@ public class OrganisaatioClientTest {
     @Test
     public void listBy() {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
-                .willReturn(aResponse().withStatus(200).withBody("{\"numHits\": 2, \"organisaatiot\": [{\"oid\": \"oid1\"}, {\"oid\": \"oid2\"}]}")));
+                .willReturn(aResponse().withStatus(200).withBody("{\"numHits\": 3, \"organisaatiot\": [" +
+                        "{\"oid\": \"oid1\", \"alkuPvm\": \"1992-01-01\"}," +
+                        "{\"oid\": \"oid2\", \"alkuPvm\": 258760800000}," +
+                        "{\"oid\": \"oid3\", \"alkuPvm\": 1093467600000}]}")));
         OrganisaatioCriteria criteria = new OrganisaatioCriteria();
         criteria.aktiiviset = true;
         criteria.yritysmuoto = List.of("Kunta");
@@ -103,7 +108,10 @@ public class OrganisaatioClientTest {
 
         Collection<OrganisaatioV4Dto> list = client.listBy(criteria);
 
-        assertThat(list).extracting(organisaatio -> organisaatio.oid).containsExactly("oid1", "oid2");
+        assertThat(list).extracting(organisaatio -> organisaatio.oid, organisaatio -> organisaatio.alkuPvm).containsExactly(
+                tuple("oid1", LocalDate.parse("1992-01-01")),
+                tuple("oid2", LocalDate.parse("1978-03-15")),
+                tuple("oid3", LocalDate.parse("2004-08-26")));
     }
 
 }
