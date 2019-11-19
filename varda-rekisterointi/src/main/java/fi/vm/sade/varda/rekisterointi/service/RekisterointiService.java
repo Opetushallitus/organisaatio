@@ -93,7 +93,9 @@ public class RekisterointiService {
         schedulerClient.schedule(paatosEmailTask.instance(taskId, saved.id), Instant.now());
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,
                 auditBeforeDto, auditAfterDto));
-        rekisterointiFinalizer.finalize(rekisterointi, paatos);
+        if (paatos.hyvaksytty) {
+            rekisterointiFinalizer.finalize(rekisterointi);
+        }
         return saved;
     }
 

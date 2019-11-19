@@ -65,7 +65,7 @@ public class OrganisaatioService {
 
     List<OrganisaatioNimi> organisaatioNimet(KielistettyNimi kielistettyNimi) {
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
-        organisaatioNimi.nimi = Map.of(kieliKoodiArvoToUri(kielistettyNimi.kieli), kielistettyNimi.nimi);
+        organisaatioNimi.nimi = Map.of(kielistettyNimi.kieli, kielistettyNimi.nimi);
         organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm;
         return List.of(organisaatioNimi);
     }
@@ -79,12 +79,6 @@ public class OrganisaatioService {
 
     private static String kieliKoodiUriVersionToKoodiArvo(String koodiUriVersion) {
         return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.getOrDefault(koodiUriVersion, "fi");
-    }
-
-    private static String kieliKoodiArvoToUri(String arvo) {
-        return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.entrySet().stream().filter(
-                entry -> entry.getValue().equals(arvo)
-        ).map(Map.Entry::getKey).findAny().orElse(DEFAULT_KIELI_KOODI_URI_VERSION);
     }
 
 }
