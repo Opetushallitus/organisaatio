@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Configuration
 public class JacksonConfiguration {
@@ -26,7 +28,7 @@ public class JacksonConfiguration {
         public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             if (p.hasToken(JsonToken.VALUE_NUMBER_INT)) {
                 // organisaatiopalvelun hakurajapinta palauttaa organisaation alkuPvm-kentän epochina
-                return new java.sql.Date(p.getLongValue()).toLocalDate();
+                return Instant.ofEpochMilli(p.getLongValue()).atZone(ZoneId.of("Europe/Helsinki")).toLocalDate();
             }
             return com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.INSTANCE.deserialize(p, ctxt);
         }
