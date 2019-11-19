@@ -11,6 +11,7 @@ public class OrganisaatioV4Dto extends BaseDto {
 
     public String oid;
     public String ytunnus;
+    public boolean piilotettu;
     public Map<String, String> nimi;
     public List<OrganisaatioNimi> nimet;
     public LocalDate alkuPvm;

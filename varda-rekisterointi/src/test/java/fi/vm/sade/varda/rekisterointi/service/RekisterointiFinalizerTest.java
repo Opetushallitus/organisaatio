@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -28,7 +28,7 @@ public class RekisterointiFinalizerTest {
     }
 
     @Test
-    public void lisaaVardaToimintamuodon() {
+    public void paivittaaVardaTiedot() {
         OrganisaatioService service = new OrganisaatioService();
         OrganisaatioClient client = mock(OrganisaatioClient.class);
         RekisterointiFinalizer finalizer = new RekisterointiFinalizer(service, client);
@@ -42,6 +42,7 @@ public class RekisterointiFinalizerTest {
         finalizer.finalize(rekisterointi);
 
         verify(client).save(any(OrganisaatioV4Dto.class));
-        assertTrue(dto.tyypit.contains(RekisterointiFinalizer.VARDA_TOIMINTAMUOTO));
+        assertTrue(dto.tyypit.contains(RekisterointiFinalizer.VARDA_ORGANISAATIOTYYPPI));
+        assertEquals(!RekisterointiFinalizer.JULKINEN_VARDA_TOIMINTAMUOTO.equals(rekisterointi.toimintamuoto), dto.piilotettu);
     }
 }

@@ -1,9 +1,10 @@
 DELETE FROM kayttaja;
 DELETE FROM rekisterointi;
 
-INSERT INTO rekisterointi (id, kunnat, sahkopostit)
+INSERT INTO rekisterointi (id, toimintamuoto, kunnat, sahkopostit)
  VALUES (
      0,
+     'vardatoimintamuoto_tm01',
      '{"Helsinki"}',
      '{"testi.yritys@testiyrit.ys"}'
  );
@@ -14,7 +15,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      '0000000-0',
      CURRENT_DATE,
      'toiminimi',
-     '{"vardatoimintamuoto_tm01"}',
+     '{"organisaatiotyyppi_07"}',
      'Helsinki',
      'Suomi',
      'Testiyritys',

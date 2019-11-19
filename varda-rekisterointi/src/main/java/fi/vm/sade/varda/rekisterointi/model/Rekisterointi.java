@@ -21,6 +21,9 @@ public class Rekisterointi {
     @With @NotNull @Column("rekisterointi_id")
     public final Organisaatio organisaatio;
 
+    @NotNull
+    public final String toimintamuoto;
+
     @NotEmpty
     public final Set<@NotNull String> kunnat;
     public final Set<@Email String> sahkopostit;
@@ -37,6 +40,7 @@ public class Rekisterointi {
     public Rekisterointi(
             Long id,
             Organisaatio organisaatio,
+            String toimintamuoto,
             Set<String> kunnat,
             Set<String> sahkopostit,
             Kayttaja kayttaja,
@@ -44,6 +48,7 @@ public class Rekisterointi {
             Tila tila) {
         this.id = id;
         this.organisaatio = organisaatio;
+        this.toimintamuoto = toimintamuoto;
         this.kunnat = kunnat;
         this.sahkopostit = sahkopostit;
         this.kayttaja = kayttaja;
@@ -53,11 +58,12 @@ public class Rekisterointi {
 
     public static Rekisterointi of(
             Organisaatio organisaatio,
+            String toimintamuoto,
             Set<String> kunnat,
             Set<String> sahkopostit,
             Kayttaja kayttaja) {
         return new Rekisterointi(
-                null, organisaatio, kunnat, sahkopostit, kayttaja, null, null);
+                null, organisaatio, toimintamuoto, kunnat, sahkopostit, kayttaja, null, null);
     }
 
     public enum Tila {

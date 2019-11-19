@@ -57,11 +57,12 @@ public class RekisterointiServiceTest {
                     KielistettyNimi.of(
                             "fi", "Testiyritys", null
                     ),
-                    "toimintamuoto",
+                    "yritysmuoto",
                     Collections.singleton("tyyppi"),
                     "Helsinki",
                     "Suomi",
                     Collections.singleton("kieli")),
+            "vardatoimintamuoto_tm01",
             Collections.singleton("Helsinki"),
             Collections.emptySet(),
             Kayttaja.builder()
