@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {KoodistoImpl, LanguageContext, OpetuskieliKoodistoContext} from "../contexts";
+import {KoodistoImpl, LanguageContext, MaatJaValtiotKoodistoContext} from "../contexts";
 import {ConfigurationContext} from "../contexts";
 import {useDebounce} from "use-debounce";
 import RekisterointiLista from "./RekisterointiLista";
@@ -27,8 +27,8 @@ const theme = createTheme();
 export default function Rekisteroinnit() {
     const { i18n, language } = useContext(LanguageContext);
     const configuration = useContext(ConfigurationContext);
-    const [{data: opetusKielet, loading: opetusKieletLoading, error: opetusKieletError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/OPETUSKIELI/koodi?onlyValid=true');
+    const [{data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError}]
+        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true');
     const [hakutermiInput, asetaHakutermiInput] = useState("");
     const [hakutermi] = useDebounce(hakutermiInput, 500);
     const [tila, asetaTila] = useState(Tila.KASITTELYSSA);
@@ -36,15 +36,15 @@ export default function Rekisteroinnit() {
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnus);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]:  ytunnusDisabled });
 
-    if (opetusKieletLoading) {
+    if (maatJaValtiotLoading) {
         return <Spinner />;
     }
 
-    if (opetusKieletError) {
+    if (maatJaValtiotError) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
     }
 
-    const opetuskieliKoodisto = new KoodistoImpl(opetusKielet, language);
+    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
 
     function vaihdaTila(uusiTila: string) {
         asetaTila(uusiTila as Tila);
@@ -56,7 +56,7 @@ export default function Rekisteroinnit() {
 
     return (
         <ConfigurationContext.Provider value={configuration}>
-            <OpetuskieliKoodistoContext.Provider value={{ koodisto: opetuskieliKoodisto }}>
+            <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
                 <VirkailijaRaamit scriptUrl={configuration.virkailijaRaamitUrl} />
                 <ThemeProvider theme={theme}>
                     <Box className={styles.rekisteroinnit}>
@@ -91,7 +91,7 @@ export default function Rekisteroinnit() {
                         </Link>
                     </Box>
                 </ThemeProvider>
-            </OpetuskieliKoodistoContext.Provider>
+            </MaatJaValtiotKoodistoContext.Provider>
         </ConfigurationContext.Provider>
     );
 }

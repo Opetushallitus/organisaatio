@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import Axios from "axios";
-import {KuntaKoodistoContext, LanguageContext, OpetuskieliKoodistoContext} from '../contexts';
+import {KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext} from '../contexts';
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Modal from "@opetushallitus/virkailija-ui-components/Modal"
@@ -9,6 +9,7 @@ import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader"
 import {Rekisterointihakemus} from "./rekisterointihakemus";
 import {hasLength} from "../StringUtils";
+import {Organisaatio} from "../types";
 
 const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
 
@@ -28,14 +29,14 @@ type Props = {
 
 class PaatosRivi {
 
-    constructor(readonly hakemus: Rekisterointihakemus, readonly kotipaikka: string, readonly opetuskieli: string) {}
+    constructor(readonly hakemus: Rekisterointihakemus, readonly kotipaikka: string) {}
 
     get organisaatio(): string {
         return this.hakemus.organisaatio.ytjNimi.nimi;
     }
 
-    get vastuuhenkilo(): string {
-        return `${this.hakemus.kayttaja.etunimi} ${this.hakemus.kayttaja.sukunimi}`
+    get sahkoposti(): string {
+        return this.hakemus.sahkopostit[0];
     }
 
     get ytunnus(): string {
@@ -47,7 +48,7 @@ class PaatosRivi {
 export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKasiteltyCallback, suljeCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
-    const { koodisto: opetuskieliKoodisto } = useContext(OpetuskieliKoodistoContext);
+    const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
 
     async function laheta() {
@@ -68,11 +69,13 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
         }
     }
 
-    function opetuskielet(kieliUris: string[]): string {
-        if (!kieliUris || kieliUris.length === 0) return "";
-        return kieliUris.map(
-            kieliUri => opetuskieliKoodisto.uri2Nimi(kieliUri)
-        ).join(", ");
+    function kotipaikka(organisaatio: Organisaatio): string {
+        const osat: string[] = [];
+        const kunta = kuntaKoodisto.uri2Nimi(organisaatio.kotipaikkaUri);
+        const maa = maatJaValtiotKoodisto.uri2Nimi(organisaatio.maaUri);
+        if (kunta) osat.push(kunta);
+        if (maa) osat.push(maa);
+        return osat.join(", ");
     }
 
     return (
@@ -83,25 +86,22 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     <thead>
                         <tr key="otsikot">
                             <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
-                            <th>{i18n.translate('VASTUUHENKILO')}</th>
+                            <th>{i18n.translate('SAHKOPOSTI')}</th>
                             <th>{i18n.translate('YTUNNUS')}</th>
                             <th>{i18n.translate('ORGANISAATION_KOTIPAIKKA')}</th>
-                            <th>{i18n.translate('OPETUSKIELI')}</th>
                         </tr>
                     </thead>
                     <tbody>
                     {
                         valitut.map(hakemus => new PaatosRivi(
                             hakemus,
-                            `${kuntaKoodisto.uri2Nimi(hakemus.organisaatio.kotipaikkaUri)}`,
-                            opetuskielet(hakemus.organisaatio.kieletUris)
+                            `${kotipaikka(hakemus.organisaatio)}`
                         )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
                             <td>{rivi.organisaatio}</td>
-                            <td>{rivi.vastuuhenkilo}</td>
+                            <td>{rivi.sahkoposti}</td>
                             <td>{rivi.ytunnus}</td>
                             <td>{rivi.kotipaikka}</td>
-                            <td>{rivi.opetuskieli}</td>
                         </tr>
                         )
                     }
@@ -109,7 +109,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                 </table>
             { hyvaksytty ? null :
                 <textarea value={perustelu}
-                          onChange={(event) => asetaPerustelu(event.currentTarget.value)} />
+                          onBlur={(event) => asetaPerustelu(event.currentTarget.value)} />
             }
             </ModalBody>
             <ModalFooter>

@@ -87,6 +87,6 @@ export const KuntaKoodistoContext = React.createContext<KoodistoContextType>({
     koodisto: new KoodistoImpl([], "fi")
 });
 
-export const OpetuskieliKoodistoContext = React.createContext<KoodistoContextType>({
+export const MaatJaValtiotKoodistoContext = React.createContext<KoodistoContextType>({
     koodisto: new KoodistoImpl([], "fi")
 });
