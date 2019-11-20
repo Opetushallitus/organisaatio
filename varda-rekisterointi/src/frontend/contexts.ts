@@ -36,7 +36,7 @@ type ConfigurationContextType = {
 }
 
 export const ConfigurationContext = React.createContext<ConfigurationContextType>({
-    virkailijaRaamitUrl: "https://virkailija.hahtuvaopintopolku.fi/virkailija-raamit/apply-raamit.js"
+    virkailijaRaamitUrl: "/virkailija-raamit/apply-raamit.js"
 });
 
 export interface Koodisto {
