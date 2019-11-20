@@ -10,6 +10,7 @@ import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
 import ErrorPage from '../ErrorPage';
+import { yritysmuotoSortFnByLanguage, yritysmuotoValueFn } from './YritysmuotoUtils';
 
 type Props = {
     readOnly?: boolean,
@@ -73,7 +74,8 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                                  disabled={yritysmuotoDisabled}
                                  required={!yritysmuotoDisabled}
                                  hasError={!!errors.yritysmuoto}
-                                 valueFn={koodi => koodi.nimi.fi || koodi.uri}
+                                 valueFn={yritysmuotoValueFn}
+                                 sortFn={yritysmuotoSortFnByLanguage(language)}
                                  onChange={yritysmuoto => setOrganisaatio({ yritysmuoto: yritysmuoto })} />
                 </div>
             </FormFieldContainer>

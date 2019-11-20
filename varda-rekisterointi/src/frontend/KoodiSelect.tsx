@@ -13,6 +13,7 @@ type Props = {
     hasError?: boolean,
     valueFn?: (koodi: Koodi) => string,
     optionLabelFn?: (koodi: Koodi, language: Language) => string,
+    sortFn?: (item1: {value: string, label: string}, item2: {value: string, label: string}) => number,
     onChange: (uri: string) => void,
 }
 
@@ -25,6 +26,7 @@ export default function KoodiSelect(props: Props) {
     });
     const valueFn = props.valueFn ? props.valueFn : (koodi: Koodi) => koodi.uri;
     const optionLabelFn = props.optionLabelFn ? props.optionLabelFn : (koodi: Koodi, language: Language) => toLocalizedText(koodi.nimi, language, koodi.arvo);
+    const sortFn = props.sortFn ? props.sortFn : (item1: {value: string, label: string}, item2: {value: string, label: string}) => item1.label.localeCompare(item2.label, language);
     return (
         <div className="oph-select-container">
             <select id={props.id}
@@ -35,7 +37,7 @@ export default function KoodiSelect(props: Props) {
                 {props.required && props.selected ? null : <option value=""></option>}
                 {props.selectable
                     .map(koodi => ({value: valueFn(koodi), label: optionLabelFn(koodi, language)}))
-                    .sort((item1, item2) => item1.label.localeCompare(item2.label, language))
+                    .sort(sortFn)
                     .map(item => <option value={item.value} key={item.value}>{item.label}</option>)}
             </select>
         </div>
