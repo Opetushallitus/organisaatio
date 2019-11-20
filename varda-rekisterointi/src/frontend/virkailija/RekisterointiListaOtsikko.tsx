@@ -20,7 +20,7 @@ export default function RekisterointiListaOtsikko({ valintaKaytossa, kaikkiValit
                 <th id="valitseKaikki"><Checkbox checked={kaikkiValittu} onChange={_ => kaikkiValittuCallback(!kaikkiValittu)}/></th>
             }
                 <th>{i18n.translate("ORGANISAATION_NIMI")}</th>
-                <th>{i18n.translate("VASTUUHENKILO")}</th>
+                <th>{i18n.translate("SAHKOPOSTI")}</th>
                 <th>{i18n.translate("YTUNNUS")}</th>
                 <th>{i18n.translate("SAAPUMISAIKA")}</th>
             </tr>

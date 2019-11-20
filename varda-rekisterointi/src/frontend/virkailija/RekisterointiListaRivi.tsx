@@ -14,8 +14,8 @@ export class ListaRivi {
         return this.hakemus.organisaatio.ytjNimi.nimi;
     }
 
-    get vastuuhenkilo(): string {
-        return `${this.hakemus.kayttaja.etunimi} ${this.hakemus.kayttaja.sukunimi}`
+    get sahkoposti(): string {
+        return this.hakemus.sahkopostit[0];
     }
 
     get ytunnus(): string {
@@ -56,7 +56,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td><Checkbox checked={valittu} onChange={_ => valitse()} /></td>
         }
             <td>{rekisterointi.organisaatio}</td>
-            <td>{rekisterointi.vastuuhenkilo}</td>
+            <td>{rekisterointi.sahkoposti}</td>
             <td>{rekisterointi.ytunnus}</td>
             <td>{rekisterointi.vastaanotettu}</td>
         </tr>
