@@ -21,8 +21,8 @@ public class OrganisaatioService {
             "kieli_en#1", "en"
     );
     private static final List<String> HALUTUT_OSOITETYYPIT = List.of(
-            YhteystietoDto.OSOITETYYPPI_POSTI,
-            YhteystietoDto.OSOITETYYPPI_KAYNTI
+            OsoiteTyyppi.POSTI.value(),
+            OsoiteTyyppi.KAYNTI.value()
     );
 
     public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
@@ -50,6 +50,7 @@ public class OrganisaatioService {
         dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
         dto.maaUri = organisaatio.maaUri;
         dto.kieletUris = organisaatio.kieletUris;
+        dto.yhteystiedot = muunnaYhteystiedot(organisaatio);
         return dto;
     }
 
@@ -102,7 +103,7 @@ public class OrganisaatioService {
                 .filter(yhteystietoDto -> yhteystietoDto.kieli.equals(ytjKieli)
                         && HALUTUT_OSOITETYYPIT.contains(yhteystietoDto.osoiteTyyppi))
                 .collect(Collectors.groupingBy(yhteystietoDto -> yhteystietoDto.osoiteTyyppi));
-        return yhteystiedotTyypeittain.getOrDefault(YhteystietoDto.OSOITETYYPPI_POSTI, List.of()).stream()
+        return yhteystiedotTyypeittain.getOrDefault(OsoiteTyyppi.POSTI.value(), List.of()).stream()
                 .findAny()
                 .map(yhteystietoDto -> {
                     Osoite postiosoite = Osoite.builder()
@@ -112,6 +113,25 @@ public class OrganisaatioService {
                             .build();
                     return Yhteystiedot.of(yhteystietoDto.numero, yhteystietoDto.email, postiosoite, Osoite.TYHJA);
                 }).orElse(Yhteystiedot.of("", "", Osoite.TYHJA, Osoite.TYHJA));
+    }
+
+    private static List<YhteystietoDto> muunnaYhteystiedot(Organisaatio organisaatio) {
+        String ytjKieli = organisaatio.ytjNimi.kieli;
+        YhteystietoDto postiosoite = muunnaOsoite(ytjKieli, OsoiteTyyppi.POSTI, organisaatio.yhteystiedot.postiosoite);
+        postiosoite.numero = organisaatio.yhteystiedot.puhelinnumero;
+        postiosoite.email = organisaatio.yhteystiedot.sahkoposti;
+        YhteystietoDto kayntiosoite = muunnaOsoite(ytjKieli, OsoiteTyyppi.KAYNTI, organisaatio.yhteystiedot.kayntiosoite);
+        return List.of(postiosoite, kayntiosoite);
+    }
+
+    private static YhteystietoDto muunnaOsoite(String kieli, OsoiteTyyppi tyyppi, Osoite osoite) {
+        YhteystietoDto dto = new YhteystietoDto();
+        dto.osoiteTyyppi = tyyppi.value();
+        dto.kieli = kieli;
+        dto.osoite = osoite.katuosoite;
+        dto.postinumeroUri = osoite.postinumeroUri;
+        dto.postitoimipaikka = osoite.postitoimipaikka;
+        return dto;
     }
 
 }
