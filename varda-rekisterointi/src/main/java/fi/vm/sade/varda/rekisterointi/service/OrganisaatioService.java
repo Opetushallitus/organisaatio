@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -97,6 +98,14 @@ public class OrganisaatioService {
         return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.getOrDefault(koodiUriVersion, "fi");
     }
 
+    private static String koodiArvoToKieliKoodiUriVersion(String kieli) {
+        return KIELI_KOODI_URI_VERSION_TO_KOODI_ARVO.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(kieli)).findAny()
+                .orElseThrow(
+                    () -> new IllegalStateException("Ei sallittu kieli: " + kieli)
+                ).getKey();
+    }
+
     private static Yhteystiedot muunnaYhteystiedot(OrganisaatioV4Dto dto) {
         String ytjKieli = ytjKieliTaiOletusKieli(dto);
         Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = dto.yhteystiedot.stream()
@@ -127,7 +136,7 @@ public class OrganisaatioService {
     private static YhteystietoDto muunnaOsoite(String kieli, OsoiteTyyppi tyyppi, Osoite osoite) {
         YhteystietoDto dto = new YhteystietoDto();
         dto.osoiteTyyppi = tyyppi.value();
-        dto.kieli = kieli;
+        dto.kieli = koodiArvoToKieliKoodiUriVersion(kieli);
         dto.osoite = osoite.katuosoite;
         dto.postinumeroUri = osoite.postinumeroUri;
         dto.postitoimipaikka = osoite.postitoimipaikka;
