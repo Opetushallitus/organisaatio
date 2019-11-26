@@ -29,6 +29,8 @@ export default function Rekisteroinnit() {
     const configuration = useContext(ConfigurationContext);
     const [{data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true');
+    const [{data: permission, loading: permissionLoading, error: permissionError}]
+        = useAxios<boolean>('/varda-rekisterointi/virkailija/api/permission/rekisterointi/create');
     const [hakutermiInput, asetaHakutermiInput] = useState("");
     const [hakutermi] = useDebounce(hakutermiInput, 500);
     const [tila, asetaTila] = useState(Tila.KASITTELYSSA);
@@ -75,6 +77,8 @@ export default function Rekisteroinnit() {
                             </Tabs>
                         </div>
                         <RekisterointiLista tila={tila} hakutermi={hakutermi}/>
+                        {!permissionLoading && !permissionError && permission ?
+                        <div>
                         <Divider />
                         <Input type="text"
                                placeholder={i18n.translate('YTUNNUS')}
@@ -89,6 +93,8 @@ export default function Rekisteroinnit() {
                             }}>
                             {i18n.translate('REKISTEROINNIT_LUONTI')}
                         </Link>
+                        </div>
+                        : null}
                     </Box>
                 </ThemeProvider>
             </MaatJaValtiotKoodistoContext.Provider>

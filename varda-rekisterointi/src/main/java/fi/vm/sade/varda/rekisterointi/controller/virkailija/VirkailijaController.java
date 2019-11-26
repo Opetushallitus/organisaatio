@@ -1,11 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
-import fi.vm.sade.varda.rekisterointi.util.Constants;
-import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +53,7 @@ public class VirkailijaController {
     }
 
     @PostMapping(REKISTEROINNIT_PATH)
+    @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
     public void luoRekisterointi(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
         rekisterointiService.create(dto, RequestContextImpl.of(request));
     }
