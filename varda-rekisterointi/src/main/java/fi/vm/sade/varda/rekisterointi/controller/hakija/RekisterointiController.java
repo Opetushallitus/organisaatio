@@ -1,7 +1,10 @@
 package fi.vm.sade.varda.rekisterointi.controller.hakija;
 
+import fi.vm.sade.varda.rekisterointi.exception.DataInconsistencyException;
+import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 @RestController
 @RequestMapping(RekisterointiController.BASE_PATH)
@@ -25,6 +30,12 @@ public class RekisterointiController {
 
     @PostMapping
     public void register(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request, Authentication authentication) {
+        String ytunnus = findSessionAttribute(request, Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class).orElseThrow(
+                () -> new DataInconsistencyException("Käyttäjälle ei löydy y-tunnusta istunnosta.")
+        );
+        if (!ytunnus.equals(dto.organisaatio.ytunnus)) {
+            throw new InvalidInputException("Käyttäjällä ei ole oikeutta toimia y-tunnuksella: " + dto.organisaatio.ytunnus);
+        }
         service.create(dto, RequestContextImpl.of(request, authentication));
     }
 
