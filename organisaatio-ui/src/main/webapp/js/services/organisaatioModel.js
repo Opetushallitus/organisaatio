@@ -45,6 +45,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
             organisaatiotyypit: [],
             ophOrganisaatiot: [],
             oppilaitostyypit: [],
+            muutoppilaitostyypitplaceholder: "",
             kotipaikat: [],
             maat: [],
             //kielet: [],
@@ -66,6 +67,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
         this.kaikkiOrganisaatiotyypit = [];
         this.kaikkiPaikkakunnat = [];
+        this.kaikkiOppilaitostyypit = [];
 
         this.henkilot = {
             virkailijat: []

@@ -490,4 +490,41 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         }
         return localisedKoodi;
     }
+
+    $scope.addToMuutOppilaitostyypit = function() {
+        var uris = $scope.model.organisaatio.muutOppilaitosTyyppiUris || [];
+        var oppilaitostyyppi = $scope.model.koodisto.muutoppilaitostyypitplaceholder;
+
+        $log.info('Add oppilaitostyyppi to list: ' + oppilaitostyyppi);
+
+        if (uris.indexOf(oppilaitostyyppi) === -1 && oppilaitostyyppi !== null && typeof(oppilaitostyyppi) !== "undefined"){
+            uris.push(oppilaitostyyppi);
+            $scope.form.$setDirty();
+        }
+
+        $scope.model.organisaatio.muutOppilaitosTyyppiUris = uris;
+    }
+
+    $scope.removeFromMuutOppilaitostyypit = function(oppilaitostyyppi) {
+        var uris = $scope.model.organisaatio.muutOppilaitosTyyppiUris || [];
+        var atIndex;
+
+        if ((atIndex = uris.indexOf(oppilaitostyyppi)) !== -1){
+            uris.splice(atIndex, 1);
+            $scope.form.$setDirty();
+        }
+
+        $scope.model.organisaatio.muutOppilaitosTyyppiUris = uris;
+    }
+
+    $scope.localizeMuuOppilaitostyyppi = function(oppilaitostyyppi) {
+        var localisedKoodi = $scope.model.kaikkiOppilaitostyypit.filter(function (koodi) {
+            return koodi.koodiUri + '#' + koodi.versio === oppilaitostyyppi;
+        })[0];
+
+        if (localisedKoodi) {
+            return KoodistoKoodi.getLocalizedName(localisedKoodi);
+        }
+        return localisedKoodi;
+    }
 });
