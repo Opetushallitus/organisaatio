@@ -24,7 +24,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
-@Transactional
 public class RekisterointiService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiService.class);
@@ -69,6 +68,7 @@ public class RekisterointiService {
                 tila.toString(), kunnat, organisaatio);
     }
 
+    @Transactional
     public long create(Rekisterointi rekisterointi, RequestContext requestContext) {
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi);
         String taskId = String.format("%s-%d", rekisterointiEmailTask.getName(), saved.id);
@@ -78,6 +78,7 @@ public class RekisterointiService {
         return saved.id;
     }
 
+    @Transactional
     public Rekisterointi resolve(String paattajaOid, PaatosDto paatosDto, RequestContext requestContext) {
         Paatos paatos = new Paatos(paatosDto.rekisterointi, paatosDto.hyvaksytty, LocalDateTime.now(),paattajaOid, paatosDto.perustelu);
         Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
@@ -98,11 +99,12 @@ public class RekisterointiService {
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,
                 auditBeforeDto, auditAfterDto));
         if (paatos.hyvaksytty) {
-            rekisterointiFinalizer.finalize(rekisterointi);
+            rekisterointiFinalizer.finalize(rekisterointi, paattajaOid);
         }
         return saved;
     }
 
+    @Transactional
     public void resolveBatch(String paattajaOid, PaatosBatch paatokset, RequestContext requestContext) {
         paatokset.hakemukset.forEach(id -> resolve(
                 paattajaOid,

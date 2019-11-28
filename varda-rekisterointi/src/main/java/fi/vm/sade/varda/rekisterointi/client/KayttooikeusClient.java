@@ -6,6 +6,8 @@ import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.varda.rekisterointi.dto.KayttooikeusKutsuDto;
+import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaCriteria;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaDto;
 import org.apache.http.entity.ContentType;
@@ -13,8 +15,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
 @Component
 public class KayttooikeusClient {
@@ -58,5 +62,31 @@ public class KayttooikeusClient {
                 .expectedStatus(200)
                 .mapWith(json -> Arrays.asList(fromJson(json, VirkailijaDto[].class)))
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+    }
+
+    public void kutsuKayttaja(String kutsujaOid, Kayttaja kayttaja, String organisaatioOid, Long oikeusRyhmaId) {
+        KayttooikeusKutsuDto dto = KayttooikeusKutsuDto.builder()
+                .kutsujaOid(kutsujaOid)
+                .etunimi(kayttaja.etunimi)
+                .sukunimi(kayttaja.sukunimi)
+                .asiointikieli(kayttaja.asiointikieli)
+                .saate(kayttaja.saateteksti)
+                .sahkoposti(kayttaja.sahkoposti)
+                .organisaatiot(Set.of(
+                        KayttooikeusKutsuDto.KutsuOrganisaatioDto.of(
+                                organisaatioOid,
+                                Set.of(KayttooikeusKutsuDto.KutsuKayttooikeusRyhmaDto.of(oikeusRyhmaId)),
+                                LocalDate.now().plusYears(1))
+                        ))
+                .build();
+        String url = properties.url("kayttooikeus-service.kutsu");
+        OphHttpEntity entity = new OphHttpEntity.Builder()
+                .content(toJson(dto))
+                .contentType(ContentType.APPLICATION_JSON)
+                .build();
+        OphHttpRequest request = OphHttpRequest.Builder.post(url).setEntity(entity).build();
+        httpClient.<Long>execute(request)
+                .expectedStatus(201)
+                .ignoreResponse();
     }
 }

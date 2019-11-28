@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import java.util.Arrays;
+
 @Configuration
 @ConfigurationPropertiesScan("fi.vm.sade.varda.rekisterointi.properties")
 public class PropertiesConfiguration {
@@ -18,6 +20,11 @@ public class PropertiesConfiguration {
         properties.addDefault("url-alb", environment.getRequiredProperty("varda-rekisterointi.url-alb"));
         properties.addDefault("varda-rekisterointi.service.username", environment.getRequiredProperty("varda-rekisterointi.service.username"));
         properties.addDefault("varda-rekisterointi.service.password", environment.getRequiredProperty("varda-rekisterointi.service.password"));
+        Arrays.asList(
+                "varda-rekisterointi.kayttooikeus.ryhma.paivakoti",
+                "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito",
+                "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito"
+        ).forEach((prop) -> properties.addDefault(prop, environment.getRequiredProperty(prop)));
         return properties;
     }
 
