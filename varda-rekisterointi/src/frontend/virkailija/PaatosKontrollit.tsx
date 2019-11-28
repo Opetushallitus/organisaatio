@@ -3,6 +3,8 @@ import {LanguageContext} from '../contexts';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import PaatosVahvistus from "./PaatosVahvistus";
 import {Rekisterointihakemus} from "./rekisterointihakemus";
+import Box from "@opetushallitus/virkailija-ui-components/Box";
+import styles from "./PaatosKontrollit.module.css";
 
 type Props = {
     valitut: Rekisterointihakemus[]
@@ -25,18 +27,19 @@ export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: 
     }, [valitut]);
 
     return (
-        <div>
-            <Button id="hylkaaButton" disabled={!kaytossa} onClick={_ => vahvista(false)}>
-                {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
+        <Box className={styles.paatosKontrollit}>
+            <Button id="hylkaaButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={_ => vahvista(false)}
+                    variant="outlined" color="secondary">
+                <i className="material-icons md-18">&#xe14c;</i> {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
             </Button>
-            <Button id="hyvaksyButton" disabled={!kaytossa} onClick={_ => vahvista(true)}>
-                {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
+            <Button id="hyvaksyButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={_ => vahvista(true)}>
+                <i className="material-icons md-18">&#xe5ca;</i> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
             <PaatosVahvistus valitut={valitut}
                              hyvaksytty={hyvaksytty}
                              nayta={naytaVahvistus}
                              valitutKasiteltyCallback={valitutKasiteltyCallback}
                              suljeCallback={() => asetaNaytaVahvistus(false)}/>
-        </div>
+        </Box>
     );
 }

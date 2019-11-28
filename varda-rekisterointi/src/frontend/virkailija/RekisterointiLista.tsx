@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from "react";
 import Axios from "axios";
-import {LanguageContext} from '../contexts';
-import {Rekisterointihakemus, Tila} from "./rekisterointihakemus";
 
 import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
-import styles from "./RekisterointiLista.module.css";
+import {LanguageContext} from '../contexts';
+import {Rekisterointihakemus, Tila} from "./rekisterointihakemus";
 import RekisterointiListaOtsikko from "./RekisterointiListaOtsikko";
 import RekisterointiListaRivi, {ListaRivi} from "./RekisterointiListaRivi";
 import PaatosKontrollit from "./PaatosKontrollit";
+import styles from "./RekisterointiLista.module.css";
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const tyhjaHakemusLista: Rekisterointihakemus[] = [];

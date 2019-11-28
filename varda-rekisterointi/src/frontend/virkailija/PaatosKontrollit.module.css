@@ -1,0 +1,10 @@
+.paatosKontrollit {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+button.paatosKontrollit {
+    border-radius: 24px;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}

@@ -16,6 +16,9 @@
 
 .suodata {
     max-width: 20em;
+    border-radius: 24px;
+    border-style: none;
+    background-color: #f0f0f0;
 }
 
 .suodataIcon {
