@@ -2,6 +2,20 @@
     margin: 2em 4em;
 }
 
+@media screen and (max-width: 800px) {
+    .rekisteroinnit {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .rekisteroinnit {
+        margin-left: 7.5%;
+        margin-right: 7.5%;
+    }
+}
+
 .vasen {
     clear: left;
     float: left;
