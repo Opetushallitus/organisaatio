@@ -1,3 +1,22 @@
-.vardaRekisterointiLista {
-    clear: both;
+table.vardaRekisterointiLista {
+    width: 100%;
+    border-spacing: 0;
+    text-align: left;
+    line-height: 2.5em;
+    margin-bottom: 2em;
 }
+
+table.vardaRekisterointiLista thead tr th {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+table.vardaRekisterointiLista tbody tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+table.vardaRekisterointiLista tbody tr:last-child td {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+

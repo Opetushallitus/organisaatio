@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
-import {LanguageContext} from "../contexts";
-
 import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
+import {LanguageContext} from "../contexts";
 
 type Props = {
     valintaKaytossa: boolean
