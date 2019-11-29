@@ -7,9 +7,10 @@ import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class OrganisaatioService {
@@ -52,8 +53,14 @@ public class OrganisaatioService {
     KielistettyNimi kuranttiNimi(OrganisaatioV4Dto dto) {
         LocalDate now = LocalDate.now();
         OrganisaatioNimi kurantti = dto.nimet.stream()
-                .filter(nimi -> nullSafeDate(nimi.alkuPvm).isBefore(now) || nullSafeDate(nimi.alkuPvm).equals(now))
-                .max(Comparator.comparing(nimi -> nullSafeDate(nimi.alkuPvm)))
+                .reduce((nimi1, nimi2) -> {
+                    LocalDate alkuPvm1 = nullSafeDate(nimi1.alkuPvm);
+                    LocalDate alkuPvm2 = nullSafeDate(nimi2.alkuPvm);
+                    if (0 - DAYS.between(alkuPvm2, now) < DAYS.between(alkuPvm1, now)) {
+                        return nimi2;
+                    }
+                    return nimi1;
+                })
                 .orElseThrow(() -> new IllegalStateException("Ei voimassa olevaa nimeä organisaatiolle: " + dto.ytunnus));
         String ytjKieli = dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_KIELI_KOODI_URI_VERSION;
         String kieli = kieliKoodiUriVersionToKoodiArvo(ytjKieli);

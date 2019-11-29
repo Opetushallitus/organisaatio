@@ -35,12 +35,27 @@ public class OrganisaatioServiceTest {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
         dto.nimet = List.of(
                 organisaatioNimi(LocalDate.MIN, "fi", "Vanha"),
-                organisaatioNimi(LocalDate.now(), "fi", "Uusi")
+                organisaatioNimi(LocalDate.now(), "fi", "Uusi"),
+                organisaatioNimi(LocalDate.now().plusDays(1), "fi", "Tuleva")
         );
         dto.ytjkieli = "kieli_fi#1";
         KielistettyNimi nimi = service.kuranttiNimi(dto);
         assertEquals("fi", nimi.kieli);
         assertEquals("Uusi", nimi.nimi);
+    }
+
+    @Test
+    public void kuranttiNimiPicksFirstNameForPlanned() {
+        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        dto.nimet = List.of(
+                organisaatioNimi(LocalDate.now().plusDays(1), "fi", "Eka"),
+                organisaatioNimi(LocalDate.now().plusWeeks(1), "fi", "Uusi"),
+                organisaatioNimi(LocalDate.MAX, "fi", "Viimeinen")
+        );
+        dto.ytjkieli = "kieli_fi#1";
+        KielistettyNimi nimi = service.kuranttiNimi(dto);
+        assertEquals("fi", nimi.kieli);
+        assertEquals("Eka", nimi.nimi);
     }
 
     @Test
