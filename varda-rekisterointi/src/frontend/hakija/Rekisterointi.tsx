@@ -3,7 +3,6 @@ import RekisterointiOrganisaatio from './RekisterointiOrganisaatio';
 import RekisterointiKayttaja from './RekisterointiKayttaja';
 import { Organisaatio, Kayttaja } from '../types';
 import RekisterointiYhteenveto from './RekisterointiYhteenveto';
-import RekisterointiValmis from './RekisterointiValmis';
 import Axios from 'axios';
 import './Rekisterointi.css';
 import Header from './Header';
@@ -11,7 +10,6 @@ import Wizard from '../Wizard';
 import Navigation from './Navigation';
 import {KuntaKoodistoContext, LanguageContext} from '../contexts';
 import EmailValidator from 'email-validator';
-import { useBeforeunload } from 'react-beforeunload';
 import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
 
@@ -48,25 +46,19 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
     const [kayttajaErrors, setKayttajaErrors] = useState({});
     const [postLoading, setPostLoading] = useState(false);
     const [postError, setPostError] = useState(null);
-    const [ready, setReady] = useState(false);
-    useBeforeunload(event => {
-        if (!ready) {
-            event.preventDefault();
-        }
-    });
 
     async function post() {
         try {
             setPostLoading(true);
             setPostError(null);
-            await Axios.post(rekisteroinnitUrl, {
+            const response = await Axios.post(rekisteroinnitUrl, {
                 organisaatio: organisaatio,
                 kunnat: kunnat,
                 sahkopostit: sahkopostit,
                 toimintamuoto: toimintamuoto,
                 kayttaja: kayttaja,
             });
-            setReady(true);
+            window.location = response.data;
         } catch (error) {
             setPostError(error);
             throw error;
@@ -163,7 +155,6 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     sahkopostit={sahkopostit}
                     toimintamuoto={toimintamuoto}
                     kayttaja={kayttaja} />
-                <RekisterointiValmis />
             </Wizard>
         </div>
     );

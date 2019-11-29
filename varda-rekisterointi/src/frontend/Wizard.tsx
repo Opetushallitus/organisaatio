@@ -21,19 +21,19 @@ export default function Wizard(props: Props) {
     const child = props.children[currentStep - 1];
 
     function isPrev() {
-        return currentStep > 1 && currentStep < steps;
+        return currentStep > 1 && currentStep <= steps;
     }
 
     function isNext() {
-        return currentStep < steps - 1;
+        return currentStep < steps;
     }
 
     function isLast() {
-        return currentStep >= steps - 1;
+        return currentStep >= steps;
     }
 
     function isSubmit() {
-        return currentStep === steps - 1;
+        return currentStep === steps;
     }
 
     function prev() {

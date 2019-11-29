@@ -12,6 +12,7 @@ import useAxios from 'axios-hooks';
 import Spinner from './Spinner';
 import RekisterointiVirkailija from './virkailija/RekisterointiVirkailija';
 import ErrorPage from './ErrorPage';
+import RekisterointiValmis from './hakija/RekisterointiValmis';
 
 const App: React.FC = () => {
   registerLocale('fi', fi);
@@ -36,6 +37,7 @@ const App: React.FC = () => {
         <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
           <Switch>
             <Route path="/hakija" exact component={RekisterointiHakija} />
+            <Route path="/valmis" exact component={RekisterointiValmis} />
             <Route path="/virkailija" exact component={Rekisteroinnit} />
             <Route path="/virkailija/rekisterointi/luonti/:ytunnus" exact component={RekisterointiVirkailija} />
             <Route path="*">

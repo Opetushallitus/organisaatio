@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
+import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
@@ -44,6 +45,7 @@ public class VirkailijaController {
     private final OrganisaatioClient organisaatioClient;
     private final OrganisaatioService organisaatioService;
     private final RekisterointiService rekisterointiService;
+    private final OphProperties properties;
 
     @GetMapping(ORGANISAATIOT_PATH + "/ytunnus={ytunnus}")
     public Organisaatio getOrganisaatioByYtunnus(@PathVariable String ytunnus) {
@@ -54,8 +56,9 @@ public class VirkailijaController {
 
     @PostMapping(REKISTEROINNIT_PATH)
     @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
-    public void luoRekisterointi(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
+    public String luoRekisterointi(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
         rekisterointiService.create(dto, RequestContextImpl.of(request));
+        return properties.url("varda-rekisterointi.virkailija");
     }
 
     @GetMapping(REKISTEROINNIT_PATH)
