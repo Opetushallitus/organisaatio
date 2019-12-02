@@ -12,6 +12,7 @@ import {KuntaKoodistoContext, LanguageContext} from '../contexts';
 import EmailValidator from 'email-validator';
 import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
+import { kielletytYritysmuodot } from './YritysmuotoUtils';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -96,6 +97,9 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                         const postitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.postitoimipaikkaFn);
                         return postinumero && !postitoimipaikka;
                     }).forEach(field => organisaatioErrors[field.name] = i18n.translate('VIRHEELLINEN_POSTINUMERO'));
+                }
+                if (kielletytYritysmuodot.includes(organisaatio.yritysmuoto)) {
+                    organisaatioErrors.yritysmuoto = i18n.translate('VIRHEELLINEN_YRITYSMUOTO');
                 }
                 if (kunnat.length === 0) {
                     organisaatioErrors.kunnat = i18n.translate('PAKOLLINEN_TIETO');

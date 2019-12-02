@@ -1,5 +1,10 @@
 import { Koodi, Language } from "../types";
 
+export const kielletytYritysmuodot = [
+    'Kunta',
+    'Kuntayhtymä',
+];
+
 const yritysmuotoPriorityList = [
     'Aatteellinen yhdistys',
     'Avoin yhtiö',
