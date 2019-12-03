@@ -53,7 +53,7 @@ export default function RekisterointiAloitus() {
         <div className={styles.section}>
             <div className={styles.child}>
                 <div className={styles.logo}>
-                    <img src={lapset} />
+                    <img src={lapset} alt={i18n.translate('KUVA_LAPSISTA')} />
                 </div>
                 { data.map(renderByKieli) }
             </div>
