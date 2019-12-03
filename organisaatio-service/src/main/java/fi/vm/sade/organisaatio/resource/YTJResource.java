@@ -82,12 +82,15 @@ public class YTJResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
     public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
+        return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
+    }
+
+    private Organisaatio getOrganisaatioByYTunnus(String ytunnus) {
         YTJDTO ytjdto = findByYTunnus(ytunnus);
         if (ytjdto.getYtunnus() == null) {
             throw new OrganisaatioResourceException(Response.Status.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
-        Organisaatio organisaatio = conversionService.convert(ytjdto, Organisaatio.class);
-        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        return conversionService.convert(ytjdto, Organisaatio.class);
     }
 
     @GET
