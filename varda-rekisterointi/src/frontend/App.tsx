@@ -13,6 +13,7 @@ import Spinner from './Spinner';
 import RekisterointiVirkailija from './virkailija/RekisterointiVirkailija';
 import ErrorPage from './ErrorPage';
 import RekisterointiValmis from './hakija/RekisterointiValmis';
+import RekisterointiAloitus from './hakija/RekisterointiAloitus';
 
 const App: React.FC = () => {
   registerLocale('fi', fi);
@@ -29,13 +30,14 @@ const App: React.FC = () => {
   if (lokalisointiError || kunnatError) {
     return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
-  const i18n = new I18nImpl(lokalisointi[language]);
+  const i18n = new I18nImpl(lokalisointi, language);
   const kuntaKoodisto = new KoodistoImpl(kunnat, language);
   return (
     <Router basename="/varda-rekisterointi">
       <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
         <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
           <Switch>
+            <Route path="/" exact component={RekisterointiAloitus} />
             <Route path="/hakija" exact component={RekisterointiHakija} />
             <Route path="/valmis" exact component={RekisterointiValmis} />
             <Route path="/virkailija" exact component={Rekisteroinnit} />

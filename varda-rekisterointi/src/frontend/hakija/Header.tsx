@@ -4,11 +4,16 @@ import { LanguageContext } from '../contexts';
 import { Language } from '../types';
 import styles from './Header.module.css';
 
-export default function Header() {
+type Props = {
+    hideLanguage?: boolean,
+}
+
+export default function Header(props: Props) {
     const { language, setLanguage, i18n } = useContext(LanguageContext);
     return (
         <header className={styles.header}>
             <div className={styles.title}>{i18n.translate('OTSIKKO')}</div>
+            { !props.hideLanguage ?
             <div className={styles.language}>{i18n.translate('SISALLON_KIELI')}:
                 <select className={styles.select}
                         defaultValue={language}
@@ -16,6 +21,7 @@ export default function Header() {
                     {asiointikielet.map(asiointikieli => <option value={asiointikieli.value} key={asiointikieli.value}>{toLocalizedText(asiointikieli.label, language)}</option>)}
                 </select>
             </div>
+            : null }
         </header>
     )
 }

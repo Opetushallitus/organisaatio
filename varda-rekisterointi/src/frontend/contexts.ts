@@ -1,20 +1,27 @@
 import React from 'react';
-import {Koodi, KoodiArvo, KoodiUri, Language} from './types';
+import {Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi} from './types';
 
 export interface I18n {
     translate: (key: string) => string,
+    translateWithLang: (key: string, language: Language) => string,
 }
 
 export class I18nImpl implements I18n {
 
-    _data: Record<string, string>;
+    _data: Lokalisointi;
+    _language: Language;
 
-    constructor(data: Record<string, string>) {
+    constructor(data: Lokalisointi, language: Language) {
         this._data = data;
+        this._language = language;
     }
 
     translate(key: string): string {
-        return this._data[key] || key;
+        return this.translateWithLang(key, this._language);
+    }
+
+    translateWithLang(key: string, language: Language): string {
+        return this._data[language][key] || key;
     }
 
 }
@@ -28,7 +35,7 @@ type LanguageContextType = {
 export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
     setLanguage: (language: Language) => {},
-    i18n: new I18nImpl({}),
+    i18n: new I18nImpl({fi: {}, sv: {}, en: {}}, 'fi'),
 });
 
 type ConfigurationContextType = {
