@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -33,7 +34,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
-
     @Override
     public OrganisaatioRDTO convert(Organisaatio s) {
         long qstarted = System.currentTimeMillis();
@@ -46,17 +46,12 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setAlkuPvm(s.getAlkuPvm());
         t.setDomainNimi(s.getDomainNimi());
 
-        t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
-
         t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setKuvaus2(convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
         t.setMetadata(convertMetadata(s.getMetadata()));
-        t.setNimi(convertMKTToMap(s.getNimi()));
-
-        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -64,9 +59,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
         t.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
         t.setParentOidPath(s.getParentOidPath());
-
-
-        t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
@@ -86,6 +78,12 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
+
+
+        t.setNimi(convertMKTToMap(s.getNimi()));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setKayntiosoite(convertOsoiteToMap(s.getKayntiosoite()));
+        t.setPostiosoite(convertOsoiteToMap(s.getPostiosoite()));
 
         for (Yhteystieto y : s.getYhteystiedot()) {
             t.addYhteystieto(convertYhteystietoGeneric(y));
@@ -117,6 +115,7 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
                     Map<String, String> nimiMap = convertMKTToMap(yTyyppi.getNimi());
                     for (String kieli : nimiMap.keySet()) {
                         val.put("YhteystietojenTyyppi.nimi." + kieli, nimiMap.get(kieli));
+
                     }
 
                     val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());

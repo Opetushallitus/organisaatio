@@ -36,7 +36,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
-
     @Override
     public OrganisaatioRDTOV4 convert(Organisaatio s) {
         long qstarted = System.currentTimeMillis();
@@ -49,8 +48,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setAlkuPvm(s.getAlkuPvm());
         t.setDomainNimi(s.getDomainNimi());
 
-        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
-
         t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setMuutKotipaikatUris(convertCollectionToSet(s.getMuutKotipaikatUris()));
@@ -58,9 +55,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
         t.setMetadata(MetadataConverterUtils.convertMetadata(s.getMetadata()));
-        t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
-
-        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -69,8 +63,6 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setMuutOppilaitosTyyppiUris(convertCollectionToSet(s.getMuutOppilaitosTyyppiUris()));
         t.setParentOid(s.getParentOid().orElse(null));
         t.setParentOidPath(s.getParentOidPath());
-
-        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
@@ -89,14 +81,22 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         t.setYTunnus(s.getYtunnus());
         t.setVirastoTunnus(s.getVirastoTunnus());
 
+        t.setPiilotettu(s.isPiilotettu());
+
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
+
+        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
+        t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
         for (Yhteystieto y : s.getYhteystiedot()) {
             t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
         }
         YhteystietoConverterUtils.convertYhteystietosToListMap(s, yhteystietoArvos);
+
 
         Optional.ofNullable(s.getVarhaiskasvatuksenToimipaikkaTiedot())
                 .map(this::varhaiskasvatuksenToimipaikkaTiedotEntityToDto)
@@ -119,6 +119,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter extends AbstractFromDomai
         Optional.ofNullable(toimipaikkaTiedot.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetEntityToDto)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedotDto::setVarhaiskasvatuksenKielipainotukset);
+
         return varhaiskasvatuksenToimipaikkaTiedotDto;
     }
 

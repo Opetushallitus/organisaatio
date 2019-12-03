@@ -171,7 +171,7 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * @param lastModifiedSince päivämäärä
      * @return
      */
-    List<Organisaatio> findModifiedSince(Date lastModifiedSince);
+    List<Organisaatio> findModifiedSince(Boolean piilotettu, Date lastModifiedSince);
 
     /**
      * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.

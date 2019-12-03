@@ -27,6 +27,17 @@ public class SearchCriteria {
     private Boolean poistettu;
 
     private List<String> yritysmuoto = new ArrayList<>();
+
+    public Boolean getPiilotettu() {
+        return piilotettu;
+    }
+
+    public void setPiilotettu(Boolean piilotettu) {
+        this.piilotettu = piilotettu;
+    }
+
+    private Boolean piilotettu;
+
     private List<String> kunta = new ArrayList<String>();
     private List<String> organisaatiotyyppi = new ArrayList<String>();
     private List<String> oppilaitostyyppi = new ArrayList<String>();

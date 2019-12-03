@@ -15,6 +15,7 @@
 package fi.vm.sade.organisaatio.service.converter.v3;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
@@ -49,7 +50,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
-
     @Override
     public OrganisaatioRDTOV3 convert(Organisaatio s) {
         long qstarted = System.currentTimeMillis();
@@ -62,17 +62,12 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setAlkuPvm(s.getAlkuPvm());
         t.setDomainNimi(s.getDomainNimi());
 
-        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
-
         t.setKieletUris(convertCollectionToSet(s.getKielet()));
         t.setKotipaikkaUri(s.getKotipaikka());
         t.setKuvaus2(convertMKTToMap(s.getKuvaus2()));
         t.setLakkautusPvm(s.getLakkautusPvm());
         t.setMaaUri(s.getMaa());
         t.setMetadata(MetadataConverterUtils.convertMetadata(s.getMetadata()));
-        t.setNimi(convertMKTToMap(s.getNimi()));
-
-        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
 
         t.setStatus(s.getStatus().name());
 
@@ -80,9 +75,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         t.setOppilaitosTyyppiUri(s.getOppilaitosTyyppi());
         t.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
         t.setParentOidPath(s.getParentOidPath());
-
-
-        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 
         t.setOpetuspisteenJarjNro(s.getOpetuspisteenJarjNro());
         t.setToimipistekoodi(s.getToimipisteKoodi());
@@ -106,6 +98,11 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);
 
+        t.setNimi(convertMKTToMap(s.getNimi()));
+        t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
+        t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
+        t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
+
         for (Yhteystieto y : s.getYhteystiedot()) {
             t.addYhteystieto(YhteystietoConverterUtils.mapYhteystietoToGeneric(y));
         }
@@ -127,7 +124,6 @@ public class OrganisaatioToOrganisaatioRDTOV3Converter extends AbstractFromDomai
                 }
             }
         }
-
         return result;
     }
 

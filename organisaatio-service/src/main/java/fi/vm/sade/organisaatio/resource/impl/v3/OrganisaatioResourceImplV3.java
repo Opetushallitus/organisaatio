@@ -76,6 +76,13 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     // GET /organisaatio/v3/{oid}/children
     @Override
     public List<OrganisaatioRDTOV3> children(String oid, boolean includeImage) throws Exception {
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
+
         Preconditions.checkNotNull(oid);
         Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
         List<OrganisaatioRDTOV3> childList = new LinkedList<>();
@@ -115,6 +122,13 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     @Override
     public OrganisaatioRDTOV3 getOrganisaatioByOID(String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
+
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
@@ -223,7 +237,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();

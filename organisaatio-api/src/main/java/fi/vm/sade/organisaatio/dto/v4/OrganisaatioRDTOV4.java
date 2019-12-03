@@ -100,6 +100,16 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     private String _parentOidPath;
 
+    public Boolean getPiilotettu() {
+        return _piilotettu;
+    }
+
+    public void setPiilotettu(Boolean piilotettu) {
+        this._piilotettu = piilotettu;
+    }
+
+    private Boolean _piilotettu;
+
     private OrganisaatioMetaDataRDTO _metadata;
 
     private String yhteishaunKoulukoodi;

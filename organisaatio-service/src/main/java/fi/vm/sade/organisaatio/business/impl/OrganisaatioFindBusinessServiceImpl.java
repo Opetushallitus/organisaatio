@@ -14,11 +14,12 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.google.common.collect.Iterables;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
@@ -30,12 +31,10 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
-import java.time.LocalDate;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioTyyppiUtil;
-import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +43,13 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import static java.util.Collections.emptyMap;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  *
@@ -82,6 +73,9 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -158,6 +152,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         to.setSuunnitellut(from.getSuunnitellut());
         to.setLakkautetut(from.getLakkautetut());
         to.setPoistettu(from.getPoistettu());
+        to.setPiilotettu(from.getPiilotettu());
         to.setOrganisaatioTyyppi(from.getOrganisaatioTyyppi().stream()
                 .flatMap(organisaatiotyyppi -> OrganisaatioTyyppiUtil.getOrgTypeLimit(organisaatiotyyppi).stream())
                 .collect(toList()));
@@ -167,7 +162,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Organisaatio> findBySearchCriteria(
+    public Set<Organisaatio> findBySearchCriteria (
             Set<String> kieliList,
             Set<String> kuntaList,
             Set<String> oppilaitostyyppiList,
@@ -191,6 +186,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         }
         criteria.setParentOidPath("|" + rootOrganisaatioOid + "|");
         criteria.setPoistettu(false);
+
         return organisaatioDAO.findGroups(criteria);
     }
 
@@ -208,7 +204,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkArgument(oids.size() <= 1000);
         return organisaatioDAO.findByOids(oids, true).stream()
                 .map(this::markImagesNotIncluded)
-                .map(organisaatio -> this.conversionService.convert(organisaatio, OrganisaatioRDTOV4.class))
+                .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
     }
 
@@ -236,11 +232,10 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             o.getMetadata().setIncludeImage(includeImage);
         }
 
-        OrganisaatioRDTOV4 result = conversionService.convert(o, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 result = mapToOrganisaatioRdtoV4(o);
 
         LOG.debug("  result={}", result);
         return result;
-
     }
 
     @Override
@@ -255,14 +250,19 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
-                .map(child -> {
-                    // Jätetään kuva pois, jos sitä ei haluta
-                    if (child.getMetadata() != null) {
-                        child.getMetadata().setIncludeImage(includeImage);
-                    }
-                    return conversionService.convert(child, OrganisaatioRDTOV4.class);
-                })
-                .collect(Collectors.toList());
+            .map(child -> {
+                // Jätetään kuva pois, jos sitä ei haluta
+                if (child.getMetadata() != null) {
+                    child.getMetadata().setIncludeImage(includeImage);
+                }
+                return mapToOrganisaatioRdtoV4(child);
+            })
+            .collect(Collectors.toList());
+    }
+
+    private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
+        OrganisaatioRDTOV4 organisaatio_result = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        return organisaatio_result;
     }
 
     @Override
@@ -293,7 +293,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
-        return organisaatioSuhdeDAO.findLiitokset(date);
+        return organisaatioSuhdeDAO.findLiitokset(permissionChecker.isReadAccessToAll() ? null : false, date);
     }
 
     @Override
@@ -309,7 +309,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
 

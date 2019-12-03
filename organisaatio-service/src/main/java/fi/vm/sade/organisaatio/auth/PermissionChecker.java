@@ -122,4 +122,16 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanEditYhteystietojenTyypit());
     }
 
+    public void checkReadOrganisation(String oid) {
+        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+
+        if(organisaatio == null){
+            return;
+        }
+        checkPermission(!organisaatio.isPiilotettu() || permissionService.userCanReadOrganisation(organisaatio.getOid()));
+    }
+
+    public boolean isReadAccessToAll() {
+         return permissionService.isReadAccessToAll();
+    }
 }

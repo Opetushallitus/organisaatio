@@ -117,4 +117,9 @@ app.controller('VarhaiskasvatuksenToimipaikanTietojenMuokkausController', functi
         return dbFormatDate && moment(dbFormatDate).format('DD.MM.YYYY');
     };
 
+    vm.toimintamuotoChanged = function(toimintamuoto) {
+        if (toimintamuoto !== "vardatoimintamuoto_tm01") {
+            vm.model.organisaatio.piilotettu = true;
+        }
+    };
 });

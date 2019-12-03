@@ -1,0 +1,91 @@
+package fi.vm.sade.organisaatio.service.search;
+
+import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
+import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import org.junit.Before;
+import org.junit.Test;
+
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
+public class SearchCriteriaServiceTest {
+
+    private SearchCriteriaService service;
+
+    private OrganisaatioPermissionServiceImpl organisaatioPermissionServiceMock;
+
+    @Before
+    public void setup() {
+        organisaatioPermissionServiceMock = mock(OrganisaatioPermissionServiceImpl.class);
+        service = new SearchCriteriaService(new SearchCriteriaModelMapper(), organisaatioPermissionServiceMock);
+    }
+
+    @Test
+    public void getServiceSearchCriteriaV2SearchStr() {
+        OrganisaatioSearchCriteriaDTOV2 apiSearchCriteria = new OrganisaatioSearchCriteriaDTOV2();
+        apiSearchCriteria.setSearchStr("hello world");
+        when(organisaatioPermissionServiceMock.isReadAccessToAll()).thenReturn(false);
+
+        SearchCriteria serviceSearchCriteria = service.getServiceSearchCriteria(apiSearchCriteria);
+
+        assertThat(serviceSearchCriteria).returns("hello world", SearchCriteria::getSearchStr);
+    }
+
+    @Test
+    public void getServiceSearchCriteriaV2ReadAccessToAllFalse() {
+        OrganisaatioSearchCriteriaDTOV2 apiSearchCriteria = new OrganisaatioSearchCriteriaDTOV2();
+        apiSearchCriteria.setOid(null);
+        when(organisaatioPermissionServiceMock.isReadAccessToAll()).thenReturn(false);
+
+        SearchCriteria serviceSearchCriteria = service.getServiceSearchCriteria(apiSearchCriteria);
+
+        assertThat(serviceSearchCriteria).returns(false, SearchCriteria::getPiilotettu);
+        verify(organisaatioPermissionServiceMock, never()).userCanReadOrganisation(any());
+    }
+
+    @Test
+    public void getServiceSearchCriteriaV2ReadAccessToAllTrue() {
+        OrganisaatioSearchCriteriaDTOV2 apiSearchCriteria = new OrganisaatioSearchCriteriaDTOV2();
+        apiSearchCriteria.setOid(null);
+        when(organisaatioPermissionServiceMock.isReadAccessToAll()).thenReturn(true);
+
+        SearchCriteria serviceSearchCriteria = service.getServiceSearchCriteria(apiSearchCriteria);
+
+        assertThat(serviceSearchCriteria).returns(null, SearchCriteria::getPiilotettu);
+        verify(organisaatioPermissionServiceMock, never()).userCanReadOrganisation(any());
+    }
+
+    @Test
+    public void getServiceSearchCriteriaV2UserCanReadOrganisationFalse() {
+        OrganisaatioSearchCriteriaDTOV2 apiSearchCriteria = new OrganisaatioSearchCriteriaDTOV2();
+        apiSearchCriteria.setOid("oid123");
+        when(organisaatioPermissionServiceMock.isReadAccessToAll()).thenReturn(false);
+        when(organisaatioPermissionServiceMock.userCanReadOrganisation(eq(("oid123")))).thenReturn(false);
+
+        SearchCriteria serviceSearchCriteria = service.getServiceSearchCriteria(apiSearchCriteria);
+
+        assertThat(serviceSearchCriteria)
+                .returns(false, SearchCriteria::getPiilotettu)
+                .returns(singletonList("oid123"), SearchCriteria::getOid);
+        verify(organisaatioPermissionServiceMock).userCanReadOrganisation(eq("oid123"));
+    }
+
+    @Test
+    public void getServiceSearchCriteriaV2UserCanReadOrganisationTrue() {
+        OrganisaatioSearchCriteriaDTOV2 apiSearchCriteria = new OrganisaatioSearchCriteriaDTOV2();
+        apiSearchCriteria.setOid("oid123");
+        when(organisaatioPermissionServiceMock.isReadAccessToAll()).thenReturn(false);
+        when(organisaatioPermissionServiceMock.userCanReadOrganisation(eq(("oid123")))).thenReturn(true);
+
+        SearchCriteria serviceSearchCriteria = service.getServiceSearchCriteria(apiSearchCriteria);
+
+        assertThat(serviceSearchCriteria)
+                .returns(null, SearchCriteria::getPiilotettu)
+                .returns(singletonList("oid123"), SearchCriteria::getOid);
+        verify(organisaatioPermissionServiceMock).userCanReadOrganisation(eq("oid123"));
+    }
+
+}

@@ -272,13 +272,17 @@ public class OrganisaatioSuhdeDAOImpl extends AbstractJpaDAOImpl<OrganisaatioSuh
     }
 
     @Override
-    public List<OrganisaatioSuhde> findLiitokset(Date date) {
+    public List<OrganisaatioSuhde> findLiitokset(Boolean piilotettu, Date date) {
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
 
         BooleanExpression expression = qSuhde.suhdeTyyppi.eq(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
 
         if (date != null) {
             expression = expression.and(qSuhde.alkuPvm.eq(date).or(qSuhde.alkuPvm.after(date)));
+        }
+
+        if(piilotettu != null){
+            expression = expression.and(qSuhde.parent.piilotettu.eq(piilotettu).or(qSuhde.child.piilotettu.eq(piilotettu)));
         }
 
         return new JPAQuery<>(getEntityManager()).from(qSuhde)

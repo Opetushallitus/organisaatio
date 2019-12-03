@@ -90,6 +90,9 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setYtunnus(source.getYTunnus());
         target.setVirastoTunnus(source.getVirastoTunnus());
 
+        target.setPiilotettu(Optional.ofNullable(source.getPiilotettu())
+                .orElseGet(() -> Optional.ofNullable(target.getVarhaiskasvatuksenToimipaikkaTiedot()).map(tiedot -> tiedot.getToimintamuoto().contains("tm02") || tiedot.getToimintamuoto().contains("tm03")).orElse(false)));
+
         if (source.getYhteystietoArvos() != null) {
             target.setYhteystietoArvos(YhteystietoConverterUtils.convertYhteystietoArvos(source.getYhteystietoArvos()));
         }
@@ -121,6 +124,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         Optional.ofNullable(toimipaikkaTiedotDto.getVarhaiskasvatuksenKielipainotukset())
                 .map(this::varhaiskasvatuksenKielipainotuksetDtoToEntity)
                 .ifPresent(varhaiskasvatuksenToimipaikkaTiedot::setVarhaiskasvatuksenKielipainotukset);
+
         return varhaiskasvatuksenToimipaikkaTiedot;
     }
 

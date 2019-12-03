@@ -63,12 +63,24 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}/children
     @Override
     public List<OrganisaatioRDTOV4> children(String oid, boolean includeImage) {
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
 
     // GET /organisaatio/v4/{oid}
     @Override
     public OrganisaatioRDTOV4 getOrganisaatioByOID(String oid, boolean includeImage) {
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
 
@@ -145,6 +157,12 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}/historia
     @Override
     public OrganisaatioHistoriaRDTOV4 getOrganizationHistory(String oid) throws Exception {
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(nae);
+        }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
 
