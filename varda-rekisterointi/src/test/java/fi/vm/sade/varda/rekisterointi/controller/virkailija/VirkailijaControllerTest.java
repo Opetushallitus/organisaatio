@@ -2,10 +2,7 @@ package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
-import fi.vm.sade.varda.rekisterointi.model.PaatosBatch;
-import fi.vm.sade.varda.rekisterointi.model.PaatosDto;
-import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
-import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,7 +77,9 @@ public class VirkailijaControllerTest {
     @Test
     @WithMockVirkailijaUser
     public void luoPaatosReturnsCreated() throws Exception {
-        Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withTila(Rekisterointi.Tila.HYVAKSYTTY);
+        Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withPaatos(
+                new Paatos(TESTI_PAATOS_DTO.hyvaksytty, LocalDateTime.now(), MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO.perustelu)
+        );
         when(rekisterointiService.resolve(eq(MOCK_VIRKAILIJA_OID), eq(TESTI_PAATOS_DTO), any())).thenReturn(resolved);
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)

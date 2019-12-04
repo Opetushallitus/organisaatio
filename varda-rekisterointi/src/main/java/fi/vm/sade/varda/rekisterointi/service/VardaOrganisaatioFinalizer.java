@@ -17,8 +17,8 @@ import java.util.HashSet;
 @RequiredArgsConstructor
 public class VardaOrganisaatioFinalizer {
 
+    static final String VARDA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_07";
     private static final Logger LOGGER = LoggerFactory.getLogger(VardaOrganisaatioFinalizer.class);
-    private static final String VARDA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_07";
 
     private final OrganisaatioService organisaatioService;
     private final OrganisaatioClient organisaatioClient;

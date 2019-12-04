@@ -11,7 +11,6 @@ import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.PaatosBatch;
 import fi.vm.sade.varda.rekisterointi.model.PaatosDto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
-import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -31,7 +30,6 @@ public class RekisterointiService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiService.class);
 
     private final RekisterointiRepository rekisterointiRepository;
-    private final PaatosRepository paatosRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final SchedulerClient schedulerClient;
     @Qualifier("rekisterointiEmailTask")
@@ -69,19 +67,17 @@ public class RekisterointiService {
 
     @Transactional
     public Rekisterointi resolve(String paattajaOid, PaatosDto paatosDto, RequestContext requestContext) {
-        Paatos paatos = new Paatos(paatosDto.rekisterointi, paatosDto.hyvaksytty, LocalDateTime.now(),paattajaOid, paatosDto.perustelu);
-        Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
-                () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
+        Long rekisterointiId = paatosDto.rekisterointi;
+        Paatos paatos = new Paatos(paatosDto.hyvaksytty, LocalDateTime.now(), paattajaOid, paatosDto.perustelu);
+        Rekisterointi rekisterointi = rekisterointiRepository.findById(rekisterointiId).orElseThrow(
+                () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + rekisterointiId));
         if (rekisterointi.tila != Rekisterointi.Tila.KASITTELYSSA) {
             throw new IllegalStateException(
                     "Päätöstä ei voi tehdä; rekisteröinti ei ole käsittelyssä-tilassa, id: " + rekisterointi.id);
         }
         RekisterointiAuditDto auditBeforeDto = new RekisterointiAuditDto(rekisterointi.tila);
-        paatosRepository.save(paatos);
+        Rekisterointi saved = rekisterointiRepository.save(rekisterointi.withPaatos(paatos));
         LOGGER.info("Päätös tallennettu rekisteröinnille: {}", rekisterointi.id);
-
-        Rekisterointi saved = rekisterointiRepository.save(
-                rekisterointi.withTila(paatos.hyvaksytty ? Rekisterointi.Tila.HYVAKSYTTY : Rekisterointi.Tila.HYLATTY));
         RekisterointiAuditDto auditAfterDto = new RekisterointiAuditDto(saved.tila);
         LOGGER.debug("Rekisteröinnin {} tila päivitetty: {}", saved.id, saved.tila);
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,

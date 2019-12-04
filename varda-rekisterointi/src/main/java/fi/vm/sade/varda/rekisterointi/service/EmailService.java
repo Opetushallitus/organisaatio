@@ -5,7 +5,6 @@ import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.client.ViestintaClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
-import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -22,7 +21,6 @@ import static java.util.stream.Collectors.*;
 public class EmailService {
 
     private final RekisterointiRepository rekisterointiRepository;
-    private final PaatosRepository paatosRepository;
     private final TemplateService templateService;
     private final MessageSource messageSource;
     private final ViestintaClient viestintaClient;
@@ -71,14 +69,12 @@ public class EmailService {
 
     public void lahetaPaatosEmail(long id) {
         rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
-            paatosRepository.findById(id).ifPresent(paatos -> {
-                String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
-                EmailDto email = EmailDto.builder()
-                        .emails(rekisterointi.sahkopostit)
-                        .message(luoViesti(paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi))
-                        .build();
-                viestintaClient.save(email, false);
-            });
+            String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
+            EmailDto email = EmailDto.builder()
+                    .emails(rekisterointi.sahkopostit)
+                    .message(luoViesti(rekisterointi.paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi))
+                    .build();
+            viestintaClient.save(email, false);
         });
     }
 

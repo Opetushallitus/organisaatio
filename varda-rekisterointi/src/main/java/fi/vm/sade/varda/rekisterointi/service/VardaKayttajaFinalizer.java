@@ -2,10 +2,7 @@ package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
-import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
-import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
-import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -13,35 +10,35 @@ import java.util.Map;
 @Service
 public class VardaKayttajaFinalizer {
 
-    private static final String VARDA_TOIMINTAMUOTO_PAIVAKOTI = "vardatoimintamuoto_tm01";
+    static final String KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.paivakoti";
+    static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito";
+    static final String KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito";
+    static final String VARDA_TOIMINTAMUOTO_PAIVAKOTI = "vardatoimintamuoto_tm01";
     private static final String VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO = "vardatoimintamuoto_tm02";
-    private static final String VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOIO = "vardatoimintamuoto_tm03";
+    private static final String VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO = "vardatoimintamuoto_tm03";
 
-    private final PaatosRepository paatosRepository;
     private final KayttooikeusClient kayttooikeusClient;
     private final Map<String,Long> toimintamuotoKayttooikeusRyhmaId;
 
-    public VardaKayttajaFinalizer(PaatosRepository paatosRepository,
-                                  KayttooikeusClient kayttooikeusClient,
+    public VardaKayttajaFinalizer(KayttooikeusClient kayttooikeusClient,
                                   OphProperties properties) {
-        this.paatosRepository = paatosRepository;
         this.kayttooikeusClient = kayttooikeusClient;
         toimintamuotoKayttooikeusRyhmaId = Map.of(
                 VARDA_TOIMINTAMUOTO_PAIVAKOTI,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.paivakoti")),
+                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)),
                 VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito")),
-                VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOIO,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito"))
+                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY)),
+                VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO,
+                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY))
         );
     }
 
-    public void kutsuKayttaja(Rekisterointi rekisterointi) {
-        Paatos paatos = paatosRepository.findById(rekisterointi.id).orElseThrow(
-                () -> new InvalidInputException("Päätöstä ei löydy rekisteröinnille: " + rekisterointi.id)
-        );
+    void kutsuKayttaja(Rekisterointi rekisterointi) {
         kayttooikeusClient.kutsuKayttaja(
-                paatos.paattaja,
+                rekisterointi.paatos.paattaja,
                 rekisterointi.kayttaja,
                 rekisterointi.organisaatio.oid,
                 kayttooikeusRyhmaId(rekisterointi.toimintamuoto)

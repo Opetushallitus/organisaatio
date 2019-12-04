@@ -6,11 +6,11 @@ import fi.vm.sade.varda.rekisterointi.RequestContext;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
-import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -36,7 +36,6 @@ public class RekisterointiServiceTest {
     static class RekisterointiServiceTestConfiguration {
         @Bean
         public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository,
-                                                         PaatosRepository paatosRepository,
                                                          ApplicationEventPublisher eventPublisher,
                                                          SchedulerClient schedulerClient,
                                                          @Qualifier("rekisterointiEmailTask")
@@ -45,7 +44,7 @@ public class RekisterointiServiceTest {
                                                          Task<Long> paatosEmailTask,
                                                          @Qualifier("luoTaiPaivitaOrganisaatioTask")
                                                          Task<Long> luoTaiPaivitaOrganisaatioTask) {
-            return new RekisterointiService(rekisterointiRepository, paatosRepository, eventPublisher, schedulerClient,
+            return new RekisterointiService(rekisterointiRepository, eventPublisher, schedulerClient,
                     rekisterointiEmailTask, paatosEmailTask, luoTaiPaivitaOrganisaatioTask);
         }
     }
@@ -82,21 +81,12 @@ public class RekisterointiServiceTest {
                     .asiointikieli("fi")
                     .build(),
             LocalDateTime.now(),
+            null,
             Rekisterointi.Tila.KASITTELYSSA
-    );
-    private static final Paatos SAVED_PAATOS = new Paatos(
-            SAVED_REKISTEROINTI_ID,
-            false,
-            LocalDateTime.now(),
-            PAATTAJA_OID,
-            null
     );
 
     @MockBean
     private RekisterointiRepository rekisterointiRepository;
-
-    @MockBean
-    private PaatosRepository paatosRepository;
 
     @MockBean
     private SchedulerClient schedulerClient;
@@ -117,8 +107,6 @@ public class RekisterointiServiceTest {
     public void mockRepositoryCalls() {
         when(rekisterointiRepository.save(any(Rekisterointi.class)))
                 .thenReturn(SAVED_REKISTEROINTI.withId(SAVED_REKISTEROINTI_ID));
-        when(paatosRepository.save(any(Paatos.class)))
-                .thenReturn(SAVED_PAATOS);
         when(rekisterointiRepository.findById(SAVED_REKISTEROINTI_ID))
                 .thenReturn(Optional.of(SAVED_REKISTEROINTI));
         when(rekisterointiRepository.findById(INVALID_REKISTEROINTI_ID))
@@ -144,10 +132,10 @@ public class RekisterointiServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void resolveThrowsOnInvalidRekisterointiTila() {
+        PaatosDto paatos = new PaatosDto(123L, false, "Juuh elikkäs");
         Rekisterointi hylatty = TestiRekisterointi.validiRekisterointi()
-                .withId(123L)
-                .withTila(Rekisterointi.Tila.HYLATTY);
-        PaatosDto paatos = new PaatosDto(hylatty.id, true, "Juuh elikkäs");
+                .withId(paatos.rekisterointi)
+                .withPaatos(new Paatos(paatos.hyvaksytty, LocalDateTime.now(), PAATTAJA_OID, paatos.perustelu));
         when(rekisterointiRepository.findById(hylatty.id)).thenReturn(Optional.of(hylatty));
         rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
     }
@@ -159,10 +147,10 @@ public class RekisterointiServiceTest {
                 false,
                 "Rekisteröinti tehty 110% väärin."
         );
-        Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYLATTY);
         rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
-        verify(rekisterointiRepository).save(expected);
-        verify(paatosRepository).save(any(Paatos.class));
+        ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
+        verify(rekisterointiRepository).save(captor.capture());
+        assertEquals(Rekisterointi.Tila.HYLATTY, captor.getValue().tila);
     }
 
     @Test
@@ -173,10 +161,10 @@ public class RekisterointiServiceTest {
                 "OK!",
                 hakemusTunnukset
         );
-        Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYVAKSYTTY);
         rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset, requestContext(null));
-        verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(expected);
-        verify(paatosRepository, times(hakemusTunnukset.size())).save(any(Paatos.class));
+        ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
+        verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(captor.capture());
+        assertEquals(Rekisterointi.Tila.HYVAKSYTTY, captor.getValue().tila);
     }
 
     private RequestContext requestContext(String userId) {
