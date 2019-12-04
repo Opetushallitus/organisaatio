@@ -1,97 +1,67 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
-import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
+import com.github.kagkarlsson.scheduler.SchedulerClient;
+import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
-import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Map;
+import java.time.Instant;
 
 @Service
+@AllArgsConstructor
 public class RekisterointiFinalizer {
 
-    static final String VARDA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_07";
-    static final String VARDA_TOIMINTAMUOTO_PAIVAKOTI = "vardatoimintamuoto_tm01";
-    private static final String VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO = "vardatoimintamuoto_tm02";
-    private static final String VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOIO = "vardatoimintamuoto_tm03";
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiFinalizer.class);
 
-    private final OrganisaatioService organisaatioService;
-    private final OrganisaatioClient organisaatioClient;
-    private final KayttooikeusClient kayttooikeusClient;
-    private final Map<String,Long> toimintamuotoKayttooikeusRyhmaId;
+    private final RekisterointiRepository rekisterointiRepository;
+    private final VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer;
+    private final VardaKayttajaFinalizer vardaKayttajaFinalizer;
+    private final SchedulerClient schedulerClient;
+    @Qualifier("kutsuKayttajaTask")
+    private final Task<Long> kutsuKayttajaTask;
+    @Qualifier("paatosEmailTask")
+    private final Task<Long> paatosEmailTask;
 
-    public RekisterointiFinalizer(OrganisaatioService organisaatioService,
-                                  OrganisaatioClient organisaatioClient,
-                                  KayttooikeusClient kayttooikeusClient,
-                                  OphProperties properties) {
-        this.organisaatioService = organisaatioService;
-        this.organisaatioClient = organisaatioClient;
-        this.kayttooikeusClient = kayttooikeusClient;
-        toimintamuotoKayttooikeusRyhmaId = Map.of(
-                VARDA_TOIMINTAMUOTO_PAIVAKOTI,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.paivakoti")),
-                VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito")),
-                VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOIO,
-                Long.valueOf(properties.getProperty("varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito"))
+    public void luoTaiPaivitaOrganisaatio(Long rekisterointiId) {
+        Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
+        String oid = vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
+        if (rekisterointi.organisaatio.oid == null) {
+            LOGGER.debug("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
+            rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
+            schedulerClient.schedule(
+                    kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
+                    Instant.now());
+        } else {
+            ajastaPaatosEmail(rekisterointiId);
+        }
+    }
+
+    public void kutsuKayttaja(Long rekisterointiId) {
+        Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
+        vardaKayttajaFinalizer.kutsuKayttaja(rekisterointi);
+        ajastaPaatosEmail(rekisterointiId);
+    }
+
+    private Rekisterointi lataaRekisterointi(Long rekisterointiId) {
+        return rekisterointiRepository.findById(rekisterointiId).orElseThrow(
+                () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + rekisterointiId)
         );
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
-    public void finalize(Rekisterointi rekisterointi, String paattajaOid) {
-        Organisaatio organisaatio = rekisterointi.organisaatio;
-        if (organisaatio.oid != null) {
-            paivitaVardaTiedot(rekisterointi);
-        } else {
-            String oid = luoOrganisaatio(organisaatio, rekisterointi);
-            kayttooikeusClient.kutsuKayttaja(
-                    paattajaOid,
-                    rekisterointi.kayttaja,
-                    oid,
-                    kayttooikeusRyhmaId(rekisterointi.toimintamuoto));
-        }
-
+    private String taskId(Task<Long> task, Long rekisterointiId) {
+        return String.format("%s-%d", task.getName(), rekisterointiId);
     }
 
-    private String luoOrganisaatio(Organisaatio organisaatio, Rekisterointi rekisterointi) {
-        OrganisaatioV4Dto dto = organisaatioService.muunnaOrganisaatio(organisaatio);
-        dto.piilotettu = piilotettavaToimintamuoto(rekisterointi.toimintamuoto);
-        OrganisaatioV4Dto luotu = organisaatioClient.create(dto);
-        LOGGER.info("Luotu uusi organisaatio {} rekisteröinnin pohjalta.", luotu.oid);
-        return luotu.oid;
-    }
-
-    private void paivitaVardaTiedot(Rekisterointi rekisterointi) {
-        String oid = rekisterointi.organisaatio.oid;
-        OrganisaatioV4Dto dto = organisaatioClient.getV4ByOid(oid).orElseThrow(
-                () -> new InvalidInputException("Organisaatiota ei löydy, oid: " + oid)
+    private void ajastaPaatosEmail(Long rekisterointiId) {
+        schedulerClient.schedule(
+                paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointiId), rekisterointiId),
+                Instant.now()
         );
-        if (!dto.tyypit.contains(VARDA_ORGANISAATIOTYYPPI)) {
-            dto.tyypit = new HashSet<>(dto.tyypit);
-            dto.tyypit.add(VARDA_ORGANISAATIOTYYPPI);
-            LOGGER.info("Lisätty varhaiskasvatuksen organisaatiotyyppi organisaatiolle, oid: {}", oid);
-        } else {
-            LOGGER.debug("Organisaatiolla {} on jo ennestään varhaiskasvatuksen organisaatiotyyppi.", oid);
-        }
-        dto.piilotettu = piilotettavaToimintamuoto(rekisterointi.toimintamuoto);
-        organisaatioClient.save(dto);
-    }
-
-    private boolean piilotettavaToimintamuoto(String toimintamuoto) {
-        return !VARDA_TOIMINTAMUOTO_PAIVAKOTI.equals(toimintamuoto);
-    }
-
-    private Long kayttooikeusRyhmaId(String toimintamuoto) {
-        return toimintamuotoKayttooikeusRyhmaId.get(toimintamuoto);
     }
 }

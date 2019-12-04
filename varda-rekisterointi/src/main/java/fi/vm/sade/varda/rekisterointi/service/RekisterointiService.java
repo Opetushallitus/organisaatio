@@ -13,6 +13,7 @@ import fi.vm.sade.varda.rekisterointi.model.PaatosDto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.repository.PaatosRepository;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +25,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class RekisterointiService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiService.class);
@@ -32,25 +34,12 @@ public class RekisterointiService {
     private final PaatosRepository paatosRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final SchedulerClient schedulerClient;
+    @Qualifier("rekisterointiEmailTask")
     private final Task<Long> rekisterointiEmailTask;
+    @Qualifier("paatosEmailTask")
     private final Task<Long> paatosEmailTask;
-    private final RekisterointiFinalizer rekisterointiFinalizer;
-
-    public RekisterointiService(RekisterointiRepository rekisterointiRepository,
-                                PaatosRepository paatosRepository,
-                                ApplicationEventPublisher eventPublisher,
-                                SchedulerClient schedulerClient,
-                                @Qualifier("rekisterointiEmailTask") Task<Long> rekisterointiEmailTask,
-                                @Qualifier("paatosEmailTask") Task<Long> paatosEmailTask,
-                                RekisterointiFinalizer rekisterointiFinalizer) {
-        this.rekisterointiRepository = rekisterointiRepository;
-        this.paatosRepository = paatosRepository;
-        this.eventPublisher = eventPublisher;
-        this.schedulerClient = schedulerClient;
-        this.rekisterointiEmailTask = rekisterointiEmailTask;
-        this.paatosEmailTask = paatosEmailTask;
-        this.rekisterointiFinalizer = rekisterointiFinalizer;
-    }
+    @Qualifier("luoTaiPaivitaOrganisaatioTask")
+    private final Task<Long> luoTaiPaivitaOrganisaatioTask;
 
     public Iterable<Rekisterointi> listByTilaAndOrganisaatio(Rekisterointi.Tila tila, String organisaatio) {
         if (organisaatio == null || organisaatio.length() == 0) {
@@ -90,18 +79,37 @@ public class RekisterointiService {
         RekisterointiAuditDto auditBeforeDto = new RekisterointiAuditDto(rekisterointi.tila);
         paatosRepository.save(paatos);
         LOGGER.info("Päätös tallennettu rekisteröinnille: {}", rekisterointi.id);
+
         Rekisterointi saved = rekisterointiRepository.save(
                 rekisterointi.withTila(paatos.hyvaksytty ? Rekisterointi.Tila.HYVAKSYTTY : Rekisterointi.Tila.HYLATTY));
         RekisterointiAuditDto auditAfterDto = new RekisterointiAuditDto(saved.tila);
         LOGGER.debug("Rekisteröinnin {} tila päivitetty: {}", saved.id, saved.tila);
-        String taskId = String.format("%s-%d", paatosEmailTask.getName(), saved.id);
-        schedulerClient.schedule(paatosEmailTask.instance(taskId, saved.id), Instant.now());
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,
                 auditBeforeDto, auditAfterDto));
+
         if (paatos.hyvaksytty) {
-            rekisterointiFinalizer.finalize(rekisterointi, paattajaOid);
+            ajastaOrganisaationLuontiTaiPaivitys(saved);
+        } else {
+            ajastaHylkaysViesti(saved);
         }
         return saved;
+    }
+
+    private void ajastaOrganisaationLuontiTaiPaivitys(Rekisterointi rekisterointi) {
+        schedulerClient.schedule(
+                luoTaiPaivitaOrganisaatioTask.instance(taskId(luoTaiPaivitaOrganisaatioTask, rekisterointi.id), rekisterointi.id),
+                Instant.now()
+        );
+    }
+
+    private void ajastaHylkaysViesti(Rekisterointi rekisterointi) {
+        schedulerClient.schedule(
+                paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointi.id), rekisterointi.id),
+                Instant.now());
+    }
+
+    private String taskId(Task<Long> task, Long rekisterointiId) {
+        return String.format("%s-%d", task.getName(), rekisterointiId);
     }
 
     @Transactional

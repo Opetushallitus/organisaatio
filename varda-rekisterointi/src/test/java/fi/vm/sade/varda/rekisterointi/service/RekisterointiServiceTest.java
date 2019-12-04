@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,10 +38,15 @@ public class RekisterointiServiceTest {
         public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository,
                                                          PaatosRepository paatosRepository,
                                                          ApplicationEventPublisher eventPublisher,
-                                                         SchedulerClient schedulerClient, Task<Long> task,
-                                                         RekisterointiFinalizer rekisterointiFinalizer) {
+                                                         SchedulerClient schedulerClient,
+                                                         @Qualifier("rekisterointiEmailTask")
+                                                         Task<Long> rekisterointiEmailTask,
+                                                         @Qualifier("paatosEmailTask")
+                                                         Task<Long> paatosEmailTask,
+                                                         @Qualifier("luoTaiPaivitaOrganisaatioTask")
+                                                         Task<Long> luoTaiPaivitaOrganisaatioTask) {
             return new RekisterointiService(rekisterointiRepository, paatosRepository, eventPublisher, schedulerClient,
-                    task, task, rekisterointiFinalizer);
+                    rekisterointiEmailTask, paatosEmailTask, luoTaiPaivitaOrganisaatioTask);
         }
     }
 
@@ -95,11 +101,14 @@ public class RekisterointiServiceTest {
     @MockBean
     private SchedulerClient schedulerClient;
 
-    @MockBean
-    private Task<Long> taskWithLongData;
+    @MockBean(name = "rekisterointiEmailTask")
+    Task<Long> rekisterointiEmailTask;
 
-    @MockBean
-    private RekisterointiFinalizer rekisterointiFinalizer;
+    @MockBean(name = "paatosEmailTask")
+    Task<Long> paatosEmailTask;
+
+    @MockBean(name = "luoTaiPaivitaOrganisaatioTask")
+    Task<Long> luoTaiPaivitaOrganisaatioTask;
 
     @Autowired
     private RekisterointiService rekisterointiService;

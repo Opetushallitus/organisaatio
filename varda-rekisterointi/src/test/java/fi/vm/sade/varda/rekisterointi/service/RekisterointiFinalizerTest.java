@@ -1,70 +1,97 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
-import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
+import com.github.kagkarlsson.scheduler.SchedulerClient;
+import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.model.*;
+import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@RunWith(SpringRunner.class)
 public class RekisterointiFinalizerTest {
 
-    private static final String PAATTAJA_OID = "1.23.456.7890";
+    private static final Kayttaja TESTI_KAYTTAJA = Kayttaja.builder()
+            .asiointikieli("fi")
+            .etunimi("Testi")
+            .sukunimi("Henkilo")
+            .sahkoposti("testi.henkilo@osoite.foo")
+            .build();
+
+    @TestConfiguration
+    static class Configuration {
+        @Bean
+        public RekisterointiFinalizer rekisterointiFinalizer(RekisterointiRepository rekisterointiRepository,
+                                                             VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer,
+                                                             VardaKayttajaFinalizer vardaKayttajaFinalizer,
+                                                             SchedulerClient schedulerClient,
+                                                             Task<Long> kutsuKayttajaTask,
+                                                             Task<Long> paatosEmailTask) {
+            return new RekisterointiFinalizer(rekisterointiRepository, vardaOrganisaatioFinalizer,
+                    vardaKayttajaFinalizer, schedulerClient, kutsuKayttajaTask, paatosEmailTask);
+        }
+    }
+
+    @MockBean
+    private RekisterointiRepository rekisterointiRepository;
+    @MockBean
+    private VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer;
+    @MockBean
+    private VardaKayttajaFinalizer vardaKayttajaFinalizer;
+    @MockBean
+    private SchedulerClient schedulerClient;
+    @MockBean(name = "kutsuKayttajaTask")
+    private Task<Long> kutsuKayttajaTask;
+    @MockBean(name = "paatosEmailTask")
+    private Task<Long> paatosEmailTask;
+    @Autowired
+    private RekisterointiFinalizer rekisterointiFinalizer;
 
     @Test
-    public void luoOrganisaationJaKutsuuKayttajanJosEiOidia() {
-        OrganisaatioService organisaatioService = new OrganisaatioService();
-        OrganisaatioClient organisaatioClient = mock(OrganisaatioClient.class);
-        KayttooikeusClient kayttooikeusClient = mock(KayttooikeusClient.class);
-        RekisterointiFinalizer finalizer = createFinalizer(organisaatioService, organisaatioClient, kayttooikeusClient);
-        when(organisaatioClient.create(any(OrganisaatioV4Dto.class))).thenReturn(new OrganisaatioV4Dto());
-
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
-        finalizer.finalize(rekisterointi, PAATTAJA_OID);
-
-        verify(organisaatioClient).create(any(OrganisaatioV4Dto.class));
-        verify(kayttooikeusClient).kutsuKayttaja(anyString(), any(Kayttaja.class), any(), anyLong());
+    public void luoTaiPaivitaOrganisaatioTallentaaOidinJaAjastaaKutsun() {
+        Organisaatio organisaatio = TestiOrganisaatio.organisaatio(null);
+        Rekisterointi rekisterointi = Rekisterointi.of(
+                organisaatio,
+                "vardatoimintamuoto_tm01",
+                Set.of("kunta_123"),
+                Set.of("testi@osoite.foo"),
+                TESTI_KAYTTAJA
+        );
+        when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
+        when(vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn("1.23.456");
+        rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
+        verify(rekisterointiRepository).save(any(Rekisterointi.class));
+        verify(kutsuKayttajaTask).instance(anyString(), anyLong());
+        verify(schedulerClient).schedule(any(), any());
     }
 
     @Test
-    public void paivittaaVardaTiedot() {
-        OrganisaatioService organisaatioService = new OrganisaatioService();
-        OrganisaatioClient organisaatioClient = mock(OrganisaatioClient.class);
-        RekisterointiFinalizer finalizer = createFinalizer(organisaatioService, organisaatioClient);
-        Organisaatio organisaatio = Organisaatio.of("1234567-8", "1-23-456-7890", LocalDate.now(),
-                KielistettyNimi.of("Testi", "fi", LocalDate.now()),
-                "foo", Set.of(), "foo", "bar", Set.of(),
-                Yhteystiedot.of("0101234567", "testi@osoite.foo", Osoite.TYHJA, Osoite.TYHJA));
-        OrganisaatioV4Dto dto = organisaatioService.muunnaOrganisaatio(organisaatio);
-        when(organisaatioClient.getV4ByOid(anyString())).thenReturn(Optional.of(dto));
-
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi().withOrganisaatio(organisaatio);
-        finalizer.finalize(rekisterointi, PAATTAJA_OID);
-
-        verify(organisaatioClient).save(any(OrganisaatioV4Dto.class));
-        assertTrue(dto.tyypit.contains(RekisterointiFinalizer.VARDA_ORGANISAATIOTYYPPI));
-        assertEquals(!RekisterointiFinalizer.VARDA_TOIMINTAMUOTO_PAIVAKOTI.equals(rekisterointi.toimintamuoto), dto.piilotettu);
+    public void luoTaiPaivitaOrganisaatioAjastaaPaatosEmailin() {
+        Organisaatio organisaatio = TestiOrganisaatio.organisaatio("1.23.456");
+        Rekisterointi rekisterointi = Rekisterointi.of(
+                organisaatio,
+                "vardatoimintamuoto_tm01",
+                Set.of("kunta_123"),
+                Set.of("testi@osoite.foo"),
+                TESTI_KAYTTAJA
+        );
+        when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
+        when(vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn(organisaatio.oid);
+        rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
+        verify(rekisterointiRepository, never()).save(any(Rekisterointi.class));
+        verify(paatosEmailTask).instance(anyString(), anyLong());
+        verify(schedulerClient).schedule(any(), any());
     }
 
-    private RekisterointiFinalizer createFinalizer(OrganisaatioService organisaatioService,
-                                                   OrganisaatioClient organisaatioClient) {
-        return createFinalizer(
-                organisaatioService, organisaatioClient, mock(KayttooikeusClient.class));
-    }
-
-    private RekisterointiFinalizer createFinalizer(OrganisaatioService organisaatioService,
-                                                   OrganisaatioClient organisaatioClient,
-                                                   KayttooikeusClient kayttooikeusClient) {
-        OphProperties properties = mock(OphProperties.class);
-        when(properties.getProperty(anyString(), any())).thenReturn("1");
-        return new RekisterointiFinalizer(
-                organisaatioService, organisaatioClient, kayttooikeusClient, properties);
-    }
 }
