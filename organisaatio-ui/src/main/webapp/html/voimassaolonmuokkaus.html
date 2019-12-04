@@ -107,6 +107,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <div ng-show="model.muokkauksenTila === model.Tila.LAKKAUTUS_PVM_JATKETTU">
                 {{'Organisaationmuokkaus.voimassaolo.jatkettu'| i18n : [model.organisaationNimi]}}
             <div>&nbsp;</div>{{t('Organisaationmuokkaus.voimassaolo.aliorganisaatiotAktiivisiksi')}}:</div>
+
+            <div ng-show="model.muokkauksenTila === model.Tila.ALKU_PVM_ASETETTU || model.muokkauksenTila === model.Tila.ALKU_PVM_SUUNNITELTU">
+                <a href="#" ng-click="model.valitseKaikki()">Valitse kaikki</a>
+                <a href="#" ng-click="model.poistaKaikki()">Poista kaikki</a>
+            </div>
         </div>
         <div class="well">
             <ol class="unstyled" ng-show="model.aliorganisaatioTree.length">
