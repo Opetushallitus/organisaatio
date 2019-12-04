@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'normalize.css';
 import 'oph-virkailija-style-guide/oph-styles.css'
 import RekisterointiHakija from './hakija/RekisterointiHakija';
@@ -14,17 +14,32 @@ import RekisterointiVirkailija from './virkailija/RekisterointiVirkailija';
 import ErrorPage from './ErrorPage';
 import RekisterointiValmis from './hakija/RekisterointiValmis';
 import RekisterointiAloitus from './hakija/RekisterointiAloitus';
+import Axios from 'axios';
 
 const App: React.FC = () => {
   registerLocale('fi', fi);
   registerLocale('sv', sv);
   registerLocale('en', enGB);
   const [ language, setLanguage ] = useState<Language>('fi');
+  const [ languageLoading, setLanguageLoading ] = useState(true);
+  useEffect(() => {
+    async function fetchLanguage() {
+      try {
+        const response = await Axios.get('/varda-rekisterointi/api/lokalisointi/kieli');
+        setLanguage(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLanguageLoading(false);
+      }
+    }
+    fetchLanguage();
+  }, []);
   const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
       '/varda-rekisterointi/api/lokalisointi');
   const [{ data: kunnat, loading: kunnatLoading, error: kunnatError}] = useAxios<Koodi[]>(
       '/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true');
-  if (lokalisointiLoading || kunnatLoading) {
+  if (languageLoading || lokalisointiLoading || kunnatLoading) {
     return <Spinner />;
   }
   if (lokalisointiError || kunnatError) {

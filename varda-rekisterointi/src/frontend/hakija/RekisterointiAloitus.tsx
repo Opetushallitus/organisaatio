@@ -10,13 +10,14 @@ type Data = {
     url: string,
 }
 
-const data: Array<Data> = [
-    { kieli: 'fi', url: 'https://www.oph.fi/fi/palvelut/varhaiskasvatuksen-tietovaranto-varda' },
-    { kieli: 'sv', url: 'https://www.oph.fi/sv/tjanster/informationsresursen-inom-smabarnspedagogiken-varda' },
-];
+const data: Record<Language, Data> = {
+    fi: { kieli: 'fi', url: 'https://www.oph.fi/fi/palvelut/varhaiskasvatuksen-tietovaranto-varda' },
+    sv: { kieli: 'sv', url: 'https://www.oph.fi/sv/tjanster/informationsresursen-inom-smabarnspedagogiken-varda' },
+    en: { kieli: 'en', url: 'https://www.oph.fi/en' },
+}
 
 export default function RekisterointiAloitus() {
-    const { i18n } = useContext(LanguageContext);
+    const { i18n, language } = useContext(LanguageContext);
 
     function renderByKieli(data: Data) {
         return <div>
@@ -36,7 +37,7 @@ export default function RekisterointiAloitus() {
                 {i18n.translateWithLang('HAKIJA_ALOITUS_TEKSTI2', data.kieli)}
             </p>
             <p>
-                <a className="oph-button oph-button-primary" href={`/varda-rekisterointi/hakija?locale=${data.kieli}`}>
+                <a className="oph-button oph-button-primary" href="/varda-rekisterointi/hakija">
                     {i18n.translateWithLang('HAKIJA_ALOITA_REKISTEROITYMINEN', data.kieli)}
                 </a>
             </p>
@@ -49,13 +50,13 @@ export default function RekisterointiAloitus() {
     }
 
     return <div>
-        <Header hideLanguage={true}></Header>
+        <Header></Header>
         <div className={styles.section}>
             <div className={styles.child}>
                 <div className={styles.logo}>
                     <img src={lapset} alt={i18n.translate('KUVA_LAPSISTA')} />
                 </div>
-                { data.map(renderByKieli) }
+                { renderByKieli(data[language]) }
             </div>
         </div>
     </div>;
