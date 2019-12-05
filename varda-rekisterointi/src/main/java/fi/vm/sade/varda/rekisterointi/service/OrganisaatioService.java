@@ -110,7 +110,8 @@ public class OrganisaatioService {
 
     private static Yhteystiedot muunnaYhteystiedot(OrganisaatioV4Dto dto) {
         String ytjKieli = ytjKieliTaiOletusKieli(dto);
-        Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = dto.yhteystiedot.stream()
+        List<YhteystietoDto> yhteystiedot = dto.yhteystiedot != null ? dto.yhteystiedot : List.of();
+        Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = yhteystiedot.stream()
                 .filter(yhteystietoDto -> yhteystietoDto.kieli.equals(ytjKieli)
                         && HALUTUT_OSOITETYYPIT.contains(yhteystietoDto.osoiteTyyppi))
                 .collect(Collectors.groupingBy(yhteystietoDto -> yhteystietoDto.osoiteTyyppi != null
