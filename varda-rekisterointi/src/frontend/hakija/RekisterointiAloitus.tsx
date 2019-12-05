@@ -11,9 +11,9 @@ type Data = {
 }
 
 const data: Record<Language, Data> = {
-    fi: { kieli: 'fi', url: 'https://www.oph.fi/fi/palvelut/varhaiskasvatuksen-tietovaranto-varda' },
-    sv: { kieli: 'sv', url: 'https://www.oph.fi/sv/tjanster/informationsresursen-inom-smabarnspedagogiken-varda' },
-    en: { kieli: 'en', url: 'https://www.oph.fi/en' },
+    fi: { kieli: 'fi', url: 'https://www.oph.fi/fi/varda' },
+    sv: { kieli: 'sv', url: 'https://www.oph.fi/sv/varda' },
+    en: { kieli: 'en', url: 'https://www.oph.fi/en/varda' },
 }
 
 export default function RekisterointiAloitus() {
