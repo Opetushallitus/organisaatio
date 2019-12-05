@@ -5,6 +5,7 @@ import Axios from 'axios';
 import Rekisterointi from './Rekisterointi';
 import ErrorPage from '../ErrorPage';
 import { LanguageContext } from '../contexts';
+import {tyhjaOsoite} from "../testTypes";
 
 const baseOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -19,7 +20,12 @@ const baseOrganisaatio: Organisaatio = {
     kotipaikkaUri: '',
     maaUri: 'maatjavaltiot1_fin',
     kieletUris: [],
-    yhteystiedot: []
+    yhteystiedot: {
+        kayntiosoite: tyhjaOsoite,
+        postiosoite: tyhjaOsoite,
+        sahkoposti: '',
+        puhelinnumero: ''
+    }
 };
 
 const organisaatiotUrl = "/varda-rekisterointi/hakija/api/organisaatiot";

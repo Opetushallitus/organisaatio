@@ -10,9 +10,9 @@ import Wizard from '../Wizard';
 import Navigation from './Navigation';
 import {KuntaKoodistoContext, LanguageContext} from '../contexts';
 import EmailValidator from 'email-validator';
-import { getYhteystietoArvo, isPuhelinnumero, toPuhelinnumero, isSahkoposti, toSahkoposti, isKayntiosoite, toOsoite, isPostiosoite, toPostinumeroUri, toPostitoimipaikka } from '../OrganisaatioYhteystietoUtils';
 import * as YtunnusValidator from '../YtunnusValidator';
 import { kielletytYritysmuodot } from './YritysmuotoUtils';
+import {validoiYhteystiedot} from "../YhteystiedotValidator";
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -80,23 +80,10 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
                         organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
                     }
-                    [
-                        { name: 'puhelinnumero', filter: isPuhelinnumero, mapper: toPuhelinnumero },
-                        { name: 'sahkoposti', filter: isSahkoposti, mapper: toSahkoposti },
-                        { name: 'postiosoite', filter: isPostiosoite, mapper: toOsoite },
-                        { name: 'postinumero', filter: isPostiosoite, mapper: toPostinumeroUri },
-                        { name: 'kayntiosoite', filter: isKayntiosoite, mapper: toOsoite, },
-                        { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, mapper: toPostinumeroUri, },
-                    ].filter(field => !getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.mapper))
-                     .forEach(field => organisaatioErrors[field.name] = i18n.translate('PAKOLLINEN_TIETO'));
-                    [
-                        { name: 'postinumero', filter: isPostiosoite, postinumeroFn: toPostinumeroUri, postitoimipaikkaFn: toPostitoimipaikka },
-                        { name: 'kayntiosoitteenPostinumero', filter: isKayntiosoite, postinumeroFn: toPostinumeroUri, postitoimipaikkaFn: toPostitoimipaikka },
-                    ].filter(field => {
-                        const postinumero = getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.postinumeroFn);
-                        const postitoimipaikka = getYhteystietoArvo(organisaatio.yhteystiedot, field.filter, field.postitoimipaikkaFn);
-                        return postinumero && !postitoimipaikka;
-                    }).forEach(field => organisaatioErrors[field.name] = i18n.translate('VIRHEELLINEN_POSTINUMERO'));
+                    const yhteystietoVirheet = validoiYhteystiedot(organisaatio.yhteystiedot);
+                    for (let avain in yhteystietoVirheet) {
+                        organisaatioErrors[`yhteystiedot.${avain}`] = yhteystietoVirheet[avain];
+                    }
                 }
                 if (kielletytYritysmuodot.includes(organisaatio.yritysmuoto)) {
                     organisaatioErrors.yritysmuoto = i18n.translate('VIRHEELLINEN_YRITYSMUOTO');
