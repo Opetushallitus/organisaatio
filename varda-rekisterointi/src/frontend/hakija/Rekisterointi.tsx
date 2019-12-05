@@ -82,7 +82,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     }
                     const yhteystietoVirheet = validoiYhteystiedot(organisaatio.yhteystiedot);
                     for (let avain in yhteystietoVirheet) {
-                        organisaatioErrors[`yhteystiedot.${avain}`] = yhteystietoVirheet[avain];
+                        organisaatioErrors[`yhteystiedot.${avain}`] = i18n.translate(yhteystietoVirheet[avain]);
                     }
                 }
                 if (kielletytYritysmuodot.includes(organisaatio.yritysmuoto)) {

@@ -60,3 +60,5 @@ export type Rekisterointi = {
     sahkopostit: string[],
     kayttaja: Kayttaja
 }
+
+export type Virheet = Record<string, string>
