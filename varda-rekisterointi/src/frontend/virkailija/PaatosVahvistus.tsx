@@ -38,8 +38,8 @@ class PaatosRivi {
         return this.hakemus.organisaatio.ytjNimi.nimi;
     }
 
-    get sahkoposti(): string {
-        return this.hakemus.sahkopostit[0];
+    get puhelinnumero(): string {
+        return this.hakemus.organisaatio.yhteystiedot.puhelinnumero || '';
     }
 
     get ytunnus(): string {
@@ -95,7 +95,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     <thead>
                         <tr key="otsikot">
                             <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
-                            <th>{i18n.translate('SAHKOPOSTI')}</th>
+                            <th>{i18n.translate('PUHELINNUMERO')}</th>
                             <th>{i18n.translate('YTUNNUS')}</th>
                             <th>{i18n.translate('ORGANISAATION_KOTIPAIKKA')}</th>
                         </tr>
@@ -108,7 +108,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                         )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
                             <td>{rivi.organisaatio}</td>
-                            <td>{rivi.sahkoposti}</td>
+                            <td>{rivi.puhelinnumero}</td>
                             <td>{rivi.ytunnus}</td>
                             <td>{rivi.kotipaikka}</td>
                         </tr>

@@ -14,8 +14,8 @@ export class ListaRivi {
         return this.hakemus.organisaatio.ytjNimi.nimi;
     }
 
-    get sahkoposti(): string {
-        return this.hakemus.sahkopostit[0];
+    get puhelinnumero(): string {
+        return this.hakemus.organisaatio.yhteystiedot.puhelinnumero || '';
     }
 
     get ytunnus(): string {
@@ -49,6 +49,8 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
         valitseHakemusCallback(rekisterointi.hakemus, valittu);
     }
 
+
+
     return (
         <tr>
         {
@@ -56,7 +58,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td><Checkbox checked={valittu} onChange={_ => valitse()} /></td>
         }
             <td>{rekisterointi.organisaatio}</td>
-            <td>{rekisterointi.sahkoposti}</td>
+            <td>{rekisterointi.puhelinnumero}</td>
             <td>{rekisterointi.ytunnus}</td>
             <td>{rekisterointi.vastaanotettu}</td>
         </tr>
