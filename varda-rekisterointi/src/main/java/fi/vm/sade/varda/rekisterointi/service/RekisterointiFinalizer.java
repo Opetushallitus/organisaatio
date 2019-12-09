@@ -65,5 +65,6 @@ public class RekisterointiFinalizer {
                 paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointiId), rekisterointiId),
                 Instant.now()
         );
+        LOGGER.debug("Päätös-email ajastettu rekisteröinnille {}.", rekisterointiId);
     }
 }

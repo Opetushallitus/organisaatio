@@ -3,6 +3,8 @@ package fi.vm.sade.varda.rekisterointi.service;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Map;
 @Service
 public class VardaKayttajaFinalizer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VardaKayttajaFinalizer.class);
     static final String KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY =
             "varda-rekisterointi.kayttooikeus.ryhma.paivakoti";
     static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY =
@@ -43,6 +46,8 @@ public class VardaKayttajaFinalizer {
                 rekisterointi.organisaatio.oid,
                 kayttooikeusRyhmaId(rekisterointi.toimintamuoto)
         );
+        LOGGER.info(
+                "Kutsuttu käyttäjä {} organisaatioon {}.", rekisterointi.kayttaja.id, rekisterointi.organisaatio.oid);
     }
 
     private Long kayttooikeusRyhmaId(String toimintamuoto) {
