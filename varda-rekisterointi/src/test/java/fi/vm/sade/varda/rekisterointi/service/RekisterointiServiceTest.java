@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,9 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,14 +56,19 @@ public class RekisterointiServiceTest {
                     KielistettyNimi.of(
                             "fi", "Testiyritys", null
                     ),
-                    "yritysmuoto",
-                    Collections.singleton("tyyppi"),
-                    "Helsinki",
-                    "Suomi",
-                    Collections.singleton("kieli")),
+                    "yritysmuoto_26",
+                    Set.of("organisaatiotyyppi_07"),
+                    "kunta_091",
+                    "maatjavaltiot1_fin",
+                    Set.of("opetuskieli"),
+                    Yhteystiedot.of(
+                            "+358101234567",
+                            "testi@testiyritys.fi",
+                            Osoite.TYHJA, Osoite.TYHJA
+                    )),
             "vardatoimintamuoto_tm01",
-            Collections.singleton("Helsinki"),
-            Collections.emptySet(),
+            Set.of("kunta_091"),
+            Set.of("testi.henkilo@foo.bar"),
             Kayttaja.builder()
                     .etunimi("Testi")
                     .sukunimi("Henkilö")
@@ -114,8 +118,7 @@ public class RekisterointiServiceTest {
 
     @Test
     public void createSavesRekisterointi() {
-        RequestContext requestContext = new RequestContextImpl("user1", "127.0.0.1");
-        Long id = rekisterointiService.create(SAVED_REKISTEROINTI, requestContext);
+        Long id = rekisterointiService.create(SAVED_REKISTEROINTI, requestContext("user1"));
         assertEquals(SAVED_REKISTEROINTI_ID, id);
         verify(rekisterointiRepository).save(SAVED_REKISTEROINTI);
     }
@@ -127,8 +130,17 @@ public class RekisterointiServiceTest {
                 true,
                 "Miksipä ei?"
         );
-        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
-        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext);
+        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void resolveThrowsOnInvalidRekisterointiTila() {
+        Rekisterointi hylatty = TestiRekisterointi.validiRekisterointi()
+                .withId(123L)
+                .withTila(Rekisterointi.Tila.HYLATTY);
+        PaatosDto paatos = new PaatosDto(hylatty.id, true, "Juuh elikkäs");
+        when(rekisterointiRepository.findById(hylatty.id)).thenReturn(Optional.of(hylatty));
+        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
     }
 
     @Test
@@ -139,8 +151,7 @@ public class RekisterointiServiceTest {
                 "Rekisteröinti tehty 110% väärin."
         );
         Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYLATTY);
-        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
-        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext);
+        rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
         verify(rekisterointiRepository).save(expected);
         verify(paatosRepository).save(any(Paatos.class));
     }
@@ -154,9 +165,15 @@ public class RekisterointiServiceTest {
                 hakemusTunnukset
         );
         Rekisterointi expected = SAVED_REKISTEROINTI.withTila(Rekisterointi.Tila.HYVAKSYTTY);
-        RequestContextImpl requestContext = new RequestContextImpl("127.0.0.1");
-        rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset, requestContext);
+        rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset, requestContext(null));
         verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(expected);
         verify(paatosRepository, times(hakemusTunnukset.size())).save(any(Paatos.class));
+    }
+
+    private RequestContext requestContext(String userId) {
+        if (userId == null) {
+            return new RequestContextImpl("127.0.0.1");
+        }
+        return new RequestContextImpl(userId, "127.0.0.1");
     }
 }

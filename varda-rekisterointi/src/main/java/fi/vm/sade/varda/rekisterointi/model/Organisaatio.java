@@ -39,4 +39,7 @@ public class Organisaatio {
     @NotNull @Column("kielet_uris")
     public final Set<String> kieletUris;
 
+    @NotNull @Column("rekisterointi_id")
+    public final Yhteystiedot yhteystiedot;
+
 }

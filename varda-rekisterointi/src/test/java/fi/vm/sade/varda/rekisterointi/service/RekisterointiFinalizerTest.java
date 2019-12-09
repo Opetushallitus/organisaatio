@@ -34,7 +34,8 @@ public class RekisterointiFinalizerTest {
         RekisterointiFinalizer finalizer = new RekisterointiFinalizer(service, client);
         Organisaatio organisaatio = Organisaatio.of("1234567-8", "1-23-456-7890", LocalDate.now(),
                 KielistettyNimi.of("Testi", "fi", LocalDate.now()),
-                "foo", Set.of(), "foo", "bar", Set.of());
+                "foo", Set.of(), "foo", "bar", Set.of(),
+                Yhteystiedot.of("0101234567", "testi@osoite.foo", Osoite.TYHJA, Osoite.TYHJA));
         OrganisaatioV4Dto dto = service.muunnaOrganisaatio(organisaatio);
         when(client.getV4ByOid(anyString())).thenReturn(Optional.of(dto));
 
