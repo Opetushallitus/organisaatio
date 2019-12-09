@@ -16,11 +16,6 @@ import static java.util.stream.Collectors.toList;
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
-    public void paivitaKoodistoAsync(Organisaatio entity) {
-        // nop
-    }
-
-    @Override
     public String paivitaKoodisto(String oid) {
         return null;
     }

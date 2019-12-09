@@ -28,7 +28,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
@@ -255,21 +254,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             }
         }
         return paivitaCodeElements(entityRelaatiot, koodi.getWithinCodeElements());
-    }
-
-    /**
-     * Päivittää koodiston vastaamaan muokattua organisaatiota. (kts.
-     * {@link #paivitaKoodisto(fi.vm.sade.organisaatio.model.Organisaatio, boolean)}.
-     *
-     * @param entity organisaatio
-     */
-    @Override
-    @Async
-    public void paivitaKoodistoAsync(Organisaatio entity) {
-        String virheviesti = paivitaKoodisto(entity);
-        if (virheviesti != null) {
-            LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
-        }
     }
 
     @Override

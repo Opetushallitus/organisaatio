@@ -9,8 +9,6 @@ import java.util.Set;
 
 public interface OrganisaatioKoodisto {
 
-    void paivitaKoodistoAsync(Organisaatio entity);
-
     String paivitaKoodisto(String oid);
 
     String paivitaKoodisto(Organisaatio entity);

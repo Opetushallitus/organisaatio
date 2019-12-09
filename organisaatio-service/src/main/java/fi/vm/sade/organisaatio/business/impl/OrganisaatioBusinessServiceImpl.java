@@ -35,6 +35,7 @@ import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.KoodistoService;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -91,6 +92,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private ConversionService conversionService;
+
+    @Autowired
+    private KoodistoService koodistoService;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -374,7 +378,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // organisaation päivittäminen koodistoon tehdään taustalla
         // jotta organisaation muokkaus olisi nopeampaa
         String info = null;
-        organisaatioKoodisto.paivitaKoodistoAsync(entity);
+        koodistoService.addKoodistoSyncByOid(entity.getOid());
 
         return new OrganisaatioResult(entity, info);
     }
@@ -749,7 +753,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     childChanged = true;
                 }
                 if (childChanged) {
-                    organisaatioKoodisto.paivitaKoodistoAsync(child);
+                    koodistoService.addKoodistoSyncByOid(child.getOid());
                 }
             }
         }
