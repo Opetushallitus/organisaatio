@@ -82,6 +82,10 @@ public class RekisterointiService {
         Paatos paatos = new Paatos(paatosDto.rekisterointi, paatosDto.hyvaksytty, LocalDateTime.now(),paattajaOid, paatosDto.perustelu);
         Rekisterointi rekisterointi = rekisterointiRepository.findById(paatos.rekisterointi).orElseThrow(
                 () -> new InvalidInputException("Rekisteröintiä ei löydy, id: " + paatos.rekisterointi));
+        if (rekisterointi.tila != Rekisterointi.Tila.KASITTELYSSA) {
+            throw new IllegalStateException(
+                    "Päätöstä ei voi tehdä; rekisteröinti ei ole käsittelyssä-tilassa, id: " + rekisterointi.id);
+        }
         RekisterointiAuditDto auditBeforeDto = new RekisterointiAuditDto(rekisterointi.tila);
         paatosRepository.save(paatos);
         LOGGER.info("Päätös tallennettu rekisteröinnille: {}", rekisterointi.id);
