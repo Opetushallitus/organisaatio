@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @AllArgsConstructor
 public class RekisterointiFinalizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiFinalizer.class);
+    private static final long ORGANISAATIO_CACHE_KLUDGE_MINUUTIT = 15;
 
     private final RekisterointiRepository rekisterointiRepository;
     private final VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer;
@@ -36,7 +38,7 @@ public class RekisterointiFinalizer {
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
             schedulerClient.schedule(
                     kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
-                    Instant.now());
+                    Instant.now().plus(ORGANISAATIO_CACHE_KLUDGE_MINUUTIT, ChronoUnit.MINUTES));
         } else {
             ajastaPaatosEmail(rekisterointiId);
         }
