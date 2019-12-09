@@ -14,15 +14,24 @@ export type Koodi = {
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
-// organisaatio
-export type Yhteystieto = Record<string, string>;
-
 export type KielistettyNimi = {
     nimi: string,
     kieli: Language, // ytj-kieli
     alkuPvm: LocalDate | null
 }
 
+export type Osoite = {
+    katuosoite: string,
+    postinumeroUri: KoodiUri,
+    postitoimipaikka: string
+}
+
+export type Yhteystiedot = {
+    puhelinnumero: string,
+    sahkoposti: string,
+    postiosoite: Osoite,
+    kayntiosoite: Osoite
+}
 export type Organisaatio = {
     oid?: string,
     ytunnus: string,
@@ -33,7 +42,7 @@ export type Organisaatio = {
     kotipaikkaUri: KoodiUri,
     maaUri: KoodiUri,
     kieletUris: KoodiUri[],
-    yhteystiedot: Yhteystieto[]
+    yhteystiedot: Yhteystiedot
 }
 
 // kayttooikeus
@@ -51,3 +60,5 @@ export type Rekisterointi = {
     sahkopostit: string[],
     kayttaja: Kayttaja
 }
+
+export type Virheet = Record<string, string>

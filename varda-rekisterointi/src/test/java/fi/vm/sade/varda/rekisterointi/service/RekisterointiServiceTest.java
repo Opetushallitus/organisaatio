@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,9 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,14 +56,19 @@ public class RekisterointiServiceTest {
                     KielistettyNimi.of(
                             "fi", "Testiyritys", null
                     ),
-                    "yritysmuoto",
-                    Collections.singleton("tyyppi"),
-                    "Helsinki",
-                    "Suomi",
-                    Collections.singleton("kieli")),
+                    "yritysmuoto_26",
+                    Set.of("organisaatiotyyppi_07"),
+                    "kunta_091",
+                    "maatjavaltiot1_fin",
+                    Set.of("opetuskieli"),
+                    Yhteystiedot.of(
+                            "+358101234567",
+                            "testi@testiyritys.fi",
+                            Osoite.TYHJA, Osoite.TYHJA
+                    )),
             "vardatoimintamuoto_tm01",
-            Collections.singleton("Helsinki"),
-            Collections.emptySet(),
+            Set.of("kunta_091"),
+            Set.of("testi.henkilo@foo.bar"),
             Kayttaja.builder()
                     .etunimi("Testi")
                     .sukunimi("Henkilö")

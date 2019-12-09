@@ -21,6 +21,7 @@ public class OrganisaatioV4Dto extends BaseDto {
     public String maaUri;
     public String ytjkieli;
     public Set<String> kieletUris;
+    public List<YhteystietoDto> yhteystiedot;
 
     public static OrganisaatioV4Dto of(String businessId, String organisationName) {
         OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
