@@ -2,11 +2,14 @@ import React, {useContext, useState} from "react";
 import Axios from "axios";
 import {KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext} from '../contexts';
 import Box from "@opetushallitus/virkailija-ui-components/Box";
+import Textarea from "@opetushallitus/virkailija-ui-components/Textarea";
+import Typography from "@opetushallitus/virkailija-ui-components/Typography";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Modal from "@opetushallitus/virkailija-ui-components/Modal"
 import ModalBody from "@opetushallitus/virkailija-ui-components/ModalBody"
 import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader"
+import Divider from "@opetushallitus/virkailija-ui-components/Divider";
 import {Rekisterointihakemus} from "./rekisterointihakemus";
 import {hasLength} from "../StringUtils";
 import {Organisaatio} from "../types";
@@ -50,22 +53,28 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
+    const [perusteluError, setPerusteluError] = useState(false);
+    // const [lahetaError, setLahetaError] = useState(false); TODO error handling
 
     async function laheta() {
+        setPerusteluError(false);
+        // setLahetaError(false);
         const paatokset: PaatosBatch = {
             hyvaksytty,
             hakemukset: valitut.map(h => h.id)
         };
         if (hasLength(perustelu)) {
             paatokset.perustelu = perustelu;
+        } else if (!hyvaksytty) {
+            return setPerusteluError(true);
         }
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
             valitutKasiteltyCallback();
             suljeCallback();
         } catch (e) {
-            // TODO: virheenkäsittely
-            console.log(e);
+            // setLahetaError(true);
+            throw e;
         }
     }
 
@@ -107,9 +116,23 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     }
                     </tbody>
                 </table>
-            { hyvaksytty ? null :
-                <textarea value={perustelu}
-                          onBlur={(event) => asetaPerustelu(event.currentTarget.value)} />
+            { !hyvaksytty && [
+                <Divider />,
+                valitut.length > 1 ?  [
+                        <Typography >
+                            {i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}
+                        </Typography>,
+                        <Divider />,
+                    ] : null,
+                 <Typography >
+                    {i18n.translate('REKISTEROINTI_HYLKAYS_OHJE')}
+                </Typography>,
+                <Textarea
+                    error={perusteluError}
+                    value={perustelu}
+                    onChange={(event: any) => asetaPerustelu(event.target.value)}
+                />
+            ]
             }
             </ModalBody>
             <ModalFooter>

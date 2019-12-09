@@ -35,11 +35,12 @@ export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: 
             <Button id="hyvaksyButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={_ => vahvista(true)}>
                 <i className="material-icons md-18">&#xe5ca;</i> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
+            {naytaVahvistus &&
             <PaatosVahvistus valitut={valitut}
                              hyvaksytty={hyvaksytty}
                              nayta={naytaVahvistus}
                              valitutKasiteltyCallback={valitutKasiteltyCallback}
-                             suljeCallback={() => asetaNaytaVahvistus(false)}/>
+                             suljeCallback={() => asetaNaytaVahvistus(false)}/> }
         </Box>
     );
 }
