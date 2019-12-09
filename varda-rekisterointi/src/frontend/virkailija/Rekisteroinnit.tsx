@@ -66,8 +66,10 @@ export default function Rekisteroinnit() {
                         <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
                         <div className={styles.vasen}>
                             <Input className={styles.suodata} type="text"
-                                   placeholder={i18n.translate('REKISTEROINNIT_SUODATA')} value={hakutermiInput}
-                                   prefix={<FilterVariantIcon className={styles.suodataIcon}/>} onChange={e => vaihdaHakutermi(e.target.value)} />
+                                   placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
+                                   value={hakutermiInput}
+                                   prefix={<FilterVariantIcon className={styles.suodataIcon}/>}
+                                   onChange={e => vaihdaHakutermi(e.target.value)} />
                         </div>
                         <div className={styles.oikea}>
                             <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
