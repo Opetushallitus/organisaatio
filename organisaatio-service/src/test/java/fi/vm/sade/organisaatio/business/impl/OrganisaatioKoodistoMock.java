@@ -21,6 +21,11 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
     }
 
     @Override
+    public String paivitaKoodisto(String oid) {
+        return null;
+    }
+
+    @Override
     public String paivitaKoodisto(Organisaatio entity) {
         return null;
     }

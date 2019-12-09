@@ -70,7 +70,7 @@ public class KoodistoTest {
             elements.add(e);
         }
         
-        OrganisaatioKoodistoImpl k = new OrganisaatioKoodistoImpl(null, null, null);
+        OrganisaatioKoodistoImpl k = new OrganisaatioKoodistoImpl(null, null, null, null);
         boolean result = k.paivitaCodeElements(entityRelaatiot, elements);
         Map<String, Object> elementsResult = new HashMap<String, Object>();
         for (OrganisaatioKoodistoKoodiCodeElements e: elements) {

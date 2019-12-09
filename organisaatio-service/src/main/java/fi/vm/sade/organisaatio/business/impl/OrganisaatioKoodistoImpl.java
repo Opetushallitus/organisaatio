@@ -19,16 +19,18 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.koodisto.service.types.common.KoodiType;
-import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
@@ -48,6 +50,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     private final OrganisaatioKoodistoClient client;
 
+    private final OrganisaatioDAO dao;
+
     private final Gson gson;
 
     private final ObjectMapper objectMapper;
@@ -61,9 +65,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      */
     @Autowired
     public OrganisaatioKoodistoImpl(OrganisaatioKoodistoClient client,
+                                    OrganisaatioDAO dao,
                                     UrlConfiguration urlConfiguration,
                                     ObjectMapper objectMapper) {
         this.client = client;
+        this.dao = dao;
         this.urlConfiguration = urlConfiguration;
         this.objectMapper = objectMapper;
         gson = new GsonBuilder().create();
@@ -264,6 +270,12 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         if (virheviesti != null) {
             LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String paivitaKoodisto(String oid) {
+        return paivitaKoodisto(dao.findByOid(oid));
     }
 
     /**

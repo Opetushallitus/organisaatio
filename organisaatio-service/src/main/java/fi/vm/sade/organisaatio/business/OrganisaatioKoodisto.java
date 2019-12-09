@@ -11,6 +11,8 @@ public interface OrganisaatioKoodisto {
 
     void paivitaKoodistoAsync(Organisaatio entity);
 
+    String paivitaKoodisto(String oid);
+
     String paivitaKoodisto(Organisaatio entity);
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm);
