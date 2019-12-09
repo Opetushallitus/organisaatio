@@ -1,6 +1,7 @@
 import {Virheet, Yhteystiedot} from "./types";
 import {hasLength} from "./StringUtils";
 import {validoiOsoite} from "./OsoiteValidator";
+import EmailValidator from 'email-validator';
 
 type YhteystiedotKentta = keyof Yhteystiedot;
 type Osoitetyyppi = Extract<YhteystiedotKentta, 'postiosoite' | 'kayntiosoite'>;
@@ -11,6 +12,10 @@ export function validoiYhteystiedot(yhteystiedot: Yhteystiedot) {
         const arvo = yhteystiedot[kentta as YhteystiedotKentta];
         if (!hasLength(arvo as string)) {
             virheet[kentta] = 'PAKOLLINEN_TIETO';
+        } else {
+            if (kentta === 'sahkoposti' && !EmailValidator.validate(arvo as string)) {
+                virheet[kentta] = 'VIRHEELLINEN_SAHKOPOSTI';
+            }
         }
     }
     for (let osoitetyyppi of ['postiosoite', 'kayntiosoite']) {

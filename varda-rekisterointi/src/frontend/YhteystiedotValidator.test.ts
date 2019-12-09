@@ -32,6 +32,17 @@ describe('YhteystiedotValidator', () => {
         tarkistaPakollinenTieto(virheet, 'sahkoposti');
     });
 
+    it('tarkistaa sähköpostin muodon', () => {
+        const yhteystiedot: Yhteystiedot = {
+            puhelinnumero: '0123456789',
+            sahkoposti: 'eiolekunnonsposti',
+            postiosoite: tyhjaOsoite,
+            kayntiosoite: tyhjaOsoite
+        };
+        const virheet = validoiYhteystiedot(yhteystiedot);
+        expect(virheet['sahkoposti']).toEqual('VIRHEELLINEN_SAHKOPOSTI');
+    });
+
     it('tarkistaa osoitteet', () => {
         const yhteystiedot: Yhteystiedot = {
             puhelinnumero: '0123456789',
