@@ -93,7 +93,7 @@ public class OrganisaatioClient {
                 .build();
         return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
+                .mapWith(json -> fromJson(json, OrganisaatioResultDto.class).organisaatio)
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 
@@ -110,7 +110,7 @@ public class OrganisaatioClient {
                 .build();
         return httpClient.<OrganisaatioV4Dto>execute(request)
                 .expectedStatus(200)
-                .mapWith(json -> fromJson(json, OrganisaatioV4Dto.class))
+                .mapWith(json -> fromJson(json, OrganisaatioResultDto.class).organisaatio)
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 
@@ -132,4 +132,7 @@ public class OrganisaatioClient {
         public Collection<OrganisaatioV4Dto> organisaatiot;
     }
 
+    private static class OrganisaatioResultDto {
+        public OrganisaatioV4Dto organisaatio;
+    }
 }

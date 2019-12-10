@@ -30,3 +30,8 @@ varda-rekisterointi:
   service:
     username: varda-rekisterointi
     password: varda-rekisterointi
+  kayttooikeus:
+    ryhma:
+      paivakoti: 70008488
+      ryhmaperhepaivahoito: 70008504
+      perhepaivahoito: 70008477

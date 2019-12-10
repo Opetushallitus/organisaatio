@@ -32,11 +32,14 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
             "k.id AS kayttaja_id, k.etunimi AS kayttaja_etunimi, k.sukunimi AS kayttaja_sukunimi, " +
             "k.sahkoposti AS kayttaja_sahkoposti, k.asiointikieli AS kayttaja_asiointikieli, " +
             "k.saateteksti AS kayttaja_saateteksti, " +
-            "r.vastaanotettu, r.tila " +
+            "r.vastaanotettu, r.tila, " +
+            "p.rekisterointi_id AS paatos_rekisterointi_id, p.hyvaksytty AS paatos_hyvaksytty, " +
+            "p.paatetty AS paatos_paatetty, p.paattaja_oid AS paatos_paattaja_oid, p.perustelu AS paatos_perustelu " +
             "FROM rekisterointi AS r " +
             "INNER JOIN kayttaja AS k ON (k.rekisterointi = r.id) " +
             "INNER JOIN organisaatio AS o ON (o.rekisterointi_id = r.id) " +
-            "INNER JOIN yhteystiedot AS y ON (y.rekisterointi_id = o.rekisterointi_id)";
+            "INNER JOIN yhteystiedot AS y ON (y.rekisterointi_id = o.rekisterointi_id) " +
+            "LEFT JOIN paatos AS p ON (p.rekisterointi_id = r.id)";
 
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila")
     Iterable<Rekisterointi> findByTila(@Param("tila") String tila);

@@ -74,7 +74,7 @@ public class OrganisaatioClientTest {
     @Test
     public void create() {
         stubFor(post(urlEqualTo("/organisaatio-service/rest/organisaatio/v4"))
-                .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
+                .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
         OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
 
         organisaatio = client.save(organisaatio);
@@ -85,7 +85,7 @@ public class OrganisaatioClientTest {
     @Test
     public void update() {
         stubFor(put(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/oid123"))
-                .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
+                .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
         OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
         organisaatio.oid = "oid123";
 

@@ -44,3 +44,8 @@ varda-rekisterointi:
         client-id: {{ varda_rekisterointi_valtuudet_client_id }}
         api-key: {{ varda_rekisterointi_valtuudet_api_key }}
         oauth-password: {{ varda_rekisterointi_valtuudet_oauth_password }}
+    kayttooikeus:
+        ryhma:
+            paivakoti: {{ kayttooikeus_ryhma_paivakoti }}
+            ryhmaperhepaivakoti: {{ kayttooikeus_ryhma_ryhmaperhepaivakoti }}
+            perhepaivahoitaja: {{ kayttooikeus_ryhma_perhepaivahoitaja }}

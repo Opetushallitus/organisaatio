@@ -56,8 +56,8 @@ public class VirkailijaController {
 
     @PostMapping(REKISTEROINNIT_PATH)
     @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
-    public String luoRekisterointi(@RequestBody @Validated Rekisterointi dto, HttpServletRequest request) {
-        rekisterointiService.create(dto, RequestContextImpl.of(request));
+    public String luoRekisterointi(@RequestBody @Validated RekisterointiDto dto, HttpServletRequest request) {
+        rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
         return properties.url("varda-rekisterointi.virkailija");
     }
 

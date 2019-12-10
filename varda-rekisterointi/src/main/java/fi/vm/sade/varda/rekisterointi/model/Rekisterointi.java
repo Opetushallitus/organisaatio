@@ -1,11 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @EqualsAndHashCode
+@AllArgsConstructor
 public class Rekisterointi {
 
     @With @Id
@@ -26,35 +27,21 @@ public class Rekisterointi {
 
     @NotEmpty
     public final Set<@NotNull String> kunnat;
+
+    @NotEmpty
     public final Set<@Email String> sahkopostit;
 
-    @With @NotNull @Valid
+    @With @NotNull
     public final Kayttaja kayttaja;
 
-    @With
+    @NotNull
     public final LocalDateTime vastaanotettu;
 
-    @With
-    public final Tila tila;
+    @Column("rekisterointi_id")
+    public final Paatos paatos;
 
-    public Rekisterointi(
-            Long id,
-            Organisaatio organisaatio,
-            String toimintamuoto,
-            Set<String> kunnat,
-            Set<String> sahkopostit,
-            Kayttaja kayttaja,
-            LocalDateTime vastaanotettu,
-            Tila tila) {
-        this.id = id;
-        this.organisaatio = organisaatio;
-        this.toimintamuoto = toimintamuoto;
-        this.kunnat = kunnat;
-        this.sahkopostit = sahkopostit;
-        this.kayttaja = kayttaja;
-        this.vastaanotettu = vastaanotettu != null ? vastaanotettu : LocalDateTime.now();
-        this.tila = tila != null ? tila : Tila.KASITTELYSSA;
-    }
+    @NotNull
+    public final Tila tila;
 
     public static Rekisterointi of(
             Organisaatio organisaatio,
@@ -62,8 +49,32 @@ public class Rekisterointi {
             Set<String> kunnat,
             Set<String> sahkopostit,
             Kayttaja kayttaja) {
+        return new Rekisterointi(null, organisaatio, toimintamuoto, kunnat, sahkopostit, kayttaja,
+                LocalDateTime.now(), null, Tila.KASITTELYSSA);
+    }
+
+    public static Rekisterointi from(RekisterointiDto dto) {
+        return Rekisterointi.of(
+                dto.organisaatio,
+                dto.toimintamuoto,
+                dto.kunnat,
+                dto.sahkopostit,
+                dto.kayttaja
+        );
+    }
+
+    public Rekisterointi withPaatos(Paatos paatos) {
         return new Rekisterointi(
-                null, organisaatio, toimintamuoto, kunnat, sahkopostit, kayttaja, null, null);
+                this.id,
+                this.organisaatio,
+                this.toimintamuoto,
+                this.kunnat,
+                this.sahkopostit,
+                this.kayttaja,
+                this.vastaanotettu,
+                paatos,
+                paatos.hyvaksytty ? Tila.HYVAKSYTTY : Tila.HYLATTY
+        );
     }
 
     public enum Tila {
