@@ -258,8 +258,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     @Override
     @Transactional(readOnly = true)
-    public String paivitaKoodisto(String oid) {
-        return paivitaKoodisto(dao.findByOid(oid));
+    public void paivitaKoodisto(String oid) {
+        paivitaKoodisto(dao.findByOid(oid));
     }
 
     /**
@@ -281,13 +281,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      *
      * @param entity Organisaatio
      *
-     * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
+     * @throws RuntimeException jos koodiston päivityksessä tapahtuu virhe
      */
     @Override
-    public synchronized String paivitaKoodisto(Organisaatio entity) {
+    public synchronized void paivitaKoodisto(Organisaatio entity) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
-            return null;
+            return;
         }
         /*
          * Koodiston koodit
@@ -314,8 +314,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 try {
                     koodi = haeKoodi(uri, tunniste);
                 } catch (OrganisaatioKoodistoException e) {
-                    LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
-                    return INFO_CODE_SAVE_FAILED;
+                    throw new RuntimeException("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui", e);
                 }
                 boolean muuttunut = false;
                 if (koodi == null) {
@@ -325,8 +324,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                         LOG.info("Koodi " + uri + "_" + tunniste + " lisättiin");
                         muuttunut = true;
                     } else {
-                        LOG.warn("Koodin " + uri + "_" + tunniste + " lisääminen epäonnistui");
-                        return INFO_CODE_SAVE_FAILED;
+                        throw new RuntimeException("Koodin " + uri + "_" + tunniste + " lisääminen epäonnistui");
                     }
                 } else {
                     // Tarkistetaan onko lakkautuspäivämäärä muuttunut
@@ -414,8 +412,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                     if (paivitaKoodi(koodi) == true) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
                     } else {
-                        LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
-                        return INFO_CODE_SAVE_FAILED;
+                        throw new RuntimeException("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
                     }
                 } else {
                     LOG.debug("Ei muutoksia");
@@ -423,7 +420,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
             }
         }
-        return null;
     }
 
     /**
