@@ -52,7 +52,7 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
                                                                 @Param("organisaatio") String organisaatio);
 
     @Query(value = REKISTEROINTI_SELECT +
-            " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat) o.nimi ILIKE '%' || :organisaatio || '%'")
+            " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat) AND o.nimi ILIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByTilaAndKunnatAndOrganisaatioContaining(@Param("tila") String tila,
                                                                          @Param("kunnat") String[] kunnat,
                                                                          @Param("organisaatio") String organisaatio);
