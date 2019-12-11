@@ -26,7 +26,7 @@ type Props = {
     valitut: Rekisterointihakemus[]
     hyvaksytty: boolean
     nayta: boolean
-    valitutKasiteltyCallback: () => void
+    valitutKasiteltyCallback: (hyvaksytty: boolean) => void
     suljeCallback: () => void
 }
 
@@ -53,12 +53,10 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
-    const [perusteluError, setPerusteluError] = useState(false);
-    // const [lahetaError, setLahetaError] = useState(false); TODO error handling
+    const [ perusteluError, setPerusteluError ] = useState(false);
 
     async function laheta() {
         setPerusteluError(false);
-        // setLahetaError(false);
         const paatokset: PaatosBatch = {
             hyvaksytty,
             hakemukset: valitut.map(h => h.id)
@@ -70,7 +68,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
         }
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
-            valitutKasiteltyCallback();
+            valitutKasiteltyCallback(hyvaksytty);
             suljeCallback();
         } catch (e) {
             // setLahetaError(true);

@@ -8,7 +8,7 @@ import styles from "./PaatosKontrollit.module.css";
 
 type Props = {
     valitut: Rekisterointihakemus[]
-    valitutKasiteltyCallback: () => void
+    valitutKasiteltyCallback: (hyvaksytty: boolean) => void
 }
 
 export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: Props) {

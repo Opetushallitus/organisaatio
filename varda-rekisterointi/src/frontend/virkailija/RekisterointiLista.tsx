@@ -18,10 +18,15 @@ const tyhjaHakemusLista: Rekisterointihakemus[] = [];
 
 type Props = {
     tila?: Tila,
-    hakutermi?: string
+    hakutermi?: string,
+    statusCallback: (hyvaksytty: boolean, lukumaara: number) => void
 }
 
-export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi } : Props) {
+export default function RekisterointiLista({
+                                               tila = Tila.KASITTELYSSA,
+                                               hakutermi,
+                                               statusCallback
+                                            } : Props) {
     const { i18n } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaHakemusLista);
     const [yksiRekisterointi, asetaYksiRekisterointi] = useState<Rekisterointi | null>(null);
@@ -61,10 +66,12 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         asetaValitutHakemukset((valittu ? valitutHakemukset.filter(h => h.id !== hakemus.id) : valitutHakemukset.concat(hakemus)));
     }
 
-    function valitutKasiteltyCallback() {
+    function valitutKasiteltyCallback(hyvaksytty: boolean) {
         vaihdaKaikkiValittu(false);
         asetaRekisteroinnit(vanhat => vanhat.filter(rekisterointi => !valitutHakemukset.some(valittu => rekisterointi.id === valittu.id)));
+        const lukumaara = valitutHakemukset.length;
         asetaValitutHakemukset(tyhjaHakemusLista);
+        statusCallback(hyvaksytty, lukumaara);
     }
 
     function yksiKasiteltyCallback(rekisterointiId: number)  {

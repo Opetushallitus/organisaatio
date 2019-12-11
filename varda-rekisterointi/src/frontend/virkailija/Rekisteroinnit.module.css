@@ -1,4 +1,5 @@
 .rekisteroinnit {
+    position: relative;
     margin: 2em 4em;
 }
 
@@ -19,16 +20,15 @@
 .vasen {
     clear: left;
     float: left;
-    width: 25%;
 }
 
 .oikea {
     clear: right;
-    float: left;
-    width: 75%;
+    float: right;
 }
 
 .suodata {
+    min-width: 20em;
     max-width: 20em;
     border-radius: 24px !important; /* Inline-style jyrää ilman tätä. :( */
     border-style: none !important; /* Ilmeisesti styled-componentsin perua. */
@@ -41,7 +41,8 @@
 }
 
 .tilaTabit {
-
+    float: right;
+    margin-left: 2em;
 }
 
 a.nappi {
