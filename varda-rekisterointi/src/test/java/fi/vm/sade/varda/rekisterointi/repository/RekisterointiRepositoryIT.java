@@ -61,7 +61,7 @@ public class RekisterointiRepositoryIT {
     }
 
     @Test
-    public void findByTilaAndKuntaRulesOutKuntaMismatch() {
+    public void findByTilaAndKunnatRulesOutKuntaMismatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnat(
                 Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Vääräkunta", "Toinenvääräkunta"});
         List<Rekisterointi> results = new ArrayList<>();
@@ -70,9 +70,27 @@ public class RekisterointiRepositoryIT {
     }
 
     @Test
-    public void findByTilaAndKuntaReturnsMatch() {
+    public void findByTilaAndKunnatReturnsMatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnat(
                 Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki", "Vääräkunta"});
+        List<Rekisterointi> results = new ArrayList<>();
+        iterable.forEach(results::add);
+        assertEquals(1, results.size());
+    }
+
+    @Test
+    public void findByTilaAndKunnatAndOrganisaatioRulesOutOrganisaatioMismatch() {
+        Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki"}, "vääräfirma");
+        List<Rekisterointi> results = new ArrayList<>();
+        iterable.forEach(results::add);
+        assertEquals(0, results.size());
+    }
+
+    @Test
+    public void findByTilaAndKunnatAndOrganisaatioReturnsMatch() {
+        Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki"}, "testi");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(1, results.size());

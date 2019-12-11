@@ -44,18 +44,18 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila")
     Iterable<Rekisterointi> findByTila(@Param("tila") String tila);
 
-    @Query(value = REKISTEROINTI_SELECT + " WHERE o.nimi LIKE '%' || :organisaatio || '%'")
+    @Query(value = REKISTEROINTI_SELECT + " WHERE o.nimi ILIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByOrganisaatioContaining(@Param("organisaatio") String organisaatio);
 
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat)")
     Iterable<Rekisterointi> findByTilaAndKunnat(@Param("tila") String tila, @Param("kunnat") String[] kunnat);
 
-    @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND o.nimi LIKE '%' || :organisaatio || '%'")
+    @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND o.nimi ILIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByTilaAndOrganisaatioContaining(@Param("tila") String tila,
                                                                 @Param("organisaatio") String organisaatio);
 
     @Query(value = REKISTEROINTI_SELECT +
-            " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat) AND o.nimi LIKE '%' || :organisaatio || '%'")
+            " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat) AND o.nimi ILIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByTilaAndKunnatAndOrganisaatioContaining(@Param("tila") String tila,
                                                                          @Param("kunnat") String[] kunnat,
                                                                          @Param("organisaatio") String organisaatio);
