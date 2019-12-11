@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {format, parseISO} from "date-fns";
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {Rekisterointihakemus} from "./rekisterointihakemus";
 
 import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
@@ -35,9 +36,10 @@ type Props = {
     rekisterointi: ListaRivi
     riviValittu: boolean
     valitseHakemusCallback: (hakemus: Rekisterointihakemus, valittu: boolean) => void
+    valitseInfoCallback: (hakemus: Rekisterointihakemus) => void
 }
 
-export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi, riviValittu, valitseHakemusCallback } : Props) {
+export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi, riviValittu, valitseHakemusCallback, valitseInfoCallback } : Props) {
     const [valittu, asetaValittu] = useState(false);
 
     useEffect(() => {
@@ -49,8 +51,6 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
         valitseHakemusCallback(rekisterointi.hakemus, valittu);
     }
 
-
-
     return (
         <tr>
         {
@@ -60,7 +60,14 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>{rekisterointi.organisaatio}</td>
             <td>{rekisterointi.puhelinnumero}</td>
             <td>{rekisterointi.ytunnus}</td>
-            <td>{rekisterointi.vastaanotettu}</td>
+            <td>
+                {rekisterointi.vastaanotettu}
+                {valintaKaytossa &&
+                    <span style={{ position: 'relative', cursor: 'pointer' }} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
+                        <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
+                    </span>
+                }
+            </td>
         </tr>
     )
 }

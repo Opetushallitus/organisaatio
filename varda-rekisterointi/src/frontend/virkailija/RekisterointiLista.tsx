@@ -5,8 +5,10 @@ import Box from "@opetushallitus/virkailija-ui-components/Box";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
 import {LanguageContext} from '../contexts';
-import {Rekisterointihakemus, Tila} from "./rekisterointihakemus";
+import {Rekisterointihakemus, Tila, } from "./rekisterointihakemus";
+import { Rekisterointi } from '../types'
 import RekisterointiListaOtsikko from "./RekisterointiListaOtsikko";
+import YksittainenPaatos from "./YksittainenPaatos/YksittainenPaatos";
 import RekisterointiListaRivi, {ListaRivi} from "./RekisterointiListaRivi";
 import PaatosKontrollit from "./PaatosKontrollit";
 import styles from "./RekisterointiLista.module.css";
@@ -22,10 +24,14 @@ type Props = {
 export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi } : Props) {
     const { i18n } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaHakemusLista);
+    const [yksiRekisterointi, asetaYksiRekisterointi] = useState<Rekisterointi | null>(null);
     const [latausKesken, asetaLatausKesken] = useState(true);
     const [latausVirhe, asetaLatausVirhe] = useState(false);
     const [kaikkiValittu, asetaKaikkiValittu] = useState(false);
     const [valitutHakemukset, asetaValitutHakemukset] = useState(tyhjaHakemusLista);
+    const [naytaYksittainenInfo, asetaNaytaYksittainenInfo] = useState(false);
+
+    const VALINTA_KAYTOSSA = tila === Tila.KASITTELYSSA;
 
     useEffect(() => {
         async function lataa() {
@@ -61,6 +67,23 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         asetaValitutHakemukset(tyhjaHakemusLista);
     }
 
+    function yksiKasiteltyCallback(rekisterointiId: number)  {
+        vaihdaKaikkiValittu(false);
+        asetaRekisteroinnit(vanhat => vanhat.filter(rekisterointi => rekisterointi.id !== rekisterointiId));
+        asetaYksiRekisterointi(null);
+        asetaValitutHakemukset(tyhjaHakemusLista);
+    }
+
+    function infoValittuCallback(rekisterointi: Rekisterointi) {
+        asetaYksiRekisterointi(rekisterointi);
+        asetaNaytaYksittainenInfo(true)
+    }
+
+    function suljeInfoCallback() {
+        asetaNaytaYksittainenInfo(false);
+        asetaYksiRekisterointi(null);
+    }
+
     if (latausKesken) {
         return <Spin />;
     }
@@ -81,15 +104,27 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                 rekisteroinnit.map(rekisterointi =>
                     <RekisterointiListaRivi key={rekisterointi.id}
                                             rekisterointi={new ListaRivi(rekisterointi)}
-                                            valintaKaytossa={tila === Tila.KASITTELYSSA}
+                                            valintaKaytossa={VALINTA_KAYTOSSA}
                                             riviValittu={valitutHakemukset.some(h => h.id === rekisterointi.id)}
-                                            valitseHakemusCallback={vaihdaHakemusValittu}/>)
+                                            valitseHakemusCallback={vaihdaHakemusValittu}
+                                            valitseInfoCallback={infoValittuCallback}
+
+                    />)
+
             }
                 </tbody>
             </table>
             {
-                tila === Tila.KASITTELYSSA &&
+                VALINTA_KAYTOSSA &&
                 <PaatosKontrollit valitut={valitutHakemukset} valitutKasiteltyCallback={valitutKasiteltyCallback} />
+            }
+            { VALINTA_KAYTOSSA && naytaYksittainenInfo && yksiRekisterointi &&
+                <YksittainenPaatos
+                  valittu={yksiRekisterointi}
+                  yksiKasiteltyCallback={yksiKasiteltyCallback}
+                  suljeCallback={suljeInfoCallback}
+                />
+
             }
         </Box>
     )

@@ -56,6 +56,7 @@ export type Kayttaja = {
 
 // varda-rekisterointi
 export type Rekisterointi = {
+    id: number
     organisaatio: Organisaatio,
     sahkopostit: string[],
     kayttaja: Kayttaja
