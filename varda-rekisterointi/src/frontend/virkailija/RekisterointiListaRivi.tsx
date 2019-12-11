@@ -63,7 +63,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>
                 {rekisterointi.vastaanotettu}
                 {valintaKaytossa &&
-                    <span style={{ position: 'relative', cursor: 'pointer' }} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
+                    <span style={{ cursor: 'pointer' }} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
                         <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
                     </span>
                 }

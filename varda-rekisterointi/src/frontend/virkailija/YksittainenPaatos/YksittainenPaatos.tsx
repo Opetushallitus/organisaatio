@@ -13,6 +13,8 @@ import OrganisaationTiedot from "./OrganisaationTiedot";
 import PaakayttajanTiedot from './PaakayttajanTiedot';
 import OrgYhteystiedot from './OrgYhteystiedot'
 
+import styles from "../PaatosKontrollit.module.css";
+
 const PAATOKSET_URL = "/varda-rekisterointi/virkailija/api/paatokset";
 
 type Props = {
@@ -57,11 +59,17 @@ export default function YksittainenPaatos({ valittu, yksiKasiteltyCallback, sulj
                     <Button
                         style={{ marginRight: '.5rem' }}
                         color={"danger"}
+                        variant={"outlined"}
                         onClick={() => laheta(false)}
+                        className={styles.paatosKontrollit}
                     >
-                        {i18n.translate('HYLKAA')}
+                        <i className="material-icons md-18">&#xe14c;</i>
+                        {i18n.translate('REKISTEROINNIT_HYLKAA')}
                     </Button>
-                    <Button color={'success'} onClick={() => laheta(true)}>{i18n.translate('HYVAKSY')}</Button>
+                    <Button color={'success'} className={styles.paatosKontrollit} onClick={() => laheta(true)}>
+                        <i className="material-icons md-18">&#xe5ca;</i>
+                        {i18n.translate('REKISTEROINNIT_HYVAKSY')}
+                    </Button>
                 </Box>
             </ModalFooter>
         </Modal>
