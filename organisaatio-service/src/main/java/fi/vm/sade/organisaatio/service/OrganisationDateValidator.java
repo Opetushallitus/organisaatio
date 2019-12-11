@@ -100,7 +100,9 @@ public class OrganisationDateValidator implements Predicate<Entry<Organisaatio, 
 
                 // XXXX side-effect:
                 // Copy parent end date
-                parentChild.getValue().setLakkautusPvm(parentChild.getKey().getLakkautusPvm());
+                if (parentEndDate.before(new Date())) {
+                    parentChild.getValue().setLakkautusPvm(parentEndDate);
+                }
                 return true;
             } else {
                 // End date not null
