@@ -14,6 +14,7 @@ import PaakayttajanTiedot from './PaakayttajanTiedot';
 import OrgYhteystiedot from './OrgYhteystiedot'
 
 import styles from "../PaatosKontrollit.module.css";
+import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader";
 
 const PAATOKSET_URL = "/varda-rekisterointi/virkailija/api/paatokset";
 
@@ -41,6 +42,7 @@ export default function YksittainenPaatos({ valittu, yksiKasiteltyCallback, sulj
     }
     return (
         <Modal maxWidth={"80%"} open onClose={suljeCallback}>
+            <ModalHeader onClose={suljeCallback}>{i18n.translate('REKISTEROINNIT_HYVAKSY_TAI_HYLKAA')}</ModalHeader>
             <ModalBody>
                 <div className="varda-rekisterointi-hakija">
                     <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}>

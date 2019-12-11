@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {format, parseISO} from "date-fns";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {Rekisterointihakemus} from "./rekisterointihakemus";
+import styles from "./RekisterointiListaRivi.module.css";
+
 
 import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
 
@@ -63,7 +65,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>
                 {rekisterointi.vastaanotettu}
                 {valintaKaytossa &&
-                    <span style={{ cursor: 'pointer' }} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
+                    <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
                         <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
                     </span>
                 }
