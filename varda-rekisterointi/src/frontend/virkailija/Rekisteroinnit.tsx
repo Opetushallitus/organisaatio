@@ -1,6 +1,5 @@
 import React, {useContext, useState} from "react";
-import {KoodistoImpl, LanguageContext, MaatJaValtiotKoodistoContext} from "../contexts";
-import {ConfigurationContext} from "../contexts";
+import {ConfigurationContext, KoodistoImpl, LanguageContext, MaatJaValtiotKoodistoContext} from "../contexts";
 import {useDebounce} from "use-debounce";
 import RekisterointiLista from "./RekisterointiLista";
 import Box from "@opetushallitus/virkailija-ui-components/Box";
@@ -15,12 +14,13 @@ import FilterVariantIcon from "mdi-react/FilterVariantIcon";
 import styles from "./Rekisteroinnit.module.css";
 import Divider from "@opetushallitus/virkailija-ui-components/Divider";
 import * as YtunnusValidator from '../YtunnusValidator';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import classNames from "classnames/bind";
 import useAxios from "axios-hooks";
 import {Koodi} from "../types";
 import Spinner from "../Spinner";
 import ErrorPage from "../ErrorPage";
+import Status, {StatusTila} from "./Status";
 
 const theme = createTheme();
 
@@ -34,6 +34,8 @@ export default function Rekisteroinnit() {
     const [hakutermiInput, asetaHakutermiInput] = useState("");
     const [hakutermi] = useDebounce(hakutermiInput, 500);
     const [tila, asetaTila] = useState(Tila.KASITTELYSSA);
+    const [statusTila, asetaStatusTila] = useState(StatusTila.PASSIIVINEN);
+    const [statusTeksti, asetaStatusTeksti] = useState('');
     const [ytunnus, setYtunnus] = useState('');
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnus);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]:  ytunnusDisabled });
@@ -56,14 +58,28 @@ export default function Rekisteroinnit() {
         asetaHakutermiInput(uusiHakutermi);
     }
 
+    function statusCallback(hyvaksytty: boolean, lukumaara: number) {
+        asetaStatusTeksti(`${lukumaara} ${i18n.translate(hyvaksytty ? 'REKISTEROINTIA_HYVAKSYTTY' : 'REKISTEROINTIA_HYLATTY')}`);
+        asetaStatusTila(StatusTila.NAKYVA);
+    }
+
     return (
         <ConfigurationContext.Provider value={configuration}>
             <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
                 <VirkailijaRaamit scriptUrl={configuration.virkailijaRaamitUrl} />
                 <ThemeProvider theme={theme}>
                     <Box className={styles.rekisteroinnit}>
-                        <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
-                        <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
+                        <Box>
+                            <div className={styles.vasen}>
+                                <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
+                                <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
+                            </div>
+                            <div className={styles.oikea}>
+                                <Status tila={statusTila}
+                                        teksti={statusTeksti}
+                                        asetaTila={asetaStatusTila} />
+                            </div>
+                        </Box>
                         <div className={styles.vasen}>
                             <Input className={styles.suodata} type="text"
                                    placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
@@ -78,7 +94,7 @@ export default function Rekisteroinnit() {
                                 <Tab value={Tila.HYLATTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`) }</Tab>
                             </Tabs>
                         </div>
-                        <RekisterointiLista tila={tila} hakutermi={hakutermi}/>
+                        <RekisterointiLista tila={tila} hakutermi={hakutermi} statusCallback={statusCallback} />
                         {!permissionLoading && !permissionError && permission ?
                         <div>
                         <Divider />
