@@ -47,7 +47,7 @@ public class OrganisaatioService {
         dto.alkuPvm = organisaatio.alkuPvm;
         dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
         dto.nimi = dto.nimet.get(0).nimi;
-        dto.ytjkieli = organisaatio.ytjNimi.kieli;
+        dto.ytjkieli = koodiArvoToKieliKoodiUriVersion(organisaatio.ytjNimi.kieli);
         dto.yritysmuoto = organisaatio.yritysmuoto;
         dto.tyypit = organisaatio.tyypit;
         dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
