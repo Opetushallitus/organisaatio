@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import useAxios from 'axios-hooks';
 import FormFieldContainer from '../FormFieldContainer';
-import {Organisaatio, Koodi, Language, Osoite} from '../types';
+import {Organisaatio, Koodi, Language, Osoite, Yhteystiedot} from '../types';
 import { toLocalizedText } from '../LocalizableTextUtils';
 import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
@@ -16,6 +16,8 @@ type Props = {
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
     errors: Record<string, string>,
 }
+
+type OsoiteKentta = Extract<keyof Yhteystiedot, "postiosoite" | "kayntiosoite">;
 
 function koodiByArvoToLocalizedText(koodit: Koodi[], language: Language, arvo?: string) {
     const koodi = koodit.find(koodi => koodi.arvo === arvo);
@@ -62,15 +64,6 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const postiosoiteDisabled = readOnly || hasLength(initialPostiosoite);
     const postinumeroDisabled = readOnly || hasLength(initialPostinumeroUri);
 
-    const handlePostiosoite = (muutos: Partial<Osoite>): void => {
-        let yhteystiedot = organisaatio.yhteystiedot;
-        yhteystiedot.postiosoite = { ...yhteystiedot.postiosoite, ...muutos };
-        if (kayntiosoiteSamaKuinPostiosoite) {
-            yhteystiedot.kayntiosoite = {...yhteystiedot.kayntiosoite, ...muutos};
-        }
-        setOrganisaatio({ yhteystiedot: yhteystiedot });
-    };
-
     const handleKayntiosoiteSamaKuinPostiosoite = (value: boolean): void => {
         setKayntiosoiteSamaKuinPostiosoite(value);
         if (value) {
@@ -78,6 +71,15 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
             yhteystiedot.kayntiosoite = { ...yhteystiedot.postiosoite };
             setOrganisaatio({ yhteystiedot: yhteystiedot });
         }
+    };
+
+    const handleOsoiteMuutos = (kentta: OsoiteKentta, muutos: Partial<Osoite>): void => {
+        const yhteystiedot = organisaatio.yhteystiedot;
+        yhteystiedot[kentta] = { ...yhteystiedot[kentta], ...muutos };
+        if (kentta === 'postiosoite' && kayntiosoiteSamaKuinPostiosoite) {
+            yhteystiedot.kayntiosoite = { ...yhteystiedot.postiosoite };
+        }
+        setOrganisaatio({ yhteystiedot });
     };
 
     const baseClasses = { 'oph-input': true };
@@ -106,7 +108,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postiosoite"
                        value={postiosoite}
                        disabled={postiosoiteDisabled}
-                       onChange={event => handlePostiosoite({ katuosoite: event.currentTarget.value })} />
+                       onChange={event => handleOsoiteMuutos('postiosoite', { katuosoite: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="postinumero" errorText={errors['yhteystiedot.postiosoite.postinumeroUri']}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.postiosoite.postinumeroUri'] })}
@@ -114,9 +116,9 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="postinumero"
                        value={postinumero}
                        disabled={postinumeroDisabled}
-                       onChange={event => handlePostiosoite({
+                       onChange={event => handleOsoiteMuutos('postiosoite', {
                            postinumeroUri: `posti_${event.currentTarget.value}`,
-                           postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : '',
+                           postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : ''
                        })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTITOIMIPAIKKA')}>
@@ -131,11 +133,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            id="kayntiosoite"
                            value={kayntiosoite}
                            disabled={kayntiosoiteDisabled}
-                           onChange={event => setOrganisaatio(
-                               {
-                                   yhteystiedot: { ...organisaatio.yhteystiedot, ...{ yhteystiedot: { kayntiosoite: { katuosoite: event.currentTarget.value }}}}
-                               }
-                           )} />
+                           onChange={event => handleOsoiteMuutos('kayntiosoite', { katuosoite: event.currentTarget.value })} />
                     {samaKuinPostiosoiteDisabled ? null :
                     <label>
                         <input type="checkbox"
@@ -153,19 +151,10 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        id="kayntiosoitteen-postinumero"
                        value={kayntiosoitteenPostinumero}
                        disabled={kayntiosoitteenPostinumeroDisabled}
-                       onChange={event => setOrganisaatio(
-                           {
-                               yhteystiedot: {
-                                   ...organisaatio.yhteystiedot,
-                                   ...{ yhteystiedot:
-                                           {
-                                               kayntiosoite: {
-                                               postinumeroUri: `posti_${event.currentTarget.value}`,
-                                               postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : ''
-                                               }
-                                           }
-                                   }
-                               }})} />
+                       onChange={event => handleOsoiteMuutos('kayntiosoite', {
+                           postinumeroUri: `posti_${event.currentTarget.value}`,
+                           postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : ''
+                       })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KAYNTIOSOITTEEN_POSTITOIMIPAIKKA')}>
                 <div className="oph-input-container">

@@ -21,8 +21,8 @@ const baseOrganisaatio: Organisaatio = {
     maaUri: 'maatjavaltiot1_fin',
     kieletUris: [],
     yhteystiedot: {
-        kayntiosoite: tyhjaOsoite,
-        postiosoite: tyhjaOsoite,
+        kayntiosoite: { ...tyhjaOsoite },
+        postiosoite: { ...tyhjaOsoite },
         sahkoposti: '',
         puhelinnumero: ''
     }
