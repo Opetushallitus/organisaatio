@@ -198,22 +198,33 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         // Lisää koodistoon ne organisaation relaatiot joita siellä ei vielä ole
         for (String oRel : entityRelaatiot) {
             if (oRel!=null) {
+                String[] codeElementUriAndVersion = oRel.split("#");
+                String codeElementUri = codeElementUriAndVersion[0];
+                int versio = getVersio(codeElementUriAndVersion);
+                if (elements.stream().anyMatch(element -> element.getCodeElementUri().equals(codeElementUri)
+                        && (versio == 0 || element.getCodeElementVersion() == versio))) {
+                    LOG.debug("Existing includesCodeElements relation: " + oRel);
+                    continue;
+                }
                 LOG.debug("Add includesCodeElements relation: " + oRel);
                 OrganisaatioKoodistoKoodiCodeElements e = new OrganisaatioKoodistoKoodiCodeElements();
-                e.setCodeElementUri(oRel.split("#")[0]);
-                int versio = 1;
-                try {
-                    if (oRel.split("#").length == 2) {
-                        versio = Integer.parseInt(oRel.split("#")[1]);
-                    }
-                } catch (NumberFormatException ex) {
-                }
+                e.setCodeElementUri(codeElementUri);
                 e.setCodeElementVersion(versio);
                 elements.add(e);
                 muuttunut = true;
             }
         }
         return muuttunut;
+    }
+
+    private int getVersio(String[] codeElementUriAndVersion) {
+        if (codeElementUriAndVersion.length == 2) {
+            try {
+                return Integer.parseInt(codeElementUriAndVersion[1]);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return 0;
     }
 
     // Päivittää Oppilaitoksen sisältyy-relaatiot
