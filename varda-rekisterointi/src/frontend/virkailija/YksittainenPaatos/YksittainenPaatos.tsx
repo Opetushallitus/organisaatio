@@ -20,7 +20,7 @@ const PAATOKSET_URL = "/varda-rekisterointi/virkailija/api/paatokset";
 
 type Props = {
     valittu: Rekisterointi
-    yksiKasiteltyCallback: (rekisterointiId: number) => void
+    yksiKasiteltyCallback: (rekisterointiId: number, hyvaksytty: boolean) => void
     suljeCallback: () => void
 }
 
@@ -35,7 +35,7 @@ export default function YksittainenPaatos({ valittu, yksiKasiteltyCallback, sulj
         }
         try {
             await Axios.post(PAATOKSET_URL, paatos);
-            yksiKasiteltyCallback(valittu.id);
+            yksiKasiteltyCallback(valittu.id, hyvaksytty);
         } catch (e) {
             throw e; // TODO Error handling
         }

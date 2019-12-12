@@ -74,11 +74,12 @@ export default function RekisterointiLista({
         statusCallback(hyvaksytty, lukumaara);
     }
 
-    function yksiKasiteltyCallback(rekisterointiId: number)  {
+    function yksiKasiteltyCallback(rekisterointiId: number, hyvaksytty: boolean)  {
         vaihdaKaikkiValittu(false);
         asetaRekisteroinnit(vanhat => vanhat.filter(rekisterointi => rekisterointi.id !== rekisterointiId));
         asetaYksiRekisterointi(null);
         asetaValitutHakemukset(tyhjaHakemusLista);
+        statusCallback(hyvaksytty, 1);
     }
 
     function infoValittuCallback(rekisterointi: Rekisterointi) {
