@@ -20,10 +20,6 @@ public class OrganisaatioService {
             "kieli_sv#1", "sv",
             "kieli_en#1", "en"
     );
-    private static final List<String> HALUTUT_OSOITETYYPIT = List.of(
-            OsoiteTyyppi.POSTI.value(),
-            OsoiteTyyppi.KAYNTI.value()
-    );
     private static final String PUHELIN_TYYPPI = "puhelin";
     private static final String EMAIL_TYYPPI = "email";
 
@@ -112,8 +108,7 @@ public class OrganisaatioService {
         String ytjKieli = ytjKieliTaiOletusKieli(dto);
         List<YhteystietoDto> yhteystiedot = dto.yhteystiedot != null ? dto.yhteystiedot : List.of();
         Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = yhteystiedot.stream()
-                .filter(yhteystietoDto -> yhteystietoDto.kieli.equals(ytjKieli)
-                        && HALUTUT_OSOITETYYPIT.contains(yhteystietoDto.osoiteTyyppi))
+                .filter(yhteystietoDto -> yhteystietoDto.kieli.equals(ytjKieli))
                 .collect(Collectors.groupingBy(yhteystietoDto -> yhteystietoDto.osoiteTyyppi != null
                         ? yhteystietoDto.osoiteTyyppi
                         : yhteystietoDto.numero != null ? PUHELIN_TYYPPI : EMAIL_TYYPPI
