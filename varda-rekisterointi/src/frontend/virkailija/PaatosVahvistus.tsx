@@ -13,6 +13,7 @@ import Divider from "@opetushallitus/virkailija-ui-components/Divider";
 import {Rekisterointihakemus} from "./rekisterointihakemus";
 import {hasLength} from "../StringUtils";
 import {Organisaatio} from "../types";
+import styles from './PaatosVahvistus.module.css';
 
 const paatoksetBatchUrl = "/varda-rekisterointi/virkailija/api/paatokset/batch";
 
@@ -105,8 +106,8 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                             `${kotipaikka(hakemus.organisaatio)}`
                         )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
-                            <td>{rivi.organisaatio}</td>
-                            <td>{rivi.puhelinnumero}</td>
+                            <td className={perusteluError ? styles.virheLomakkeella : ''}>{rivi.organisaatio}</td>
+                            <td className={perusteluError ? styles.virheLomakkeella : ''}>{rivi.puhelinnumero}</td>
                             <td>{rivi.ytunnus}</td>
                             <td>{rivi.kotipaikka}</td>
                         </tr>
@@ -122,7 +123,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                         </Typography>,
                         <Divider />,
                     ] : null,
-                 <Typography >
+                 <Typography className={perusteluError ? styles.virheLomakkeella : ''}>
                     {i18n.translate('REKISTEROINTI_HYLKAYS_OHJE')}
                 </Typography>,
                 <Textarea
