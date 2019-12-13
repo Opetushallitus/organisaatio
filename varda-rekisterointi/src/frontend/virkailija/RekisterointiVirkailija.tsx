@@ -1,4 +1,5 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
+import { cloneDeep } from 'lodash';
 import Rekisterointi from '../hakija/Rekisterointi';
 import { KoodiUri, tyhjaOrganisaatio } from '../types';
 import { useParams } from 'react-router';
@@ -32,8 +33,8 @@ export default function RekisterointiVirkailija() {
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
                     tyypit.push('organisaatiotyyppi_07');
                 }
-                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...data, tyypit: tyypit });
-                setOrganisaatio({ ...tyhjaOrganisaatio(), ...data, tyypit: tyypit });
+                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
+                setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
             } catch (error) {
                 setFetchError(error);
             } finally {
