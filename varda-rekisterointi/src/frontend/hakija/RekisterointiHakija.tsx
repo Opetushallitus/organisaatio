@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useReducer, useContext } from 'react';
+import { cloneDeep } from 'lodash';
 import {KoodiUri, tyhjaOrganisaatio} from '../types';
 import Spinner from '../Spinner';
 import Axios from 'axios';
@@ -30,8 +31,8 @@ export default function RekisterointiHakija() {
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
                     tyypit.push('organisaatiotyyppi_07');
                 }
-                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...data, tyypit: tyypit });
-                setOrganisaatio({ ...tyhjaOrganisaatio(), ...data, tyypit: tyypit });
+                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
+                setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
             } catch (error) {
                 setFetchError(error);
             } finally {
