@@ -73,7 +73,7 @@ export default function RekisterointiLista({
         asetaValitutHakemukset(tyhjaHakemusLista);
         statusCallback(hyvaksytty, lukumaara);
     }
-
+    /*
     function yksiKasiteltyCallback(rekisterointiId: number, hyvaksytty: boolean)  {
         vaihdaKaikkiValittu(false);
         asetaRekisteroinnit(vanhat => vanhat.filter(rekisterointi => rekisterointi.id !== rekisterointiId));
@@ -81,6 +81,7 @@ export default function RekisterointiLista({
         asetaValitutHakemukset(tyhjaHakemusLista);
         statusCallback(hyvaksytty, 1);
     }
+    */
 
     function infoValittuCallback(rekisterointi: Rekisterointi) {
         asetaYksiRekisterointi(rekisterointi);
@@ -129,7 +130,6 @@ export default function RekisterointiLista({
             { VALINTA_KAYTOSSA && naytaYksittainenInfo && yksiRekisterointi &&
                 <YksittainenPaatos
                   valittu={yksiRekisterointi}
-                  yksiKasiteltyCallback={yksiKasiteltyCallback}
                   suljeCallback={suljeInfoCallback}
                 />
 
