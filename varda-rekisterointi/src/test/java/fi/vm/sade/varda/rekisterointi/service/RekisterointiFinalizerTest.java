@@ -77,7 +77,7 @@ public class RekisterointiFinalizerTest {
     }
 
     @Test
-    public void luoTaiPaivitaOrganisaatioAjastaaPaatosEmailin() {
+    public void luoTaiPaivitaOrganisaatioAjastaaKutsun() {
         Organisaatio organisaatio = TestiOrganisaatio.organisaatio("1.23.456");
         Rekisterointi rekisterointi = Rekisterointi.of(
                 organisaatio,
@@ -90,6 +90,23 @@ public class RekisterointiFinalizerTest {
         when(vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn(organisaatio.oid);
         rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
         verify(rekisterointiRepository, never()).save(any(Rekisterointi.class));
+        verify(kutsuKayttajaTask).instance(anyString(), anyLong());
+        verify(schedulerClient).schedule(any(), any());
+    }
+
+    @Test
+    public void kutsuKayttajaAjastaaEmailin() {
+        Organisaatio organisaatio = TestiOrganisaatio.organisaatio(null);
+        Rekisterointi rekisterointi = Rekisterointi.of(
+                organisaatio,
+                "vardatoimintamuoto_tm01",
+                Set.of("kunta_123"),
+                Set.of("testi@osoite.foo"),
+                TESTI_KAYTTAJA
+        );
+        when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
+        rekisterointiFinalizer.kutsuKayttaja(1L);
+        verify(vardaKayttajaFinalizer).kutsuKayttaja(rekisterointi);
         verify(paatosEmailTask).instance(anyString(), anyLong());
         verify(schedulerClient).schedule(any(), any());
     }

@@ -36,8 +36,6 @@ public class RekisterointiFinalizer {
         if (rekisterointi.organisaatio.oid == null) {
             LOGGER.debug("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
-        } else {
-            ajastaPaatosEmail(rekisterointiId);
         }
         schedulerClient.schedule(
                 kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
