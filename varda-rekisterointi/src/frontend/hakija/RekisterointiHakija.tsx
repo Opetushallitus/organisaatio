@@ -1,32 +1,11 @@
 import React, { useEffect, useState, useReducer, useContext } from 'react';
-import { Organisaatio, KoodiUri } from '../types';
+import { cloneDeep } from 'lodash';
+import {KoodiUri, tyhjaOrganisaatio} from '../types';
 import Spinner from '../Spinner';
 import Axios from 'axios';
 import Rekisterointi from './Rekisterointi';
 import ErrorPage from '../ErrorPage';
 import { LanguageContext } from '../contexts';
-import {tyhjaOsoite} from "../testTypes";
-
-const baseOrganisaatio: Organisaatio = {
-    ytunnus: '',
-    ytjNimi: {
-        nimi: '',
-        alkuPvm: null,
-        kieli: 'fi'
-    },
-    alkuPvm: null,
-    yritysmuoto: '',
-    tyypit: [],
-    kotipaikkaUri: '',
-    maaUri: 'maatjavaltiot1_fin',
-    kieletUris: [],
-    yhteystiedot: {
-        kayntiosoite: tyhjaOsoite,
-        postiosoite: tyhjaOsoite,
-        sahkoposti: '',
-        puhelinnumero: ''
-    }
-};
 
 const organisaatiotUrl = "/varda-rekisterointi/hakija/api/organisaatiot";
 const rekisteroinnitUrl = "/varda-rekisterointi/hakija/api/rekisteroinnit";
@@ -37,8 +16,8 @@ function reducer<T>(state: T, data: Partial<T>): T {
 
 export default function RekisterointiHakija() {
     const { i18n } = useContext(LanguageContext);
-    const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
-    const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
+    const [initialOrganisaatio, setInitialOrganisaatio] = useState(tyhjaOrganisaatio());
+    const [organisaatio, setOrganisaatio] = useReducer(reducer, tyhjaOrganisaatio());
     const [fetchLoading, setFetchLoading] = useState(true);
     const [fetchError, setFetchError] = useState(null);
     useEffect(() => {
@@ -52,8 +31,8 @@ export default function RekisterointiHakija() {
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
                     tyypit.push('organisaatiotyyppi_07');
                 }
-                setInitialOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
-                setOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
+                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
+                setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
             } catch (error) {
                 setFetchError(error);
             } finally {

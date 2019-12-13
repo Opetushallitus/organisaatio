@@ -1,33 +1,12 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
+import { cloneDeep } from 'lodash';
 import Rekisterointi from '../hakija/Rekisterointi';
-import { Organisaatio, KoodiUri } from '../types';
+import { KoodiUri, tyhjaOrganisaatio } from '../types';
 import { useParams } from 'react-router';
 import Axios from 'axios';
 import Spinner from '../Spinner';
 import ErrorPage from '../ErrorPage';
 import { LanguageContext } from '../contexts';
-import {tyhjaOsoite} from "../testTypes";
-
-const baseOrganisaatio: Organisaatio = {
-    ytunnus: '',
-    ytjNimi: {
-        nimi: '',
-        alkuPvm: null,
-        kieli: 'fi'
-    },
-    alkuPvm: null,
-    yritysmuoto: '',
-    tyypit: ['organisaatiotyyppi_07'],
-    kotipaikkaUri: '',
-    maaUri: 'maatjavaltiot1_fin',
-    kieletUris: [],
-    yhteystiedot: {
-        kayntiosoite: tyhjaOsoite,
-        postiosoite: tyhjaOsoite,
-        sahkoposti: '',
-        puhelinnumero: ''
-    }
-};
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";
 const organisaatiotUrl = (ytunnus: string | undefined): string => `/varda-rekisterointi/virkailija/api/organisaatiot/ytunnus=${ytunnus}`;
@@ -38,8 +17,8 @@ function reducer<T>(state: T, data: Partial<T>): T {
 
 export default function RekisterointiVirkailija() {
     const { i18n } = useContext(LanguageContext);
-    const [initialOrganisaatio, setInitialOrganisaatio] = useState(baseOrganisaatio);
-    const [organisaatio, setOrganisaatio] = useReducer(reducer, baseOrganisaatio);
+    const [initialOrganisaatio, setInitialOrganisaatio] = useState(tyhjaOrganisaatio());
+    const [organisaatio, setOrganisaatio] = useReducer(reducer, tyhjaOrganisaatio());
     const [fetchLoading, setFetchLoading] = useState(true);
     const [fetchError, setFetchError] = useState(null);
     const { ytunnus } = useParams();
@@ -54,8 +33,8 @@ export default function RekisterointiVirkailija() {
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
                     tyypit.push('organisaatiotyyppi_07');
                 }
-                setInitialOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
-                setOrganisaatio({ ...baseOrganisaatio, ...data, tyypit: tyypit });
+                setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
+                setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
             } catch (error) {
                 setFetchError(error);
             } finally {

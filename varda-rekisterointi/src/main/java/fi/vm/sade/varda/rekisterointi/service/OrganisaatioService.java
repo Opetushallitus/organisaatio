@@ -59,7 +59,7 @@ public class OrganisaatioService {
                 .reduce((nimi1, nimi2) -> {
                     LocalDate alkuPvm1 = nullSafeDate(nimi1.alkuPvm);
                     LocalDate alkuPvm2 = nullSafeDate(nimi2.alkuPvm);
-                    if (0 - DAYS.between(alkuPvm2, now) < DAYS.between(alkuPvm1, now)) {
+                    if (-DAYS.between(alkuPvm2, now) < DAYS.between(alkuPvm1, now)) {
                         return nimi2;
                     }
                     return nimi1;
@@ -121,13 +121,13 @@ public class OrganisaatioService {
     }
 
     private static String poimiPuhelin(Map<String, List<YhteystietoDto>> tiedot) {
-        return tiedot.getOrDefault(PUHELIN_TYYPPI, List.of()).stream()
-                .filter(dto -> dto.numero != null).findAny().orElse(new YhteystietoDto()).numero;
+        return nullToBlank(tiedot.getOrDefault(PUHELIN_TYYPPI, List.of()).stream()
+                .filter(dto -> dto.numero != null).findAny().orElse(new YhteystietoDto()).numero);
     }
 
     private static String poimiEmail(Map<String, List<YhteystietoDto>> tiedot) {
-        return tiedot.getOrDefault(EMAIL_TYYPPI, List.of()).stream()
-                .filter(dto -> dto.email != null).findAny().orElse(new YhteystietoDto()).email;
+        return nullToBlank(tiedot.getOrDefault(EMAIL_TYYPPI, List.of()).stream()
+                .filter(dto -> dto.email != null).findAny().orElse(new YhteystietoDto()).email);
     }
 
     private static Osoite poimiOsoite(Map<String, List<YhteystietoDto>> tiedot, OsoiteTyyppi tyyppi) {
@@ -163,6 +163,10 @@ public class OrganisaatioService {
         dto.postinumeroUri = osoite.postinumeroUri;
         dto.postitoimipaikka = osoite.postitoimipaikka;
         return dto;
+    }
+
+    private static String nullToBlank(String value) {
+        return value == null ? "" : value;
     }
 
 }

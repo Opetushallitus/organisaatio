@@ -44,6 +44,36 @@ export type Organisaatio = {
     kieletUris: KoodiUri[],
     yhteystiedot: Yhteystiedot
 }
+export function tyhjaOrganisaatio(): Organisaatio {
+    return {
+        ytunnus: '',
+        ytjNimi: {
+            nimi: '',
+            alkuPvm: null,
+            kieli: 'fi'
+        },
+        alkuPvm: null,
+        yritysmuoto: '',
+        tyypit: [],
+        kotipaikkaUri: '',
+        maaUri: 'maatjavaltiot1_fin',
+        kieletUris: [],
+        yhteystiedot: {
+            kayntiosoite: {
+                katuosoite: '',
+                postinumeroUri: '',
+                postitoimipaikka: ''
+            },
+            postiosoite: {
+                katuosoite: '',
+                postinumeroUri: '',
+                postitoimipaikka: ''
+            },
+            sahkoposti: '',
+            puhelinnumero: ''
+        }
+    }
+};
 
 // kayttooikeus
 export type Kayttaja = {
