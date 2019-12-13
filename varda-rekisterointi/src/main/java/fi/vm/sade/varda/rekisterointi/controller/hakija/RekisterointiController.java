@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 
+import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 @RestController
@@ -45,7 +49,10 @@ public class RekisterointiController {
             throw new InvalidInputException("Käyttäjällä ei ole oikeutta toimia y-tunnuksella: " + dto.organisaatio.ytunnus);
         }
         rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request, authentication));
-        return logoutService.logout(request, properties.url("varda-rekisterointi.valmis"));
+        Map<String, Object> parameters = new LinkedHashMap<>();
+        findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_LOCALE, Locale.class)
+                .ifPresent(locale -> parameters.put("locale", locale.getLanguage()));
+        return logoutService.logout(request, properties.url("varda-rekisterointi.valmis", parameters));
     }
 
 }
