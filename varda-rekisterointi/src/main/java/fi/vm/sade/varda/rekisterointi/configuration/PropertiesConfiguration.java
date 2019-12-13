@@ -22,8 +22,8 @@ public class PropertiesConfiguration {
         properties.addDefault("varda-rekisterointi.service.password", environment.getRequiredProperty("varda-rekisterointi.service.password"));
         Arrays.asList(
                 "varda-rekisterointi.kayttooikeus.ryhma.paivakoti",
-                "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito",
-                "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito"
+                "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja",
+                "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti"
         ).forEach((prop) -> properties.addDefault(prop, environment.getRequiredProperty(prop)));
         return properties;
     }

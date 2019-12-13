@@ -9,9 +9,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static fi.vm.sade.varda.rekisterointi.service.VardaKayttajaFinalizer.KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY;
-import static fi.vm.sade.varda.rekisterointi.service.VardaKayttajaFinalizer.KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY;
-import static fi.vm.sade.varda.rekisterointi.service.VardaKayttajaFinalizer.KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY;
+import static fi.vm.sade.varda.rekisterointi.service.VardaKayttajaFinalizer.*;
 import static org.mockito.Mockito.*;
 
 public class VardaKayttajaFinalizerTest {
@@ -25,8 +23,8 @@ public class VardaKayttajaFinalizerTest {
         KayttooikeusClient kayttooikeusClient = mock(KayttooikeusClient.class);
         OphProperties properties = mock(OphProperties.class);
         when(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)).thenReturn(PK_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY)).thenReturn(PPH_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY)).thenReturn(RPPH_RYHMA_ID.toString());
+        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY)).thenReturn(PPH_RYHMA_ID.toString());
+        when(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY)).thenReturn(RPPH_RYHMA_ID.toString());
         VardaKayttajaFinalizer finalizer = new VardaKayttajaFinalizer(kayttooikeusClient, properties);
 
         Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi().withPaatos(

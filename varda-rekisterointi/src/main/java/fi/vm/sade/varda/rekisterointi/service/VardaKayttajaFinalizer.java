@@ -15,10 +15,10 @@ public class VardaKayttajaFinalizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(VardaKayttajaFinalizer.class);
     static final String KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY =
             "varda-rekisterointi.kayttooikeus.ryhma.paivakoti";
-    static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoito";
-    static final String KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivahoito";
+    static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja";
+    static final String KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti";
     static final String VARDA_TOIMINTAMUOTO_PAIVAKOTI = "vardatoimintamuoto_tm01";
     private static final String VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO = "vardatoimintamuoto_tm02";
     private static final String VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO = "vardatoimintamuoto_tm03";
@@ -33,9 +33,9 @@ public class VardaKayttajaFinalizer {
                 VARDA_TOIMINTAMUOTO_PAIVAKOTI,
                 Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)),
                 VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITO_PROPERTY)),
+                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY)),
                 VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAHOITO_PROPERTY))
+                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY))
         );
     }
 

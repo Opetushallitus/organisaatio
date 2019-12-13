@@ -33,5 +33,5 @@ varda-rekisterointi:
   kayttooikeus:
     ryhma:
       paivakoti: 70008488
-      ryhmaperhepaivahoito: 70008504
-      perhepaivahoito: 70008477
+      ryhmaperhepaivakoti: 70008504
+      perhepaivahoitaja: 70008477
