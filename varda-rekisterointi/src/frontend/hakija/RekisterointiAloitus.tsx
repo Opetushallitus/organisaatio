@@ -4,6 +4,7 @@ import { LanguageContext } from '../contexts';
 import styles from './RekisterointiAloitus.module.css';
 import { Language } from '../types';
 import lapset from './Lapset.png';
+import Footer from './Footer';
 
 type Data = {
     kieli: Language,
@@ -59,5 +60,6 @@ export default function RekisterointiAloitus() {
                 { renderByKieli(data[language]) }
             </div>
         </div>
+        <Footer></Footer>
     </div>;
 }

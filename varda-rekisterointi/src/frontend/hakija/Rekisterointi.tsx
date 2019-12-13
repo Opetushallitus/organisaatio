@@ -13,6 +13,7 @@ import EmailValidator from 'email-validator';
 import * as YtunnusValidator from '../YtunnusValidator';
 import { kielletytYritysmuodot } from './YritysmuotoUtils';
 import {validoiYhteystiedot} from "../YhteystiedotValidator";
+import Footer from './Footer';
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -147,6 +148,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     toimintamuoto={toimintamuoto}
                     kayttaja={kayttaja} />
             </Wizard>
+            <Footer />
         </div>
     );
 }
