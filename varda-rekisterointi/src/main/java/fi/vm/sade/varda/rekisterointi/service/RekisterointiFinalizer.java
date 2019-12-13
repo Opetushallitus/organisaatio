@@ -36,12 +36,13 @@ public class RekisterointiFinalizer {
         if (rekisterointi.organisaatio.oid == null) {
             LOGGER.debug("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
-            schedulerClient.schedule(
-                    kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
-                    Instant.now().plus(ORGANISAATIO_CACHE_KLUDGE_MINUUTIT, ChronoUnit.MINUTES));
         } else {
             ajastaPaatosEmail(rekisterointiId);
         }
+        schedulerClient.schedule(
+                kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
+                Instant.now().plus(ORGANISAATIO_CACHE_KLUDGE_MINUUTIT, ChronoUnit.MINUTES)
+        );
     }
 
     public void kutsuKayttaja(Long rekisterointiId) {
