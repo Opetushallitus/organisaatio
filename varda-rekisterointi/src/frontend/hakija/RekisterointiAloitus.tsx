@@ -38,6 +38,11 @@ export default function RekisterointiAloitus() {
                 {i18n.translateWithLang('HAKIJA_ALOITUS_TEKSTI2', data.kieli)}
             </p>
             <p>
+                <a className="oph-link" href="https://confluence.csc.fi/display/OPHPALV/Ohje+yksityisille+varhaiskasvatustoimijoille" target="_blank">
+                    {i18n.translateWithLang('LUE_LISAA', data.kieli)}
+                </a>
+            </p>
+            <p>
                 <a className="oph-button oph-button-primary" href="/varda-rekisterointi/hakija">
                     {i18n.translateWithLang('HAKIJA_ALOITA_REKISTEROITYMINEN', data.kieli)}
                 </a>
