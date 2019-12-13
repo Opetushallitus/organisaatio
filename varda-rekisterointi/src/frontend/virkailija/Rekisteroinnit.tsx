@@ -37,7 +37,8 @@ export default function Rekisteroinnit() {
     const [statusTila, asetaStatusTila] = useState(StatusTila.PASSIIVINEN);
     const [statusTeksti, asetaStatusTeksti] = useState('');
     const [ytunnus, setYtunnus] = useState('');
-    const ytunnusDisabled = !YtunnusValidator.validate(ytunnus);
+    const ytunnusTrimmed = ytunnus.trim();
+    const ytunnusDisabled = !YtunnusValidator.validate(ytunnusTrimmed);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]:  ytunnusDisabled });
 
     if (maatJaValtiotLoading) {
@@ -102,10 +103,10 @@ export default function Rekisteroinnit() {
                                placeholder={i18n.translate('YTUNNUS')}
                                value={ytunnus}
                                onChange={event => setYtunnus(event.currentTarget.value)} />
-                        <Link to={`/virkailija/rekisterointi/luonti/${ytunnus}`}
+                        <Link to={`/virkailija/rekisterointi/luonti/${ytunnusTrimmed}`}
                             className={ytunnusClassNames}
                             onClick={event => {
-                                if (!YtunnusValidator.validate(ytunnus)) {
+                                if (ytunnusDisabled) {
                                     event.preventDefault();
                                 }
                             }}>
