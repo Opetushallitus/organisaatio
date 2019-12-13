@@ -38,7 +38,7 @@ export default function RekisterointiAloitus() {
                 {i18n.translateWithLang('HAKIJA_ALOITUS_TEKSTI2', data.kieli)}
             </p>
             <p>
-                <a className="oph-link" href="https://confluence.csc.fi/display/OPHPALV/Ohje+yksityisille+varhaiskasvatustoimijoille" target="_blank">
+                <a className="oph-link" href="https://confluence.csc.fi/display/OPHPALV/Ohje+yksityisille+varhaiskasvatustoimijoille" target="_blank" rel="noopener noreferrer">
                     {i18n.translateWithLang('LUE_LISAA', data.kieli)}
                 </a>
             </p>
