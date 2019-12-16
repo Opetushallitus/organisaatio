@@ -33,6 +33,12 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
     // copy from service
     var EMAIL_PATTERN = /^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/;
 
+    var KIELET = {
+        suomi: { opetuskieliArvo: "1", kieliUriAndVersio: "kieli_fi#1" },
+        ruotsi: { opetuskieliArvo: "2", kieliUriAndVersio: "kieli_sv#1" },
+        englanti: { opetuskieliArvo: "4", kieliUriAndVersio: "kieli_en#1" }
+    };
+
     $log = $log.getInstance("OrganisaatioModel");
     var loadingService = $injector.get('LoadingService');
     
@@ -469,6 +475,13 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
                 this.toggleCheckOrganisaatio(organisaatiotyyppi);
             }
 
+            if (typeof model.ytjTiedot.yrityksenKieli === "string") {
+                var kieli = KIELET[model.ytjTiedot.yrityksenKieli.trim().toLowerCase()];
+                if (kieli) {
+                    model.organisaatio.ytjkieli = kieli.kieliUriAndVersio;
+                }
+            }
+
             // asetetaan päivitys timestamp
             model.organisaatio.ytjpaivitysPvm = model.formatDate(new Date());
             nimi.alkuPvm = model.organisaatio.ytjpaivitysPvm;
@@ -644,21 +657,7 @@ app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
 
                 // yritystietojen mukana kieli tulee "suomeksi" --> muutetaan se kieliArvoksi
                 // Koodisto "oppilaitoksenopetuskieli" arvot numeroita
-                var kieliArvo = null;
-                switch (kieli.trim().toLowerCase()) {
-                    case "suomi":
-                        kieliArvo = "1";
-                        break;
-                    case "ruotsi":
-                        kieliArvo = "2";
-                        break;
-                    case "englanti":
-                        kieliArvo = "4";
-                        break;
-                    default:
-                        $log.warn("Failed to get kieli uri for language: " + kieli);
-                        return;
-                }
+                const kieliArvo = (KIELET[kieli.trim().toLowerCase()] || { opetuskieliArvo: null }).opetuskieliArvo;
 
                 // etsitään koodiston kielistä kieliArvoa ja palautetaan vastaava uri jos löytyy
                 var found = $filter('filter')(model.koodisto.opetuskielet, {arvo: kieliArvo}, true);
