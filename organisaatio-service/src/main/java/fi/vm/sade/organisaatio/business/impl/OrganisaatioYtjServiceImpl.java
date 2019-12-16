@@ -188,6 +188,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // validates, updates if needed and returns info if org was updated or not
     private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
+        boolean updateYtjKieli = false;
         boolean updateNimi = false;
         boolean updateOsoite = false;
         boolean updateSahkoposti = false;
@@ -209,7 +210,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         boolean kieliAddedFromYTJ = updateLangFromYTJ(ytjOrg, organisaatio);
         String ytjKielikoodi = getKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli());
-        organisaatio.setYtjKieli(ytjKielikoodi);
+        if (!ytjKielikoodi.equals(organisaatio.getYtjKieli())) {
+            organisaatio.setYtjKieli(ytjKielikoodi);
+            updateYtjKieli = true;
+        }
         // validate and update YTJ alkupvm
         Date ytjAlkupvm = validateandParseYtjAlkupvm(ytjOrg, organisaatio);
         if (ytjAlkupvm != null && (!ytjAlkupvm.equals(organisaatio.getAlkuPvm()) || forceUpdate)) {
@@ -272,7 +276,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updateYritysmuoto = true;
         }
         // validate and update contact info according to YTJ lang
-        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm || updateYritysmuoto);
+        return (kieliAddedFromYTJ || updateYtjKieli || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm || updateYritysmuoto);
     }
 
     /* Date related stuff */
