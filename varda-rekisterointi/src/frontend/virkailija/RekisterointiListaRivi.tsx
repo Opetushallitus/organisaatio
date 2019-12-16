@@ -64,11 +64,9 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>{rekisterointi.ytunnus}</td>
             <td>
                 {rekisterointi.vastaanotettu}
-                {valintaKaytossa &&
-                    <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
-                        <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
-                    </span>
-                }
+                <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
+                    <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
+                </span>
             </td>
         </tr>
     )

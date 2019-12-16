@@ -41,7 +41,7 @@ export default function OrganisaationTiedot({ organisaatio }: Props) {
     }
 
     function yritysmuoto(yritysmuotoUri: string) {
-        const osuvaYritysMuoto = yritysmuodot.find(y => y.uri === yritysmuotoUri);
+        const osuvaYritysMuoto = yritysmuodot.find(y => y.uri === yritysmuotoUri || y.nimi.fi === yritysmuotoUri);
         return osuvaYritysMuoto ? toLocalizedText(osuvaYritysMuoto.nimi, language, osuvaYritysMuoto.arvo) : i18n.translate('EI_TIEDOSSA');
     }
 

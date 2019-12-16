@@ -91,7 +91,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
         <Modal open={nayta} onClose={suljeCallback}>
             <ModalHeader onClose={suljeCallback}>{i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}</ModalHeader>
             <ModalBody>
-                <table>
+                <table className={styles.paatosLista}>
                     <thead>
                         <tr key="otsikot">
                             <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
@@ -107,8 +107,8 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                             `${kotipaikka(hakemus.organisaatio)}`
                         )).map(rivi =>
                         <tr key={rivi.hakemus.id}>
-                            <td className={perusteluError ? styles.virheLomakkeella : ''}>{rivi.organisaatio}</td>
-                            <td className={perusteluError ? styles.virheLomakkeella : ''}>{rivi.puhelinnumero}</td>
+                            <td>{rivi.organisaatio}</td>
+                            <td>{rivi.puhelinnumero}</td>
                             <td>{rivi.ytunnus}</td>
                             <td>{rivi.kotipaikka}</td>
                         </tr>
@@ -117,17 +117,18 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     </tbody>
                 </table>
             { !hyvaksytty && [
-                <Divider />,
                 valitut.length > 1 ?  [
-                        <Typography >
-                            {i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}
-                        </Typography>,
+                        <Divider />,
+                            <Typography >
+                                {i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}
+                            </Typography>,
                         <Divider />,
                     ] : null,
                  <Typography className={perusteluError ? styles.virheLomakkeella : ''}>
                     {i18n.translate('REKISTEROINTI_HYLKAYS_OHJE')}
                 </Typography>,
                 <Textarea
+                    className={styles.lisattyMargin}
                     error={perusteluError}
                     value={perustelu}
                     onChange={(event: any) => asetaPerustelu(event.target.value)}
