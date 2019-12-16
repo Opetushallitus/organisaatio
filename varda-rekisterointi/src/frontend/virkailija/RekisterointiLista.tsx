@@ -118,7 +118,7 @@ export default function RekisterointiLista({
                 VALINTA_KAYTOSSA &&
                 <PaatosKontrollit valitut={valitutHakemukset} valitutKasiteltyCallback={valitutKasiteltyCallback} />
             }
-            { VALINTA_KAYTOSSA && naytaYksittainenInfo && yksiRekisterointi &&
+            { naytaYksittainenInfo && yksiRekisterointi &&
                 <YksittainenPaatos
                   valittu={yksiRekisterointi}
                   suljeCallback={suljeInfoCallback}

@@ -45,5 +45,5 @@ export function yritysmuotoSortFnByLanguage(language: Language) {
 }
 
 export function yritysmuotoValueFn(koodi: Koodi) {
-    return koodi.nimi.fi || koodi.uri
+    return koodi.uri || (koodi.nimi && koodi.nimi.fi) || '';
 }
