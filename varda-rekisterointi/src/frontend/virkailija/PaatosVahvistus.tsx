@@ -55,6 +55,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
     const [ perustelu, asetaPerustelu ] = useState("");
     const [ perusteluError, setPerusteluError ] = useState(false);
+    const [ lahetaError, setLahetaError ] = useState(false);
 
     async function laheta() {
         setPerusteluError(false);
@@ -72,7 +73,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
             valitutKasiteltyCallback(hyvaksytty);
             suljeCallback();
         } catch (e) {
-            // setLahetaError(true);
+            setLahetaError(true);
             throw e;
         }
     }
@@ -136,6 +137,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
             </ModalBody>
             <ModalFooter>
                 <Box display="flex" justifyContent="flex-end">
+                    { lahetaError ? <div className={` ${styles.virheLomakkeella} ${styles.virheAsettelu}`}>{i18n.translate('ERROR_SAVE')}</div> : null }
                     <Button variant="text" onClick={suljeCallback}>{i18n.translate('REKISTEROINTI_PERUUTA')}</Button>
                     <Button onClick={laheta}>{i18n.translate('REKISTEROINTI_LAHETA')}</Button>
                 </Box>
