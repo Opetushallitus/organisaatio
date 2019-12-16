@@ -18,6 +18,10 @@ spring:
     password: varda-rekisterointi
   flyway:
     out-of-order: true
+  resources:
+    cache:
+      cachecontrol:
+        no-store: true
   session:
     store-type: jdbc
 varda-rekisterointi:
