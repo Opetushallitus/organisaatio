@@ -241,8 +241,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             if (entity.getOppilaitosKoodi()!=null) {
                 // Käydään läpi aliorganisaatiot, jotka eivät ole passiivisia
                 for (Organisaatio child : entity.getChildren(false)) {
-                    if (child.getOpetuspisteenJarjNro()!=null) {
-                        entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + child.getOpetuspisteenJarjNro());
+                    if (child.getToimipisteKoodi()!=null) {
+                        entityRelaatiot.add("opetuspisteet_" + child.getToimipisteKoodi());
                     }
                 }
             }
