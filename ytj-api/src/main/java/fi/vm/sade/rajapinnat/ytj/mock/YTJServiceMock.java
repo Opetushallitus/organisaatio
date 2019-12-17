@@ -7,15 +7,15 @@ import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
 import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
 import fi.vm.sade.rajapinnat.ytj.api.YTJOsoiteDTO;
 import fi.vm.sade.rajapinnat.ytj.api.YTJService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import fi.ytj.YTunnusDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Mock for YTJService.
@@ -40,7 +40,7 @@ public class YTJServiceMock implements YTJService {
     public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException {
         List<YTJDTO> ytjdtos = new ArrayList<YTJDTO>();
         for(String str : ytunnuses) {
-            ytjdtos.add(dataByYTunnus.get(str));
+            ytjdtos.add(findByYTunnus(str, ytjKieli));
         }
         return ytjdtos;
     }
