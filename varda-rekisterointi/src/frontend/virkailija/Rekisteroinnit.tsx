@@ -19,7 +19,7 @@ import classNames from "classnames/bind";
 import useAxios from "axios-hooks";
 import {Koodi} from "../types";
 import Spinner from "../Spinner";
-import ErrorPage from "../ErrorPage";
+import ErrorPage from "../virhe/VirheSivu";
 import Status, {StatusTila} from "./Status";
 
 const theme = createTheme();

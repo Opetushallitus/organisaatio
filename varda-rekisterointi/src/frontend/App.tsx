@@ -11,7 +11,7 @@ import {Koodi, Language, Lokalisointi} from './types';
 import useAxios from 'axios-hooks';
 import Spinner from './Spinner';
 import RekisterointiVirkailija from './virkailija/RekisterointiVirkailija';
-import ErrorPage from './ErrorPage';
+import ErrorPage from './virhe/VirheSivu';
 import RekisterointiValmis from './hakija/RekisterointiValmis';
 import RekisterointiAloitus from './hakija/RekisterointiAloitus';
 import Axios from 'axios';

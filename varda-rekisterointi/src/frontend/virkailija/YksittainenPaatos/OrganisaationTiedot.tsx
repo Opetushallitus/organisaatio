@@ -8,7 +8,7 @@ import { parseISO, format } from 'date-fns';
 import {KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext} from '../../contexts';
 import useAxios from "axios-hooks";
 import Spinner from "../../Spinner";
-import ErrorPage from "../../ErrorPage";
+import ErrorPage from "../../virhe/VirheSivu";
 
 type Props = {
     organisaatio: Organisaatio,
