@@ -55,18 +55,6 @@ public class OrganisationDateValidatorTest {
         // all dates null
         assertTrue(validator.apply(parentChild));
 
-        // parent has end date, child does not
-        parent.setLakkautusPvm(date(100));
-        assertNotEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
-        // side effect happends during validation
-        assertTrue(validator.apply(parentChild));
-
-        // side effect result
-        assertEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
-
-        // validates ok after side effect?
-        assertTrue(validator.apply(parentChild));
-
         // parent has start date
         parent.setAlkuPvm(date(10));
         assertTrue(validator.apply(parentChild));
@@ -89,6 +77,7 @@ public class OrganisationDateValidatorTest {
         assertTrue(validatorSkipStartDate.apply(parentChild));
 
         // loppu > parent.loppu
+        parent.setLakkautusPvm(date(100));
         child.setAlkuPvm(date(10));
         child.setLakkautusPvm(date(101));
         assertFalse(validator.apply(parentChild));
@@ -100,6 +89,38 @@ public class OrganisationDateValidatorTest {
 
         // parent has no start date, child has
         parent.setAlkuPvm(null);
+        assertTrue(validator.apply(parentChild));
+    }
+
+    @Test
+    public void setsChildLakkautusPvmIfParentLakkautusInPast() {
+        // parent has end date in the past, child has null
+        parent.setLakkautusPvm(date(0));
+        assertNotEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
+
+        // side effect happens during validation
+        assertTrue(validator.apply(parentChild));
+
+        // side effect result
+        assertEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
+
+        // validates ok after side effect?
+        assertTrue(validator.apply(parentChild));
+    }
+
+    @Test
+    public void doesNotSetChildLakkautusPvmIfParentLakkautusInFuture() {
+        // parent has end date in the future, child has null
+        parent.setLakkautusPvm(date(100));
+        assertNotEquals(parent.getLakkautusPvm(), child.getLakkautusPvm());
+
+        // side effect would happen during validation
+        assertTrue(validator.apply(parentChild));
+
+        // no side effect happened
+        assertNull(child.getLakkautusPvm());
+
+        // validates ok after side effect?
         assertTrue(validator.apply(parentChild));
     }
 
