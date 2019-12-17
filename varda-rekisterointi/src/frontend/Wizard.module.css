@@ -15,3 +15,11 @@
     grid-row: 2;
     grid-column: col-start / span 11;
 }
+
+.buttons button {
+    margin-right: 0.5em;
+}
+.buttons button:last-child {
+    margin-right: 0;
+}
+
