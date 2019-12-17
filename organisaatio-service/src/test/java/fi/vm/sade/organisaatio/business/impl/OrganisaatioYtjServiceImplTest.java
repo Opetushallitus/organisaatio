@@ -5,6 +5,10 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.rajapinnat.ytj.api.YTJDTOBuilder;
+import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
+import fi.vm.sade.rajapinnat.ytj.api.YTJService;
+import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
 import org.assertj.core.groups.Tuple;
 import org.junit.After;
 import org.junit.Assert;
@@ -24,6 +28,9 @@ import java.util.List;
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_FI;
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_SV;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,14 +41,20 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
     private OrganisaatioDAO organisaatioDAO;
     @Autowired
     private OrganisaatioYtjService service;
+    @Autowired
+    private YTJService ytjServiceMock;
 
     private List<OrganisaatioNimi> orgSortedNimet;
     private List<Yhteystieto> orgSortedYhteystiedot;
     private List<Organisaatio> organisaatioList;
 
     @Before
-    public void setUp() {
+    public void setUp() throws YtjConnectionException {
         executeSqlScript("data/basic_organisaatio_data.sql", false);
+        when(ytjServiceMock.findByYTunnus(eq("1234569-5"), any(YTJKieli.class))).thenAnswer(invocation ->
+                new YTJDTOBuilder(invocation.getArgumentAt(0, String.class))
+                        .kieli(invocation.getArgumentAt(1, YTJKieli.class))
+                        .build());
     }
 
     @After
@@ -57,9 +70,10 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         organisaatioList = organisaatioDAO.findByOidList(oidList, OrganisaatioYtjServiceImpl.SEARCH_LIMIT);
 
-        Assert.assertEquals(3, organisaatioList.size());
+        Assert.assertEquals(4, organisaatioList.size());
 
         Organisaatio org = organisaatioDAO.findByOid("1.2.2005.5");
         initTestData(org);

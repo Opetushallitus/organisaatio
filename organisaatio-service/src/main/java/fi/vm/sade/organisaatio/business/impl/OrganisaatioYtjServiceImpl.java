@@ -50,6 +50,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @Service("organisaatioYtjService")
 @Transactional(rollbackFor = Throwable.class, readOnly = true)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
@@ -107,10 +109,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         // Search the organisations using the DAO since it provides osoites.
-        // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
+        // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, varhaiskasvatuksen_jarjestaja, ei lakkautettu, has y-tunnus)
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         if(oidList.isEmpty()) {
             LOG.error("päivitettävien organisaatioiden oidList on tyhjä, organisaatioita ei päivitetty");
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
@@ -679,7 +682,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private void mapOrgsByYtunnusAndRemovePassiveOrgs(List<String> oidList, Map<String, Organisaatio> organisaatioMap) {
-        List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList, SEARCH_LIMIT);
+        List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList.stream().distinct().collect(toList()), SEARCH_LIMIT);
         for(Organisaatio organisaatio : organisaatioList) {
             if(organisaatio.getStatus() == OrganisaatioStatus.AKTIIVINEN
                     || organisaatio.getStatus() == OrganisaatioStatus.SUUNNITELTU) {
