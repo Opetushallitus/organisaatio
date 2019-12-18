@@ -46,6 +46,10 @@ export default function Wizard(props: Props) {
         }
     }
 
+    async function logout() {
+        window.location.href='/varda-rekisterointi/hakija/logout'
+    }
+
     async function submit() {
         try {
             await props.submit();
@@ -64,6 +68,11 @@ export default function Wizard(props: Props) {
                     {props.error
                         ? <span className="oph-error">{props.error}</span>
                         : null}
+                    {[1, 2, 3].includes(currentStep) &&
+                    <Button disabled={props.disabled || props.loading}
+                            styling="cancel"
+                            onClick={logout}>{i18n.translate('KESKEYTÄ')}</Button>
+                    }
                     {isPrev()
                         ? <Button disabled={props.disabled || props.loading}
                                   styling="ghost"
