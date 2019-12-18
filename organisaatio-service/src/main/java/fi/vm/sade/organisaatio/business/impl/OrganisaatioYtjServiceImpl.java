@@ -662,7 +662,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 LOG.error("Virhe YTJ-tietojen haussa", ore);
             }
         }
-        return ytjdtoList;
+        return ytjdtoList.stream().filter(dto -> dto.getYtunnus() != null).collect(toList());
     }
 
     private void logYtjError(Organisaatio organisaatio, YtjVirhe.YTJVirheKohde kohde, String viesti) {
