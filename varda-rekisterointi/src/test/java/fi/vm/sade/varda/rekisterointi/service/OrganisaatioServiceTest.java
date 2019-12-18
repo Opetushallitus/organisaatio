@@ -16,18 +16,19 @@ public class OrganisaatioServiceTest {
     private final OrganisaatioService service = new OrganisaatioService();
 
     @Test(expected = IllegalStateException.class)
-    public void kuranttiNimiThrowsWhenNoCurrentName() {
+    public void kuranttiNimiThrowsWhenNoName() {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
-        dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MAX, null, null));
+        dto.nimet = Collections.emptyList();
         service.kuranttiNimi(dto);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void kuranttiNimiThrowsWhenNoNameMatchingLanguage() {
+    @Test
+    public void kuranttiNimiReturnsBlankWhenNoNameMatchingLanguage() {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
-        dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", null));
-        dto.ytjkieli = "sv";
-        service.kuranttiNimi(dto);
+        dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", "Finnish name missing!"));
+        dto.ytjkieli = "fi";
+        KielistettyNimi kuranttiNimi = service.kuranttiNimi(dto);
+        assertEquals("", kuranttiNimi.nimi);
     }
 
     @Test

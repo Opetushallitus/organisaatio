@@ -1,6 +1,8 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.varda.rekisterointi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,6 +14,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class OrganisaatioService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrganisaatioService.class);
 
     private static final String DEFAULT_KIELI_KOODI_URI_VERSION = "kieli_fi#1";
     private static final String DEFAULT_KIELI_KOODI_ARVO = "fi";
@@ -69,7 +73,8 @@ public class OrganisaatioService {
         String kieli = kieliKoodiUriVersionToKoodiArvo(ytjKieli);
         String ytjKielinen = kurantti.nimi.getOrDefault(kieli, kurantti.nimi.get(DEFAULT_KIELI_KOODI_ARVO));
         if (ytjKielinen == null) {
-            throw new IllegalStateException("Ei YTJ-kielen tai oletuskielen mukaista nimeä organisaatiolle: " + dto.ytunnus);
+            LOGGER.warn("Ei YTJ-kielen tai oletuskielen mukaista nimeä organisaatiolle: {}", dto.ytunnus);
+            ytjKielinen = "";
         }
         return KielistettyNimi.of(ytjKielinen, kieli, kurantti.alkuPvm);
     }
