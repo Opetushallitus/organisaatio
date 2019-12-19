@@ -8,7 +8,7 @@ import Spinner from '../Spinner';
 import { asiointikielet } from '../LocalizableTextUtils';
 import classNames from 'classnames/bind';
 import { LanguageContext } from '../contexts';
-import ErrorPage from '../ErrorPage';
+import ErrorPage from '../virhe/VirheSivu';
 
 type Props = {
     readOnly?: boolean,

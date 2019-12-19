@@ -4,7 +4,7 @@ import {KoodiUri, tyhjaOrganisaatio} from '../types';
 import Spinner from '../Spinner';
 import Axios from 'axios';
 import Rekisterointi from './Rekisterointi';
-import ErrorPage from '../ErrorPage';
+import ErrorPage from '../virhe/VirheSivu';
 import { LanguageContext } from '../contexts';
 
 const organisaatiotUrl = "/varda-rekisterointi/hakija/api/organisaatiot";

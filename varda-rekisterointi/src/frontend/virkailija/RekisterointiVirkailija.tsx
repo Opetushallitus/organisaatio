@@ -5,7 +5,7 @@ import { KoodiUri, tyhjaOrganisaatio } from '../types';
 import { useParams } from 'react-router';
 import Axios from 'axios';
 import Spinner from '../Spinner';
-import ErrorPage from '../ErrorPage';
+import ErrorPage from '../virhe/VirheSivu';
 import { LanguageContext } from '../contexts';
 
 const rekisteroinnitUrl = "/varda-rekisterointi/virkailija/api/rekisteroinnit";

@@ -9,7 +9,7 @@ import { hasLength } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
-import ErrorPage from '../ErrorPage';
+import ErrorPage from '../virhe/VirheSivu';
 import { yritysmuotoSortFnByLanguage, yritysmuotoValueFn } from './YritysmuotoUtils';
 
 type Props = {

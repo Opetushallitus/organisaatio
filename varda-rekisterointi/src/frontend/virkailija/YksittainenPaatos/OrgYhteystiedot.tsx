@@ -14,7 +14,7 @@ export default function OrgYhteystiedot({ yhteystiedot }: Props) {
             <FormFieldContainer label={i18n.translate('PUHELINNUMERO')}>
                 <span>{yhteystiedot.puhelinnumero}</span>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SAHKOPOSTI')}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_SAHKOPOSTI')}>
                 <span>{yhteystiedot.sahkoposti}</span>
             </FormFieldContainer>
         </>
