@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {format, parseISO} from "date-fns";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {Rekisterointihakemus} from "./rekisterointihakemus";
@@ -6,6 +6,7 @@ import styles from "./RekisterointiListaRivi.module.css";
 
 
 import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
+import {KuntaKoodistoContext} from "../contexts";
 
 const saapumisAikaFormat = 'd.M.y HH:mm';
 
@@ -30,8 +31,8 @@ export class ListaRivi {
             ? format(parseISO(this.hakemus.vastaanotettu), saapumisAikaFormat)
             : ""
     }
-    get kunnat(): string {
-        return this.hakemus.kunnat.join() || '';
+    get kunnat(): string[] {
+        return this.hakemus.kunnat;
     }
 
 }
@@ -47,6 +48,8 @@ type Props = {
 export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi, riviValittu, valitseHakemusCallback, valitseInfoCallback } : Props) {
     const [valittu, asetaValittu] = useState(false);
 
+    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+
     useEffect(() => {
         asetaValittu(riviValittu);
     }, [valintaKaytossa, riviValittu]);
@@ -54,6 +57,10 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
     function valitse() {
         asetaValittu(vanhaTila => !vanhaTila);
         valitseHakemusCallback(rekisterointi.hakemus, valittu);
+    }
+
+    function koodit2kunnat(kunnatArr: string[]): string {
+        return kunnatArr.map(k => kuntaKoodisto.uri2Nimi(k) || k).join(", ")
     }
 
     return (
@@ -65,7 +72,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>{rekisterointi.organisaatio}</td>
             <td>{rekisterointi.puhelinnumero}</td>
             <td>{rekisterointi.ytunnus}</td>
-            <td>{rekisterointi.kunnat}</td>
+            <td>{koodit2kunnat(rekisterointi.kunnat)}</td>
             <td>
                 {rekisterointi.vastaanotettu}
                 <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>

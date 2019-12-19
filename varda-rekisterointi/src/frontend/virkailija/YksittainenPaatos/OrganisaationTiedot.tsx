@@ -12,11 +12,12 @@ import ErrorPage from "../../virhe/VirheSivu";
 
 type Props = {
     organisaatio: Organisaatio,
+    kunnat: string[]
 }
 
 const UI_FORMAT = 'dd.MM.yyyy';
 
-export default function OrganisaationTiedot({ organisaatio }: Props) {
+export default function OrganisaationTiedot({ organisaatio, kunnat }: Props) {
     const { i18n, language } = useContext(LanguageContext);
     const [{data: yritysmuodot, loading: yritysmuotoLoading, error: yritysmuodotError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true');
@@ -40,6 +41,10 @@ export default function OrganisaationTiedot({ organisaatio }: Props) {
         return osat.join(", ");
     }
 
+    function koodit2kunnat(kunnatArr: string[]): string {
+        return kunnatArr.map(k => kuntaKoodisto.uri2Nimi(k) || k).join(", ")
+    }
+
     function yritysmuoto(yritysmuotoUri: string) {
         const osuvaYritysMuoto = yritysmuodot.find(y => y.uri === yritysmuotoUri || y.nimi.fi === yritysmuotoUri);
         return osuvaYritysMuoto ? toLocalizedText(osuvaYritysMuoto.nimi, language, osuvaYritysMuoto.arvo) : i18n.translate('EI_TIEDOSSA');
@@ -61,6 +66,9 @@ export default function OrganisaationTiedot({ organisaatio }: Props) {
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('TOIMINNAN_ALKAMISAIKA')}>
                 <span>{format(parseISO(organisaatio.alkuPvm || ''), UI_FORMAT)}</span>
+            </FormFieldContainer>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_KUNNAT')}>
+                <span>{koodit2kunnat(kunnat)}</span>
             </FormFieldContainer>
         </>
     );
