@@ -51,7 +51,9 @@ export default function RekisterointiVirkailija() {
         return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 
-    return <Rekisterointi initialOrganisaatio={initialOrganisaatio}
+    return <Rekisterointi
+                          isVirkailija
+                          initialOrganisaatio={initialOrganisaatio}
                           organisaatio={organisaatio}
                           setOrganisaatio={setOrganisaatio}
                           rekisteroinnitUrl={rekisteroinnitUrl} />
