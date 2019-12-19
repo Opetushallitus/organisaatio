@@ -211,16 +211,14 @@ public class OrganisaatioTarjonta {
                     continue;
                 } else {
                     Calendar cal = Calendar.getInstance();
-                    cal.set(Calendar.YEAR, vuosi + 1);
-                    cal.set(Calendar.MONTH, Calendar.JANUARY);
-                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                    cal.set(Calendar.YEAR, vuosi);
+                    cal.set(Calendar.MONTH, Calendar.DECEMBER);
+                    cal.set(Calendar.DAY_OF_MONTH, 31);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
                     cal.set(Calendar.MINUTE, 0);
                     cal.set(Calendar.SECOND, 0);
                     cal.set(Calendar.MILLISECOND, 0);
-
-                    cal.add(Calendar.MILLISECOND, -1);
 
                     koulutuksenAlkamisPvmMax = cal.getTime();
                     LOG.debug("oli vuosi, käytetään aikaa " + koulutuksenAlkamisPvmMax);

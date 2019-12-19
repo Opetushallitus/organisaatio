@@ -581,6 +581,16 @@ app.factory('VoimassaolonMuokkausModel', function($q, $filter, $log, $injector,
             return !(lakkautusPvm && (alkuPvm > lakkautusPvm));
         };
 
+        this.valitseKaikki = function() {
+            valitseKaikki(model.aliorganisaatioTree, true);
+            asetaValintojenPakotus();
+        };
+
+        this.poistaKaikki = function() {
+            valitseKaikki(model.aliorganisaatioTree, false);
+            asetaValintojenPakotus();
+        };
+
         this.checkboxChanged = function(data) {
             model.isDirty = true;
             asetaSamaValintaLapsille(data, data.valittu);
