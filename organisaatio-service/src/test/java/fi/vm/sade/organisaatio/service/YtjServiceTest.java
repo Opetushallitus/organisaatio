@@ -11,10 +11,12 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Matchers.*;
+import static java.util.stream.Collectors.toList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +35,10 @@ public class YtjServiceTest {
                     public List<YTJDTO> answer(InvocationOnMock invocation) throws Throwable {
                         List<YTJDTO> ytjdtoList = new ArrayList<>();
                         @SuppressWarnings("unchecked")
-                        List<String> args = (List<String>) invocation.getArguments()[0];
-                        for(int i = 0; i < args.size(); i++) {
-                            ytjdtoList.add(null);
-                        }
-                        return ytjdtoList;
+                        List<String> ytunnusList = (List<String>) invocation.getArguments()[0];
+                        return ytunnusList.stream().map(ytunnus -> new YTJDTO() {{
+                            setYtunnus(ytunnus);
+                        }}).collect(toList());
                     }
                 });
         organisaatioYtjService = new OrganisaatioYtjServiceImpl();
@@ -68,7 +69,7 @@ public class YtjServiceTest {
     private List<YTJDTO> invokeFetchDataFromYtj(int amount) {
         List<String> ytunnusMock = new ArrayList<>();
         for(int i = 0; i < amount; i++) {
-            ytunnusMock.add(null);
+            ytunnusMock.add("2769790-1");
         }
         return ReflectionTestUtils.invokeMethod(organisaatioYtjService, "fetchDataFromYtj", ytunnusMock);
     }

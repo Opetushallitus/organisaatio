@@ -50,6 +50,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @Service("organisaatioYtjService")
 @Transactional(rollbackFor = Throwable.class, readOnly = true)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
@@ -107,10 +109,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         // Create y-tunnus list of updateable arganisations
         List<String> oidList = new ArrayList<>();
         // Search the organisations using the DAO since it provides osoites.
-        // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, ei lakkautettu, has y-tunnus)
+        // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, varhaiskasvatuksen_jarjestaja, ei lakkautettu, has y-tunnus)
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
         oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         if(oidList.isEmpty()) {
             LOG.error("päivitettävien organisaatioiden oidList on tyhjä, organisaatioita ei päivitetty");
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
@@ -188,6 +191,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // validates, updates if needed and returns info if org was updated or not
     private boolean updateOrg(final YTJDTO ytjOrg, Organisaatio organisaatio, boolean forceUpdate) {
+        boolean updateYtjKieli = false;
         boolean updateNimi = false;
         boolean updateOsoite = false;
         boolean updateSahkoposti = false;
@@ -209,7 +213,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         boolean kieliAddedFromYTJ = updateLangFromYTJ(ytjOrg, organisaatio);
         String ytjKielikoodi = getKielikoodiFromYTJlang(ytjOrg.getYrityksenKieli());
-        organisaatio.setYtjKieli(ytjKielikoodi);
+        if (!ytjKielikoodi.equals(organisaatio.getYtjKieli())) {
+            organisaatio.setYtjKieli(ytjKielikoodi);
+            updateYtjKieli = true;
+        }
         // validate and update YTJ alkupvm
         Date ytjAlkupvm = validateandParseYtjAlkupvm(ytjOrg, organisaatio);
         if (ytjAlkupvm != null && (!ytjAlkupvm.equals(organisaatio.getAlkuPvm()) || forceUpdate)) {
@@ -272,7 +279,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             updateYritysmuoto = true;
         }
         // validate and update contact info according to YTJ lang
-        return (kieliAddedFromYTJ || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm || updateYritysmuoto);
+        return (kieliAddedFromYTJ || updateYtjKieli || updateNimi || updateOsoite || updateSahkoposti || updatePuhelin || updateWww || updateAlkupvm || updateYritysmuoto);
     }
 
     /* Date related stuff */
@@ -655,7 +662,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 LOG.error("Virhe YTJ-tietojen haussa", ore);
             }
         }
-        return ytjdtoList;
+        return ytjdtoList.stream().filter(dto -> dto.getYtunnus() != null).collect(toList());
     }
 
     private void logYtjError(Organisaatio organisaatio, YtjVirhe.YTJVirheKohde kohde, String viesti) {
@@ -675,7 +682,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private void mapOrgsByYtunnusAndRemovePassiveOrgs(List<String> oidList, Map<String, Organisaatio> organisaatioMap) {
-        List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList, SEARCH_LIMIT);
+        List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList.stream().distinct().collect(toList()), SEARCH_LIMIT);
         for(Organisaatio organisaatio : organisaatioList) {
             if(organisaatio.getStatus() == OrganisaatioStatus.AKTIIVINEN
                     || organisaatio.getStatus() == OrganisaatioStatus.SUUNNITELTU) {

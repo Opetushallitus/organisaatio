@@ -34,6 +34,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
         ytjdto = generateValidYtjdto();
         initGeneralOrgData();
         generateOrganisaatioNimi(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
+        org.setYtjKieli("kieli_fi#1");
     }
 
     @Test
