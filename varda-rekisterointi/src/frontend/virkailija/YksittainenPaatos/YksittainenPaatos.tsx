@@ -13,7 +13,6 @@ import OrgYhteystiedot from './OrgYhteystiedot'
 
 import styles from "../PaatosKontrollit.module.css";
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader";
-import FormFieldContainer from "../../FormFieldContainer";
 
 
 type Props = {
@@ -30,10 +29,7 @@ export default function YksittainenPaatos({ valittu, suljeCallback }: Props) {
             <ModalBody>
                 <div className="varda-rekisterointi-hakija">
                     <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}>
-                        <OrganisaationTiedot organisaatio={valittu.organisaatio}/>
-                        <FormFieldContainer label={i18n.translate('ORGANISAATION_KUNNAT')}>
-                            <span>{valittu.kunnat.join()}</span>
-                        </FormFieldContainer>
+                        <OrganisaationTiedot organisaatio={valittu.organisaatio} kunnat={valittu.kunnat}/>
                     </Fieldset>
                     <Fieldset title={i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}>
                         <OrgYhteystiedot yhteystiedot={valittu.organisaatio.yhteystiedot}/>
