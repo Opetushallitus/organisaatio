@@ -22,6 +22,7 @@ export default function RekisterointiListaOtsikko({ valintaKaytossa, kaikkiValit
                 <th>{i18n.translate("PUHELINNUMERO")}</th>
                 <th>{i18n.translate("YTUNNUS")}</th>
                 <th>{i18n.translate("SAAPUMISAIKA")}</th>
+                <th>{i18n.translate("KASITTELEVAT_KUNNAT")}</th>
             </tr>
         </thead>
     )

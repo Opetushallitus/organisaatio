@@ -16,6 +16,7 @@ import {validoiYhteystiedot} from "../YhteystiedotValidator";
 import Footer from './Footer';
 
 type Props = {
+    isVirkailija?: boolean,
     initialOrganisaatio: Organisaatio,
     organisaatio: Organisaatio,
     setOrganisaatio: (organisaatio: Partial<Organisaatio>) => void,
@@ -37,7 +38,7 @@ function reducer<T>(state: T, data: Partial<T>): T {
     return { ...state, ...data };
 }
 
-export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrganisaatio, rekisteroinnitUrl}: Props) {
+export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrganisaatio, rekisteroinnitUrl, isVirkailija = false}: Props) {
     const { i18n } = useContext(LanguageContext);
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
@@ -123,7 +124,9 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     validate={validate}
                     submit={post}
                     loading={postLoading}
-                    error={postError ? i18n.translate('ERROR_SAVE') : undefined}>
+                    error={postError ? i18n.translate('ERROR_SAVE') : undefined}
+                    isVirkailija={isVirkailija}
+            >
                 <RekisterointiOrganisaatio
                     initialOrganisaatio={initialOrganisaatio}
                     organisaatio={organisaatio}

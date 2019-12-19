@@ -11,6 +11,7 @@ type Props = {
     submit: () => Promise<void>,
     loading: boolean,
     error?: string,
+    isVirkailija?: boolean,
 }
 
 export default function Wizard(props: Props) {
@@ -47,7 +48,7 @@ export default function Wizard(props: Props) {
     }
 
     async function logout() {
-        window.location.href='/varda-rekisterointi/hakija/logout'
+        window.location.href= props.isVirkailija ? '/varda-rekisterointi/virkailija' : '/varda-rekisterointi/hakija/logout';
     }
 
     async function submit() {

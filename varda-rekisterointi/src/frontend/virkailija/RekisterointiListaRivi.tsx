@@ -30,6 +30,9 @@ export class ListaRivi {
             ? format(parseISO(this.hakemus.vastaanotettu), saapumisAikaFormat)
             : ""
     }
+    get kunnat(): string {
+        return this.hakemus.kunnat.join() || '';
+    }
 
 }
 
@@ -62,6 +65,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>{rekisterointi.organisaatio}</td>
             <td>{rekisterointi.puhelinnumero}</td>
             <td>{rekisterointi.ytunnus}</td>
+            <td>{rekisterointi.kunnat}</td>
             <td>
                 {rekisterointi.vastaanotettu}
                 <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
