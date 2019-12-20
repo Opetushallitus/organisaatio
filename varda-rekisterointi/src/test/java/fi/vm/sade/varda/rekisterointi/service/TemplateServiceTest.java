@@ -8,14 +8,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,6 +23,7 @@ import static java.util.stream.Collectors.toList;
 public class TemplateServiceTest {
 
     private static final Collection<String> LANGUAGES = List.of("fi", "sv");
+    private static final Collection<Locale> LOCALES = LANGUAGES.stream().map(Locale::new).collect(toList());
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -34,6 +33,8 @@ public class TemplateServiceTest {
 
     @Autowired
     private TemplateService templateService;
+    @Autowired
+    private MessageSource messageSource;
 
     @Parameterized.Parameters(name = "{0}:{1}")
     public static Collection<Object[]> parameters() {
@@ -52,7 +53,8 @@ public class TemplateServiceTest {
 
     @Test
     public void renderWorks() {
-        String content = templateService.getContent(template, new Locale(language));
+        Map<String, Object> variables = Map.of("messageSource", messageSource, "locales", LOCALES);
+        String content = templateService.getContent(template, new Locale(language), variables);
         System.out.println(content);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
 import static java.util.function.Function.identity;
@@ -19,6 +20,9 @@ import static java.util.stream.Collectors.*;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    public static final List<Locale> LOCALES = List.of(new Locale("fi"), new Locale("sv"));
+    private static final String SUBJECT_DELIMITER = " / ";
 
     private final RekisterointiRepository rekisterointiRepository;
     private final TemplateService templateService;
@@ -37,17 +41,17 @@ public class EmailService {
     private void lahetaRekisterointiEmail(Rekisterointi rekisterointi) {
         EmailDto email = EmailDto.builder()
                 .emails(rekisterointi.sahkopostit)
-                .message(luoViesti(rekisterointi, new Locale("fi")))
+                .message(luoViesti(rekisterointi))
                 .build();
         viestintaClient.save(email, false);
     }
 
-    private EmailMessageDto luoViesti(Rekisterointi rekisterointi, Locale locale) {
+    private EmailMessageDto luoViesti(Rekisterointi rekisterointi) {
         String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
         return EmailMessageDto.builder()
-                .subject(messageSource.getMessage("rekisteroityminen.kayttaja.otsikko", null, locale))
-                .body(templateService.getContent(Template.REKISTEROITYMINEN_KAYTTAJA, locale,
-                        Map.of("organisaatioNimi", organisaatioNimi)))
+                .subject(subjectToAllLanguages("rekisteroityminen.kayttaja.otsikko"))
+                .body(templateService.getContent(Template.REKISTEROITYMINEN_KAYTTAJA, new Locale("fi"),
+                        Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi)))
                 .html(true)
                 .build();
     }
@@ -72,25 +76,25 @@ public class EmailService {
             String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
             EmailDto email = EmailDto.builder()
                     .emails(rekisterointi.sahkopostit)
-                    .message(luoViesti(rekisterointi.paatos, new Locale(rekisterointi.kayttaja.asiointikieli), organisaatioNimi))
+                    .message(luoViesti(rekisterointi.paatos, organisaatioNimi))
                     .build();
             viestintaClient.save(email, false);
         });
     }
 
-    private EmailMessageDto luoViesti(Paatos paatos, Locale locale, String organisaatioNimi) {
+    private EmailMessageDto luoViesti(Paatos paatos, String organisaatioNimi) {
         if (paatos.hyvaksytty) {
             return EmailMessageDto.builder()
-                    .subject(messageSource.getMessage("rekisteroityminen.hyvaksytty.otsikko", null, locale))
-                    .body(templateService.getContent(Template.REKISTEROITYMINEN_HYVAKSYTTY, locale,
-                            Map.of("organisaatioNimi", organisaatioNimi)))
+                    .subject(subjectToAllLanguages("rekisteroityminen.hyvaksytty.otsikko"))
+                    .body(templateService.getContent(Template.REKISTEROITYMINEN_HYVAKSYTTY, new Locale("fi"),
+                            Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi)))
                     .html(true)
                     .build();
         }
         return EmailMessageDto.builder()
-                .subject(messageSource.getMessage("rekisteroityminen.hylatty.otsikko", null, locale))
-                .body(templateService.getContent(Template.REKISTEROITYMINEN_HYLATTY, locale,
-                        Map.of("organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu)))
+                .subject(subjectToAllLanguages("rekisteroityminen.hylatty.otsikko"))
+                .body(templateService.getContent(Template.REKISTEROITYMINEN_HYLATTY, new Locale("fi"),
+                        Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu)))
                 .html(true)
                 .build();
     }
@@ -142,6 +146,14 @@ public class EmailService {
                         .build())
                 .build();
         viestintaClient.save(email, false);
+    }
+
+    private String subjectToAllLanguages(String code) {
+        return subjectToAllLanguages(locale -> messageSource.getMessage(code, null, locale));
+    }
+
+    private String subjectToAllLanguages(Function<Locale, String> messageByLocale) {
+        return LOCALES.stream().map(messageByLocale::apply).collect(joining(SUBJECT_DELIMITER));
     }
 
 }

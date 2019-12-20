@@ -1,13 +1,19 @@
 <!doctype html>
-<html layout:decorate="~{email/pohja}">
+<html layout:decorate="~{email/pohja-kaikki-kielet}">
 <head>
     <title th:text="#{rekisteroityminen.hylatty.otsikko}">otsikko</title>
 </head>
 <body>
 <div layout:fragment="sisalto">
-    <span th:text="#{hei}">Hei</span>,<br>
-    <span th:text="#{rekisteroityminen.hylatty.teksti(${organisaatioNimi},${perustelu})}">teksti</span>
-    <p th:text="#{rekisteroityminen.hylatty.lisatieto}">lisätieto</p>
+    <div th:each="locale,iterStat: ${locales}">
+        <span th:text="${messageSource.getMessage('hei', null, locale)}">Hei</span>,<br>
+        <span th:text="${messageSource.getMessage('rekisteroityminen.hylatty.teksti', new Object[]{organisaatioNimi , perustelu}, locale)}">teksti</span>
+        <p th:text="${messageSource.getMessage('rekisteroityminen.hylatty.lisatieto', null, locale)}">lisätieto</p>
+        <span th:text="${messageSource.getMessage('terveisin', null, locale)}">Terveisin</span><br/>
+        <span th:text="${messageSource.getMessage('asiakaspalvelu', null, locale)}">Vardan asiakaspalvelu</span><br/>
+        <span th:text="${messageSource.getMessage('opetushallitus', null, locale)}">Opetushallitus</span>
+        <div th:if="${!iterStat.last}">***</div>
+    </div>
 </div>
 </body>
 </html>
