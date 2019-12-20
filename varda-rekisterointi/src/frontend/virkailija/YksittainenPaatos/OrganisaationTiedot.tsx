@@ -67,7 +67,7 @@ export default function OrganisaationTiedot({ organisaatio, kunnat }: Props) {
             <FormFieldContainer label={i18n.translate('TOIMINNAN_ALKAMISAIKA')}>
                 <span>{format(parseISO(organisaatio.alkuPvm || ''), UI_FORMAT)}</span>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_KUNNAT')}>
+            <FormFieldContainer label={i18n.translate('KASITTELEVAT_KUNNAT')}>
                 <span>{koodit2kunnat(kunnat)}</span>
             </FormFieldContainer>
         </>

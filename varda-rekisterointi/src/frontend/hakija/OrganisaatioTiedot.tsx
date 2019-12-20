@@ -48,6 +48,9 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
     const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
 
+    // TODO Väliaikainen fix. Tämän voisi poistaa kunhan organisaatiopalvelu siirtyy käyttämään koodistoa yritysmuotojen osalta. Korjaus sitten myös riville 77.
+    const yritysmuotoKoodi = yritysmuodot.find(y => (y.nimi && (y.nimi.fi === initialOrganisaatio.yritysmuoto || y.nimi.sv === initialOrganisaatio.yritysmuoto)) || y.uri === initialOrganisaatio.yritysmuoto);
+
     const baseClasses = { 'oph-input': true };
 
     return (
@@ -70,7 +73,8 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto}>
                 <div className="oph-input-container">
-                    <KoodiSelect selectable={yritysmuodot} selected={organisaatio.yritysmuoto}
+                    <KoodiSelect selectable={yritysmuodot}
+                                 selected={yritysmuotoDisabled && yritysmuotoKoodi ? yritysmuotoKoodi.uri : organisaatio.yritysmuoto}
                                  disabled={yritysmuotoDisabled}
                                  required={!yritysmuotoDisabled}
                                  hasError={!!errors.yritysmuoto}
