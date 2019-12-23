@@ -15,6 +15,7 @@
     <properties>
         <java.version>11</java.version>
         <build-number>unknown</build-number>
+        <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
     </properties>
 
     <dependencies>
