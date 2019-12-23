@@ -73,7 +73,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
             <td>{rekisterointi.puhelinnumero}</td>
             <td>{rekisterointi.ytunnus}</td>
             <td>{koodit2kunnat(rekisterointi.kunnat)}</td>
-            <td>
+            <td className={styles.nowrap}>
                 {rekisterointi.vastaanotettu}
                 <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
                     <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>

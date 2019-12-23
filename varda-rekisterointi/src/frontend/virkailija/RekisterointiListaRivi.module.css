@@ -1,3 +1,7 @@
 span.rivinInfoNappi {
     cursor: pointer;
 }
+
+.nowrap {
+    white-space: nowrap;
+}
