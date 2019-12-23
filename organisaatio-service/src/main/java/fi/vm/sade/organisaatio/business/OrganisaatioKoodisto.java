@@ -9,9 +9,9 @@ import java.util.Set;
 
 public interface OrganisaatioKoodisto {
 
-    void paivitaKoodistoAsync(Organisaatio entity);
+    void paivitaKoodisto(String oid);
 
-    String paivitaKoodisto(Organisaatio entity);
+    void paivitaKoodisto(Organisaatio entity);
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm);
 

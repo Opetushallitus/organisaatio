@@ -57,6 +57,7 @@
             <ref bean="organisaatioDevResource"/>
             <ref bean="ytjPaivitysResource"/>
             <ref bean="lisatietoResource" />
+            <ref bean="koodistoResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="organisaatioJsonProvider"/>

@@ -19,16 +19,17 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.koodisto.service.types.common.KoodiType;
-import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
+import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
@@ -48,6 +49,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     private final OrganisaatioKoodistoClient client;
 
+    private final OrganisaatioDAO dao;
+
     private final Gson gson;
 
     private final ObjectMapper objectMapper;
@@ -61,9 +64,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      */
     @Autowired
     public OrganisaatioKoodistoImpl(OrganisaatioKoodistoClient client,
+                                    OrganisaatioDAO dao,
                                     UrlConfiguration urlConfiguration,
                                     ObjectMapper objectMapper) {
         this.client = client;
+        this.dao = dao;
         this.urlConfiguration = urlConfiguration;
         this.objectMapper = objectMapper;
         gson = new GsonBuilder().create();
@@ -193,22 +198,33 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         // Lisää koodistoon ne organisaation relaatiot joita siellä ei vielä ole
         for (String oRel : entityRelaatiot) {
             if (oRel!=null) {
+                String[] codeElementUriAndVersion = oRel.split("#");
+                String codeElementUri = codeElementUriAndVersion[0];
+                int versio = getVersio(codeElementUriAndVersion);
+                if (elements.stream().anyMatch(element -> element.getCodeElementUri().equals(codeElementUri)
+                        && (versio == 0 || element.getCodeElementVersion() == versio))) {
+                    LOG.debug("Existing includesCodeElements relation: " + oRel);
+                    continue;
+                }
                 LOG.debug("Add includesCodeElements relation: " + oRel);
                 OrganisaatioKoodistoKoodiCodeElements e = new OrganisaatioKoodistoKoodiCodeElements();
-                e.setCodeElementUri(oRel.split("#")[0]);
-                int versio = 1;
-                try {
-                    if (oRel.split("#").length == 2) {
-                        versio = Integer.parseInt(oRel.split("#")[1]);
-                    }
-                } catch (NumberFormatException ex) {
-                }
+                e.setCodeElementUri(codeElementUri);
                 e.setCodeElementVersion(versio);
                 elements.add(e);
                 muuttunut = true;
             }
         }
         return muuttunut;
+    }
+
+    private int getVersio(String[] codeElementUriAndVersion) {
+        if (codeElementUriAndVersion.length == 2) {
+            try {
+                return Integer.parseInt(codeElementUriAndVersion[1]);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return 0;
     }
 
     // Päivittää Oppilaitoksen sisältyy-relaatiot
@@ -225,8 +241,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             if (entity.getOppilaitosKoodi()!=null) {
                 // Käydään läpi aliorganisaatiot, jotka eivät ole passiivisia
                 for (Organisaatio child : entity.getChildren(false)) {
-                    if (child.getOpetuspisteenJarjNro()!=null) {
-                        entityRelaatiot.add("opetuspisteet_" + entity.getOppilaitosKoodi() + child.getOpetuspisteenJarjNro());
+                    if (child.getToimipisteKoodi()!=null) {
+                        entityRelaatiot.add("opetuspisteet_" + child.getToimipisteKoodi());
                     }
                 }
             }
@@ -251,19 +267,10 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         return paivitaCodeElements(entityRelaatiot, koodi.getWithinCodeElements());
     }
 
-    /**
-     * Päivittää koodiston vastaamaan muokattua organisaatiota. (kts.
-     * {@link #paivitaKoodisto(fi.vm.sade.organisaatio.model.Organisaatio, boolean)}.
-     *
-     * @param entity organisaatio
-     */
     @Override
-    @Async
-    public void paivitaKoodistoAsync(Organisaatio entity) {
-        String virheviesti = paivitaKoodisto(entity);
-        if (virheviesti != null) {
-            LOG.error("Organisaation päivittäminen koodistoon epäonnistui: {}", virheviesti);
-        }
+    @Transactional(readOnly = true)
+    public void paivitaKoodisto(String oid) {
+        paivitaKoodisto(dao.findByOid(oid));
     }
 
     /**
@@ -285,13 +292,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      *
      * @param entity Organisaatio
      *
-     * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
+     * @throws RuntimeException jos koodiston päivityksessä tapahtuu virhe
      */
     @Override
-    public synchronized String paivitaKoodisto(Organisaatio entity) {
+    public synchronized void paivitaKoodisto(Organisaatio entity) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
-            return null;
+            return;
         }
         /*
          * Koodiston koodit
@@ -318,8 +325,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 try {
                     koodi = haeKoodi(uri, tunniste);
                 } catch (OrganisaatioKoodistoException e) {
-                    LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
-                    return INFO_CODE_SAVE_FAILED;
+                    throw new RuntimeException("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui", e);
                 }
                 boolean muuttunut = false;
                 if (koodi == null) {
@@ -329,8 +335,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                         LOG.info("Koodi " + uri + "_" + tunniste + " lisättiin");
                         muuttunut = true;
                     } else {
-                        LOG.warn("Koodin " + uri + "_" + tunniste + " lisääminen epäonnistui");
-                        return INFO_CODE_SAVE_FAILED;
+                        throw new RuntimeException("Koodin " + uri + "_" + tunniste + " lisääminen epäonnistui");
                     }
                 } else {
                     // Tarkistetaan onko lakkautuspäivämäärä muuttunut
@@ -418,8 +423,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                     if (paivitaKoodi(koodi) == true) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
                     } else {
-                        LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
-                        return INFO_CODE_SAVE_FAILED;
+                        throw new RuntimeException("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
                     }
                 } else {
                     LOG.debug("Ei muutoksia");
@@ -427,7 +431,6 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
             }
         }
-        return null;
     }
 
     /**

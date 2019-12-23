@@ -16,37 +16,65 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
-public final class OrganisaatioBuilder {
+public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
 
     private final String oid;
     private final List<OrganisaatioTyyppi> tyypit = new ArrayList<>();
     private final MonikielinenTeksti nimi = new MonikielinenTeksti();
+    private final List<String> opetuskielet = new ArrayList<>();
     private java.sql.Date alkuPvm;
     private java.sql.Date lakkautusPvm;
+    private String kotipaikka;
+    private String maa;
     private Organisaatio parent;
 
     public OrganisaatioBuilder(String oid) {
         this.oid = requireNonNull(oid);
     }
 
-    public OrganisaatioBuilder tyyppi(OrganisaatioTyyppi... tyyppi) {
+    @SuppressWarnings("unchecked")
+    private T builder() {
+        return (T) this;
+    }
+
+    public T tyyppi(OrganisaatioTyyppi... tyyppi) {
         Arrays.stream(tyyppi).forEach(this.tyypit::add);
-        return this;
+        return builder();
     }
 
-    public OrganisaatioBuilder alkuPvm(LocalDate alkuPvm) {
+    public T nimi(String kieli, String arvo) {
+        this.nimi.addString(kieli, arvo);
+        return builder();
+    }
+
+    public T opetuskieli(String opetuskieli) {
+        this.opetuskielet.add(opetuskieli);
+        return builder();
+    }
+
+    public T alkuPvm(LocalDate alkuPvm) {
         this.alkuPvm = java.sql.Date.valueOf(alkuPvm);
-        return this;
+        return builder();
     }
 
-    public OrganisaatioBuilder lakkautusPvm(LocalDate lakkautusPvm) {
+    public T lakkautusPvm(LocalDate lakkautusPvm) {
         this.lakkautusPvm = java.sql.Date.valueOf(lakkautusPvm);
-        return this;
+        return builder();
     }
 
-    public OrganisaatioBuilder parent(Organisaatio parent) {
+    public T kotipaikka(String kotipaikka) {
+        this.kotipaikka = kotipaikka;
+        return builder();
+    }
+
+    public T maa(String maa) {
+        this.maa = maa;
+        return builder();
+    }
+
+    public T parent(Organisaatio parent) {
         this.parent = parent;
-        return this;
+        return builder();
     }
 
     public Organisaatio build() {
@@ -55,8 +83,11 @@ public final class OrganisaatioBuilder {
         organisaatio.setTyypit(tyypit.stream().map(OrganisaatioTyyppi::value).collect(toSet()));
         organisaatio.setNimi(nimi);
         organisaatio.setNimihaku(nimi.getValues().values().stream().collect(joining(",")));
+        organisaatio.setKielet(opetuskielet);
         organisaatio.setAlkuPvm(alkuPvm);
         organisaatio.setLakkautusPvm(lakkautusPvm);
+        organisaatio.setKotipaikka(kotipaikka);
+        organisaatio.setMaa(maa);
         if (parent != null) {
             List<OrganisaatioSuhde> parentSuhteet = new ArrayList<>();
             OrganisaatioSuhde parentSuhde = new OrganisaatioSuhde();

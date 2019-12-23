@@ -16,13 +16,13 @@ import static java.util.stream.Collectors.toList;
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override
-    public void paivitaKoodistoAsync(Organisaatio entity) {
+    public void paivitaKoodisto(String oid) {
         // nop
     }
 
     @Override
-    public String paivitaKoodisto(Organisaatio entity) {
-        return null;
+    public void paivitaKoodisto(Organisaatio entity) {
+        // nop
     }
 
     @Override

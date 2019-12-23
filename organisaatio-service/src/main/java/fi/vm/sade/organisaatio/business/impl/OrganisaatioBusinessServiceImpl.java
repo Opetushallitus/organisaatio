@@ -35,6 +35,7 @@ import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.KoodistoService;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -91,6 +92,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Autowired
     private ConversionService conversionService;
+
+    @Autowired
+    private KoodistoService koodistoService;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -374,7 +378,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // organisaation päivittäminen koodistoon tehdään taustalla
         // jotta organisaation muokkaus olisi nopeampaa
         String info = null;
-        organisaatioKoodisto.paivitaKoodistoAsync(entity);
+        koodistoService.addKoodistoSyncByOid(entity.getOid());
 
         return new OrganisaatioResult(entity, info);
     }
@@ -749,7 +753,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     childChanged = true;
                 }
                 if (childChanged) {
-                    organisaatioKoodisto.paivitaKoodistoAsync(child);
+                    koodistoService.addKoodistoSyncByOid(child.getOid());
                 }
             }
         }
@@ -917,7 +921,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
                     organisaatioDAO.update(org);
-                    organisaatioKoodisto.paivitaKoodisto(org);
+                    koodistoService.addKoodistoSyncByOid(org.getOid());
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
                     throw new AliorganisaatioModifiedException(ole);
@@ -1046,7 +1050,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Päivitetään tiedot koodistoon.
-        organisaatioKoodisto.paivitaKoodisto(organisaatio);
+        koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
     }
 
     @Override
@@ -1100,7 +1104,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             organisaatioKoodisto.lakkautaKoodi(OrganisaatioKoodisto.KoodistoUri.TOIMIPISTE.uri(), oldToimipistekoodi, previousDay.getTime());
 
             // Päivitetään uusi opetuspistekoodi koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio);
+            koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
 
             // Jos toimipisteen nimi alkaa sen parent oppilaitoksen nimellä, niin siivotaan tuo osa pois toimipisteen nimestä
             MonikielinenTeksti updatedToimipisteNimi = getUpdatedToimipisteNimi(organisaatio, newParent);
@@ -1197,7 +1201,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
 
             // Päivitetään tiedot koodistoon.
-            organisaatioKoodisto.paivitaKoodisto(organisaatio);
+            koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
         }
     }
 }
