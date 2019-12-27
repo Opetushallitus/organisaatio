@@ -2,6 +2,7 @@ import {Virheet, Yhteystiedot} from "./types";
 import {hasLength} from "./StringUtils";
 import {validoiOsoite} from "./OsoiteValidator";
 import EmailValidator from 'email-validator';
+import * as PuhelinnumeroValidator from './PuhelinnumeroValidator';
 
 type YhteystiedotKentta = keyof Yhteystiedot;
 type Osoitetyyppi = Extract<YhteystiedotKentta, 'postiosoite' | 'kayntiosoite'>;
@@ -15,6 +16,9 @@ export function validoiYhteystiedot(yhteystiedot: Yhteystiedot) {
         } else {
             if (kentta === 'sahkoposti' && !EmailValidator.validate(arvo as string)) {
                 virheet[kentta] = 'VIRHEELLINEN_SAHKOPOSTI';
+            }
+            if (kentta === 'puhelinnumero' && !PuhelinnumeroValidator.validate(arvo as string)) {
+                virheet[kentta] = 'VIRHEELLINEN_PUHELINNUMERO';
             }
         }
     }
