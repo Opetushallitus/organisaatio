@@ -36,12 +36,12 @@ public class YtjDtoToOrganisaatioConverter implements Converter<YTJDTO, Organisa
             return null;
         }
 
-        Date alkuPvm = localDateAsStringToJavaSqlDate(source.getYritysTunnus().getAlkupvm());
-        Date lakkautusPvm = localDateAsStringToJavaSqlDate(source.getYritysTunnus().getLoppupvm());
+        Date alkuPvm = localDateAsStringToJavaSqlDate(source.getYritysTunnus().getAlkupvm()).orElse(null);
+        Date lakkautusPvm = localDateAsStringToJavaSqlDate(source.getYritysTunnus().getLoppupvm()).orElse(null);
         Date ytjPaivitysPvm = localDateToJavaSqlDate(LocalDate.now());
         String kieli = ytjKieliToOrgKieli(source.getYrityksenKieli());
         String koodistoKieli = String.format("kieli_%s#1", kieli);
-        Date nimiAlkuPvm = localDateAsStringToJavaSqlDate(source.getAloitusPvm());
+        Date nimiAlkuPvm = localDateAsStringToJavaSqlDate(source.getAloitusPvm()).orElse(alkuPvm);
 
         Organisaatio destination = new Organisaatio();
         destination.setAlkuPvm(alkuPvm);
@@ -79,10 +79,10 @@ public class YtjDtoToOrganisaatioConverter implements Converter<YTJDTO, Organisa
         return destination;
     }
 
-    private static Date localDateAsStringToJavaSqlDate(String dateAsString) {
+    private static Optional<Date> localDateAsStringToJavaSqlDate(String dateAsString) {
         return ofEmpty(dateAsString)
                 .map(date -> LocalDate.parse(date, DATE_FORMATTER))
-                .map(YtjDtoToOrganisaatioConverter::localDateToJavaSqlDate).orElse(null);
+                .map(YtjDtoToOrganisaatioConverter::localDateToJavaSqlDate);
     }
 
     private static Date localDateToJavaSqlDate(LocalDate date) {
