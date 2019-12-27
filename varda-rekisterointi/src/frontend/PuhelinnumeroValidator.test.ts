@@ -1,6 +1,7 @@
 import * as PuhelinnumeroValidator from './PuhelinnumeroValidator';
 
 it('validates puhelinnumero', () => {
+    expect(PuhelinnumeroValidator.validate('09-1234567')).toEqual(true);
     expect(PuhelinnumeroValidator.validate('0501234567')).toEqual(true);
     expect(PuhelinnumeroValidator.validate('050 123 4567')).toEqual(true);
     expect(PuhelinnumeroValidator.validate('+358501234567')).toEqual(true);
