@@ -43,6 +43,17 @@ describe('YhteystiedotValidator', () => {
         expect(virheet['sahkoposti']).toEqual('VIRHEELLINEN_SAHKOPOSTI');
     });
 
+    it('tarkistaa puhelinnumeron muodon', () => {
+        const yhteystiedot: Yhteystiedot = {
+            puhelinnumero: 'eiolekunnonpuhelinnumero',
+            sahkoposti: 'foo@bar.baa.ri',
+            postiosoite: tyhjaOsoite,
+            kayntiosoite: tyhjaOsoite
+        };
+        const virheet = validoiYhteystiedot(yhteystiedot);
+        expect(virheet['puhelinnumero']).toEqual('VIRHEELLINEN_PUHELINNUMERO');
+    })
+
     it('tarkistaa osoitteet', () => {
         const yhteystiedot: Yhteystiedot = {
             puhelinnumero: '0123456789',

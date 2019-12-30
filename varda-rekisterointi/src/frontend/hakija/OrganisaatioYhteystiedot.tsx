@@ -8,6 +8,7 @@ import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
 import ErrorPage from '../virhe/VirheSivu';
+import * as PuhelinnumeroValidator from '../PuhelinnumeroValidator';
 
 type Props = {
     readOnly?: boolean,
@@ -56,7 +57,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const postinumero = postinumeroUri.replace('posti_', '');
     const postitoimipaikka = organisaatio.yhteystiedot.postiosoite.postitoimipaikka;
 
-    const puhelinnumeroDisabled = readOnly || hasLength(initialPuhelinnumero);
+    const puhelinnumeroDisabled = readOnly || (hasLength(initialPuhelinnumero) && PuhelinnumeroValidator.validate(initialPuhelinnumero));
     const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
     const kayntiosoiteDisabled = readOnly || hasLength(initialKayntiosoite) || kayntiosoiteSamaKuinPostiosoite;
     const kayntiosoitteenPostinumeroDisabled = readOnly || hasLength(initialKayntiosoitteenPostinumeroUri) || kayntiosoiteSamaKuinPostiosoite;
