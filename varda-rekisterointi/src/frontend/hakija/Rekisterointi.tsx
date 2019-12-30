@@ -82,6 +82,9 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
                         organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
                     }
+                    if (!organisaatio.ytjNimi.nimi) {
+                        organisaatioErrors['nimi'] = i18n.translate('PAKOLLINEN_TIETO');
+                    }
                     const yhteystietoVirheet = validoiYhteystiedot(organisaatio.yhteystiedot);
                     for (let avain in yhteystietoVirheet) {
                         organisaatioErrors[`yhteystiedot.${avain}`] = i18n.translate(yhteystietoVirheet[avain]);
