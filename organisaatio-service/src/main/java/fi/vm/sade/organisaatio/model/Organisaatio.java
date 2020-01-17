@@ -9,6 +9,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -252,12 +253,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.metadata = metadata;
     }
 
-    public Set<Yhteystieto> getYhteystiedot() {
+    public @Valid Set<Yhteystieto> getYhteystiedot() {
         return Collections.unmodifiableSet(yhteystiedot);
     }
 
 
-    public void setYhteystiedot(Set<Yhteystieto> newYhteystiedot) {
+    public void setYhteystiedot(@Valid Set<Yhteystieto> newYhteystiedot) {
         yhteystiedot = newYhteystiedot;
     }
 
