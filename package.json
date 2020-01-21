@@ -26,6 +26,6 @@
     "script-loader": "^0.6.1",
     "tinymce": "4.3.8",
     "ui-select": "0.16.1",
-    "webpack": "^1.12.14"
+    "webpack": "^2.2.0"
   }
 }
