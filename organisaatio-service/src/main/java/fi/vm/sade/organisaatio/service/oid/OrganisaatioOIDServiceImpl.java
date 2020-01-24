@@ -129,7 +129,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         boolean generateNew = true;
         String newOid = null;
 
-        while(generateNew) {
+        while (generateNew) {
             newOid = OIDGenerator.generateOID(Integer.parseInt(nodeClassValue));
             if (oidAvailable(newOid, nodeClassValue)) {
                 generateNew = false;
