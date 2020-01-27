@@ -48,12 +48,15 @@ import javax.validation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 
 @Service("organisaatioYtjService")
 @Transactional(rollbackFor = Throwable.class, readOnly = true)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
+
+    private static final Pattern PUHELIN_VALIDATION = Pattern.compile(Puhelinnumero.VALIDATION_REGEXP);
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -546,10 +549,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if (puhelin == null || puhelin.length() > ValidationConstants.GENERIC_MAX) {
             return false;
         } else {
-            ytjOrg.setPuhelin(puhelin.split(",|; *")[0]);
+            ytjOrg.setPuhelin(puhelin.split(",|; *")[0]); // huh? mitä/miksi?!
         }
 
-        return true;
+        return PUHELIN_VALIDATION.matcher(ytjOrg.getPuhelin()).matches();
     }
 
     private boolean validateYtjWww(YTJDTO ytjOrg) {
