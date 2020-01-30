@@ -25,7 +25,7 @@ public class OrganisaatioServiceTest {
     @Test
     public void kuranttiNimiReturnsBlankWhenNoNameMatchingLanguage() {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
-        dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", "Finnish name missing!"));
+        dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", "Finnish and Swedish names missing!"));
         dto.ytjkieli = "fi";
         KielistettyNimi kuranttiNimi = service.kuranttiNimi(dto);
         assertEquals("", kuranttiNimi.nimi);

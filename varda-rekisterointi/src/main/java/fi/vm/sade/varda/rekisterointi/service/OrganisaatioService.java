@@ -71,7 +71,7 @@ public class OrganisaatioService {
                 .orElseThrow(() -> new IllegalStateException("Ei voimassa olevaa nimeä organisaatiolle: " + dto.ytunnus));
         String ytjKieli = ytjKieliTaiOletusKieli(dto);
         String kieli = kieliKoodiUriVersionToKoodiArvo(ytjKieli);
-        String ytjKielinen = kurantti.nimi.getOrDefault(kieli, kurantti.nimi.get(DEFAULT_KIELI_KOODI_ARVO));
+        String ytjKielinen = kurantti.nimi.getOrDefault(kieli, kurantti.nimi.getOrDefault("sv", kurantti.nimi.get(DEFAULT_KIELI_KOODI_ARVO)));
         if (ytjKielinen == null) {
             LOGGER.warn("Ei YTJ-kielen tai oletuskielen mukaista nimeä organisaatiolle: {}", dto.ytunnus);
             ytjKielinen = "";
