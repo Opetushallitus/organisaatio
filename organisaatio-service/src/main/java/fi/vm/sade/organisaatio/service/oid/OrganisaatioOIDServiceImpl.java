@@ -165,7 +165,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
                     return false;
                 }
             } catch (Exception ex) {
-                LOG.warn("Failed to find yhteystiedot by oid: " + oid, ex);
+                LOG.warn("Failed to check if yhteystiedot exists by oid: " + oid, ex);
             }
             // Yhteystietoihin liittyvistä tauluista ei löytynyt oidia
             return true;
