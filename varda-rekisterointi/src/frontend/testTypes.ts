@@ -41,6 +41,7 @@ export const dummyHakemus: Rekisterointihakemus = {
     sahkopostit: [],
     kayttaja: dummyKayttaja,
     organisaatio: dummyOrganisaatio,
+    toimintamuoto: 'päiväkoti',
     id: 0,
     vastaanotettu: '14.11.2019 10:44',
     tila: Tila.KASITTELYSSA

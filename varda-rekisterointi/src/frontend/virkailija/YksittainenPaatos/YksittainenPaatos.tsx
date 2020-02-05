@@ -29,7 +29,7 @@ export default function YksittainenPaatos({ valittu, suljeCallback }: Props) {
             <ModalBody>
                 <div className="varda-rekisterointi-hakija">
                     <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}>
-                        <OrganisaationTiedot organisaatio={valittu.organisaatio} kunnat={valittu.kunnat}/>
+                        <OrganisaationTiedot organisaatio={valittu.organisaatio} toimintamuoto={valittu.toimintamuoto } kunnat={valittu.kunnat}/>
                     </Fieldset>
                     <Fieldset title={i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}>
                         <OrgYhteystiedot yhteystiedot={valittu.organisaatio.yhteystiedot}/>

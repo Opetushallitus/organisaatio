@@ -86,6 +86,7 @@ export type Kayttaja = {
 
 // varda-rekisterointi
 export type Rekisterointi = {
+    toimintamuoto: string,
     kunnat: string[]
     id: number
     organisaatio: Organisaatio,
