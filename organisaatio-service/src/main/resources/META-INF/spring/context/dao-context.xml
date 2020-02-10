@@ -44,6 +44,7 @@
 
     <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="baselineOnMigrate" value="${flyway.initOnMigrate}"/>
+        <property name="table" value="schema_version"/><!-- default has been changed, need to specify this -->
         <property name="dataSource">
             <bean id="dbDataSource"
                   class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
