@@ -42,7 +42,7 @@
     <!-- enable spring annotation driven transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" />
 
-    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+    <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="baselineOnMigrate" value="${flyway.initOnMigrate}"/>
         <property name="dataSource">
             <bean id="dbDataSource"
@@ -51,6 +51,10 @@
             </bean>
         </property>
         <property name="outOfOrder" value="true" />
+    </bean>
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg ref="flywayConfig" />
     </bean>
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">

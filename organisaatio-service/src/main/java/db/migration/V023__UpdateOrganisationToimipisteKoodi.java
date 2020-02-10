@@ -14,19 +14,18 @@
  */
 package db.migration;
 
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
+import org.flywaydb.core.api.migration.BaseJavaMigration;
+import org.flywaydb.core.api.migration.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 /**
  * OVT-4954 "Natural key"
@@ -52,46 +51,45 @@ import org.springframework.jdbc.core.RowMapper;
  *
  * @author mlyly
  */
-public class V023__UpdateOrganisationToimipisteKoodi implements SpringJdbcMigration {
+public class V023__UpdateOrganisationToimipisteKoodi extends BaseJavaMigration {
 
     private static final Logger LOG = LoggerFactory.getLogger(V023__UpdateOrganisationToimipisteKoodi.class);
     private Map<String, Map<String, Object>> _organisations = new HashMap<String, Map<String, Object>>();
     private int _numUpdated = 0;
 
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
+    @Override
+    public void migrate(Context context) throws Exception {
         LOG.info("migrate()...");
-
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(
+                new SingleConnectionDataSource(context.getConnection(), true));
         // Get all organisations
-        List<Map> resultSet = jdbcTemplate.query("SELECT * FROM organisaatio o", new RowMapper<Map>() {
-            @Override
-            public Map mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Map r = new HashMap<String, Object>();
+        List<Map<String, Object>> resultSet = jdbcTemplate.query("SELECT * FROM organisaatio o", (rs, rowNum) -> {
+            Map<String, Object> r = new HashMap<>();
 
-                ResultSetMetaData metadata = rs.getMetaData();
-                for (int i = 1; i <= metadata.getColumnCount(); i++) {
-                    String cname = metadata.getColumnName(i);
-                    int ctype = metadata.getColumnType(i);
+            ResultSetMetaData metadata = rs.getMetaData();
+            for (int i = 1; i <= metadata.getColumnCount(); i++) {
+                String cname = metadata.getColumnName(i);
+                int ctype = metadata.getColumnType(i);
 
-                    switch (ctype) {
-                        case Types.VARCHAR:
-                            r.put(cname, rs.getString(cname));
-                            break;
+                switch (ctype) {
+                    case Types.VARCHAR:
+                        r.put(cname, rs.getString(cname));
+                        break;
 
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
-
-                LOG.debug("  read from db : org = {}", r);
-
-                _organisations.put((String) r.get("oid"), r);
-                return r;
             }
+
+            LOG.debug("  read from db : org = {}", r);
+
+            _organisations.put((String) r.get("oid"), r);
+            return r;
         });
 
         // Generate and update initial values for toimipistekoodis
-        for (Map org : resultSet) {
-            if (isToimipiste(org, jdbcTemplate)) {
+        for (Map<String, Object> org : resultSet) {
+            if (isToimipiste(org)) {
                 String tpKoodi = calculateToimipisteKoodi(org, jdbcTemplate);
                 updateToimipisteKoodi(org, tpKoodi, jdbcTemplate);
             }
@@ -102,21 +100,21 @@ public class V023__UpdateOrganisationToimipisteKoodi implements SpringJdbcMigrat
         LOG.info("migrate()... done.");
     }
 
-    private boolean isToimipiste(Map org, JdbcTemplate jdbcTemplate) {
+    private boolean isToimipiste(Map<String, Object> org) {
         String organisaatiotyypitstr = (String) org.get("organisaatiotyypitstr");
         return organisaatiotyypitstr != null && organisaatiotyypitstr.contains("Opetuspiste");
     }
 
-    private boolean isOppilaitos(Map org) {
+    private boolean isOppilaitos(Map<String, Object> org) {
         String organisaatiotyypitstr = (String) org.get("organisaatiotyypitstr");
         return organisaatiotyypitstr != null && organisaatiotyypitstr.contains("Oppilaitos");
     }
 
-    private String calculateToimipisteKoodi(Map org, JdbcTemplate jdbcTemplate) {
+    private String calculateToimipisteKoodi(Map<String, Object> org, JdbcTemplate jdbcTemplate) {
         String result = null;
 
         // Find parent who is Oppilaitos
-        String oppilaitoskoodi = findParentOppilaitoskoodi(org, jdbcTemplate);
+        String oppilaitoskoodi = findParentOppilaitoskoodi(org);
         if (oppilaitoskoodi != null) {
             String jarjestysnumero = (String) org.get("opetuspisteenjarjnro");
             if (jarjestysnumero == null) {
@@ -132,7 +130,7 @@ public class V023__UpdateOrganisationToimipisteKoodi implements SpringJdbcMigrat
         return result;
     }
 
-    private void updateToimipisteKoodi(Map org, String tpKoodi, JdbcTemplate jdbcTemplate) {
+    private void updateToimipisteKoodi(Map<String, Object> org, String tpKoodi, JdbcTemplate jdbcTemplate) {
         String oid = (String) org.get("oid");
         int result = jdbcTemplate.update("UPDATE organisaatio SET toimipisteKoodi = ? WHERE oid = ?", tpKoodi, oid);
 
@@ -145,7 +143,7 @@ public class V023__UpdateOrganisationToimipisteKoodi implements SpringJdbcMigrat
         }
     }
 
-    private String findParentOppilaitoskoodi(Map org, JdbcTemplate jdbcTemplate) {
+    private String findParentOppilaitoskoodi(Map<String, Object> org) {
 
         String parentOidPath = (String) org.get("parentoidpath");
         if (parentOidPath == null) {
@@ -168,6 +166,7 @@ public class V023__UpdateOrganisationToimipisteKoodi implements SpringJdbcMigrat
 
         LOG.error("  Opetuspiste does not have Oppilaitos parent? org= ", org);
 
-        return (String) null;
+        return null;
     }
+
 }
