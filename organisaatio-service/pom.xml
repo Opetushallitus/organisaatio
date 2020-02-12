@@ -738,8 +738,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-            <!-- ei käytännössä kuitenkaan ollut pelkällä test-scopella, koska ei käänny ilman (tullut api-moduulin xml-riippuvuuden kautta)-->
-            <!--<scope>${slf4j-api.scope}</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
