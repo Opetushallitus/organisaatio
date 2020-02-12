@@ -68,54 +68,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.github.divinespear</groupId>
-                <artifactId>jpa-schema-maven-plugin</artifactId>
-                <version>0.2.0</version>
-                <configuration>
-                    <scriptAction>create</scriptAction>
-                    <createOutputFileName>schema.ddl</createOutputFileName>
-                    <databaseProductName>PostgreSQL</databaseProductName>
-
-                    <databaseMajorVersion>9</databaseMajorVersion>
-                    <databaseMinorVersion>3</databaseMinorVersion>
-                    <format>true</format>
-                    <lineSeparator>LF</lineSeparator>
-                    <packageToScan>
-                        <scan>fi.vm.sade.organisaatio.model</scan>
-                    </packageToScan>
-                    <vendor>hibernate</vendor>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.eclipse.persistence</groupId>
-                        <artifactId>org.eclipse.persistence.jpa</artifactId>
-                        <version>2.6.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-entitymanager</artifactId>
-                        <version>5.0.7.Final</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>io.github.divinespear</groupId>
-            <artifactId>jpa-schema-maven-plugin</artifactId>
-            <version>0.2.0</version>
-        </dependency>
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-distributed-ehcache</artifactId>
@@ -209,7 +165,6 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
@@ -619,14 +574,6 @@
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
             <version>1.11-8</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- satunnainen bugi ilmenee jaxb 2.2.4:lla: http://java.net/projects/jaxb/lists/users/archive/2011-09/message/3 -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <!--<version>2.2.4-1</version>-->
-            <version>2.2.3</version>
             <scope>test</scope>
         </dependency>
 
