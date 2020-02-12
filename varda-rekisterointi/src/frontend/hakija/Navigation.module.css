@@ -43,3 +43,7 @@
 .nav div.line.previous {
     border-top: 2px solid #159ecb;
 }
+
+.ariaLabel {
+    display: none;
+}

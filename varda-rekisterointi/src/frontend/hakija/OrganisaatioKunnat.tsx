@@ -5,6 +5,7 @@ import KoodiMultiSelect from '../KoodiMultiSelect';
 import { Koodi } from '../types';
 
 type Props = {
+    id?: string,
     readOnly?: boolean,
     kaikkiKunnat: Koodi[],
     kunnat: string[],
@@ -19,8 +20,12 @@ export default function OrganisaatioKunnat({readOnly, kaikkiKunnat, kunnat, setK
         <>
             <FormFieldContainer readOnly={readOnly}
                                 errorText={errors.kunnat}
-                                label={i18n.translate('ORGANISAATION_KUNNAT')}>
-                <KoodiMultiSelect selectable={kaikkiKunnat}
+                                label={i18n.translate('ORGANISAATION_KUNNAT')}
+                                labelBy="organisaation-kunnat"
+            >
+
+                <KoodiMultiSelect labelledBy="organisaation-kunnat"
+                                  selectable={kaikkiKunnat}
                                   selected={kunnat}
                                   disabled={readOnly}
                                   onChange={setKunnat} />

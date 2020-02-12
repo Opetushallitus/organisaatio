@@ -87,10 +87,10 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('PUHELINNUMERO')} labelFor="puhelinnumero" errorText={errors['yhteystiedot.puhelinnumero']}>
+            <FormFieldContainer label={i18n.translate('PUHELINNUMERO')} labelFor="organisaation-puhelinnumero" errorText={errors['yhteystiedot.puhelinnumero']}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.puhelinnumero'] })}
                        type="text"
-                       id="puhelinnumero"
+                       id="organisaation-puhelinnumero"
                        value={puhelinnumero}
                        disabled={puhelinnumeroDisabled}
                        onChange={event => setOrganisaatio({ yhteystiedot:  { ...organisaatio.yhteystiedot, ...{ puhelinnumero: event.currentTarget.value }}})} />
@@ -103,18 +103,18 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        disabled={sahkopostiDisabled}
                        onChange={event => setOrganisaatio({ yhteystiedot: { ...organisaatio.yhteystiedot, ...{ sahkoposti: event.currentTarget.value }}})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('POSTIOSOITE')} labelFor="postiosoite" errorText={errors['yhteystiedot.postiosoite.katuosoite']}>
+            <FormFieldContainer label={i18n.translate('POSTIOSOITE')} labelFor="organisaation-postiosoite" errorText={errors['yhteystiedot.postiosoite.katuosoite']}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.postiosoite.katuosoite'] })}
                        type="text"
-                       id="postiosoite"
+                       id="organisaation-postiosoite"
                        value={postiosoite}
                        disabled={postiosoiteDisabled}
                        onChange={event => handleOsoiteMuutos('postiosoite', { katuosoite: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="postinumero" errorText={errors['yhteystiedot.postiosoite.postinumeroUri']}>
+            <FormFieldContainer label={i18n.translate('POSTINUMERO')} labelFor="organisaation-postinumero" errorText={errors['yhteystiedot.postiosoite.postinumeroUri']}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.postiosoite.postinumeroUri'] })}
                        type="text"
-                       id="postinumero"
+                       id="organisaation-postinumero"
                        value={postinumero}
                        disabled={postinumeroDisabled}
                        onChange={event => handleOsoiteMuutos('postiosoite', {
@@ -127,11 +127,11 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                     {postitoimipaikka}
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="kayntiosoite" errorText={errors['yhteystiedot.kayntiosoite.katuosoite']}>
+            <FormFieldContainer label={i18n.translate('KAYNTIOSOITE')} labelFor="organisaation-kayntiosoite" errorText={errors['yhteystiedot.kayntiosoite.katuosoite']}>
                 <div className="oph-input-container">
                     <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.kayntiosoite.katuosoite'] })}
                            type="text"
-                           id="kayntiosoite"
+                           id="organisaation-kayntiosoite"
                            value={kayntiosoite}
                            disabled={kayntiosoiteDisabled}
                            onChange={event => handleOsoiteMuutos('kayntiosoite', { katuosoite: event.currentTarget.value })} />

@@ -35,42 +35,43 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('VARHAISKASVATUSTOIMIJA')}>
+            <FormFieldContainer labelFor="varhaiskasvatustoimijan-toimintamuoto" label={i18n.translate('VARHAISKASVATUSTOIMIJA')}>
                 <div className="oph-input-container">
-                    <KoodiSelectRadio selectable={toimintamuodot}
+                    <KoodiSelectRadio id="varhaiskasvatustoimijan-toimintamuoto"
+                                      selectable={toimintamuodot}
                                       selected={toimintamuoto}
                                       readOnly={readOnly}
                                       disabled={readOnly}
                                       onChange={setToimintamuoto} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ETUNIMI')} labelFor="etunimi" errorText={errors.etunimi}>
+            <FormFieldContainer label={i18n.translate('ETUNIMI')} labelFor="paakayttajan-etunimi" errorText={errors.etunimi}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.etunimi })}
                        type="text"
-                       id="etunimi"
+                       id="paakayttajan-etunimi"
                        value={kayttaja.etunimi}
                        disabled={readOnly}
                        onChange={event => setKayttaja({ etunimi: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SUKUNIMI')} labelFor="sukunimi" errorText={errors.sukunimi}>
+            <FormFieldContainer label={i18n.translate('SUKUNIMI')} labelFor="paakayttajan-sukunimi" errorText={errors.sukunimi}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.sukunimi })}
                        type="text"
-                       id="sukunimi"
+                       id="paakayttajan-sukunimi"
                        value={kayttaja.sukunimi}
                        disabled={readOnly}
                        onChange={event => setKayttaja({ sukunimi: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SAHKOPOSTI')} labelFor="sahkoposti" errorText={errors.sahkoposti}>
+            <FormFieldContainer label={i18n.translate('SAHKOPOSTI')} labelFor="paakayttajan-sahkoposti" errorText={errors.sahkoposti}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.sahkoposti })}
                        type="text"
-                       id="sahkoposti"
+                       id="paakayttajan-sahkoposti"
                        value={kayttaja.sahkoposti}
                        disabled={readOnly}
                        onChange={event => setKayttaja({ sahkoposti: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ASIOINTIKIELI')} labelFor="asiointikieli" errorText={errors.asiointikieli}>
+            <FormFieldContainer label={i18n.translate('ASIOINTIKIELI')} labelFor="paakayttajan-asiointikieli" errorText={errors.asiointikieli}>
                 <div className="oph-input-container">
-                    <Select id="asiointikieli"
+                    <Select id="paakayttajan-asiointikieli"
                             selectable={asiointikielet}
                             selected={kayttaja.asiointikieli}
                             disabled={readOnly}
@@ -78,9 +79,9 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                             onChange={asiointikieli => setKayttaja({ asiointikieli: asiointikieli })} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SAATETEKSTI')} labelFor="saateteksti" errorText={errors.saateteksti}>
+            <FormFieldContainer label={i18n.translate('SAATETEKSTI')} labelFor="paakayttajan-saateteksti" errorText={errors.saateteksti}>
                 <textarea className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.saateteksti })}
-                          id="saateteksti"
+                          id="paakayttajan-saateteksti"
                           value={kayttaja.saateteksti}
                           disabled={readOnly}
                           onChange={event => setKayttaja({ saateteksti: event.currentTarget.value })}></textarea>

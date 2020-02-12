@@ -7,6 +7,7 @@ import { LanguageContext } from './contexts';
 import classNames from 'classnames/bind';
 
 type Props = {
+    id?: string,
     value: LocalDate | null,
     disabled?: boolean,
     hasError?: boolean,
@@ -23,10 +24,13 @@ export default function DateSelect(props: Props) {
         'oph-input': true,
         'oph-input-has-error': props.hasError,
     })
-    return <DatePicker className={classes}
+    return <DatePicker id={props.id}
+                       className={classes}
                        locale={language}
                        dateFormat={UI_FORMAT}
                        selected={value}
                        disabled={props.disabled}
-                       onChange={date => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)} />
+                       onChange={date => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)}
+                       customInput={<input aria-describedby="datepickerohje" />}
+        />;
 }
