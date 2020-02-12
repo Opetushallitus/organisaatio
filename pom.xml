@@ -48,7 +48,7 @@
         <frontend-plugin.version>1.5</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>3.2.4</cxf.version>
+        <cxf.version>3.3.5</cxf.version>
         <wss4j.version>1.6.4</wss4j.version>
         <spring.version>4.3.26.RELEASE</spring.version>
         <spring.security.version>4.2.14.RELEASE</spring.security.version>
