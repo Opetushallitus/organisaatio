@@ -55,25 +55,26 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} errorText={errors.nimi}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} labelFor="organisaationnimi" errorText={errors.nimi}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.nimi })}
                        type="text"
-                       id="nimi"
+                       id="organisaationnimi"
                        value={organisaatio.ytjNimi.nimi}
                        disabled={nimiDisabled}
                        onChange={event => setOrganisaatio({ ytjNimi: { nimi: event.currentTarget.value, alkuPvm: organisaatio.alkuPvm, kieli: organisaatio.ytjNimi.kieli }})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="ytunnus" errorText={errors.ytunnus}>
+            <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="organisaationytunnus" errorText={errors.ytunnus}>
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.ytunnus })}
                        type="text"
-                       id="ytunnus"
+                       id="organisaationytunnus"
                        value={organisaatio.ytunnus}
                        disabled={ytunnusDisabled}
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto}>
                 <div className="oph-input-container">
-                    <KoodiSelect selectable={yritysmuodot}
+                    <KoodiSelect id="yritysmuoto"
+                                 selectable={yritysmuodot}
                                  selected={yritysmuotoDisabled && yritysmuotoKoodi ? yritysmuotoKoodi.uri : organisaatio.yritysmuoto}
                                  disabled={yritysmuotoDisabled}
                                  required={!yritysmuotoDisabled}
@@ -86,18 +87,27 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
             <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')}>
                 <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} errorText={errors.kotipaikkaUri}>
+            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} labelFor="organisaationkotipaikka" errorText={errors.kotipaikkaUri}>
                 <div className="oph-input-container">
-                    <KoodiSelect selectable={kaikkiKunnat} selected={organisaatio.kotipaikkaUri}
-                                disabled={kotipaikkaDisabled}
-                                required={!kotipaikkaDisabled}
-                                hasError={!!errors.kotipaikkaUri}
-                                onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
+                    <KoodiSelect id="organisaationkotipaikka"
+                                 selectable={kaikkiKunnat}
+                                 selected={organisaatio.kotipaikkaUri}
+                                 disabled={kotipaikkaDisabled}
+                                 required={!kotipaikkaDisabled}
+                                 hasError={!!errors.kotipaikkaUri}
+                                 onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('TOIMINNAN_ALKAMISAIKA')} errorText={errors.alkuPvm}>
+            <FormFieldContainer
+                label={i18n.translate('TOIMINNAN_ALKAMISAIKA')}
+                labelFor="organisaationalkuPvm"
+                errorText={errors.alkuPvm}
+                ariaLisatietoId="datepickerohje"
+                ariaLisatietoLokalisaatio={i18n.translate('RUUDUNLUKIJA_DATEPICKER_OHJE')}
+            >
                 <div className="oph-input-container">
-                    <DateSelect value={organisaatio.alkuPvm}
+                    <DateSelect id="organisaationalkuPvm"
+                                value={organisaatio.alkuPvm}
                                 disabled={alkuPvmDisabled}
                                 hasError={!!errors.alkuPvm}
                                 onChange={alkuPvm => setOrganisaatio({ alkuPvm: alkuPvm, ytjNimi: { alkuPvm: alkuPvm, nimi: organisaatio.ytjNimi.nimi, kieli: organisaatio.ytjNimi.kieli }})} />

@@ -19,8 +19,10 @@ export default function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.title}>{i18n.translate('OTSIKKO')}</div>
-            <div className={styles.language}>{i18n.translate('SISALLON_KIELI')}:
-                <select className={styles.select}
+            <div className={styles.language}>
+                <label htmlFor="kielivalikko">{i18n.translate('SISALLON_KIELI')}</label>:
+                <select id="kielivalikko"
+                        className={styles.select}
                         defaultValue={language}
                         onChange={event => onChange(event.currentTarget.value as Language)}>
                     {asiointikielet.map(asiointikieli => <option value={asiointikieli.value} key={asiointikieli.value}>{toLocalizedText(asiointikieli.label, language)}</option>)}

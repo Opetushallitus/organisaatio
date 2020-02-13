@@ -7,7 +7,7 @@ import Select from 'react-select';
 import { OptionTypeBase } from 'react-select/src/types';
 
 type Props = {
-    id?: string,
+    labelledBy?: string,
     selectable: Koodi[],
     selected?: string[],
     disabled?: boolean,
@@ -32,7 +32,7 @@ export default function KoodiMultiSelect(props: Props) {
     return (
         <div className="oph-input-container">
             <Select
-                id={props.id}
+                aria-labelledby={props.labelledBy}
                 className={classes}
                 placeholder=""
                 defaultValue={defaultValue}

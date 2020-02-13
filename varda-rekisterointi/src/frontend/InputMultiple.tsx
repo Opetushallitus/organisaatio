@@ -7,6 +7,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 
 type Props = {
+    id?: string,
     values: string[],
     disabled?: boolean,
     hasError?: boolean,
@@ -33,13 +34,15 @@ export default function InputMultiple(props: Props) {
     return (
         <div>{props.values.map((value, index) => {
             return <div key={index} className={styles.inputContainer}>
-                <input className={classes}
+                <input aria-labelledby={props.id}
+                       className={classes}
                        type="text"
                        value={value}
                        disabled={props.disabled}
                        onChange={event => props.onChange(edit(event.currentTarget.value, index))} />
                 {props.disabled ? null :
-                <button className={classNames("oph-button oph-button-close", styles.removeButton)}
+                <button aria-label={i18n.translate('POISTA_SAHKOPOSTI')}
+                        className={classNames("oph-button oph-button-close", styles.removeButton)}
                         type="button"
                         disabled={props.disabled}
                         onClick={() => props.onChange(remove(index))}>
@@ -49,7 +52,8 @@ export default function InputMultiple(props: Props) {
             </div>
         })}
         {props.disabled ? null :
-        <Button type="button"
+        <Button
+                type="button"
                 disabled={props.disabled}
                 styling="ghost"
                 onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>

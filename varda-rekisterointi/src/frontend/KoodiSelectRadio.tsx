@@ -4,6 +4,7 @@ import { toLocalizedText } from './LocalizableTextUtils';
 import { LanguageContext } from './contexts';
 
 type Props = {
+    id?: string,
     readOnly?: boolean,
     selectable: Koodi[],
     selected?: string,
@@ -18,11 +19,13 @@ export default function KoodiSelectRadio(props: Props) {
         return <div>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
     }
     return (
-        <div>
+        <div role="radiogroup"
+             id={props.id}>
             {props.selectable.map(koodi => {
                 return (
-                    <label className="oph-checkable" key={koodi.uri}>
-                        <input className="oph-checkable-input"
+                    <label className="oph-checkable" htmlFor={koodi.uri} key={koodi.uri}>
+                        <input id={koodi.uri}
+                               className="oph-checkable-input"
                                type="radio"
                                value={koodi.uri}
                                checked={koodi.uri === props.selected}
