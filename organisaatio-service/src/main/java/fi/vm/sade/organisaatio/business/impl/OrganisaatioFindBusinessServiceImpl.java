@@ -202,7 +202,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkNotNull(oids);
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
-        return organisaatioDAO.findByOids(oids, true).stream()
+        boolean excludePiilotettu = !permissionChecker.isReadAccessToAll();
+        return organisaatioDAO.findByOids(oids, true, excludePiilotettu).stream()
                 .map(this::markImagesNotIncluded)
                 .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
