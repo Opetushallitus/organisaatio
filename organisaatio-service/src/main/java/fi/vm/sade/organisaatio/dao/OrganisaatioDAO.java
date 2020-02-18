@@ -157,13 +157,26 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
     /**
-     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Hibernaten odotetaan lataavan laiskasti batcheissa
-     * puuttuvat tiedot.
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Ei palauta piilotettuja organisaatioita.
+     * Hibernaten odotetaan lataavan laiskasti batcheissa puuttuvat tiedot.
      * @param oids Organisaatioiden oidit
      * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
      * @return Oideja vastaavat organisaatiot
+     * @see #findByOids(Collection, boolean, boolean) 
      */
     List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
+
+    /**
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. <b>Huom!</b> oikeus nähdä piilotetut
+     * organisaatiot tarkistettava, jos piilotetut sisällytetään tuloksiin - tämä on <i>kutsujan vastuulla</i>.
+     * 
+     * @param oids organisatioiden OID:t
+     * @param excludePoistettu jätetäänkö poistetut pois tuloksista
+     * @param excludePiilotettu jätetäänkö piilotetut pois tuloksista
+     * @return OID:ja vastaavat organisaatiot
+     * @see #findByOids(Collection, boolean)
+     */
+    List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu);
 
     /***
      * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot

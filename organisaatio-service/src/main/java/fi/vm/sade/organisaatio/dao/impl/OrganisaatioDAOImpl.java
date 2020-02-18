@@ -440,6 +440,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
     @Override
     public List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu) {
+        return findByOids(oids, excludePoistettu, true);
+    }
+
+    @Override
+    public List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu) {
         LOG.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
         QOrganisaatioMetaData metaData = QOrganisaatioMetaData.organisaatioMetaData;
@@ -468,10 +473,12 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .leftJoin(metaData.hakutoimistoEctsPuhelinmkt, hakutoimistoEctsPuhelinmkt).fetchJoin()
                 .leftJoin(metaData.hakutoimistoNimi, hakutoimistoNimi).fetchJoin()
                 .leftJoin(org.varhaiskasvatuksenToimipaikkaTiedot, qVarhaiskasvatuksenToimipaikkaTiedot).fetchJoin()
-                .where(org.oid.in(oids))
-                .where(org.piilotettu.isFalse());
+                .where(org.oid.in(oids));
         if (excludePoistettu) {
             jpaQuery.where(org.organisaatioPoistettu.isFalse());
+        }
+        if (excludePiilotettu) {
+            jpaQuery.where(org.piilotettu.isFalse());
         }
         return jpaQuery.fetch();
     }
