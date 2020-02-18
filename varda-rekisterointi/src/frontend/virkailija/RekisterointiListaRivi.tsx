@@ -71,7 +71,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
         }
             <td className={styles.nimi}>{rekisterointi.organisaatio}</td>
             <td className={styles.kapea}>{rekisterointi.puhelinnumero}</td>
-            <td className={styles.kapea}>{rekisterointi.ytunnus}</td>
+            <td className={styles.ytunnus}>{rekisterointi.ytunnus}</td>
             <td className={styles.kunnat}>{koodit2kunnat(rekisterointi.kunnat)}</td>
             <td className={styles.aikaleima}>{rekisterointi.vastaanotettu}</td>
             <td className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
