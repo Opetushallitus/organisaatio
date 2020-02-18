@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
 import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
 import {LanguageContext} from "../contexts";
+import styles from "./RekisterointiLista.module.css";
 
 type Props = {
     valintaKaytossa: boolean
@@ -22,7 +23,8 @@ export default function RekisterointiListaOtsikko({ valintaKaytossa, kaikkiValit
                 <th>{i18n.translate("PUHELINNUMERO")}</th>
                 <th>{i18n.translate("YTUNNUS")}</th>
                 <th>{i18n.translate("KASITTELEVAT_KUNNAT")}</th>
-                <th>{i18n.translate("SAAPUMISAIKA")}</th>
+                <th className={styles.aikaleima}>{i18n.translate("SAAPUMISAIKA")}</th>
+                <th className={styles.rivinInfoNappi}></th>
             </tr>
         </thead>
     )

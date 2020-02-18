@@ -67,17 +67,15 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
         <tr>
         {
             valintaKaytossa &&
-            <td><Checkbox checked={valittu} onChange={_ => valitse()} /></td>
+            <td className={styles.kapea}><Checkbox checked={valittu} onChange={_ => valitse()} /></td>
         }
-            <td>{rekisterointi.organisaatio}</td>
-            <td>{rekisterointi.puhelinnumero}</td>
-            <td>{rekisterointi.ytunnus}</td>
-            <td>{koodit2kunnat(rekisterointi.kunnat)}</td>
-            <td className={styles.nowrap}>
-                {rekisterointi.vastaanotettu}
-                <span className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
-                    <InfoOutlinedIcon style={{ position: 'absolute', margin: '.5rem 0 0 3rem', color: "#159ecb"}}/>
-                </span>
+            <td className={styles.nimi}>{rekisterointi.organisaatio}</td>
+            <td className={styles.kapea}>{rekisterointi.puhelinnumero}</td>
+            <td className={styles.kapea}>{rekisterointi.ytunnus}</td>
+            <td className={styles.kunnat}>{koodit2kunnat(rekisterointi.kunnat)}</td>
+            <td className={styles.aikaleima}>{rekisterointi.vastaanotettu}</td>
+            <td className={styles.rivinInfoNappi} onClick={_ => valitseInfoCallback(rekisterointi.hakemus)}>
+                <InfoOutlinedIcon style={{ color: "#159ecb"}}/>
             </td>
         </tr>
     )
