@@ -7,6 +7,8 @@ import fi.vm.sade.varda.rekisterointi.client.ViestintaClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import static java.util.stream.Collectors.*;
 public class EmailService {
 
     public static final List<Locale> LOCALES = List.of(new Locale("fi"), new Locale("sv"));
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String SUBJECT_DELIMITER = " / ";
 
     private final RekisterointiRepository rekisterointiRepository;
@@ -32,10 +35,11 @@ public class EmailService {
     private final OrganisaatioClient organisaatioClient;
 
     public void lahetaRekisterointiEmail(long id) {
-        rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
+        rekisterointiRepository.findById(id).ifPresentOrElse(rekisterointi -> {
             lahetaRekisterointiEmail(rekisterointi);
             lahetaRekisterointiEmail(rekisterointi.kayttaja);
-        });
+        }, () -> LOGGER.warn(
+                "Rekisteröinti-ilmoituksen lähetys epäonnistui, rekisteröintiä ei löydy tunnisteella: {}", id));
     }
 
     private void lahetaRekisterointiEmail(Rekisterointi rekisterointi) {
@@ -43,6 +47,8 @@ public class EmailService {
                 .emails(rekisterointi.sahkopostit)
                 .message(luoViesti(rekisterointi))
                 .build();
+        LOGGER.info("Lähetetään ilmoitus rekisteröinnistä osoitteisiin: {}",
+                String.join(", ", rekisterointi.sahkopostit));
         viestintaClient.save(email, false);
     }
 
@@ -68,6 +74,7 @@ public class EmailService {
                         .html(true)
                         .build())
                 .build();
+        LOGGER.info("Lähetetään ilmoitus rekisteröinnistä pääkäyttäjälle: {}", kayttaja.sahkoposti);
         viestintaClient.save(email, false);
     }
 
@@ -78,6 +85,8 @@ public class EmailService {
                     .emails(rekisterointi.sahkopostit)
                     .message(luoViesti(rekisterointi.paatos, organisaatioNimi))
                     .build();
+            LOGGER.info("Lähetetään ilmoitus rekisteröinnin {} päätöksestä osoitteisiin: {}",
+                    id, String.join(", ", rekisterointi.sahkopostit));
             viestintaClient.save(email, false);
         });
     }
@@ -145,6 +154,7 @@ public class EmailService {
                         .html(true)
                         .build())
                 .build();
+        LOGGER.info("Lähetetään ilmoitus rekisteröitymisestä virkailijalle: {}", virkailija.sahkoposti);
         viestintaClient.save(email, false);
     }
 
