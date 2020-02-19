@@ -28,8 +28,10 @@ public class VardaOrganisaatioFinalizer {
         Organisaatio organisaatio = rekisterointi.organisaatio;
         String oid = organisaatio.oid;
         if (oid != null) {
+            LOGGER.info("Päivitetään organisaatiota: {}", oid);
             paivitaVardaTiedot(oid);
         } else {
+            LOGGER.info("Luodaan organisaatio nimellä: {}", organisaatio.ytjNimi.nimi);
             oid = luoOrganisaatio(organisaatio);
         }
         return oid;
