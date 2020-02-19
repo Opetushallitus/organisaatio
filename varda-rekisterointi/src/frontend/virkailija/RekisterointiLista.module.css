@@ -2,13 +2,19 @@ table.vardaRekisterointiLista {
     width: 100%;
     border-spacing: 0;
     text-align: left;
-    line-height: 2.5em;
+    line-height: 1.5em;
     margin-bottom: 2em;
 }
 
 table.vardaRekisterointiLista thead tr th {
     border-bottom-style: solid;
     border-bottom-width: 1px;
+    padding: 0.3em;
+    white-space: nowrap;
+}
+
+table.vardaRekisterointiLista thead tr th.aikaleima {
+    text-align: right;
 }
 
 table.vardaRekisterointiLista tbody tr:nth-child(odd) {
