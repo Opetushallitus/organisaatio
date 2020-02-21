@@ -465,7 +465,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
@@ -498,7 +499,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         Preconditions.checkNotNull(lastModifiedSince);
         LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         List<String> oids = new ArrayList<>();
         for (Organisaatio org : organisaatiot) {

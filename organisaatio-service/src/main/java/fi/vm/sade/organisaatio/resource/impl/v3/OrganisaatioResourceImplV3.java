@@ -237,7 +237,8 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
