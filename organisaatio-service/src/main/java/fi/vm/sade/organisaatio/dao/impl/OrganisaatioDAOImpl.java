@@ -58,6 +58,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -342,7 +343,18 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public List<Organisaatio> findModifiedSince(boolean excludePiilotettu, Date lastModifiedSince) {
+    public List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince) {
+        return findModifiedSince(excludePiilotettu, lastModifiedSince, Collections.emptyList(), true);
+    }
+
+    @Override
+    public List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued) {
         LOG.debug("findModifiedSince({})", lastModifiedSince);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
@@ -350,6 +362,19 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
         if (excludePiilotettu) {
             whereExpression = whereExpression.and(qOrganisaatio.piilotettu.eq(false));
+        }
+        if (organizationTypes != null && !organizationTypes.isEmpty()) {
+            String[] types = organizationTypes.stream()
+                    .map(OrganisaatioTyyppi::koodiValue)
+                    .collect(Collectors.toList())
+                    .toArray(new String[0]);
+            whereExpression = whereExpression.and(
+                    qOrganisaatio.tyypit.any().in(types));
+        }
+        if (excludeDiscontinued) {
+            Date now = new Date();
+            whereExpression = whereExpression.and(
+                    qOrganisaatio.lakkautusPvm.isNull().or(qOrganisaatio.lakkautusPvm.after(now)));
         }
 
         return new JPAQuery<>(getEntityManager())

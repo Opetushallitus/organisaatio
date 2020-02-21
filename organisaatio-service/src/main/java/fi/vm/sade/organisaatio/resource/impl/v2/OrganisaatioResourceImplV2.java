@@ -500,7 +500,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
 
         List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
+                !permissionChecker.isReadAccessToAll(),
+                lastModifiedSince.getValue());
 
         List<String> oids = new ArrayList<>();
         for (Organisaatio org : organisaatiot) {

@@ -122,7 +122,13 @@ public interface OrganisaatioFindBusinessService {
      * Hakee muuttuneet organisaatiot
      * @param lastModifiedSince Päivämäärä jonka jälkeen muuttuneita haetaan
      * @param includeImage Haetaanko kuvat
+     * @param organizationTypes Halutut organisaatiotyypit (tyhjä/null ei rajaa tyypillä)
+     * @param excludeDiscontinued Rajataanko lakkautetut pois tuloksista
      * @return Muuttuneet organisaatiot muodossa OrganisaatioRDTOV4
      */
-    List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage);
+    List<OrganisaatioRDTOV4> haeMuutetut(
+            DateParam lastModifiedSince,
+            boolean includeImage,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued);
 }
