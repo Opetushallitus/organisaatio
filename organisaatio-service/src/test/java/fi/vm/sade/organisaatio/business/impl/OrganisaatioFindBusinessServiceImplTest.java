@@ -185,9 +185,14 @@ public class OrganisaatioFindBusinessServiceImplTest {
     private boolean invokeFindModifiedSince(boolean readAccessToAll) {
         when(permissionChecker.isReadAccessToAll()).thenReturn(readAccessToAll);
         ArgumentCaptor<Boolean> excludesPiilotettuCaptor = ArgumentCaptor.forClass(Boolean.class);
-        when(organisaatioDaoMock.findModifiedSince(excludesPiilotettuCaptor.capture(), any(Date.class)))
+        when(organisaatioDaoMock.findModifiedSince(
+                    excludesPiilotettuCaptor.capture(),
+                    any(Date.class),
+                    any(List.class),
+                    anyBoolean()))
                 .thenReturn(asList(new Organisaatio()));
-        organisaatioFindBusinessServiceImpl.haeMuutetut(new DateParam("2010-05-24"), false);
+        organisaatioFindBusinessServiceImpl.haeMuutetut(
+                new DateParam("2010-05-24"), false, Collections.emptyList(), true);
         return excludesPiilotettuCaptor.getValue();
     }
 
