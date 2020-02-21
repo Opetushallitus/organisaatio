@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.OrganisaatioBuilder;
+import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
@@ -13,6 +14,7 @@ import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import static java.util.Arrays.asList;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
@@ -165,6 +167,27 @@ public class OrganisaatioFindBusinessServiceImplTest {
         when(organisaatioDaoMock.findByOids(anyCollection(), anyBoolean(), excludesPiilotettuCaptor.capture()))
                 .thenReturn(asList(new Organisaatio()));
         organisaatioFindBusinessServiceImpl.findByOidsV4(Collections.singletonList("1.23.456"));
+        return excludesPiilotettuCaptor.getValue();
+    }
+
+    @Test
+    public void haeMuutetutExcludesPiilotettu() {
+        boolean excludedPiilotettu = invokeFindModifiedSince(false);
+        assertThat(excludedPiilotettu).isTrue();
+    }
+
+    @Test
+    public void haeMuutetutIncludesPiilotettuIfReadAccessToAll() {
+        boolean excludedPiilotettu = invokeFindModifiedSince(true);
+        assertThat(excludedPiilotettu).isFalse();
+    }
+
+    private boolean invokeFindModifiedSince(boolean readAccessToAll) {
+        when(permissionChecker.isReadAccessToAll()).thenReturn(readAccessToAll);
+        ArgumentCaptor<Boolean> excludesPiilotettuCaptor = ArgumentCaptor.forClass(Boolean.class);
+        when(organisaatioDaoMock.findModifiedSince(excludesPiilotettuCaptor.capture(), any(Date.class)))
+                .thenReturn(asList(new Organisaatio()));
+        organisaatioFindBusinessServiceImpl.haeMuutetut(new DateParam("2010-05-24"), false);
         return excludesPiilotettuCaptor.getValue();
     }
 

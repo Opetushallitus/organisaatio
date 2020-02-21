@@ -342,14 +342,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public List<Organisaatio> findModifiedSince(Boolean piilotettu, Date lastModifiedSince) {
+    public List<Organisaatio> findModifiedSince(boolean excludePiilotettu, Date lastModifiedSince) {
         LOG.debug("findModifiedSince({})", lastModifiedSince);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
         BooleanExpression whereExpression = qOrganisaatio.paivitysPvm.after(lastModifiedSince);
-        if(piilotettu != null){
-            whereExpression = whereExpression.and(qOrganisaatio.piilotettu.eq(piilotettu));
+        if (excludePiilotettu) {
+            whereExpression = whereExpression.and(qOrganisaatio.piilotettu.eq(false));
         }
 
         return new JPAQuery<>(getEntityManager())

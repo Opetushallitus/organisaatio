@@ -182,9 +182,10 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
      * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
      *
      * @param lastModifiedSince päivämäärä
-     * @return
+     * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
+     * @return annetun päivämäärän jälkeen muuttuneet organisatiot
      */
-    List<Organisaatio> findModifiedSince(Boolean piilotettu, Date lastModifiedSince);
+    List<Organisaatio> findModifiedSince(boolean excludePiilotettu, Date lastModifiedSince);
 
     /**
      * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.
