@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -105,9 +106,17 @@ public interface OrganisaatioResourceV4 {
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioRDTOV4.class,
             responseContainer = "List")
-    List<OrganisaatioRDTOV4> haeMuutetut(@ApiParam(value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
-                                         @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
-                                                 defaultValue = "false") @DefaultValue("false") @QueryParam("includeImage") boolean includeImage);
+    List<OrganisaatioRDTOV4> haeMuutetut(
+            @ApiParam(
+                value = "Muokattu jälkeen", required = true) @QueryParam("lastModifiedSince") DateParam date,
+            @ApiParam(
+                value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
+                defaultValue = "false") @QueryParam("includeImage") @DefaultValue("false") boolean includeImage,
+            @ApiParam(
+                value = "Halutut organisaatiotyypit") @QueryParam("organizationType") List<String> organizationTypes,
+            @ApiParam(
+                value = "Rajataanko lakkautetut organisaatiot pois",
+                defaultValue = "false") @QueryParam("excludeDiscontinued") @DefaultValue("false") boolean excludeDiscontinued);
 
     @GET
     @Path("/{oid}/historia")
