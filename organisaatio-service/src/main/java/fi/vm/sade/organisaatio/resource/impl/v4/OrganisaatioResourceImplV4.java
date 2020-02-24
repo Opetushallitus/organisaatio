@@ -18,6 +18,7 @@ import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -158,10 +159,14 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             boolean includeImage,
             List<String> organizationTypes,
             boolean excludeDiscontinued) {
-        List<OrganisaatioTyyppi> organisaatioTyypit = organizationTypes == null ? Collections.emptyList() :
-                organizationTypes.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
-        return this.organisaatioFindBusinessService.haeMuutetut(
-                lastModifiedSince, includeImage, organisaatioTyypit, excludeDiscontinued);
+        try {
+            List<OrganisaatioTyyppi> organisaatioTyypit = organizationTypes == null ? Collections.emptyList() :
+                    organizationTypes.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
+            return this.organisaatioFindBusinessService.haeMuutetut(
+                    lastModifiedSince, includeImage, organisaatioTyypit, excludeDiscontinued);
+        } catch (IllegalArgumentException iae) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST.value(), iae.getMessage());
+        }
     }
 
     // GET /organisaatio/v4/{oid}/historia
