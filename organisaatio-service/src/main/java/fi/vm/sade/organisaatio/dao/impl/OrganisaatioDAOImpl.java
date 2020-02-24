@@ -365,9 +365,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         }
         if (organizationTypes != null && !organizationTypes.isEmpty()) {
             String[] types = organizationTypes.stream()
-                    .map(OrganisaatioTyyppi::koodiValue)
-                    .collect(Collectors.toList())
-                    .toArray(new String[0]);
+                    .map(OrganisaatioTyyppi::koodiValue).toArray(String[]::new);
             whereExpression = whereExpression.and(
                     qOrganisaatio.tyypit.any().in(types));
         }
