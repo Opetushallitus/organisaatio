@@ -20,6 +20,9 @@
                 <version>${jetty.version}</version>
 
                 <configuration>
+                    <supportedPackagings>
+                        <supportedPackaging>pom</supportedPackaging>
+                    </supportedPackagings>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
                     <systemPropertiesFile>${user.home}/oph-configuration/organisaatio-service.properties</systemPropertiesFile>
                     <systemProperties>
@@ -97,22 +100,6 @@
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-servlets</artifactId>
                         <version>${jetty.version}</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>org.javassist</groupId>
-                                <artifactId>javassist</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.ow2.asm</groupId>
-                        <artifactId>asm</artifactId>
-                        <version>${asm.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.ow2.asm</groupId>
-                        <artifactId>asm-commons</artifactId>
-                        <version>${asm.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.postgresql</groupId>
