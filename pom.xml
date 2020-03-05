@@ -11,6 +11,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <!-- OPH service versions -->
@@ -31,14 +32,9 @@
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
 
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <jetty.module>${project.artifactId}</jetty.module>
         <jetty.webApp>../${jetty.module}/target/${jetty.module}.war</jetty.webApp>
-        <jetty.version>9.3.10.v20160621</jetty.version>
-        <daemon>false</daemon>
+        <jetty.version>9.4.27.v20200227</jetty.version>
         <daemon>false</daemon>
 
         <!-- UI libraries -->
@@ -83,7 +79,6 @@
         <aspectj.version>1.7.0</aspectj.version>
         <modelmapper.version>2.3.6</modelmapper.version>
         <jackson.version>2.9.5</jackson.version>
-        <asm.version>7.3.1</asm.version>
         <httpcomponents.version>4.4.5</httpcomponents.version>
         <httpcomponents.client.version>4.5.2</httpcomponents.client.version>
         <gson.version>2.2.2</gson.version>
