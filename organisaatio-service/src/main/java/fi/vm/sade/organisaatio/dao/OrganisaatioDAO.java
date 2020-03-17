@@ -179,13 +179,33 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu);
 
     /***
-     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot. Ei rajaa organisaatiotyypillä, sisällyttää myös
+     * lakkautetut organisaatiot.
      *
      * @param lastModifiedSince päivämäärä
      * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
-     * @return annetun päivämäärän jälkeen muuttuneet organisatiot
+     * @return annetun päivämäärän jälkeen muuttuneet organisaatiot
+     * @see #findModifiedSince(boolean, Date, List, boolean)
      */
-    List<Organisaatio> findModifiedSince(boolean excludePiilotettu, Date lastModifiedSince);
+    List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince);
+
+    /***
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot. Hakua voi rajata organisaatiotyypeillä tai jättää
+     * (hakuhetkellä) lakkautetut organisaatiot pois tuloksista.
+     *
+     * @param lastModifiedSince päivämäärä
+     * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
+     * @param organizationTypes halutut organisaatiotyypit (tyhjä/null palauttaa kaikki)
+     * @param excludeDiscontinued jätetäänkö (hakuhetkellä) lakkautetut pois tuloksista
+     * @return annetun päivämäärän jälkeen muuttuneet organisaatiot
+     */
+    List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued);
 
     /**
      * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.

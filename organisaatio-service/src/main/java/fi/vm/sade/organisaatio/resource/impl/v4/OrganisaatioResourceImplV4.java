@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.resource.impl.v4;
 
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
@@ -17,13 +18,16 @@ import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @CrossOriginResourceSharing(allowAllOrigins = true)
@@ -150,8 +154,19 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     // GET /organisaatio/v4/muutetut
     @Override
-    public List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
-        return this.organisaatioFindBusinessService.haeMuutetut(lastModifiedSince, includeImage);
+    public List<OrganisaatioRDTOV4> haeMuutetut(
+            DateParam lastModifiedSince,
+            boolean includeImage,
+            List<String> organizationTypes,
+            boolean excludeDiscontinued) {
+        try {
+            List<OrganisaatioTyyppi> organisaatioTyypit = organizationTypes == null ? Collections.emptyList() :
+                    organizationTypes.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
+            return this.organisaatioFindBusinessService.haeMuutetut(
+                    lastModifiedSince, includeImage, organisaatioTyypit, excludeDiscontinued);
+        } catch (IllegalArgumentException iae) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST.value(), iae.getMessage());
+        }
     }
 
     // GET /organisaatio/v4/{oid}/historia

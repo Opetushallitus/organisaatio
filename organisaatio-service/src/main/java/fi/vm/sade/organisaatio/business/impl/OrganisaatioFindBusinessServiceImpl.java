@@ -304,14 +304,21 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTOV4> haeMuutetut(
+            DateParam lastModifiedSince,
+            boolean includeImage,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued) {
         Preconditions.checkNotNull(lastModifiedSince);
 
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
+                !permissionChecker.isReadAccessToAll(),
+                lastModifiedSince.getValue(),
+                organizationTypes,
+                excludeDiscontinued);
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
 
