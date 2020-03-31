@@ -14,6 +14,7 @@ truncate table organisaatiometadata;
 truncate table organisaatiometadata_namedmonikielinenteksti;
 truncate table organisaatiometadata_yhteystieto;
 truncate table organisaatiosuhde;
+truncate table organisaatio_parent_oids;
 truncate table yhteystieto;
 truncate table yhteystietoarvo;
 truncate table yhteystietoelementti;

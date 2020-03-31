@@ -97,12 +97,20 @@ public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
             organisaatio.setParentSuhteet(parentSuhteet);
             organisaatio.setParentOidPath(generateParentPath(parent.getParentOidPath(), parent.getOid()));
             organisaatio.setParentIdPath(generateParentPath(parent.getParentIdPath(), parent.getId()));
+            organisaatio.setParentOids(generateParentOids(parent));
         }
         return organisaatio;
     }
 
     private static String generateParentPath(String parentParentPath, Serializable parentId) {
         return Optional.ofNullable(parentParentPath).map(path -> path + parentId + "|").orElse("|" + parentId + "|");
+    }
+
+    private static List<String> generateParentOids(Organisaatio parent) {
+        List<String> parentOids = new ArrayList<>();
+        parentOids.add(parent.getOid());
+        parentOids.addAll(parent.getParentOids());
+        return parentOids;
     }
 
 }

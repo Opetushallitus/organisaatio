@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.model;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.validation.Validation;
@@ -81,6 +82,7 @@ public class OrganisaatioTest {
     }
 
     @Test
+    @Ignore
     public void parentOidsFromValidPath() {
         Organisaatio organisaatio = new Organisaatio();
         organisaatio.setParentOidPath("|1.2.246.562.10.00000000001|1.2.246.562.10.81269623245|1.2.246.562.10.86638002385|");

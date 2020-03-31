@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
 import static java.util.stream.Collectors.toSet;
 
 
@@ -173,6 +172,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String parentOidPath;
     private String parentIdPath;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "organisaatio_parent_oids",
+            joinColumns = @JoinColumn(name = "organisaatio_id"))
+    @Column(name = "parent_oid", nullable = false)
+    @OrderColumn(name = "parent_position")
+    private List<String> parentOids = new ArrayList<>();
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
 
@@ -216,15 +223,19 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     public Optional<String> getParentOid() {
         if (this.parentOidPath != null) {
             Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
-                    .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
-                    .descendingIterator();
-            if (!oidsPathInverted.hasNext()) {
-                return Optional.empty();
-            }
-            return Optional.ofNullable(oidsPathInverted.next())
-                    .filter(s -> s.matches("[\\d\\.]+"));
+                            .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                            .descendingIterator();
+                    if (!oidsPathInverted.hasNext()) {
+                        return Optional.empty();
+                    }
+                    return Optional.ofNullable(oidsPathInverted.next())
+                            .filter(s -> s.matches("[\\d\\.]+"));
         }
         return Optional.empty();
+        /*if (parentOids.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(parentOids.get(0));*/
     }
 
     /**
@@ -705,11 +716,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public List<String> getParentOidsFromPath() {
-        return Optional.ofNullable(parentOidPath)
-                .map(path -> Arrays.stream(path.split("\\|"))
-                        .filter(not(String::isEmpty))
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+        return new ArrayList<>(parentOids);
     }
 
     public String getParentIdPath() {
@@ -718,6 +725,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setParentIdPath(String parentIdPath) {
         this.parentIdPath = parentIdPath;
+    }
+
+    public List<String> getParentOids() {
+        return parentOids;
+    }
+
+    public void setParentOids(List<String> parentOids) {
+        this.parentOids = parentOids;
     }
 
     /**
