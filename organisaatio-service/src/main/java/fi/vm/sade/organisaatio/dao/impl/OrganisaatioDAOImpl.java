@@ -20,9 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLOps;
 import com.querydsl.jpa.JPQLQuery;
@@ -58,7 +56,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -102,6 +99,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
         StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
         StringPath qKieli = Expressions.stringPath("kieli");
+        StringPath qParentOid = Expressions.stringPath("parentOid");
 
         JPAQuery<OrganisaatioPerustietoRivi> query = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
@@ -109,12 +107,13 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .leftJoin(qOrganisaatio.nimi, qNimi)
                 .leftJoin(qNimi.values, qNimiArvo)
                 .leftJoin(qOrganisaatio.kielet, qKieli)
+                .leftJoin(qOrganisaatio.parentOids, qParentOid)
                 .select(Projections.constructor(OrganisaatioPerustietoRivi.class,
                         qOrganisaatio.oid, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
-                        qOrganisaatio.parentOidPath, qOrganisaatio.ytunnus, qOrganisaatio.virastoTunnus,
-                        qOrganisaatio.oppilaitosKoodi, qOrganisaatio.oppilaitosTyyppi, qOrganisaatio.toimipisteKoodi,
-                        Expressions.stringOperation(JPQLOps.KEY, qNimiArvo), qNimiArvo, qOrganisaatiotyyppi, qKieli,
-                        qOrganisaatio.kotipaikka
+                        qOrganisaatio.parentOidPath, qParentOid, qOrganisaatio.ytunnus,
+                        qOrganisaatio.virastoTunnus,  qOrganisaatio.oppilaitosKoodi, qOrganisaatio.oppilaitosTyyppi,
+                        qOrganisaatio.toimipisteKoodi,  Expressions.stringOperation(JPQLOps.KEY, qNimiArvo), qNimiArvo,
+                        qOrganisaatiotyyppi, qKieli, qOrganisaatio.kotipaikka
                 ));
 
         Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
@@ -151,7 +150,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         Optional.ofNullable(criteria.getOidRestrictionList()).filter(not(Collection::isEmpty)).ifPresent(oids -> {
             BooleanBuilder parentOidPathPredicate = oids.stream()
-                    .map(oid -> qOrganisaatio.parentOidPath.contains(oid))
+                    .map(qOrganisaatio.parentOids::contains)
                     .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
             query.where(qOrganisaatio.oid.in(oids).or(parentOidPathPredicate));
         });
@@ -168,9 +167,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getOid()).filter(not(Collection::isEmpty)).ifPresent(oids
                 -> query.where(qOrganisaatio.oid.in(oids)));
 
-        Optional.ofNullable(criteria.getParentOidPaths()).filter(not(Collection::isEmpty)).ifPresent(parentOidPaths
-                -> query.where(parentOidPaths.stream().map(parentOidPath -> qOrganisaatio.parentOidPath.startsWith(parentOidPath))
-                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
+        Optional.ofNullable(criteria.getParentOids()).filter(not(Collection::isEmpty)).ifPresent(parentOids
+                -> query.where(qOrganisaatio.parentOids.any().in(parentOids)));
 
         return query.fetch().stream()
                 .collect(groupingBy(OrganisaatioPerustietoRivi::getOid,
@@ -184,6 +182,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         destination.setAlkuPvm(source.getAlkuPvm());
         destination.setLakkautusPvm(source.getLakkautusPvm());
         destination.setParentOidPath(source.getParentOidPath());
+        destination.setParentOids(asList(source.getParentOid()));
         destination.setYtunnus(source.getYtunnus());
         destination.setVirastoTunnus(source.getVirastotunnus());
         destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
@@ -198,15 +197,18 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     private static Organisaatio merge(Organisaatio o1, Organisaatio o2) {
-        Optional.ofNullable(o1.getTyypit()).ifPresent(tyypit
-                -> o2.setTyypit(Stream.concat(o2.getTyypit().stream(), tyypit.stream())
+        Optional.ofNullable(o1.getTyypit()).ifPresent(
+                tyypit -> o2.setTyypit(Stream.concat(o2.getTyypit().stream(), tyypit.stream())
                         .collect(toCollection(LinkedHashSet::new))));
-        Optional.ofNullable(o1.getNimi()).ifPresent(nimi
-                -> nimi.getValues().forEach((kieli, arvo)
+        Optional.ofNullable(o1.getNimi()).ifPresent(
+                nimi -> nimi.getValues().forEach((kieli, arvo)
                         -> o2.getNimi().addString(kieli, arvo)));
-        Optional.ofNullable(o1.getKielet()).ifPresent(kielet
-                -> o2.setKielet(Stream.concat(o2.getKielet().stream(), kielet.stream())
+        Optional.ofNullable(o1.getKielet()).ifPresent(
+                kielet -> o2.setKielet(Stream.concat(o2.getKielet().stream(), kielet.stream())
                         .collect(toCollection(LinkedHashSet::new))));
+        Optional.ofNullable(o1.getParentOids()).ifPresent(
+                parentOids -> o2.setParentOids(Stream.concat(o2.getParentOids().stream(), parentOids.stream())
+                        .collect(toCollection(LinkedList::new))));
         return o2;
     }
 
