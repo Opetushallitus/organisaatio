@@ -48,7 +48,7 @@ public class SearchCriteria {
     private String searchStr;
 
     private Collection<String> oid = new ArrayList<>();
-    private Collection<String> parentOidPaths = new ArrayList<String>();
+    private Collection<String> parentOids = new ArrayList<String>();
 
     /**
      * Default no-arg constructor
@@ -170,14 +170,14 @@ public class SearchCriteria {
         }
     }
 
-    public Collection<String> getParentOidPaths() {
-        return parentOidPaths;
+    public Collection<String> getParentOids() {
+        return parentOids;
     }
 
-    public void setParentOidPaths(Collection<String> parentOidPaths) {
-        this.parentOidPaths.clear();
-        if (parentOidPaths != null) {
-            this.parentOidPaths.addAll(parentOidPaths);
+    public void setParentOids(Collection<String> parentOids) {
+        this.parentOids.clear();
+        if (parentOids != null) {
+            this.parentOids.addAll(parentOids);
         }
     }
 
