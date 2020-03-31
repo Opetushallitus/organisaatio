@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -18,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -125,7 +125,6 @@ public class OrganisaatioFindBusinessServiceImplTest {
         verify(organisaatioDaoMock, times(2)).findBy(searchCriteriaCaptor.capture(), any());
         List<SearchCriteria> searchCriterias = searchCriteriaCaptor.getAllValues();
         assertThat(searchCriterias.get(0)).isSameAs(criteria);
-        assertThat(searchCriterias.get(1).getParentOidPaths()).containsExactlyInAnyOrder("|rootOid|oid1|", "|rootOid|oid4|");
         verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
     }
 

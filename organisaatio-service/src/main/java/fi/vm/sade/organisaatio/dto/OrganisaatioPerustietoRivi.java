@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class OrganisaatioPerustietoRivi {
 
@@ -8,6 +9,7 @@ public class OrganisaatioPerustietoRivi {
     private Date alkuPvm;
     private Date lakkautusPvm;
     private String parentOidPath;
+    private String parentOid;
     private String ytunnus;
     private String virastotunnus;
     private String oppilaitosKoodi;
@@ -19,13 +21,15 @@ public class OrganisaatioPerustietoRivi {
     private String kieli;
     private String kotipaikka;
 
-    public OrganisaatioPerustietoRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOidPath, String ytunnus,
-            String virastotunnus, String oppilaitosKoodi, String oppilaitostyyppi, String toimipistekoodi,
-            String nimiKieli, String nimiArvo, String tyyppi, String kieli, String kotipaikka) {
+    public OrganisaatioPerustietoRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOidPath,
+                                      String parentOid, String ytunnus, String virastotunnus, String oppilaitosKoodi,
+                                      String oppilaitostyyppi, String toimipistekoodi, String nimiKieli,
+                                      String nimiArvo, String tyyppi, String kieli, String kotipaikka) {
         this.oid = oid;
         this.alkuPvm = alkuPvm;
         this.lakkautusPvm = lakkautusPvm;
         this.parentOidPath = parentOidPath;
+        this.parentOid = parentOid;
         this.ytunnus = ytunnus;
         this.virastotunnus = virastotunnus;
         this.oppilaitosKoodi = oppilaitosKoodi;
@@ -68,6 +72,14 @@ public class OrganisaatioPerustietoRivi {
 
     public void setParentOidPath(String parentOidPath) {
         this.parentOidPath = parentOidPath;
+    }
+
+    public String getParentOid() {
+        return parentOid;
+    }
+
+    public void setParentOid(String parentOid) {
+        this.parentOid = parentOid;
     }
 
     public String getYtunnus() {
