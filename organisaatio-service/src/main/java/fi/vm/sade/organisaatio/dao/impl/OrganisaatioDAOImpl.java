@@ -19,10 +19,8 @@ package fi.vm.sade.organisaatio.dao.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLOps;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
@@ -31,7 +29,6 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
-import fi.vm.sade.organisaatio.dto.OrganisaatioPerustietoRivi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -56,14 +53,12 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.types.dsl.Expressions.allOf;
 import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
 import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 
 /**
@@ -101,20 +96,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         StringPath qKieli = Expressions.stringPath("kieli");
         StringPath qParentOid = Expressions.stringPath("parentOid");
 
-        JPAQuery<OrganisaatioPerustietoRivi> query = new JPAQuery<>(getEntityManager())
+        JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
                 .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi)
                 .leftJoin(qOrganisaatio.nimi, qNimi)
                 .leftJoin(qNimi.values, qNimiArvo)
                 .leftJoin(qOrganisaatio.kielet, qKieli)
                 .leftJoin(qOrganisaatio.parentOids, qParentOid)
-                .select(Projections.constructor(OrganisaatioPerustietoRivi.class,
-                        qOrganisaatio.oid, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
-                        qOrganisaatio.parentOidPath, qParentOid, qOrganisaatio.ytunnus,
-                        qOrganisaatio.virastoTunnus,  qOrganisaatio.oppilaitosKoodi, qOrganisaatio.oppilaitosTyyppi,
-                        qOrganisaatio.toimipisteKoodi,  Expressions.stringOperation(JPQLOps.KEY, qNimiArvo), qNimiArvo,
-                        qOrganisaatiotyyppi, qKieli, qOrganisaatio.kotipaikka
-                ));
+                .select(qOrganisaatio);
 
         Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
 
@@ -170,46 +159,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getParentOids()).filter(not(Collection::isEmpty)).ifPresent(parentOids
                 -> query.where(qOrganisaatio.parentOids.any().in(parentOids)));
 
-        return query.fetch().stream()
-                .collect(groupingBy(OrganisaatioPerustietoRivi::getOid,
-                        reducing(new Organisaatio(), OrganisaatioDAOImpl::map, OrganisaatioDAOImpl::merge)))
-                .values();
-    }
-
-    private static Organisaatio map(OrganisaatioPerustietoRivi source) {
-        Organisaatio destination = new Organisaatio();
-        destination.setOid(source.getOid());
-        destination.setAlkuPvm(source.getAlkuPvm());
-        destination.setLakkautusPvm(source.getLakkautusPvm());
-        destination.setParentOidPath(source.getParentOidPath());
-        destination.setParentOids(asList(source.getParentOid()));
-        destination.setYtunnus(source.getYtunnus());
-        destination.setVirastoTunnus(source.getVirastotunnus());
-        destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
-        destination.setOppilaitosTyyppi(source.getOppilaitostyyppi());
-        destination.setToimipisteKoodi(source.getToimipistekoodi());
-        destination.setNimi(new MonikielinenTeksti());
-        Optional.ofNullable(source.getNimiArvo()).ifPresent(nimiArvo -> destination.getNimi().addString(source.getNimiKieli(), nimiArvo));
-        destination.setTyypit(Stream.of(source.getTyyppi()).collect(toSet()));
-        Optional.ofNullable(source.getKieli()).ifPresent(kieli -> destination.setKielet(asList(kieli)));
-        destination.setKotipaikka(source.getKotipaikka());
-        return destination;
-    }
-
-    private static Organisaatio merge(Organisaatio o1, Organisaatio o2) {
-        Optional.ofNullable(o1.getTyypit()).ifPresent(
-                tyypit -> o2.setTyypit(Stream.concat(o2.getTyypit().stream(), tyypit.stream())
-                        .collect(toCollection(LinkedHashSet::new))));
-        Optional.ofNullable(o1.getNimi()).ifPresent(
-                nimi -> nimi.getValues().forEach((kieli, arvo)
-                        -> o2.getNimi().addString(kieli, arvo)));
-        Optional.ofNullable(o1.getKielet()).ifPresent(
-                kielet -> o2.setKielet(Stream.concat(o2.getKielet().stream(), kielet.stream())
-                        .collect(toCollection(LinkedHashSet::new))));
-        Optional.ofNullable(o1.getParentOids()).ifPresent(
-                parentOids -> o2.setParentOids(Stream.concat(o2.getParentOids().stream(), parentOids.stream())
-                        .collect(toCollection(LinkedList::new))));
-        return o2;
+        return query.fetch();
     }
 
     private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio, Date now) {
