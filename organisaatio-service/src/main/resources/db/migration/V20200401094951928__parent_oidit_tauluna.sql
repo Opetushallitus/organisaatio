@@ -1,6 +1,6 @@
 CREATE TABLE organisaatio_parent_oids (
   organisaatio_id BIGINT NOT NULL REFERENCES organisaatio (id) ON DELETE CASCADE,
-  parent_position SMALLINT NOT NULL,
+  parent_position INTEGER NOT NULL,
   parent_oid VARCHAR(255) NOT NULL,
   UNIQUE (organisaatio_id, parent_position),
   UNIQUE (organisaatio_id, parent_oid)
@@ -19,7 +19,6 @@ DECLARE
 BEGIN
   FOR o IN SELECT * FROM organisaatio WHERE parentoidpath IS NOT NULL AND parentoidpath <> '' LOOP
     SELECT regexp_split_to_array(substring(o.parentoidpath FROM 2 FOR length(o.parentoidpath) -2), '\|') INTO STRICT _parentOids;
-    RAISE NOTICE 'Organization % parent OIDs: %', _o.id, _parentOids;
     SELECT array_length(_parentOids, 1) INTO STRICT _parentCount;
     _position = _parentCount - 1;
     FOREACH _parentOid IN ARRAY _parentOids LOOP
