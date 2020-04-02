@@ -98,11 +98,11 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
-                .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi)
-                .leftJoin(qOrganisaatio.nimi, qNimi)
-                .leftJoin(qNimi.values, qNimiArvo)
-                .leftJoin(qOrganisaatio.kielet, qKieli)
-                .leftJoin(qOrganisaatio.parentOids, qParentOid)
+                .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi).fetchJoin()
+                .leftJoin(qOrganisaatio.nimi, qNimi).fetchJoin()
+                .leftJoin(qNimi.values, qNimiArvo).fetchJoin()
+                .leftJoin(qOrganisaatio.kielet, qKieli).fetchJoin()
+                .leftJoin(qOrganisaatio.parentOids, qParentOid).fetchJoin()
                 .select(qOrganisaatio);
 
         Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
