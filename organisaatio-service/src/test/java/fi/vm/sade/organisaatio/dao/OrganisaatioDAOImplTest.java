@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,10 +43,10 @@ public class OrganisaatioDAOImplTest {
     public void doTest() {
         LOG.info("doTest()...");
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        Organisaatio b = createOrganisaatio("B", a, false, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio c = createOrganisaatio("C", b, false, generateParentOidPath(b), generateParentIdPath(b));
-        Organisaatio d = createOrganisaatio("D", c, false, generateParentOidPath(c), generateParentIdPath(c));
-        Organisaatio e = createOrganisaatio("E", d, false, generateParentOidPath(d), generateParentIdPath(d));
+        Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
+        Organisaatio c = createOrganisaatio("C", b, false, generateParentOids(b), generateParentIdPath(b));
+        Organisaatio d = createOrganisaatio("D", c, false, generateParentOids(c), generateParentIdPath(c));
+        Organisaatio e = createOrganisaatio("E", d, false, generateParentOids(d), generateParentIdPath(d));
 
         final String oid = e.getOid();
         List<String> oids = organisaatioDAO.findParentOidsTo(oid);
@@ -124,7 +126,7 @@ public class OrganisaatioDAOImplTest {
         assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1, ryhma2);
 
         criteria = new RyhmaCriteriaDto();
-        criteria.setParentOidPath("|" + parent2.getOid() + "|");
+        criteria.setParentOid(parent2.getOid());
         assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma3);
 
         criteria = new RyhmaCriteriaDto();
@@ -141,7 +143,7 @@ public class OrganisaatioDAOImplTest {
         criteria.setLakkautusPvm(LocalDate.of(2018, 6, 1));
         criteria.setRyhmatyyppi("ryhmatyyppi1");
         criteria.setKayttoryhma("kayttoryhma1");
-        criteria.setParentOidPath("|" + parent1.getOid() + "|");
+        criteria.setParentOid(parent1.getOid());
         criteria.setPoistettu(false);
         assertThat(organisaatioDAO.findGroups(criteria)).containsExactlyInAnyOrder(ryhma1);
     }
@@ -149,7 +151,7 @@ public class OrganisaatioDAOImplTest {
     @Test
     public void parentTest() {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        Organisaatio b = createOrganisaatio("B", a, false, generateParentOidPath(a), generateParentIdPath(a));
+        Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
 
         b = organisaatioDAO.findByOid(b.getOid());
 
@@ -159,31 +161,30 @@ public class OrganisaatioDAOImplTest {
     @Test
     public void findChildrenTest() {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        Organisaatio b = createOrganisaatio("B", a, false, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio c = createOrganisaatio("C", a, false, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio d = createOrganisaatio("D", b, false, generateParentOidPath(b), generateParentIdPath(b));
-        Organisaatio e = createOrganisaatio("E", c, false, generateParentOidPath(c), generateParentIdPath(c));
-        Organisaatio f = createOrganisaatio("F", a, true, generateParentOidPath(a), generateParentIdPath(a));
-        Organisaatio g = createOrganisaatio("G", e, true, generateParentOidPath(e), generateParentIdPath(e));
+        Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
+        Organisaatio c = createOrganisaatio("C", a, false, generateParentOids(a), generateParentIdPath(a));
+        Organisaatio d = createOrganisaatio("D", b, false, generateParentOids(b), generateParentIdPath(b));
+        Organisaatio e = createOrganisaatio("E", c, false, generateParentOids(c), generateParentIdPath(c));
+        Organisaatio f = createOrganisaatio("F", a, true, generateParentOids(a), generateParentIdPath(a));
 
         List<Organisaatio> children = this.organisaatioDAO.findChildren(a.getOid(), false, true);
-        Assert.assertTrue(children.size() == 2);
+        Assert.assertEquals(2, children.size());
         Assert.assertTrue(organisaatiotContain(children, b));
         Assert.assertTrue(organisaatiotContain(children, c));
-        Assert.assertTrue(!organisaatiotContain(children, f));
+        Assert.assertFalse(organisaatiotContain(children, f));
 
         children = organisaatioDAO.findChildren(c.getOid(), false, true);
-        Assert.assertTrue(children.size() == 1);
+        Assert.assertEquals(1,children.size());
         Assert.assertTrue(organisaatiotContain(children, e));
 
         children = organisaatioDAO.findChildren(e.getOid(), false, true);
-        Assert.assertTrue(children.size() == 0);
+        Assert.assertEquals(0, children.size());
 
         children = organisaatioDAO.findChildren(d.getOid(), false, true);
-        Assert.assertTrue(children.size() == 0);
+        Assert.assertEquals(0, children.size());
 
         children = this.organisaatioDAO.findChildren(a.getOid(), true, true);
-        Assert.assertTrue(children.size() == 3);
+        Assert.assertEquals(3, children.size());
         Assert.assertTrue(organisaatiotContain(children, f));
 
     }
@@ -244,13 +245,11 @@ public class OrganisaatioDAOImplTest {
         assertThat(tulokset.size()).isEqualTo(1);
     }
 
-    private String generateParentOidPath(Organisaatio parent) {
+    private List<String> generateParentOids(Organisaatio parent) {
         if (parent == null) {
-            return null;
+            return Collections.emptyList();
         }
-        return (!StringUtils.isEmpty(parent.getParentOidPath()))
-                ? parent.getParentOidPath() + parent.getOid() + "|"
-                : "|" + parent.getOid() + "|";
+        return Stream.concat(Stream.of(parent.getOid()), parent.getParentOids().stream()).collect(Collectors.toList());
     }
 
     private String generateParentIdPath(Organisaatio parent) {
@@ -268,18 +267,18 @@ public class OrganisaatioDAOImplTest {
 
     private boolean organisaatiotContain(List<Organisaatio> organisaatiot, Organisaatio o) {
         for (Organisaatio curOrg : organisaatiot) {
-            if (curOrg.getId() == o.getId()) {
+            if (curOrg.getId().equals(o.getId())) {
                 return true;
             }
         }
         return false;
     }
 
-    private Organisaatio createOrganisaatio(String nimi, Organisaatio parent, boolean isPoistettu, String parentOidPath, String parentIdPath) {
-        return createOrganisaatio(generateOid(), nimi, parent, isPoistettu, parentOidPath, parentIdPath);
+    private Organisaatio createOrganisaatio(String nimi, Organisaatio parent, boolean isPoistettu, List<String> parentOids, String parentIdPath) {
+        return createOrganisaatio(generateOid(), nimi, parent, isPoistettu, parentOids, parentIdPath);
     }
 
-    private Organisaatio createOrganisaatio(String oid, String nimi, Organisaatio parent, boolean isPoistettu, String parentOidPath, String parentIdPath) {
+    private Organisaatio createOrganisaatio(String oid, String nimi, Organisaatio parent, boolean isPoistettu, List<String> parentOids, String parentIdPath) {
         LOG.info("createOrganisaatio({})", nimi);
 
         Organisaatio o = new Organisaatio();
@@ -303,7 +302,7 @@ public class OrganisaatioDAOImplTest {
             organisaatioSuhdeDAO.getEntityManager().flush();
             LOG.info("YHTEYSTIEDOT: " + o.getYhteystiedot().size());
             LOG.info("PARENTS: " + o.getParentSuhteet().size());
-            o.setParentOidPath(parentOidPath);
+            o.setParentOids(parentOids);
             o.setParentIdPath(parentIdPath);
         }
 
