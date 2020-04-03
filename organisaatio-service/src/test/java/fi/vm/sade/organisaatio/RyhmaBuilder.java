@@ -81,10 +81,16 @@ public final class RyhmaBuilder {
             parentSuhde.setParent(parent);
             parentSuhteet.add(parentSuhde);
             ryhma.setParentSuhteet(parentSuhteet);
-            ryhma.setParentOidPath(generateParentPath(parent.getParentOidPath(), parent.getOid()));
+            ryhma.setParentOids(generateParentOids(parent));
             ryhma.setParentIdPath(generateParentPath(parent.getParentIdPath(), parent.getId()));
         }
         return ryhma;
+    }
+
+    private static List<String> generateParentOids(Organisaatio parent) {
+        List<String> parentOids = Arrays.asList(parent.getOid());
+        parentOids.addAll(parent.getParentOids());
+        return parentOids;
     }
 
     private static String generateParentPath(String parentParentPath, Serializable parentId) {
