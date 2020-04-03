@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,18 +40,18 @@ public class OrganisaatioPermissionServiceTest {
 
     private OrganisaatioPermissionServiceImpl permissionService = new OrganisaatioPermissionServiceImpl(rootOrgOid);
 
-    private static Organisaatio withParentOidPath(String parentOidPath) {
+    private static Organisaatio withParentOids(List<String> parentOids) {
         Organisaatio organisaatio = new Organisaatio();
-        organisaatio.setParentOidPath(parentOidPath);
+        organisaatio.setParentOids(parentOids);
         return organisaatio;
     }
 
     @Test
     public void testBasic() {
         OrganisaatioDAO organisaatioDaoMock = Mockito.mock(OrganisaatioDAO.class);
-        Mockito.when(organisaatioDaoMock.findByOid(eq(otherOrgOid))).thenReturn(withParentOidPath("|" + rootOrgOid + "|"));
-        Mockito.when(organisaatioDaoMock.findByOid(userOrgOid)).thenReturn(withParentOidPath("|" + rootOrgOid + "|"));
-        Mockito.when(organisaatioDaoMock.findByOid(rootOrgOid)).thenReturn(withParentOidPath(null));
+        Mockito.when(organisaatioDaoMock.findByOid(eq(otherOrgOid))).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
+        Mockito.when(organisaatioDaoMock.findByOid(userOrgOid)).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
+        Mockito.when(organisaatioDaoMock.findByOid(rootOrgOid)).thenReturn(withParentOids(Collections.emptyList()));
         OidProvider oidProvider = new OidProvider(rootOrgOid, organisaatioDaoMock);
         OrganisationHierarchyAuthorizer authorizer = new OrganisationHierarchyAuthorizer(oidProvider);
         permissionService.setAuthorizer(authorizer);
