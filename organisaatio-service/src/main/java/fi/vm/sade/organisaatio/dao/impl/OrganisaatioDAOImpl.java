@@ -53,6 +53,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.types.dsl.Expressions.allOf;
@@ -518,23 +520,14 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public List<String> findParentOidsTo(String oid) {
         LOG.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
-        List<String> oids = Lists.newArrayList();
 
         Organisaatio org = findByOid(oid);
-        final String parentOidPath = org.getParentOidPath();
-
-
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
-
-
-        while (org != null) {
-            oids.add(org.getOid());
-            OrganisaatioSuhde curSuhde = organisaatioSuhdeDAO.findParentTo(org.getId(), new Date());
-            org = (curSuhde != null) ? curSuhde.getParent() : null;
-        }
-        Collections.reverse(oids);
-        return oids;
+        return Stream.concat(Stream.of(oid), org.getParentOids().stream()).collect(
+                Collectors.collectingAndThen(toList(), oids -> {
+                    Collections.reverse(oids);
+                    return oids;
+                })
+        );
     }
 
     /**
@@ -909,8 +902,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .where(qKayttoryhma.eq(kayttoryhma));
             query.where(qOrganisaatio.in(subquery));
         });
-        Optional.ofNullable(criteria.getParentOidPath()).ifPresent(parentOidPath -> {
-            query.where(qOrganisaatio.parentOidPath.eq(parentOidPath));
+        Optional.ofNullable(criteria.getParentOid()).ifPresent(parentOid -> {
+            query.where(qOrganisaatio.parentOids.get(0).eq(parentOid));
         });
         Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu -> {
             query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu));

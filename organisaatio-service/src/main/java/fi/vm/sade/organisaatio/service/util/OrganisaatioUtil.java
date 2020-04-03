@@ -20,7 +20,9 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.apache.commons.lang.time.DateUtils;
 
-import java.util.Date;
+import java.util.*;
+
+import static java.util.Arrays.asList;
 
 /**
  *
@@ -108,6 +110,26 @@ public abstract class OrganisaatioUtil {
      */
     public static boolean isSuunniteltu(Organisaatio o) {
         return o.getAlkuPvm() != null && o.getAlkuPvm().after(new Date());
+    }
+
+    public static String parentOidPath(List<String> parentOids) {
+        if (parentOids == null || parentOids.isEmpty()) {
+            return "";
+        }
+        List<String> copy = new LinkedList<>(parentOids);
+        Collections.reverse(copy);
+        return "|" + String.join("|", copy) + "|";
+    }
+
+    public static List<String> parentOids(String parentOidPath) {
+        if (parentOidPath == null || parentOidPath.length() == 0) {
+            return Collections.emptyList();
+        }
+        String stripSurroundingSeparators = parentOidPath.substring(1, parentOidPath.length() - 1);
+        String[] parts = stripSurroundingSeparators.split("\\|");
+        List<String> parentOids = Arrays.asList(parts);
+        Collections.reverse(parentOids);
+        return parentOids;
     }
 
 }
