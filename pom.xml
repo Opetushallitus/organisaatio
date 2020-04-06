@@ -44,7 +44,7 @@
         <frontend-plugin.version>1.5</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>3.3.5</cxf.version>
+        <cxf.version>3.3.6</cxf.version>
         <wss4j.version>1.6.4</wss4j.version>
         <spring.version>4.3.26.RELEASE</spring.version>
         <spring.security.version>4.2.14.RELEASE</spring.security.version>
@@ -68,7 +68,7 @@
         <hibernate.version>5.4.5.Final</hibernate.version>
         <hibernate.jpa.version>1.0.2.Final</hibernate.jpa.version>
         <ehcache.version>2.5.2</ehcache.version>
-        <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
+        <cas-client-support-distributed-ehcache.version>3.6.0</cas-client-support-distributed-ehcache.version>
 
 
         <!-- Utils -->
