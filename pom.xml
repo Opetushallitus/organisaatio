@@ -73,6 +73,7 @@
 
         <!-- Utils -->
         <commons-codec.version>1.6</commons-codec.version>
+        <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <jodatime.version>2.9.4</jodatime.version>
         <aopalliance.version>1.0</aopalliance.version>
         <antisamy.version>1.4.5</antisamy.version>
