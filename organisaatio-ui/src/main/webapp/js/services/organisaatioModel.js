@@ -17,7 +17,7 @@
 var app = angular.module('organisaatio');
 
 app.factory('OrganisaatioModel', function($filter, $log, $timeout, $location,
-                                          $q, $cookieStore, $injector,
+                                          $q, $cookies, $injector,
                                           Organisaatio, Organisaatiot,
                                           OrganisaatioHistoria,
                                           KoodistoKoodi, KoodistoClient,

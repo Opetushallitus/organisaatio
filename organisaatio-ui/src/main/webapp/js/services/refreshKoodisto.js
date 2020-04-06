@@ -16,7 +16,7 @@
 
 var koodisto = angular.module('Koodisto');
 
-koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injector, $log, KoodistoClient,
+koodisto.factory('RefreshKoodisto', function($filter, $q, $cookies, $injector, $log, KoodistoClient,
                                              Yhteystietojentyyppi, KoodistoKoodi, LisaYhteystiedot) {
     var loadingService = $injector.get('LoadingService');
 
@@ -267,10 +267,10 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookieStore, $injecto
                 // Testauksessa pitää huomioida että testiympäristössä koodistoversiota ei välttämättä päivitetä
                 // yllä kuvatulla tavalla.
                 getKoodistoPostiVersio().then(function(versio) {
-                    var kversio = $cookieStore.get('KoodistoPNVersio');
+                    var kversio = $cookies.get('KoodistoPNVersio');
                     if (typeof kversio === 'undefined' || kversio !== versio) {
                         // versio on vaihtunut, estä haku selaimen cachesta
-                        $cookieStore.put('KoodistoPNVersio', versio);
+                        $cookies.put('KoodistoPNVersio', versio);
                         getKoodistoPosti(false).then(function(result) {
                             deferred.resolve(result);
                         }, function(response) {
