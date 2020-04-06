@@ -41,7 +41,7 @@
         <servlet.version>3.1.0</servlet.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
         <swagger.version>1.6.0</swagger.version>
-        <frontend-plugin.version>1.5</frontend-plugin.version>
+        <frontend-plugin.version>1.9.1</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
         <cxf.version>3.3.6</cxf.version>
