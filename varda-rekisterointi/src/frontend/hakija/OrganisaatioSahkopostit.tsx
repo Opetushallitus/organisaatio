@@ -19,7 +19,9 @@ export default function OrganisaatioSahkopostit({readOnly, sahkopostit, setSahko
                                 errorText={errors.sahkopostit}
                                 label={i18n.translate('ORGANISAATION_SAHKOPOSTIT')}
                                 labelBy="organisaation-sahkopostit"
-                                helpText={i18n.translate('ORGANISAATION_SAHKOPOSTIT_OHJE')}>
+                                helpText={i18n.translate('ORGANISAATION_SAHKOPOSTIT_OHJE')}
+                                ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
+            >
                 <InputMultiple id="organisaation-sahkopostit"
                                values={sahkopostit}
                                disabled={readOnly}

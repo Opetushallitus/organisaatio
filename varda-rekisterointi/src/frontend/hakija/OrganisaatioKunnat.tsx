@@ -22,6 +22,7 @@ export default function OrganisaatioKunnat({readOnly, kaikkiKunnat, kunnat, setK
                                 errorText={errors.kunnat}
                                 label={i18n.translate('ORGANISAATION_KUNNAT')}
                                 labelBy="organisaation-kunnat"
+                                ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
 
                 <KoodiMultiSelect labelledBy="organisaation-kunnat"

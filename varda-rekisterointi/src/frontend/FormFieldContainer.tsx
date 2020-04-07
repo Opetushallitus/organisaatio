@@ -12,6 +12,7 @@ type Props = {
     children: React.ReactNode,
     ariaLisatietoId?: string,
     ariaLisatietoLokalisaatio?: string,
+    ariaErrorKoosteId?: string,
 }
 
 export default function FormFieldContainer(props: Props) {
@@ -26,7 +27,8 @@ export default function FormFieldContainer(props: Props) {
             {props.errorText || props.helpText
                 ? <div className="oph-input-container">
                     {props.children}
-                    {props.errorText ? <div className="oph-field-text oph-error">{props.errorText}</div> : null}
+                    {props.errorText ?
+                        <div aria-describedby={props.ariaErrorKoosteId || ''} className="oph-field-text oph-error">{props.errorText}</div> : null}
                     {!props.readOnly && props.helpText ? <div className="oph-field-text">{props.helpText}</div> : null}
                   </div>
                 : props.children}
@@ -34,3 +36,4 @@ export default function FormFieldContainer(props: Props) {
         </div>
     )
 }
+
