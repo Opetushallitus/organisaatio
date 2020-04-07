@@ -48,14 +48,14 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
     const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
 
-    // TODO Väliaikainen fix. Tämän voisi poistaa kunhan organisaatiopalvelu siirtyy käyttämään koodistoa yritysmuotojen osalta. Korjaus sitten myös riville 77.
+    // TODO Väliaikainen fix. Tämän voisi poistaa kunhan organisaatiopalvelu siirtyy käyttämään koodistoa yritysmuotojen osalta. Korjaus sitten myös riville 78.
     const yritysmuotoKoodi = yritysmuodot.find(y => (y.nimi && (y.nimi.fi === initialOrganisaatio.yritysmuoto || y.nimi.sv === initialOrganisaatio.yritysmuoto)) || y.uri === initialOrganisaatio.yritysmuoto);
 
     const baseClasses = { 'oph-input': true };
 
     return (
         <>
-            <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} labelFor="organisaationnimi" errorText={errors.nimi}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} labelFor="organisaationnimi" errorText={errors.nimi} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.nimi })}
                        type="text"
                        id="organisaationnimi"
@@ -63,7 +63,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                        disabled={nimiDisabled}
                        onChange={event => setOrganisaatio({ ytjNimi: { nimi: event.currentTarget.value, alkuPvm: organisaatio.alkuPvm, kieli: organisaatio.ytjNimi.kieli }})} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="organisaationytunnus" errorText={errors.ytunnus}>
+            <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="organisaationytunnus" errorText={errors.ytunnus} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.ytunnus })}
                        type="text"
                        id="organisaationytunnus"
@@ -71,7 +71,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                        disabled={ytunnusDisabled}
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto}>
+            <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <div className="oph-input-container">
                     <KoodiSelect id="yritysmuoto"
                                  selectable={yritysmuodot}
@@ -84,10 +84,10 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                                  onChange={yritysmuoto => setOrganisaatio({ yritysmuoto: yritysmuoto })} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')}>
+            <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')} ariaErrorKoosteId="rekisterointi_organisaatio_virheet" >
                 <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} labelFor="organisaationkotipaikka" errorText={errors.kotipaikkaUri}>
+            <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} labelFor="organisaationkotipaikka" errorText={errors.kotipaikkaUri} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <div className="oph-input-container">
                     <KoodiSelect id="organisaationkotipaikka"
                                  selectable={kaikkiKunnat}
@@ -104,6 +104,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                 errorText={errors.alkuPvm}
                 ariaLisatietoId="datepickerohje"
                 ariaLisatietoLokalisaatio={i18n.translate('RUUDUNLUKIJA_DATEPICKER_OHJE')}
+                ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
                 <div className="oph-input-container">
                     <DateSelect id="organisaationalkuPvm"

@@ -35,7 +35,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
 
     return (
         <>
-            <FormFieldContainer labelFor="varhaiskasvatustoimijan-toimintamuoto" label={i18n.translate('VARHAISKASVATUSTOIMIJA')}>
+            <FormFieldContainer labelFor="varhaiskasvatustoimijan-toimintamuoto" label={i18n.translate('VARHAISKASVATUSTOIMIJA')} ariaErrorKoosteId="rekisterointi_kayttaja_virheet">
                 <div className="oph-input-container">
                     <KoodiSelectRadio id="varhaiskasvatustoimijan-toimintamuoto"
                                       selectable={toimintamuodot}
@@ -45,7 +45,12 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                                       onChange={setToimintamuoto} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ETUNIMI')} labelFor="paakayttajan-etunimi" errorText={errors.etunimi}>
+            <FormFieldContainer
+                label={i18n.translate('ETUNIMI')}
+                labelFor="paakayttajan-etunimi"
+                errorText={errors.etunimi}
+                ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
+            >
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.etunimi })}
                        type="text"
                        id="paakayttajan-etunimi"
@@ -53,7 +58,12 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        disabled={readOnly}
                        onChange={event => setKayttaja({ etunimi: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SUKUNIMI')} labelFor="paakayttajan-sukunimi" errorText={errors.sukunimi}>
+            <FormFieldContainer
+                label={i18n.translate('SUKUNIMI')}
+                labelFor="paakayttajan-sukunimi"
+                errorText={errors.sukunimi}
+                ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
+            >
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.sukunimi })}
                        type="text"
                        id="paakayttajan-sukunimi"
@@ -61,7 +71,12 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        disabled={readOnly}
                        onChange={event => setKayttaja({ sukunimi: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SAHKOPOSTI')} labelFor="paakayttajan-sahkoposti" errorText={errors.sahkoposti}>
+            <FormFieldContainer
+                label={i18n.translate('SAHKOPOSTI')}
+                labelFor="paakayttajan-sahkoposti"
+                errorText={errors.sahkoposti}
+                ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
+            >
                 <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.sahkoposti })}
                        type="text"
                        id="paakayttajan-sahkoposti"
@@ -69,7 +84,12 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        disabled={readOnly}
                        onChange={event => setKayttaja({ sahkoposti: event.currentTarget.value })} />
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('ASIOINTIKIELI')} labelFor="paakayttajan-asiointikieli" errorText={errors.asiointikieli}>
+            <FormFieldContainer
+                label={i18n.translate('ASIOINTIKIELI')}
+                labelFor="paakayttajan-asiointikieli"
+                errorText={errors.asiointikieli}
+                ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
+            >
                 <div className="oph-input-container">
                     <Select id="paakayttajan-asiointikieli"
                             selectable={asiointikielet}
@@ -79,7 +99,12 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                             onChange={asiointikieli => setKayttaja({ asiointikieli: asiointikieli })} />
                 </div>
             </FormFieldContainer>
-            <FormFieldContainer label={i18n.translate('SAATETEKSTI')} labelFor="paakayttajan-saateteksti" errorText={errors.saateteksti}>
+            <FormFieldContainer
+                label={i18n.translate('SAATETEKSTI')}
+                labelFor="paakayttajan-saateteksti"
+                errorText={errors.saateteksti}
+                ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
+            >
                 <textarea className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.saateteksti })}
                           id="paakayttajan-saateteksti"
                           value={kayttaja.saateteksti}

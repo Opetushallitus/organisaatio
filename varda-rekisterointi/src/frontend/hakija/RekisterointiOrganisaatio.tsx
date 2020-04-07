@@ -6,6 +6,7 @@ import { LanguageContext } from '../contexts';
 import OrganisaatioSahkopostit from './OrganisaatioSahkopostit';
 import Fieldset from '../Fieldset';
 import OrganisaatioKunnat from './OrganisaatioKunnat';
+import AriaVirheMapper from "../virhe/AriaVirheMapper";
 
 type Props = {
     initialOrganisaatio: Organisaatio,
@@ -23,6 +24,11 @@ export default function RekisterointiOrganisaatio(props: Props) {
     const { i18n } = useContext(LanguageContext);
     return (
         <form>
+            { Object.keys(props.errors).length > 0 &&
+            <AriaVirheMapper
+                listId="rekisterointi_organisaatio_virheet"
+                errors={props.errors}
+            />}
             <Fieldset title={i18n.translate('ORGANISAATION_TIEDOT')}
                       description={i18n.translate('ORGANISAATION_TIEDOT_KUVAUS')}>
                 <OrganisaatioTiedot readOnly={!!props.initialOrganisaatio.oid}
