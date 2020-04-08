@@ -68,7 +68,7 @@
         <hibernate.version>5.4.5.Final</hibernate.version>
         <hibernate.jpa.version>1.0.2.Final</hibernate.jpa.version>
         <ehcache.version>2.6.11</ehcache.version>
-        <cas-client-support-distributed-ehcache.version>3.6.0</cas-client-support-distributed-ehcache.version>
+        <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
 
 
         <!-- Utils -->
