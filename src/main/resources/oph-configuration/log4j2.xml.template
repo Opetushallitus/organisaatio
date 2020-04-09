@@ -12,7 +12,7 @@
         <Property name="auditLogPattern">%m%n</Property>
     </Properties>
     <Appenders>
-        <Console name="STDOUT" target="SYSTEM_OUT">\
+        <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="${layoutPattern}"/>
         </Console>
         <RollingFile name="FILE" fileName="${logFile}" append="true">
@@ -29,7 +29,7 @@
         <Root level="${logLevel}">
             <AppenderRef ref="FILE"/>
         </Root>
-        <Logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="info, audit" additivity="false">
+        <Logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="info" additivity="false">
              <AppenderRef ref="AUDIT"/>
         </Logger>
     </Loggers>
