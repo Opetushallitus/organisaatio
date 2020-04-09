@@ -163,7 +163,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
             criteria.setLakkautusPvm(LocalDate.now());
         }
-        criteria.setParentOid(rootOrganisaatioOid);
+        criteria.setParentOidPath("|" + rootOrganisaatioOid + "|");
         criteria.setPoistettu(false);
 
         return organisaatioDAO.findGroups(criteria);

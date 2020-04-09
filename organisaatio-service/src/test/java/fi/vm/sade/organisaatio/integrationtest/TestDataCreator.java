@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Tuomas Katva
@@ -156,20 +155,16 @@ public class TestDataCreator {
     }
 
     private void setParentPaths(Organisaatio o, String parentOid) {
+        String parentOidpath = "";
         String parentIdPath = "";
-        List<Organisaatio> parents = this.organisaatioDAO.findParentsTo(parentOid);
-        for (Organisaatio curOrg : parents) {
+        for (Organisaatio curOrg : this.organisaatioDAO.findParentsTo(parentOid)) {
+            parentOidpath += "|" + curOrg.getOid();
             parentIdPath += "|" + curOrg.getId();
         }
+        parentOidpath += "|";
         parentIdPath += "|";
+        o.setParentOidPath(parentOidpath);
         o.setParentIdPath(parentIdPath);
-        List<String> parentOids = parents.stream().map(Organisaatio::getOid).collect(Collectors.collectingAndThen(
-                Collectors.toList(), strings -> {
-                    Collections.reverse(strings);
-                    return strings;
-                }
-        ));
-        o.setParentOids(parentOids);
     }
 
 }

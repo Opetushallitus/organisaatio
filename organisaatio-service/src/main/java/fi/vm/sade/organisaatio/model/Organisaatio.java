@@ -166,9 +166,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Column(length = 255)
     private String paivittaja;
 
+    /**
+     * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
+     */
+    private String parentOidPath;
     private String parentIdPath;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(
             name = "organisaatio_parent_oids",
             joinColumns = @JoinColumn(name = "organisaatio_id"))
@@ -217,10 +221,21 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public Optional<String> getParentOid() {
-        if (parentOids == null || parentOids.isEmpty()) {
+        if (this.parentOidPath != null) {
+            Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
+                            .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                            .descendingIterator();
+                    if (!oidsPathInverted.hasNext()) {
+                        return Optional.empty();
+                    }
+                    return Optional.ofNullable(oidsPathInverted.next())
+                            .filter(s -> s.matches("[\\d\\.]+"));
+        }
+        return Optional.empty();
+        /*if (parentOids.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(parentOids.get(0));
+        return Optional.of(parentOids.get(0));*/
     }
 
     /**
@@ -692,12 +707,20 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.parentSuhteet = parentSuhteet;
     }
 
-    public String getParentIdPath() {
-        return parentIdPath;
+    public String getParentOidPath() {
+        return parentOidPath;
     }
 
-    public String getParentOidPath() {
-        return OrganisaatioUtil.parentOidPath(parentOids);
+    public void setParentOidPath(String parentOidPath) {
+        this.parentOidPath = parentOidPath;
+    }
+
+    public List<String> getParentOidsFromPath() {
+        return new ArrayList<>(parentOids);
+    }
+
+    public String getParentIdPath() {
+        return parentIdPath;
     }
 
     public void setParentIdPath(String parentIdPath) {
