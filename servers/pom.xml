@@ -27,11 +27,11 @@
                     <systemPropertiesFile>${user.home}/oph-configuration/organisaatio-service.properties</systemPropertiesFile>
                     <systemProperties>
                         <systemProperty>
-                            <name>log4j.configuration</name>
+                            <name>log4j.configurationFile</name>
                             <!-- have to use file:/// url since -->
                             <!-- Jetty is using classloader -->
                             <!-- before the webapp classloader is ready -->
-                            <value>file:///${basedir}/src/main/resources/log4j.properties</value>
+                            <value>file:///${basedir}/src/main/resources/log4j2.xml</value>
                         </systemProperty>
                     </systemProperties>
                     <webAppConfig>
