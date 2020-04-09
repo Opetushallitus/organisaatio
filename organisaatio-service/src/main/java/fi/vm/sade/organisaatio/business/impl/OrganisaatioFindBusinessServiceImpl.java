@@ -15,7 +15,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -60,8 +59,7 @@ import static java.util.stream.Collectors.toSet;
 @Service("organisaatioFindBusinessService")
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
-    private static final int MAX_PARENT_OIDS = 500;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -109,11 +107,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         }
         if (config.isChildrenIncluded() && !oids.isEmpty()) {
             SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-            // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
-            Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
-                childrenCriteria.setParentOids(parentOids);
-                entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
-            });
+            childrenCriteria.setParentOids(oids);
+            entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
         }
 
         // haetaan aliorganisaatioiden lukumäärät (myös hakukriteerien ulkopuolella olevat)
@@ -189,7 +184,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         boolean excludePiilotettu = !permissionChecker.isReadAccessToAll();
         return organisaatioDAO.findByOids(oids, true, excludePiilotettu).stream()
                 .map(this::markImagesNotIncluded)
-                .map(this::mapToOrganisaatioRdtoV4)
+                .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
     }
 
@@ -246,7 +241,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
-        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 organisaatio_result = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        return organisaatio_result;
     }
 
     @Override
