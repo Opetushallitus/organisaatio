@@ -140,9 +140,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
         result = res.searchHierarchy(searchCriteria);
-        for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
-            LOG.debug("ORG: {}", org.getOid());
-        }
         assertEquals(5, result.getNumHits());
 
         //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
