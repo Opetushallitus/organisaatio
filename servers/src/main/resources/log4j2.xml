@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
+<Configuration status="trace">
     <Appenders>
-        <Console name="STDOUT" target="SYSTEM_OUT">\
+        <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
         </Console>
     </Appenders>
@@ -11,5 +11,8 @@
         </Root>
         <Logger name="log4j.logger.org.springframework" level="warn"/>
         <Logger name="log4j.logger.fi.vm" level="debug"/>
+        <Logger name="org.hibernate.SQL" level="debug"/>
+        <Logger name="org.hibernate.type" level="trace"/>
+        <Logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="info"/>
     </Loggers>
 </Configuration>
