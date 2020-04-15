@@ -71,7 +71,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
         return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
@@ -83,7 +83,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
@@ -97,7 +97,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to update organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         try {
@@ -134,7 +134,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
         try {
             return organisaatioBusinessService.save(ordto, false);
@@ -176,7 +176,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
