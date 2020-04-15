@@ -280,7 +280,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         LOG.debug("searchOrganisaatioPaivittaja: " + oid);
@@ -306,7 +306,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
@@ -337,7 +337,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         LOG.debug("getOrganisaationLOPTiedotByOID: " + oid);
@@ -386,7 +386,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
@@ -404,7 +404,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
 
@@ -423,7 +423,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
@@ -561,7 +561,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
@@ -634,7 +634,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(organisaatioOid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + organisaatioOid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         try {
