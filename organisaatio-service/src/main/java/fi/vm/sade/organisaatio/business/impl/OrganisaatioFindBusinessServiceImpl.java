@@ -61,7 +61,7 @@ import static java.util.stream.Collectors.toSet;
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
-    private static final int MAX_PARENT_OIDS = 500;
+    private static final int MAX_PARENT_OIDS = 2500;
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -94,26 +94,30 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 .filter(notRootOrganisaatio)
                 .collect(toSet());
 
-        // haetaan ylä- ja aliorganisaatiot
-        if (config.isParentsIncluded()) {
-            Set<String> parentOids = new HashSet<>();
-            entities.forEach(entity -> parentOids.addAll(
-                    entity.getParentOids().stream().filter(notRootOrganisaatio).collect(toList())));
-            parentOids.removeAll(oids);
+        if (hasOtherThanStatusCriteria(criteria)) {
+            // jos ehdot eivät rajaa muulla kuin statuksella, vanhemmat/lapset sisältyvät jo hitteihin!
+            // haetaan ylä- ja aliorganisaatiot
+            if (config.isParentsIncluded()) {
+                Set<String> parentOids = new HashSet<>();
+                entities.forEach(entity ->
+                        parentOids.addAll(
+                                entity.getParentOids().stream().filter(notRootOrganisaatio).collect(toList())));
+                parentOids.removeAll(oids);
 
-            if (!parentOids.isEmpty()) {
-                SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
-                parentsCriteria.setOid(parentOids);
-                entities.addAll(organisaatioDAO.findBy(parentsCriteria, now));
+                if (!parentOids.isEmpty()) {
+                    SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
+                    parentsCriteria.setOid(parentOids);
+                    entities.addAll(organisaatioDAO.findBy(parentsCriteria, now));
+                }
             }
-        }
-        if (config.isChildrenIncluded() && !oids.isEmpty()) {
-            SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-            // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
-            Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
-                childrenCriteria.setParentOids(parentOids);
-                entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
-            });
+            if (config.isChildrenIncluded() && !oids.isEmpty()) {
+                SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
+                // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
+                Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
+                    childrenCriteria.setParentOids(parentOids);
+                    entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
+                });
+            }
         }
 
         // haetaan aliorganisaatioiden lukumäärät (myös hakukriteerien ulkopuolella olevat)
@@ -128,6 +132,19 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     return dto;
                 })
                 .collect(toList());
+    }
+
+    // onko muita, kuin statusehtoja?
+    private static boolean hasOtherThanStatusCriteria(SearchCriteria criteria) {
+        return !(criteria.getKieli().isEmpty() &&
+                criteria.getKunta().isEmpty() &&
+                criteria.getOid().isEmpty() &&
+                criteria.getOidRestrictionList().isEmpty() &&
+                criteria.getOppilaitosTyyppi().isEmpty() &&
+                criteria.getOrganisaatioTyyppi().isEmpty() &&
+                criteria.getParentOids().isEmpty() &&
+                (criteria.getSearchStr() == null || criteria.getSearchStr().length() == 0) &&
+                criteria.getYritysmuoto().isEmpty());
     }
 
     private static SearchCriteria constructRelativeCriteria(SearchCriteria from) {
