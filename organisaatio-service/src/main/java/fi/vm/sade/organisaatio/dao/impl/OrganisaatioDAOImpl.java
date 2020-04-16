@@ -87,6 +87,9 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Autowired
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
+    @Value("${root.organisaatio.oid}")
+    private String rootOrganisaatioOid;
+
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
     @Override
@@ -162,6 +165,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getParentOids()).filter(not(Collection::isEmpty)).ifPresent(parentOids
                 -> query.where(qOrganisaatio.parentOids.any().in(parentOids)));
 
+        query.where(qOrganisaatio.oid.notEqualsIgnoreCase(rootOrganisaatioOid));
         return query.fetch();
     }
 
