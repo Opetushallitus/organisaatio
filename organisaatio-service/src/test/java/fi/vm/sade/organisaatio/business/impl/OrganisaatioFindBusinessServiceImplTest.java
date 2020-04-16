@@ -88,6 +88,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     @Test
     public void findByIncludeParents() {
         SearchCriteria criteria = new SearchCriteria();
+        criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
@@ -109,6 +110,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     @Test
     public void findByIncludeChildren() {
         SearchCriteria criteria = new SearchCriteria();
+        criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(false, true, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
