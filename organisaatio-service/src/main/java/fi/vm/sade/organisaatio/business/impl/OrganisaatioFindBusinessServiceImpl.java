@@ -84,14 +84,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioPerustieto> findBy(SearchCriteria criteria, SearchConfig config) {
-        Predicate<? super String> notRootOrganisaatio = oid -> oid != null && !oid.equals(rootOrganisaatioOid);
         // haetaan hakukriteerien mukaiset organisaatiot
         Date now = timeService.getNow();
         Set<Organisaatio> entities = new TreeSet<>(Comparator.comparing(Organisaatio::getOid));
         entities.addAll(organisaatioDAO.findBy(criteria, now));
         Set<String> oids = entities.stream()
                 .map(Organisaatio::getOid)
-                .filter(notRootOrganisaatio)
                 .collect(toSet());
 
         if (hasOtherThanStatusCriteria(criteria)) {
@@ -101,7 +99,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 Set<String> parentOids = new HashSet<>();
                 entities.forEach(entity ->
                         parentOids.addAll(
-                                entity.getParentOids().stream().filter(notRootOrganisaatio).collect(toList())));
+                                entity.getParentOids().stream().collect(toList())));
                 parentOids.removeAll(oids);
 
                 if (!parentOids.isEmpty()) {
@@ -112,11 +110,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             }
             if (config.isChildrenIncluded() && !oids.isEmpty()) {
                 SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-                // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
-                Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
-                    childrenCriteria.setParentOids(parentOids);
-                    entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
-                });
+                childrenCriteria.setParentOids(oids);
+                entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
             }
         }
 
@@ -124,9 +119,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Map<String, Long> childCount = config.isCountChildren() ? organisaatioDAO.countActiveChildrenByOid(now) : emptyMap();
 
         return entities.stream()
-                .filter(entity -> !rootOrganisaatioOid.equals(entity.getOid()))
-                .map(entity -> conversionService.convert(entity, OrganisaatioPerustieto.class))
-                .map(dto -> {
+                .map(entity -> {
+                    OrganisaatioPerustieto dto = conversionService.convert(entity, OrganisaatioPerustieto.class);
                     dto.setAliOrganisaatioMaara(childCount.getOrDefault(dto.getOid(), 0L));
                     dto.setMatch(oids.contains(dto.getOid()));
                     return dto;
