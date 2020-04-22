@@ -202,11 +202,14 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}/jalkelaiset
     @Override
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
+        OrganisaatioRDTOV4 parent = getOrganisaatioByOID(oid, false);
+        // parentin haku tarkistaa oikeudet ja palauttaa 404, jos ei löydy
         List<OrganisaatioDAOImpl.JalkelaisetRivi> rows = organisaatioFindBusinessService.findDescendants(oid);
-        return processRows(rows);
+        return processRows(rows, parent);
     }
 
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioDAOImpl.JalkelaisetRivi> rows) {
+    private static OrganisaatioHakutulosV4 processRows(
+            List<OrganisaatioDAOImpl.JalkelaisetRivi> rows, OrganisaatioRDTOV4 root) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
         final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
@@ -232,7 +235,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 current.setKieletUris(new HashSet<>());
                 current.setChildren(new HashSet<>());
                 OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
-                current.setParentOidPath(generateParentOidPath(parent));
+                current.setParentOidPath(generateParentOidPath(root, parent));
                 if (parent == null) {
                     rootOrgs.add(current);
                 } else {
@@ -259,11 +262,12 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         return result;
     }
 
-    private static String generateParentOidPath(OrganisaatioPerustietoV4 parent) {
+    private static String generateParentOidPath(OrganisaatioRDTOV4 root, OrganisaatioPerustietoV4 parent) {
         if (parent == null) {
-            return "";
+            return (root.getParentOidPath() != null && root.getParentOidPath().length() > 0 ?
+                    root.getParentOidPath() : "|") + root.getOid() + "|";
         }
-        return "|" + parent.getOid() + (parent.getParentOidPath() == null ? "|" : parent.getParentOidPath());
+        return parent.getParentOidPath() + parent.getOid() + "|";
     }
 
 }
