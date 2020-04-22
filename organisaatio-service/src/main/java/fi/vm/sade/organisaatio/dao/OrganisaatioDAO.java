@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -230,4 +231,6 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     EntityManager getJpaEntityManager();
 
     Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
+
+    List<OrganisaatioDAOImpl.JalkelaisetRivi> findAllDescendants(String oid);
 }

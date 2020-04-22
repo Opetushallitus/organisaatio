@@ -31,6 +31,8 @@
             <map>
                 <entry key="hibernate.hbm2ddl.auto" value="${jpa.schemaUpdate}" />
                 <entry key="hibernate.show_sql" value="${jpa.showSql}" />
+                <!--<entry key="hibernate.generate_statistics" value="${jpa.generateStats}" />-->
+                <entry key="hibernate.generate_statistics" value="true" />
             </map>
         </property>
         <property name="persistenceXmlLocation" value="classpath:persistence.xml" />

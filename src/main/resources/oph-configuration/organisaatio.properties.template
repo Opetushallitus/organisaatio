@@ -68,6 +68,7 @@ koodi.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/
 koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate
 jpa.showSql=false
+jpa.generateStats=false
 log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
