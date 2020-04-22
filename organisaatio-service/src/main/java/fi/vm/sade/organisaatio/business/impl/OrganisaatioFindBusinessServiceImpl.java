@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -320,6 +321,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             return Collections.emptyList();
         }
         return this.mapToOrganisaatioRdtoV4(organisaatiot, includeImage);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid) {
+        return organisaatioDAO.findAllDescendants(oid);
     }
 
 }

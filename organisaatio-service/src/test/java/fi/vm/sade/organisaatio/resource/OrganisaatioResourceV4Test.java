@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.junit.After;
@@ -44,6 +45,13 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         List<OrganisaatioRDTOV4> organisaatiot = resource.findByOids(oids);
 
         assertThat(organisaatiot).extracting(OrganisaatioRDTOV4::getOid).containsExactly("1.2.8000.1");
+    }
+
+    @Test
+    public void findDescendants() {
+        String rootOid = "1.2.246.562.24.00000000001";
+        OrganisaatioHakutulosV4 results = resource.findDescendants(rootOid);
+        assertThat(results.getNumHits()).isEqualTo(9);
     }
 
 }

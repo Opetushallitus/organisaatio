@@ -7,9 +7,11 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
@@ -18,15 +20,14 @@ import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,6 +43,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private final PermissionChecker permissionChecker;
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
+    private final ConversionService conversionService;
 
     @Autowired
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2,
@@ -49,13 +51,15 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                                       OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper,
                                       PermissionChecker permissionChecker,
                                       OrganisaatioBusinessService organisaatioBusinessService,
-                                      OrganisaatioFindBusinessService organisaatioFindBusinessService) {
+                                      OrganisaatioFindBusinessService organisaatioFindBusinessService,
+                                      ConversionService conversionService) {
         this.organisaatioResourceV2 = organisaatioResourceV2;
         this.organisaatioResourceV3 = organisaatioResourceV3;
         this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
         this.permissionChecker = permissionChecker;
         this.organisaatioBusinessService = organisaatioBusinessService;
         this.organisaatioFindBusinessService = organisaatioFindBusinessService;
+        this.conversionService = conversionService;
     }
 
     // POST //organisaatio/v4/findbyoids
@@ -194,4 +198,72 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
     }
+
+    // GET /organisaatio/v4/{oid}/jalkelaiset
+    @Override
+    public OrganisaatioHakutulosV4 findDescendants(String oid) {
+        List<OrganisaatioDAOImpl.JalkelaisetRivi> rows = organisaatioFindBusinessService.findDescendants(oid);
+        return processRows(rows);
+    }
+
+    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioDAOImpl.JalkelaisetRivi> rows) {
+        final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
+        final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
+        OrganisaatioPerustietoV4 current = null;
+        for (OrganisaatioDAOImpl.JalkelaisetRivi row : rows) {
+            if (current == null || !row.oid.equals(current.getOid())) {
+                if (current != null) { // edellinen valmis, asetetaan mappiin
+                    oidToOrg.put(current.getOid(), current);
+                }
+                current = new OrganisaatioPerustietoV4();
+                current.setMatch(true);
+                current.setOid(row.oid);
+                current.setAlkuPvm(row.alkuPvm);
+                current.setLakkautusPvm(row.lakkautusPvm);
+                current.setParentOid(row.parentOid);
+                current.setYtunnus(row.ytunnus);
+                current.setVirastoTunnus(row.virastotunnus);
+                current.setOppilaitosKoodi(row.oppilaitoskoodi);
+                current.setOppilaitostyyppi(row.oppilaitostyyppi);
+                current.setToimipistekoodi(row.toimipistekoodi);
+                current.setKotipaikkaUri(row.kotipaikka);
+                current.setOrganisaatiotyypit(new HashSet<>());
+                current.setNimi(new HashMap<>());
+                current.setKieletUris(new HashSet<>());
+                current.setChildren(new HashSet<>());
+                OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
+                current.setParentOidPath(generateParentOidPath(parent));
+                if (parent == null) {
+                    rootOrgs.add(current);
+                } else {
+                    parent.getChildren().add(current);
+                    parent.setAliOrganisaatioMaara(parent.getChildren().size());
+                }
+            }
+            if (row.organisaatiotyyppi != null) {
+                current.getOrganisaatiotyypit().add(row.organisaatiotyyppi);
+            }
+            if (row.nimiKieli != null) {
+                current.getNimi().put(row.nimiKieli, row.nimiArvo);
+            }
+            if (row.kieli != null) {
+                current.getKieletUris().add(row.kieli);
+            }
+        }
+        if (current != null) {
+            oidToOrg.put(current.getOid(), current);
+        }
+        OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
+        result.setOrganisaatiot(rootOrgs);
+        result.setNumHits(oidToOrg.size());
+        return result;
+    }
+
+    private static String generateParentOidPath(OrganisaatioPerustietoV4 parent) {
+        if (parent == null) {
+            return "";
+        }
+        return "|" + parent.getOid() + (parent.getParentOidPath() == null ? "|" : parent.getParentOidPath());
+    }
+
 }
