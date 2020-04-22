@@ -35,6 +35,7 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import org.hibernate.jpa.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -933,6 +933,53 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         List<String> childOids = namedParameterJdbcTemplate.query(sql, new BeanPropertySqlParameterSource(criteria),
                 (ResultSet rs, int rowNum) -> rs.getString("oid"));
         return childOids.stream().filter(childOid -> !childOid.equals(criteria.getOid())).collect(toSet());
+    }
+
+    @Override
+    public List<JalkelaisetRivi> findAllDescendants(String oid) {
+        TypedQuery<JalkelaisetRivi> query = getEntityManager().createNamedQuery(
+                "Organisaatio.findAllDescendants", JalkelaisetRivi.class);
+        query.setParameter("root", oid);
+        return query.getResultList();
+    }
+
+    public static class JalkelaisetRivi {
+        public final String oid;
+        public final Date alkuPvm;
+        public final Date lakkautusPvm;
+        public final String parentOid;
+        public final String ytunnus;
+        public final String virastotunnus;
+        public final String oppilaitoskoodi;
+        public final String oppilaitostyyppi;
+        public final String toimipistekoodi;
+        public final String kotipaikka;
+        public final String nimiKieli;
+        public final String nimiArvo;
+        public final String organisaatiotyyppi;
+        public final String kieli;
+        public final Integer taso;
+
+        public JalkelaisetRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOid,
+                               String ytunnus, String virastotunnus, String oppilaitoskoodi,
+                               String oppilaitostyyppi, String toimipistekoodi, String kotipaikka,
+                               String organisaatiotyyppi, String nimiKieli,  String nimiArvo, String kieli, Integer taso) {
+            this.oid = oid;
+            this.alkuPvm = alkuPvm;
+            this.lakkautusPvm = lakkautusPvm;
+            this.parentOid = parentOid;
+            this.ytunnus = ytunnus;
+            this.virastotunnus = virastotunnus;
+            this.oppilaitoskoodi = oppilaitoskoodi;
+            this.oppilaitostyyppi = oppilaitostyyppi;
+            this.toimipistekoodi = toimipistekoodi;
+            this.kotipaikka = kotipaikka;
+            this.nimiKieli = nimiKieli;
+            this.nimiArvo = nimiArvo;
+            this.organisaatiotyyppi = organisaatiotyyppi;
+            this.kieli = kieli;
+            this.taso = taso;
+        }
     }
 
 }
