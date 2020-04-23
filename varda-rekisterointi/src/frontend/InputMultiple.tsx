@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import Button from './Button';
 import { LanguageContext } from './contexts';
 import styles from './InputMultiple.module.css';
@@ -16,6 +16,7 @@ type Props = {
 
 export default function InputMultiple(props: Props) {
     const { i18n } = useContext(LanguageContext);
+
     function add(value: string) {
         return [ ...props.values, value ];
     }
@@ -32,9 +33,12 @@ export default function InputMultiple(props: Props) {
         'oph-input-has-error': props.hasError,
     });
     return (
-        <div>{props.values.map((value, index) => {
+        <div>
+            {props.values.map((value, index) => {
             return <div key={index} className={styles.inputContainer}>
-                <input aria-labelledby={props.id}
+                <input tabIndex={0}
+                       autoFocus
+                       aria-labelledby={props.id}
                        className={classes}
                        type="text"
                        value={value}
@@ -42,6 +46,7 @@ export default function InputMultiple(props: Props) {
                        onChange={event => props.onChange(edit(event.currentTarget.value, index))} />
                 {props.disabled ? null :
                 <button aria-label={i18n.translate('POISTA_SAHKOPOSTI')}
+                        tabIndex={0}
                         className={classNames("oph-button oph-button-close", styles.removeButton)}
                         type="button"
                         disabled={props.disabled}
@@ -51,13 +56,14 @@ export default function InputMultiple(props: Props) {
                 }
             </div>
         })}
-        {props.disabled ? null :
-        <Button
-                type="button"
-                disabled={props.disabled}
-                styling="ghost"
-                onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
-        }
+            {props.disabled ? null :
+                <Button
+                    tabIndex={0}
+                    type="button"
+                    disabled={props.disabled}
+                    styling="ghost"
+                    onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
+            }
         </div>
     )
 }
