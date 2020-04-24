@@ -45,7 +45,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
@@ -60,8 +59,8 @@ import static java.util.stream.Collectors.toSet;
 @Service("organisaatioFindBusinessService")
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
-    private static final int MAX_PARENT_OIDS = 2500;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final int MAX_PARENT_OID_PATHS = 500;
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -86,31 +85,34 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public List<OrganisaatioPerustieto> findBy(SearchCriteria criteria, SearchConfig config) {
         // haetaan hakukriteerien mukaiset organisaatiot
         Date now = timeService.getNow();
-        Set<Organisaatio> entities = new TreeSet<>(Comparator.comparing(Organisaatio::getOid));
+        Set<Organisaatio> entities = new TreeSet<>((o1, o2) -> o1.getOid().compareTo(o2.getOid()));
         entities.addAll(organisaatioDAO.findBy(criteria, now));
-        Set<String> oids = entities.stream()
-                .map(Organisaatio::getOid)
-                .collect(toSet());
+        Set<String> oids = entities.stream().map(Organisaatio::getOid).collect(toSet());
 
-        if (hasOtherThanStatusCriteria(criteria)) {
-            // jos ehdot eivät rajaa muulla kuin statuksella, vanhemmat/lapset sisältyvät jo hitteihin!
-            // haetaan ylä- ja aliorganisaatiot
-            if (config.isParentsIncluded()) {
-                Set<String> parentOids = new HashSet<>();
-                entities.forEach(entity -> parentOids.addAll(entity.getParentOids()));
-                parentOids.removeAll(oids);
+        // haetaan ylä- ja aliorganisaatiot
+        if (config.isParentsIncluded() || config.isChildrenIncluded()) {
+            Set<String> parentOids = new HashSet<>();
+            SortedSet<String> parentOidPaths = new TreeSet<>((path1, path2) -> path1.compareTo(path2));
+            entities.forEach(entity -> {
+                Optional.ofNullable(entity.getParentOidPath()).ifPresent(parentOidPath -> {
+                    Arrays.stream(parentOidPath.split("\\|"))
+                            .filter(oid -> !oid.isEmpty() && !oid.equals(rootOrganisaatioOid))
+                            .forEach(parentOids::add);
+                    parentOidPaths.add(parentOidPath + entity.getOid() + "|");
+                });
+            });
+            parentOids.removeAll(oids);
+            optimizeParentOidPaths(parentOidPaths);
 
-                if (!parentOids.isEmpty()) {
-                    SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
-                    parentsCriteria.setOid(parentOids);
-                    entities.addAll(organisaatioDAO.findBy(parentsCriteria, now));
-                }
+            if (config.isParentsIncluded() && !parentOids.isEmpty()) {
+                SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
+                parentsCriteria.setOid(parentOids);
+                entities.addAll(organisaatioDAO.findBy(parentsCriteria, now));
             }
-            if (config.isChildrenIncluded() && !oids.isEmpty()) {
+            if (config.isChildrenIncluded() && !parentOidPaths.isEmpty()) {
                 SearchCriteria childrenCriteria = constructRelativeCriteria(criteria);
-                // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
-                Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
-                    childrenCriteria.setParentOids(parentOids);
+                Iterables.partition(parentOidPaths, MAX_PARENT_OID_PATHS).forEach(optimizedParentOidPaths -> {
+                    childrenCriteria.setParentOidPaths(optimizedParentOidPaths);
                     entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
                 });
             }
@@ -120,25 +122,28 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Map<String, Long> childCount = config.isCountChildren() ? organisaatioDAO.countActiveChildrenByOid(now) : emptyMap();
 
         return entities.stream()
-                .map(entity -> {
-                    OrganisaatioPerustieto dto = conversionService.convert(entity, OrganisaatioPerustieto.class);
+                .filter(entity -> !rootOrganisaatioOid.equals(entity.getOid()))
+                .map(entity -> conversionService.convert(entity, OrganisaatioPerustieto.class))
+                .map(dto -> {
                     dto.setAliOrganisaatioMaara(childCount.getOrDefault(dto.getOid(), 0L));
                     dto.setMatch(oids.contains(dto.getOid()));
                     return dto;
-                }).collect(toList());
+                })
+                .collect(toList());
     }
 
-    // onko muita, kuin statusehtoja?
-    private static boolean hasOtherThanStatusCriteria(SearchCriteria criteria) {
-        return !(criteria.getKieli().isEmpty() &&
-                criteria.getKunta().isEmpty() &&
-                criteria.getOid().isEmpty() &&
-                criteria.getOidRestrictionList().isEmpty() &&
-                criteria.getOppilaitosTyyppi().isEmpty() &&
-                criteria.getOrganisaatioTyyppi().isEmpty() &&
-                criteria.getParentOids().isEmpty() &&
-                (criteria.getSearchStr() == null || criteria.getSearchStr().length() == 0) &&
-                criteria.getYritysmuoto().isEmpty());
+    private static void optimizeParentOidPaths(SortedSet<String> parentOidPaths) {
+        // optimoidaan parentOidPath: poistetaan organisaatiot joiden yläorganisaatio on myös mukana listassa
+        Iterator<String> iterator = parentOidPaths.iterator();
+        String prev = null;
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (prev != null && next.startsWith(prev)) {
+                iterator.remove();
+            } else {
+                prev = next;
+            }
+        }
     }
 
     private static SearchCriteria constructRelativeCriteria(SearchCriteria from) {
@@ -179,7 +184,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         if (criteria.getAktiivinen() != null && criteria.getLakkautusPvm() == null) {
             criteria.setLakkautusPvm(LocalDate.now());
         }
-        criteria.setParentOid(rootOrganisaatioOid);
+        criteria.setParentOidPath("|" + rootOrganisaatioOid + "|");
         criteria.setPoistettu(false);
 
         return organisaatioDAO.findGroups(criteria);
@@ -200,7 +205,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         boolean excludePiilotettu = !permissionChecker.isReadAccessToAll();
         return organisaatioDAO.findByOids(oids, true, excludePiilotettu).stream()
                 .map(this::markImagesNotIncluded)
-                .map(this::mapToOrganisaatioRdtoV4)
+                .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
     }
 
@@ -257,7 +262,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
-        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 organisaatio_result = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        return organisaatio_result;
     }
 
     @Override

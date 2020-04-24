@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         // s.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
         // t.set(s.getParentIdPath());
         // t.setParentMetadata(s.getParentMetadata());
-        s.setParentOids(OrganisaatioUtil.parentOids(s.getParentOidPath()));
+        s.setParentOidPath(s.getParentOidPath());
         // t.set(s.getParentSuhteet());
 
         // t.set(s.getPuhelin());

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
 import static java.util.stream.Collectors.toSet;
 
 
@@ -166,15 +167,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Column(length = 255)
     private String paivittaja;
 
+    /**
+     * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
+     */
+    private String parentOidPath;
     private String parentIdPath;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "organisaatio_parent_oids",
-            joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @Column(name = "parent_oid", nullable = false)
-    @OrderColumn(name = "parent_position")
-    private List<String> parentOids = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
@@ -217,10 +214,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public Optional<String> getParentOid() {
-        if (parentOids == null || parentOids.isEmpty()) {
-            return Optional.empty();
+        if (this.parentOidPath != null) {
+            Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
+                    .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                    .descendingIterator();
+            if (!oidsPathInverted.hasNext()) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(oidsPathInverted.next())
+                    .filter(s -> s.matches("[\\d\\.]+"));
         }
-        return Optional.of(parentOids.get(0));
+        return Optional.empty();
     }
 
     /**
@@ -692,24 +696,28 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.parentSuhteet = parentSuhteet;
     }
 
+    public String getParentOidPath() {
+        return parentOidPath;
+    }
+
+    public void setParentOidPath(String parentOidPath) {
+        this.parentOidPath = parentOidPath;
+    }
+
+    public List<String> getParentOidsFromPath() {
+        return Optional.ofNullable(parentOidPath)
+                .map(path -> Arrays.stream(path.split("\\|"))
+                        .filter(not(String::isEmpty))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+    }
+
     public String getParentIdPath() {
         return parentIdPath;
     }
 
-    public String getParentOidPath() {
-        return OrganisaatioUtil.parentOidPath(parentOids);
-    }
-
     public void setParentIdPath(String parentIdPath) {
         this.parentIdPath = parentIdPath;
-    }
-
-    public List<String> getParentOids() {
-        return parentOids;
-    }
-
-    public void setParentOids(List<String> parentOids) {
-        this.parentOids = parentOids;
     }
 
     /**

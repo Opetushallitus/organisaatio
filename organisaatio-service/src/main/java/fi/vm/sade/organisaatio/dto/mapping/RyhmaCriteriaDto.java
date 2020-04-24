@@ -9,7 +9,7 @@ public class RyhmaCriteriaDto {
     private LocalDate lakkautusPvm;
     private String ryhmatyyppi;
     private String kayttoryhma;
-    private String parentOid;
+    private String parentOidPath;
     private Boolean poistettu;
 
     public String getQ() {
@@ -52,12 +52,12 @@ public class RyhmaCriteriaDto {
         this.kayttoryhma = kayttoryhma;
     }
 
-    public String getParentOid() {
-        return parentOid;
+    public String getParentOidPath() {
+        return parentOidPath;
     }
 
-    public void setParentOid(String parentOid) {
-        this.parentOid = parentOid;
+    public void setParentOidPath(String parentOidPath) {
+        this.parentOidPath = parentOidPath;
     }
 
     public Boolean getPoistettu() {

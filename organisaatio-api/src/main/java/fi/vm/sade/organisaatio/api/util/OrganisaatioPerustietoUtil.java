@@ -20,8 +20,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -29,9 +27,7 @@ import java.util.stream.Collectors;
  */
 public abstract class OrganisaatioPerustietoUtil {
     /**
-     * Luo puumaisen organisaatiohierarkian. <b>Huom!</b> <code>organisaatiot</code> on oltava
-     * järjestettynä vanhempien lukumäärän mukaan nousevassa järjestyksessä - toteutus nojaa siihen,
-     * että vanhemmat listataan ensin lapsiaan.
+     * Luo puumaisen organisaatiohierarkian. 
      * 
      * @param organisaatiot List organisaatioista, joista muodostetaan puu
      * @return Lista juuritason organisaatioista (lapset asetettu niiden alle)
@@ -39,10 +35,14 @@ public abstract class OrganisaatioPerustietoUtil {
     public static Set<OrganisaatioPerustieto> createHierarchy(
             final List<OrganisaatioPerustieto> organisaatiot) {
 
-        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<>();
+        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<String, OrganisaatioPerustieto>();
 
-        //Organisaatiot joilla ei ole isää:
+        //ORganisaatiot joilla eil ole isää:
         Set<OrganisaatioPerustieto> rootOrgs = new HashSet<>();
+
+        for (OrganisaatioPerustieto curOrg : organisaatiot) {
+            oidToOrgMap.put(curOrg.getOid(), curOrg);
+        }
 
         for (OrganisaatioPerustieto curOrg : organisaatiot) {
             final String parentOid = curOrg.getParentOid();
@@ -52,7 +52,6 @@ public abstract class OrganisaatioPerustietoUtil {
             } else {
                 rootOrgs.add(curOrg);
             }
-            oidToOrgMap.put(curOrg.getOid(), curOrg);
         }
 
         return rootOrgs;

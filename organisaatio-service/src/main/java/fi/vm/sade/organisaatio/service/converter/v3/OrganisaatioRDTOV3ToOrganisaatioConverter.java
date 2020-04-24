@@ -24,7 +24,6 @@ import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +81,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainC
         // s.setParentOid(s.getParent() != null ? s.getParent().getOid() : null);
         // t.set(s.getParentIdPath());
         // t.setParentMetadata(s.getParentMetadata());
-        s.setParentOids(OrganisaatioUtil.parentOids(s.getParentOidPath()));
+        s.setParentOidPath(s.getParentOidPath());
         // t.set(s.getParentSuhteet());
 
         // t.set(s.getPuhelin());
