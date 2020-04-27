@@ -80,7 +80,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         Preconditions.checkNotNull(oid);
@@ -127,7 +127,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
@@ -157,7 +157,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to update organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         try {
@@ -188,7 +188,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to delete organisation: " + oid);
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
 
         try {
@@ -210,7 +210,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
-            throw new OrganisaatioResourceException(nae);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
         }
         try {
             OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);

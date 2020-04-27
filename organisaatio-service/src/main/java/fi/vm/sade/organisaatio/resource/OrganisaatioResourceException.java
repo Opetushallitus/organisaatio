@@ -79,8 +79,8 @@ public class OrganisaatioResourceException extends WebApplicationException {
         this(500, new ErrorMessage(sbe));
     }
 
-    public OrganisaatioResourceException(Status status, Object message) {
-        this(status.getStatusCode(), message);
+    public OrganisaatioResourceException(Status status, SadeBusinessException exception) {
+        this(status.getStatusCode(), new ErrorMessage(exception));
     }
 
 }
