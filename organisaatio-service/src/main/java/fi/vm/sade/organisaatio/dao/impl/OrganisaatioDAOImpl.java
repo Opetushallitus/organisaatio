@@ -108,8 +108,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                 .leftJoin(qNimi.values, qNimiArvo).fetchJoin()
                 .leftJoin(qOrganisaatio.kielet, qKieli).fetchJoin()
                 .leftJoin(qOrganisaatio.parentOids, qParentOid).fetchJoin()
-                .select(qOrganisaatio)
-                .orderBy(qOrganisaatio.parentOids.size().asc());
+                .select(qOrganisaatio);
 
         Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
 
