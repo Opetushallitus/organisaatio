@@ -24,6 +24,13 @@
     border: 0;
     padding: 0.5em 0;
 }
+.varda-rekisterointi-hakija div.oph-field input:read-only {
+    background-color: transparent;
+    color: #2a2a2a;
+    border: 0;
+    padding: 0.5em 0;
+}
+
 
 .varda-rekisterointi-hakija .oph-checkable-input:focus + .oph-checkable-text {
     color: #2a2a2a;

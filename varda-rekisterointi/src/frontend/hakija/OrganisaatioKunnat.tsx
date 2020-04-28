@@ -14,7 +14,7 @@ type Props = {
 }
 
 export default function OrganisaatioKunnat({readOnly, kaikkiKunnat, kunnat, setKunnat, errors}: Props) {
-    const { i18n } = useContext(LanguageContext);
+    const { i18n, language } = useContext(LanguageContext);
 
     return (
         <>
@@ -25,11 +25,21 @@ export default function OrganisaatioKunnat({readOnly, kaikkiKunnat, kunnat, setK
                                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
 
-                <KoodiMultiSelect labelledBy="organisaation-kunnat"
+                { !readOnly ? <KoodiMultiSelect labelledBy="organisaation-kunnat"
                                   selectable={kaikkiKunnat}
                                   selected={kunnat}
                                   disabled={readOnly}
-                                  onChange={setKunnat} />
+                                  onChange={setKunnat} /> :
+                <div tabIndex={0} className="oph-input-container">
+                    {
+                    kunnat.map(k => {
+                        const kunta = kaikkiKunnat.find(kk => kk.uri === k);
+                        return kunta ? kunta.nimi[language] : k;
+                    }).join(', ')
+                    }
+                </div>
+                }
+
             </FormFieldContainer>
         </>
     );

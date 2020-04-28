@@ -42,7 +42,7 @@ export default function InputMultiple(props: Props) {
                        className={classes}
                        type="text"
                        value={value}
-                       disabled={props.disabled}
+                       readOnly={props.disabled}
                        onChange={event => props.onChange(edit(event.currentTarget.value, index))} />
                 {props.disabled ? null :
                 <button aria-label={i18n.translate('POISTA_SAHKOPOSTI')}

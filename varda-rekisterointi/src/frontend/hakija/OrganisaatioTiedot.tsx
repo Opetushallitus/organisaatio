@@ -47,6 +47,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
     const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
     const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
+    const selkokielinenKotipaikka = kaikkiKunnat.find(k => k.uri === organisaatio.kotipaikkaUri);
 
     // TODO Väliaikainen fix. Tämän voisi poistaa kunhan organisaatiopalvelu siirtyy käyttämään koodistoa yritysmuotojen osalta. Korjaus sitten myös riville 78.
     const yritysmuotoKoodi = yritysmuodot.find(y => (y.nimi && (y.nimi.fi === initialOrganisaatio.yritysmuoto || y.nimi.sv === initialOrganisaatio.yritysmuoto)) || y.uri === initialOrganisaatio.yritysmuoto);
@@ -60,7 +61,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                        type="text"
                        id="organisaationnimi"
                        value={organisaatio.ytjNimi.nimi}
-                       disabled={nimiDisabled}
+                       readOnly={nimiDisabled}
                        onChange={event => setOrganisaatio({ ytjNimi: { nimi: event.currentTarget.value, alkuPvm: organisaatio.alkuPvm, kieli: organisaatio.ytjNimi.kieli }})} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YTUNNUS')} labelFor="organisaationytunnus" errorText={errors.ytunnus} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
@@ -68,34 +69,47 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                        type="text"
                        id="organisaationytunnus"
                        value={organisaatio.ytunnus}
-                       disabled={ytunnusDisabled}
+                       readOnly={ytunnusDisabled}
                        onChange={event => setOrganisaatio({ ytunnus: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('YRITYSMUOTO')} labelFor="yritysmuoto" errorText={errors.yritysmuoto} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <div className="oph-input-container">
-                    <KoodiSelect id="yritysmuoto"
+                    { !yritysmuotoDisabled ? <KoodiSelect id="yritysmuoto"
                                  selectable={yritysmuodot}
                                  selected={yritysmuotoDisabled && yritysmuotoKoodi ? yritysmuotoKoodi.uri : organisaatio.yritysmuoto}
-                                 disabled={yritysmuotoDisabled}
                                  required={!yritysmuotoDisabled}
                                  hasError={!!errors.yritysmuoto}
                                  valueFn={yritysmuotoValueFn}
                                  sortFn={yritysmuotoSortFnByLanguage(language)}
                                  onChange={yritysmuoto => setOrganisaatio({ yritysmuoto: yritysmuoto })} />
+                                 :
+                    <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.yritysmuoto })}
+                           type="text"
+                           id="yritysmuoto"
+                           value={yritysmuotoKoodi ? yritysmuotoKoodi.nimi[language] : organisaatio.yritysmuoto}
+                           readOnly />
+                    }
                 </div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('ORGANISAATIOTYYPPI')} ariaErrorKoosteId="rekisterointi_organisaatio_virheet" >
-                <div className="oph-input-container">{tyypit}</div>
+                <div tabIndex={0} className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KOTIPAIKKA')} labelFor="organisaationkotipaikka" errorText={errors.kotipaikkaUri} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
                 <div className="oph-input-container">
-                    <KoodiSelect id="organisaationkotipaikka"
+                    { !kotipaikkaDisabled ? <KoodiSelect id="organisaationkotipaikka"
                                  selectable={kaikkiKunnat}
                                  selected={organisaatio.kotipaikkaUri}
-                                 disabled={kotipaikkaDisabled}
                                  required={!kotipaikkaDisabled}
                                  hasError={!!errors.kotipaikkaUri}
                                  onChange={kotipaikkaUri => setOrganisaatio({ kotipaikkaUri: kotipaikkaUri })} />
+                                 :
+                        <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kotipaikkaUri })}
+                               type="text"
+                               id="organisaationkotipaikka"
+                               value={selkokielinenKotipaikka ? selkokielinenKotipaikka.nimi[language] : organisaatio.kotipaikkaUri}
+                               readOnly />
+                    }
+
                 </div>
             </FormFieldContainer>
             <FormFieldContainer
@@ -109,7 +123,7 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
                 <div className="oph-input-container">
                     <DateSelect id="organisaationalkuPvm"
                                 value={organisaatio.alkuPvm}
-                                disabled={alkuPvmDisabled}
+                                readOnly={alkuPvmDisabled}
                                 hasError={!!errors.alkuPvm}
                                 onChange={alkuPvm => setOrganisaatio({ alkuPvm: alkuPvm, ytjNimi: { alkuPvm: alkuPvm, nimi: organisaatio.ytjNimi.nimi, kieli: organisaatio.ytjNimi.kieli }})} />
                 </div>

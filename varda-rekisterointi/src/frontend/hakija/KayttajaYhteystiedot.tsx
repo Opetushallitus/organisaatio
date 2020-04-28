@@ -5,7 +5,7 @@ import { Kayttaja, KoodiUri, Koodi } from '../types';
 import Select from '../Select';
 import KoodiSelectRadio from '../KoodiSelectRadio';
 import Spinner from '../Spinner';
-import { asiointikielet } from '../LocalizableTextUtils';
+import {asiointikielet} from '../LocalizableTextUtils';
 import classNames from 'classnames/bind';
 import { LanguageContext } from '../contexts';
 import ErrorPage from '../virhe/VirheSivu';
@@ -20,7 +20,7 @@ type Props = {
 }
 
 export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimintamuoto, kayttaja, setKayttaja, errors}: Props) {
-    const { i18n } = useContext(LanguageContext);
+    const { i18n, language } = useContext(LanguageContext);
     const [{data: toimintamuodot, loading: toimintamuodotLoading, error: toimintamuodotError}]
         = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true');
 
@@ -33,6 +33,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
 
     const baseClasses = { 'oph-input': true };
 
+    const selkokielinenAsiointikieli = asiointikielet.find(k => k.value === kayttaja.asiointikieli);
     return (
         <>
             <FormFieldContainer labelFor="varhaiskasvatustoimijan-toimintamuoto" label={i18n.translate('VARHAISKASVATUSTOIMIJA')} ariaErrorKoosteId="rekisterointi_kayttaja_virheet">
@@ -41,7 +42,6 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                                       selectable={toimintamuodot}
                                       selected={toimintamuoto}
                                       readOnly={readOnly}
-                                      disabled={readOnly}
                                       onChange={setToimintamuoto} />
                 </div>
             </FormFieldContainer>
@@ -55,7 +55,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        type="text"
                        id="paakayttajan-etunimi"
                        value={kayttaja.etunimi}
-                       disabled={readOnly}
+                       readOnly={readOnly}
                        onChange={event => setKayttaja({ etunimi: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -68,7 +68,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        type="text"
                        id="paakayttajan-sukunimi"
                        value={kayttaja.sukunimi}
-                       disabled={readOnly}
+                       readOnly={readOnly}
                        onChange={event => setKayttaja({ sukunimi: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -81,7 +81,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                        type="text"
                        id="paakayttajan-sahkoposti"
                        value={kayttaja.sahkoposti}
-                       disabled={readOnly}
+                       readOnly={readOnly}
                        onChange={event => setKayttaja({ sahkoposti: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -91,12 +91,17 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                 ariaErrorKoosteId="rekisterointi_kayttaja_virheet"
             >
                 <div className="oph-input-container">
-                    <Select id="paakayttajan-asiointikieli"
+                    { !readOnly ? <Select id="paakayttajan-asiointikieli"
                             selectable={asiointikielet}
                             selected={kayttaja.asiointikieli}
-                            disabled={readOnly}
                             hasError={!!errors.asiointikieli}
-                            onChange={asiointikieli => setKayttaja({ asiointikieli: asiointikieli })} />
+                            onChange={asiointikieli => setKayttaja({ asiointikieli: asiointikieli })} />     :
+                    <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.kotipaikkaUri })}
+                           type="text"
+                           id="paakayttajan-asiointikieli"
+                           value={(selkokielinenAsiointikieli && selkokielinenAsiointikieli.label[language]) || kayttaja.asiointikieli}
+                           readOnly />
+                    }
                 </div>
             </FormFieldContainer>
             <FormFieldContainer
@@ -108,7 +113,7 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
                 <textarea className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.saateteksti })}
                           id="paakayttajan-saateteksti"
                           value={kayttaja.saateteksti}
-                          disabled={readOnly}
+                          readOnly={readOnly}
                           onChange={event => setKayttaja({ saateteksti: event.currentTarget.value })}></textarea>
             </FormFieldContainer>
         </>

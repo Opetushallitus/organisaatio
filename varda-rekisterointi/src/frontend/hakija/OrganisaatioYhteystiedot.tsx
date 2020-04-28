@@ -97,7 +97,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        type="text"
                        id="organisaation-puhelinnumero"
                        value={puhelinnumero}
-                       disabled={puhelinnumeroDisabled}
+                       readOnly={puhelinnumeroDisabled}
                        onChange={event => setOrganisaatio({ yhteystiedot:  { ...organisaatio.yhteystiedot, ...{ puhelinnumero: event.currentTarget.value }}})} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -110,7 +110,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        type="text"
                        id="organisaation-sahkoposti"
                        value={sahkoposti}
-                       disabled={sahkopostiDisabled}
+                       readOnly={sahkopostiDisabled}
                        onChange={event => setOrganisaatio({ yhteystiedot: { ...organisaatio.yhteystiedot, ...{ sahkoposti: event.currentTarget.value }}})} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -123,7 +123,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        type="text"
                        id="organisaation-postiosoite"
                        value={postiosoite}
-                       disabled={postiosoiteDisabled}
+                       readOnly={postiosoiteDisabled}
                        onChange={event => handleOsoiteMuutos('postiosoite', { katuosoite: event.currentTarget.value })} />
             </FormFieldContainer>
             <FormFieldContainer
@@ -136,14 +136,14 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        type="text"
                        id="organisaation-postinumero"
                        value={postinumero}
-                       disabled={postinumeroDisabled}
+                       readOnly={postinumeroDisabled}
                        onChange={event => handleOsoiteMuutos('postiosoite', {
                            postinumeroUri: `posti_${event.currentTarget.value}`,
                            postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : ''
                        })} />
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('POSTITOIMIPAIKKA')} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
-                <div className="oph-input-container">
+                <div tabIndex={0} className="oph-input-container">
                     {postitoimipaikka}
                 </div>
             </FormFieldContainer>
@@ -158,7 +158,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                            type="text"
                            id="organisaation-kayntiosoite"
                            value={kayntiosoite}
-                           disabled={kayntiosoiteDisabled}
+                           readOnly={kayntiosoiteDisabled}
                            onChange={event => handleOsoiteMuutos('kayntiosoite', { katuosoite: event.currentTarget.value })} />
                     {samaKuinPostiosoiteDisabled ? null :
                     <label>
@@ -181,7 +181,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                        type="text"
                        id="kayntiosoitteen-postinumero"
                        value={kayntiosoitteenPostinumero}
-                       disabled={kayntiosoitteenPostinumeroDisabled}
+                       readOnly={kayntiosoitteenPostinumeroDisabled}
                        onChange={event => handleOsoiteMuutos('kayntiosoite', {
                            postinumeroUri: `posti_${event.currentTarget.value}`,
                            postitoimipaikka: event.currentTarget.value.length === 5 ? koodiByArvoToLocalizedText(postinumerot, language, event.currentTarget.value) : ''
@@ -191,7 +191,7 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                 label={i18n.translate('KAYNTIOSOITTEEN_POSTITOIMIPAIKKA')}
                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
-                <div className="oph-input-container">
+                <div tabIndex={0} className="oph-input-container">
                     {kayntiosoitteenPostitoimipaikka}
                 </div>
             </FormFieldContainer>
