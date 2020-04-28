@@ -29,9 +29,7 @@ import java.util.stream.Collectors;
  */
 public abstract class OrganisaatioPerustietoUtil {
     /**
-     * Luo puumaisen organisaatiohierarkian. <b>Huom!</b> <code>organisaatiot</code> on oltava
-     * järjestettynä vanhempien lukumäärän mukaan nousevassa järjestyksessä - toteutus nojaa siihen,
-     * että vanhemmat listataan ensin lapsiaan.
+     * Luo puumaisen organisaatiohierarkian. 
      * 
      * @param organisaatiot List organisaatioista, joista muodostetaan puu
      * @return Lista juuritason organisaatioista (lapset asetettu niiden alle)
@@ -39,9 +37,10 @@ public abstract class OrganisaatioPerustietoUtil {
     public static Set<OrganisaatioPerustieto> createHierarchy(
             final List<OrganisaatioPerustieto> organisaatiot) {
 
-        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<>();
+        Map<String, OrganisaatioPerustieto> oidToOrgMap = organisaatiot.stream().collect(
+                Collectors.toMap(OrganisaatioPerustieto::getOid, Function.identity()));
 
-        //Organisaatiot joilla ei ole isää:
+        //ORganisaatiot joilla eil ole isää:
         Set<OrganisaatioPerustieto> rootOrgs = new HashSet<>();
 
         for (OrganisaatioPerustieto curOrg : organisaatiot) {
@@ -52,7 +51,6 @@ public abstract class OrganisaatioPerustietoUtil {
             } else {
                 rootOrgs.add(curOrg);
             }
-            oidToOrgMap.put(curOrg.getOid(), curOrg);
         }
 
         return rootOrgs;
