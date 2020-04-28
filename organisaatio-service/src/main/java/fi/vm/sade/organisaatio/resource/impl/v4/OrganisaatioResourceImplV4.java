@@ -11,7 +11,6 @@ import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
@@ -20,7 +19,6 @@ import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -43,7 +41,6 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private final PermissionChecker permissionChecker;
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
-    private final ConversionService conversionService;
 
     @Autowired
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2,
@@ -51,15 +48,13 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                                       OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper,
                                       PermissionChecker permissionChecker,
                                       OrganisaatioBusinessService organisaatioBusinessService,
-                                      OrganisaatioFindBusinessService organisaatioFindBusinessService,
-                                      ConversionService conversionService) {
+                                      OrganisaatioFindBusinessService organisaatioFindBusinessService) {
         this.organisaatioResourceV2 = organisaatioResourceV2;
         this.organisaatioResourceV3 = organisaatioResourceV3;
         this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
         this.permissionChecker = permissionChecker;
         this.organisaatioBusinessService = organisaatioBusinessService;
         this.organisaatioFindBusinessService = organisaatioFindBusinessService;
-        this.conversionService = conversionService;
     }
 
     // POST //organisaatio/v4/findbyoids
@@ -202,28 +197,33 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}/jalkelaiset
     @Override
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        OrganisaatioRDTOV4 parent = getOrganisaatioByOID(oid, false);
-        // parentin haku tarkistaa oikeudet ja palauttaa 404, jos ei löydy
-        List<OrganisaatioDAOImpl.JalkelaisetRivi> rows = organisaatioFindBusinessService.findDescendants(oid);
-        return processRows(rows, parent);
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+        }
+        return processRows(organisaatioFindBusinessService.findDescendants(oid));
     }
 
-    private static OrganisaatioHakutulosV4 processRows(
-            List<OrganisaatioDAOImpl.JalkelaisetRivi> rows, OrganisaatioRDTOV4 root) {
+    // prosessointi tarkoituksella transaktion ulkopuolella
+    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioDAOImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
         final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
+        Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
         for (OrganisaatioDAOImpl.JalkelaisetRivi row : rows) {
             if (current == null || !row.oid.equals(current.getOid())) {
                 if (current != null) { // edellinen valmis, asetetaan mappiin
+                    finalizePerustieto(current, parentOids);
                     oidToOrg.put(current.getOid(), current);
+                    parentOids = new HashSet<>();
                 }
                 current = new OrganisaatioPerustietoV4();
                 current.setMatch(true);
                 current.setOid(row.oid);
                 current.setAlkuPvm(row.alkuPvm);
                 current.setLakkautusPvm(row.lakkautusPvm);
-                current.setParentOid(row.parentOid);
                 current.setYtunnus(row.ytunnus);
                 current.setVirastoTunnus(row.virastotunnus);
                 current.setOppilaitosKoodi(row.oppilaitoskoodi);
@@ -235,13 +235,15 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 current.setKieletUris(new HashSet<>());
                 current.setChildren(new HashSet<>());
                 OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
-                current.setParentOidPath(generateParentOidPath(root, parent));
                 if (parent == null) {
                     rootOrgs.add(current);
                 } else {
                     parent.getChildren().add(current);
                     parent.setAliOrganisaatioMaara(parent.getChildren().size());
                 }
+            }
+            if (row.parentOid != null) {
+                parentOids.add(row.parentOid);
             }
             if (row.organisaatiotyyppi != null) {
                 current.getOrganisaatiotyypit().add(row.organisaatiotyyppi);
@@ -253,7 +255,8 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 current.getKieletUris().add(row.kieli);
             }
         }
-        if (current != null) {
+        if (current != null) { // viimeistellään viimeinen käsitelty rivi
+            finalizePerustieto(current, parentOids);
             oidToOrg.put(current.getOid(), current);
         }
         OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
@@ -262,12 +265,16 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         return result;
     }
 
-    private static String generateParentOidPath(OrganisaatioRDTOV4 root, OrganisaatioPerustietoV4 parent) {
-        if (parent == null) {
-            return (root.getParentOidPath() != null && root.getParentOidPath().length() > 0 ?
-                    root.getParentOidPath() : "|") + root.getOid() + "|";
+    private static String generateParentOidPath(Set<String> parentOids) {
+        if (parentOids.isEmpty()) {
+            return "";
         }
-        return parent.getParentOidPath() + parent.getOid() + "|";
+        return "|" + String.join("|", parentOids) + "|";
+    }
+
+    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
+        perustieto.setParentOid(parentOids.isEmpty() ? null : parentOids.iterator().next());
+        perustieto.setParentOidPath(generateParentOidPath(parentOids));
     }
 
 }
