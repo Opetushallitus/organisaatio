@@ -8,7 +8,6 @@ type Props = {
     readOnly?: boolean,
     selectable: Koodi[],
     selected?: string,
-    disabled?: boolean,
     onChange: (uri: string) => void,
 }
 
@@ -16,7 +15,7 @@ export default function KoodiSelectRadio(props: Props) {
     const { language } = useContext(LanguageContext);
     if (props.readOnly) {
         const value = props.selectable.find(koodi => koodi.uri === props.selected)
-        return <div>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
+        return <div tabIndex={0}>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
     }
     return (
         <div role="radiogroup"
@@ -29,7 +28,7 @@ export default function KoodiSelectRadio(props: Props) {
                                type="radio"
                                value={koodi.uri}
                                checked={koodi.uri === props.selected}
-                               disabled={props.disabled}
+                               readOnly={props.readOnly}
                                onChange={event => props.onChange(event.currentTarget.value)} />
                         <span className="oph-checkable-text">{toLocalizedText(koodi.nimi, language, koodi.arvo)}</span>
                     </label>

@@ -5,7 +5,7 @@ import { LanguageContext } from './contexts';
 import classNames from 'classnames/bind';
 
 type Props = {
-    tabIndex?: string,
+    tabIndex?: number,
     id?: string,
     selectable: Koodi[],
     selected?: string,
@@ -31,7 +31,7 @@ export default function KoodiSelect(props: Props) {
     return (
         <div className="oph-select-container">
             <select id={props.id}
-                    tabIndex={0}
+                    tabIndex={props.tabIndex || 0}
                     className={classes}
                     defaultValue={props.selected}
                     disabled={props.disabled}

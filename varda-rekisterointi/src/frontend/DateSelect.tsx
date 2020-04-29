@@ -9,7 +9,7 @@ import classNames from 'classnames/bind';
 type Props = {
     id?: string,
     value: LocalDate | null,
-    disabled?: boolean,
+    readOnly?: boolean,
     hasError?: boolean,
     onChange: (value: LocalDate | null) => void,
 }
@@ -29,7 +29,7 @@ export default function DateSelect(props: Props) {
                        locale={language}
                        dateFormat={UI_FORMAT}
                        selected={value}
-                       disabled={props.disabled}
+                       readOnly={props.readOnly}
                        onChange={date => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)}
                        customInput={<input aria-describedby="datepickerohje" />}
         />;

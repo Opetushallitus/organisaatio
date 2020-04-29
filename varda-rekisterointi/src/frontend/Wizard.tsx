@@ -61,7 +61,7 @@ export default function Wizard(props: Props) {
     }
 
     return (
-        <>
+        <main>
             {isLast() ? null : props.getNavigation(currentStep)}
             <section className={styles.section}>
                 <div className={styles.child}>{child}</div>
@@ -96,6 +96,6 @@ export default function Wizard(props: Props) {
                         : null}
                 </div>
             </section>
-        </>
+        </main>
     )
 }
