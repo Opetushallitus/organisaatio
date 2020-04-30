@@ -5,7 +5,7 @@ import FormFieldContainer from '../FormFieldContainer';
 import { Organisaatio, Koodi } from '../types';
 import KoodiSelect from '../KoodiSelect';
 import { toLocalizedText } from '../LocalizableTextUtils';
-import { hasLength } from '../StringUtils';
+import { isNonEmpty } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
@@ -43,10 +43,10 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     }).map(koodi => toLocalizedText(koodi.nimi, language, koodi.arvo)).join(', ');
 
     const nimiDisabled = readOnly || !!initialOrganisaatio.ytjNimi.nimi;
-    const ytunnusDisabled = readOnly || hasLength(initialOrganisaatio.ytunnus);
-    const yritysmuotoDisabled = readOnly || hasLength(initialOrganisaatio.yritysmuoto);
-    const kotipaikkaDisabled = readOnly || hasLength(initialOrganisaatio.kotipaikkaUri);
-    const alkuPvmDisabled = readOnly || hasLength(initialOrganisaatio.alkuPvm);
+    const ytunnusDisabled = readOnly || isNonEmpty(initialOrganisaatio.ytunnus);
+    const yritysmuotoDisabled = readOnly || isNonEmpty(initialOrganisaatio.yritysmuoto);
+    const kotipaikkaDisabled = readOnly || isNonEmpty(initialOrganisaatio.kotipaikkaUri);
+    const alkuPvmDisabled = readOnly || isNonEmpty(initialOrganisaatio.alkuPvm);
     const selkokielinenKotipaikka = kaikkiKunnat.find(k => k.uri === organisaatio.kotipaikkaUri);
 
     // TODO Väliaikainen fix. Tämän voisi poistaa kunhan organisaatiopalvelu siirtyy käyttämään koodistoa yritysmuotojen osalta. Korjaus sitten myös riville 78.

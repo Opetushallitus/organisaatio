@@ -94,4 +94,5 @@ export type Rekisterointi = {
     kayttaja: Kayttaja
 }
 
-export type Virheet = Record<string, string>
+export type VirheKoodi = string;
+export type Virheet = Record<string, VirheKoodi>

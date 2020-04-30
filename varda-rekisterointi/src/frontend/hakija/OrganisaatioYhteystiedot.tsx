@@ -3,7 +3,7 @@ import useAxios from 'axios-hooks';
 import FormFieldContainer from '../FormFieldContainer';
 import {Organisaatio, Koodi, Language, Osoite, Yhteystiedot} from '../types';
 import { toLocalizedText } from '../LocalizableTextUtils';
-import { hasLength } from '../StringUtils';
+import { isNonEmpty } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
 import classNames from 'classnames/bind';
@@ -57,13 +57,13 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
     const postinumero = postinumeroUri.replace('posti_', '');
     const postitoimipaikka = organisaatio.yhteystiedot.postiosoite.postitoimipaikka;
 
-    const puhelinnumeroDisabled = readOnly || (hasLength(initialPuhelinnumero) && PuhelinnumeroValidator.validate(initialPuhelinnumero));
-    const sahkopostiDisabled = readOnly || hasLength(initialSahkoposti);
-    const kayntiosoiteDisabled = readOnly || hasLength(initialKayntiosoite) || kayntiosoiteSamaKuinPostiosoite;
-    const kayntiosoitteenPostinumeroDisabled = readOnly || hasLength(initialKayntiosoitteenPostinumeroUri) || kayntiosoiteSamaKuinPostiosoite;
-    const samaKuinPostiosoiteDisabled = readOnly || hasLength(initialKayntiosoite);
-    const postiosoiteDisabled = readOnly || hasLength(initialPostiosoite);
-    const postinumeroDisabled = readOnly || hasLength(initialPostinumeroUri);
+    const puhelinnumeroDisabled = readOnly || (isNonEmpty(initialPuhelinnumero) && PuhelinnumeroValidator.validate(initialPuhelinnumero));
+    const sahkopostiDisabled = readOnly || isNonEmpty(initialSahkoposti);
+    const kayntiosoiteDisabled = readOnly || isNonEmpty(initialKayntiosoite) || kayntiosoiteSamaKuinPostiosoite;
+    const kayntiosoitteenPostinumeroDisabled = readOnly || isNonEmpty(initialKayntiosoitteenPostinumeroUri) || kayntiosoiteSamaKuinPostiosoite;
+    const samaKuinPostiosoiteDisabled = readOnly || isNonEmpty(initialKayntiosoite);
+    const postiosoiteDisabled = readOnly || isNonEmpty(initialPostiosoite);
+    const postinumeroDisabled = readOnly || isNonEmpty(initialPostinumeroUri);
 
     const handleKayntiosoiteSamaKuinPostiosoite = (value: boolean): void => {
         setKayntiosoiteSamaKuinPostiosoite(value);

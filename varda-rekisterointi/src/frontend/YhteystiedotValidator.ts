@@ -1,5 +1,5 @@
 import {Virheet, Yhteystiedot} from "./types";
-import {hasLength} from "./StringUtils";
+import {isNonEmpty} from "./StringUtils";
 import {validoiOsoite} from "./OsoiteValidator";
 import EmailValidator from 'email-validator';
 import * as PuhelinnumeroValidator from './PuhelinnumeroValidator';
@@ -11,7 +11,7 @@ export function validoiYhteystiedot(yhteystiedot: Yhteystiedot) {
     const virheet: Virheet = {};
     for (let kentta of ['sahkoposti', 'puhelinnumero']) {
         const arvo = yhteystiedot[kentta as YhteystiedotKentta];
-        if (!hasLength(arvo as string)) {
+        if (!isNonEmpty(arvo as string)) {
             virheet[kentta] = 'PAKOLLINEN_TIETO';
         } else {
             if (kentta === 'sahkoposti' && !EmailValidator.validate(arvo as string)) {
