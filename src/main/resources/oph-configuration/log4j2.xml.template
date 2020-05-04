@@ -13,7 +13,7 @@
     </Properties>
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="${layoutPattern}"/>
+            <PatternLayout pattern="${logPattern}"/>
         </Console>
         <RollingFile name="FILE" fileName="${logFile}" append="true">
             <PatternLayout pattern="${layoutPattern}"/>
@@ -22,7 +22,7 @@
             <ThresholdFilter level="info"/>
         </RollingFile>
         <File name="AUDIT" fileName="${auditLogFile}" append="true" immediateFlush="true">
-            <PatternLayout pattern="${auditLogPattern}"/>
+            <PatternLayout pattern="${auditLogPattern}" charset="UTF-8"/>
         </File>
     </Appenders>
     <Loggers>
