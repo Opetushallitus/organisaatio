@@ -154,21 +154,21 @@ export default function OrganisaatioYhteystiedot({readOnly, initialOrganisaatio,
                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
                 <div className="oph-input-container">
+                    {samaKuinPostiosoiteDisabled ? null :
+                        <label>
+                            <input type="checkbox"
+                                   className="oph-checkable-input"
+                                   checked={kayntiosoiteSamaKuinPostiosoite}
+                                   onChange={event => handleKayntiosoiteSamaKuinPostiosoite(event.currentTarget.checked)} />
+                            <span className="oph-checkable-text">{i18n.translate('SAMA_KUIN_POSTIOSOITE')}</span>
+                        </label>
+                    }
                     <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors['yhteystiedot.kayntiosoite.katuosoite'] })}
                            type="text"
                            id="organisaation-kayntiosoite"
                            value={kayntiosoite}
                            readOnly={kayntiosoiteDisabled}
                            onChange={event => handleOsoiteMuutos('kayntiosoite', { katuosoite: event.currentTarget.value })} />
-                    {samaKuinPostiosoiteDisabled ? null :
-                    <label>
-                        <input type="checkbox"
-                               className="oph-checkable-input"
-                               checked={kayntiosoiteSamaKuinPostiosoite}
-                               onChange={event => handleKayntiosoiteSamaKuinPostiosoite(event.currentTarget.checked)} />
-                        <span className="oph-checkable-text">{i18n.translate('SAMA_KUIN_POSTIOSOITE')}</span>
-                    </label>
-                    }
                 </div>
             </FormFieldContainer>
             <FormFieldContainer

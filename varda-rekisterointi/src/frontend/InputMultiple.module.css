@@ -5,3 +5,7 @@
 .removeButton {
     padding: 0 3px 0 0;
 }
+
+.addButton{
+    padding-left: 0;
+}

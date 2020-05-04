@@ -17,6 +17,7 @@ type Props = {
 export default function Wizard(props: Props) {
     const { i18n } = useContext(LanguageContext);
     const [currentStep, setCurrentStep] = useState(1);
+    const rootEl = document.querySelector('#root') as HTMLElement;
 
     const steps = props.children.length;
     const child = props.children[currentStep - 1];
@@ -39,11 +40,13 @@ export default function Wizard(props: Props) {
 
     function prev() {
         setCurrentStep(currentStep - 1);
+        if (rootEl) rootEl.focus();
     }
 
     function next() {
         if (props.validate(currentStep)) {
             setCurrentStep(currentStep + 1);
+            if (rootEl) rootEl.focus();
         }
     }
 

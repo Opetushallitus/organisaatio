@@ -7,6 +7,7 @@ type Props = {
     disabled?: boolean,
     loading?: boolean,
     styling?: 'primary' | 'confirm' | 'cancel' | 'ghost';
+    className?: string,
     onClick?: () => void,
     children: React.ReactNode,
 }
@@ -14,7 +15,7 @@ type Props = {
 export default function Button(props: Props) {
     return (
         <button tabIndex={props.tabIndex || 0}
-                className={`oph-button oph-button-${props.styling}`}
+                className={`oph-button oph-button-${props.styling} ${props.className ? props.className : ''}`}
                 type={props.type}
                 disabled={props.disabled}
                 onClick={props.onClick}>
