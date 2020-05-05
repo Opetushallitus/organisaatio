@@ -83,8 +83,10 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
         OrganisaatioPerustietoV4 organization = find(childOid, results.getOrganisaatiot());
         assertThat(organization).isNotNull();
+        assertThat(organization.getParentOid()).isEqualTo(parentOid);
         organization = find(grandChildOid, organization.getChildren());
         assertThat(organization).isNotNull();
+        assertThat(organization.getParentOid()).isEqualTo(childOid);
     }
 
     private static OrganisaatioPerustietoV4 find(String oid, Set<OrganisaatioPerustietoV4> organizations) {

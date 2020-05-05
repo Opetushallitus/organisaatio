@@ -217,7 +217,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 if (current != null) { // edellinen valmis, asetetaan mappiin
                     finalizePerustieto(current, parentOids);
                     oidToOrg.put(current.getOid(), current);
-                    parentOids = new HashSet<>();
+                    parentOids = new LinkedHashSet<>();
                 }
                 current = new OrganisaatioPerustietoV4();
                 current.setMatch(true);
@@ -234,6 +234,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 current.setNimi(new HashMap<>());
                 current.setKieletUris(new HashSet<>());
                 current.setChildren(new HashSet<>());
+                current.setParentOid(row.parentOid);
                 OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
                 if (parent == null) {
                     rootOrgs.add(current);
@@ -265,6 +266,10 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         return result;
     }
 
+    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
+        perustieto.setParentOidPath(generateParentOidPath(parentOids));
+    }
+
     private static String generateParentOidPath(Set<String> parentOids) {
         if (parentOids.isEmpty()) {
             return "";
@@ -272,11 +277,6 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         List<String> parentOidsList = new ArrayList<>(parentOids);
         Collections.reverse(parentOidsList);
         return "|" + String.join("|", parentOidsList) + "|";
-    }
-
-    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
-        perustieto.setParentOid(parentOids.isEmpty() ? null : parentOids.iterator().next());
-        perustieto.setParentOidPath(generateParentOidPath(parentOids));
     }
 
 }
