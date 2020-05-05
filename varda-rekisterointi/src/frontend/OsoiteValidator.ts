@@ -1,16 +1,17 @@
 import {Osoite, Virheet} from "./types";
-import {hasLength} from "./StringUtils";
+import {isNonEmpty, hasLengthBetween} from "./StringUtils";
 
 type OsoiteKentta = keyof Osoite;
+const minLenght = 3;
+const maxLength = 100;
+const zipCodePattern = /^posti_\d{5}$/
 
 export function validoiOsoite(osoite: Osoite): Virheet {
     const virheet: Virheet = {};
-    for (let kentta of ['katuosoite', 'postinumeroUri']) {
-        if (!hasLength(osoite[kentta as OsoiteKentta])) {
-            virheet[kentta] = 'PAKOLLINEN_TIETO';
-        }
+    if (!hasLengthBetween(osoite.katuosoite, minLenght, maxLength)) {
+        virheet['katuosoite'] = 'VIRHEELLINEN_OSOITE';
     }
-    if (!hasLength(osoite.postitoimipaikka)) {
+    if (!zipCodePattern.test(osoite.postinumeroUri) || !isNonEmpty(osoite.postitoimipaikka)) {
         virheet['postinumeroUri'] = 'VIRHEELLINEN_POSTINUMERO';
     }
     return virheet;

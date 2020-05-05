@@ -1,11 +1,11 @@
 import {validoiOsoite} from "./OsoiteValidator";
-import {Osoite, Virheet} from "./types";
+import {Osoite, Virheet, VirheKoodi} from "./types";
 
 type OsoiteKentta = keyof Osoite;
 
-function tarkistaPakollinenTieto(virheet: Virheet, kentta: OsoiteKentta) {
+function tarkistaKentta(virheet: Virheet, kentta: OsoiteKentta, odotettuVirhe: VirheKoodi) {
     expect(Object.keys(virheet)).toContain(kentta);
-    expect(virheet[kentta]).toEqual('PAKOLLINEN_TIETO');
+    expect(virheet[kentta]).toEqual(odotettuVirhe);
 }
 
 describe('OsoiteValidator', () => {
@@ -15,7 +15,7 @@ describe('OsoiteValidator', () => {
             postinumeroUri: 'posti_12345',
             postitoimipaikka: 'Humppaala'
         };
-        tarkistaPakollinenTieto(validoiOsoite(osoite), 'katuosoite');
+        tarkistaKentta(validoiOsoite(osoite), 'katuosoite', 'VIRHEELLINEN_OSOITE');
     });
 
     it('vaatii postinumeroUrlin', () => {
@@ -24,7 +24,7 @@ describe('OsoiteValidator', () => {
             postinumeroUri: '',
             postitoimipaikka: 'Humppaala'
         };
-        tarkistaPakollinenTieto(validoiOsoite(osoite), 'postinumeroUri');
+        tarkistaKentta(validoiOsoite(osoite), 'postinumeroUri', 'VIRHEELLINEN_POSTINUMERO');
     });
 
     it('vaatii postitoimipaikan', () => {
@@ -35,7 +35,6 @@ describe('OsoiteValidator', () => {
         };
         const virheet: Virheet = validoiOsoite(osoite);
         // virhe merkitään postinumerolle, koska postitoimipaikka populoidaan sen pohjalta
-        expect(Object.keys(virheet)).toContain('postinumeroUri');
-        expect(virheet.postinumeroUri).toEqual('VIRHEELLINEN_POSTINUMERO');
+        tarkistaKentta(validoiOsoite(osoite), 'postinumeroUri', 'VIRHEELLINEN_POSTINUMERO');
     });
 });
