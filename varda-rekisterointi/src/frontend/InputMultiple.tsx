@@ -34,10 +34,18 @@ export default function InputMultiple(props: Props) {
     });
     return (
         <div>
+            {props.disabled ? null :
+                <Button
+                    tabIndex={0}
+                    type="button"
+                    disabled={props.disabled}
+                    styling="ghost"
+                    className={styles.addButton}
+                    onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
+            }
             {props.values.map((value, index) => {
             return <div key={index} className={styles.inputContainer}>
                 <input tabIndex={0}
-                       autoFocus
                        aria-labelledby={props.id}
                        className={classes}
                        type="text"
@@ -56,14 +64,6 @@ export default function InputMultiple(props: Props) {
                 }
             </div>
         })}
-            {props.disabled ? null :
-                <Button
-                    tabIndex={0}
-                    type="button"
-                    disabled={props.disabled}
-                    styling="ghost"
-                    onClick={() => props.onChange(add(''))}>{i18n.translate('LISAA_SAHKOPOSTI')}</Button>
-            }
         </div>
     )
 }
