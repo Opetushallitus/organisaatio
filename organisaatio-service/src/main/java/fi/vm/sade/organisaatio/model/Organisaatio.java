@@ -62,9 +62,7 @@ import static java.util.stream.Collectors.toSet;
                         "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
                         "WHERE o.organisaatiopoistettu <> TRUE AND o.piilotettu <> TRUE AND o.id IN (" +
                         "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
-                        "GROUP BY o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid, p.parent_position, o.ytunnus, o.virastotunnus, " +
-                        "o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, t.tyypit, " +
-                        "nv.key, nv.value , k.kielet, r.parent_position ORDER BY taso, o.oid, p.parent_position DESC",
+                        "ORDER BY taso, o.oid, p.parent_position",
                 resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
         )
 )
