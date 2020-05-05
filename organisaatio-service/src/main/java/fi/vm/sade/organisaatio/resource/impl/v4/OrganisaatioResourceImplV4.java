@@ -269,7 +269,9 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         if (parentOids.isEmpty()) {
             return "";
         }
-        return "|" + String.join("|", parentOids) + "|";
+        List<String> parentOidsList = new ArrayList<>(parentOids);
+        Collections.reverse(parentOidsList);
+        return "|" + String.join("|", parentOidsList) + "|";
     }
 
     private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
