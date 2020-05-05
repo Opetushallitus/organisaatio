@@ -76,6 +76,22 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
     }
 
     @Test
+    public void findDescendantsReturnsCorrectHierarchy() {
+        String parentOid = "1.2.246.562.24.00000000001";
+        String childOid = "1.2.2004.1";
+        String grandChildOid = "1.2.2004.2";
+        OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
+        OrganisaatioPerustietoV4 organization = find(childOid, results.getOrganisaatiot());
+        assertThat(organization).isNotNull();
+        organization = find(grandChildOid, organization.getChildren());
+        assertThat(organization).isNotNull();
+    }
+
+    private static OrganisaatioPerustietoV4 find(String oid, Set<OrganisaatioPerustietoV4> organizations) {
+        return organizations.stream().filter(o -> o.getOid().equals(oid)).findFirst().orElse(null);
+    }
+
+    @Test
     public void findDescendantsReturnsCorrectParentOidPath() {
         String parentOid = "1.2.2004.1";
         String childOid = "1.2.2004.2";
