@@ -46,7 +46,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
@@ -325,8 +324,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid) {
-        return organisaatioDAO.findAllDescendants(oid);
+    public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
+        return organisaatioDAO.findAllDescendants(oid, includeHidden);
     }
 
 }
