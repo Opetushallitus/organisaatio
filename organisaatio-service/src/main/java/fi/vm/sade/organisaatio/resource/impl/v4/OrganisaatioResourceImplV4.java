@@ -197,13 +197,16 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     // GET /organisaatio/v4/{oid}/jalkelaiset
     @Override
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+        boolean globalReadAccess = permissionChecker.isReadAccessToAll();
+        if (!globalReadAccess) {
+            try {
+                permissionChecker.checkReadOrganisation(oid);
+            } catch (NotAuthorizedException nae) {
+                LOG.warn("Not authorized to read organisation: " + oid);
+                throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            }
         }
-        return processRows(organisaatioFindBusinessService.findDescendants(oid));
+        return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

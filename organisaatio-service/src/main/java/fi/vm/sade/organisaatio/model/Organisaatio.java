@@ -47,7 +47,7 @@ import static java.util.stream.Collectors.toSet;
                 )
         )
 )
-@NamedNativeQueries(
+@NamedNativeQueries({
         @NamedNativeQuery(
                 name = "Organisaatio.findAllDescendants",
                 query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
@@ -64,7 +64,24 @@ import static java.util.stream.Collectors.toSet;
                         "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
                         "ORDER BY taso, o.oid, p.parent_position",
                 resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
-        )
+        ),
+        @NamedNativeQuery(
+        name = "Organisaatio.findAllDescendantsInclHidden",
+        query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
+                "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
+                "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
+                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
+                "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
+                "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
+                "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
+                "LEFT JOIN monikielinenteksti n ON (n.id = o.nimi_mkt) " +
+                "JOIN monikielinenteksti_values nv ON (nv.id = n.id) " +
+                "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
+                "WHERE o.organisaatiopoistettu <> TRUE AND o.id IN (" +
+                "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
+                "ORDER BY taso, o.oid, p.parent_position",
+        resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
+        )}
 )
 @EntityListeners(XssFilterListener.class)
 public class Organisaatio extends OrganisaatioBaseEntity {

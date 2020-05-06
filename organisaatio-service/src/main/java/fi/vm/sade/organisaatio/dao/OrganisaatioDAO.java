@@ -232,5 +232,14 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
 
     Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
 
-    List<OrganisaatioDAOImpl.JalkelaisetRivi> findAllDescendants(String oid);
+    /**
+     * Palauttaa kaikki annetun organisaation jälkeläiset, pl. poistetut. Piilotettujen sisällyttämistä voi
+     * kontrolloida <code>includeHidden</code> -vivulla. <i>Huom!</i> oikeus piilotettujen näkemiseen tulee tarkistaa
+     * kutsuvassa koodissa! Palautettavat rivit ovat raakadataa, sisältäen duplikaattirivejä eri JOIN:ien tuloksena.
+     *
+     * @param oid           vanhemman OID.
+     * @param includeHidden sisällytetäänkö piilotetut organisaatiot tuloksiin?
+     * @return jälkeläiset.
+     */
+    List<OrganisaatioDAOImpl.JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden);
 }

@@ -18,9 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-
 public interface OrganisaatioFindBusinessService {
 
     /**
@@ -133,5 +130,5 @@ public interface OrganisaatioFindBusinessService {
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 
-    List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid);
+    List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden);
 }
