@@ -15,7 +15,7 @@
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="${logPattern}"/>
         </Console>
-        <RollingFile name="FILE" fileName="${logFile}" append="true">
+        <RollingFile name="FILE" fileName="${logFile}" filePattern="${logFile}.%i" append="true">
             <PatternLayout pattern="${layoutPattern}"/>
             <SizeBasedTriggeringPolicy size="${maxFileSize}" />
             <DefaultRolloverStrategy max="${maxFilesKept}"/>
