@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -57,15 +58,26 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         String[] allDescendants = new String[] {
                 "1.2.2004.1", "1.2.2004.2", "1.2.2004.3",
                 "1.2.2004.4", "1.2.2004.5", "1.2.2004.6",
-                "1.2.2005.4", "1.2.2005.5", "1.2.8000.1"
+                "1.2.2005.4", "1.2.2005.5", "1.2.8000.1",
+                "1.2.2020.1"
         };
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
-        assertThat(results.getNumHits()).isEqualTo(9);
+        assertThat(results.getNumHits()).isEqualTo(10);
         List<String> resultOids = results.getOrganisaatiot().stream()
                 .map(OrganisaatioResourceV4Test::collectOids)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         assertThat(resultOids).containsExactlyInAnyOrder(allDescendants);
+    }
+
+    @Test
+    public void findDescendantsReturnsPublicDescendantsOnly() {
+        String parentOid = "1.2.8000.1";
+        setCurrentUser("1.2.3.4.5", getAuthority(
+                "APP_" + OrganisaatioPermissionServiceImpl.ORGANISAATIOHALLINTA + "_CRUD",
+                parentOid));
+        OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
+        assertThat(results.getNumHits()).isEqualTo(0); // ainoa jälkeläinen on piilotettu
     }
 
     private static List<String> collectOids(OrganisaatioPerustietoV4 organisaatio) {

@@ -934,9 +934,10 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     }
 
     @Override
-    public List<JalkelaisetRivi> findAllDescendants(String oid) {
+    public List<JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden) {
         TypedQuery<JalkelaisetRivi> query = getEntityManager().createNamedQuery(
-                "Organisaatio.findAllDescendants", JalkelaisetRivi.class);
+                includeHidden ? "Organisaatio.findAllDescendantsInclHidden" : "Organisaatio.findAllDescendants",
+                JalkelaisetRivi.class);
         query.setParameter("root", oid);
         return query.getResultList();
     }
