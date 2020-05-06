@@ -35,6 +35,7 @@
         <Logger name="org.apache.cxf" level="error"/>
         <Logger name="org.springframework" level="error"/>
         <Logger name="org.vaadin" level="error"/>
+        <Logger name="org.hibernate" level="warn"/>
         <Logger name="javax.sql" level="error"/>
         <Logger name="org.apache.activemq" level="info"/>
         <Logger name="org.apache.activemq.spring" level="${logLevel}"/>
