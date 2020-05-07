@@ -1,9 +1,21 @@
 .varda-rekisterointi-hakija div.oph-field {
-    padding: 0.5em 0.5em 0.5em 2em;
+   padding: 0.5em 0.5em 0.5em 2em;
+    flex-wrap: unset;
 }
 
 .varda-rekisterointi-hakija div.oph-field label.oph-label {
     width: 30%;
+}
+
+@media (max-width:540px) {
+    .varda-rekisterointi-hakija div.oph-field {
+        flex-wrap: wrap;
+        padding: 0.5em;
+    }
+    .varda-rekisterointi-hakija div.oph-field label.oph-label {
+        width: auto;
+        padding: 0.5em 0 0.5em 0;
+    }
 }
 
 .varda-rekisterointi-hakija div.oph-field div.oph-select-container {

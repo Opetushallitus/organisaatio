@@ -9,6 +9,7 @@
     padding: 2em 0;
     text-align: center;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 
@@ -34,10 +35,21 @@
     color: #ffffff;
 }
 
+
 .nav div.line {
     flex-grow: 1;
     border-top: 2px solid #cccccc;
     margin: 2em;
+}
+
+@media (max-width:540px) {
+    .nav div.line {
+        border-top: none;
+    }
+
+    .nav > div {
+        flex-direction: column;
+    }
 }
 
 .nav div.line.previous {
