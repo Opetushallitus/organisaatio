@@ -38,7 +38,8 @@ export default function KayttajaYhteystiedot({readOnly, toimintamuoto, setToimin
         <>
             <FormFieldContainer labelFor="varhaiskasvatustoimijan-toimintamuoto" label={i18n.translate('VARHAISKASVATUSTOIMIJA')} ariaErrorKoosteId="rekisterointi_kayttaja_virheet">
                 <div className="oph-input-container">
-                    <KoodiSelectRadio id="varhaiskasvatustoimijan-toimintamuoto"
+                    <KoodiSelectRadio autoFocus={!readOnly}
+                                      id="varhaiskasvatustoimijan-toimintamuoto"
                                       selectable={toimintamuodot}
                                       selected={toimintamuoto}
                                       readOnly={readOnly}

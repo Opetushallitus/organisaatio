@@ -57,7 +57,8 @@ export default function OrganisaatioTiedot({readOnly, kaikkiKunnat, initialOrgan
     return (
         <>
             <FormFieldContainer label={i18n.translate('ORGANISAATION_NIMI')} labelFor="organisaationnimi" errorText={errors.nimi} ariaErrorKoosteId="rekisterointi_organisaatio_virheet">
-                <input className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.nimi })}
+                <input autoFocus
+                       className={classNames({ ...baseClasses, 'oph-input-has-error': !!errors.nimi })}
                        type="text"
                        id="organisaationnimi"
                        value={organisaatio.ytjNimi.nimi}
