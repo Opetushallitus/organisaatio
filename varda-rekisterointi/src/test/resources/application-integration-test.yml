@@ -1,4 +1,6 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${db.port}/varda-rekisterointi
   session:
     store-type: none
 db-scheduler:
