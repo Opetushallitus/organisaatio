@@ -14,7 +14,7 @@ export default function RekisterointiValmis() {
                               description={i18n.translate('REKISTEROINNIN_KASITTELY_KUVAUS')}>
                     </Fieldset>
                     <p>{i18n.translate('REKISTEROINNIN_KASITTELY_OHJE')}</p>
-                    <p className={styles.center}><Image /></p>
+                    <div className={styles.center}><Image /></div>
                 </form>
             </div>
         </div>
