@@ -1,33 +1,33 @@
 import { Koodi, Language } from "../types";
 
 export const kielletytYritysmuodot = [
-    'Kunta',
-    'Kuntayhtymä',
+    'yritysmuoto_41', //'Kunta',
+    'yritysmuoto_42' //'Kuntayhtymä',
 ];
 
 const yritysmuotoPriorityList = [
-    'Aatteellinen yhdistys',
-    'Avoin yhtiö',
-    'Ei yritysmuotoa',
-    'Ev.lut.kirkko',
-    'Julkinen osakeyhtiö',
-    'Kommandiittiyhtiö',
-    'Muu julkisoikeudellinen oikeushenkilö',
-    'Muu säätiö',
-    'Muu taloudellinen yhdistys',
-    'Muu verotuksen yksikkö',
-    'Muu yhdistys',
-    'Muu yhteisvast.pidätysvelvollinen',
-    'Muu yhtiö',
-    'Muut oikeushenkilöt',
-    'Ortodoksinen kirkko',
-    'Osakeyhtiö',
-    'Osuuskunta',
-    'Rekisteröity uskonnollinen yhdyskunta',
-    'Sivuliike',
-    'Säätiö',
-    'Taloudellinen yhdistys',
-    'Yksityinen elinkeinonharjoittaja'
+    'yritysmuoto_6', //'Aatteellinen yhdistys',
+    'yritysmuoto_5', //'Avoin yhtiö',
+    'yritysmuoto_0', //'Ei yritysmuotoa',
+    'yritysmuoto_44', //'Ev.lut.kirkko',
+    'yritysmuoto_17', //'Julkinen osakeyhtiö',
+    'yritysmuoto_13', //'Kommandiittiyhtiö',
+    'yritysmuoto_49', //'Muu julkisoikeudellinen oikeushenkilö',
+    'yritysmuoto_39', //'Muu säätiö',
+    'yritysmuoto_38', //'Muu taloudellinen yhdistys',
+    'yritysmuoto_59', //'Muu verotuksen yksikkö',
+    'yritysmuoto_29', //'Muu yhdistys',
+    'yritysmuoto_52', //'Muu yhteisvast.pidätysvelvollinen',
+    'yritysmuoto_30', //'Muu yhtiö',
+    'yritysmuoto_63', //'Muut oikeushenkilöt',
+    'yritysmuoto_45', //'Ortodoksinen kirkko',
+    'yritysmuoto_16', //'Osakeyhtiö',
+    'yritysmuoto_14', //'Osuuskunta',
+    'yritysmuoto_46', //'Rekisteröity uskonnollinen yhdyskunta',
+    'yritysmuoto_19', //'Sivuliike',
+    'yritysmuoto_18', //'Säätiö',
+    'yritysmuoto_21', //'Taloudellinen yhdistys',
+    'yritysmuoto_26', //'Yksityinen elinkeinonharjoittaja'
 ];
 
 export function yritysmuotoSortFnByLanguage(language: Language) {
