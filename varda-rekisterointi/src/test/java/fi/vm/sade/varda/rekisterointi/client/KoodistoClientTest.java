@@ -1,6 +1,8 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
@@ -27,9 +29,13 @@ import static org.assertj.core.api.Assertions.tuple;
 public class KoodistoClientTest {
 
     @Autowired
-    private KoodistoClient client;
+    private OphHttpClient httpClient;
     @Autowired
     private OphProperties properties;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private KoodistoClient client;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
@@ -37,6 +43,7 @@ public class KoodistoClientTest {
     @Before
     public void setup() {
         properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
+        client = new KoodistoClient(httpClient, properties, objectMapper);
     }
 
     @Test
