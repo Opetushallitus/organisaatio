@@ -1,19 +1,20 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.varda.rekisterointi.model.KielistettyNimi;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioNimi;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
+import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
+import fi.vm.sade.varda.rekisterointi.model.*;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class OrganisaatioServiceTest {
 
-    private final OrganisaatioService service = new OrganisaatioService();
+    private final OrganisaatioService service = organisaatioService();
 
     @Test(expected = IllegalStateException.class)
     public void kuranttiNimiThrowsWhenNoName() {
@@ -69,10 +70,34 @@ public class OrganisaatioServiceTest {
         assertEquals(nimi.alkuPvm, muunnettu.alkuPvm);
     }
 
+    @Test
+    public void yritysmuotoArvoIsConverted() {
+        String yritysmuoto = "yritysmuoto_1";
+        String converted = "Yritysmuoto";
+        String result = service.yritysMuotoKoodiUriToNimi(yritysmuoto);
+        assertEquals(converted, result);
+    }
+
+    @Test
+    public void yritysmuotoNimiIsNotConverted() {
+        String yritysmuoto = "Yritysmuoto";
+        String result = service.yritysMuotoKoodiUriToNimi(yritysmuoto);
+        assertEquals(yritysmuoto, result);
+    }
+
     private OrganisaatioNimi organisaatioNimi(LocalDate alkuPvm, String kieli, String nimi) {
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.alkuPvm = alkuPvm;
         organisaatioNimi.nimi = Collections.singletonMap(kieli, nimi);
         return organisaatioNimi;
+    }
+
+    private static OrganisaatioService organisaatioService() {
+        Koodi koodi = new Koodi();
+        koodi.uri = "yritysmuoto_1";
+        koodi.nimi = Map.of("fi", "Yritysmuoto");
+        KoodistoClient client = mock(KoodistoClient.class);
+        when(client.listKoodit(any(KoodistoType.class))).thenReturn(Collections.singletonList(koodi));
+        return new OrganisaatioService(client);
     }
 }
