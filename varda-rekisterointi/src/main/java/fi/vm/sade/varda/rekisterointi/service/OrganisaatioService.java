@@ -1,13 +1,16 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
+import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -26,6 +29,14 @@ public class OrganisaatioService {
     );
     private static final String PUHELIN_TYYPPI = "puhelin";
     private static final String EMAIL_TYYPPI = "email";
+    private static final Pattern YRITYSMUOTOURI_PATTERN = Pattern.compile("yritysmuoto_\\d+");
+
+    private final Map<String,Koodi> yritysmuotoUriToKoodi = new HashMap<>();
+
+    public OrganisaatioService(KoodistoClient koodistoClient) {
+        koodistoClient.listKoodit(KoodistoType.YRITYSMUOTO).forEach(
+                koodi -> yritysmuotoUriToKoodi.put(koodi.uri, koodi));
+    }
 
     public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
         return Organisaatio.of(
@@ -48,7 +59,7 @@ public class OrganisaatioService {
         dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
         dto.nimi = dto.nimet.get(0).nimi;
         dto.ytjkieli = koodiArvoToKieliKoodiUriVersion(organisaatio.ytjNimi.kieli);
-        dto.yritysmuoto = organisaatio.yritysmuoto;
+        dto.yritysmuoto = yritysMuotoKoodiUriToNimi(organisaatio.yritysmuoto);
         dto.tyypit = organisaatio.tyypit;
         dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
         dto.maaUri = organisaatio.maaUri;
@@ -84,6 +95,22 @@ public class OrganisaatioService {
         organisaatioNimi.nimi = Map.of(kielistettyNimi.kieli, kielistettyNimi.nimi);
         organisaatioNimi.alkuPvm = kielistettyNimi.alkuPvm != null ? kielistettyNimi.alkuPvm : LocalDate.now();
         return List.of(organisaatioNimi);
+    }
+
+    // organisaatiopalvelu tallentaa ikävä kyllä kielistettyjä yritysmuotoja,
+    // muunnetaan kunnes saadaan organisaatiopalvelu järkevämpään kuosiin
+    String yritysMuotoKoodiUriToNimi(String uri) {
+        String nimi = null;
+        if (YRITYSMUOTOURI_PATTERN.matcher(uri).matches()) {
+            LOGGER.debug("Muunnetaan yritysmuotokoodi: {}", uri);
+            Koodi koodi = yritysmuotoUriToKoodi.get(uri);
+            if (koodi != null) {
+                nimi = koodi.nimi.get(DEFAULT_KIELI_KOODI_ARVO);
+            } else {
+                LOGGER.warn("Ei nimeä yritysmuotokoodille: {}", uri);
+            }
+        }
+        return nimi != null ? nimi : uri;
     }
 
     private static String ytjKieliTaiOletusKieli(OrganisaatioV4Dto dto) {

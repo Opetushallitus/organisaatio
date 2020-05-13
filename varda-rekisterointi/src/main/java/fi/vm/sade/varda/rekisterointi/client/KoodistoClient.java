@@ -6,6 +6,7 @@ import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.BaseDto;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -15,6 +16,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Component
+@Profile("!test & !integration-test")
 public class KoodistoClient {
 
     private final OphHttpClient httpClient;
