@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -24,6 +25,7 @@ public class OrganisaatioService {
             "kieli_sv#1", "sv",
             "kieli_en#1", "en"
     );
+    private static final Set<String> DEFAULT_OPETUSKIELET = Set.of("oppilaitoksenopetuskieli_1#1");
     private static final String PUHELIN_TYYPPI = "puhelin";
     private static final String EMAIL_TYYPPI = "email";
 
@@ -52,7 +54,7 @@ public class OrganisaatioService {
         dto.tyypit = organisaatio.tyypit;
         dto.kotipaikkaUri = organisaatio.kotipaikkaUri;
         dto.maaUri = organisaatio.maaUri;
-        dto.kieletUris = organisaatio.kieletUris;
+        dto.kieletUris = opetusKielet(organisaatio.kieletUris);
         dto.yhteystiedot = muunnaYhteystiedot(organisaatio);
         return dto;
     }
@@ -144,6 +146,13 @@ public class OrganisaatioService {
                             .postitoimipaikka(yhteystietoDto.postitoimipaikka)
                             .build()
                 ).orElse(Osoite.TYHJA);
+    }
+
+    private static Set<String> opetusKielet(Set<String> kieletUris) {
+        if (kieletUris == null || kieletUris.isEmpty()) {
+            return DEFAULT_OPETUSKIELET;
+        }
+        return kieletUris;
     }
 
     private static List<YhteystietoDto> muunnaYhteystiedot(Organisaatio organisaatio) {
