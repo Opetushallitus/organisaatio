@@ -2,7 +2,6 @@ import React, {useContext, useState} from "react";
 import {ConfigurationContext, KoodistoImpl, LanguageContext, MaatJaValtiotKoodistoContext} from "../contexts";
 import {useDebounce} from "use-debounce";
 import RekisterointiLista from "./RekisterointiLista";
-import Box from "@opetushallitus/virkailija-ui-components/Box";
 import createTheme from "@opetushallitus/virkailija-ui-components/createTheme";
 import VirkailijaRaamit from "@opetushallitus/virkailija-ui-components/VirkailijaRaamit";
 import {ThemeProvider} from "styled-components";
@@ -69,52 +68,56 @@ export default function Rekisteroinnit() {
             <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
                 <VirkailijaRaamit scriptUrl={configuration.virkailijaRaamitUrl} />
                 <ThemeProvider theme={theme}>
-                    <Box className={styles.rekisteroinnit}>
-                        <Box>
-                            <div className={styles.vasen}>
+                    <div className={styles.rekisteroinnit}>
+                        <div className={styles.rekisterointiOsio}>
+                            <div>
                                 <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
                                 <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
                             </div>
-                            <div className={styles.oikea}>
-                                <Status tila={statusTila}
-                                        teksti={statusTeksti}
-                                        asetaTila={asetaStatusTila} />
-                            </div>
-                        </Box>
-                        <div className={styles.vasen}>
-                            <Input className={styles.suodata} type="text"
-                                   placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
-                                   value={hakutermiInput}
-                                   prefix={<FilterVariantIcon className={styles.suodataIcon}/>}
-                                   onChange={e => vaihdaHakutermi(e.target.value)} />
+                            <Status tila={statusTila}
+                                    teksti={statusTeksti}
+                                    asetaTila={asetaStatusTila} />
                         </div>
-                        <div className={styles.oikea}>
-                            <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
-                                <Tab value={Tila.KASITTELYSSA}>{ i18n.translate(`REKISTEROINNIT_TILA_KASITTELYSSA`) }</Tab>
-                                <Tab value={Tila.HYVAKSYTTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYVAKSYTTY`) }</Tab>
-                                <Tab value={Tila.HYLATTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`) }</Tab>
-                            </Tabs>
+                        <div className={styles.rekisterointiOsio}>
+                            <div>
+                                <Input className={styles.suodata} type="text"
+                                       placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
+                                       value={hakutermiInput}
+                                       prefix={<FilterVariantIcon className={styles.suodataIcon}/>}
+                                       onChange={e => vaihdaHakutermi(e.target.value)} />
+                            </div>
+                            <div>
+                                <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
+                                    <Tab value={Tila.KASITTELYSSA}>{ i18n.translate(`REKISTEROINNIT_TILA_KASITTELYSSA`) }</Tab>
+                                    <Tab value={Tila.HYVAKSYTTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYVAKSYTTY`) }</Tab>
+                                    <Tab value={Tila.HYLATTY}>{ i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`) }</Tab>
+                                </Tabs>
+                            </div>
                         </div>
                         <RekisterointiLista tila={tila} hakutermi={hakutermi} statusCallback={statusCallback} />
                         {!permissionLoading && !permissionError && permission ?
                         <div>
                         <Divider />
-                        <Input type="text"
-                               placeholder={i18n.translate('YTUNNUS')}
-                               value={ytunnus}
-                               onChange={event => setYtunnus(event.currentTarget.value)} />
-                        <Link to={`/virkailija/rekisterointi/luonti/${ytunnusTrimmed}`}
-                            className={ytunnusClassNames}
-                            onClick={event => {
-                                if (ytunnusDisabled) {
-                                    event.preventDefault();
-                                }
-                            }}>
-                            {i18n.translate('REKISTEROINNIT_LUONTI')}
-                        </Link>
+                        <div className={styles.lisaaHakemusOsio}>
+                            <Input type="text"
+                                   placeholder={i18n.translate('YTUNNUS')}
+                                   value={ytunnus}
+                                   onChange={event => setYtunnus(event.currentTarget.value)} />
+                           <div>
+                                <Link to={`/virkailija/rekisterointi/luonti/${ytunnusTrimmed}`}
+                                    className={ytunnusClassNames}
+                                    onClick={event => {
+                                        if (ytunnusDisabled) {
+                                            event.preventDefault();
+                                        }
+                                    }}>
+                                    {i18n.translate('REKISTEROINNIT_LUONTI')}
+                                </Link>
+                           </div>
+                        </div>
                         </div>
                         : null}
-                    </Box>
+                    </div>
                 </ThemeProvider>
             </MaatJaValtiotKoodistoContext.Provider>
         </ConfigurationContext.Provider>

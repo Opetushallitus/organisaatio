@@ -39,6 +39,7 @@ export default function Wizard(props: Props) {
 
     function prev() {
         setCurrentStep(currentStep - 1);
+
     }
 
     function next() {

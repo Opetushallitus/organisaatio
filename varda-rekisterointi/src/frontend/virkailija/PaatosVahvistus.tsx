@@ -11,7 +11,7 @@ import ModalFooter from "@opetushallitus/virkailija-ui-components/ModalFooter"
 import ModalHeader from "@opetushallitus/virkailija-ui-components/ModalHeader"
 import Divider from "@opetushallitus/virkailija-ui-components/Divider";
 import {Rekisterointihakemus} from "./rekisterointihakemus";
-import {hasLength} from "../StringUtils";
+import {isNonEmpty} from "../StringUtils";
 import {Organisaatio} from "../types";
 import styles from './PaatosVahvistus.module.css';
 
@@ -63,7 +63,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
             hyvaksytty,
             hakemukset: valitut.map(h => h.id)
         };
-        if (hasLength(perustelu)) {
+        if (isNonEmpty(perustelu)) {
             paatokset.perustelu = perustelu;
         } else if (!hyvaksytty) {
             return setPerusteluError(true);

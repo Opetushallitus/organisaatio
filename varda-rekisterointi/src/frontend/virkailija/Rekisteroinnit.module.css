@@ -3,10 +3,37 @@
     margin: 2em 4em;
 }
 
+.rekisterointiOsio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.lisaaHakemusOsio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 2em;
+}
+
+.lisaaHakemusOsio div {
+    margin: 0 1em 1em 0;
+}
+
+.tilaTabit {
+    margin-left: 2em;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 @media screen and (max-width: 800px) {
     .rekisteroinnit {
-        margin-left: 1em;
-        margin-right: 1em;
+         margin-left: 1em;
+         margin-right: 1em;
+    }
+    .tilaTabit {
+        margin-left: 0;
     }
 }
 
@@ -17,22 +44,11 @@
     }
 }
 
-.vasen {
-    clear: left;
-    float: left;
-}
-
-.oikea {
-    clear: right;
-    float: right;
-}
-
-.suodata {
-    min-width: 20em;
-    max-width: 20em;
-    border-radius: 24px !important; /* Inline-style jyrää ilman tätä. :( */
-    border-style: none !important; /* Ilmeisesti styled-componentsin perua. */
-    background-color: #f0f0f0 !important; /* Ois kiva, jos näistä pääsisi jotenkin eroon. */
+.suodata.suodata {
+    width: 20em;
+    border-radius: 24px;
+    border-style: none;
+    background-color: #f0f0f0;
 }
 
 .suodataIcon {
@@ -40,19 +56,14 @@
     font-weight: lighter;
 }
 
-.tilaTabit {
-    float: right;
-    margin-left: 2em;
-}
-
 a.nappi {
+    height: 100%;
     border-radius: 4px;
     border-color: #159ecb;
     background-color: #159ecb;
     padding: 6px 16px;
     color: #ffffff;
     text-decoration: none;
-    float: left;
 }
 
 a.nappiDisabled {

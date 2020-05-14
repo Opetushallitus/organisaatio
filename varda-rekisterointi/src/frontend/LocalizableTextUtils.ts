@@ -1,5 +1,5 @@
 import { Language, LocalizableText, KoodiUri } from "./types";
-import { hasLength } from "./StringUtils";
+import { isNonEmpty } from "./StringUtils";
 
 export function toLocalizedText(localizableText: LocalizableText | null | undefined,
                                 language: Language,
@@ -18,7 +18,7 @@ export function hasLengthInLang(localizableText: LocalizableText | null | undefi
     if (localizableText === null || localizableText === undefined) {
         return false;
     }
-    return hasLength(localizableText[language]);
+    return isNonEmpty(localizableText[language]);
 }
 
 export const asiointikielet = [

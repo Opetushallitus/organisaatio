@@ -9,12 +9,13 @@ type Props = {
     selectable: Koodi[],
     selected?: string,
     onChange: (uri: string) => void,
+    autoFocus?: boolean,
 }
 
-export default function KoodiSelectRadio(props: Props) {
+const KoodiSelectRadio = (props: Props) => {
     const { language } = useContext(LanguageContext);
     if (props.readOnly) {
-        const value = props.selectable.find(koodi => koodi.uri === props.selected)
+        const value = props.selectable.find(koodi => koodi.uri === props.selected);
         return <div tabIndex={0}>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
     }
     return (
@@ -23,7 +24,8 @@ export default function KoodiSelectRadio(props: Props) {
             {props.selectable.map(koodi => {
                 return (
                     <label className="oph-checkable" htmlFor={koodi.uri} key={koodi.uri}>
-                        <input id={koodi.uri}
+                        <input autoFocus={props.autoFocus}
+                               id={koodi.uri}
                                className="oph-checkable-input"
                                type="radio"
                                value={koodi.uri}
@@ -37,3 +39,9 @@ export default function KoodiSelectRadio(props: Props) {
         </div>
     )
 }
+
+KoodiSelectRadio.defaultProps = {
+    autoFocus: false,
+};
+
+export default KoodiSelectRadio;
