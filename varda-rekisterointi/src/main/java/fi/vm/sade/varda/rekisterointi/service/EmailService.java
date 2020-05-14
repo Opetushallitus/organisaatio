@@ -26,6 +26,7 @@ public class EmailService {
     public static final List<Locale> LOCALES = List.of(new Locale("fi"), new Locale("sv"));
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String SUBJECT_DELIMITER = " / ";
+    private static final String VARDA_EMAIL_ADDRESS = "varda@oph.fi";
 
     private final RekisterointiRepository rekisterointiRepository;
     private final TemplateService templateService;
@@ -74,6 +75,16 @@ public class EmailService {
                 .flatMap(rekisterointi -> rekisterointi.kunnat.stream()).collect(toSet());
         Map<VirkailijaDto, Long> virkailijat = getVirkailijaByKunta(kunnat);
         virkailijat.forEach(this::lahetaKuntaEmail);
+    }
+
+    public void lahetaOngelmaRaportti(Set<TaskMonitoringService.TaskFailure> epaonnistuneet) {
+        Set<TaskFailureInformation> failures = epaonnistuneet.stream().map(failure ->
+                new TaskFailureInformation(
+                        failure,
+                        rekisterointiRepository.findById(failure.rekisterointi).orElseThrow(
+                                () -> new IllegalStateException("No registration found by id: " + failure.rekisterointi)
+                        ))).collect(toSet());
+        lahetaVirheRaportti(failures);
     }
 
     private void lahetaRekisterointiEmail(Rekisterointi rekisterointi) {
@@ -171,12 +182,40 @@ public class EmailService {
         viestintaClient.save(email, false);
     }
 
+    private void lahetaVirheRaportti(Set<TaskFailureInformation> failures) {
+        Locale locale = new Locale("fi");
+        String subject = messageSource.getMessage("taskien-virheraportti.otsikko", null, locale);
+        Map<String, Object> variables = Map.of(
+                "epaonnistuneetLkm", failures.size(),
+                "epaonnistuneet", failures);
+        String body = templateService.getContent(Template.AJASTETTUJEN_TASKIEN_VIRHERAPORTTI, locale, variables);
+        EmailDto email = EmailDto.builder()
+                .email(VARDA_EMAIL_ADDRESS)
+                .message(EmailMessageDto.builder()
+                        .subject(subject)
+                        .body(body)
+                        .html(true)
+                        .build())
+                .build();
+        LOGGER.info("Lähetetään raportti epäonnistuneista taskeista osoitteeseen: {}", VARDA_EMAIL_ADDRESS);
+        viestintaClient.save(email, false);
+    }
+
     private String subjectToAllLanguages(String code) {
         return subjectToAllLanguages(locale -> messageSource.getMessage(code, null, locale));
     }
 
     private String subjectToAllLanguages(Function<Locale, String> messageByLocale) {
         return LOCALES.stream().map(messageByLocale::apply).collect(joining(SUBJECT_DELIMITER));
+    }
+
+    public static class TaskFailureInformation {
+        public final TaskMonitoringService.TaskFailure virhe;
+        public final Rekisterointi rekisterointi;
+        public TaskFailureInformation(TaskMonitoringService.TaskFailure virhe, Rekisterointi rekisterointi) {
+            this.virhe = virhe;
+            this.rekisterointi = rekisterointi;
+        }
     }
 
 }
