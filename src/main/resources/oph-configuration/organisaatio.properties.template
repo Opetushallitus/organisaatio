@@ -64,6 +64,7 @@ cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-ui
 cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
 flyway.initOnMigrate=true
+flyway.validateOnMigrate=true
 koodi.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodiService
 koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate

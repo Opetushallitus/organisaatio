@@ -46,6 +46,7 @@
 
     <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
         <property name="initOnMigrate" value="${flyway.initOnMigrate}"/>
+        <property name="validateOnMigrate" value="${flyway.validateOnMigrate}"/>
         <property name="dataSource">
             <bean id="dbDataSource"
                   class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
