@@ -19,6 +19,9 @@
         <webapp.port>7003</webapp.port>
         <skipDbDiagramGenerate>false</skipDbDiagramGenerate>
         <spring-profiles>default</spring-profiles>
+        <database.name>organisaatio</database.name>
+        <database.user>organisaatio</database.user>
+        <database.password>organisaatio</database.password>
     </properties>
 
     <build>
@@ -130,9 +133,9 @@
                             <name>postgres:10-alpine</name>
                             <run>
                                 <env>
-                                    <POSTGRES_USER>organisaatio</POSTGRES_USER>
-                                    <POSTGRES_PASSWORD>organisaatio</POSTGRES_PASSWORD>
-                                    <POSTGRES_DB>organisaatio</POSTGRES_DB>
+                                    <POSTGRES_USER>${database.user}</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>${database.password}</POSTGRES_PASSWORD>
+                                    <POSTGRES_DB>${database.name}</POSTGRES_DB>
                                 </env>
                                 <ports>
                                     <!--suppress UnresolvedMavenProperty -->
@@ -178,12 +181,11 @@
                             <schemas>
                                 <schema>public</schema>
                             </schemas>
-                            <user>organisaatio</user>
-                            <password>organisaatio</password>
+                            <user>${database.user}</user>
+                            <password>${database.password}</password>
                             <driver>org.postgresql.Driver</driver>
                             <!--suppress UnresolvedMavenProperty -->
-                            <url>jdbc:postgresql://localhost:${database.port}/organisaatio</url>
-                            <connectionRetries>2</connectionRetries>
+                            <url>jdbc:postgresql://localhost:${database.port}/${database.name}</url>
                         </configuration>
                     </execution>
                 </executions>
