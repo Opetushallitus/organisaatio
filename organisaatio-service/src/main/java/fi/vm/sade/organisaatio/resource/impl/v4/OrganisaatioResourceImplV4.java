@@ -279,7 +279,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         }
         List<String> parentOidsList = new ArrayList<>(parentOids);
         Collections.reverse(parentOidsList);
-        return "|" + String.join("|", parentOidsList) + "|";
+        return String.join("/", parentOidsList);
     }
 
 }
