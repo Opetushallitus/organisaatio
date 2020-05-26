@@ -109,7 +109,7 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
     public void findDescendantsReturnsCorrectParentOidPath() {
         String parentOid = "1.2.2004.1";
         String childOid = "1.2.2004.2";
-        String expectedParentPath = "|1.2.246.562.24.00000000001|1.2.2004.1|";
+        String expectedParentPath = "1.2.246.562.24.00000000001/1.2.2004.1";
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
         OrganisaatioPerustietoV4 childOrg = results.getOrganisaatiot().stream().filter(
                 organisaatio -> childOid.equals(organisaatio.getOid())
