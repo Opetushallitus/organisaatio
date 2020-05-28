@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="info">
+<Configuration status="warn">
     <Properties>
         <Property name="logLevel">{{env_loglevel}}</Property>
 {# raw-endraw -välillä template engine ei tee mitään! #}
@@ -12,9 +12,6 @@
         <Property name="auditLogPattern">%m%n</Property>
     </Properties>
     <Appenders>
-        <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="${logPattern}"/>
-        </Console>
         <RollingFile name="FILE" fileName="${logFile}" filePattern="${logFile}.%i" append="true">
             <PatternLayout pattern="${logPattern}"/>
             <SizeBasedTriggeringPolicy size="${maxFileSize}" />
