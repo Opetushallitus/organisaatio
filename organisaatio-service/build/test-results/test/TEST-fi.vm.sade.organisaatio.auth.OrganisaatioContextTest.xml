@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:33" hostname="Miikkas-MacBook-Pro.local" time="0.002">
+<testsuite name="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:38:43" hostname="Miikkas-MacBook-Pro.local" time="0.003">
   <properties/>
-  <testcase name="isRyhmaReturnsFalseWithEmpty" classname="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" time="0.0"/>
+  <testcase name="isRyhmaReturnsFalseWithEmpty" classname="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" time="0.001"/>
   <testcase name="isRyhmaReturnsTrueWithRyhma" classname="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" time="0.0"/>
   <testcase name="isRyhmaReturnsFalseWithKoulutustoimija" classname="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" time="0.0"/>
   <testcase name="test" classname="fi.vm.sade.organisaatio.auth.OrganisaatioContextTest" time="0.001"/>

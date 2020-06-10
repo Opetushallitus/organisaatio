@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.001">
+<testsuite name="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:14" hostname="Miikkas-MacBook-Pro.local" time="0.002">
   <properties/>
-  <testcase name="isAktiivinenSuunniteltuLakkautettuLakkautusPvmEilen" classname="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" time="0.0"/>
+  <testcase name="isAktiivinenSuunniteltuLakkautettuLakkautusPvmEilen" classname="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" time="0.001"/>
   <testcase name="isAktiivinenSuunniteltuLakkautettuAlkuPvmEilen" classname="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" time="0.0"/>
   <testcase name="isAktiivinenSuunniteltuLakkautettuAlkuPvmTanaan" classname="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" time="0.0"/>
   <testcase name="isAktiivinenSuunniteltuLakkautettuLakkautusPvmHuomenna" classname="fi.vm.sade.organisaatio.service.util.OrganisaatioUtilTest" time="0.0"/>
