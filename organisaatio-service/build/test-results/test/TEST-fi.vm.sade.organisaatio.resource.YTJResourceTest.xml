@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.resource.YTJResourceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:06" hostname="Miikkas-MacBook-Pro.local" time="2.031">
+<testsuite name="fi.vm.sade.organisaatio.resource.YTJResourceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:18" hostname="Miikkas-MacBook-Pro.local" time="2.024">
   <properties/>
-  <testcase name="findByYTunnusV4" classname="fi.vm.sade.organisaatio.resource.YTJResourceTest" time="2.031"/>
+  <testcase name="findByYTunnusV4" classname="fi.vm.sade.organisaatio.resource.YTJResourceTest" time="2.024"/>
   <system-out><![CDATA[
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -11,163 +11,163 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.3.0.RELEASE)
 
-2020-06-10 18:12:04.726  INFO 55751 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : Starting YTJResourceTest on Miikkas-MacBook-Pro.local with PID 55751 (started by mkamka in /Users/mkamka/git/wunderdog/oph/yleiskayttoiset/organisaatio 2/organisaatio-service)
-2020-06-10 18:12:04.726  INFO 55751 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : No active profile set, falling back to default profiles: default
-2020-06-10 18:12:05.024  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
-2020-06-10 18:12:05.081  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57ms. Found 12 JPA repository interfaces.
-2020-06-10 18:12:05.098  INFO 55751 --- [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
-2020-06-10 18:12:05.163  INFO 55751 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:5db9f65e-e2bd-4561-81f0-82dafeb0c745;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
-2020-06-10 18:12:05.207  INFO 55751 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-06-10 18:12:05.239  INFO 55751 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@2dfabe23
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@55bedb8b
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@4d73a2ec
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@6ca0e59d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@6ca0e59d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@5e476f96
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@5e476f96
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@7250e71f
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@7250e71f
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@98a4409
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@51939a53
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@5dd004c4
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@5dd004c4
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@beb10cd
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@beb10cd
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@614aee68
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@614aee68
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@7f3412aa
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@7f3412aa
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@230aeaef
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@230aeaef
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@54760927
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@54760927
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2822f21e
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2822f21e
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@30e0cc1d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@30e0cc1d
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@17453e64
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@17453e64
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@6746b6dc
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@6746b6dc
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@22b2b7d4
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@22b2b7d4
-2020-06-10 18:12:05.242 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@3b61c4de
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@30133667
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@6db15d50
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@34dae521
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@34dae521
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@4abf8419
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@4abf8419
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@475664c7
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@475664c7
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@7ee21a44
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@7ee21a44
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@6201aaf9
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@6201aaf9
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@1f85babe
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@5044e279
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@57d6ac5e
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@2b03af4
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@6d7d39e
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@4dc78672
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@4dc78672
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@7969dd0d
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@38f39022
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@38f39022
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@4b4e387b
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@4b4e387b
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@33eb9d
-2020-06-10 18:12:05.243 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@4774d2ca
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@3298d692
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@22e34fa
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@22e34fa
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@2fa43ae6
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@65a92661
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@7edf5ce8
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@5ce631cb
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@521b53bb
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@7eadedb7
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@7a91c696
-2020-06-10 18:12:05.244 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@1714c866
-2020-06-10 18:12:05.248  INFO 55751 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2020-06-10 18:12:05.250 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@3bc1fa61] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@57a0b6c]
-2020-06-10 18:12:05.270 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.270 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.270 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.271 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.272 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.272 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.273 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.274 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.300 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@3bc1fa61] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@663b6c22]
-2020-06-10 18:12:05.300 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.300 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.304 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.304 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.321 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.321 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.324 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.324 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.349  WARN 55751 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-06-10 18:12:05.366 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.366 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.369 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.369 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.395 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.395 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.398 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.398 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.417 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.417 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:12:05.421 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.421 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:12:05.432 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.432 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:12:05.435 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:12:05.435 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.087  INFO 56553 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : Starting YTJResourceTest on Miikkas-MacBook-Pro.local with PID 56553 (started by mkamka in /Users/mkamka/git/wunderdog/oph/yleiskayttoiset/organisaatio/organisaatio-service)
+2020-06-10 20:39:17.087  INFO 56553 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : No active profile set, falling back to default profiles: default
+2020-06-10 20:39:17.383  INFO 56553 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2020-06-10 20:39:17.442  INFO 56553 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 58ms. Found 12 JPA repository interfaces.
+2020-06-10 20:39:17.457  INFO 56553 --- [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2020-06-10 20:39:17.523  INFO 56553 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:54eecc4f-599b-4f8b-97c5-27d47cea5600;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2020-06-10 20:39:17.564  INFO 56553 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-10 20:39:17.595  INFO 56553 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@22ae80e1
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@59db20f2
+2020-06-10 20:39:17.597 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@fa51239
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@49fab90e
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@49fab90e
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@6942968d
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@6942968d
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@7c919f77
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@7c919f77
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@1a73a322
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@7e0bc6be
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@40000ea8
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@40000ea8
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@4debc20a
+2020-06-10 20:39:17.598 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@4debc20a
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@707b906d
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@707b906d
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@4535de2b
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@4535de2b
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@116bbe39
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@116bbe39
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@60d3c2e8
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@60d3c2e8
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@356f6d2
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@356f6d2
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@4dc9162
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@4dc9162
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@6f4a7ae2
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@6f4a7ae2
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@5b9b5794
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@5b9b5794
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@deef864
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@deef864
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@2fca8a09
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@22802e9e
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@6b7e8311
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@1cbd2173
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@1cbd2173
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@5b4a1a37
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@5b4a1a37
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@1765f8eb
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@1765f8eb
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@72906078
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@72906078
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@49c7680a
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@49c7680a
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@75e27771
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:39:17.599 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@6ce134df
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@7d89ac69
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@1dd5be31
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@26d9e304
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@1494a27c
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@1494a27c
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@2ece2bc5
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@7fdf8a06
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@7fdf8a06
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@2d76351c
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@2d76351c
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@4fec3165
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@a16cd5c
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@406b01c4
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@45cbe814
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@45cbe814
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@39a52e0
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@77a128de
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@524d1a3f
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@43603d0d
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@12bc7ad3
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@6ca54782
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@560324cb
+2020-06-10 20:39:17.600 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@1449e353
+2020-06-10 20:39:17.605  INFO 56553 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-06-10 20:39:17.606 DEBUG 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@544e2c8d] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@6d4c62c4]
+2020-06-10 20:39:17.634 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.635 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.635 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.635 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.636 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.637 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.638 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.638 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.673 DEBUG 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@544e2c8d] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@74122eff]
+2020-06-10 20:39:17.673 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.673 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.677 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.677 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.694 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.694 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.697 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.697 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.715  WARN 56553 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-06-10 20:39:17.732 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.732 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.736 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.736 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.770 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.770 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.774 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.774 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.801 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.801 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.805 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.805 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.810 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.810 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.814 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.814 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
 Hibernate: 
     
     drop table if exists binary_data CASCADE 
@@ -400,7 +400,7 @@ Hibernate:
        organisaatio_id bigint not null,
         ryhmatyypit varchar(255)
     )
-2020-06-10 18:12:05.440 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:39:17.820 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
 Hibernate: 
     
     create table organisaatio_sahkoposti (
@@ -454,7 +454,7 @@ Hibernate:
        organisaatio_meta_data_id bigint not null,
         yhteystiedot_id bigint not null
     )
-2020-06-10 18:12:05.442 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:39:17.822 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
 Hibernate: 
     
     create table organisaatiosuhde (
@@ -592,7 +592,7 @@ Hibernate:
        id bigint not null,
         organisaatio_tyyppi varchar(255)
     )
-2020-06-10 18:12:05.444 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:39:17.825 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
 Hibernate: 
     
     create table ytjpaivitysloki (
@@ -604,7 +604,7 @@ Hibernate:
         paivitysaika timestamp,
         primary key (id)
     )
-2020-06-10 18:12:05.444 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:39:17.826 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
 Hibernate: 
     
     create table ytjvirhe (
@@ -925,17 +925,17 @@ Hibernate:
        add constraint FK6lnd3ilr54i81swnh5nwbvupb 
        foreign key (ytj_paivitys_loki_id) 
        references ytjpaivitysloki
-2020-06-10 18:12:05.455  INFO 55751 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2020-06-10 18:12:05.455 TRACE 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@663b6c22] for TypeConfiguration
-2020-06-10 18:12:05.455  INFO 55751 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-06-10 18:12:05.950  INFO 55751 --- [    Test worker] org.dozer.DozerBeanMapper                : Initializing a new instance of dozer bean mapper.
-2020-06-10 18:12:06.300  INFO 55751 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/console/'. Database available at 'jdbc:h2:mem:5db9f65e-e2bd-4561-81f0-82dafeb0c745'
-2020-06-10 18:12:06.330  INFO 55751 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-06-10 18:12:06.364  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
-2020-06-10 18:12:06.401  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
-2020-06-10 18:12:06.411  INFO 55751 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : Started YTJResourceTest in 1.7 seconds (JVM running for 47.846)
-2020-06-10 18:12:06.417  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3b1834a8 testClass = YTJResourceTest, testInstance = fi.vm.sade.organisaatio.resource.YTJResourceTest@42d73170, testMethod = findByYTunnusV4@YTJResourceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2bec938e testClass = YTJResourceTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.resource.YTJResourceTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@3c9548f5 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@362f80d8]; rollback [true]
-2020-06-10 18:12:06.678  WARN 55751 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
+2020-06-10 20:39:17.841  INFO 56553 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-06-10 20:39:17.841 TRACE 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@74122eff] for TypeConfiguration
+2020-06-10 20:39:17.841  INFO 56553 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-06-10 20:39:18.305  INFO 56553 --- [    Test worker] org.dozer.DozerBeanMapper                : Initializing a new instance of dozer bean mapper.
+2020-06-10 20:39:18.611  INFO 56553 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/console/'. Database available at 'jdbc:h2:mem:54eecc4f-599b-4f8b-97c5-27d47cea5600'
+2020-06-10 20:39:18.645  INFO 56553 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-06-10 20:39:18.669  INFO 56553 --- [    Test worker] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2020-06-10 20:39:18.696  INFO 56553 --- [    Test worker] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2020-06-10 20:39:18.700  INFO 56553 --- [    Test worker] f.v.s.o.resource.YTJResourceTest         : Started YTJResourceTest in 1.633 seconds (JVM running for 50.706)
+2020-06-10 20:39:18.705  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@338cdb00 testClass = YTJResourceTest, testInstance = fi.vm.sade.organisaatio.resource.YTJResourceTest@7f0872f5, testMethod = findByYTunnusV4@YTJResourceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@59ab87d6 testClass = YTJResourceTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.resource.YTJResourceTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@3428273e key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@195ad9a5]; rollback [true]
+2020-06-10 20:39:18.963  WARN 56553 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -973,51 +973,51 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:07.057 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.24.00000000001]
-2020-06-10 18:12:07.057 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [0]
-2020-06-10 18:12:07.057 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([version2_5_] : [BIGINT]) - [0]
-2020-06-10 18:12:07.057 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([alkupvm3_5_] : [DATE]) - [1970-01-01]
-2020-06-10 18:12:07.057 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([domainni4_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([kotipaik5_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([kuvaus_28_5_] : [BIGINT]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lakkautu6_5_] : [DATE]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([maa7_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([metadat29_5_] : [BIGINT]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([nimi_mk30_5_] : [BIGINT]) - [0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([nimihaku8_5_] : [VARCHAR]) - [oph,,]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oid9_5_] : [VARCHAR]) - [1.2.246.562.24.00000000001]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([opetusp10_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oppilai11_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oppilai12_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([organis13_5_] : [BOOLEAN]) - [false]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([paivitt14_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([paivity15_5_] : [TIMESTAMP]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parenti16_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parento17_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([piilote18_5_] : [BOOLEAN]) - [false]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tarkast19_5_] : [TIMESTAMP]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([toimipi20_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tuontip21_5_] : [TIMESTAMP]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([varhais31_5_] : [BIGINT]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([virasto22_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([yhteish23_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([yritysm24_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytj_kie25_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytjpaiv26_5_] : [DATE]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytunnus27_5_] : [VARCHAR]) - [null]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.childSuhteet#0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.kayttoryhmat#0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.kielet#0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.muutKotipaikatUris#0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.muutOppilaitosTyyppiUris#0]
-2020-06-10 18:12:07.058 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.nimet#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.organisaatioLisatietotyypit#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.parentSuhteet#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.ryhmatyypit#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.tyypit#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.vuosiluokat#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.yhteystiedot#0]
-2020-06-10 18:12:07.059 TRACE 55751 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.yhteystietoArvos#0]
+2020-06-10 20:39:19.331 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.24.00000000001]
+2020-06-10 20:39:19.331 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [0]
+2020-06-10 20:39:19.331 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([version2_5_] : [BIGINT]) - [0]
+2020-06-10 20:39:19.331 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([alkupvm3_5_] : [DATE]) - [1970-01-01]
+2020-06-10 20:39:19.331 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([domainni4_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([kotipaik5_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([kuvaus_28_5_] : [BIGINT]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lakkautu6_5_] : [DATE]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([maa7_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([metadat29_5_] : [BIGINT]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([nimi_mk30_5_] : [BIGINT]) - [0]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([nimihaku8_5_] : [VARCHAR]) - [oph,,]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oid9_5_] : [VARCHAR]) - [1.2.246.562.24.00000000001]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([opetusp10_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oppilai11_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([oppilai12_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([organis13_5_] : [BOOLEAN]) - [false]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([paivitt14_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([paivity15_5_] : [TIMESTAMP]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parenti16_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parento17_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([piilote18_5_] : [BOOLEAN]) - [false]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tarkast19_5_] : [TIMESTAMP]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([toimipi20_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tuontip21_5_] : [TIMESTAMP]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([varhais31_5_] : [BIGINT]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([virasto22_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([yhteish23_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([yritysm24_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytj_kie25_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytjpaiv26_5_] : [DATE]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ytunnus27_5_] : [VARCHAR]) - [null]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.childSuhteet#0]
+2020-06-10 20:39:19.332 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.kayttoryhmat#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.kielet#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.muutKotipaikatUris#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.muutOppilaitosTyyppiUris#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.nimet#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.organisaatioLisatietotyypit#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.parentSuhteet#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.ryhmatyypit#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.tyypit#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.vuosiluokat#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.yhteystiedot#0]
+2020-06-10 20:39:19.333 TRACE 56553 --- [    Test worker] org.hibernate.type.CollectionType        : Created collection wrapper: [fi.vm.sade.organisaatio.model.Organisaatio.yhteystietoArvos#0]
 Hibernate: 
     select
         parentsuht0_.child_id as child_id7_19_0_,
@@ -1036,8 +1036,8 @@ Hibernate:
         parentsuht0_.child_id=? 
     order by
         parentsuht0_.alkupvm
-2020-06-10 18:12:07.060 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.060  WARN 55751 --- [    Test worker] .s.o.b.i.OrganisaatioBusinessServiceImpl : Oppilaitos not found in parents
+2020-06-10 20:39:19.334 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.335  WARN 56553 --- [    Test worker] .s.o.b.i.OrganisaatioBusinessServiceImpl : Oppilaitos not found in parents
 Hibernate: 
     select
         count(*) as col_0_0_ 
@@ -1046,8 +1046,8 @@ Hibernate:
     where
         organisaat0_.ytunnus=? 
         and organisaatio_poistettu=0
-2020-06-10 18:12:07.064 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [2255802-1]
-2020-06-10 18:12:07.064 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [BIGINT]) - [0]
+2020-06-10 20:39:19.340 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [2255802-1]
+2020-06-10 20:39:19.340 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [BIGINT]) - [0]
 Hibernate: 
     insert 
     into
@@ -1055,7 +1055,7 @@ Hibernate:
         (id, version) 
     values
         (null, ?)
-2020-06-10 18:12:07.068 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.345 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1063,7 +1063,7 @@ Hibernate:
         (id, version) 
     values
         (null, ?)
-2020-06-10 18:12:07.069 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.346 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1071,36 +1071,36 @@ Hibernate:
         (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [1]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [2]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
-2020-06-10 18:12:07.071 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [2255802-1]
+2020-06-10 20:39:19.356 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.356 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [1]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [2]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
+2020-06-10 20:39:19.357 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [2255802-1]
 Hibernate: 
     insert 
     into
@@ -1108,11 +1108,11 @@ Hibernate:
         (id, version, alkupvm, nimi_mkt, organisaatio_id, paivittaja) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:12:07.072 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.072 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [1999-02-10]
-2020-06-10 18:12:07.072 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
-2020-06-10 18:12:07.072 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [BIGINT] - [1]
-2020-06-10 18:12:07.072 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:19.359 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.359 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [1999-02-10]
+2020-06-10 20:39:19.359 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
+2020-06-10 20:39:19.359 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [BIGINT] - [1]
+2020-06-10 20:39:19.359 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
 Hibernate: 
     insert 
     into
@@ -1120,11 +1120,11 @@ Hibernate:
         (id, version, kieli, organisaatio_id, yhteystieto_oid, email, dtype) 
     values
         (null, ?, ?, ?, ?, ?, 'Email')
-2020-06-10 18:12:07.073 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.073 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:07.073 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
-2020-06-10 18:12:07.073 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [15918019264230.43802569108904776]
-2020-06-10 18:12:07.073 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [example@example.com]
+2020-06-10 20:39:19.361 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.361 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:19.361 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
+2020-06-10 20:39:19.361 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [15918107587110.45256595426112833]
+2020-06-10 20:39:19.361 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [example@example.com]
 Hibernate: 
     insert 
     into
@@ -1132,21 +1132,21 @@ Hibernate:
         (id, version, kieli, organisaatio_id, yhteystieto_oid, coordinatetype, extrarivi, lat, lng, maa, osavaltio, osoite, osoite_tyyppi, postinumero, postitoimipaikka, ytjpaivityspvm, dtype) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Osoite')
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1.2.246.562.5.2020061018120706093446]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [VARCHAR] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [DOUBLE] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [VARCHAR] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [Ygankuja 1]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [posti]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [posti_00100]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [Helsinki]
-2020-06-10 18:12:07.074 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [DATE] - [Wed Jun 10 00:00:00 EEST 2020]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1.2.246.562.5.2020061020391933576931]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [VARCHAR] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [DOUBLE] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [VARCHAR] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [Ygankuja 1]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [posti]
+2020-06-10 20:39:19.362 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [posti_00100]
+2020-06-10 20:39:19.363 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [Helsinki]
+2020-06-10 20:39:19.363 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [DATE] - [Wed Jun 10 00:00:00 EEST 2020]
 Hibernate: 
     update
         organisaatio 
@@ -1184,38 +1184,38 @@ Hibernate:
     where
         id=? 
         and version=?
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [2]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [2255802-1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [31] as [BIGINT] - [1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [32] as [BIGINT] - [0]
+2020-06-10 20:39:19.364 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [1]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [2]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [2255802-1]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [31] as [BIGINT] - [1]
+2020-06-10 20:39:19.365 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [32] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1223,8 +1223,8 @@ Hibernate:
         (organisaatio_id, kielet) 
     values
         (?, ?)
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:07.076 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoksenopetuskieli_1#1]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoksenopetuskieli_1#1]
 Hibernate: 
     insert 
     into
@@ -1232,8 +1232,8 @@ Hibernate:
         (organisaatio_id, tyypit) 
     values
         (?, ?)
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [organisaatiotyyppi_07]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [organisaatiotyyppi_07]
 Hibernate: 
     insert 
     into
@@ -1241,9 +1241,9 @@ Hibernate:
         (id, key, value) 
     values
         (?, ?, ?)
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [fi]
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [Katva Consulting]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [fi]
+2020-06-10 20:39:19.366 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [Katva Consulting]
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1281,9 +1281,9 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.24.00000000001]
-2020-06-10 18:12:07.077 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [0]
-2020-06-10 18:12:07.078  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : findParentTo(1, Wed Jun 10 18:12:07 EEST 2020)
+2020-06-10 20:39:19.367 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.24.00000000001]
+2020-06-10 20:39:19.367 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [0]
+2020-06-10 20:39:19.367  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : findParentTo(1, Wed Jun 10 20:39:19 EEST 2020)
 Hibernate: 
     select
         organisaat0_.id as id1_19_0_,
@@ -1344,13 +1344,13 @@ Hibernate:
         and organisaat1_.organisaatio_poistettu=? 
     order by
         organisaat0_.alkupvm desc
-2020-06-10 18:12:07.081 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:07.081 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [HISTORIA]
-2020-06-10 18:12:07.081 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DATE] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.081 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.081 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [DATE] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.082 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BOOLEAN] - [false]
-2020-06-10 18:12:07.082  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : addChild(0, 1, Wed Jun 10 18:12:07 EEST 2020)
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [HISTORIA]
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DATE] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [DATE] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.374 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BOOLEAN] - [false]
+2020-06-10 20:39:19.375  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : addChild(0, 1, Wed Jun 10 20:39:19 EEST 2020)
 Hibernate: 
     insert 
     into
@@ -1358,14 +1358,14 @@ Hibernate:
         (id, version, alkupvm, child_id, loppupvm, opetuspisteenjarjnro, parent_id, suhdetyyppi) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Wed Jun 10 18:12:07 EEST 2020]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [null]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [0]
-2020-06-10 18:12:07.084 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [HISTORIA]
-2020-06-10 18:12:07.085  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl :     Created new child relation:  --> pId=0, cId=1, aPvm=Wed Jun 10 18:12:07 EEST 2020, lPvm=null
+2020-06-10 20:39:19.378 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Wed Jun 10 20:39:19 EEST 2020]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [null]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [0]
+2020-06-10 20:39:19.379 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [HISTORIA]
+2020-06-10 20:39:19.380  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl :     Created new child relation:  --> pId=0, cId=1, aPvm=Wed Jun 10 20:39:19 EEST 2020, lPvm=null
 Hibernate: 
     select
         organisaat0_.id as id1_19_,
@@ -1380,8 +1380,8 @@ Hibernate:
         organisaatiosuhde organisaat0_ 
     where
         organisaat0_.child_id=?
-2020-06-10 18:12:07.086 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:07.086 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_19_] : [BIGINT]) - [1]
+2020-06-10 20:39:19.382 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:19.382 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_19_] : [BIGINT]) - [1]
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1419,8 +1419,8 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:07.087 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:07.087 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
+2020-06-10 20:39:19.383 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:19.383 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1458,12 +1458,12 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:07.090 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:07.090 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
-2020-06-10 18:12:07.341  WARN 55751 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
-2020-06-10 18:12:07.693  WARN 55751 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
-2020-06-10 18:12:08.019  WARN 55751 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
-2020-06-10 18:12:08.350  WARN 55751 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
+2020-06-10 20:39:19.387 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:19.387 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
+2020-06-10 20:39:19.641  WARN 56553 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
+2020-06-10 20:39:19.990  WARN 56553 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
+2020-06-10 20:39:20.314  WARN 56553 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
+2020-06-10 20:39:20.639  WARN 56553 --- [    Test worker] fi.vm.sade.javautils.http.OphHttpClient  : Failed to CAS authenticate. Renewing proxy ticket.
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1501,8 +1501,8 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:08.430 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:08.430 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
+2020-06-10 20:39:20.710 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:20.710 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1540,8 +1540,8 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:08.431 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061018120706061752]
-2020-06-10 18:12:08.431 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
+2020-06-10 20:39:20.711 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061020391933401296]
+2020-06-10 20:39:20.711 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [1]
 Hibernate: 
     select
         tyypit0_.organisaatio_id as organisa1_14_0_,
@@ -1550,10 +1550,10 @@ Hibernate:
         organisaatio_tyypit tyypit0_ 
     where
         tyypit0_.organisaatio_id=?
-2020-06-10 18:12:08.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([organisa1_14_0_] : [BIGINT]) - [0]
-2020-06-10 18:12:08.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tyypit2_14_0_] : [VARCHAR]) - [Muu organisaatio]
-2020-06-10 18:12:08.432  WARN 55751 --- [    Test worker] .s.o.b.i.OrganisaatioBusinessServiceImpl : Oppilaitos not found in parents
+2020-06-10 20:39:20.712 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.712 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([organisa1_14_0_] : [BIGINT]) - [0]
+2020-06-10 20:39:20.712 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tyypit2_14_0_] : [VARCHAR]) - [Muu organisaatio]
+2020-06-10 20:39:20.712  WARN 56553 --- [    Test worker] .s.o.b.i.OrganisaatioBusinessServiceImpl : Oppilaitos not found in parents
 Hibernate: 
     insert 
     into
@@ -1561,7 +1561,7 @@ Hibernate:
         (id, version) 
     values
         (null, ?)
-2020-06-10 18:12:08.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.713 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1569,7 +1569,7 @@ Hibernate:
         (id, version) 
     values
         (null, ?)
-2020-06-10 18:12:08.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.713 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1577,10 +1577,10 @@ Hibernate:
         (id, version, kasvatusopillinen_jarjestelma, paikkojen_lukumaara, toimintamuoto) 
     values
         (null, ?, ?, ?, ?)
-2020-06-10 18:12:08.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [vardakasvatusopillinenjarjestelma_kj99]
-2020-06-10 18:12:08.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [10]
-2020-06-10 18:12:08.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [vardatoimintamuoto_tm02]
+2020-06-10 20:39:20.714 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.714 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [vardakasvatusopillinenjarjestelma_kj99]
+2020-06-10 20:39:20.714 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [10]
+2020-06-10 20:39:20.714 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [vardatoimintamuoto_tm02]
 Hibernate: 
     insert 
     into
@@ -1588,36 +1588,36 @@ Hibernate:
         (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:12:08.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
-2020-06-10 18:12:08.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:12:08.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [3]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [4]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061018120843298252]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|1|]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|1.2.246.562.10.2020061018120706061752|]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [1]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
-2020-06-10 18:12:08.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [3]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [4]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061020392071161562]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|1|]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|1.2.246.562.10.2020061020391933401296|]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [1]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:20.715 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
 Hibernate: 
     insert 
     into
@@ -1625,11 +1625,11 @@ Hibernate:
         (id, version, alkupvm, nimi_mkt, organisaatio_id, paivittaja) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [1999-02-10]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [4]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [BIGINT] - [2]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [1999-02-10]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [4]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [BIGINT] - [2]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
 Hibernate: 
     insert 
     into
@@ -1637,21 +1637,21 @@ Hibernate:
         (id, version, kieli, organisaatio_id, yhteystieto_oid, coordinatetype, extrarivi, lat, lng, maa, osavaltio, osoite, osoite_tyyppi, postinumero, postitoimipaikka, ytjpaivityspvm, dtype) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Osoite')
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1.2.246.562.5.2020061018120843225113]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [VARCHAR] - [null]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [null]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [DOUBLE] - [null]
-2020-06-10 18:12:08.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [VARCHAR] - [null]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [Ygankuja 1]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [posti]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [posti_00100]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [Helsinki]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [DATE] - [Wed Jun 10 00:00:00 EEST 2020]
+2020-06-10 20:39:20.716 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1.2.246.562.5.2020061020392071103266]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [VARCHAR] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [DOUBLE] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [VARCHAR] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [Ygankuja 1]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [posti]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [posti_00100]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [Helsinki]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [DATE] - [Wed Jun 10 00:00:00 EEST 2020]
 Hibernate: 
     insert 
     into
@@ -1659,12 +1659,12 @@ Hibernate:
         (id, version, kieli, organisaatio_id, yhteystieto_oid, email, dtype) 
     values
         (null, ?, ?, ?, ?, ?, 'Email')
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [15918019270890.6438349519639718]
-2020-06-10 18:12:08.438 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [example@example.com]
-2020-06-10 18:12:08.439  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : findParentTo(2, Wed Jun 10 18:12:08 EEST 2020)
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [15918107593850.21165141422677725]
+2020-06-10 20:39:20.717 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [example@example.com]
+2020-06-10 20:39:20.718  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : findParentTo(2, Wed Jun 10 20:39:20 EEST 2020)
 Hibernate: 
     update
         organisaatio 
@@ -1702,38 +1702,38 @@ Hibernate:
     where
         id=? 
         and version=?
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [3]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [4]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061018120843298252]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|1|]
-2020-06-10 18:12:08.440 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|1.2.246.562.10.2020061018120706061752|]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [1]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [31] as [BIGINT] - [2]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [32] as [BIGINT] - [0]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Mon Feb 28 00:00:00 EET 2011]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [3]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [maatjavaltiot1_fin]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [4]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [,Katva Consulting]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [1.2.246.562.10.2020061020392071161562]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [ophadmin]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [|0|1|]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [|1.2.246.562.24.00000000001|1.2.246.562.10.2020061020391933401296|]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 20:39:20.719 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - []
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [1]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [Yksityinen elinkeinonharjoittaja]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [kieli_fi#1]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [2020-06-10]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [31] as [BIGINT] - [2]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [32] as [BIGINT] - [0]
 Hibernate: 
     insert 
     into
@@ -1741,8 +1741,8 @@ Hibernate:
         (organisaatio_id, kielet) 
     values
         (?, ?)
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
-2020-06-10 18:12:08.441 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoksenopetuskieli_1#1]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 20:39:20.720 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoksenopetuskieli_1#1]
 Hibernate: 
     insert 
     into
@@ -1750,8 +1750,8 @@ Hibernate:
         (organisaatio_id, tyypit) 
     values
         (?, ?)
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [organisaatiotyyppi_08]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [organisaatiotyyppi_08]
 Hibernate: 
     insert 
     into
@@ -1759,9 +1759,9 @@ Hibernate:
         (id, key, value) 
     values
         (?, ?, ?)
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [4]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [fi]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [Katva Consulting]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [4]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [fi]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [Katva Consulting]
 Hibernate: 
     insert 
     into
@@ -1769,8 +1769,8 @@ Hibernate:
         (varhaiskasvatuksen_toimipaikka_tiedot_id, toimintamuoto) 
     values
         (?, ?)
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [vardajarjestamismuoto_jm03]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [vardajarjestamismuoto_jm03]
 Hibernate: 
     select
         organisaat0_.id as id1_19_0_,
@@ -1831,13 +1831,13 @@ Hibernate:
         and organisaat1_.organisaatio_poistettu=? 
     order by
         organisaat0_.alkupvm desc
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [HISTORIA]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DATE] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [DATE] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.442 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BOOLEAN] - [false]
-2020-06-10 18:12:08.443  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : addChild(1, 2, Wed Jun 10 18:12:08 EEST 2020)
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [HISTORIA]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DATE] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [DATE] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.721 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BOOLEAN] - [false]
+2020-06-10 20:39:20.722  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl : addChild(1, 2, Wed Jun 10 20:39:20 EEST 2020)
 Hibernate: 
     insert 
     into
@@ -1845,14 +1845,14 @@ Hibernate:
         (id, version, alkupvm, child_id, loppupvm, opetuspisteenjarjnro, parent_id, suhdetyyppi) 
     values
         (null, ?, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Wed Jun 10 18:12:08 EEST 2020]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [null]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [1]
-2020-06-10 18:12:08.443 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [HISTORIA]
-2020-06-10 18:12:08.444  INFO 55751 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl :     Created new child relation:  --> pId=1, cId=2, aPvm=Wed Jun 10 18:12:08 EEST 2020, lPvm=null
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [Wed Jun 10 20:39:20 EEST 2020]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [DATE] - [null]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [null]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [1]
+2020-06-10 20:39:20.722 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [HISTORIA]
+2020-06-10 20:39:20.723  INFO 56553 --- [    Test worker] .s.o.r.i.OrganisaatioSuhdeRepositoryImpl :     Created new child relation:  --> pId=1, cId=2, aPvm=Wed Jun 10 20:39:20 EEST 2020, lPvm=null
 Hibernate: 
     select
         organisaat0_.id as id1_19_,
@@ -1867,8 +1867,8 @@ Hibernate:
         organisaatiosuhde organisaat0_ 
     where
         organisaat0_.child_id=?
-2020-06-10 18:12:08.444 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
-2020-06-10 18:12:08.444 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_19_] : [BIGINT]) - [2]
+2020-06-10 20:39:20.723 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 20:39:20.723 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_19_] : [BIGINT]) - [2]
 Hibernate: 
     select
         organisaat0_.id as id1_5_,
@@ -1906,9 +1906,9 @@ Hibernate:
         organisaatio organisaat0_ 
     where
         organisaat0_.oid=?
-2020-06-10 18:12:08.445 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061018120843298252]
-2020-06-10 18:12:08.445 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [2]
-2020-06-10 18:12:08.448  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3b1834a8 testClass = YTJResourceTest, testInstance = fi.vm.sade.organisaatio.resource.YTJResourceTest@42d73170, testMethod = findByYTunnusV4@YTJResourceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2bec938e testClass = YTJResourceTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.resource.YTJResourceTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@3c9548f5 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 20:39:20.724 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [1.2.246.562.10.2020061020392071161562]
+2020-06-10 20:39:20.724 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_5_] : [BIGINT]) - [2]
+2020-06-10 20:39:20.727  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@338cdb00 testClass = YTJResourceTest, testInstance = fi.vm.sade.organisaatio.resource.YTJResourceTest@7f0872f5, testMethod = findByYTunnusV4@YTJResourceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@59ab87d6 testClass = YTJResourceTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.resource.YTJResourceTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@3428273e key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

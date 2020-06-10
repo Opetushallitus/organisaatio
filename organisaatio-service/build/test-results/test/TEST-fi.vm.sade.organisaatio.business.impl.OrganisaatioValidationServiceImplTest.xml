@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" tests="29" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.015">
+<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" tests="29" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:13" hostname="Miikkas-MacBook-Pro.local" time="0.017">
   <properties/>
   <testcase name="painotusNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="kasvatusopillinenjarjestelmaInvalidKoodi" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
@@ -8,18 +8,18 @@
   <testcase name="painotusEmpty" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
   <testcase name="postiosoiteOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="nimiOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
-  <testcase name="toiminnallinenpainotusLoppupvmInvalid" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="isNotSet" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
+  <testcase name="toiminnallinenpainotusLoppupvmInvalid" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
+  <testcase name="isNotSet" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
   <testcase name="jarjestamismuodotEmpty" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
   <testcase name="kuvausTuntematonKieli" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="nimetTuntematonKieli" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="toiminnallinenpainotusAlkupvmNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
+  <testcase name="toiminnallinenpainotusAlkupvmNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="allOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="kielipainotuksetEmpty" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="kasvatusopillinenjarjestelmaNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
-  <testcase name="yhteystietoArvoTuntematonKieli" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="toimintamuodotNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
-  <testcase name="toiminnallinenpainotusInvalidKoodi" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
+  <testcase name="kielipainotuksetEmpty" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
+  <testcase name="kasvatusopillinenjarjestelmaNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
+  <testcase name="yhteystietoArvoTuntematonKieli" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
+  <testcase name="toimintamuodotNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
+  <testcase name="toiminnallinenpainotusInvalidKoodi" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="kielipainotuksetNull" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
   <testcase name="toimintamuodotInvalidKoodi" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="nimiTuntematonKieli" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
@@ -29,7 +29,7 @@
   <testcase name="kuvausOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
   <testcase name="yhteystietoArvoOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <testcase name="kielipainotuksetLoppupvmInvalid" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
-  <testcase name="nimetOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.0"/>
+  <testcase name="nimetOk" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioValidationServiceImplTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

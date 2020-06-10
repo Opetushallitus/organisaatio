@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.031">
+<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:13" hostname="Miikkas-MacBook-Pro.local" time="0.056">
   <properties/>
-  <testcase name="alkavaKoulutusSamanaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.02"/>
-  <testcase name="alkavaKoulutusSeuraavanaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.005"/>
-  <testcase name="alkavaKoulutusEdellisenaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.004"/>
-  <system-out><![CDATA[2020-06-10 18:12:01.632  INFO 55751 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
-2020-06-10 18:12:01.639  INFO 55751 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
-2020-06-10 18:12:01.645  INFO 55751 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
+  <testcase name="alkavaKoulutusSamanaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.037"/>
+  <testcase name="alkavaKoulutusSeuraavanaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.007"/>
+  <testcase name="alkavaKoulutusEdellisenaPaivana" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjontaTest" time="0.007"/>
+  <system-out><![CDATA[2020-06-10 20:39:13.683  INFO 56553 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
+2020-06-10 20:39:13.704  INFO 56553 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
+2020-06-10 20:39:13.713  INFO 56553 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioTarjonta      : Missing 'kausi' (koulutuksenAlkamisPvmMax == null) for koulutus: null
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

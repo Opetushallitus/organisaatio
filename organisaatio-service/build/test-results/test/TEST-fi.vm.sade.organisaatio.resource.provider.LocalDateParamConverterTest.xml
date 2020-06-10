@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:02" hostname="Miikkas-MacBook-Pro.local" time="0.002">
+<testsuite name="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:15" hostname="Miikkas-MacBook-Pro.local" time="0.003">
   <properties/>
-  <testcase name="toStringShouldThrowIllegalArgumentExceptionWithNull" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.0"/>
-  <testcase name="fromStringShouldReturnCorrectly" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.0"/>
+  <testcase name="toStringShouldThrowIllegalArgumentExceptionWithNull" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.001"/>
+  <testcase name="fromStringShouldReturnCorrectly" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.001"/>
   <testcase name="toStringShouldReturnCorrectly" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.0"/>
-  <testcase name="fromStringShouldThrowIllegalArgumentExceptionWithNull" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.001"/>
-  <testcase name="fromStringShouldThrowIllegalArgumentExceptionWithInvalid" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.0"/>
+  <testcase name="fromStringShouldThrowIllegalArgumentExceptionWithNull" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.0"/>
+  <testcase name="fromStringShouldThrowIllegalArgumentExceptionWithInvalid" classname="fi.vm.sade.organisaatio.resource.provider.LocalDateParamConverterTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

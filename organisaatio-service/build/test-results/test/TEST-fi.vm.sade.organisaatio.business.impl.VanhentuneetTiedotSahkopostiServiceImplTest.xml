@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.business.impl.VanhentuneetTiedotSahkopostiServiceImplTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.084">
+<testsuite name="fi.vm.sade.organisaatio.business.impl.VanhentuneetTiedotSahkopostiServiceImplTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:39:13" hostname="Miikkas-MacBook-Pro.local" time="0.093">
   <properties/>
-  <testcase name="lahetaSahkopostit" classname="fi.vm.sade.organisaatio.business.impl.VanhentuneetTiedotSahkopostiServiceImplTest" time="0.084"/>
+  <testcase name="lahetaSahkopostit" classname="fi.vm.sade.organisaatio.business.impl.VanhentuneetTiedotSahkopostiServiceImplTest" time="0.093"/>
   <system-out><![CDATA[EmailData [recipient=[EmailRecipient [oid=null, oidType=null, email=example3@example.com, languageCode=sv, name=null, recipientReplacements=null]], replacements=[], email=EmailMessage [callingProcess=organisaatio, from=null, sender=null, replyTo=null, senderOid=null, organizationOid=null, subject=Granskning av uppgifter, body=
 <!doctype html>
 <html lang="sv">

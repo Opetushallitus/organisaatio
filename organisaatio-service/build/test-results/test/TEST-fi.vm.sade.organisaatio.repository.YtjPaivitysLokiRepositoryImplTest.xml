@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:28" hostname="Miikkas-MacBook-Pro.local" time="0.247">
+<testsuite name="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:38:37" hostname="Miikkas-MacBook-Pro.local" time="0.613">
   <properties/>
-  <testcase name="fetchBothLogs" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.222"/>
-  <testcase name="fetchOnlyNewLog" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.012"/>
-  <testcase name="fetchLatest" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.012"/>
-  <system-out><![CDATA[18:11:20.711 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.711 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.711 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.711 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.712 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
-18:11:20.714 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.714 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
-18:11:20.740 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
+  <testcase name="fetchBothLogs" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.573"/>
+  <testcase name="fetchOnlyNewLog" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.017"/>
+  <testcase name="fetchLatest" classname="fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest" time="0.022"/>
+  <system-out><![CDATA[20:38:30.167 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.167 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.167 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.167 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.169 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+20:38:30.170 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.170 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest]
+20:38:30.193 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -21,165 +21,165 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.3.0.RELEASE)
 
-2020-06-10 18:11:21.087  INFO 55751 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : Starting YtjPaivitysLokiRepositoryImplTest on Miikkas-MacBook-Pro.local with PID 55751 (started by mkamka in /Users/mkamka/git/wunderdog/oph/yleiskayttoiset/organisaatio 2/organisaatio-service)
-2020-06-10 18:11:21.089  INFO 55751 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : No active profile set, falling back to default profiles: default
-2020-06-10 18:11:22.237  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
-2020-06-10 18:11:22.396  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 148ms. Found 12 JPA repository interfaces.
-2020-06-10 18:11:22.488  INFO 55751 --- [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
-2020-06-10 18:11:22.919  INFO 55751 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:21adf075-d7e1-4046-960e-4b030b04f436;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
-2020-06-10 18:11:23.136  INFO 55751 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-06-10 18:11:23.218  INFO 55751 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2020-06-10 18:11:23.294  INFO 55751 --- [         task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
-2020-06-10 18:11:23.521  INFO 55751 --- [         task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
-2020-06-10 18:11:23.564 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:11:23.565 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:11:23.565 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@64832385
-2020-06-10 18:11:23.565 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@2dfabe23
-2020-06-10 18:11:23.566 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@55bedb8b
-2020-06-10 18:11:23.567 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@4d73a2ec
-2020-06-10 18:11:23.568 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:11:23.568 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:11:23.568 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@1bbfb0e1
-2020-06-10 18:11:23.569 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:11:23.570 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:11:23.570 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@542babe6
-2020-06-10 18:11:23.571 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:11:23.571 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:11:23.571 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@45aa4e90
-2020-06-10 18:11:23.573 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:11:23.573 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:11:23.573 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@5e9acab2
-2020-06-10 18:11:23.574 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:11:23.574 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:11:23.574 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@37885b1d
-2020-06-10 18:11:23.576 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:11:23.576 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:11:23.576 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@607b0cc3
-2020-06-10 18:11:23.577 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:11:23.577 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:11:23.577 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@6cef098d
-2020-06-10 18:11:23.578 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@6ca0e59d
-2020-06-10 18:11:23.578 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@6ca0e59d
-2020-06-10 18:11:23.579 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@5e476f96
-2020-06-10 18:11:23.580 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@5e476f96
-2020-06-10 18:11:23.581 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@7250e71f
-2020-06-10 18:11:23.581 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@7250e71f
-2020-06-10 18:11:23.581 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@98a4409
-2020-06-10 18:11:23.582 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@51939a53
-2020-06-10 18:11:23.583 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@5dd004c4
-2020-06-10 18:11:23.583 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@5dd004c4
-2020-06-10 18:11:23.584 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@beb10cd
-2020-06-10 18:11:23.584 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@beb10cd
-2020-06-10 18:11:23.585 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@614aee68
-2020-06-10 18:11:23.585 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@614aee68
-2020-06-10 18:11:23.586 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@7f3412aa
-2020-06-10 18:11:23.586 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@7f3412aa
-2020-06-10 18:11:23.587 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@230aeaef
-2020-06-10 18:11:23.588 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@230aeaef
-2020-06-10 18:11:23.589 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@54760927
-2020-06-10 18:11:23.589 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@54760927
-2020-06-10 18:11:23.590 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2822f21e
-2020-06-10 18:11:23.590 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2822f21e
-2020-06-10 18:11:23.592 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@30e0cc1d
-2020-06-10 18:11:23.592 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@30e0cc1d
-2020-06-10 18:11:23.593 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@17453e64
-2020-06-10 18:11:23.593 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@17453e64
-2020-06-10 18:11:23.595 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@6746b6dc
-2020-06-10 18:11:23.595 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@6746b6dc
-2020-06-10 18:11:23.596 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@22b2b7d4
-2020-06-10 18:11:23.596 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@22b2b7d4
-2020-06-10 18:11:23.597 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:11:23.597 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:11:23.597 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@16387082
-2020-06-10 18:11:23.598 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@3b61c4de
-2020-06-10 18:11:23.599 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:11:23.599 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:11:23.599 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@872f114
-2020-06-10 18:11:23.599 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@30133667
-2020-06-10 18:11:23.600 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@6db15d50
-2020-06-10 18:11:23.601 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@34dae521
-2020-06-10 18:11:23.601 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@34dae521
-2020-06-10 18:11:23.602 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@4abf8419
-2020-06-10 18:11:23.603 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@4abf8419
-2020-06-10 18:11:23.603 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@475664c7
-2020-06-10 18:11:23.604 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@475664c7
-2020-06-10 18:11:23.604 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@7ee21a44
-2020-06-10 18:11:23.604 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@7ee21a44
-2020-06-10 18:11:23.605 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@6201aaf9
-2020-06-10 18:11:23.605 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@6201aaf9
-2020-06-10 18:11:23.606 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@1f85babe
-2020-06-10 18:11:23.607 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:11:23.607 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:11:23.607 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@1cd11657
-2020-06-10 18:11:23.608 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:11:23.608 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:11:23.608 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@43976e8c
-2020-06-10 18:11:23.609 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@5044e279
-2020-06-10 18:11:23.609 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@57d6ac5e
-2020-06-10 18:11:23.610 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:11:23.610 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:11:23.610 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@10ee6e56
-2020-06-10 18:11:23.611 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:11:23.611 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:11:23.611 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@79c7d538
-2020-06-10 18:11:23.612 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@2b03af4
-2020-06-10 18:11:23.612 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@6d7d39e
-2020-06-10 18:11:23.613 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@4dc78672
-2020-06-10 18:11:23.613 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@4dc78672
-2020-06-10 18:11:23.614 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@7969dd0d
-2020-06-10 18:11:23.615 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@38f39022
-2020-06-10 18:11:23.615 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@38f39022
-2020-06-10 18:11:23.617 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@4b4e387b
-2020-06-10 18:11:23.617 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@4b4e387b
-2020-06-10 18:11:23.617 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@33eb9d
-2020-06-10 18:11:23.618 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@4774d2ca
-2020-06-10 18:11:23.619 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@3298d692
-2020-06-10 18:11:23.625 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@22e34fa
-2020-06-10 18:11:23.626 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@22e34fa
-2020-06-10 18:11:23.626 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@5556d923
-2020-06-10 18:11:23.626 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@24b5fce1
-2020-06-10 18:11:23.626 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@2b15318
-2020-06-10 18:11:23.627 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@415908d6
-2020-06-10 18:11:23.627 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@22255e1f
-2020-06-10 18:11:23.627 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@29fcec4e
-2020-06-10 18:11:23.627 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@21dd53fa
-2020-06-10 18:11:23.627 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@284bf0af
-2020-06-10 18:11:23.736  INFO 55751 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2020-06-10 18:11:23.770  WARN 55751 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-06-10 18:11:23.823 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@7118f2c9] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@3828ed25]
-2020-06-10 18:11:24.112 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.113 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.114 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.114 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:24.167 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.170 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.175 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.177 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:24.330 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@7118f2c9] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@7134d61e]
-2020-06-10 18:11:24.382 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.383 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.599 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.599 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:24.674 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.674 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.681 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.682 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:24.789 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.789 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.795 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.795 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:24.843 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:24.843 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:24.848 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:24.848 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:25.054 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:25.054 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
-2020-06-10 18:11:25.059 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:25.059 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
-2020-06-10 18:11:25.068 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:25.068 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
-2020-06-10 18:11:25.073 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
-2020-06-10 18:11:25.073 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:30.532  INFO 56553 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : Starting YtjPaivitysLokiRepositoryImplTest on Miikkas-MacBook-Pro.local with PID 56553 (started by mkamka in /Users/mkamka/git/wunderdog/oph/yleiskayttoiset/organisaatio/organisaatio-service)
+2020-06-10 20:38:30.533  INFO 56553 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : No active profile set, falling back to default profiles: default
+2020-06-10 20:38:31.627  INFO 56553 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2020-06-10 20:38:31.781  INFO 56553 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 143ms. Found 12 JPA repository interfaces.
+2020-06-10 20:38:31.877  INFO 56553 --- [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2020-06-10 20:38:32.338  INFO 56553 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:54ed1eb9-a11c-4562-939f-229d4e4d7e8a;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2020-06-10 20:38:32.628  INFO 56553 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-10 20:38:32.737  INFO 56553 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-06-10 20:38:32.816  INFO 56553 --- [         task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
+2020-06-10 20:38:33.033  INFO 56553 --- [         task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2020-06-10 20:38:33.078 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:38:33.078 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:38:33.078 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@522d1133
+2020-06-10 20:38:33.079 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@22ae80e1
+2020-06-10 20:38:33.079 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@59db20f2
+2020-06-10 20:38:33.080 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@fa51239
+2020-06-10 20:38:33.081 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:38:33.081 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:38:33.082 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@53bec7aa
+2020-06-10 20:38:33.083 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:38:33.083 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:38:33.083 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@1c430539
+2020-06-10 20:38:33.085 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:38:33.085 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:38:33.085 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@476dda9b
+2020-06-10 20:38:33.086 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:38:33.086 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:38:33.086 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@4d38d4b7
+2020-06-10 20:38:33.087 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:38:33.088 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:38:33.088 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@69b44bdc
+2020-06-10 20:38:33.089 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:38:33.089 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:38:33.089 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@78101572
+2020-06-10 20:38:33.090 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:38:33.090 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:38:33.090 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@526e483e
+2020-06-10 20:38:33.091 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@49fab90e
+2020-06-10 20:38:33.091 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@49fab90e
+2020-06-10 20:38:33.092 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@6942968d
+2020-06-10 20:38:33.092 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@6942968d
+2020-06-10 20:38:33.093 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@7c919f77
+2020-06-10 20:38:33.093 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@7c919f77
+2020-06-10 20:38:33.094 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@1a73a322
+2020-06-10 20:38:33.095 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@7e0bc6be
+2020-06-10 20:38:33.096 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@40000ea8
+2020-06-10 20:38:33.096 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@40000ea8
+2020-06-10 20:38:33.096 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@4debc20a
+2020-06-10 20:38:33.097 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@4debc20a
+2020-06-10 20:38:33.098 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@707b906d
+2020-06-10 20:38:33.098 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@707b906d
+2020-06-10 20:38:33.099 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@4535de2b
+2020-06-10 20:38:33.099 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@4535de2b
+2020-06-10 20:38:33.100 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@116bbe39
+2020-06-10 20:38:33.100 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@116bbe39
+2020-06-10 20:38:33.101 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@60d3c2e8
+2020-06-10 20:38:33.101 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@60d3c2e8
+2020-06-10 20:38:33.103 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@356f6d2
+2020-06-10 20:38:33.103 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@356f6d2
+2020-06-10 20:38:33.104 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@4dc9162
+2020-06-10 20:38:33.104 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@4dc9162
+2020-06-10 20:38:33.105 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@6f4a7ae2
+2020-06-10 20:38:33.105 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@6f4a7ae2
+2020-06-10 20:38:33.107 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@5b9b5794
+2020-06-10 20:38:33.107 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@5b9b5794
+2020-06-10 20:38:33.108 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@deef864
+2020-06-10 20:38:33.108 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@deef864
+2020-06-10 20:38:33.109 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:38:33.109 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:38:33.109 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@1893c812
+2020-06-10 20:38:33.110 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@2fca8a09
+2020-06-10 20:38:33.111 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:38:33.111 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:38:33.111 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@e8f29f5
+2020-06-10 20:38:33.112 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@22802e9e
+2020-06-10 20:38:33.113 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@6b7e8311
+2020-06-10 20:38:33.114 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@1cbd2173
+2020-06-10 20:38:33.114 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@1cbd2173
+2020-06-10 20:38:33.115 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@5b4a1a37
+2020-06-10 20:38:33.115 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@5b4a1a37
+2020-06-10 20:38:33.116 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@1765f8eb
+2020-06-10 20:38:33.116 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@1765f8eb
+2020-06-10 20:38:33.117 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@72906078
+2020-06-10 20:38:33.117 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@72906078
+2020-06-10 20:38:33.118 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@49c7680a
+2020-06-10 20:38:33.118 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@49c7680a
+2020-06-10 20:38:33.119 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@75e27771
+2020-06-10 20:38:33.120 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:38:33.120 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:38:33.120 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@11a46473
+2020-06-10 20:38:33.121 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:38:33.121 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:38:33.121 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@782112ad
+2020-06-10 20:38:33.122 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@6ce134df
+2020-06-10 20:38:33.123 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@7d89ac69
+2020-06-10 20:38:33.124 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:38:33.124 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:38:33.124 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@664e071e
+2020-06-10 20:38:33.125 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:38:33.125 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:38:33.125 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@5e433219
+2020-06-10 20:38:33.125 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@1dd5be31
+2020-06-10 20:38:33.126 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@26d9e304
+2020-06-10 20:38:33.127 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@1494a27c
+2020-06-10 20:38:33.127 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@1494a27c
+2020-06-10 20:38:33.128 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@2ece2bc5
+2020-06-10 20:38:33.129 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@7fdf8a06
+2020-06-10 20:38:33.129 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@7fdf8a06
+2020-06-10 20:38:33.130 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@2d76351c
+2020-06-10 20:38:33.130 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@2d76351c
+2020-06-10 20:38:33.131 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@4fec3165
+2020-06-10 20:38:33.131 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@a16cd5c
+2020-06-10 20:38:33.132 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@406b01c4
+2020-06-10 20:38:33.136 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@45cbe814
+2020-06-10 20:38:33.136 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@45cbe814
+2020-06-10 20:38:33.136 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@3519d6e4
+2020-06-10 20:38:33.136 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@5953f54
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@7f0bd4ce
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@10ee99ae
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@6b3bd3a1
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@47783e0d
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@66742f88
+2020-06-10 20:38:33.137 DEBUG 56553 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@2b3e901
+2020-06-10 20:38:33.234  WARN 56553 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-06-10 20:38:33.247  INFO 56553 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-06-10 20:38:33.335 DEBUG 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@3ce37ab7] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@5379663f]
+2020-06-10 20:38:33.624 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:33.625 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:33.626 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:33.627 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:33.684 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:33.687 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:33.692 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:33.693 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:33.828 DEBUG 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@3ce37ab7] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@65b7e2be]
+2020-06-10 20:38:33.890 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:33.890 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.127 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.127 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.202 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.203 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.210 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.210 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.315 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.315 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.322 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.322 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.367 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.367 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.372 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.372 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.580 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.580 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.584 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.584 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.596 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.596 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.601 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.601 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
 Hibernate: 
     
     drop table if exists binary_data CASCADE 
@@ -412,7 +412,7 @@ Hibernate:
        organisaatio_id bigint not null,
         ryhmatyypit varchar(255)
     )
-2020-06-10 18:11:25.122 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 20:38:34.650 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
 Hibernate: 
     
     create table organisaatio_sahkoposti (
@@ -466,7 +466,7 @@ Hibernate:
        organisaatio_meta_data_id bigint not null,
         yhteystiedot_id bigint not null
     )
-2020-06-10 18:11:25.125 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 20:38:34.652 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
 Hibernate: 
     
     create table organisaatiosuhde (
@@ -604,7 +604,7 @@ Hibernate:
        id bigint not null,
         organisaatio_tyyppi varchar(255)
     )
-2020-06-10 18:11:25.131 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 20:38:34.660 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
 Hibernate: 
     
     create table ytjpaivitysloki (
@@ -616,7 +616,7 @@ Hibernate:
         paivitysaika timestamp,
         primary key (id)
     )
-2020-06-10 18:11:25.132 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 20:38:34.660 DEBUG 56553 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
 Hibernate: 
     
     create table ytjvirhe (
@@ -937,21 +937,21 @@ Hibernate:
        add constraint FK6lnd3ilr54i81swnh5nwbvupb 
        foreign key (ytj_paivitys_loki_id) 
        references ytjpaivitysloki
-2020-06-10 18:11:25.180  INFO 55751 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2020-06-10 18:11:25.187 TRACE 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@7134d61e] for TypeConfiguration
-2020-06-10 18:11:25.189  INFO 55751 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-06-10 18:11:26.745  INFO 55751 --- [    Test worker] org.dozer.config.GlobalSettings          : Trying to find Dozer configuration file: dozer.properties
-2020-06-10 18:11:26.751  WARN 55751 --- [    Test worker] org.dozer.config.GlobalSettings          : Dozer configuration file not found: dozer.properties.  Using defaults for all Dozer global properties.
-2020-06-10 18:11:26.752  INFO 55751 --- [    Test worker] org.dozer.DozerInitializer               : Initializing Dozer. Version: 5.5.0, Thread Name: Test worker
-2020-06-10 18:11:26.788  INFO 55751 --- [    Test worker] org.dozer.jmx.JMXPlatformImpl            : Dozer JMX MBean [org.dozer.jmx:type=DozerStatisticsController] auto registered with the Platform MBean Server
-2020-06-10 18:11:26.788  INFO 55751 --- [    Test worker] org.dozer.jmx.JMXPlatformImpl            : Dozer JMX MBean [org.dozer.jmx:type=DozerAdminController] auto registered with the Platform MBean Server
-2020-06-10 18:11:26.789  INFO 55751 --- [    Test worker] org.dozer.DozerBeanMapper                : Initializing a new instance of dozer bean mapper.
-2020-06-10 18:11:27.664  INFO 55751 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/console/'. Database available at 'jdbc:h2:mem:21adf075-d7e1-4046-960e-4b030b04f436'
-2020-06-10 18:11:27.716  INFO 55751 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-06-10 18:11:27.762  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
-2020-06-10 18:11:27.975  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
-2020-06-10 18:11:27.987  INFO 55751 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : Started YtjPaivitysLokiRepositoryImplTest in 7.228 seconds (JVM running for 9.421)
-2020-06-10 18:11:28.015  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@52a089b5, testMethod = fetchBothLogs@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+2020-06-10 20:38:34.713  INFO 56553 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-06-10 20:38:34.721 TRACE 56553 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@65b7e2be] for TypeConfiguration
+2020-06-10 20:38:34.723  INFO 56553 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-06-10 20:38:36.271  INFO 56553 --- [    Test worker] org.dozer.config.GlobalSettings          : Trying to find Dozer configuration file: dozer.properties
+2020-06-10 20:38:36.277  WARN 56553 --- [    Test worker] org.dozer.config.GlobalSettings          : Dozer configuration file not found: dozer.properties.  Using defaults for all Dozer global properties.
+2020-06-10 20:38:36.278  INFO 56553 --- [    Test worker] org.dozer.DozerInitializer               : Initializing Dozer. Version: 5.5.0, Thread Name: Test worker
+2020-06-10 20:38:36.317  INFO 56553 --- [    Test worker] org.dozer.jmx.JMXPlatformImpl            : Dozer JMX MBean [org.dozer.jmx:type=DozerStatisticsController] auto registered with the Platform MBean Server
+2020-06-10 20:38:36.318  INFO 56553 --- [    Test worker] org.dozer.jmx.JMXPlatformImpl            : Dozer JMX MBean [org.dozer.jmx:type=DozerAdminController] auto registered with the Platform MBean Server
+2020-06-10 20:38:36.319  INFO 56553 --- [    Test worker] org.dozer.DozerBeanMapper                : Initializing a new instance of dozer bean mapper.
+2020-06-10 20:38:37.263  INFO 56553 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/console/'. Database available at 'jdbc:h2:mem:54ed1eb9-a11c-4562-939f-229d4e4d7e8a'
+2020-06-10 20:38:37.332  INFO 56553 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-06-10 20:38:37.391  INFO 56553 --- [    Test worker] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2020-06-10 20:38:37.917  INFO 56553 --- [    Test worker] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2020-06-10 20:38:37.933  INFO 56553 --- [    Test worker] .s.o.r.YtjPaivitysLokiRepositoryImplTest : Started YtjPaivitysLokiRepositoryImplTest in 7.73 seconds (JVM running for 9.939)
+2020-06-10 20:38:37.979  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@6f4f7da3, testMethod = fetchBothLogs@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@20031d49]; rollback [true]
 Hibernate: 
     insert 
     into
@@ -959,11 +959,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.055 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.055 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.055 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.055 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.061 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
+2020-06-10 20:38:38.118 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.119 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.120 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.120 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.132 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
 Hibernate: 
     insert 
     into
@@ -971,12 +971,12 @@ Hibernate:
         (id, version, oid, org_nimi, virhekohde, virheviesti, ytj_paivitys_loki_id) 
     values
         (null, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.086 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.086 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
-2020-06-10 18:11:28.086 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.087 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
-2020-06-10 18:11:28.087 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
-2020-06-10 18:11:28.087 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
+2020-06-10 20:38:38.303 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.304 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
+2020-06-10 20:38:38.304 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.304 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
+2020-06-10 20:38:38.304 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
+2020-06-10 20:38:38.305 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
 Hibernate: 
     insert 
     into
@@ -984,11 +984,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.089 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.089 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.089 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.089 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.089 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
+2020-06-10 20:38:38.310 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.310 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.310 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.310 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.310 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
 Hibernate: 
     select
         ytjpaivity0_.id as id1_31_,
@@ -1001,12 +1001,12 @@ Hibernate:
         ytjpaivitysloki ytjpaivity0_ 
     where
         ytjpaivity0_.paivitysaika between ? and ?
-2020-06-10 18:11:28.215 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Wed Mar 02 00:00:00 EET 2016]
-2020-06-10 18:11:28.215 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [TIMESTAMP] - [Fri Jul 06 00:00:00 EEST 2018]
-2020-06-10 18:11:28.216 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [1]
-2020-06-10 18:11:28.217 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [2]
-2020-06-10 18:11:28.228  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@52a089b5, testMethod = fetchBothLogs@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
-2020-06-10 18:11:28.230  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@732b7e1, testMethod = fetchOnlyNewLog@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+2020-06-10 20:38:38.512 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Wed Mar 02 00:00:00 EET 2016]
+2020-06-10 20:38:38.512 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [TIMESTAMP] - [Fri Jul 06 00:00:00 EEST 2018]
+2020-06-10 20:38:38.517 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [1]
+2020-06-10 20:38:38.520 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [2]
+2020-06-10 20:38:38.536  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@6f4f7da3, testMethod = fetchBothLogs@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 20:38:38.538  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@1b105d17, testMethod = fetchOnlyNewLog@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@20031d49]; rollback [true]
 Hibernate: 
     insert 
     into
@@ -1014,11 +1014,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.232 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.232 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.232 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.232 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.232 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
+2020-06-10 20:38:38.540 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.540 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.540 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.540 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.541 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
 Hibernate: 
     insert 
     into
@@ -1026,12 +1026,12 @@ Hibernate:
         (id, version, oid, org_nimi, virhekohde, virheviesti, ytj_paivitys_loki_id) 
     values
         (null, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
-2020-06-10 18:11:28.234 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
+2020-06-10 20:38:38.542 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.542 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
+2020-06-10 20:38:38.542 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.542 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
+2020-06-10 20:38:38.542 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
+2020-06-10 20:38:38.543 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
 Hibernate: 
     insert 
     into
@@ -1039,11 +1039,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.235 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.235 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.235 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.235 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.236 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
+2020-06-10 20:38:38.544 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.544 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.545 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.545 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.545 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
 Hibernate: 
     select
         ytjpaivity0_.id as id1_31_,
@@ -1056,11 +1056,11 @@ Hibernate:
         ytjpaivitysloki ytjpaivity0_ 
     where
         ytjpaivity0_.paivitysaika between ? and ?
-2020-06-10 18:11:28.238 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Mar 02 00:00:00 EET 2017]
-2020-06-10 18:11:28.238 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [TIMESTAMP] - [Thu Jul 06 00:00:00 EEST 2017]
-2020-06-10 18:11:28.239 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [4]
-2020-06-10 18:11:28.241  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@732b7e1, testMethod = fetchOnlyNewLog@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
-2020-06-10 18:11:28.243  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@270af886, testMethod = fetchLatest@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+2020-06-10 20:38:38.548 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Mar 02 00:00:00 EET 2017]
+2020-06-10 20:38:38.549 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [TIMESTAMP] - [Thu Jul 06 00:00:00 EEST 2017]
+2020-06-10 20:38:38.549 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [4]
+2020-06-10 20:38:38.554  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@1b105d17, testMethod = fetchOnlyNewLog@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 20:38:38.556  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@73d82ed9, testMethod = fetchLatest@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@20031d49]; rollback [true]
 Hibernate: 
     insert 
     into
@@ -1068,11 +1068,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.244 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.244 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.244 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.245 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.245 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
+2020-06-10 20:38:38.558 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.558 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.558 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.558 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.559 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Sun Jan 01 00:00:00 EET 2017]
 Hibernate: 
     insert 
     into
@@ -1080,12 +1080,12 @@ Hibernate:
         (id, version, oid, org_nimi, virhekohde, virheviesti, ytj_paivitys_loki_id) 
     values
         (null, ?, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.245 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.246 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
-2020-06-10 18:11:28.246 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.246 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
-2020-06-10 18:11:28.246 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
-2020-06-10 18:11:28.246 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
+2020-06-10 20:38:38.562 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.563 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [12345.0]
+2020-06-10 20:38:38.563 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.563 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [ALKUPVM]
+2020-06-10 20:38:38.563 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [bar]
+2020-06-10 20:38:38.563 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BIGINT] - [null]
 Hibernate: 
     insert 
     into
@@ -1093,11 +1093,11 @@ Hibernate:
         (id, version, paivitetyt_lkm, paivitys_tila, paivitys_tila_selite, paivitysaika) 
     values
         (null, ?, ?, ?, ?, ?)
-2020-06-10 18:11:28.247 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
-2020-06-10 18:11:28.247 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
-2020-06-10 18:11:28.247 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
-2020-06-10 18:11:28.247 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
-2020-06-10 18:11:28.247 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
+2020-06-10 20:38:38.564 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 20:38:38.565 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [BIGINT] - [1]
+2020-06-10 20:38:38.565 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 20:38:38.565 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 20:38:38.565 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [TIMESTAMP] - [Mon Jun 05 00:00:00 EEST 2017]
 Hibernate: 
     select
         ytjpaivity0_.id as id1_31_,
@@ -1110,8 +1110,8 @@ Hibernate:
         ytjpaivitysloki ytjpaivity0_ 
     order by
         ytjpaivity0_.paivitysaika DESC limit ?
-2020-06-10 18:11:28.251 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [6]
-2020-06-10 18:11:28.253  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@1071fa44 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@270af886, testMethod = fetchLatest@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@47942886 testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@26b5cf35 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 20:38:38.572 TRACE 56553 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_31_] : [BIGINT]) - [6]
+2020-06-10 20:38:38.576  INFO 56553 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4fb162a2 testClass = YtjPaivitysLokiRepositoryImplTest, testInstance = fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryImplTest@73d82ed9, testMethod = fetchLatest@YtjPaivitysLokiRepositoryImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4aca94ab testClass = YtjPaivitysLokiRepositoryImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@83020a4e, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e540114, [ImportsContextCustomizer@1b73f002 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@41cdf26a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1e95fe99, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6d8bcece, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
