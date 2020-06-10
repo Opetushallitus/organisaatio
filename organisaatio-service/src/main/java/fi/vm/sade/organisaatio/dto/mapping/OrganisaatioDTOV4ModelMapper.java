@@ -35,7 +35,7 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
                 ? null
                 : OrganisaatioTyyppi.fromValue(mc.getSource()).koodiValue();
 
-        final Converter<String,String> organisaatioTyyppiV4ToV3 = mc -> mc.getSource() == null
+        final Converter<String, String> organisaatioTyyppiV4ToV3 = mc -> mc.getSource() == null
                 ? null
                 : OrganisaatioTyyppi.fromKoodiValue(mc.getSource()).value();
 

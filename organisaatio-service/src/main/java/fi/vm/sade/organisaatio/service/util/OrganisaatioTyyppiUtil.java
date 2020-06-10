@@ -1,12 +1,14 @@
 package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import static java.util.Collections.unmodifiableMap;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
+
+import static java.util.Collections.unmodifiableMap;
+import static java.util.stream.Collectors.toSet;
 
 public final class OrganisaatioTyyppiUtil {
 

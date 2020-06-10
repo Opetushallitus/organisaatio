@@ -17,27 +17,19 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
 
 /**
  * @author Antti Salonen
  */
 @Entity
 // uniqueConstraint koska tietyn niminen kenttä voi olla vain kerran yhteystietotyypillä
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"yhteystietojenTyyppi_id", "nimi"})})
-@EntityListeners(XssFilterListener.class)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"yhteystietojen_tyyppi_id", "nimi"})})
 public class YhteystietoElementti extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -54,12 +46,9 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
     // TODO remove after MonikielinenTeksti is enabled
     @NotNull
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
-    @FilterXss
-    private String nimi;
-    @FilterXss
-    private String nimiSv;
-    @FilterXss
-    private String nimiEn;
+    private String nimi;  // TODO XSS filtteri
+    private String nimiSv;  // TODO XSS filtteri
+    private String nimiEn; // TODO XSS filtteri
 
 
     @NotNull

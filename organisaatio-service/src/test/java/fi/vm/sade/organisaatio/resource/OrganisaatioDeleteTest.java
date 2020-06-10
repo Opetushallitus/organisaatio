@@ -17,11 +17,20 @@ package fi.vm.sade.organisaatio.resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
@@ -31,26 +40,40 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import static org.junit.Assert.fail;
 import org.junit.Before;
-import org.kubek2k.springockito.annotations.ReplaceWithMock;
+import org.kubek2k.springockito.annotations.ReplaceWithMock; // TODO replacement ??
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
+
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
-@ContextConfiguration(loader = SpringockitoContextLoader.class, locations = { "classpath:spring/test-context.xml" })
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @Transactional
+@ComponentScan(basePackages = "fi.vm.sade.organisaatio")
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
+
+    private OrganisaatioRDTO a, ab, abc, ad;
+
+    @TestConfiguration
+    public static class TestConfig {
+        @Bean
+        @Primary
+        public OrganisaatioTarjonta tarjontaMock(){
+            OrganisaatioTarjonta tarjonta = Mockito.mock(OrganisaatioTarjonta.class);
+            return tarjonta;
+        }
+
+    }
+    @Autowired
+    OrganisaatioTarjonta tarjontaMock;
 
     @Autowired
     OrganisaatioResource res;
 
-    @ReplaceWithMock
-    @Autowired
-    private OrganisaatioTarjonta tarjonta;
-
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
 
-    private OrganisaatioRDTO a, ab, abc, ad;
 
     @Before
     public void setUp() {
@@ -67,12 +90,12 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
         abc = createOrganisaatio("ABC", ab);
         ad  = createOrganisaatio("AD", a);
 
-        MockitoAnnotations.initMocks(this);
+        //MockitoAnnotations.initMocks(this);
 
         // Mock toteutukset alkavien koulutusten pyynnöille
-        when(tarjonta.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
-        when(tarjonta.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
-        when(tarjonta.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
+        when(tarjontaMock.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
+        when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
+        when(tarjontaMock.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
     }
 
     @Test

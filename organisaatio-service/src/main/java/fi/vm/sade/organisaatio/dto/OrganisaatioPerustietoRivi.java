@@ -20,8 +20,8 @@ public class OrganisaatioPerustietoRivi {
     private String kotipaikka;
 
     public OrganisaatioPerustietoRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOidPath, String ytunnus,
-            String virastotunnus, String oppilaitosKoodi, String oppilaitostyyppi, String toimipistekoodi,
-            String nimiKieli, String nimiArvo, String tyyppi, String kieli, String kotipaikka) {
+                                      String virastotunnus, String oppilaitosKoodi, String oppilaitostyyppi, String toimipistekoodi,
+                                      String nimiKieli, String nimiArvo, String tyyppi, String kieli, String kotipaikka) {
         this.oid = oid;
         this.alkuPvm = alkuPvm;
         this.lakkautusPvm = lakkautusPvm;

@@ -29,7 +29,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -96,7 +96,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     private ConversionService conversionService;
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     PermissionChecker permissionChecker;
@@ -285,7 +285,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         LOG.debug("searchOrganisaatioPaivittaja: " + oid);
 
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
 
         if (org != null) {
             final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
@@ -348,18 +348,18 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // 3. VIRASTOTUNNUS
         // 4. OPPILAITOSKOODI
         // 5. TOIMIPISTEKOODI
-        Organisaatio o = organisaatioDAO.findByOid(oid);
+        Organisaatio o = organisaatioRepository.customFindByOid(oid);
         if (o == null) {
-            o = organisaatioDAO.findByYTunnus(oid);
+            o = organisaatioRepository.findByYTunnus(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByVirastoTunnus(oid);
+            o = organisaatioRepository.findByVirastoTunnus(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByOppilaitoskoodi(oid);
+            o = organisaatioRepository.findByOppilaitoskoodi(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByToimipistekoodi(oid);
+            o = organisaatioRepository.findByToimipistekoodi(oid);
         }
 
         if (o != null) {
@@ -465,7 +465,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
@@ -499,7 +499,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         Preconditions.checkNotNull(lastModifiedSince);
         LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
                 lastModifiedSince.getValue());
 
@@ -527,8 +527,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             date = new Date();
         }
 
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
-        Organisaatio newParent = organisaatioDAO.findByOid(newParentOid);
+        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
+        Organisaatio newParent = organisaatioRepository.customFindByOid(newParentOid);
 
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(oid);
@@ -564,7 +564,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(nae);
         }
 
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
 
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(oid);

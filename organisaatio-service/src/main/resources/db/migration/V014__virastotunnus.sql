@@ -1,1 +1,0 @@
-ALTER TABLE organisaatio ADD COLUMN virastotunnus varchar(255);

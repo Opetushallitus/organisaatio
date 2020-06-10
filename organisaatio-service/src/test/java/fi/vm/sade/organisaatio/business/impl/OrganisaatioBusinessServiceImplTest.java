@@ -1,12 +1,15 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.oid.service.OIDService;
+import fi.vm.sade.oid.service.mock.OIDServiceMock;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
@@ -19,15 +22,22 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
+import fi.vm.sade.rajapinnat.ytj.api.YTJService;
+import fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock;
+import fi.vm.sade.security.OidProvider;
+import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Propagation;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
@@ -40,19 +50,50 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.data.MapEntry.entry;
+import static org.mockito.Mockito.spy;
 
 /**
- * Tests for {@link fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessServiceImpl} class.
+ * Tests for {@link OrganisaatioBusinessServiceImpl} class.
  * Created by vrouvine on 02/12/14.
  */
-@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@RunWith(SpringRunner.class)
+@Transactional
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
+
+    @TestConfiguration
+    static class OrganisaatioBusinessServiceImplTestContextConfiguration {
+
+        @Bean
+        @Primary
+        public OrganisationHierarchyAuthorizer authorizer() {
+            return new OrganisationHierarchyAuthorizer();
+        }
+
+        @Bean
+        @Primary
+        public OidProvider oidProvider() {
+            return new OidProvider();
+        }
+
+        @Bean
+        @Primary
+        public YTJService ytjService() {
+            return spy(new YTJServiceMock());
+        }
+
+        @Bean
+        @Primary
+        public OIDService oidService() {
+            return new OIDServiceMock();
+        }
+
+    }
 
     private final String rootOid = "1.2.246.562.24.00000000001";
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
     @Autowired
     private OrganisaatioBusinessService service;
     @Autowired
@@ -67,12 +108,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Before
     public void setUp() {
-        executeSqlScript("data/basic_organisaatio_data.sql", false);
+        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
     }
 
     @After
     public void tearDown() {
-        executeSqlScript("data/truncate_tables.sql", false);
+        executeSqlScript("classpath:data/truncate_tables.sql", false);
     }
 
     @Test
@@ -109,15 +150,15 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("Parent oid path should match!", "|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
 
         String oid = "1.2.2004.4";
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org.getParentOidPath());
 
         oid = "1.2.2005.4";
-        Organisaatio org2 = organisaatioDAO.findByOid(oid);
+        Organisaatio org2 = organisaatioRepository.customFindByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org2.getParentOidPath());
 
         oid = "1.2.2005.5";
-        org2 = organisaatioDAO.findByOid(oid);
+        org2 = organisaatioRepository.customFindByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, org.getParentOidPath() + org.getOid() + "|", org2.getParentOidPath());
 
         checkParent(modified, "1.2.2004.4");
@@ -156,10 +197,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos.getOid());
 
-        assertThat(organisaatioDAO.findByOid(oppilaitos.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(oppilaitos.getOid()))
                 .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioDAO.findByOid(toimipiste.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(toimipiste.getOid()))
                 .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
     }
@@ -203,10 +244,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
 
-        assertThat(organisaatioDAO.findByOid(oppilaitos1.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(oppilaitos1.getOid()))
                 .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioDAO.findByOid(toimipiste1.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(toimipiste1.getOid()))
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
@@ -252,27 +293,27 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
 
-        assertThat(organisaatioDAO.findByOid(oppilaitos1.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(oppilaitos1.getOid()))
                 .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioDAO.findByOid(toimipiste1.getOid()))
+        assertThat(organisaatioRepository.customFindByOid(toimipiste1.getOid()))
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
 
 
     private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
         Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
         return org;
     }
 
     private Organisaatio checkParent(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
         String pop = org.getParentOidPath();
         String[] list = pop.split("[|]+");
         String parentOid = list[list.length-1];
-        Organisaatio orgParent = organisaatioDAO.findByOid(parentOid);
+        Organisaatio orgParent = organisaatioRepository.customFindByOid(parentOid);
         Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), orgParent.getOid());
         return org;
     }
@@ -282,7 +323,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioRDTO model = new OrganisaatioRDTO();
         String removedOid = "1.2.2004.4";
         model.setOid(removedOid);
-        jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
+        jdbcTemplate.update("update organisaatio set organisaatio_poistettu = TRUE where oid = ?", removedOid);
         try {
             service.save(model, true);
             Assert.fail("should throw ValidationException");
@@ -303,7 +344,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
 
         model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
-        organisaatioDAO.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
+        organisaatioRepository.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
         model.setYTunnus("4567891-0");
         organisaatioResult = service.save(model, true);
         Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
@@ -357,10 +398,16 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
-        jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null, toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
-        toimipisteResult1 = service.save(toimipiste1, true);
-        assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("02");
-        assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi02");
+        OrganisaatioRDTO toimipiste2 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2, toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        OrganisaatioResult toimipisteResult2 = service.save(toimipiste2, false);
+
+        toimipisteResult2.getOrganisaatio().setOpetuspisteenJarjNro(null);
+        toimipisteResult2.getOrganisaatio().setToimipisteKoodi(null);
+        organisaatioRepository.save(toimipisteResult2.getOrganisaatio());
+        //jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null, toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
+        toimipisteResult2 = service.save(toimipiste2, true);
+        assertThat(toimipisteResult2.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("02");
+        assertThat(toimipisteResult2.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi02");
     }
 
     @Test
@@ -378,7 +425,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
-        jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
+        toimipisteResult1.getOrganisaatio().setOpetuspisteenJarjNro(null);
+        Organisaatio org = organisaatioRepository.save(toimipisteResult1.getOrganisaatio());
         toimipisteResult1 = service.save(toimipiste1, true);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isNull();
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");

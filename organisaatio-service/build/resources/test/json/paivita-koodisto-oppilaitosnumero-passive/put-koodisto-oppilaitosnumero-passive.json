@@ -1,0 +1,45 @@
+{
+  "koodiUri": "oppilaitosnumero_02428",
+  "version": 3,
+  "versio": 1,
+  "tila": "PASSIIVINEN",
+  "koodiArvo": "02428",
+  "paivitysPvm": "1557832018727",
+  "voimassaAlkuPvm": "2000-01-01",
+  "voimassaLoppuPvm": "2002-07-31",
+  "metadata": [
+    {
+      "nimi": "Lapuan ammatti-instituutti",
+      "kuvaus": "Lapuan ammatti-instituutti",
+      "lyhytNimi": "Lapuan ammatti-instituutti",
+      "kieli": "EN"
+    },
+    {
+      "nimi": "Lapuan ammatti-instituutti",
+      "kuvaus": "Lapuan ammatti-instituutti",
+      "lyhytNimi": "Lapuan ammatti-instituutti",
+      "kieli": "FI"
+    },
+    {
+      "nimi": "Lapuan ammatti-instituutti",
+      "kuvaus": "Lapuan ammatti-instituutti",
+      "lyhytNimi": "Lapuan ammatti-instituutti",
+      "kieli": "SV"
+    }
+  ],
+  "includesCodeElements": [
+    {
+      "codeElementUri": "oppilaitostyyppi_21",
+      "codeElementValue": "21",
+      "codeElementVersion": 1,
+      "passive": true
+    },
+    {
+      "codeElementUri": "kunta_408",
+      "codeElementVersion": 0,
+      "passive": false
+    }
+  ],
+  "withinCodeElements": [],
+  "levelsWithCodeElements": []
+}

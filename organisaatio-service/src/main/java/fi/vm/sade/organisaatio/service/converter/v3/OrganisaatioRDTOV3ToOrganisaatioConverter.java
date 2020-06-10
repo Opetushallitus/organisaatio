@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverte
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.modelmapper.TypeToken;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -33,7 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class OrganisaatioRDTOV3ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV3, Organisaatio> {
+public class OrganisaatioRDTOV3ToOrganisaatioConverter implements Converter<OrganisaatioRDTOV3, Organisaatio> {
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 

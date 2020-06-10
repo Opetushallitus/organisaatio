@@ -1,0 +1,75 @@
+{
+  "koodiUri": "koulutustoimija_22283574",
+  "version": 5,
+  "versio": 1,
+  "tila": "LUONNOS",
+  "koodiArvo": "2228357-4",
+  "paivitysPvm": "1518735657089",
+  "voimassaAlkuPvm": "2008-10-22",
+  "metadata": [
+    {
+      "nimi": "Aalto-korkeakoulusäätiö sr",
+      "kuvaus": "Aalto-korkeakoulusäätiö sr",
+      "lyhytNimi": "Aalto-korkeakoulusäätiö sr",
+      "kieli": "FI"
+    },
+    {
+      "nimi": "Aalto-korkeakoulusäätiö sr",
+      "kuvaus": "Aalto-korkeakoulusäätiö sr",
+      "lyhytNimi": "Aalto-korkeakoulusäätiö sr",
+      "kieli": "SV"
+    },
+    {
+      "nimi": "Aalto-korkeakoulusäätiö sr",
+      "kuvaus": "Aalto-korkeakoulusäätiö sr",
+      "lyhytNimi": "Aalto-korkeakoulusäätiö sr",
+      "kieli": "EN"
+    }
+  ],
+  "includesCodeElements": [
+    {
+      "codeElementUri": "maatjavaltiot2_246",
+      "codeElementValue": "246",
+      "codeElementVersion": 2,
+      "passive": false
+    },
+    {
+      "codeElementUri": "kunta_091",
+      "codeElementValue": "091",
+      "codeElementVersion": 2,
+      "passive": false
+    },
+    {
+      "codeElementUri": "maatjavaltiot2_246",
+      "codeElementValue": "246",
+      "codeElementVersion": 1,
+      "passive": true
+    },
+    {
+      "codeElementUri": "posti_00076",
+      "codeElementValue": "00076",
+      "codeElementVersion": 2,
+      "passive": false
+    },
+    {
+      "codeElementUri": "kieli_fi",
+      "codeElementValue": "FI",
+      "codeElementVersion": 1,
+      "passive": false
+    },
+    {
+      "codeElementUri": "posti_00076",
+      "codeElementValue": "00076",
+      "codeElementVersion": 1,
+      "passive": true
+    },
+    {
+      "codeElementUri": "kunta_091",
+      "codeElementValue": "091",
+      "codeElementVersion": 1,
+      "passive": true
+    }
+  ],
+  "withinCodeElements": [],
+  "levelsWithCodeElements": []
+}

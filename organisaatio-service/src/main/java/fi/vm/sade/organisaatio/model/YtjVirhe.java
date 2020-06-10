@@ -16,15 +16,14 @@
 package fi.vm.sade.organisaatio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+// TODO XSS filtteri
 @Entity
 @Table(name = "ytjvirhe")
 @org.hibernate.annotations.Table(appliesTo = "ytjvirhe", comment = "Sisältää YTJ-massapäivityksessä tulleen virheen oidin, virheellisen kentän ja kuvauksen.")
-@EntityListeners(XssFilterListener.class)
 public class YtjVirhe extends BaseEntity {
 
     public enum YTJVirheKohde {

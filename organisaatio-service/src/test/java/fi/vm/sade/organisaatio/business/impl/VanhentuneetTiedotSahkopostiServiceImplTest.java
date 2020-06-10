@@ -2,12 +2,12 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.PrintingAnswer;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
-import fi.vm.sade.organisaatio.config.FreemarkerConfiguration;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSahkopostiDao;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSahkopostiRepository;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import freemarker.template.Configuration;
@@ -29,11 +29,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
 public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
     private VanhentuneetTiedotSahkopostiServiceImpl service;
@@ -43,32 +44,34 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
     @Mock
     private OrganisaatioViestinta organisaatioViestintaMock;
     @Mock
-    private OrganisaatioDAO organisaatioDAOMock;
+    private OrganisaatioRepository organisaatioRepositoryMock;
     @Mock
-    private OrganisaatioSahkopostiDao organisaatioSahkopostiDaoMock;
+    private OrganisaatioSahkopostiRepository organisaatioSahkopostiRepositoryMock;
+
+    private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
 
     @Before
     public void setup() throws Exception {
+        properties.addFiles("/application.properties");
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:Messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setUseCodeAsDefaultMessage(true);
 
-        FreeMarkerConfigurationFactoryBean freeMarkerConfigurationFactoryBean = new FreemarkerConfiguration().freeMarkerConfigurationFactoryBean();
+        FreeMarkerConfigurationFactoryBean freeMarkerConfigurationFactoryBean = new FreeMarkerConfigurationFactoryBean();
         freeMarkerConfigurationFactoryBean.afterPropertiesSet();
         Configuration freemarker = freeMarkerConfigurationFactoryBean.getObject();
 
-        UrlConfiguration properties = new UrlConfiguration();
         service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, organisaatioViestintaMock,
-                organisaatioDAOMock, organisaatioSahkopostiDaoMock, messageSource, freemarker, properties);
+                organisaatioRepositoryMock, organisaatioSahkopostiRepositoryMock, messageSource, freemarker, properties);
         when(organisaatioViestintaMock.sendEmail(any(), anyBoolean())).then(new PrintingAnswer<>());
     }
 
     @Test
     public void lahetaSahkopostit() {
         when(kayttooikeusClientMock.listOrganisaatioOid(any())).thenReturn(singletonList("org1"));
-        when(organisaatioDAOMock.findByTarkastusPvm(any(), any(), any(), anyLong()))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgumentAt(2, Collection.class).stream().map(oid -> {
+        when(organisaatioRepositoryMock.findByTarkastusPvm(any(), any(), any(), anyLong()))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(2, Collection.class).stream().map(oid -> {
                     Organisaatio organisaatio = new Organisaatio();
                     organisaatio.setOid((String) oid);
                     return organisaatio;
@@ -91,7 +94,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
 
         service.lahetaSahkopostit();
 
-        verify(organisaatioDAOMock).findByTarkastusPvm(any(), any(), eq(singletonList("org1")), anyLong());
+        verify(organisaatioRepositoryMock).findByTarkastusPvm(any(), any(), eq(singletonList("org1")), anyLong());
         ArgumentCaptor<EmailData> emailDataArgumentCaptor = ArgumentCaptor.forClass(EmailData.class);
         verify(organisaatioViestintaMock, times(2)).sendEmail(emailDataArgumentCaptor.capture(), eq(false));
         List<EmailData> emailDatas = emailDataArgumentCaptor.getAllValues();

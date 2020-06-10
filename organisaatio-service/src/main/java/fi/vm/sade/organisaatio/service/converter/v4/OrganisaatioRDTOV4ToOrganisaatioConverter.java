@@ -13,6 +13,7 @@ import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -22,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV4, Organisaatio> {
+public class OrganisaatioRDTOV4ToOrganisaatioConverter implements Converter<OrganisaatioRDTOV4, Organisaatio> {
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired

@@ -1,7 +1,8 @@
 package fi.vm.sade.organisaatio.auth;
 
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -9,8 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,14 +20,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
 public class PermissionCheckerTest {
 
     @InjectMocks
     private PermissionChecker permissionChecker;
 
     @Mock
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
     @Mock
     private OrganisaatioPermissionServiceImpl organisaatioPermissionServiceImpl;
 
@@ -38,7 +38,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioDAO.findByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");
@@ -58,7 +58,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioDAO.findByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");

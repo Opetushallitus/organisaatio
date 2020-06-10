@@ -4,9 +4,8 @@ import fi.vm.sade.organisaatio.OrganisaatioBuilder;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -29,18 +28,25 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
+
+@RunWith(SpringRunner.class)
+@Transactional
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class OrganisaatioFindBusinessServiceImplTest {
 
     @Mock
-    private OrganisaatioDAO organisaatioDaoMock;
+    private OrganisaatioRepository organisaatioDaoMock;
 
     @Mock
-    private OrganisaatioSuhdeDAO organisaatioSuhdeDaoMock;
+    private OrganisaatioSuhdeRepository organisaatioSuhdeRepositoryMock;
 
     @Mock
     private ConversionService conversionServiceMock;
@@ -58,7 +64,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     public void setup() {
         ReflectionTestUtils.setField(organisaatioFindBusinessServiceImpl, "rootOrganisaatioOid", "rootOid");
         when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
-            Organisaatio entity = invocation.getArgumentAt(0, Organisaatio.class);
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
             OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
             dto.setOid(entity.getOid());
             return dto;

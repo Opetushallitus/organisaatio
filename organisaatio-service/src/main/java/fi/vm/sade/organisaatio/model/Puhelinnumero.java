@@ -22,14 +22,10 @@ import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
-
 /**
  * @author Antti
  */
 @Entity
-@EntityListeners(XssFilterListener.class)
 public class Puhelinnumero extends Yhteystieto {
 
 	private static final long serialVersionUID = 1L;
@@ -39,8 +35,7 @@ public class Puhelinnumero extends Yhteystieto {
 
     @NotNull
     @Pattern(regexp = VALIDATION_REGEXP, message = "{validation.invalid.phone}")
-    @FilterXss
-    private String puhelinnumero;
+    private String puhelinnumero; // TODO XSS filtteri
     
     @NotNull
     @Pattern(regexp = TYYPPI_PUHELIN)

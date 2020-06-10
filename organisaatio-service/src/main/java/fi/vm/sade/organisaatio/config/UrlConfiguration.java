@@ -3,20 +3,32 @@ package fi.vm.sade.organisaatio.config;
 import fi.vm.sade.properties.OphProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @Configuration
-public class UrlConfiguration extends OphProperties {
-    private static final Logger LOG = LoggerFactory.getLogger(UrlConfiguration.class);
+public class UrlConfiguration {
 
-    public UrlConfiguration() {
-        addFiles("/organisaatio-service-oph.properties");
-        addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/common.properties").toString());
-        addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/organisaatio-service.properties").toString());
-        addOptionalFiles("/organisaatio-service-test.properties");
+    @Bean
+    public OphProperties properties(Environment environment) {
+        OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
+        properties.addDefault("host.virkailija", environment.getRequiredProperty("host.virkailija"));
+        properties.addDefault("organisaatio.service.username", environment.getRequiredProperty("organisaatio.service.username"));
+        properties.addDefault("organisaatio.service.password", environment.getRequiredProperty("organisaatio.service.password"));
+        properties.addDefault("organisaatio.service.username.to.koodisto", environment.getRequiredProperty("organisaatio.service.username.to.koodisto"));
+        properties.addDefault("organisaatio.service.password.to.koodisto", environment.getRequiredProperty("organisaatio.service.password.to.koodisto"));
+        properties.addDefault("organisaatio.service.username.to.viestinta", environment.getRequiredProperty("organisaatio.service.password.to.viestinta"));
+        properties.addDefault("organisaatio.service.password.to.viestinta", environment.getRequiredProperty("organisaatio.service.password.to.viestinta"));
+        properties.addDefault("organisaatio.ui.url", environment.getRequiredProperty("organisaatio.ui.url"));
+        properties.addDefault("organisaatio.ui.ilmoitukset.url", environment.getRequiredProperty("organisaatio.ui.ilmoitukset.url"));
+        properties.addDefault("port.koodisto-service", environment.getRequiredProperty("port.koodisto-service"));
+        properties.addDefault("port.tarjonta-service", environment.getRequiredProperty("port.tarjonta-service"));
+        properties.addDefault("port.organisaatio-service", environment.getRequiredProperty("port.organisaatio-service"));
 
-        LOG.info("property: 'organisaatio-service.ryhmasahkoposti-service.rest.url': " + getProperty("organisaatio-service.ryhmasahkoposti-service.rest.url"));
+        return properties;
     }
 }

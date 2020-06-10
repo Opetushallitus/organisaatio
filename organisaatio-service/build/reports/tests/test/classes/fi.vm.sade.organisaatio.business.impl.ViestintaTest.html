@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ViestintaTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ViestintaTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/fi.vm.sade.organisaatio.business.impl.html">fi.vm.sade.organisaatio.business.impl</a> &gt; ViestintaTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.015s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">messageFromLogTestWith1Error</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">messageFromLogTestWith3Errors</td>
+<td class="success">0.008s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">messageFromLogTestWithNoErrors</td>
+<td class="success">0.004s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.3.0.RELEASE)
+
+2020-06-10 18:11:53.789  INFO 55751 --- [    Test worker] f.v.s.o.business.impl.ViestintaTest      : Starting ViestintaTest on Miikkas-MacBook-Pro.local with PID 55751 (started by mkamka in /Users/mkamka/git/wunderdog/oph/yleiskayttoiset/organisaatio 2/organisaatio-service)
+2020-06-10 18:11:53.790  INFO 55751 --- [    Test worker] f.v.s.o.business.impl.ViestintaTest      : No active profile set, falling back to default profiles: default
+2020-06-10 18:11:54.158  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2020-06-10 18:11:54.221  INFO 55751 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62ms. Found 12 JPA repository interfaces.
+2020-06-10 18:11:54.241  INFO 55751 --- [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2020-06-10 18:11:54.315  INFO 55751 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:124a7464-96fa-4ba8-bda7-a58079d2cbe8;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2020-06-10 18:11:54.361  INFO 55751 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-10 18:11:54.395  INFO 55751 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -&gt; org.hibernate.type.BooleanType@64832385
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -&gt; org.hibernate.type.BooleanType@64832385
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -&gt; org.hibernate.type.BooleanType@64832385
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -&gt; org.hibernate.type.NumericBooleanType@2dfabe23
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -&gt; org.hibernate.type.TrueFalseType@55bedb8b
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -&gt; org.hibernate.type.YesNoType@4d73a2ec
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -&gt; org.hibernate.type.ByteType@1bbfb0e1
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -&gt; org.hibernate.type.ByteType@1bbfb0e1
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -&gt; org.hibernate.type.ByteType@1bbfb0e1
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -&gt; org.hibernate.type.CharacterType@542babe6
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -&gt; org.hibernate.type.CharacterType@542babe6
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -&gt; org.hibernate.type.CharacterType@542babe6
+2020-06-10 18:11:54.398 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -&gt; org.hibernate.type.ShortType@45aa4e90
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -&gt; org.hibernate.type.ShortType@45aa4e90
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -&gt; org.hibernate.type.ShortType@45aa4e90
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -&gt; org.hibernate.type.IntegerType@5e9acab2
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -&gt; org.hibernate.type.IntegerType@5e9acab2
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -&gt; org.hibernate.type.IntegerType@5e9acab2
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -&gt; org.hibernate.type.LongType@37885b1d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -&gt; org.hibernate.type.LongType@37885b1d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -&gt; org.hibernate.type.LongType@37885b1d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -&gt; org.hibernate.type.FloatType@607b0cc3
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -&gt; org.hibernate.type.FloatType@607b0cc3
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -&gt; org.hibernate.type.FloatType@607b0cc3
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -&gt; org.hibernate.type.DoubleType@6cef098d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -&gt; org.hibernate.type.DoubleType@6cef098d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -&gt; org.hibernate.type.DoubleType@6cef098d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -&gt; org.hibernate.type.BigDecimalType@6ca0e59d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -&gt; org.hibernate.type.BigDecimalType@6ca0e59d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -&gt; org.hibernate.type.BigIntegerType@5e476f96
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -&gt; org.hibernate.type.BigIntegerType@5e476f96
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -&gt; org.hibernate.type.StringType@7250e71f
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -&gt; org.hibernate.type.StringType@7250e71f
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -&gt; org.hibernate.type.StringNVarcharType@98a4409
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -&gt; org.hibernate.type.CharacterNCharType@51939a53
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -&gt; org.hibernate.type.UrlType@5dd004c4
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -&gt; org.hibernate.type.UrlType@5dd004c4
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -&gt; org.hibernate.type.DurationType@beb10cd
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -&gt; org.hibernate.type.DurationType@beb10cd
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -&gt; org.hibernate.type.InstantType@614aee68
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -&gt; org.hibernate.type.InstantType@614aee68
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -&gt; org.hibernate.type.LocalDateTimeType@7f3412aa
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -&gt; org.hibernate.type.LocalDateTimeType@7f3412aa
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -&gt; org.hibernate.type.LocalDateType@230aeaef
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -&gt; org.hibernate.type.LocalDateType@230aeaef
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -&gt; org.hibernate.type.LocalTimeType@54760927
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -&gt; org.hibernate.type.LocalTimeType@54760927
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -&gt; org.hibernate.type.OffsetDateTimeType@2822f21e
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -&gt; org.hibernate.type.OffsetDateTimeType@2822f21e
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -&gt; org.hibernate.type.OffsetTimeType@30e0cc1d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -&gt; org.hibernate.type.OffsetTimeType@30e0cc1d
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -&gt; org.hibernate.type.ZonedDateTimeType@17453e64
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -&gt; org.hibernate.type.ZonedDateTimeType@17453e64
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -&gt; org.hibernate.type.DateType@6746b6dc
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -&gt; org.hibernate.type.DateType@6746b6dc
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -&gt; org.hibernate.type.TimeType@22b2b7d4
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -&gt; org.hibernate.type.TimeType@22b2b7d4
+2020-06-10 18:11:54.399 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -&gt; org.hibernate.type.TimestampType@16387082
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -&gt; org.hibernate.type.TimestampType@16387082
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -&gt; org.hibernate.type.TimestampType@16387082
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -&gt; org.hibernate.type.DbTimestampType@3b61c4de
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -&gt; org.hibernate.type.CalendarType@872f114
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -&gt; org.hibernate.type.CalendarType@872f114
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -&gt; org.hibernate.type.CalendarType@872f114
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -&gt; org.hibernate.type.CalendarDateType@30133667
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -&gt; org.hibernate.type.CalendarTimeType@6db15d50
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -&gt; org.hibernate.type.LocaleType@34dae521
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -&gt; org.hibernate.type.LocaleType@34dae521
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -&gt; org.hibernate.type.CurrencyType@4abf8419
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -&gt; org.hibernate.type.CurrencyType@4abf8419
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -&gt; org.hibernate.type.TimeZoneType@475664c7
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -&gt; org.hibernate.type.TimeZoneType@475664c7
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -&gt; org.hibernate.type.ClassType@7ee21a44
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -&gt; org.hibernate.type.ClassType@7ee21a44
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -&gt; org.hibernate.type.UUIDBinaryType@6201aaf9
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -&gt; org.hibernate.type.UUIDBinaryType@6201aaf9
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -&gt; org.hibernate.type.UUIDCharType@1f85babe
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -&gt; org.hibernate.type.BinaryType@1cd11657
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -&gt; org.hibernate.type.BinaryType@1cd11657
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -&gt; org.hibernate.type.BinaryType@1cd11657
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -&gt; org.hibernate.type.WrapperBinaryType@43976e8c
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -&gt; org.hibernate.type.WrapperBinaryType@43976e8c
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -&gt; org.hibernate.type.WrapperBinaryType@43976e8c
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -&gt; org.hibernate.type.RowVersionType@5044e279
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -&gt; org.hibernate.type.ImageType@57d6ac5e
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -&gt; org.hibernate.type.CharArrayType@10ee6e56
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -&gt; org.hibernate.type.CharArrayType@10ee6e56
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -&gt; org.hibernate.type.CharArrayType@10ee6e56
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -&gt; org.hibernate.type.CharacterArrayType@79c7d538
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -&gt; org.hibernate.type.CharacterArrayType@79c7d538
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -&gt; org.hibernate.type.CharacterArrayType@79c7d538
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -&gt; org.hibernate.type.TextType@2b03af4
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -&gt; org.hibernate.type.NTextType@6d7d39e
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -&gt; org.hibernate.type.BlobType@4dc78672
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -&gt; org.hibernate.type.BlobType@4dc78672
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -&gt; org.hibernate.type.MaterializedBlobType@7969dd0d
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -&gt; org.hibernate.type.ClobType@38f39022
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -&gt; org.hibernate.type.ClobType@38f39022
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -&gt; org.hibernate.type.NClobType@4b4e387b
+2020-06-10 18:11:54.400 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -&gt; org.hibernate.type.NClobType@4b4e387b
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -&gt; org.hibernate.type.MaterializedClobType@33eb9d
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -&gt; org.hibernate.type.MaterializedNClobType@4774d2ca
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -&gt; org.hibernate.type.SerializableType@3298d692
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -&gt; org.hibernate.type.ObjectType@22e34fa
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -&gt; org.hibernate.type.ObjectType@22e34fa
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -&gt; org.hibernate.type.AdaptedImmutableType@4eb8a789
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -&gt; org.hibernate.type.AdaptedImmutableType@96c7618
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -&gt; org.hibernate.type.AdaptedImmutableType@1f22c5e7
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -&gt; org.hibernate.type.AdaptedImmutableType@73514c82
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -&gt; org.hibernate.type.AdaptedImmutableType@785e398e
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -&gt; org.hibernate.type.AdaptedImmutableType@12685c2b
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -&gt; org.hibernate.type.AdaptedImmutableType@1b6cbe7c
+2020-06-10 18:11:54.401 DEBUG 55751 --- [         task-1] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -&gt; org.hibernate.type.AdaptedImmutableType@6220c4cf
+2020-06-10 18:11:54.406  INFO 55751 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-06-10 18:11:54.409 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@52c488be] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@5d1996c8]
+2020-06-10 18:11:54.438 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.438 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.438 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.438 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.440 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.440 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.441 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.442 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.475 DEBUG 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@52c488be] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@ea4ddb9]
+2020-06-10 18:11:54.475 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.475 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.479 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.479 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.504 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.504 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.508 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.508 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.520  WARN 55751 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-06-10 18:11:54.555 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.555 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.559 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.559 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.591 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.591 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.595 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.595 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.624 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.624 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+2020-06-10 18:11:54.627 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.627 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+2020-06-10 18:11:54.631 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.631 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+2020-06-10 18:11:54.634 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+2020-06-10 18:11:54.634 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+Hibernate: 
+    
+    drop table if exists binary_data CASCADE 
+Hibernate: 
+    
+    drop table if exists lisatietotyyppi CASCADE 
+Hibernate: 
+    
+    drop table if exists monikielinen_teksti CASCADE 
+Hibernate: 
+    
+    drop table if exists monikielinen_teksti_values CASCADE 
+Hibernate: 
+    
+    drop table if exists named_monikielinen_teksti CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_kayttoryhmat CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_kielet CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_lisatieto CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_muut_kotipaikat_uris CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_muut_oppilaitostyypit CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_nimi CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_ryhmatyypit CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_sahkoposti CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_tyypit CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_vuosiluokat CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_meta_data CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_meta_data_values CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatio_meta_data_yhteystiedot CASCADE 
+Hibernate: 
+    
+    drop table if exists organisaatiosuhde CASCADE 
+Hibernate: 
+    
+    drop table if exists rajoite CASCADE 
+Hibernate: 
+    
+    drop table if exists varhaiskasvatuksen_jarjestamismuoto CASCADE 
+Hibernate: 
+    
+    drop table if exists varhaiskasvatuksen_kielipainotus CASCADE 
+Hibernate: 
+    
+    drop table if exists varhaiskasvatuksen_toiminnallinenpainotus CASCADE 
+Hibernate: 
+    
+    drop table if exists varhaiskasvatuksen_toimipaikka_tiedot CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystieto CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystieto_arvo CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystieto_elementti CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystietojen_tyyppi CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystietojen_tyyppi_sovellettavat_oppilaitostyyppis CASCADE 
+Hibernate: 
+    
+    drop table if exists yhteystietojen_tyyppi_sovellettavat_organisaatio_tyyppis CASCADE 
+Hibernate: 
+    
+    drop table if exists ytjpaivitysloki CASCADE 
+Hibernate: 
+    
+    drop table if exists ytjvirhe CASCADE 
+Hibernate: 
+    
+    create table binary_data (
+       id bigint generated by default as identity,
+        version bigint not null,
+        data blob,
+        filename varchar(255),
+        mime_type varchar(255),
+        name_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table lisatietotyyppi (
+       id bigint generated by default as identity,
+        version bigint not null,
+        nimi varchar(255),
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table monikielinen_teksti (
+       id bigint generated by default as identity,
+        version bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table monikielinen_teksti_values (
+       id bigint not null,
+        value varchar(16384),
+        key varchar(255) not null,
+        primary key (id, key)
+    )
+Hibernate: 
+    
+    create table named_monikielinen_teksti (
+       id bigint generated by default as identity,
+        version bigint not null,
+        key varchar(255),
+        name_id bigint,
+        value_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio (
+       id bigint generated by default as identity,
+        version bigint not null,
+        alkupvm date,
+        domainnimi varchar(255),
+        kotipaikka varchar(255),
+        lakkautuspvm date,
+        maa varchar(255),
+        nimihaku varchar(256000),
+        oid varchar(255) not null,
+        opetuspisteenjarjnro varchar(255),
+        oppilaitoskoodi varchar(255),
+        oppilaitos_tyyppi varchar(255),
+        organisaatio_poistettu boolean,
+        paivittaja varchar(255),
+        paivityspvm timestamp,
+        parentidpath varchar(255),
+        parentoidpath varchar(255),
+        piilotettu boolean default false not null,
+        tarkastus_pvm timestamp,
+        toimipistekoodi varchar(32),
+        tuontipvm timestamp,
+        virastotunnus varchar(255),
+        yhteishaunkoulukoodi varchar(255),
+        yritysmuoto varchar(255),
+        ytj_kieli varchar(255),
+        ytjpaivityspvm date,
+        ytunnus varchar(255),
+        kuvaus_mkt bigint,
+        metadata_id bigint,
+        nimi_mkt bigint,
+        varhaiskasvatuksen_toimipaikka_tiedot_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio_kayttoryhmat (
+       organisaatio_id bigint not null,
+        kayttoryhmat varchar(255)
+    )
+Hibernate: 
+    
+    create table organisaatio_kielet (
+       organisaatio_id bigint not null,
+        kielet varchar(255) not null,
+        primary key (organisaatio_id, kielet)
+    )
+Hibernate: 
+    
+    create table organisaatio_lisatieto (
+       id bigint generated by default as identity,
+        version bigint not null,
+        lisatietotyyppi_id bigint,
+        organisaatio_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio_muut_kotipaikat_uris (
+       organisaatio_id bigint not null,
+        muut_kotipaikat varchar(255) not null,
+        primary key (organisaatio_id, muut_kotipaikat)
+    )
+Hibernate: 
+    
+    create table organisaatio_muut_oppilaitostyypit (
+       organisaatio_id bigint not null,
+        oppilaitostyyppi varchar(255) not null,
+        primary key (organisaatio_id, oppilaitostyyppi)
+    )
+Hibernate: 
+    
+    create table organisaatio_nimi (
+       id bigint generated by default as identity,
+        version bigint not null,
+        alkupvm date,
+        paivittaja varchar(255),
+        nimi_mkt bigint,
+        organisaatio_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio_ryhmatyypit (
+       organisaatio_id bigint not null,
+        ryhmatyypit varchar(255)
+    )
+2020-06-10 18:11:54.641 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti$Tyyppi
+Hibernate: 
+    
+    create table organisaatio_sahkoposti (
+       id bigint generated by default as identity,
+        version bigint not null,
+        aikaleima timestamp not null,
+        tyyppi varchar(255) not null,
+        viestintapalvelu_id varchar(255),
+        organisaatio_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio_tyypit (
+       organisaatio_id bigint not null,
+        tyypit varchar(255)
+    )
+Hibernate: 
+    
+    create table organisaatio_vuosiluokat (
+       organisaatio_id bigint not null,
+        vuosiluokat varchar(255)
+    )
+Hibernate: 
+    
+    create table organisaatio_meta_data (
+       id bigint generated by default as identity,
+        version bigint not null,
+        koodi varchar(255),
+        luontipvm timestamp not null,
+        muokkauspvm timestamp not null,
+        hakutoimistoectsemailmkt bigint,
+        hakutoimistoectsnimimkt bigint,
+        hakutoimistoectspuhelinmkt bigint,
+        hakutoimistoectstehtavanimikemkt bigint,
+        hakutoimisto_nimi_id bigint,
+        kuva_id bigint,
+        nimi_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table organisaatio_meta_data_values (
+       organisaatio_meta_data_id bigint not null,
+        values_id bigint not null,
+        primary key (organisaatio_meta_data_id, values_id)
+    )
+Hibernate: 
+    
+    create table organisaatio_meta_data_yhteystiedot (
+       organisaatio_meta_data_id bigint not null,
+        yhteystiedot_id bigint not null
+    )
+2020-06-10 18:11:54.642 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.OrganisaatioSuhde$OrganisaatioSuhdeTyyppi
+Hibernate: 
+    
+    create table organisaatiosuhde (
+       id bigint generated by default as identity,
+        version bigint not null,
+        alkupvm date,
+        loppupvm date,
+        opetuspisteenjarjnro varchar(255),
+        suhdetyyppi varchar(255) not null,
+        child_id bigint not null,
+        parent_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table rajoite (
+       rajoitetyyppi varchar(31) not null,
+        id bigint generated by default as identity,
+        version bigint not null,
+        arvo varchar(255),
+        lisatietotyyppi_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table varhaiskasvatuksen_jarjestamismuoto (
+       varhaiskasvatuksen_toimipaikka_tiedot_id bigint not null,
+        toimintamuoto varchar(255) not null,
+        primary key (varhaiskasvatuksen_toimipaikka_tiedot_id, toimintamuoto)
+    )
+Hibernate: 
+    
+    create table varhaiskasvatuksen_kielipainotus (
+       id bigint generated by default as identity,
+        version bigint not null,
+        alkupvm timestamp,
+        kielipainotus varchar(255),
+        loppupvm timestamp,
+        varhaiskasvatuksen_toimipaikka_tiedot_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table varhaiskasvatuksen_toiminnallinenpainotus (
+       id bigint generated by default as identity,
+        version bigint not null,
+        alkupvm timestamp,
+        loppupvm timestamp,
+        toiminnallinenpainotus varchar(255),
+        varhaiskasvatuksen_toimipaikka_tiedot_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table varhaiskasvatuksen_toimipaikka_tiedot (
+       id bigint generated by default as identity,
+        version bigint not null,
+        kasvatusopillinen_jarjestelma varchar(255) not null,
+        paikkojen_lukumaara bigint not null,
+        toimintamuoto varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table yhteystieto (
+       dtype varchar(31) not null,
+        id bigint generated by default as identity,
+        version bigint not null,
+        kieli varchar(255),
+        yhteystieto_oid varchar(255) not null,
+        email varchar(255),
+        coordinatetype varchar(255),
+        extrarivi varchar(255),
+        lat double,
+        lng double,
+        maa varchar(255),
+        osavaltio varchar(255),
+        osoite varchar(100),
+        osoite_tyyppi varchar(255),
+        postinumero varchar(255),
+        postitoimipaikka varchar(255),
+        ytjpaivityspvm date,
+        puhelinnumero varchar(255),
+        tyyppi varchar(255),
+        www_osoite varchar(255),
+        organisaatio_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table yhteystieto_arvo (
+       id bigint generated by default as identity,
+        version bigint not null,
+        arvo_text varchar(100),
+        kieli varchar(255),
+        yhteystieto_arvo_oid varchar(255) not null,
+        arvo_yhteystieto_id bigint,
+        kentta_id bigint not null,
+        organisaatio_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table yhteystieto_elementti (
+       id bigint generated by default as identity,
+        version bigint not null,
+        kaytossa boolean not null,
+        nimi varchar(100) not null,
+        nimi_en varchar(255),
+        nimi_sv varchar(255),
+        oid varchar(255) not null,
+        pakollinen boolean not null,
+        tyyppi varchar(255) not null,
+        yhteystietojen_tyyppi_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table yhteystietojen_tyyppi (
+       id bigint generated by default as identity,
+        version bigint not null,
+        oid varchar(255) not null,
+        nimi_mkt bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table yhteystietojen_tyyppi_sovellettavat_oppilaitostyyppis (
+       id bigint not null,
+        oppilaitos_tyyppi varchar(255)
+    )
+Hibernate: 
+    
+    create table yhteystietojen_tyyppi_sovellettavat_organisaatio_tyyppis (
+       id bigint not null,
+        organisaatio_tyyppi varchar(255)
+    )
+2020-06-10 18:11:54.644 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjPaivitysLoki$YTJPaivitysStatus
+Hibernate: 
+    
+    create table ytjpaivitysloki (
+       id bigint generated by default as identity,
+        version bigint not null,
+        paivitetyt_lkm bigint,
+        paivitys_tila varchar(255),
+        paivitys_tila_selite varchar(255),
+        paivitysaika timestamp,
+        primary key (id)
+    )
+2020-06-10 18:11:54.645 DEBUG 55751 --- [         task-1] org.hibernate.type.EnumType              : Using NAMED-based conversion for Enum fi.vm.sade.organisaatio.model.YtjVirhe$YTJVirheKohde
+Hibernate: 
+    
+    create table ytjvirhe (
+       id bigint generated by default as identity,
+        version bigint not null,
+        oid varchar(255) not null,
+        org_nimi varchar(255),
+        virhekohde varchar(255),
+        virheviesti varchar(255),
+        ytj_paivitys_loki_id bigint,
+        primary key (id)
+    )
+Hibernate: 
+    
+    alter table lisatietotyyppi 
+       add constraint UK_e7pxtttw3wrna1wjw61ick6vl unique (nimi)
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint UKc6jnudh0bxmcy5fc7y0eokbkj unique (oid)
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint UK6htp7inu0bb40kgmylnlvxjo1 unique (ytunnus, organisaatio_poistettu)
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint UK_kbbl6aavaqs852gioayq5dehw unique (oppilaitoskoodi)
+Hibernate: 
+    
+    alter table organisaatio_meta_data_values 
+       add constraint UK_g35xuy6ir6nfqehs1mdpb0odd unique (values_id)
+Hibernate: 
+    
+    alter table organisaatio_meta_data_yhteystiedot 
+       add constraint UK_758cu0hyetr6eyrj1kbylgasw unique (yhteystiedot_id)
+Hibernate: 
+    
+    alter table yhteystieto_arvo 
+       add constraint UKd9q8ra5w26jde1w6l6ymfx9k4 unique (kentta_id, organisaatio_id, kieli)
+Hibernate: 
+    
+    alter table yhteystieto_elementti 
+       add constraint UKieg9ee1a951xgtme9aji0k4fs unique (yhteystietojen_tyyppi_id, nimi)
+Hibernate: 
+    
+    alter table binary_data 
+       add constraint FKssnh8n1s66lsvm2yjnbrcmvvw 
+       foreign key (name_id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table monikielinen_teksti_values 
+       add constraint FKrdlbmp10y4f2boe47juw9bqwx 
+       foreign key (id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table named_monikielinen_teksti 
+       add constraint FKr22740y3ut1n0sju0qmryng4y 
+       foreign key (name_id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table named_monikielinen_teksti 
+       add constraint FK7jq92bs1p0oyijwx6jdnf3igq 
+       foreign key (value_id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint FKic8d5tlmo7mmc01r0e6h844cp 
+       foreign key (kuvaus_mkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint FK6f3doa3r89e3gib24hnfdinj7 
+       foreign key (metadata_id) 
+       references organisaatio_meta_data
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint FKc6gfifn7bviifrq5irvaq9qrs 
+       foreign key (nimi_mkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio 
+       add constraint FKocandrafxw8npk6c3h7liadjf 
+       foreign key (varhaiskasvatuksen_toimipaikka_tiedot_id) 
+       references varhaiskasvatuksen_toimipaikka_tiedot
+Hibernate: 
+    
+    alter table organisaatio_kayttoryhmat 
+       add constraint FK10yp10g3f2cf607vu0tni61gj 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_kielet 
+       add constraint FKnaihhk0jghdudh6pbobaswf1t 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_lisatieto 
+       add constraint FKa6s9w6dypgh7ss24f1oy4w23y 
+       foreign key (lisatietotyyppi_id) 
+       references lisatietotyyppi
+Hibernate: 
+    
+    alter table organisaatio_lisatieto 
+       add constraint FKpb1pf6w0puvaai93numrqyxum 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_muut_kotipaikat_uris 
+       add constraint FKt0k0u60ux3rggl4ioogafdfba 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_muut_oppilaitostyypit 
+       add constraint organisaatio_muut_oppilaitostyypit_organisaatio_id_fkey 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_nimi 
+       add constraint FKgbhx14jx5w673be2gfowqv4sq 
+       foreign key (nimi_mkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_nimi 
+       add constraint FKh6sjwfk2f1vbquymjrjs2fg4i 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_ryhmatyypit 
+       add constraint FKcmx0x0pxsp2q6op3btctgg8q 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_sahkoposti 
+       add constraint organisaatio_sahkoposti_organisaatio_id_fkey 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_tyypit 
+       add constraint FKrpw0rau0dvcsk5ue6ax97kogd 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_vuosiluokat 
+       add constraint FKm9gcj129o866ipeu65ifk710 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FKhgb2944ry4o37ob4x310wik49 
+       foreign key (hakutoimistoectsemailmkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FK57at2ysc6dlpaifapn925h9la 
+       foreign key (hakutoimistoectsnimimkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FKidlrk3xqv24jh3dlyqfotp7gp 
+       foreign key (hakutoimistoectspuhelinmkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FK394pgu58twk2v3agpbvpkudqs 
+       foreign key (hakutoimistoectstehtavanimikemkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FKhujfyydy7au7931rx31pmstf7 
+       foreign key (hakutoimisto_nimi_id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FKa3j8bs5yqbrejqb8wrvgpimrl 
+       foreign key (kuva_id) 
+       references binary_data
+Hibernate: 
+    
+    alter table organisaatio_meta_data 
+       add constraint FKb2ehg2vf31sl02u4fff2x2jof 
+       foreign key (nimi_id) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data_values 
+       add constraint FK2dyf7gsrikqeiebn6f64pto1c 
+       foreign key (values_id) 
+       references named_monikielinen_teksti
+Hibernate: 
+    
+    alter table organisaatio_meta_data_values 
+       add constraint FKh6v5k2b2bgaf2khvqkd1l7pbs 
+       foreign key (organisaatio_meta_data_id) 
+       references organisaatio_meta_data
+Hibernate: 
+    
+    alter table organisaatio_meta_data_yhteystiedot 
+       add constraint FKpoxhldprmw67hfydue6vrec59 
+       foreign key (yhteystiedot_id) 
+       references yhteystieto
+Hibernate: 
+    
+    alter table organisaatio_meta_data_yhteystiedot 
+       add constraint FKoath2196e85hpwbw7fdfg95xb 
+       foreign key (organisaatio_meta_data_id) 
+       references organisaatio_meta_data
+Hibernate: 
+    
+    alter table organisaatiosuhde 
+       add constraint FK48p0wus5mebwan5c8p9tbdapr 
+       foreign key (child_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table organisaatiosuhde 
+       add constraint FK5ed7m6bo9brfmf08umasnp68o 
+       foreign key (parent_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table rajoite 
+       add constraint FK3v1g6p71215r9q5syemd0wh6 
+       foreign key (lisatietotyyppi_id) 
+       references lisatietotyyppi
+Hibernate: 
+    
+    alter table varhaiskasvatuksen_jarjestamismuoto 
+       add constraint FKqq2uaxliuau68807jjvddqcdw 
+       foreign key (varhaiskasvatuksen_toimipaikka_tiedot_id) 
+       references varhaiskasvatuksen_toimipaikka_tiedot
+Hibernate: 
+    
+    alter table varhaiskasvatuksen_kielipainotus 
+       add constraint FKeo6sd2swrsevc96o0v3k1gdov 
+       foreign key (varhaiskasvatuksen_toimipaikka_tiedot_id) 
+       references varhaiskasvatuksen_toimipaikka_tiedot
+Hibernate: 
+    
+    alter table varhaiskasvatuksen_toiminnallinenpainotus 
+       add constraint FKkb1vf7mxi9jovxxok8p1h9089 
+       foreign key (varhaiskasvatuksen_toimipaikka_tiedot_id) 
+       references varhaiskasvatuksen_toimipaikka_tiedot
+Hibernate: 
+    
+    alter table yhteystieto 
+       add constraint FKc4f5icrr53k9fin533f8wf8ck 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table yhteystieto_arvo 
+       add constraint FK9vtl6q70mk1j7cggl1se3grs6 
+       foreign key (arvo_yhteystieto_id) 
+       references yhteystieto
+Hibernate: 
+    
+    alter table yhteystieto_arvo 
+       add constraint FKhbfhp21mnuebqbelkx241pn7c 
+       foreign key (kentta_id) 
+       references yhteystieto_elementti
+Hibernate: 
+    
+    alter table yhteystieto_arvo 
+       add constraint FKo6gphkqjgah8gjomcuq072hmb 
+       foreign key (organisaatio_id) 
+       references organisaatio
+Hibernate: 
+    
+    alter table yhteystieto_elementti 
+       add constraint FK61qq0pvu0jvdkx1edni9y4qpr 
+       foreign key (yhteystietojen_tyyppi_id) 
+       references yhteystietojen_tyyppi
+Hibernate: 
+    
+    alter table yhteystietojen_tyyppi 
+       add constraint FKfv2o24xdj13vkudj5xbc09sbg 
+       foreign key (nimi_mkt) 
+       references monikielinen_teksti
+Hibernate: 
+    
+    alter table yhteystietojen_tyyppi_sovellettavat_oppilaitostyyppis 
+       add constraint FKqqcb5656tu5wruuagdqj6wx15 
+       foreign key (id) 
+       references yhteystietojen_tyyppi
+Hibernate: 
+    
+    alter table yhteystietojen_tyyppi_sovellettavat_organisaatio_tyyppis 
+       add constraint FKhg9iy7u0sxq1qjoka6rjbn7h2 
+       foreign key (id) 
+       references yhteystietojen_tyyppi
+Hibernate: 
+    
+    alter table ytjvirhe 
+       add constraint FK6lnd3ilr54i81swnh5nwbvupb 
+       foreign key (ytj_paivitys_loki_id) 
+       references ytjpaivitysloki
+2020-06-10 18:11:54.658  INFO 55751 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-06-10 18:11:54.658 TRACE 55751 --- [         task-1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@ea4ddb9] for TypeConfiguration
+2020-06-10 18:11:54.659  INFO 55751 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-06-10 18:11:55.223  INFO 55751 --- [    Test worker] org.dozer.DozerBeanMapper                : Initializing a new instance of dozer bean mapper.
+2020-06-10 18:11:55.570  INFO 55751 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/console/'. Database available at 'jdbc:h2:mem:124a7464-96fa-4ba8-bda7-a58079d2cbe8'
+2020-06-10 18:11:55.599  INFO 55751 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-06-10 18:11:55.630  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2020-06-10 18:11:55.664  INFO 55751 --- [    Test worker] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2020-06-10 18:11:55.669  INFO 55751 --- [    Test worker] f.v.s.o.business.impl.ViestintaTest      : Started ViestintaTest in 2.093 seconds (JVM running for 37.103)
+2020-06-10 18:11:55.672  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@6227731d, testMethod = messageFromLogTestWithNoErrors@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@75dbbaba]; rollback [true]
+2020-06-10 18:11:55.676  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@6227731d, testMethod = messageFromLogTestWithNoErrors@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]
+2020-06-10 18:11:55.676  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@587455ca, testMethod = messageFromLogTestWith3Errors@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@75dbbaba]; rollback [true]
+2020-06-10 18:11:55.684  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@587455ca, testMethod = messageFromLogTestWith3Errors@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]
+2020-06-10 18:11:55.685  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@2a666598, testMethod = messageFromLogTestWith1Error@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@75dbbaba]; rollback [true]
+2020-06-10 18:11:55.689  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@480d43fc testClass = ViestintaTest, testInstance = fi.vm.sade.organisaatio.business.impl.ViestintaTest@2a666598, testMethod = messageFromLogTestWith1Error@ViestintaTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@4ef68ed testClass = ViestintaTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication, class fi.vm.sade.organisaatio.business.impl.ViestintaTest$TestContextConfiguration}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@7a44fbdd key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true]]
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 6.3</a> at 10 Jun 2020, 18.12.16</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.resource.provider;
 
+import javax.ws.rs.ext.ParamConverter;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
-import javax.ws.rs.ext.ParamConverter;
 
 public class LocalDateParamConverter implements ParamConverter<LocalDate> {
 

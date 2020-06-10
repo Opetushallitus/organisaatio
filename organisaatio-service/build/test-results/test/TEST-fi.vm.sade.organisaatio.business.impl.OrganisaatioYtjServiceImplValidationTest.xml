@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImplValidationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.015">
+  <properties/>
+  <testcase name="noNameHistoryUpdateIfOnlyLetterCaseChanges" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImplValidationTest" time="0.005"/>
+  <testcase name="validationPassesIfYtjHasOlderStartDateAndOrgNoChildren" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImplValidationTest" time="0.004"/>
+  <testcase name="validationFailsIfYtjHasStartDateBeforeMinDate" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImplValidationTest" time="0.003"/>
+  <testcase name="ytjHasLaterStartThanOrgsChildren" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImplValidationTest" time="0.003"/>
+  <system-out><![CDATA[2020-06-10 18:12:01.658 ERROR 55751 --- [    Test worker] f.v.s.o.b.i.OrganisaatioBusinessChecker  : oid: 1234.5: käytetty alkuPvm (Tue Feb 01 00:00:00 EET 1870) < min päivämäärä (Mon Jan 01 00:00:00 EET 1900)
+2020-06-10 18:12:01.658 ERROR 55751 --- [    Test worker] .s.o.b.i.OrganisaatioBusinessServiceImpl : bulkUpdatePvm() error: oid: 1234.5: käytetty alkuPvm (Tue Feb 01 00:00:00 EET 1870) < min päivämäärä (Mon Jan 01 00:00:00 EET 1900)
+2020-06-10 18:12:01.658  INFO 55751 --- [    Test worker] f.v.s.o.b.i.OrganisaatioYtjServiceImpl   : YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia 1234.5
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

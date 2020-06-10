@@ -15,11 +15,11 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
+import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
+import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import fi.vm.sade.organisaatio.dao.YtjPaivitysLokiDao;
-import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class YTJPaivitysLokiResource {
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
 
     @Autowired
-    private YtjPaivitysLokiDao ytjPaivitysLokiDao;
+    private YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
     @GET
     @Path("/aikavali")
@@ -56,7 +56,7 @@ public class YTJPaivitysLokiResource {
         Date alkupvmDate = new Date(alkupvm);
         Date loppupvmDate = new Date(loppupvm);
         if (alkupvm != 0 && loppupvm != 0) {
-            ytjLoki = ytjPaivitysLokiDao.findByDateRange(alkupvmDate, loppupvmDate);
+            ytjLoki = ytjPaivitysLokiRepository.findByDateRange(alkupvmDate, loppupvmDate);
         }
         return ytjLoki;
     }
@@ -69,7 +69,7 @@ public class YTJPaivitysLokiResource {
     public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "limit", required = true) @QueryParam("limit") int limit) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
         if (limit > 0) {
-            ytjLoki = ytjPaivitysLokiDao.findLatest(limit);
+            ytjLoki = ytjPaivitysLokiRepository.findLatest(limit);
         }
         return ytjLoki;
     }

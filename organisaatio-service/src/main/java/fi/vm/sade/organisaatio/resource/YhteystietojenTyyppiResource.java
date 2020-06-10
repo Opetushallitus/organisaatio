@@ -24,8 +24,8 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
+import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
+import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
@@ -52,7 +52,7 @@ import java.util.List;
 @Api(value = "/yhteystietojentyyppi", description = "Yhteytietojen tyyppeihin liittyvät operaatiot")
 public class YhteystietojenTyyppiResource {
     @Autowired
-    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
     @Autowired
     private ConverterFactory converterFactory;
@@ -61,7 +61,7 @@ public class YhteystietojenTyyppiResource {
     private PermissionChecker permissionChecker;
 
     @Autowired
-    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+    protected YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
     private OIDService oidService;
@@ -84,7 +84,7 @@ public class YhteystietojenTyyppiResource {
             response = YhteystietojenTyyppiDTO.class, responseContainer = "List")
     public List<YhteystietojenTyyppiDTO> getYhteystietoTyypit() {
         List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<>();
-        for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
+        for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
             tyypit.add(converterFactory.convertToDTO(t));
         }
         return tyypit;
@@ -114,7 +114,7 @@ public class YhteystietojenTyyppiResource {
         if (entity == null) {
             throw new OrganisaatioResourceException(Response.Status.BAD_REQUEST, "Entity is null.");
         }
-        yhteystietojenTyyppiDAO.update(entity);
+        yhteystietojenTyyppiRepository.save(entity); //TODO works?
         return (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(entity);
     }
 
@@ -133,7 +133,7 @@ public class YhteystietojenTyyppiResource {
         }
 
         // Validate
-        for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
+        for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
             YhteystietojenTyyppiDTO dtd = (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t);
             if (MonikielinenTekstiUtil.haveSameText(yhteystietojenTyyppi.getNimi(), dtd.getNimi())) {
                 throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
@@ -147,7 +147,7 @@ public class YhteystietojenTyyppiResource {
         }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(yhteystietojenTyyppi, true);
         try {
-            entity = this.yhteystietojenTyyppiDAO.insert(entity);
+            entity = this.yhteystietojenTyyppiRepository.save(entity);
         } catch (PersistenceException e) {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
         }
@@ -168,7 +168,7 @@ public class YhteystietojenTyyppiResource {
             throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
         }
 
-        List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiDAO.findBy("oid", oid);
+        List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiRepository.findByOid(oid);
         if (tyypit.isEmpty()) {
             throw new OrganisaatioResourceException(
                     Response.Status.NOT_FOUND,
@@ -177,15 +177,15 @@ public class YhteystietojenTyyppiResource {
             );
         }
         YhteystietojenTyyppi tyyppiToRemove = tyypit.get(0);
-        List<YhteystietoArvo> arvos = yhteystietoArvoDAO.findByYhteystietojenTyyppi(tyyppiToRemove);
+        List<YhteystietoArvo> arvos = yhteystietoArvoRepository.findByYhteystietojenTyyppi(tyyppiToRemove);
         if (force) {
             for (YhteystietoArvo arvo : arvos) {
-                this.yhteystietoArvoDAO.remove(arvo);
+                this.yhteystietoArvoRepository.delete(arvo);
             }
-            this.yhteystietojenTyyppiDAO.remove(tyyppiToRemove);
+            this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
         }
         else if (arvos.isEmpty()) {
-            this.yhteystietojenTyyppiDAO.remove(tyyppiToRemove);
+            this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
         } else {
             throw new OrganisaatioResourceException(
                     Response.Status.CONFLICT,

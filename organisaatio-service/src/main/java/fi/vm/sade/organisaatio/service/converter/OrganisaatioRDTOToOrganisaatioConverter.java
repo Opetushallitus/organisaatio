@@ -10,6 +10,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -18,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
+public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<OrganisaatioRDTO, Organisaatio> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOToOrganisaatioConverter.class);
 
@@ -31,7 +32,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
     @Override
     public Organisaatio convert(OrganisaatioRDTO t) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio s = new Organisaatio();
 

@@ -17,26 +17,14 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-
-import java.io.Serializable;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
-import org.hibernate.annotations.Cascade;
-
-import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
 
 /**
  * @author Antti Salonen
@@ -44,7 +32,6 @@ import fi.vm.sade.security.xssfilter.XssFilterListener;
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"kentta_id", "organisaatio_id", "kieli"})})
-@EntityListeners(XssFilterListener.class)
 public class YhteystietoArvo extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -56,10 +43,8 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
     private Yhteystieto arvoYhteystieto;
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
-    @FilterXss
-    private String arvoText;
-    @FilterXss
-    private String kieli;
+    private String arvoText; // TODO XSS filtteri
+    private String kieli;  // TODO XSS filtteri
  
     @NotNull
     private String yhteystietoArvoOid;

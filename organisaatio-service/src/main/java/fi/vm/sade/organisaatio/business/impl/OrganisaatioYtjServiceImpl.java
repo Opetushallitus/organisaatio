@@ -28,8 +28,8 @@ import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.YtjPaivitysLokiDao;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -59,10 +59,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private static final Pattern PUHELIN_VALIDATION = Pattern.compile(Puhelinnumero.VALIDATION_REGEXP);
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    protected YtjPaivitysLokiDao ytjPaivitysLokiDao;
+    protected YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
     @Autowired
     private OIDService oidService;
@@ -112,10 +112,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         List<String> oidList = new ArrayList<>();
         // Search the organisations using the DAO since it provides osoites.
         // Criteria: (koulutustoimija, tyoelamajarjesto, muu_organisaatio, varhaiskasvatuksen_jarjestaja, ei lakkautettu, has y-tunnus)
-        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         if(oidList.isEmpty()) {
             LOG.error("päivitettävien organisaatioiden oidList on tyhjä, organisaatioita ei päivitetty");
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
@@ -124,7 +124,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             return ytjPaivitysLoki;
         }
         // Fill the Y-tunnus list and parse off organisaatios that are lakkautettu
-        Map<String,Organisaatio> organisaatiosByYtunnus = new HashMap<>();
+        Map<String, Organisaatio> organisaatiosByYtunnus = new HashMap<>();
         mapOrgsByYtunnusAndRemovePassiveOrgs(oidList, organisaatiosByYtunnus);
 
         List<YTJDTO> ytjdtoList = fetchDataFromYtj(new ArrayList<>(organisaatiosByYtunnus.keySet()));
@@ -146,7 +146,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 if(constraintViolations.size() > 0) {
                     throw new ValidationException(constraintViolations.iterator().next().getMessage());
                 }
-                organisaatioDAO.updateOrg(organisaatio);
+                organisaatioRepository.updateOrg(organisaatio);
                 // update koodisto (When name has changed)
                 try {
                     organisaatioKoodisto.paivitaKoodisto(organisaatio);
@@ -168,12 +168,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.TUNTEMATON, "ilmoitukset.log.virhe.tuntematon");
             }
         }
+        // TODO check flushing
         // Call this since the class is readOnly so it won't be called automatically by transaction manager.
-        organisaatioDAO.flush();
+        //organisaatioRepository.flush();
 
         ytjPaivitysLoki.setPaivitetytLkm(updateOrganisaatioList.size());
-        ytjPaivitysLokiDao.insert(ytjPaivitysLoki);
-        ytjPaivitysLokiDao.flush();
+        ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
 
         organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
 
@@ -181,7 +181,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     // Returns a list uf updated organisations. Cumulates errors to ytjPaivitysLoki field.
-    private List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String,Organisaatio> organisaatiosByYtunnus, boolean forceUpdate) {
+    private List<Organisaatio> doUpdate(List<YTJDTO> ytjOrganisaatios, Map<String, Organisaatio> organisaatiosByYtunnus, boolean forceUpdate) {
         List<Organisaatio> updatedOrganisaatios = new ArrayList<>();
         for(YTJDTO ytjOrg : ytjOrganisaatios) {
             Organisaatio organisaatio = organisaatiosByYtunnus.get(ytjOrg.getYtunnus().trim());
@@ -654,7 +654,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     /* Other help methods */
 
     private List<YTJDTO> fetchDataFromYtj(List<String> ytunnusList) {
-        List <YTJDTO> ytjdtoList = new ArrayList<>();
+        List<YTJDTO> ytjdtoList = new ArrayList<>();
         for (int i = 0; i < ytunnusList.size(); i += PARTITION_SIZE) {
             try {
                 // Fetch data from ytj for these organisations
@@ -683,7 +683,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private void mapOrgsByYtunnusAndRemovePassiveOrgs(List<String> oidList, Map<String, Organisaatio> organisaatioMap) {
-        List<Organisaatio> organisaatioList = organisaatioDAO.findByOidList(oidList.stream().distinct().collect(toList()), SEARCH_LIMIT);
+        List<Organisaatio> organisaatioList = organisaatioRepository.findByOidList(oidList.stream().distinct().collect(toList()), SEARCH_LIMIT);
         for(Organisaatio organisaatio : organisaatioList) {
             if(organisaatio.getStatus() == OrganisaatioStatus.AKTIIVINEN
                     || organisaatio.getStatus() == OrganisaatioStatus.SUUNNITELTU) {

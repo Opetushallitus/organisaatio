@@ -22,14 +22,10 @@ import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
-
 /**
  * @author Antti Salonen
  */
 @Entity
-@EntityListeners(XssFilterListener.class)
 public class Www extends Yhteystieto {
 
     private static final long serialVersionUID = 1L;
@@ -37,8 +33,7 @@ public class Www extends Yhteystieto {
     // Huom. Alunperin www pattern tuli tuolta: fi.vm.sade.generic.common.validation.ValidationConstants.WWW_PATTERN;
     @NotNull
     @Pattern(regexp = "^(https?)(:\\/\\/)([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
-    @FilterXss
-    private String wwwOsoite;
+    private String wwwOsoite;  // TODO XSS filtteri
 
     public Www() {
         this.yhteystietoOid = "" + System.currentTimeMillis() + Math.random();
