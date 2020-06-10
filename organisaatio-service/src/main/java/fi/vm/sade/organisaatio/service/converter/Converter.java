@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.service.converter;
 
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
 import fi.vm.sade.organisaatio.model.OrganisaatioBaseEntity;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.YhteystietoElementtiRepository;
 
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
@@ -54,11 +54,11 @@ public class Converter<DTOCLASS, JPACLASS extends OrganisaatioBaseEntity> {
 
     }
 
-    public void setValuesToJPA(DTOCLASS dto, JPACLASS entity, boolean merge, OrganisaatioDAO organisaatioDAO) {
+    public void setValuesToJPA(DTOCLASS dto, JPACLASS entity, boolean merge, OrganisaatioRepository organisaatioDAO) {
 
     }
 
-    public void setValuesToJPA(DTOCLASS dto, JPACLASS entity, boolean merge, OrganisaatioDAO organisaatioDAO, YhteystietoElementtiDAO yteDao) {
+    public void setValuesToJPA(DTOCLASS dto, JPACLASS entity, boolean merge, OrganisaatioRepository organisaatioDAO, YhteystietoElementtiRepository yteDao) {
 
     }
 

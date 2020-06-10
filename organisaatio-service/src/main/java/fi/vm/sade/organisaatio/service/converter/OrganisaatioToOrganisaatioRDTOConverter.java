@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -11,6 +10,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -21,7 +21,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 @Component
-public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTO> {
+public class OrganisaatioToOrganisaatioRDTOConverter implements Converter<Organisaatio, OrganisaatioRDTO> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOConverter.class);
 

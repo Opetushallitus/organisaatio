@@ -1,0 +1,9 @@
+                                KOULUTUSTOIMIJA OPPILAITOS  TOIMIPISTE  OPPISOPIMUSTOIMIPISTE   MUU_ORGANISAATIO    VARHAISKASVATUKSEN_JARJESTAJA   VARHAISKASVATUKSEN_TOIMIPAIKKA  TYOELAMAJARJESTO
+KOULUTUSTOIMIJA                 false           false       false       false                   false               false                           false                           false
+OPPILAITOS                      true            false       false       false                   false               false                           false                           false
+TOIMIPISTE                      false           true        true        false                   true                false                           false                           true
+OPPISOPIMUSTOIMIPISTE           true            false       false       false                   false               false                           false                           false
+MUU_ORGANISAATIO                false           false       false       false                   true                false                           false                           false
+VARHAISKASVATUKSEN_JARJESTAJA   false           false       false       false                   false               false                           false                           false
+VARHAISKASVATUKSEN_TOIMIPAIKKA  false           false       false       false                   false               true                            true                            false
+TYOELAMAJARJESTO                false           false       false       false                   false               false                           false                           true

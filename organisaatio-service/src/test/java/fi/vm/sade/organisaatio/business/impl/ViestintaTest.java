@@ -15,38 +15,61 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
+import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
+import static org.mockito.Mockito.mock;
+
+@RunWith(SpringRunner.class)
+@Transactional
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class ViestintaTest {
 
-    @Mock
-    private OrganisaatioViestintaClient organisaatioViestintaClient;
+    @TestConfiguration
+    static class TestContextConfiguration {
 
-    @InjectMocks
+
+        @Bean
+        @Primary
+        public OrganisaatioViestintaClient organisaatioViestintaClient() {
+            return mock(OrganisaatioViestintaClient.class);
+        }
+
+
+        @Bean
+        @Primary
+        public OrganisaatioViestintaImpl organisaatioViestinta() {
+            return mock(OrganisaatioViestintaImpl.class);
+        }
+
+    }
+
+    @Autowired
+    private OrganisaatioViestintaClient organisaatioViestintaClient;
     @Autowired
     private OrganisaatioViestintaImpl organisaatioViestinta;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+    //@Before
+    //public void setUp() {
+       // MockitoAnnotations.initMocks(this);
+    //}
 
     @Test
     public void messageFromLogTestWith1Error() {

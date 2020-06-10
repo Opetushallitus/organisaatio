@@ -21,9 +21,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -31,6 +30,7 @@ import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -71,10 +71,10 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     private static final Pattern TOIMIPISTEKOODI_PATTERN = Pattern.compile("\\d{7}");
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
+    private OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
 
     @Autowired
     private ConversionService conversionService;
@@ -94,7 +94,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         // haetaan hakukriteerien mukaiset organisaatiot
         Date now = timeService.getNow();
         Set<Organisaatio> entities = new TreeSet<>(Comparator.comparing(Organisaatio::getOid));
-        entities.addAll(organisaatioDAO.findBy(criteria, now));
+        entities.addAll(organisaatioRepository.findBy(criteria, now));
         Set<String> oids = entities.stream()
                 .map(Organisaatio::getOid)
                 .collect(toSet());
@@ -110,7 +110,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 if (!parentOids.isEmpty()) {
                     SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
                     parentsCriteria.setOid(parentOids);
-                    entities.addAll(organisaatioDAO.findBy(parentsCriteria, now));
+                    entities.addAll(organisaatioRepository.findBy(parentsCriteria, now));
                 }
             }
             if (config.isChildrenIncluded() && !oids.isEmpty()) {
@@ -118,13 +118,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
                 Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
                     childrenCriteria.setParentOids(parentOids);
-                    entities.addAll(organisaatioDAO.findBy(childrenCriteria, now));
+                    entities.addAll(organisaatioRepository.findBy(childrenCriteria, now));
                 });
             }
         }
 
         // haetaan aliorganisaatioiden lukumäärät (myös hakukriteerien ulkopuolella olevat)
-        Map<String, Long> childCount = config.isCountChildren() ? organisaatioDAO.countActiveChildrenByOid(now) : emptyMap();
+        Map<String, Long> childCount = config.isCountChildren() ? organisaatioRepository.countActiveChildrenByOid(now) : emptyMap();
 
         return entities.stream()
                 .map(entity -> {
@@ -173,7 +173,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             Set<String> oidList,
             int limit) {
 
-        return organisaatioDAO.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
+        return organisaatioRepository.findBySearchCriteria(kieliList, kuntaList, oppilaitostyyppiList, vuosiluokkaList, ytunnusList, oidList, limit);
     }
 
     @Override
@@ -189,13 +189,13 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         criteria.setParentOid(rootOrganisaatioOid);
         criteria.setPoistettu(false);
 
-        return organisaatioDAO.findGroups(criteria);
+        return organisaatioRepository.findGroups(criteria);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
-        return organisaatioDAO.findByOids(oids);
+        return organisaatioRepository.findByOids(oids);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
         boolean excludePiilotettu = !permissionChecker.isReadAccessToAll();
-        return organisaatioDAO.findByOids(oids, true, excludePiilotettu).stream()
+        return organisaatioRepository.findByOids(oids, true, excludePiilotettu).stream()
                 .map(this::markImagesNotIncluded)
                 .map(this::mapToOrganisaatioRdtoV4)
                 .collect(Collectors.toList());
@@ -272,15 +272,15 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public Organisaatio findById(String id) {
         Organisaatio o = null;
         if (OID_PATTERN.matcher(id).matches()) {
-            o = organisaatioDAO.findByOid(id);
+            o = organisaatioRepository.customFindByOid(id);
         } else if (OPPILAITOSKOODI_PATTERN.matcher(id).matches()) {
-            o = organisaatioDAO.findByOppilaitoskoodi(id);
+            o = organisaatioRepository.findByOppilaitoskoodi(id);
         } else if (TOIMIPISTEKOODI_PATTERN.matcher(id).matches()) {
-            o = organisaatioDAO.findByToimipistekoodi(id);
+            o = organisaatioRepository.findByToimipistekoodi(id);
         } else if (YTUNNUS_VIRASTOTUNNUS_PATTERN.matcher(id).matches()) {
-            o = organisaatioDAO.findByYTunnus(id);
+            o = organisaatioRepository.findByYTunnus(id);
             if (o == null) {
-                o = organisaatioDAO.findByVirastoTunnus(id);
+                o = organisaatioRepository.findByVirastoTunnus(id);
             }
         }
         // voitaisiin heittää IllegalArgumentException ja palauttaa 400 Bad Request,
@@ -291,18 +291,18 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type) {
-        return organisaatioDAO.findOidsBy(false, count, startIndex, type);
+        return organisaatioRepository.findOidsBy(false, count, startIndex, type);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioSuhde> findLiitokset(Date date) {
-        return organisaatioSuhdeDAO.findLiitokset(permissionChecker.isReadAccessToAll() ? null : false, date);
+        return organisaatioSuhdeRepository.findLiitokset(permissionChecker.isReadAccessToAll() ? null : false, date);
     }
 
     @Override
     public Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria) {
-        return organisaatioDAO.findChildOidsRecursive(criteria);
+        return organisaatioRepository.findChildOidsRecursive(criteria);
     }
 
     @Override
@@ -317,7 +317,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
                 lastModifiedSince.getValue(),
                 organizationTypes,
@@ -333,8 +333,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
-        return organisaatioDAO.findAllDescendants(oid, includeHidden);
+    public List<OrganisaatioResourceImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
+        return organisaatioRepository.findAllDescendants(oid, includeHidden);
     }
 
 }

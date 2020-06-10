@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:02" hostname="Miikkas-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="testValidator" classname="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" time="0.0"/>
+  <testcase name="childBeginningAfterParentEndFailsWithoutStartDateValidation" classname="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" time="0.0"/>
+  <testcase name="setsChildLakkautusPvmIfParentLakkautusInPast" classname="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" time="0.001"/>
+  <testcase name="doesNotSetChildLakkautusPvmIfParentLakkautusInFuture" classname="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" time="0.0"/>
+  <testcase name="childBeginningAfterParentEndFails" classname="fi.vm.sade.organisaatio.service.OrganisationDateValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

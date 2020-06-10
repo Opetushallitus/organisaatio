@@ -1,1 +1,0 @@
-update yhteystietojentyyppi_organisaatiotyypit set organisaatio_tyyppi = 'Toimipiste' where organisaatio_tyyppi = 'Opetuspiste';

@@ -20,7 +20,7 @@ import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.oid.service.types.NodeClassData;
 import fi.vm.sade.oidgenerator.OIDGenerator;
-import fi.vm.sade.organisaatio.dao.*;
+import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,19 +47,19 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    private YhteystietoDAO yhteystietoDAO;
+    private YhteystietoRepository yhteystietoRepository;
 
     @Autowired
-    private YhteystietoArvoDAO yhteystietoArvoDAO;
+    private YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
-    private YhteystietoElementtiDAO yhteystietoElementtiDAO;
+    private YhteystietoElementtiRepository yhteystietoElementtiRepository;
 
     @Autowired
-    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
 
 
@@ -145,23 +145,23 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
 
         if (nodeClassValue.equals("28") || nodeClass == NodeClassCode.TOIMIPAIKAT) {
             // Organisaation ja ryhmän OID:t löytyvät organisaatio-taulusta
-            Organisaatio org = organisaatioDAO.findByOid(oid);
+            Organisaatio org = organisaatioRepository.customFindByOid(oid);
 
             // Jos organisaatio löytyy annetulla oidilla, niin se ei ole vapaana
             return (org == null);
         } else if (nodeClass == NodeClassCode.TEKN_5) {
             try {
                 // Yhteystietoihin liittyvät OID:t löytyvät neljästä eri taulusta
-                if (yhteystietoDAO.findBy("yhteystietoOid", oid).size() > 0) {
+                if (yhteystietoRepository.findByYhteystietoOid(oid).size() > 0) {
                     return false;
                 }
-                if (yhteystietoArvoDAO.findBy("yhteystietoArvoOid", oid).size() > 0) {
+                if (yhteystietoArvoRepository.findByYhteystietoArvoOid(oid).size() > 0) {
                     return false;
                 }
-                if (yhteystietoElementtiDAO.findBy("oid", oid).size() > 0) {
+                if (yhteystietoElementtiRepository.findByOid(oid).size() > 0) {
                     return false;
                 }
-                if (yhteystietojenTyyppiDAO.findBy("oid", oid).size() > 0) {
+                if (yhteystietojenTyyppiRepository.findByOid(oid).size() > 0) {
                     return false;
                 }
             } catch (Exception ex) {

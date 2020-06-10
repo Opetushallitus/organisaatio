@@ -2,8 +2,8 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSahkopostiDao;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSahkopostiRepository;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
@@ -18,6 +18,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,24 +44,25 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
 
     private final KayttooikeusClient kayttooikeusClient;
     private final OrganisaatioViestinta organisaatioViestinta;
-    private final OrganisaatioDAO organisaatioDAO;
-    private final OrganisaatioSahkopostiDao organisaatioSahkopostiDao;
+    private final OrganisaatioRepository organisaatioRepository;
+    private final OrganisaatioSahkopostiRepository organisaatioSahkopostiRepository;
     private final MessageSource messageSource;
     private final Configuration freemarker;
     private final OphProperties properties;
 
     public VanhentuneetTiedotSahkopostiServiceImpl(KayttooikeusClient kayttooikeusClient,
                                                    OrganisaatioViestinta organisaatioViestinta,
-                                                   OrganisaatioDAO organisaatioDAO,
-                                                   OrganisaatioSahkopostiDao organisaatioSahkopostiDao,
+                                                   OrganisaatioRepository organisaatioRepository,
+                                                   OrganisaatioSahkopostiRepository organisaatioSahkopostiRepository,
                                                    MessageSource messageSource,
                                                    Configuration freemarker,
                                                    OphProperties properties) {
         this.kayttooikeusClient = kayttooikeusClient;
         this.organisaatioViestinta = organisaatioViestinta;
-        this.organisaatioDAO = organisaatioDAO;
-        this.organisaatioSahkopostiDao = organisaatioSahkopostiDao;
+        this.organisaatioRepository = organisaatioRepository;
+        this.organisaatioSahkopostiRepository = organisaatioSahkopostiRepository;
         this.messageSource = messageSource;
+
         this.freemarker = freemarker;
         this.properties = properties;
     }
@@ -83,7 +85,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
 
         LocalDate voimassaPvm = LocalDate.now();
         Date tarkastusPvm = DateUtils.addYears(new Date(), -1);
-        return organisaatioDAO.findByTarkastusPvm(tarkastusPvm, voimassaPvm, organisaatioOids, MAKSIMIMAARA);
+        return organisaatioRepository.findByTarkastusPvm(tarkastusPvm, voimassaPvm, organisaatioOids, MAKSIMIMAARA);
     }
 
     private void lahetaSahkoposti(Organisaatio organisaatio) {
@@ -132,12 +134,13 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
         organisaatioSahkoposti.setTyyppi(OrganisaatioSahkoposti.Tyyppi.VANHENTUNEET_TIEDOT);
         organisaatioSahkoposti.setAikaleima(new Date());
         organisaatioSahkoposti.setViestintapalveluId(sahkopostiId);
-        organisaatioSahkopostiDao.insert(organisaatioSahkoposti);
+        organisaatioSahkopostiRepository.save(organisaatioSahkoposti);
     }
 
     private String createBody(Locale locale, String organisaatioOid, String otsikko) {
         try {
-            Template template = freemarker.getTemplate("sahkoposti/vanhentuneettiedot.ftl", locale);
+            freemarker.setClassForTemplateLoading(this.getClass(), "/templates");
+            Template template = freemarker.getTemplate("/sahkoposti/vanhentuneettiedot.ftlh", locale);
             Map<String, Object> model = new HashMap<>();
             model.put("otsikko", otsikko);
             model.put("linkki", properties.url("organisaatio-ui.organisaatio.byOid", organisaatioOid));

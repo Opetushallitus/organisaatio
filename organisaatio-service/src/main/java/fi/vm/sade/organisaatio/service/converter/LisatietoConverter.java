@@ -6,12 +6,13 @@ import fi.vm.sade.organisaatio.dto.Rajoitetyyppi;
 import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
 import fi.vm.sade.organisaatio.model.OppilaitostyyppiRajoite;
 import fi.vm.sade.organisaatio.model.OrganisaatiotyyppiRajoite;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
-public class LisatietoConverter extends AbstractFromDomainConverter<Lisatietotyyppi, LisatietotyyppiDto> {
+public class LisatietoConverter implements Converter<Lisatietotyyppi, LisatietotyyppiDto> {
 
     @Override
     public LisatietotyyppiDto convert(Lisatietotyyppi lisatietotyyppi) {

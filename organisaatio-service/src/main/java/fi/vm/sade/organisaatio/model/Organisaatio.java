@@ -4,12 +4,12 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -17,11 +17,11 @@ import static java.util.stream.Collectors.toSet;
 
 
 @Entity
-@Table(uniqueConstraints = {
+@javax.persistence.Table(uniqueConstraints = {
     @UniqueConstraint(columnNames = {"oid"}),
     @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
-@org.hibernate.annotations.Table(appliesTo = "Organisaatio", comment = "Sisältää kaikki organisaatiot.")
+@org.hibernate.annotations.Table(appliesTo = "organisaatio", comment = "Sisältää kaikki organisaatiot.")
 @SqlResultSetMappings(
         @SqlResultSetMapping(
                 name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
@@ -128,9 +128,8 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     // TODO regex validointi?
     private String ytunnus;
 
-    @Column
-    @FilterXss
-    private String virastoTunnus;
+    @Column(name="virastotunnus")
+    private String virastoTunnus; // TODO XSS filtteri
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
     @BatchSize(size = 200)
@@ -143,7 +142,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
     private Set<OrganisaatioSuhde> childSuhteet = new HashSet<>();
 
-    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
     @BatchSize(size = 200)
     private List<OrganisaatioNimi> nimet = new ArrayList<>();
@@ -155,9 +154,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String yritysmuoto;
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="alkupvm")
     private Date alkuPvm;
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="lakkautuspvm")
     private Date lakkautusPvm;
 
     private String kotipaikka;
@@ -176,13 +177,14 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @BatchSize(size = 100)
     private Set<String> kielet = new LinkedHashSet<>();
 
+    @Column(name = "domainnimi")
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 200)
     private Set<YhteystietoArvo> yhteystietoArvos = new HashSet<>();
 
-    @Column(unique = true)
+    @Column(unique = true, name="oppilaitoskoodi")
     private String oppilaitosKoodi;
 
     private String oppilaitosTyyppi;
@@ -200,27 +202,32 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String ytjKieli;
 
     @Temporal(TemporalType.DATE)
+    @Column(name="ytjpaivityspvm")
     private Date ytjPaivitysPvm;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="tuontipvm")
     private Date tuontiPvm;
 
     /**
      * false == ei poistettu
      * true == poistettu
      */
-    @Column(nullable=true)
+    @Column
     private Boolean organisaatioPoistettu = false;
 
+    @Column(name = "opetuspisteenjarjnro")
     private String opetuspisteenJarjNro;
+    @Column(name = "yhteishaunkoulukoodi")
     private String yhteishaunKoulukoodi;
 
     // OVT-4954
-    @Column(length = 32)
+    @Column(length = 32, name="toimipistekoodi")
     private String toimipisteKoodi;
 
     // OVT-7684
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="paivityspvm")
     private Date paivitysPvm;
 
     // OVT-7684

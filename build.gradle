@@ -1,0 +1,28 @@
+plugins {
+	id 'groovy'
+}
+
+group = 'fi.vm.sade.organisaatio'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+allprojects {
+	repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+		maven {
+			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+			mavenContent {
+				snapshotsOnly()
+			}
+		}
+		maven {
+			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+			mavenContent {
+				releasesOnly()
+			}
+		}
+	}
+}
+

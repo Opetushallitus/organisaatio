@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.service.filters.CsrfHeaderFilterTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:12:01" hostname="Miikkas-MacBook-Pro.local" time="0.031">
+  <properties/>
+  <testcase name="requestHasNoCookieAtAll_DontAddHeader" classname="fi.vm.sade.organisaatio.service.filters.CsrfHeaderFilterTest" time="0.027"/>
+  <testcase name="requestHasCsrfCookieAndNoCsrfHeader_AddCsrfHeader" classname="fi.vm.sade.organisaatio.service.filters.CsrfHeaderFilterTest" time="0.002"/>
+  <testcase name="requestHasNoCsrfCookie_DontAddHeader" classname="fi.vm.sade.organisaatio.service.filters.CsrfHeaderFilterTest" time="0.0"/>
+  <testcase name="requestAlreadyHasCsrfHeader_KeepOldCsrfHeader" classname="fi.vm.sade.organisaatio.service.filters.CsrfHeaderFilterTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

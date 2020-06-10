@@ -19,17 +19,19 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import static java.util.Arrays.asList;
-import java.util.Collection;
-import static java.util.Collections.emptyList;
-import java.util.List;
-import static java.util.stream.Collectors.toList;
-import java.util.stream.Stream;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -83,13 +85,13 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
         final Converter<OrganisaatioSearchCriteria, Collection<String>> oidConverter = new Converter<OrganisaatioSearchCriteria, Collection<String>>() {
             @Override
             public List<String> convert(MappingContext<OrganisaatioSearchCriteria, Collection<String>> context) {
-                return context.getSource().getOid() != null ? asList(context.getSource().getOid()) : null;
+                return context.getSource().getOid() != null ? Arrays.asList(context.getSource().getOid()) : null;
             }
         };
         final Converter<OrganisaatioSearchCriteriaDTOV2, Collection<String>> oidConverterV2 = new Converter<OrganisaatioSearchCriteriaDTOV2, Collection<String>>() {
             @Override
             public List<String> convert(MappingContext<OrganisaatioSearchCriteriaDTOV2, Collection<String>> context) {
-                return context.getSource().getOid() != null ? asList(context.getSource().getOid()) : null;
+                return context.getSource().getOid() != null ? Arrays.asList(context.getSource().getOid()) : null;
             }
         };
 

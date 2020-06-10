@@ -17,7 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.Entity;
@@ -31,7 +30,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(appliesTo = "Yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
+@Table(appliesTo = "yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 public class Yhteystieto extends OrganisaatioBaseEntity {
 
     @ManyToOne(optional = true)
@@ -40,8 +39,7 @@ public class Yhteystieto extends OrganisaatioBaseEntity {
     @NotNull
     protected String yhteystietoOid;
 
-    @FilterXss
-    private String kieli;
+    private String kieli;  // TODO XSS filtteri
     
     public String getYhteystietoOid() {
         return yhteystietoOid;

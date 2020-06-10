@@ -1,9 +1,10 @@
 package fi.vm.sade.organisaatio.business.impl;
 
+import com.sun.jersey.api.NotFoundException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
-import fi.vm.sade.organisaatio.dao.LisatietoTyyppiDao;
+import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepository;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiDto;
 import fi.vm.sade.organisaatio.dto.RajoiteDto;
@@ -16,23 +17,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
-import javax.ws.rs.NotFoundException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class LisatietoServiceImpl implements LisatietoService {
-    private final LisatietoTyyppiDao lisatietoTyyppiDao;
+    private final LisatietoTyyppiRepository lisatietoTyyppiRepository;
 
     private final OrganisaatioKoodisto organisaatioKoodisto;
 
     private final ConversionService conversionService;
 
-    public LisatietoServiceImpl(LisatietoTyyppiDao lisatietoTyyppiDao,
+    public LisatietoServiceImpl(LisatietoTyyppiRepository lisatietoTyyppiRepository,
                                 OrganisaatioKoodisto organisaatioKoodisto,
                                 ConversionService conversionService) {
-        this.lisatietoTyyppiDao = lisatietoTyyppiDao;
+        this.lisatietoTyyppiRepository = lisatietoTyyppiRepository;
         this.organisaatioKoodisto = organisaatioKoodisto;
         this.conversionService = conversionService;
     }
@@ -40,7 +41,7 @@ public class LisatietoServiceImpl implements LisatietoService {
     @Override
     @Transactional(readOnly = true)
     public Set<String> getLisatietotyypit() {
-        return this.lisatietoTyyppiDao.findAll().stream()
+        return StreamSupport.stream(this.lisatietoTyyppiRepository.findAll().spliterator(), false)
                 .map(Lisatietotyyppi::getNimi)
                 .collect(Collectors.toSet());
     }
@@ -48,13 +49,13 @@ public class LisatietoServiceImpl implements LisatietoService {
     @Override
     @Transactional(readOnly = true)
     public Set<String> getSallitutByOid(String oid) {
-        return this.lisatietoTyyppiDao.findValidByOrganisaatiotyyppiAndOppilaitostyyppi(oid);
+        return this.lisatietoTyyppiRepository.findValidByOrganisaatiotyyppiAndOppilaitostyyppi(oid);
     }
 
     @Override
     @Transactional
     public String create(LisatietotyyppiCreateDto lisatietotyyppiCreateDto) {
-        this.lisatietoTyyppiDao.findByNimi(lisatietotyyppiCreateDto.getNimi())
+        this.lisatietoTyyppiRepository.findByNimi(lisatietotyyppiCreateDto.getNimi())
                 .ifPresent((value) -> {throw new IllegalArgumentException(String.format("Lisatietotyyppi with nimi %s already exists", lisatietotyyppiCreateDto.getNimi()));});
         Lisatietotyyppi lisatietotyyppi = new Lisatietotyyppi();
         Set<Rajoite> rajoitteet = lisatietotyyppiCreateDto.getRajoitteet().stream()
@@ -65,7 +66,7 @@ public class LisatietoServiceImpl implements LisatietoService {
         lisatietotyyppi.setNimi(lisatietotyyppiCreateDto.getNimi());
         lisatietotyyppi.setRajoitteet(rajoitteet);
 
-        Lisatietotyyppi createdLisatietotyyppi = this.lisatietoTyyppiDao.insert(lisatietotyyppi);
+        Lisatietotyyppi createdLisatietotyyppi = this.lisatietoTyyppiRepository.save(lisatietotyyppi);
         return createdLisatietotyyppi.getNimi();
     }
 
@@ -96,15 +97,15 @@ public class LisatietoServiceImpl implements LisatietoService {
     @Override
     @Transactional
     public void delete(String nimi) {
-        Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiDao.findByNimi(nimi)
+        Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiRepository.findByNimi(nimi)
                 .orElseThrow(() -> new NotFoundException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
-        this.lisatietoTyyppiDao.remove(lisatietotyyppi);
+        this.lisatietoTyyppiRepository.delete(lisatietotyyppi);
     }
 
     @Transactional(readOnly = true)
     @Override
     public LisatietotyyppiDto findByName(String nimi) {
-        Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiDao.findByNimi(nimi)
+        Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiRepository.findByNimi(nimi)
                 .orElseThrow(() -> new NotFoundException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
         return this.conversionService.convert(lisatietotyyppi, LisatietotyyppiDto.class);
     }

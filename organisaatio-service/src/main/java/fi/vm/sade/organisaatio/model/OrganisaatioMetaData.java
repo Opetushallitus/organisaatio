@@ -12,7 +12,7 @@ import java.util.*;
  * @author mlyly
  */
 @Entity
-@Table(appliesTo = "OrganisaatioMetaData", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
+@Table(appliesTo = "organisaatio_meta_data", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
 public class OrganisaatioMetaData extends BaseEntity {
 
     /**
@@ -70,11 +70,11 @@ public class OrganisaatioMetaData extends BaseEntity {
     private Set<NamedMonikielinenTeksti> values = new HashSet<NamedMonikielinenTeksti>();
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, name="luontipvm")
     private Date luontiPvm = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name="muokkauspvm")
     private Date muokkausPvm = new Date();
 
 

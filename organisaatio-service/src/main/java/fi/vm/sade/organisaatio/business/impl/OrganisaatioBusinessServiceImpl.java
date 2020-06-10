@@ -23,7 +23,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
-import fi.vm.sade.organisaatio.dao.*;
+import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
@@ -40,6 +40,7 @@ import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,22 +65,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    private OrganisaatioSuhdeDAO organisaatioSuhdeDAO;
+    private OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
 
     @Autowired
-    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+    protected YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
-    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
     @Autowired
-    protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
+    protected YhteystietoElementtiRepository yhteystietoElementtiRepository;
 
     @Autowired
-    protected OrganisaatioNimiDAO organisaatioNimiDAO;
+    protected OrganisaatioNimiRepository organisaatioNimiRepository;
 
     @Autowired
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
@@ -103,7 +104,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private OrganisaatioKoodisto organisaatioKoodisto;
 
     @Autowired
-    private LisatietoTyyppiDao lisatietoTyyppiDao;
+    private LisatietoTyyppiRepository lisatietoTyyppiRepository;
 
     @Autowired
     private OrganisaatioValidationService organisaatioValidationService;
@@ -166,6 +167,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @Transactional
     public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
@@ -188,11 +190,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean updating) {
+
         // Tarkistetaan OID
         if (entity.getOid() == null && updating) {
             throw new ValidationException("Oid cannot be null"); //trying to update organisaatio that doesn't exist (is is null)");
         } else if (!updating) {
-            if ((entity.getOid() != null) && (organisaatioDAO.findByOid(entity.getOid()) != null)) {
+            if ((entity.getOid() != null) && (organisaatioRepository.customFindByOid(entity.getOid()) != null)) {
                 throw new OrganisaatioExistsException(entity.getOid());
             }
 
@@ -203,9 +206,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             }
         }
 
+
         // Haetaan parent organisaatio
         Organisaatio parentOrg = (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid))
-                ? organisaatioDAO.findByOid(parentOid) : null;
+                ? organisaatioRepository.customFindByOid(parentOid) : null;
 
         // Validate (throws exception)
         this.organisaatioValidationService.validateOrganisation(entity, parentOid, parentOrg);
@@ -222,7 +226,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio oldOrg = null;
         Map<String, String> oldName = null;
         if (updating) {
-            oldOrg = organisaatioDAO.findByOid(entity.getOid());
+            oldOrg = organisaatioRepository.customFindByOid(entity.getOid());
             if(oldOrg.isOrganisaatioPoistettu()) {
                 throw new ValidationException("validation.Organisaatio.poistettu");
             }
@@ -252,10 +256,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         boolean parentChanged = false;
         Organisaatio oldParent = null;
         if (updating) {
-            oldParent = validateHierarchy(parentOid, entity);
+            oldParent = validateHierarchy(parentOid, entity, oldOrg);
             if(oldParent != null) {
                 parentChanged = true;
             }
+            mergeAuxData(entity, oldOrg);
+            entity.setId(oldOrg.getId());
+            entity.setOpetuspisteenJarjNro(oldOrg.getOpetuspisteenJarjNro());
+            entity.setVersion(oldOrg.getVersion());
 
         } else {
             // Tarkistetaan organisaatio hierarkia
@@ -299,25 +307,23 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Asetetaan yhteystietoarvot
         entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
-
         // Kirjoitetaan yhteystiedot uusiksi (ei päivitetä vanhoja)
         for (Yhteystieto yhtTieto : entity.getYhteystiedot()) {
             yhtTieto.setOrganisaatio(entity);
         }
-
-        // Kirjoitetaan nimihistoria uusiksi (ei päivitetä vanhoja)
         for (OrganisaatioNimi nimi : entity.getNimet()) {
             nimi.setOrganisaatio(entity);
         }
-
+        // Kirjoitetaan nimihistoria uusiksi (ei päivitetä vanhoja)
         // Nimihistoriaan liittyvät tarkistukset (HUOM! Ei koske Ryhmiä)
         if (!OrganisaatioUtil.isRyhma(entity)) {
             /** @TODO --> Tarkistetaan, ettei nimihistoriaa muuteta muuta kuin nykyisen tai uusimman nimen osalta */
             // Tarkistetaan, että nimen alkupäivämäärä ei ole NULL
-            checker.checkNimihistoriaAlkupvm(entity.getNimet());
+            List<OrganisaatioNimi> nimet = entity.getNimet();
+            checker.checkNimihistoriaAlkupvm(nimet);
 
             // Tarkistetaan, että nimihistoriassa on organisaatiolle validi nimi
-            MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(entity.getNimet());
+            MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(nimet);
             if (nimi == null) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
@@ -327,7 +333,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (!nimi.getValues().equals(entity.getNimi().getValues())) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
-
             // Asetetaan organisaatiolle sama nimi instanssi kuin nimihistoriassa
             entity.setNimi(nimi);
         }
@@ -344,21 +349,21 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // call super.insert OR update which saves & validates jpa
         if (updating) {
-            LOG.info("updating " + entity);
+           LOG.debug("updating " + entity);
             try {
-                organisaatioDAO.update(entity);
+                entity = organisaatioRepository.save(entity);
             } catch (OptimisticLockException ole) {
                 throw new OrganisaatioModifiedException(ole);
             }
-            entity = organisaatioDAO.read(entity.getId());
+           entity = organisaatioRepository.findById(entity.getId()).orElseThrow(); // TODO virheet
         } else {
-            entity = organisaatioDAO.insert(entity);
+            entity = organisaatioRepository.save(entity);
         }
 
         // Saving the parent relationship
         if (parentOrg == null) {
             // Koulutustoimija in root level is stored under OPH
-            Organisaatio uberParent = organisaatioDAO.findByOid(rootOrganisaatioOid);
+            Organisaatio uberParent = organisaatioRepository.customFindByOid(rootOrganisaatioOid);
             entity = saveParentSuhde(entity, uberParent, opJarjNro);
         } else {
             entity = saveParentSuhde(entity, parentOrg, opJarjNro);
@@ -373,19 +378,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (parentChanged) {
             updateChildrenRecursive(entity);
         }
-
         // Päivitä tiedot koodistoon.
         // organisaation päivittäminen koodistoon tehdään taustalla
         // jotta organisaation muokkaus olisi nopeampaa
         String info = null;
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-
         return new OrganisaatioResult(entity, info);
     }
 
     private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
         Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = entity.getOrganisaatioLisatietotyypit().stream()
-                .map(lisatietotyyppi -> this.lisatietoTyyppiDao.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
+                .map(lisatietotyyppi -> this.lisatietoTyyppiRepository.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
                         .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
                 .map(lisatietotyyppi -> {
                     OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
@@ -406,29 +409,25 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private Organisaatio validateHierarchy(String parentOid, Organisaatio entity) {
+    private Organisaatio validateHierarchy(String parentOid, Organisaatio entity, Organisaatio oldOrg) {
         Organisaatio oldParent = null;
-        Organisaatio orgEntity = this.organisaatioDAO.findByOid(entity.getOid());
-        mergeAuxData(entity, orgEntity);
-        entity.setId(orgEntity.getId());
-        entity.setOpetuspisteenJarjNro(orgEntity.getOpetuspisteenJarjNro());
 
         // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
-        if (!parentOid.equals(orgEntity.getParent().getOid())) {
+        if (!parentOid.equals(oldOrg.getParent().getOid())) {
             LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, parentOid);
-            oldParent = orgEntity.getParent();
+            oldParent = oldOrg.getParent();
         }
 
         // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
-        if (!entity.getTyypit().containsAll(orgEntity.getTyypit())
-                || !orgEntity.getTyypit().containsAll(entity.getTyypit())) {
+        if (!entity.getTyypit().containsAll(oldOrg.getTyypit())
+                || !oldOrg.getTyypit().containsAll(entity.getTyypit())) {
             LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
         // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
-        if (!OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), orgEntity.getLakkautusPvm())) {
+        if (!OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
             LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
             checker.checkLakkautusAlkavatKoulutukset(entity);
         }
@@ -436,27 +435,27 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private Organisaatio saveParentSuhde(Organisaatio child, Organisaatio parent, String opJarjNro) {
-        OrganisaatioSuhde curSuhde = organisaatioSuhdeDAO.findParentTo(child.getId(), null);
+        OrganisaatioSuhde curSuhde = organisaatioSuhdeRepository.findParentTo(child.getId(), null);
         if (parent != null && (curSuhde == null || !curSuhde.getParent().getId().equals(parent.getId()))) {
             if (curSuhde != null) {
                 // Set end date for current parent relation before create new one.
                 curSuhde.setLoppuPvm(new Date());
-                organisaatioSuhdeDAO.update(curSuhde);
+                organisaatioSuhdeRepository.save(curSuhde);
             }
-            organisaatioSuhdeDAO.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
+            organisaatioSuhdeRepository.addChild(parent.getId(), child.getId(), Calendar.getInstance().getTime(), opJarjNro);
         }
-        child.setParentSuhteet(organisaatioSuhdeDAO.findBy("child", child));
-        return this.organisaatioDAO.findByOid(child.getOid());
+        child.setParentSuhteet(organisaatioSuhdeRepository.findByChild(child));
+        return this.organisaatioRepository.customFindByOid(child.getOid());
     }
 
     private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys,
-            boolean updating) {
+                                                       boolean updating) {
 
         Map<String, YhteystietoArvo> ov = new HashMap<>();
 
-        for (YhteystietoArvo ya : yhteystietoArvoDAO.findByOrganisaatio(org)) {
+        for (YhteystietoArvo ya : yhteystietoArvoRepository.findByOrganisaatio(org)) {
             if (!isAllowed(org, ya.getKentta().getYhteystietojenTyyppi())) {
-                yhteystietoArvoDAO.remove(ya);
+                yhteystietoArvoRepository.delete(ya);
             } else {
                 ov.put(ya.getKentta().getOid() + ya.getKieli(), ya);
             }
@@ -465,11 +464,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Set<YhteystietoArvo> ret = new HashSet<>();
 
         for (YhteystietoArvo ya : nys) {
-            List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiDAO.findBy("oid", ya.getKentta().getYhteystietojenTyyppi().getOid());
+            List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiRepository.findByOid(ya.getKentta().getYhteystietojenTyyppi().getOid());
             if (yt.isEmpty()) {
                 continue;
             }
-            List<YhteystietoElementti> kentat = yhteystietoElementtiDAO.findBy("oid", ya.getKentta().getOid());
+            List<YhteystietoElementti> kentat = yhteystietoElementtiRepository.findByOid(ya.getKentta().getOid());
             if (kentat.isEmpty()) {
                 continue;
             }
@@ -481,7 +480,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (o != null) {
                 o.setArvoText(ya.getArvoText());
                 o.setKieli(ya.getKieli());
-                yhteystietoArvoDAO.update(o);
+                yhteystietoArvoRepository.save(o); // TODO check if works?
                 ret.add(o);
             } else {
                 ya.setOrganisaatio(org);
@@ -491,7 +490,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
                 }
                 if (updating) {
-                    yhteystietoArvoDAO.insert(ya);
+                    yhteystietoArvoRepository.save(ya); // TODO works?
                 }
                 ret.add(ya);
             }
@@ -636,7 +635,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             parentOid = rootOrganisaatioOid;
         }
         StringBuilder parentIdPath = new StringBuilder();
-        List<Organisaatio> parents = organisaatioDAO.findParentsTo(parentOid);
+        List<Organisaatio> parents = organisaatioRepository.findParentsTo(parentOid);
         List<String> parentOids = new ArrayList<>();
         for (Organisaatio curParent : parents) {
             parentOids.add(curParent.getOid());
@@ -686,17 +685,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return val == null || val.isEmpty();
     }
 
+
     private void updateChildrenRecursive(Organisaatio parent) {
-        List<Organisaatio> children = organisaatioDAO.findChildren(parent.getId());
+        List<Organisaatio> children = organisaatioRepository.findChildren(parent.getId());
         if (children == null || children.isEmpty()) {
             return;
         }
 
         for (Organisaatio child : children) {
             // Create new parent id / oid paths for child.
+            Hibernate.initialize(child); // TODO tee tästä parempi???
             setParentPath(child, parent.getOid());
-            organisaatioDAO.update(child);
-            updateChildrenRecursive(child);
+            Organisaatio updated = organisaatioRepository.save(child);
+            updateChildrenRecursive(updated);
+
         }
     }
 
@@ -708,7 +710,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("updateOrganisaatioNameHierarchy()");
 
         if (oppilaitos.getId() != null) {
-            List<Organisaatio> children = organisaatioDAO.findChildren(oppilaitos.getId());
+            List<Organisaatio> children = organisaatioRepository.findChildren(oppilaitos.getId());
             MonikielinenTeksti newParentNames = oppilaitos.getNimi();
             for (Organisaatio child : children) {
                 MonikielinenTeksti childnimi = child.getNimi();
@@ -743,7 +745,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             }
                         }
                         child.setPaivitysPvm(new Date());
-                        organisaatioDAO.update(child);
+                        organisaatioRepository.save(child); // TODO works?
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
                         // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
@@ -761,7 +763,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
-        List<OrganisaatioNimi> nimet =  organisaatioNimiDAO.findNimet(oid);
+        List<OrganisaatioNimi> nimet = organisaatioNimiRepository.findNimet(oid);
         if (nimet.isEmpty()) {
             throw new OrganisaatioNotFoundException(oid);
         }
@@ -770,7 +772,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) {
-        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
 
         if (orgEntity == null) {
             throw new OrganisaatioNotFoundException(oid);
@@ -783,7 +785,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         nimiEntity.setOrganisaatio(orgEntity);
 
         // Insertoidaan kantaan
-        nimiEntity = organisaatioNimiDAO.insert(nimiEntity);
+        nimiEntity = organisaatioNimiRepository.save(nimiEntity);
 
         // Jos nimi tulee nykyiseksi nimeksi, niin päivitetään se myös organisaatioon.
         if (OrganisaatioNimiUtil.isValidCurrentNimi(nimiEntity)) {
@@ -793,7 +795,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             LOG.info("updating " + orgEntity);
             try {
-                organisaatioDAO.update(orgEntity);
+                organisaatioRepository.save(orgEntity); // TODO update works?
             } catch (OptimisticLockException ole) {
                 throw new OrganisaatioModifiedException(ole);
             }
@@ -804,7 +806,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTOV2 nimidto) {
-        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
 
         if (orgEntity == null) {
             throw new OrganisaatioNotFoundException(oid);
@@ -813,7 +815,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
 
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiDAO.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
 
         if (nimiEntityOld == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
@@ -833,30 +835,30 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.info("updating " + nimiEntityNew);
         try {
             // Päivitetään nimi
-            organisaatioNimiDAO.update(nimiEntityNew);
+            organisaatioNimiRepository.save(nimiEntityNew);
         } catch (OptimisticLockException ole) {
             throw new OrganisaatioNimiModifiedException(ole);
         }
 
         // Palautetaan päivitetty nini
-        nimiEntityNew = organisaatioNimiDAO.read(nimiEntityNew.getId());
+        nimiEntityNew = organisaatioNimiRepository.findById(nimiEntityNew.getId()).orElseThrow(); //TODO works?
 
         return nimiEntityNew;
     }
 
     @Override
     public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
-        Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
+        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
 
         if (orgEntity == null) {
             throw new OrganisaatioNotFoundException(oid);
         }
 
         // Haetaan poistettava entity objecti
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
 
         // Tarkistetaan, että nimi ei ole nykyinen nimi
-        OrganisaatioNimi currentNimiEntity = this.organisaatioNimiDAO.findCurrentNimi(orgEntity);
+        OrganisaatioNimi currentNimiEntity = this.organisaatioNimiRepository.findCurrentNimi(orgEntity);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
@@ -877,7 +879,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.info("deleting " + nimiEntity);
 
         // Poistetaan
-        this.organisaatioNimiDAO.remove(nimiEntity);
+        this.organisaatioNimiRepository.delete(nimiEntity);
     }
 
     @Override
@@ -896,7 +898,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<String> oids = new ArrayList<>(givenOids);
 
         LOG.debug("bulkUpdatePvm(): haetaan oideilla:" + oids);
-        List<Organisaatio> organisaatios = this.organisaatioDAO.findByOidList(oids, oids.size());
+        List<Organisaatio> organisaatios = this.organisaatioRepository.findByOidList(oids, oids.size());
 
         for (Organisaatio o : organisaatios) {
             organisaatioMap.put(o.getOid(), o);
@@ -919,7 +921,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 org.setAlkuPvm(tieto.getAlkuPvm());
                 org.setLakkautusPvm(tieto.getLoppuPvm());
                 try {
-                    organisaatioDAO.update(org);
+                    organisaatioRepository.save(org); // TODO worrks?
                     koodistoService.addKoodistoSyncByOid(org.getOid());
                 } catch (OptimisticLockException ole) {
                     LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
@@ -991,7 +993,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Override
     public Set<Organisaatio> processNewOrganisaatioSuhdeChanges() {
         Set<Organisaatio> results = new HashSet<>();
-        List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
+        List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeRepository.findForDay(new Date());
         for (OrganisaatioSuhde os : suhdeList) {
             LOG.info("Processing {}", os);
 
@@ -999,7 +1001,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Liitos ei muuta parenttia (kts. Organisaatio#getParent)
             if (!OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(os.getSuhdeTyyppi())) {
                 setParentPath(child, os.getParent().getOid());
-                organisaatioDAO.update(child);
+                organisaatioRepository.save(child); // TODO works?
             }
 
             updateChildrenRecursive(child);
@@ -1033,14 +1035,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         previousDay.setTime(date);
         previousDay.add(Calendar.DAY_OF_MONTH, -1);
         organisaatio.setLakkautusPvm(previousDay.getTime());
-        organisaatioDAO.update(organisaatio);
+        organisaatioRepository.save(organisaatio); // TODO WOrkds
 
         // Lisätään uusi organisaatioiden liitos
-        organisaatioSuhdeDAO.addLiitos(organisaatio, newParent, date);
+        organisaatioSuhdeRepository.addLiitos(organisaatio, newParent, date);
 
         // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
         final List<OrganisaatioSuhde> suhteet =
-                organisaatioSuhdeDAO.findChildrenTo(organisaatio.getId(), date);
+                organisaatioSuhdeRepository.findChildrenTo(organisaatio.getId(), date);
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (!OrganisaatioUtil.isPassive(child)) {
@@ -1067,9 +1069,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioMoveException("organisation.move.parent.invalid");
         }
 
-        OrganisaatioSuhde currentParentRelationship = organisaatioSuhdeDAO.findParentTo(organisaatio.getId(), null);
+        OrganisaatioSuhde currentParentRelationship = organisaatioSuhdeRepository.findParentTo(organisaatio.getId(), null);
         currentParentRelationship.setLoppuPvm(date);
-        organisaatioSuhdeDAO.update(currentParentRelationship);
+        organisaatioSuhdeRepository.save(currentParentRelationship); // TODO Works?
 
         // Luodaan uusi suhde
         // HUOM! Tässä pitää laittaa organisaatiosuhde "organisaation kautta --> näin parent laskenta pysyy mukana"
@@ -1114,7 +1116,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Date today = new Date();
         if (date.before(today) || DateUtils.isSameDay(date, today)) {
             setParentPath(organisaatio, newParent.getOid());
-            organisaatioDAO.update(organisaatio);
+            organisaatioRepository.save(organisaatio); // TODO worrks?
 
             updateChildrenRecursive(organisaatio);
         }
@@ -1152,7 +1154,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private Organisaatio updateCurrentNimiToOrganisaatio(Organisaatio organisaatio) {
         // Haetaan organisaation current nimi
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiDAO.findCurrentNimi(organisaatio);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findCurrentNimi(organisaatio);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(organisaatio.getOid());
@@ -1166,19 +1168,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         LOG.info("updating " + organisaatio);
         try {
             // Päivitetään nimi
-            organisaatioDAO.update(organisaatio);
+            organisaatioRepository.save(organisaatio);
         } catch (OptimisticLockException ole) {
             throw new OrganisaatioModifiedException(ole);
         }
 
         // Palautetaan päivitetty organisaatio
-        return organisaatioDAO.read(organisaatio.getId());
+        return organisaatioRepository.findById(organisaatio.getId()).orElseThrow();
     }
 
     @Override
     public void updateCurrentOrganisaatioNimet() {
         // Haetaan organisaatiot, joiden nimi ei ole nimihistorian current nimi
-        List<Organisaatio> organisaatiot = this.organisaatioNimiDAO.findNimiNotCurrentOrganisaatiot();
+        List<Organisaatio> organisaatiot = this.organisaatioNimiRepository.findNimiNotCurrentOrganisaatiot();
 
         if (organisaatiot.isEmpty()) {
             LOG.info("Orgnisaatioiden nimet kunnossa");

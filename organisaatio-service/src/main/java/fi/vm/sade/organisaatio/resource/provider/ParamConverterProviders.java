@@ -1,11 +1,11 @@
 package fi.vm.sade.organisaatio.resource.provider;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.time.LocalDate;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
 
 @Provider
 public class ParamConverterProviders implements ParamConverterProvider {

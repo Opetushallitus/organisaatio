@@ -28,7 +28,7 @@ import java.util.Date;
  * @author mlyly
  */
 @Entity
-@Table(name = "organisaatiosuhde")
+@javax.persistence.Table(name = "organisaatiosuhde")
 @org.hibernate.annotations.Table(appliesTo = "organisaatiosuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
 public class OrganisaatioSuhde extends BaseEntity {
 
@@ -50,7 +50,7 @@ public class OrganisaatioSuhde extends BaseEntity {
     };
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name="suhdetyyppi")
     private OrganisaatioSuhdeTyyppi suhdeTyyppi = OrganisaatioSuhdeTyyppi.HISTORIA;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -60,11 +60,14 @@ public class OrganisaatioSuhde extends BaseEntity {
     private Organisaatio child;
 
     @Temporal(TemporalType.DATE)
+    @Column(name="alkupvm")
     private Date alkuPvm;
 
     @Temporal(TemporalType.DATE)
+    @Column(name="loppupvm")
     private Date loppuPvm;
 
+    @Column(name="opetuspisteenjarjnro")
     private String opetuspisteenJarjNro;
 
 

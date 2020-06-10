@@ -2,20 +2,16 @@ package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class OrganisaatioToOrganisaatioPerustietoConverter implements org.springframework.core.convert.converter.Converter<Organisaatio, OrganisaatioPerustieto> {
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+public class OrganisaatioToOrganisaatioPerustietoConverter implements Converter<Organisaatio, OrganisaatioPerustieto> {
 
     @Override
     public OrganisaatioPerustieto convert(Organisaatio source) {

@@ -9,16 +9,18 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
-import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KAYTTOOIKEUS;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
 import fi.vm.sade.properties.OphProperties;
-import java.io.IOException;
-import java.util.Collection;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Collection;
+
+import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KAYTTOOIKEUS;
 
 @Component
 public class KayttooikeusClient {

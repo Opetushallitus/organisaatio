@@ -19,10 +19,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -51,16 +48,16 @@ public class OrganisaatioBusinessChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+    protected YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
-    protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
+    protected YhteystietoElementtiRepository yhteystietoElementtiRepository;
 
     @Autowired
-    protected OrganisaatioNimiDAO organisaatioNimiDAO;
+    protected OrganisaatioNimiRepository organisaatioNimiRepository;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -103,7 +100,7 @@ public class OrganisaatioBusinessChecker {
      * @return
      */
     public boolean checkLearningInstitutionCodeIsUniqueAndNotUsed(Organisaatio org) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("oppilaitosKoodi", org.getOppilaitosKoodi().trim());
+        List<Organisaatio> orgs = organisaatioRepository.findByOppilaitosKoodi(org.getOppilaitosKoodi().trim());
         if (orgs != null && orgs.size() > 0) {
             return true;
         }
@@ -118,7 +115,7 @@ public class OrganisaatioBusinessChecker {
      * @return
      */
     public boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
+        List<Organisaatio> orgs = organisaatioRepository.findByToimipisteKoodi(toimipistekoodi.trim());
         if (orgs != null && orgs.size() > 0) {
             // toimipistekoodi on jo olemassa
             LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
@@ -135,7 +132,7 @@ public class OrganisaatioBusinessChecker {
      * @param ytunnus
      */
     public void checkYtunnusIsUniqueAndNotUsed(String ytunnus) {
-        if (ytunnus != null && !organisaatioDAO.isYtunnusAvailable(ytunnus)) {
+        if (ytunnus != null && !organisaatioRepository.isYtunnusAvailable(ytunnus)) {
             throw new YtunnusException();
         }
     }
@@ -144,11 +141,11 @@ public class OrganisaatioBusinessChecker {
         LOG.debug("checkOrganisaatioHierarchy()");
 
         final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
-        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioDAO.findByOid(parentOid) : null;
+        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioRepository.customFindByOid(parentOid) : null;
         if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio))) {
             //check children
             if (organisaatio.getId() != null) { // we can have children only if we are already saved
-                List<Organisaatio> children = organisaatioDAO.findChildren(organisaatio.getId());
+                List<Organisaatio> children = organisaatioRepository.findChildren(organisaatio.getId());
                 for (Organisaatio child : children) {
                     if (!validator.apply(Maps.immutableEntry(organisaatio, child))) {
                         throw new OrganisaatioHierarchyException();
@@ -216,7 +213,7 @@ public class OrganisaatioBusinessChecker {
     Child is now supposed to end later than the parent organisation.
      */
     public String checkPvmConstraints(Organisaatio organisaatio,
-            Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+                                      Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
         final Date MIN_DATE = this.MIN_DATE.getTime();

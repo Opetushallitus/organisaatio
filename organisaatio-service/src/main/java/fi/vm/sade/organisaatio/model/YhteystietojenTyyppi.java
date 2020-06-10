@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.security.xssfilter.XssFilterListener;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -9,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@EntityListeners(XssFilterListener.class)
 public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -21,12 +18,12 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @Column(name = "organisaatio_tyyppi")
-    @CollectionTable(name = "yhteystietojenTyyppi_organisaatioTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "id"))
     private Set<String> sovellettavatOrganisaatioTyyppis = new HashSet<>();
 
     @ElementCollection
     @Column(name = "oppilaitos_tyyppi")
-    @CollectionTable(name = "yhteystietojenTyyppi_oppilaitosTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "id"))
     private Set<String> sovellettavatOppilaitostyyppis = new HashSet<>();
 
     @OneToMany(mappedBy = "yhteystietojenTyyppi", cascade = CascadeType.ALL, orphanRemoval=true)

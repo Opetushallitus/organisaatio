@@ -18,7 +18,8 @@ package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Objects;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -44,7 +45,7 @@ public class PermissionChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
@@ -52,7 +53,7 @@ public class PermissionChecker {
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
     public void checkRemoveOrganisation(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioDAO.findByOid(oid));
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.customFindByOid(oid));
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
@@ -81,10 +82,10 @@ public class PermissionChecker {
     }
 
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
-            String oid, Map<String, String> nimi,
-            Date alkuPvm, Date lakkautusPvm) {
+                                       String oid, Map<String, String> nimi,
+                                       Date alkuPvm, Date lakkautusPvm) {
         if (update) {
-            final Organisaatio current = organisaatioDAO.findByOid(oid);
+            final Organisaatio current = organisaatioRepository.customFindByOid(oid);
 
             if (!Objects.equal(current.getNimi().getValues(), nimi)) {
                 LOG.info("Nimi muuttunut");
@@ -123,7 +124,7 @@ public class PermissionChecker {
     }
 
     public void checkReadOrganisation(String oid) {
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
 
         if(organisaatio == null){
             return;

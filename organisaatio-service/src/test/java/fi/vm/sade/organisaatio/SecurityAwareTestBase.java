@@ -24,15 +24,14 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
  * By default executes tests as CRUD_USER, override before to customize
  */
 public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
-    
+
     @Value("${root.organisaatio.oid}")
     protected String ophOid;
     
     @Autowired
     protected OrganisationHierarchyAuthorizer authorizer;
     
-    
-    
+    @Autowired
     private OidProvider oidProvider;
 
     /**
@@ -47,10 +46,10 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
 //        Mockito.stub(oidProvider.getSelfAndParentOids(userOrgOid)).toReturn(
 //                ophOid, userOrgOid));
         
-        Mockito.stub(oidProvider.getSelfAndParentOids(ophOid)).toReturn(
+        Mockito.when(oidProvider.getSelfAndParentOids(ophOid)).thenReturn(
                 Lists.newArrayList(ophOid));
 
-        Mockito.stub(oidProvider.getSelfAndParentOids("1.2.2004.2")).toReturn(
+        Mockito.when(oidProvider.getSelfAndParentOids("1.2.2004.2")).thenReturn(
                 Lists.newArrayList(ophOid, "1.2.2004.2"));
 //        Mockito.stub(oidProvider.getSelfAndParentOids(Mockito.anyString())).toReturn(
 //                Lists.newArrayList(ophOid));

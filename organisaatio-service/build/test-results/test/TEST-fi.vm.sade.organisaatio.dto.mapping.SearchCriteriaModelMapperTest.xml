@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapperTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:20" hostname="Miikkas-MacBook-Pro.local" time="0.544">
+  <properties/>
+  <testcase name="organisaatioSearchCriteriaOrganisaatioTyyppi" classname="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapperTest" time="0.439"/>
+  <testcase name="organisaatioSearchCriteriaDTOV2OrganisaatioTyyppi" classname="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapperTest" time="0.037"/>
+  <testcase name="organisaatioSearchCriteriaOid" classname="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapperTest" time="0.031"/>
+  <testcase name="organisaatioSearchCriteriaDTOV2Oid" classname="fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapperTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

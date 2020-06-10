@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:28" hostname="Miikkas-MacBook-Pro.local" time="0.241">
+  <properties/>
+  <testcase name="findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoiteWhileOnlyOneConstraintIsTrue" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.16"/>
+  <testcase name="oppilaitostyyppiRajoiteIsNotFoundIncorrectly" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.01"/>
+  <testcase name="findAll" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.023"/>
+  <testcase name="findByOrganisationWithOrganisaatiotyyppiRajoite" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.01"/>
+  <testcase name="findByOrganisationWithOppilaitostyyppiRajoite" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.009"/>
+  <testcase name="findByOrganisationWhenRajoitteetonLisatietotyyppi" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.008"/>
+  <testcase name="findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoite" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.01"/>
+  <testcase name="findByOrganisationNotExistsWithOrganisaatiotyyppiRajoite" classname="fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest" time="0.009"/>
+  <system-out><![CDATA[2020-06-10 18:11:28.259  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@2a624d1a, testMethod = findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoiteWhileOnlyOneConstraintIsTrue@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.261 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.262 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.263 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.264 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid2]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.266 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.267 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.268 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.268 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.270 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.270 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'oppilaitostyyppi')
+2020-06-10 18:11:28.271 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.271 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.271 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'organisaatiotyyppi')
+2020-06-10 18:11:28.272 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.272 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Koulutustoimija]
+2020-06-10 18:11:28.272 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [1]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.406 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2020-06-10 18:11:28.407 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.407 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]
+2020-06-10 18:11:28.407 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Koulutustoimija]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.414 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid2]
+2020-06-10 18:11:28.415 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.417 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [VARCHAR]) - [lisatieto.nimi]
+2020-06-10 18:11:28.419  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@2a624d1a, testMethod = findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoiteWhileOnlyOneConstraintIsTrue@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.420  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@15c30d6f, testMethod = oppilaitostyyppiRajoiteIsNotFoundIncorrectly@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.421 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.421 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.422 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.423 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.424 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.424 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'oppilaitostyyppi')
+2020-06-10 18:11:28.425 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.425 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoskoodi_1]
+2020-06-10 18:11:28.425 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [2]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.427 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [3]
+2020-06-10 18:11:28.427 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.428 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.428 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.429  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@15c30d6f, testMethod = oppilaitostyyppiRajoiteIsNotFoundIncorrectly@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.431  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@50953d3f, testMethod = findAll@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.432 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.433 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.434 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.withOrganisaatioRajoite]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'organisaatiotyyppi')
+2020-06-10 18:11:28.435 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+2020-06-10 18:11:28.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [4]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.436 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.withOppilaitosRajoite]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'oppilaitostyyppi')
+2020-06-10 18:11:28.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+2020-06-10 18:11:28.437 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [5]
+Hibernate: 
+    select
+        lisatietot0_.id as id1_1_,
+        lisatietot0_.version as version2_1_,
+        lisatietot0_.nimi as nimi3_1_ 
+    from
+        lisatietotyyppi lisatietot0_
+2020-06-10 18:11:28.448 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_1_] : [BIGINT]) - [3]
+2020-06-10 18:11:28.449 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_1_] : [BIGINT]) - [4]
+2020-06-10 18:11:28.449 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_1_] : [BIGINT]) - [5]
+2020-06-10 18:11:28.452  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@50953d3f, testMethod = findAll@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.454  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@c2fdf4b, testMethod = findByOrganisationWithOrganisaatiotyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.455 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.456 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.457 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.457 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'organisaatiotyyppi')
+2020-06-10 18:11:28.458 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.458 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+2020-06-10 18:11:28.458 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [6]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.460 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [5]
+2020-06-10 18:11:28.460 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.461 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.461 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.462 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [VARCHAR]) - [lisatieto.nimi]
+2020-06-10 18:11:28.462  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@c2fdf4b, testMethod = findByOrganisationWithOrganisaatiotyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.464  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@b0b64c8, testMethod = findByOrganisationWithOppilaitostyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.465 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.466 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.467 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.467 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'oppilaitostyyppi')
+2020-06-10 18:11:28.468 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.468 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoskoodi_12]
+2020-06-10 18:11:28.468 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [7]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.470 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [6]
+2020-06-10 18:11:28.470 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.471 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.471 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.471 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [VARCHAR]) - [lisatieto.nimi]
+2020-06-10 18:11:28.472  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@b0b64c8, testMethod = findByOrganisationWithOppilaitostyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.473  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@4ffd68ac, testMethod = findByOrganisationWhenRajoitteetonLisatietotyyppi@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.474 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.475 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.476 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.476 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.rajoitteeton]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.478 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [7]
+2020-06-10 18:11:28.478 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.479 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.479 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.480 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [VARCHAR]) - [lisatieto.rajoitteeton]
+2020-06-10 18:11:28.480  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@4ffd68ac, testMethod = findByOrganisationWhenRajoitteetonLisatietotyyppi@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.482  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@470d988b, testMethod = findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.483 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.484 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.484 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'oppilaitostyyppi')
+2020-06-10 18:11:28.485 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.485 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.485 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [9]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'organisaatiotyyppi')
+2020-06-10 18:11:28.486 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.486 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+2020-06-10 18:11:28.486 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [9]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.488 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [8]
+2020-06-10 18:11:28.488 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.489 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.489 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.489 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([col_0_0_] : [VARCHAR]) - [lisatieto.nimi]
+2020-06-10 18:11:28.490  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@470d988b, testMethod = findByOrganisationWithOrganisaatiotyyppiAndOppilaitostyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+2020-06-10 18:11:28.492  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@6a29bd5b, testMethod = findByOrganisationNotExistsWithOrganisaatiotyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@af9fb3]; rollback [true]
+Hibernate: 
+    insert 
+    into
+        organisaatio
+        (id, version, alkupvm, domainnimi, kotipaikka, kuvaus_mkt, lakkautuspvm, maa, metadata_id, nimi_mkt, nimihaku, oid, opetuspisteenjarjnro, oppilaitoskoodi, oppilaitos_tyyppi, organisaatio_poistettu, paivittaja, paivityspvm, parentidpath, parentoidpath, piilotettu, tarkastus_pvm, toimipistekoodi, tuontipvm, varhaiskasvatuksen_toimipaikka_tiedot_id, virastotunnus, yhteishaunkoulukoodi, yritysmuoto, ytj_kieli, ytjpaivityspvm, ytunnus) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2020-06-10 18:11:28.492 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [DATE] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BIGINT] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [DATE] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BIGINT] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BIGINT] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [11] as [VARCHAR] - [oid]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [12] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [13] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [14] as [VARCHAR] - [oppilaitoskoodi_12#1]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [15] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [16] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [17] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [18] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [19] as [VARCHAR] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [20] as [BOOLEAN] - [false]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [21] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.493 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [22] as [VARCHAR] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [23] as [TIMESTAMP] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [24] as [BIGINT] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [25] as [VARCHAR] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [26] as [VARCHAR] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [27] as [VARCHAR] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [28] as [VARCHAR] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [29] as [DATE] - [null]
+2020-06-10 18:11:28.494 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [30] as [VARCHAR] - [null]
+Hibernate: 
+    insert 
+    into
+        lisatietotyyppi
+        (id, version, nimi) 
+    values
+        (null, ?, ?)
+2020-06-10 18:11:28.495 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.495 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [lisatieto.nimi]
+Hibernate: 
+    insert 
+    into
+        rajoite
+        (id, version, arvo, lisatietotyyppi_id, rajoitetyyppi) 
+    values
+        (null, ?, ?, ?, 'organisaatiotyyppi')
+2020-06-10 18:11:28.496 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [0]
+2020-06-10 18:11:28.496 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+2020-06-10 18:11:28.496 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BIGINT] - [10]
+Hibernate: 
+    insert 
+    into
+        organisaatio_tyypit
+        (organisaatio_id, tyypit) 
+    values
+        (?, ?)
+2020-06-10 18:11:28.498 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [9]
+2020-06-10 18:11:28.498 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Oppilaitos]
+Hibernate: 
+    select
+        distinct lisatietot0_.nimi as col_0_0_ 
+    from
+        lisatietotyyppi lisatietot0_ 
+    inner join
+        organisaatio organisaat1_ 
+            on (
+                organisaat1_.oid=?
+            ) 
+    left outer join
+        rajoite organisaat2_ 
+            on (
+                organisaat2_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite oppilaitos3_ 
+            on (
+                oppilaitos3_.lisatietotyyppi_id=lisatietot0_.id
+            ) 
+    left outer join
+        rajoite rajoite4_ 
+            on (
+                not (exists (select
+                    rajoitteet5_.id 
+            from
+                rajoite rajoitteet5_ 
+            where
+                lisatietot0_.id=rajoitteet5_.lisatietotyyppi_id))
+        ) 
+    where
+        organisaat2_.arvo in (
+            select
+                tyypit6_.tyypit 
+            from
+                organisaatio_tyypit tyypit6_ 
+            where
+                organisaat1_.id=tyypit6_.organisaatio_id
+        ) 
+        or organisaat1_.oppilaitos_tyyppi like (oppilaitos3_.arvo||?) escape '!' 
+        or  not (exists (select
+            rajoitteet7_.id 
+        from
+            rajoite rajoitteet7_ 
+        where
+            lisatietot0_.id=rajoitteet7_.lisatietotyyppi_id))
+2020-06-10 18:11:28.499 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [wrong oid]
+2020-06-10 18:11:28.499 TRACE 55751 --- [    Test worker] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [#%]
+2020-06-10 18:11:28.500  INFO 55751 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@3da3a811 testClass = LisatietoTyyppiDaoImplTest, testInstance = fi.vm.sade.organisaatio.repository.impl.LisatietoTyyppiDaoImplTest@6a29bd5b, testMethod = findByOrganisationNotExistsWithOrganisaatiotyyppiRajoite@LisatietoTyyppiDaoImplTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@2dfe92f3 testClass = LisatietoTyyppiDaoImplTest, locations = '{}', classes = '{class fi.vm.sade.organisaatio.OrganisaatioApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@a273518a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@25a95d7a, [ImportsContextCustomizer@440a97a6 key = [org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33d60c3d, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6943770e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@536042e6, org.springframework.boot.test.context.SpringBootTestArgs@1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true]]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

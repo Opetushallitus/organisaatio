@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.auth.PermissionCheckerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:33" hostname="Miikkas-MacBook-Pro.local" time="0.017">
+  <properties/>
+  <testcase name="checkSaveOrganisationWithoutNameChange" classname="fi.vm.sade.organisaatio.auth.PermissionCheckerTest" time="0.014"/>
+  <testcase name="checkSaveOrganisationWithNameChange" classname="fi.vm.sade.organisaatio.auth.PermissionCheckerTest" time="0.003"/>
+  <system-out><![CDATA[2020-06-10 18:11:33.130  INFO 55751 --- [    Test worker] f.v.s.o.auth.PermissionChecker           : Nimi muuttunut
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

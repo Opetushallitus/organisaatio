@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fi.vm.sade.organisaatio.business.impl.OrganisaatioKoodistoImplTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-06-10T15:11:53" hostname="Miikkas-MacBook-Pro.local" time="0.04">
+  <properties/>
+  <testcase name="paivitaKoodistoKoulutustoimija" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioKoodistoImplTest" time="0.034"/>
+  <testcase name="paivitaKoodistoOppilaitosIncludesCodeElementsPassive" classname="fi.vm.sade.organisaatio.business.impl.OrganisaatioKoodistoImplTest" time="0.006"/>
+  <system-out><![CDATA[2020-06-10 18:11:53.556  INFO 55751 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioKoodistoImpl  : Koodi koulutustoimija_2228357-4 päivitettiin
+2020-06-10 18:11:53.572  INFO 55751 --- [    Test worker] f.v.s.o.b.impl.OrganisaatioKoodistoImpl  : Koodi oppilaitosnumero_02428 päivitettiin
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,2 +1,0 @@
-update organisaatio set organisaatiotyypitstr = replace(organisaatiotyypitstr, 'Opetuspiste', 'Toimipiste') where organisaatiotyypitstr like '%Opetuspiste%';
-update organisaatio_tyypit set tyypit = replace(tyypit, 'Opetuspiste', 'Toimipiste') where tyypit like '%Opetuspiste%';

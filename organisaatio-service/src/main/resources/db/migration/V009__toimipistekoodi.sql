@@ -1,1 +1,0 @@
-ALTER TABLE organisaatio ADD COLUMN toimipistekoodi varchar(255);

@@ -1,1 +1,0 @@
-ALTER TABLE varhaiskasvatuksen_toimipaikka_tiedot RENAME COLUMN julkinen TO piilotettu;

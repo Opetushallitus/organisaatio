@@ -15,7 +15,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.security.xssfilter.XssFilterListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,12 +22,11 @@ import java.util.Date;
 /**
  * Entity luokka organisaation nimelle ja nimihistorialle.
  *
- * @author simok
+ * TODO xssfiltteri
  */
 @Entity
 @Table(name = "organisaatio_nimi")
 @org.hibernate.annotations.Table(appliesTo = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
-@EntityListeners(XssFilterListener.class)
 @NamedQuery(
         name = "OrganisaatioNimiDAO.findNimet",
         query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
@@ -37,10 +35,11 @@ public class OrganisaatioNimi extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Organisaatio organisaatio;
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="alkupvm")
     private Date alkuPvm;
 
     @OneToOne(cascade = CascadeType.ALL)

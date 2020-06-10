@@ -8,11 +8,14 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,8 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,8 +44,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
+@ComponentScan(basePackages = "fi.vm.sade.organisaatio")
+@SpringBootTest
+@AutoConfigureTestDatabase
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
@@ -46,6 +55,8 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
 
     @Autowired
     private OrganisaatioResource res;
+    @Autowired
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private OrganisaatioResourceV2 res2;
@@ -58,13 +69,13 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     public void before() {
         super.before();
         Locale.setDefault(Locale.US); // because of validaton messages
-        executeSqlScript("data/basic_organisaatio_data.sql", false);
+        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
     }
 
     @Override
     @After
     public void after() {
-        executeSqlScript("data/truncate_tables.sql", false);
+        executeSqlScript("classpath:data/truncate_tables.sql", false);
     }
 
     @Test
@@ -105,7 +116,6 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
         Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
         LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
-
         List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
         Assert.assertEquals("Children count should match!", 2, children.size());
         for (OrganisaatioRDTO child : children) {
