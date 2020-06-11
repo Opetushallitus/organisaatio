@@ -61,7 +61,6 @@ public class Osoite extends Yhteystieto {
     //@Size(min = GENERIC_MIN, max = GENERIC_MAX)
     private String postitoimipaikka; // TODO XSS filtteri
     private String osavaltio;  // TODO XSS filtteri
-    @Column(name="extrarivi")
     private String extraRivi; // TODO XSS filtteri
     private String maa; // TODO XSS filtteri
 
@@ -69,11 +68,9 @@ public class Osoite extends Yhteystieto {
     private Double lat;
     private Double lng;
 
-    @Column(name="coordinatetype")
     private String coordinateType;
     
     @Temporal(TemporalType.DATE)
-    @Column(name="ytjpaivityspvm")
     private Date ytjPaivitysPvm;
 
     public Osoite() {

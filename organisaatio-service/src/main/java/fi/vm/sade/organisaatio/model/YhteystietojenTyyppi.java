@@ -18,12 +18,12 @@ public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
 
     @ElementCollection
     @Column(name = "organisaatio_tyyppi")
-    @CollectionTable(joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "yhteystietojenTyyppi_organisaatioTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
     private Set<String> sovellettavatOrganisaatioTyyppis = new HashSet<>();
 
     @ElementCollection
     @Column(name = "oppilaitos_tyyppi")
-    @CollectionTable(joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "yhteystietojenTyyppi_oppilaitosTyypit", joinColumns = @JoinColumn(name = "yhteystietojenTyyppi_id"))
     private Set<String> sovellettavatOppilaitostyyppis = new HashSet<>();
 
     @OneToMany(mappedBy = "yhteystietojenTyyppi", cascade = CascadeType.ALL, orphanRemoval=true)

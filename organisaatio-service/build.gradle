@@ -29,6 +29,7 @@ dependencies {
 	compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
 	compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.7.18' // TODO poistettava?
 	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-security-cors', version: '3.3.6'
+	compile "org.flywaydb:flyway-core:6.4.4"
 	//compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.6'
 
 	compile ('commons-fileupload:commons-fileupload:1.4') {

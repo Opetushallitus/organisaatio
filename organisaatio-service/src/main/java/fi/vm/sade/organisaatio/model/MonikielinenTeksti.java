@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Entity
 @BatchSize(size = 500)
+@Table(name="monikielinenteksti")
 public class MonikielinenTeksti extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -16,7 +17,7 @@ public class MonikielinenTeksti extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
-    @CollectionTable(joinColumns=@JoinColumn(name="id"))
+    @CollectionTable(name="monikielinenteksti_values", joinColumns=@JoinColumn(name="id"))
     @BatchSize(size = 1000)
     private Map<String, String> values = new HashMap<>();
 

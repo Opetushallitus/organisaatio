@@ -12,7 +12,8 @@ import java.util.*;
  * @author mlyly
  */
 @Entity
-@Table(appliesTo = "OrganisaatioMetaData", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
+@javax.persistence.Table(name="organisaatiometadata")
+@Table(appliesTo = "organisaatiometadata", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
 public class OrganisaatioMetaData extends BaseEntity {
 
     /**
@@ -55,6 +56,7 @@ public class OrganisaatioMetaData extends BaseEntity {
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @BatchSize(size = 200)
+    @JoinTable(name="ORGANISAATIOMETADATA_YHTEYSTIETO")
     private List<Yhteystieto> yhteystiedot = new ArrayList<Yhteystieto>();
 
     /**
@@ -67,6 +69,7 @@ public class OrganisaatioMetaData extends BaseEntity {
      */
     @OneToMany(cascade = CascadeType.ALL)
     @BatchSize(size = 500)
+    @JoinTable(name="ORGANISAATIOMETADATA_NAMEDMONIKIELINENTEKSTI")
     private Set<NamedMonikielinenTeksti> values = new HashSet<NamedMonikielinenTeksti>();
 
     @Temporal(TemporalType.TIMESTAMP)

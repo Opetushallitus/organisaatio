@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.persistence.UniqueConstraint;
@@ -17,11 +16,13 @@ import static java.util.stream.Collectors.toSet;
 
 
 @Entity
-@javax.persistence.Table(uniqueConstraints = {
+@javax.persistence.Table(
+        name="organisaatio",
+        uniqueConstraints = {
     @UniqueConstraint(columnNames = {"oid"}),
     @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
-@org.hibernate.annotations.Table(appliesTo = "Organisaatio", comment = "Sisältää kaikki organisaatiot.")
+@org.hibernate.annotations.Table(appliesTo = "organisaatio", comment = "Sisältää kaikki organisaatiot.")
 @SqlResultSetMappings(
         @SqlResultSetMapping(
                 name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
@@ -83,7 +84,6 @@ import static java.util.stream.Collectors.toSet;
         resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
         )}
 )
-@EntityListeners(XssFilterListener.class)
 public class Organisaatio extends OrganisaatioBaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -128,7 +128,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     // TODO regex validointi?
     private String ytunnus;
 
-    @Column(name="virastotunnus")
+    @Column
     private String virastoTunnus; // TODO XSS filtteri
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -142,7 +142,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToMany(mappedBy = "parent", cascade = {}, fetch=FetchType.LAZY)
     private Set<OrganisaatioSuhde> childSuhteet = new HashSet<>();
 
-    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     @OrderBy("alkuPvm")
     @BatchSize(size = 200)
     private List<OrganisaatioNimi> nimet = new ArrayList<>();
@@ -154,11 +154,9 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String yritysmuoto;
 
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Column(name="alkupvm")
     private Date alkuPvm;
 
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Column(name="lakkautuspvm")
     private Date lakkautusPvm;
 
     private String kotipaikka;
@@ -177,14 +175,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @BatchSize(size = 100)
     private Set<String> kielet = new LinkedHashSet<>();
 
-    @Column(name = "domainnimi")
     private String domainNimi;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 200)
     private Set<YhteystietoArvo> yhteystietoArvos = new HashSet<>();
 
-    @Column(unique = true, name="oppilaitoskoodi")
+    @Column(unique = true)
     private String oppilaitosKoodi;
 
     private String oppilaitosTyyppi;
@@ -202,38 +199,37 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String ytjKieli;
 
     @Temporal(TemporalType.DATE)
-    @Column(name="ytjpaivityspvm")
     private Date ytjPaivitysPvm;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="tuontipvm")
     private Date tuontiPvm;
 
     /**
      * false == ei poistettu
      * true == poistettu
      */
-    @Column
+    @Column(nullable=true)
     private Boolean organisaatioPoistettu = false;
 
-    @Column(name = "opetuspisteenjarjnro")
     private String opetuspisteenJarjNro;
-    @Column(name = "yhteishaunkoulukoodi")
     private String yhteishaunKoulukoodi;
 
     // OVT-4954
-    @Column(length = 32, name="toimipistekoodi")
+    @Column(length = 32)
     private String toimipisteKoodi;
 
     // OVT-7684
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="paivityspvm")
     private Date paivitysPvm;
 
     // OVT-7684
     @Column(length = 255)
     private String paivittaja;
 
+    /**
+     * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
+     */
+    private String parentOidPath;
     private String parentIdPath;
 
     @ElementCollection(fetch = FetchType.EAGER)

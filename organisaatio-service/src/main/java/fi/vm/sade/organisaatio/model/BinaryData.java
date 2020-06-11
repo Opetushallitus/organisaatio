@@ -23,6 +23,7 @@ import javax.persistence.*;
  * @author mlyly
  */
 @Entity
+@Table(name="binarydata")
 public class BinaryData extends BaseEntity {
 
     /**
