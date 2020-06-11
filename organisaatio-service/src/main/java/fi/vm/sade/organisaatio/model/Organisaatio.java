@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toSet;
     @UniqueConstraint(columnNames = {"oid"}),
     @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
-@org.hibernate.annotations.Table(appliesTo = "organisaatio", comment = "Sisältää kaikki organisaatiot.")
+@org.hibernate.annotations.Table(appliesTo = "Organisaatio", comment = "Sisältää kaikki organisaatiot.")
 public class Organisaatio extends OrganisaatioBaseEntity {
 
     private static final long serialVersionUID = 1L;

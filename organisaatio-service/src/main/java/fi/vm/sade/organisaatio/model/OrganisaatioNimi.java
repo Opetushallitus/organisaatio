@@ -25,8 +25,8 @@ import java.util.Date;
  * TODO xssfiltteri
  */
 @Entity
-@Table(name = "organisaatio_nimi")
-@org.hibernate.annotations.Table(appliesTo = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
+@Table(name = "organisaationimi")
+@org.hibernate.annotations.Table(appliesTo = "organisaationimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
 public class OrganisaatioNimi extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

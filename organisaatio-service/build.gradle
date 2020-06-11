@@ -13,6 +13,8 @@ compileJava {
 	options.annotationProcessorPath = configurations.annotationProcessor
 }
 
+mainClassName='fi.vm.sade.organisaatio.OrganisaatioApplication'
+
 dependencies {
 	compile project(':organisaatio-api')
 	implementation 'org.springframework.boot:spring-boot-starter'

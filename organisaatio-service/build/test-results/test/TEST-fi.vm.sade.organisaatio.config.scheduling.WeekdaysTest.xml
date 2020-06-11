@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fi.vm.sade.organisaatio.config.scheduling.WeekdaysTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-06-10T17:38:40" hostname="Miikkas-MacBook-Pro.local" time="0.035">
-  <properties/>
-  <testcase name="timeDoneSaturday" classname="fi.vm.sade.organisaatio.config.scheduling.WeekdaysTest" time="0.033"/>
-  <testcase name="timeDoneFriday" classname="fi.vm.sade.organisaatio.config.scheduling.WeekdaysTest" time="0.001"/>
-  <testcase name="timeDoneMonday" classname="fi.vm.sade.organisaatio.config.scheduling.WeekdaysTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
