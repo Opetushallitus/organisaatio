@@ -29,12 +29,13 @@ import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_M
  */
 @Entity
 // uniqueConstraint koska tietyn niminen kenttä voi olla vain kerran yhteystietotyypillä
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"yhteystietojentyyppi_id", "nimi"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"yhteystietojenTyyppi_id", "nimi"})})
 public class YhteystietoElementti extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name="yhteystietojenTyyppi_id")
     private YhteystietojenTyyppi yhteystietojenTyyppi;
     private boolean pakollinen;
 

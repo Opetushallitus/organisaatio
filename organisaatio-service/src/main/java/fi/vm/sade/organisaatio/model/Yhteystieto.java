@@ -25,12 +25,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-/**
- * @author Antti Salonen
- */
 @Entity
+@javax.persistence.Table(name="yhteystieto")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(appliesTo = "Yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
+@Table(appliesTo = "yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 public class Yhteystieto extends OrganisaatioBaseEntity {
 
     @ManyToOne(optional = true)

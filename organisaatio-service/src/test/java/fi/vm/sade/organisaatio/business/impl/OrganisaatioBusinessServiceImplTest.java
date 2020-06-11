@@ -323,7 +323,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioRDTO model = new OrganisaatioRDTO();
         String removedOid = "1.2.2004.4";
         model.setOid(removedOid);
-        jdbcTemplate.update("update organisaatio set organisaatio_poistettu = TRUE where oid = ?", removedOid);
+        jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
         try {
             service.save(model, true);
             Assert.fail("should throw ValidationException");

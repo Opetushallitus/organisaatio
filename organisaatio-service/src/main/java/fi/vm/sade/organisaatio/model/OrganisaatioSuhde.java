@@ -28,8 +28,8 @@ import java.util.Date;
  * @author mlyly
  */
 @Entity
-@javax.persistence.Table(name = "OrganisaatioSuhde")
-@org.hibernate.annotations.Table(appliesTo = "OrganisaatiSuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
+@javax.persistence.Table(name = "organisaatiosuhde")
+@org.hibernate.annotations.Table(appliesTo = "organisaatiosuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
 public class OrganisaatioSuhde extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -66,7 +66,6 @@ public class OrganisaatioSuhde extends BaseEntity {
     @Temporal(TemporalType.DATE)
     @Column(name="loppupvm")
     private Date loppuPvm;
-
     @Column(name="opetuspisteenjarjnro")
     private String opetuspisteenJarjNro;
 
