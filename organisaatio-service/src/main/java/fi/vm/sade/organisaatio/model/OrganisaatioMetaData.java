@@ -12,7 +12,7 @@ import java.util.*;
  * @author mlyly
  */
 @Entity
-@Table(appliesTo = "organisaatio_meta_data", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
+@Table(appliesTo = "OrganisaatioMetaData", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
 public class OrganisaatioMetaData extends BaseEntity {
 
     /**

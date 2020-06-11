@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.model;
-
+//TODO korjaa tama
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.time.DateUtils;
@@ -21,12 +21,12 @@ import static java.util.stream.Collectors.toSet;
     @UniqueConstraint(columnNames = {"oid"}),
     @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
-@org.hibernate.annotations.Table(appliesTo = "organisaatio", comment = "Sisältää kaikki organisaatiot.")
+@org.hibernate.annotations.Table(appliesTo = "Organisaatio", comment = "Sisältää kaikki organisaatiot.")
 @SqlResultSetMappings(
         @SqlResultSetMapping(
                 name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
                 classes = @ConstructorResult(
-                        targetClass = OrganisaatioDAOImpl.JalkelaisetRivi.class,
+                        targetClass = OrganisaatioResourceImplV2.JalkelaisetRivi.class,
                         columns = {
                                 @ColumnResult(name = "oid"),
                                 @ColumnResult(name = "alkuPvm", type = Date.class),

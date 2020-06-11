@@ -25,7 +25,8 @@ import java.util.Date;
  * TODO xssfiltteri
  */
 @Entity
-@Table(name = "organisaatio_nimi")
+@Table(name = "organisaationimi")
+@org.hibernate.annotations.Table(appliesTo = "organisaationimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
 @org.hibernate.annotations.Table(appliesTo = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
 @NamedQuery(
         name = "OrganisaatioNimiDAO.findNimet",

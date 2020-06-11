@@ -7,7 +7,7 @@ import java.util.Date;
  * Organisaatiolle (tai sen virkailijoille) lähetetty sähköposti.
  */
 @Entity
-@Table(name = "organisaatio_sahkoposti")
+@Table(name = "organisaatiosahkoposti")
 public class OrganisaatioSahkoposti extends BaseEntity {
 
     public enum Tyyppi {

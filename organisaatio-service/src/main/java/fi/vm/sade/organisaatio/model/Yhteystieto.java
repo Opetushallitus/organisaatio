@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(appliesTo = "yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
+@Table(appliesTo = "Yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 public class Yhteystieto extends OrganisaatioBaseEntity {
 
     @ManyToOne(optional = true)
