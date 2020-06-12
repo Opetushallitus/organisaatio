@@ -3,10 +3,18 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'application'
+	id "org.flywaydb.flyway" version "6.4.4"
 }
 
 ext {
 	queryDslVersion = '4.1.4'
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/organisaatio'
+	user = 'app'
+	password = 'ophoph'
+	table = 'schema_version'
 }
 
 compileJava {
@@ -32,10 +40,10 @@ dependencies {
 	// compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.6.0' // TODO poistettava?
 	compile group: 'org.apache.cxf', name: 'cxf-api', version: '2.7.18'
 	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-security-cors', version: '2.7.18'
-	// compile "org.flywaydb:flyway-core:6.4.4" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
+	compile "org.flywaydb:flyway-core:6.4.4" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
 	//compile group: 'org.flywaydb', name: 'flyway-core', version: '4.2.0'
-	//compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0'
-	compile group: 'com.googlecode.flyway', name: 'flyway-core', version: '2.3'
+	//compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0' // TODO 2. päivitys.
+	// compile group: 'com.googlecode.flyway', name: 'flyway-core', version: '2.3' // TODO 1. päivitys
 	//compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.6'
 
 	compile ('commons-fileupload:commons-fileupload:1.4') {

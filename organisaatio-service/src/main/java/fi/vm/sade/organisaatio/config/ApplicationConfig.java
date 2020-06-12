@@ -8,11 +8,12 @@ import fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 //import org.flywaydb.core.Flyway; // versiosta 3.0 eteenpäin
-import com.googlecode.flyway.core.Flyway;
+//import com.googlecode.flyway.core.Flyway;
 
 
 @Configuration
@@ -51,6 +52,16 @@ public class ApplicationConfig {
         ConverterFactory converterFactory = new ConverterFactory();
         return converterFactory;
     }
+    /*
+    @Bean
+    public FlywayMigrationStrategy repair() {
+        return flyway -> {
+            // repair each script checksum
+            flyway.repair();
+            // before migration is executed
+            flyway.migrate();
+        };
+    }
     @Bean(initMethod = "migrate")
     Flyway flyway() {
         Flyway flyway = new Flyway();
@@ -59,4 +70,6 @@ public class ApplicationConfig {
         flyway.setDataSource("jdbc:postgresql://localhost:5432/organisaatio", "app", "ophoph");
         return flyway;
     }
+
+     */
 }
