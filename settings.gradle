@@ -1,4 +1,5 @@
 
 rootProject.name = 'fi.vm.sade.organisaatio'
+include 'organisaatio-ui'
 include 'organisaatio-service'
 include 'organisaatio-api'

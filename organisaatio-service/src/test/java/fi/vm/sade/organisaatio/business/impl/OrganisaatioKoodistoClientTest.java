@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.business.impl;
+/*package fi.vm.sade.organisaatio.business.impl;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
@@ -55,4 +55,5 @@ public class OrganisaatioKoodistoClientTest {
         assertThat(response).isNull();
     }
 
-}
+} TODO this!
+*/

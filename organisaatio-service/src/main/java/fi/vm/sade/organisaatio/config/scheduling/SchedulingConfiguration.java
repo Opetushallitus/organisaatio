@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.config.scheduling;
 import com.github.kagkarlsson.scheduler.Scheduler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import javax.sql.DataSource;
 
@@ -18,7 +19,7 @@ public class SchedulingConfiguration {
     Scheduler scheduler(DataSource dataSource,
                         VanhentuneetTiedotSahkopostiTask vanhentuneetTiedotSahkopostiTask,
                         KoodistoUpdateTask koodistoUpdateTask,
-                        OrganisaatioUpdateTask organisaatioUpdateTask) {
+                        @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
                 .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask)
                 .threads(1)
