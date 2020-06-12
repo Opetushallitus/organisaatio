@@ -16,6 +16,7 @@ compileJava {
 mainClassName='fi.vm.sade.organisaatio.OrganisaatioApplication'
 
 dependencies {
+	implementation project(':organisaatio-ui')
 	compile project(':organisaatio-api')
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'com.google.guava:guava:29.0-jre'
@@ -27,9 +28,14 @@ dependencies {
 	compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
 	compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
-	compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.7.18' // TODO poistettava?
-	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-security-cors', version: '3.3.6'
-	compile "org.flywaydb:flyway-core:6.4.4"
+	compile group: 'org.apache.cxf', name: 'cxf-rt-core', version: '2.7.18'
+	// compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.6.0' // TODO poistettava?
+	compile group: 'org.apache.cxf', name: 'cxf-api', version: '2.7.18'
+	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-security-cors', version: '2.7.18'
+	// compile "org.flywaydb:flyway-core:6.4.4" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
+	//compile group: 'org.flywaydb', name: 'flyway-core', version: '4.2.0'
+	//compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0'
+	compile group: 'com.googlecode.flyway', name: 'flyway-core', version: '2.3'
 	//compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.6'
 
 	compile ('commons-fileupload:commons-fileupload:1.4') {
@@ -40,9 +46,12 @@ dependencies {
 	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 	compile('fi.vm.sade.viestintapalvelu:ryhmasahkoposti-api:14.8-SNAPSHOT') {
 	// TODO exclusions
+		exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_3.0_spec'
 	}
 	compile('fi.vm.sade.tarjonta:tarjonta-api:9.7-SNAPSHOT') {
 		// TODO exclusions
+		exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_2.5_spec'
+
 	}
 	compile('fi.vm.sade.rajapinnat.ytj:ytj-api:13.0-SNAPSHOT') {
 		exclude group: 'org.slf4j', module: 'slf4j-api'

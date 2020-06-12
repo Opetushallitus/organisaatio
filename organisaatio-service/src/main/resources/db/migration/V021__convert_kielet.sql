@@ -1,0 +1,1 @@
+update monikielinenteksti_values set key = replace(key, 'kieli_', 'kielivalikoima_') where key like 'kieli_%';

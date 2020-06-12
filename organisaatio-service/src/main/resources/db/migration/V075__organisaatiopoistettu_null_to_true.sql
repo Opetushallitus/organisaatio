@@ -1,0 +1,1 @@
+update organisaatio set organisaatiopoistettu = TRUE where organisaatiopoistettu is null;

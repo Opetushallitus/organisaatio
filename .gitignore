@@ -16,6 +16,8 @@ bin/
 nb-configuration.xml
 phantomjsdriver.log
 /build
+/organisaatio-api/build
+/organisaatio-service/build
 /.gradle
 **/pom.xml.versionsBackup
 **/*.orig

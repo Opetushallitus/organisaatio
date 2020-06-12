@@ -11,6 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+//import org.flywaydb.core.Flyway; // versiosta 3.0 eteenpäin
+import com.googlecode.flyway.core.Flyway;
+
 
 @Configuration
 public class ApplicationConfig {
@@ -48,5 +51,12 @@ public class ApplicationConfig {
         ConverterFactory converterFactory = new ConverterFactory();
         return converterFactory;
     }
-
+    @Bean(initMethod = "migrate")
+    Flyway flyway() {
+        Flyway flyway = new Flyway();
+        //flyway.setBaselineOnMigrate(true);
+        flyway.setInitOnMigrate(true);
+        flyway.setDataSource("jdbc:postgresql://localhost:5432/organisaatio", "app", "ophoph");
+        return flyway;
+    }
 }
