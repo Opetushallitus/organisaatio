@@ -19,7 +19,7 @@ task run(type: NpmTask) {
 	args = ['start']
 }
 
-task webjar(type: Jar) {
+task webjar(type: Jar, dependsOn: 'jar') {
 	from(fileTree('build')) {
 		into 'META-INF/resources'
 	}

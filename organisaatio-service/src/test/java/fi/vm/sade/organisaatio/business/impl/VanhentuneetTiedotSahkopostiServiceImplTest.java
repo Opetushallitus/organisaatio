@@ -2,7 +2,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.PrintingAnswer;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
+import fi.vm.sade.organisaatio.client.KayttooikeusClient;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSahkopostiRepository;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
@@ -29,7 +29,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;

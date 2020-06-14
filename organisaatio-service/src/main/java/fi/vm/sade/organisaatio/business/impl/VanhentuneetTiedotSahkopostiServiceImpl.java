@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
+import fi.vm.sade.organisaatio.client.KayttooikeusClient;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSahkopostiRepository;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
@@ -18,7 +19,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
