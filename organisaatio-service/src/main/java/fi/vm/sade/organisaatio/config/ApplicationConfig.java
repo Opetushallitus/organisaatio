@@ -53,23 +53,15 @@ public class ApplicationConfig {
         return converterFactory;
     }
     /*
-    @Bean
-    public FlywayMigrationStrategy repair() {
-        return flyway -> {
-            // repair each script checksum
-            flyway.repair();
-            // before migration is executed
-            flyway.migrate();
-        };
-    }
     @Bean(initMethod = "migrate")
     Flyway flyway() {
         Flyway flyway = new Flyway();
-        //flyway.setBaselineOnMigrate(true);
-        flyway.setInitOnMigrate(true);
+        flyway.setBaselineOnMigrate(true);
+        //flyway.setInitOnMigrate(true);
+        flyway.setTable("schema_version");
         flyway.setDataSource("jdbc:postgresql://localhost:5432/organisaatio", "app", "ophoph");
         return flyway;
     }
 
-     */
+   */
 }
