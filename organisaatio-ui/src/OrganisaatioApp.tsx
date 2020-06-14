@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import 'normalize.css';
-import 'oph-virkailija-style-guide/oph-styles.css'
+import * as React from 'react';
+import {useState, useEffect} from "react";
+//import 'normalize.css';
+// import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
-import { LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext } from './contexts';
+import { LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {Koodi, Language, Lokalisointi} from './types';
+import {Koodi, Language, Lokalisointi} from './types/types';
 import useAxios from 'axios-hooks';
-import Spinner from './Spinner';
-import ErrorPage from './virhe/VirheSivu';
+import Spinner from './components/Spinner/Spinner';
+import ErrorPage from './components/VirheSivu/VirheSivu';
 import Axios from 'axios';
+
 
 const OrganisaatioApp: React.FC = () => {
   registerLocale('fi', fi);
@@ -20,7 +22,7 @@ const OrganisaatioApp: React.FC = () => {
   useEffect(() => {
     async function fetchLanguage() {
       try {
-        const response = await Axios.get('/varda-rekisterointi/api/lokalisointi/kieli');
+        const response = await Axios.get('/organisaatio/api/lokalisointi/kieli');
         setLanguage(response.data);
       } catch (error) {
         console.log(error);
@@ -31,9 +33,9 @@ const OrganisaatioApp: React.FC = () => {
     fetchLanguage();
   }, []);
   const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
-      '/varda-rekisterointi/api/lokalisointi');
+      '/organisaatio/api/lokalisointi');
   const [{ data: kunnat, loading: kunnatLoading, error: kunnatError}] = useAxios<Koodi[]>(
-      '/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true');
+      '/organisaatio/api/koodisto/KUNTA/koodi?onlyValid=true');
   if (languageLoading || lokalisointiLoading || kunnatLoading) {
     return <Spinner />;
   }
@@ -47,7 +49,7 @@ const OrganisaatioApp: React.FC = () => {
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
           <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
             <Switch>
-              <Route path="/" exact component={<div>Organisaatioita täällä</div>} />
+              <Route path="/" exact component={() => (<div>Organisaatioita täällä</div>)} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>

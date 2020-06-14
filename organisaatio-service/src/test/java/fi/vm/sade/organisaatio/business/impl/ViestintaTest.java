@@ -15,7 +15,7 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.organisaatio.client.OrganisaatioViestintaClient;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
 import org.junit.Assert;
