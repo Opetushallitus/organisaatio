@@ -15,6 +15,7 @@ flyway {
 	user = 'app'
 	password = 'ophoph'
 	table = 'schema_version'
+	locations= ['classpath:db.migration']
 }
 
 compileJava {
