@@ -35,7 +35,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             <fieldset>
 
                 <label class="checkbox">
-                    <input type="checkbox" ng-disabled="koulutustoimija" ng-change="updateSearch()" ng-model="options.merge">
+                    <input type="checkbox" ng-disabled="koulutustoimija || varhaiskasvatuksenJarjestaja" ng-change="updateSearch()" ng-model="options.merge">
                     {{t('organisaatio.move.merge.to.parent.organization')}}
                 </label>
 
