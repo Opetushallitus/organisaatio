@@ -39,7 +39,7 @@ const OrganisaatioApp: React.FC = () => {
   if (languageLoading || lokalisointiLoading || kunnatLoading) {
     return <Spinner />;
   }
-  if (lokalisointiError || kunnatError) {
+  if (lokalisointiError) {
     return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
   const i18n = new I18nImpl(lokalisointi, language);

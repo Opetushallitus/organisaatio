@@ -11,8 +11,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
-@Path("/koodisto")
-@Api("/koodisto")
+@Path("/api/koodisto")
+@Api("/api/koodisto")
 @Component("koodistoResource")
 @Produces(MediaType.APPLICATION_JSON)
 public class KoodistoResource {

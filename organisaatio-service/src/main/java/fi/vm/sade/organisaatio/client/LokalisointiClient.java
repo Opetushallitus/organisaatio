@@ -1,9 +1,8 @@
-/*package fi.vm.sade.organisaatio.client;
+package fi.vm.sade.organisaatio.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.properties.OphProperties;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -18,11 +17,11 @@ import static java.util.stream.Collectors.*;
 @Component
 public class LokalisointiClient {
 
-    private final OphHttpClient httpClient;
+    private final OphHttpClient httpClient; // TODO check import path (httpClient) compared to other clients.
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
 
-    public LokalisointiClient(@Qualifier(HTTP_CLIENT_LOKALISOINTI) OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
+    public LokalisointiClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.properties = properties;
         this.objectMapper = objectMapper;
@@ -61,4 +60,3 @@ public class LokalisointiClient {
     }
 
 }
-*/
