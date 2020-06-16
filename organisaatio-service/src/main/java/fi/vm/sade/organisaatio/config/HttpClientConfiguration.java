@@ -1,7 +1,9 @@
 package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.javautils.http.OphHttpClient;
+
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
+import fi.vm.sade.javautils.httpclient.apache.ApacheOphHttpClient;
 import fi.vm.sade.properties.OphProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,12 @@ public class HttpClientConfiguration {
     public OphHttpClient httpClient() {
         return new OphHttpClient.Builder(CALLER_ID).build();
     }
+
+    @Bean // new default TODO check for better implementation.
+    public fi.vm.sade.javautils.httpclient.OphHttpClient defaultHttpClient() {
+        return ApacheOphHttpClient.createDefaultOphClient(CALLER_ID, null);
+    }
+
 
     @Bean(name = HTTP_CLIENT_KAYTTOOIKEUS)
     public OphHttpClient kayttooikeusHttpClient(OphProperties properties) {
@@ -54,17 +62,5 @@ public class HttpClientConfiguration {
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
-
-    @Bean(name = HTTP_CLIENT_LOKALISOINTI)
-    public OphHttpClient lokalisointiHttpClient(OphProperties properties) {
-        CasAuthenticator authenticator = new CasAuthenticator.Builder()
-                .username(properties.require("organisaatio.service.username.to.koodisto"))
-                .password(properties.require("organisaatio.service.password.to.koodisto"))
-                .webCasUrl(properties.url("cas.base"))
-                .casServiceUrl(properties.url("organisaatio-service.koodisto-service.login"))
-                .build();
-        return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
-    }
-
 
 }

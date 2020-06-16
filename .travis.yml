@@ -24,24 +24,24 @@ install:
   - export ARTIFACT_NAME="organisaatio"
   - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
   - export TZ=Europe/Helsinki # TODO: fix tests
-
+ 
 script:
+  - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
   - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
 
-  - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
-  - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
+  - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/organisaatio-service.jar
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-war:jdk11"
-  - ./ci-tools/common/pull-image.sh
-  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
-
+  - export BASE_IMAGE="baseimage-fatjar:jdk11"
+    - ./ci-tools/common/pull-image.sh
+  - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
+  -
 deploy:
-  - provider: script
-    script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
-    skip_cleanup: true
-    on:
-      branch: master
+  ##- provider: script
+  ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
+  ##  skip_cleanup: true
+  ##  on:
+  ##    branch: master TODO deploy gradlella?
   - provider: script
     script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
     on:
