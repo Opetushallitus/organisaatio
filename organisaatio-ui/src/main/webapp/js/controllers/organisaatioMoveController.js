@@ -26,6 +26,8 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
     $scope.suggests = [];
     $scope.koulutustoimija = false;
     $scope.oppilaitos = false;
+    $scope.varhaiskasvatuksenJarjestaja = false;
+    $scope.varhaiskasvatuksenToimipaikka = false;
 
     $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.organization");
 
@@ -43,6 +45,14 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
     function isOppilaitos() {
         var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
         return currentOrganizationTypes.indexOf("organisaatiotyyppi_02") > -1; // Oppilaitos
+    }
+    function isVarhaiskasvatuksenJarjestaja() {
+        var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
+        return currentOrganizationTypes.indexOf("organisaatiotyyppi_07") > -1; // VarhaiskasvatuksenJarjestaja
+    }
+    function isVarhaiskasvatuksenToimipaikka() {
+        var currentOrganizationTypes = $scope.options.organisaatio.tyypit;
+        return currentOrganizationTypes.indexOf("organisaatiotyyppi_08") > -1; // VarhaiskasvatuksenToimipaikka
     }
 
     function getNimi(organisaatio) {
@@ -78,6 +88,8 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
         var organizationType = "";
         $scope.koulutustoimija = isKoulutustoimija();
         $scope.oppilaitos = isOppilaitos();
+        $scope.varhaiskasvatuksenJarjestaja = isVarhaiskasvatuksenJarjestaja();
+        $scope.varhaiskasvatuksenToimipaikka = isVarhaiskasvatuksenToimipaikka();
 
         if ($scope.koulutustoimija) {
             // Koulutustoimijan tapauksessa voidaan tehdä vain liitos toiseen
@@ -97,8 +109,24 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
                 organizationType = 'organisaatiotyyppi_01'; // Koulutustoimija
                 $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.koulutustoimija");
             }
-        }
-        else {
+        } else if ($scope.varhaiskasvatuksenJarjestaja) {
+            // Varhaiskasvatuksen järjestäjän tapauksessa voidaan tehdä vain liitos toiseen
+            // Varhaiskasvatuksen järjestäjään
+            organizationType = 'organisaatiotyyppi_07'; // Varhaiskasvatuksen järjestäjä
+            $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.varhaiskasvatuksenJarjestaja");
+            $scope.options.merge = true;
+        } else if ($scope.varhaiskasvatuksenToimipaikka) {
+            // Jos Varhaiskasvatuksen toimipaikka, niin liitos voi tapahtua vain toiseen
+            // Varhaiskasvatuksen toimipaikkaan. Jos taas siirretään Varhaiskasvatuksen toimipaikka, se voidaan siirtää
+            // vain Varhaiskasvatuksen järjestäjän alle.
+            if ($scope.options.merge) {
+                organizationType = 'organisaatiotyyppi_08'; // Varhaiskasvatuksen toimipaikka
+                $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.varhaiskasvatuksenToimipaikka");
+            } else {
+                organizationType = 'organisaatiotyyppi_07'; // Varhaiskasvatuksen järjestäjä
+                $scope.siirtoKohdeTitle = $filter('i18n')("organisaatio.move.new.parent.varhaiskasvatuksenJarjestaja");
+            }
+        } else {
             $log.warn("Virheellinen organisaatiotyyppi organisaationsiirrossa: ",
                 $scope.options.organisaatio.tyypit);
         }

@@ -69,8 +69,9 @@ app.controller('OrganisaatioTreeController', function OrganisaatioTreeController
     };
 
     $scope.isMoveAllowed = function(node) {
-        // Oppilaitos || Koulutustoimija
-        return $scope.model.isTyyppi(node, "organisaatiotyyppi_02") || $scope.model.isTyyppi(node, "organisaatiotyyppi_01");
+        // Oppilaitos || Koulutustoimija || varhaiskasvatuksen järjestäjä || varhaiskasvatuksen toimipaikka
+        return $scope.model.isTyyppi(node, "organisaatiotyyppi_02") || $scope.model.isTyyppi(node, "organisaatiotyyppi_01") ||
+          $scope.model.isTyyppi(node, "organisaatiotyyppi_07") || $scope.model.isTyyppi(node, "organisaatiotyyppi_08");
     };
 
     $scope.isCreateSubAllowed = function(node) {
