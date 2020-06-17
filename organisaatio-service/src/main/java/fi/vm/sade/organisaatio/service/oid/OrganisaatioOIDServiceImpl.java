@@ -129,7 +129,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         boolean generateNew = true;
         String newOid = null;
 
-        while(generateNew) {
+        while (generateNew) {
             newOid = OIDGenerator.generateOID(Integer.parseInt(nodeClassValue));
             if (oidAvailable(newOid, nodeClassValue)) {
                 generateNew = false;
@@ -149,8 +149,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
 
             // Jos organisaatio löytyy annetulla oidilla, niin se ei ole vapaana
             return (org == null);
-        }
-        else if (nodeClass == NodeClassCode.TEKN_5) {
+        } else if (nodeClass == NodeClassCode.TEKN_5) {
             try {
                 // Yhteystietoihin liittyvät OID:t löytyvät neljästä eri taulusta
                 if (yhteystietoDAO.findBy("yhteystietoOid", oid).size() > 0) {
@@ -166,7 +165,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
                     return false;
                 }
             } catch (Exception ex) {
-                LOG.warn(ex.getMessage());
+                LOG.warn("Failed to check if yhteystiedot exists by oid: " + oid, ex);
             }
             // Yhteystietoihin liittyvistä tauluista ei löytynyt oidia
             return true;

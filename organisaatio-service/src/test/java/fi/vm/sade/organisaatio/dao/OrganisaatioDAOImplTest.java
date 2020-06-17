@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.organisaatio.RyhmaBuilder;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
@@ -187,6 +188,62 @@ public class OrganisaatioDAOImplTest {
 
     }
 
+    @Test
+    public void findModifedSinceLimitsByModificationTime() {
+        Date now = new Date();
+        Organisaatio a = createOrganisaatio("A", null, false, null, null);
+        a.setPaivitysPvm(new Date(0L));
+        organisaatioDAO.update(a);
+        Organisaatio b = createOrganisaatio("B", null, false, null, null);
+        b.setPaivitysPvm((new Date(now.getTime() + 100)));
+        organisaatioDAO.update(b);
+        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(false, now);
+        assertThat(tulokset.size()).isEqualTo(1);
+        assertThat(tulokset.get(0).getOid()).isEqualTo(b.getOid());
+    }
+
+    @Test
+    public void findModifedSinceLimitsByOrganizationType() {
+        Date now = new Date();
+        Date after = new Date(now.getTime() + 100);
+        OrganisaatioTyyppi organisaatioTyyppi = OrganisaatioTyyppi.OPPILAITOS;
+        Organisaatio a = createOrganisaatio("A", null, false, null, null);
+        a.setPaivitysPvm(after);
+        a.setTyypit(Collections.singleton(organisaatioTyyppi.koodiValue()));
+        organisaatioDAO.update(a);
+        Organisaatio b = createOrganisaatio("B", null, false, null, null);
+        b.setPaivitysPvm(after);
+        organisaatioDAO.update(b);
+        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(
+                false, now, Collections.singletonList(organisaatioTyyppi), false);
+        assertThat(tulokset.size()).isEqualTo(1);
+        assertThat(tulokset.get(0).getOid()).isEqualTo(a.getOid());
+    }
+
+    @Test
+    public void findModifedSinceExcludesDiscontinued() {
+        Date now = new Date();
+        Organisaatio a = createOrganisaatio("A", null, false, null, null);
+        a.setPaivitysPvm(new Date(now.getTime() + 100));
+        a.setLakkautusPvm(new Date(now.getTime() - 100));
+        organisaatioDAO.update(a);
+        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(
+                false, now, Collections.emptyList(), true);
+        assertThat(tulokset.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void findModifedSinceIncludesDiscontinuedInTheFuture() {
+        Date now = new Date();
+        Organisaatio a = createOrganisaatio("A", null, false, null, null);
+        a.setPaivitysPvm(new Date(now.getTime() + 100));
+        a.setLakkautusPvm(new Date(now.getTime() + 24 * 60 * 60 * 1000));
+        organisaatioDAO.update(a);
+        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(
+                false, now, Collections.emptyList(), true);
+        assertThat(tulokset.size()).isEqualTo(1);
+    }
+
     private String generateParentOidPath(Organisaatio parent) {
         if (parent == null) {
             return null;
@@ -254,21 +311,7 @@ public class OrganisaatioDAOImplTest {
     }
 
     private Osoite createOsoite() {
-        Osoite o = new Osoite(Osoite.TYYPPI_KAYNTIOSOITE, "katu", "0000", "Helsinki", UUID.randomUUID().toString());
-        return o;
-    }
-
-    private void setParentPaths(Organisaatio o) {
-        String parentOidpath = "";
-        String parentIdPath = "";
-        for (Organisaatio curOrg : this.organisaatioDAO.findParentsTo(o.getOid())) {
-            parentOidpath += "|" + curOrg.getOid();
-            parentIdPath += "|" + curOrg.getId();
-        }
-        parentOidpath += "|";
-        parentIdPath += "|";
-        o.setParentOidPath(parentOidpath);
-        o.setParentIdPath(parentIdPath);
+        return new Osoite(Osoite.TYYPPI_KAYNTIOSOITE, "katu", "0000", "Helsinki", UUID.randomUUID().toString());
     }
 
 }

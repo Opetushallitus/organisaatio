@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.generic.common.validation.ValidationConstants;
-import fi.vm.sade.oid.service.ExceptionMessage;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.types.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
@@ -49,12 +48,15 @@ import javax.validation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 
 @Service("organisaatioYtjService")
 @Transactional(rollbackFor = Throwable.class, readOnly = true)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
+
+    private static final Pattern PUHELIN_VALIDATION = Pattern.compile(Puhelinnumero.VALIDATION_REGEXP);
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -183,7 +185,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         List<Organisaatio> updatedOrganisaatios = new ArrayList<>();
         for(YTJDTO ytjOrg : ytjOrganisaatios) {
             Organisaatio organisaatio = organisaatiosByYtunnus.get(ytjOrg.getYtunnus().trim());
-            if(updateOrg(ytjOrg, organisaatio, forceUpdate)) {
+            if (updateOrg(ytjOrg, organisaatio, forceUpdate)) {
                 organisaatio.setYtjPaivitysPvm(new Date());
                 updatedOrganisaatios.add(organisaatio);
             }
@@ -256,9 +258,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             }
             updateSahkoposti = updateSahkopostiFromYTJToOrganisation(ytjOrg, email, forceUpdate);
         }
-        if(validateYtjPuhelin(ytjOrg)) {
+        if (validateYtjPuhelin(ytjOrg)) {
             Puhelinnumero puhelinnumero = organisaatio.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, ytjKielikoodi);
-            if(puhelinnumero == null) {
+            if (puhelinnumero == null) {
                 puhelinnumero = new Puhelinnumero();
                 if(!initYhteystietoforOrg(puhelinnumero, organisaatio, ytjKielikoodi, YtjVirhe.YTJVirheKohde.PUHELIN, "ilmoitukset.log.virhe.oid.puhelin")) {
                     puhelinnumero = null;
@@ -311,10 +313,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             LOG.info("YTJ y-tunnuksen alkupvm ei läpäise organisaatiopalvelun tarkistuksia " + organisaatio.getOid());
             return null;
         } catch (AliorganisaatioLakkautusKoulutuksiaException ke) {
-            // this can't actually happend because we don't import end date, so no ytj error logging
+            // this can't actually happen because we don't import end date, so no ytj error logging
             // but we still have to process the error that the validation method throws
-            LOG.info("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle ",
-                    organisaatio.getOid() + " jolla on alkavia koulutuksia");
+            LOG.info("YTJ:ssä y-tunnuksella on loppupäivämäärä organisaatiolle {} jolla on alkavia koulutuksia",
+                    organisaatio.getOid());
             return null;
         }
         return ytunnusAlkupvm;
@@ -468,7 +470,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private boolean updateLangFromYTJ(YTJDTO ytjdto, Organisaatio organisaatio) {
         String YTJKieli = ytjdto.getYrityksenKieli();
         if(YTJKieli != null && !YTJKieli.trim().isEmpty()) {
-            Boolean YTJkieliExists = false;
+            boolean YTJkieliExists = false;
             for (String kieli : organisaatio.getKielet()) {
                 if (kieli.trim().equals(ORG_KIELI_KOODI_FI)
                         && YTJKieli.trim().equals("Suomi")) {
@@ -543,17 +545,14 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private boolean validateYtjPuhelin(YTJDTO ytjOrg) {
-        if(ytjOrg.getPuhelin() == null) {
+        String puhelin = ytjOrg.getPuhelin();
+        if (puhelin == null || puhelin.length() > ValidationConstants.GENERIC_MAX) {
             return false;
+        } else {
+            ytjOrg.setPuhelin(puhelin.split(",|; *")[0]); // huh? mitä/miksi?!
         }
-        else if(ytjOrg.getPuhelin().length() > ValidationConstants.GENERIC_MAX) {
-            return false;
-        }
-        else {
-            // Parse extra stuff off.
-            ytjOrg.setPuhelin(ytjOrg.getPuhelin().split(",|; *")[0]);
-        }
-        return true;
+
+        return PUHELIN_VALIDATION.matcher(ytjOrg.getPuhelin()).matches();
     }
 
     private boolean validateYtjWww(YTJDTO ytjOrg) {
@@ -573,7 +572,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     // set the common fields for all Yhteystietos
     private boolean initYhteystietoforOrg(Yhteystieto yhteystieto, Organisaatio organisaatio, String kielikoodi, YtjVirhe.YTJVirheKohde virhekohde, String virheviesti) {
         String oid = generateOid();
-        if(oid != null) {
+        if (oid != null) {
             yhteystieto.setKieli(kielikoodi);
             yhteystieto.setOrganisaatio(organisaatio);
             yhteystieto.setYhteystietoOid(oid);
@@ -694,7 +693,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     }
 
     private String fixHttpPrefix(String www) {
-        if(www != null && !www.matches("^(https?:\\/\\/).*$")) {
+        if(www != null && !www.matches("^(https?://).*$")) {
             www = "http://" + www;
         }
         return www;
@@ -712,7 +711,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private String generateOid() {
         try {
             return oidService.newOid(NodeClassCode.TEKN_5);
-        } catch (ExceptionMessage e) {
+        } catch (Exception e) {
             LOG.error("Oid-generointi yhteystiedolle epäonnistui", e);
         }
         return null;

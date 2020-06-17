@@ -90,14 +90,4 @@ public class OrganisaatioTest {
         assertThat(parentOids).containsExactly("1.2.246.562.10.00000000001", "1.2.246.562.10.81269623245", "1.2.246.562.10.86638002385");
     }
 
-    @Test
-    public void validatesYhteystiedot() {
-        Organisaatio organisaatio = new Organisaatio();
-        Puhelinnumero puhelinnumero = new Puhelinnumero("", Puhelinnumero.TYYPPI_PUHELIN, null);
-        organisaatio.setOid("1.23.456");
-        organisaatio.addYhteystieto(puhelinnumero);
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        assertThat(validator.validate(organisaatio)).isNotEmpty();
-    }
-
 }

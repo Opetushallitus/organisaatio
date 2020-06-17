@@ -202,7 +202,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Preconditions.checkNotNull(oids);
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
-        return organisaatioDAO.findByOids(oids, true).stream()
+        boolean excludePiilotettu = !permissionChecker.isReadAccessToAll();
+        return organisaatioDAO.findByOids(oids, true, excludePiilotettu).stream()
                 .map(this::markImagesNotIncluded)
                 .map(organisaatio -> mapToOrganisaatioRdtoV4(organisaatio))
                 .collect(Collectors.toList());
@@ -303,13 +304,21 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRDTOV4> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTOV4> haeMuutetut(
+            DateParam lastModifiedSince,
+            boolean includeImage,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued) {
         Preconditions.checkNotNull(lastModifiedSince);
 
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(permissionChecker.isReadAccessToAll() ? null : false, lastModifiedSince.getValue());
+        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+                !permissionChecker.isReadAccessToAll(),
+                lastModifiedSince.getValue(),
+                organizationTypes,
+                excludeDiscontinued);
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
 

@@ -157,21 +157,55 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
     /**
-     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Hibernaten odotetaan lataavan laiskasti batcheissa
-     * puuttuvat tiedot.
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Ei palauta piilotettuja organisaatioita.
+     * Hibernaten odotetaan lataavan laiskasti batcheissa puuttuvat tiedot.
      * @param oids Organisaatioiden oidit
      * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
      * @return Oideja vastaavat organisaatiot
+     * @see #findByOids(Collection, boolean, boolean) 
      */
     List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
 
+    /**
+     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. <b>Huom!</b> oikeus nähdä piilotetut
+     * organisaatiot tarkistettava, jos piilotetut sisällytetään tuloksiin - tämä on <i>kutsujan vastuulla</i>.
+     * 
+     * @param oids organisatioiden OID:t
+     * @param excludePoistettu jätetäänkö poistetut pois tuloksista
+     * @param excludePiilotettu jätetäänkö piilotetut pois tuloksista
+     * @return OID:ja vastaavat organisaatiot
+     * @see #findByOids(Collection, boolean)
+     */
+    List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu);
+
     /***
-     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot. Ei rajaa organisaatiotyypillä, sisällyttää myös
+     * lakkautetut organisaatiot.
      *
      * @param lastModifiedSince päivämäärä
-     * @return
+     * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
+     * @return annetun päivämäärän jälkeen muuttuneet organisaatiot
+     * @see #findModifiedSince(boolean, Date, List, boolean)
      */
-    List<Organisaatio> findModifiedSince(Boolean piilotettu, Date lastModifiedSince);
+    List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince);
+
+    /***
+     * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot. Hakua voi rajata organisaatiotyypeillä tai jättää
+     * (hakuhetkellä) lakkautetut organisaatiot pois tuloksista.
+     *
+     * @param lastModifiedSince päivämäärä
+     * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
+     * @param organizationTypes halutut organisaatiotyypit (tyhjä/null palauttaa kaikki)
+     * @param excludeDiscontinued jätetäänkö (hakuhetkellä) lakkautetut pois tuloksista
+     * @return annetun päivämäärän jälkeen muuttuneet organisaatiot
+     */
+    List<Organisaatio> findModifiedSince(
+            boolean excludePiilotettu,
+            Date lastModifiedSince,
+            List<OrganisaatioTyyppi> organizationTypes,
+            boolean excludeDiscontinued);
 
     /**
      * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.
