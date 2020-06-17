@@ -4,9 +4,9 @@ import {useState, useEffect} from "react";
 // import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
-import { LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext } from './contexts/contexts';
+import { LanguageContext, I18nImpl } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {Koodi, Language, Lokalisointi} from './types/types';
+import {Language, Lokalisointi} from './types/types';
 import useAxios from 'axios-hooks';
 import Spinner from './components/Spinner/Spinner';
 import ErrorPage from './components/VirheSivu/VirheSivu';
@@ -22,7 +22,7 @@ const OrganisaatioApp: React.FC = () => {
   useEffect(() => {
     async function fetchLanguage() {
       try {
-        const response = await Axios.get('/organisaatio/api/lokalisointi/kieli');
+        const response = await Axios.get('/api/lokalisointi/kieli');
         setLanguage(response.data);
       } catch (error) {
         console.log(error);
@@ -33,28 +33,22 @@ const OrganisaatioApp: React.FC = () => {
     fetchLanguage();
   }, []);
   const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
-      '/organisaatio/api/lokalisointi');
-  const [{ data: kunnat, loading: kunnatLoading, error: kunnatError}] = useAxios<Koodi[]>(
-      '/organisaatio/api/koodisto/KUNTA/koodi?onlyValid=true');
-  if (languageLoading || lokalisointiLoading || kunnatLoading) {
+      '/api/lokalisointi');
+  if (languageLoading || lokalisointiLoading) {
     return <Spinner />;
   }
   if (lokalisointiError) {
     return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
-  const i18n = new I18nImpl(lokalisointi, language);
-  const kuntaKoodisto = new KoodistoImpl(kunnat, language);
-  return (
+  const i18n = new I18nImpl(lokalisointi, language);return (
       <Router basename="/organisaatio-ui">
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
-          <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
             <Switch>
               <Route path="/" exact component={() => (<div>Organisaatioita täällä</div>)} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>
             </Switch>
-          </KuntaKoodistoContext.Provider>
         </LanguageContext.Provider>
       </Router>
   );
