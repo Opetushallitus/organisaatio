@@ -28,6 +28,8 @@ dependencies {
 	implementation project(':organisaatio-ui')
 	compile project(':organisaatio-api')
 	implementation 'org.springframework.boot:spring-boot-starter'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation 'com.google.guava:guava:29.0-jre'
 	implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
 	implementation 'fi.vm.sade.java-utils:java-http:0.6.0-SNAPSHOT'

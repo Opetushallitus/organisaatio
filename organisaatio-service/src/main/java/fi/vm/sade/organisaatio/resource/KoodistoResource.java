@@ -5,16 +5,13 @@ import fi.vm.sade.organisaatio.service.KoodistoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
-@Path("/api/koodisto")
-@Api("/api/koodisto")
-@Component("koodistoResource")
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/koodisto")
+@Api(value = "/koodisto")
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;
@@ -23,37 +20,31 @@ public class KoodistoResource {
         this.koodistoService = koodistoService;
     }
 
-    @POST
-    @Path("/sync/v4")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @PostMapping(path= "/sync/v4", consumes = "application/json")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Lisää hakukriteerien mukaiset organisaatiot koodistosynkronointiin")
-    public void addKoodistoSyncBy(OrganisaatioSearchCriteriaDTOV4 criteriaV4) {
+    public void addKoodistoSyncBy(@RequestBody OrganisaatioSearchCriteriaDTOV4 criteriaV4) {
         koodistoService.addKoodistoSyncBy(criteriaV4);
     }
 
-    @GET
-    @Path("/sync")
+    @GetMapping(path="/sync", produces = "application/json")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Listaa koodistosynkronoinnissa olevat organisaatiot")
     public Collection<String> listKoodistoSyncOids() {
         return koodistoService.listKoodistoSyncOids();
     }
 
-    @PUT
-    @Path("/sync/{oid}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @PutMapping(path="/sync/{oid}", consumes = "application/json")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Lisää organisaation koodistosynkronointiin")
-    public void addKoodistoSyncByOid(@PathParam("oid") String oid) {
+    public void addKoodistoSyncByOid(@PathVariable String oid) {
         koodistoService.addKoodistoSyncByOid(oid);
     }
 
-    @DELETE
-    @Path("/sync/{oid}")
+    @DeleteMapping(path="/sync/{oid}")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Poistaa organisaation koodistosynkronoinnista")
-    public void removeKoodistoSyncByOid(@PathParam("oid") String oid) {
+    public void removeKoodistoSyncByOid(@PathVariable String oid) {
         koodistoService.removeKoodistoSyncByOid(oid);
     }
 

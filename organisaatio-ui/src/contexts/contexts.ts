@@ -42,9 +42,9 @@ type ConfigurationContextType = {
     virkailijaRaamitUrl: string
 }
 
-export const ConfigurationContext = React.createContext<ConfigurationContextType>({
-    virkailijaRaamitUrl: "/virkailija-raamit/apply-raamit.js"
-});
+//export const ConfigurationContext = React.createContext<ConfigurationContextType>({
+//    virkailijaRaamitUrl: "/virkailija-raamit/apply-raamit.js"
+//});
 
 export interface Koodisto {
     uri2Nimi: (uri: KoodiUri) => string
@@ -89,11 +89,3 @@ export class KoodistoImpl implements Koodisto {
 type KoodistoContextType = {
     koodisto: Koodisto
 }
-
-export const KuntaKoodistoContext = React.createContext<KoodistoContextType>({
-    koodisto: new KoodistoImpl([], "fi")
-});
-
-export const MaatJaValtiotKoodistoContext = React.createContext<KoodistoContextType>({
-    koodisto: new KoodistoImpl([], "fi")
-});
