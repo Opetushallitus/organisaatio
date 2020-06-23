@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {useState, useEffect} from "react";
+import { ThemeProvider } from 'styled-components';
+import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 //import 'normalize.css';
 // import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
@@ -9,9 +11,14 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {Language, Lokalisointi} from './types/types';
 import useAxios from 'axios-hooks';
 import Spinner from './components/Spinner/Spinner';
-import ErrorPage from './components/VirheSivu/VirheSivu';
+import ErrorPage from './components/pages/VirheSivu/VirheSivu';
 import Axios from 'axios';
+import LomakeSivu from "./components/pages/LomakeSivu/LomakeSivu";
+import TaulukkoSivu from "./components/pages/TaulukkoSivu/TaulukkoSivu";
 
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
+
+const theme = createTheme();
 
 const OrganisaatioApp: React.FC = () => {
   registerLocale('fi', fi);
@@ -22,7 +29,7 @@ const OrganisaatioApp: React.FC = () => {
   useEffect(() => {
     async function fetchLanguage() {
       try {
-        const response = await Axios.get('/api/lokalisointi/kieli');
+        const response = await Axios.get(`${urlPrefix}/lokalisointi/kieli`);
         setLanguage(response.data);
       } catch (error) {
         console.log(error);
@@ -33,7 +40,7 @@ const OrganisaatioApp: React.FC = () => {
     fetchLanguage();
   }, []);
   const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
-      '/api/lokalisointi');
+      `${urlPrefix}/lokalisointi`);
   if (languageLoading || lokalisointiLoading) {
     return <Spinner />;
   }
@@ -42,14 +49,17 @@ const OrganisaatioApp: React.FC = () => {
   }
   const i18n = new I18nImpl(lokalisointi, language);return (
       <Router basename="/organisaatio-ui">
+        <ThemeProvider theme={theme}>
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
             <Switch>
-              <Route path="/" exact component={() => (<div>Organisaatioita täällä</div>)} />
+              <Route path="/" exact component={TaulukkoSivu} />
+              <Route path="/lomake" exact component={LomakeSivu} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>
             </Switch>
         </LanguageContext.Provider>
+        </ThemeProvider>
       </Router>
   );
 };
