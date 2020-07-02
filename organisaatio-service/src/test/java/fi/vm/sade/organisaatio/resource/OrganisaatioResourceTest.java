@@ -140,6 +140,9 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         //Finding all organisaatios with bar in name
         searchCriteria = createOrgSearchCriteria(null, null, "bar", true, null);
         result = res.searchHierarchy(searchCriteria);
+        for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
+            LOG.debug("ORG: {}", org.getOid());
+        }
         assertEquals(5, result.getNumHits());
 
         //Finding only organisaatios that are of oppilaitostyyppi Ammattikorkeakoulut
@@ -150,7 +153,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         //Finding only organisaatios that are of organisaatiotyyppi Varhaiskasvatuksen jarjestaja
         searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), null, null, true, null);
         result = res.searchHierarchy(searchCriteria);
-        assertEquals(1, result.getNumHits());
+        assertEquals(2, result.getNumHits()); // the matching organization plus its child
         assertThat(result.getOrganisaatiot())
                 .flatExtracting(OrganisaatioPerustieto::getOrganisaatiotyypit)
                 .containsExactlyInAnyOrder(OrganisaatioTyyppi.OPPILAITOS, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA);
@@ -165,7 +168,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
         // Get the hierarchy
         OrganisaatioSearchCriteriaDTOV2 searchCriteria = createOrgSearchCriteriaDTOV2();
         OrganisaatioHakutulos result = res2.searchOrganisaatioHierarkia(searchCriteria);
-        assertEquals(8, result.getNumHits());
+        assertEquals(9, result.getNumHits());
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             if(org.getOid().equals("1.2.2004.1")) {
                 assertNotNull(org.getOppilaitosKoodi());

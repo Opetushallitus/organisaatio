@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.dao;
 
 import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -230,4 +231,15 @@ public interface OrganisaatioDAO extends JpaDAO<Organisaatio, Long> {
     EntityManager getJpaEntityManager();
 
     Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
+
+    /**
+     * Palauttaa kaikki annetun organisaation jälkeläiset, pl. poistetut. Piilotettujen sisällyttämistä voi
+     * kontrolloida <code>includeHidden</code> -vivulla. <i>Huom!</i> oikeus piilotettujen näkemiseen tulee tarkistaa
+     * kutsuvassa koodissa! Palautettavat rivit ovat raakadataa, sisältäen duplikaattirivejä eri JOIN:ien tuloksena.
+     *
+     * @param oid           vanhemman OID.
+     * @param includeHidden sisällytetäänkö piilotetut organisaatiot tuloksiin?
+     * @return jälkeläiset.
+     */
+    List<OrganisaatioDAOImpl.JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden);
 }
