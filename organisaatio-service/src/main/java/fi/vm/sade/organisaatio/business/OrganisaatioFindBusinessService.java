@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -17,6 +16,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public interface OrganisaatioFindBusinessService {
 
@@ -129,6 +131,4 @@ public interface OrganisaatioFindBusinessService {
             boolean includeImage,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
-
-    List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden);
 }

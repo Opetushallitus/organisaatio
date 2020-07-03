@@ -7,7 +7,6 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
@@ -25,7 +24,9 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -193,93 +194,4 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
     }
-
-    // GET /organisaatio/v4/{oid}/jalkelaiset
-    @Override
-    public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        boolean globalReadAccess = permissionChecker.isReadAccessToAll();
-        if (!globalReadAccess) {
-            try {
-                permissionChecker.checkReadOrganisation(oid);
-            } catch (NotAuthorizedException nae) {
-                LOG.warn("Not authorized to read organisation: " + oid);
-                throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-            }
-        }
-        return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));
-    }
-
-    // prosessointi tarkoituksella transaktion ulkopuolella
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioDAOImpl.JalkelaisetRivi> rows) {
-        final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
-        final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
-        OrganisaatioPerustietoV4 current = null;
-        Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
-        for (OrganisaatioDAOImpl.JalkelaisetRivi row : rows) {
-            if (current == null || !row.oid.equals(current.getOid())) {
-                if (current != null) { // edellinen valmis, asetetaan mappiin
-                    finalizePerustieto(current, parentOids);
-                    oidToOrg.put(current.getOid(), current);
-                    parentOids = new LinkedHashSet<>();
-                }
-                current = new OrganisaatioPerustietoV4();
-                current.setMatch(true);
-                current.setOid(row.oid);
-                current.setAlkuPvm(row.alkuPvm);
-                current.setLakkautusPvm(row.lakkautusPvm);
-                current.setYtunnus(row.ytunnus);
-                current.setVirastoTunnus(row.virastotunnus);
-                current.setOppilaitosKoodi(row.oppilaitoskoodi);
-                current.setOppilaitostyyppi(row.oppilaitostyyppi);
-                current.setToimipistekoodi(row.toimipistekoodi);
-                current.setKotipaikkaUri(row.kotipaikka);
-                current.setOrganisaatiotyypit(new HashSet<>());
-                current.setNimi(new HashMap<>());
-                current.setKieletUris(new HashSet<>());
-                current.setChildren(new HashSet<>());
-                current.setParentOid(row.parentOid);
-                OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
-                if (parent == null) {
-                    rootOrgs.add(current);
-                } else {
-                    parent.getChildren().add(current);
-                    parent.setAliOrganisaatioMaara(parent.getChildren().size());
-                }
-            }
-            if (row.parentOid != null) {
-                parentOids.add(row.parentOid);
-            }
-            if (row.organisaatiotyyppi != null) {
-                current.getOrganisaatiotyypit().add(row.organisaatiotyyppi);
-            }
-            if (row.nimiKieli != null) {
-                current.getNimi().put(row.nimiKieli, row.nimiArvo);
-            }
-            if (row.kieli != null) {
-                current.getKieletUris().add(row.kieli);
-            }
-        }
-        if (current != null) { // viimeistellään viimeinen käsitelty rivi
-            finalizePerustieto(current, parentOids);
-            oidToOrg.put(current.getOid(), current);
-        }
-        OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
-        result.setOrganisaatiot(rootOrgs);
-        result.setNumHits(oidToOrg.size());
-        return result;
-    }
-
-    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
-        perustieto.setParentOidPath(generateParentOidPath(parentOids));
-    }
-
-    private static String generateParentOidPath(Set<String> parentOids) {
-        if (parentOids.isEmpty()) {
-            return "";
-        }
-        List<String> parentOidsList = new ArrayList<>(parentOids);
-        Collections.reverse(parentOidsList);
-        return String.join("/", parentOidsList);
-    }
-
 }

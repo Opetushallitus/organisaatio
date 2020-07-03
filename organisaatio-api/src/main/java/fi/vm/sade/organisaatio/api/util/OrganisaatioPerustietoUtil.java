@@ -20,8 +20,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -37,11 +35,14 @@ public abstract class OrganisaatioPerustietoUtil {
     public static Set<OrganisaatioPerustieto> createHierarchy(
             final List<OrganisaatioPerustieto> organisaatiot) {
 
-        Map<String, OrganisaatioPerustieto> oidToOrgMap = organisaatiot.stream().collect(
-                Collectors.toMap(OrganisaatioPerustieto::getOid, Function.identity()));
+        Map<String, OrganisaatioPerustieto> oidToOrgMap = new HashMap<String, OrganisaatioPerustieto>();
 
         //ORganisaatiot joilla eil ole isää:
         Set<OrganisaatioPerustieto> rootOrgs = new HashSet<>();
+
+        for (OrganisaatioPerustieto curOrg : organisaatiot) {
+            oidToOrgMap.put(curOrg.getOid(), curOrg);
+        }
 
         for (OrganisaatioPerustieto curOrg : organisaatiot) {
             final String parentOid = curOrg.getParentOid();

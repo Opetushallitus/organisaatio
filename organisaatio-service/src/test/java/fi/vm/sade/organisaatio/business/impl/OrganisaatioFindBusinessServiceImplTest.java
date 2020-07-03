@@ -6,6 +6,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -17,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -73,7 +73,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
         Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
-        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3));
+        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(rootOrganisaatio, organisaatio1, organisaatio2, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
 
@@ -88,13 +88,12 @@ public class OrganisaatioFindBusinessServiceImplTest {
     @Test
     public void findByIncludeParents() {
         SearchCriteria criteria = new SearchCriteria();
-        criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(rootOrganisaatio).build();
         Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio2).build();
-        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(organisaatio1, organisaatio3));
+        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(rootOrganisaatio, organisaatio1, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
 
@@ -103,14 +102,13 @@ public class OrganisaatioFindBusinessServiceImplTest {
         verify(organisaatioDaoMock, times(2)).findBy(searchCriteriaCaptor.capture(), any());
         List<SearchCriteria> searchCriterias = searchCriteriaCaptor.getAllValues();
         assertThat(searchCriterias.get(0)).isSameAs(criteria);
-        assertThat(searchCriterias.get(1).getOid()).containsExactlyInAnyOrder("rootOid", "oid2");
+        assertThat(searchCriterias.get(1).getOid()).containsExactlyInAnyOrder("oid2");
         verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
     }
 
     @Test
     public void findByIncludeChildren() {
         SearchCriteria criteria = new SearchCriteria();
-        criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(false, true, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
@@ -118,7 +116,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
         Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
         Organisaatio organisaatio4 = new OrganisaatioBuilder("oid4").parent(rootOrganisaatio).build();
         Organisaatio organisaatio5 = new OrganisaatioBuilder("oid5").parent(organisaatio4).build();
-        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3, organisaatio4, organisaatio5));
+        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(rootOrganisaatio, organisaatio1, organisaatio2, organisaatio3, organisaatio4, organisaatio5));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
 
@@ -127,6 +125,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
         verify(organisaatioDaoMock, times(2)).findBy(searchCriteriaCaptor.capture(), any());
         List<SearchCriteria> searchCriterias = searchCriteriaCaptor.getAllValues();
         assertThat(searchCriterias.get(0)).isSameAs(criteria);
+        assertThat(searchCriterias.get(1).getParentOidPaths()).containsExactlyInAnyOrder("|rootOid|oid1|", "|rootOid|oid4|");
         verify(organisaatioDaoMock, never()).countActiveChildrenByOid(any());
     }
 
@@ -138,7 +137,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
         Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
         Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
         Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
-        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3));
+        when(organisaatioDaoMock.findBy(eq(criteria), any())).thenReturn(asList(rootOrganisaatio, organisaatio1, organisaatio2, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
 

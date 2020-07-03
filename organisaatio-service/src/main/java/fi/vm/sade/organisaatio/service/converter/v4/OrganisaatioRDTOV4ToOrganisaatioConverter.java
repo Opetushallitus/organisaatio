@@ -11,7 +11,6 @@ import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
-import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,7 +66,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setOppilaitosKoodi(source.getOppilaitosKoodi());
         target.setOppilaitosTyyppi(source.getOppilaitosTyyppiUri());
         target.setMuutOppilaitosTyyppiUris(convertCollectionToSet(source.getMuutOppilaitosTyyppiUris()));
-        target.setParentOids(OrganisaatioUtil.parentOids(source.getParentOidPath()));
+        target.setParentOidPath(source.getParentOidPath());
 
         target.setToimipisteKoodi(source.getToimipistekoodi());
         target.setTyypit(this.convertSetToSet(source.getTyypit()));

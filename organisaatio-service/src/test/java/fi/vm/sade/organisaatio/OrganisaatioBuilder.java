@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
 public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
@@ -37,7 +38,7 @@ public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
     }
 
     public T tyyppi(OrganisaatioTyyppi... tyyppi) {
-        tyypit.addAll(Arrays.asList(tyyppi));
+        Arrays.stream(tyyppi).forEach(this.tyypit::add);
         return builder();
     }
 
@@ -81,7 +82,7 @@ public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
         organisaatio.setOid(oid);
         organisaatio.setTyypit(tyypit.stream().map(OrganisaatioTyyppi::value).collect(toSet()));
         organisaatio.setNimi(nimi);
-        organisaatio.setNimihaku(String.join(",", nimi.getValues().values()));
+        organisaatio.setNimihaku(nimi.getValues().values().stream().collect(joining(",")));
         organisaatio.setKielet(opetuskielet);
         organisaatio.setAlkuPvm(alkuPvm);
         organisaatio.setLakkautusPvm(lakkautusPvm);
@@ -94,22 +95,14 @@ public class OrganisaatioBuilder<T extends OrganisaatioBuilder<T>> {
             parentSuhde.setParent(parent);
             parentSuhteet.add(parentSuhde);
             organisaatio.setParentSuhteet(parentSuhteet);
-            organisaatio.setParentOids(generateParentOids(parent));
+            organisaatio.setParentOidPath(generateParentPath(parent.getParentOidPath(), parent.getOid()));
             organisaatio.setParentIdPath(generateParentPath(parent.getParentIdPath(), parent.getId()));
-            organisaatio.setParentOids(generateParentOids(parent));
         }
         return organisaatio;
     }
 
     private static String generateParentPath(String parentParentPath, Serializable parentId) {
         return Optional.ofNullable(parentParentPath).map(path -> path + parentId + "|").orElse("|" + parentId + "|");
-    }
-
-    private static List<String> generateParentOids(Organisaatio parent) {
-        List<String> parentOids = new ArrayList<>();
-        parentOids.add(parent.getOid());
-        parentOids.addAll(parent.getParentOids());
-        return parentOids;
     }
 
 }

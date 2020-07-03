@@ -635,18 +635,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (parentOid == null) {
             parentOid = rootOrganisaatioOid;
         }
+        StringBuilder parentOidPath = new StringBuilder();
         StringBuilder parentIdPath = new StringBuilder();
         List<Organisaatio> parents = organisaatioDAO.findParentsTo(parentOid);
-        List<String> parentOids = new ArrayList<>();
         for (Organisaatio curParent : parents) {
-            parentOids.add(curParent.getOid());
+            parentOidPath.append(parentSeparator).append(curParent.getOid());
             parentIdPath.append(parentSeparator).append(curParent.getId());
         }
-        Collections.reverse(parentOids);
         if (!parents.isEmpty()) {
+            parentOidPath.append(parentSeparator);
             parentIdPath.append(parentSeparator);
         }
-        entity.setParentOids(parentOids);
+        entity.setParentOidPath(parentOidPath.toString());
         entity.setParentIdPath(parentIdPath.toString());
     }
 

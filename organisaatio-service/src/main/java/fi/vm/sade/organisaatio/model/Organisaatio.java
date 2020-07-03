@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import fi.vm.sade.security.xssfilter.FilterXss;
@@ -12,7 +11,9 @@ import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
 import static java.util.stream.Collectors.toSet;
 
 
@@ -22,67 +23,6 @@ import static java.util.stream.Collectors.toSet;
     @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
 @org.hibernate.annotations.Table(appliesTo = "Organisaatio", comment = "Sisältää kaikki organisaatiot.")
-@SqlResultSetMappings(
-        @SqlResultSetMapping(
-                name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
-                classes = @ConstructorResult(
-                        targetClass = OrganisaatioDAOImpl.JalkelaisetRivi.class,
-                        columns = {
-                                @ColumnResult(name = "oid"),
-                                @ColumnResult(name = "alkuPvm", type = Date.class),
-                                @ColumnResult(name = "lakkautusPvm", type = Date.class),
-                                @ColumnResult(name = "parentOid"),
-                                @ColumnResult(name = "ytunnus"),
-                                @ColumnResult(name = "virastotunnus"),
-                                @ColumnResult(name = "oppilaitoskoodi"),
-                                @ColumnResult(name = "oppilaitostyyppi"),
-                                @ColumnResult(name = "toimipistekoodi"),
-                                @ColumnResult(name = "kotipaikka"),
-                                @ColumnResult(name = "organisaatiotyyppi"),
-                                @ColumnResult(name = "nimiKieli"),
-                                @ColumnResult(name = "nimiArvo"),
-                                @ColumnResult(name = "kieli"),
-                                @ColumnResult(name = "taso", type = Integer.class)
-                        }
-                )
-        )
-)
-@NamedNativeQueries({
-        @NamedNativeQuery(
-                name = "Organisaatio.findAllDescendants",
-                query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
-                        "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
-                        "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                        "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
-                        "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
-                        "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
-                        "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
-                        "LEFT JOIN monikielinenteksti n ON (n.id = o.nimi_mkt) " +
-                        "JOIN monikielinenteksti_values nv ON (nv.id = n.id) " +
-                        "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
-                        "WHERE o.organisaatiopoistettu <> TRUE AND o.piilotettu <> TRUE AND o.id IN (" +
-                        "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
-                        "ORDER BY taso, o.oid, p.parent_position",
-                resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
-        ),
-        @NamedNativeQuery(
-        name = "Organisaatio.findAllDescendantsInclHidden",
-        query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
-                "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
-                "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
-                "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
-                "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
-                "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
-                "LEFT JOIN monikielinenteksti n ON (n.id = o.nimi_mkt) " +
-                "JOIN monikielinenteksti_values nv ON (nv.id = n.id) " +
-                "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
-                "WHERE o.organisaatiopoistettu <> TRUE AND o.id IN (" +
-                "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
-                "ORDER BY taso, o.oid, p.parent_position",
-        resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
-        )}
-)
 @EntityListeners(XssFilterListener.class)
 public class Organisaatio extends OrganisaatioBaseEntity {
 
@@ -227,15 +167,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Column(length = 255)
     private String paivittaja;
 
+    /**
+     * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
+     */
+    private String parentOidPath;
     private String parentIdPath;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "organisaatio_parent_oids",
-            joinColumns = @JoinColumn(name = "organisaatio_id"))
-    @Column(name = "parent_oid", nullable = false)
-    @OrderColumn(name = "parent_position")
-    private List<String> parentOids = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
@@ -278,10 +214,17 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public Optional<String> getParentOid() {
-        if (parentOids == null || parentOids.isEmpty()) {
-            return Optional.empty();
+        if (this.parentOidPath != null) {
+            Iterator<String> oidsPathInverted = Arrays.stream(this.parentOidPath.split("\\|"))
+                    .collect(Collectors.toCollection(ArrayDeque::new)) // or LinkedList
+                    .descendingIterator();
+            if (!oidsPathInverted.hasNext()) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(oidsPathInverted.next())
+                    .filter(s -> s.matches("[\\d\\.]+"));
         }
-        return Optional.of(parentOids.get(0));
+        return Optional.empty();
     }
 
     /**
@@ -753,24 +696,28 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         this.parentSuhteet = parentSuhteet;
     }
 
+    public String getParentOidPath() {
+        return parentOidPath;
+    }
+
+    public void setParentOidPath(String parentOidPath) {
+        this.parentOidPath = parentOidPath;
+    }
+
+    public List<String> getParentOidsFromPath() {
+        return Optional.ofNullable(parentOidPath)
+                .map(path -> Arrays.stream(path.split("\\|"))
+                        .filter(not(String::isEmpty))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+    }
+
     public String getParentIdPath() {
         return parentIdPath;
     }
 
-    public String getParentOidPath() {
-        return OrganisaatioUtil.parentOidPath(parentOids);
-    }
-
     public void setParentIdPath(String parentIdPath) {
         this.parentIdPath = parentIdPath;
-    }
-
-    public List<String> getParentOids() {
-        return parentOids;
-    }
-
-    public void setParentOids(List<String> parentOids) {
-        this.parentOids = parentOids;
     }
 
     /**

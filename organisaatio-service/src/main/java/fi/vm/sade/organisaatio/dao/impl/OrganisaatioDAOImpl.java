@@ -19,8 +19,12 @@ package fi.vm.sade.organisaatio.dao.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLOps;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
@@ -29,6 +33,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.OrganisaatioPerustietoRivi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
@@ -43,7 +48,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -60,6 +66,7 @@ import static com.querydsl.core.types.dsl.Expressions.allOf;
 import static com.querydsl.core.types.dsl.Expressions.anyOf;
 import static fi.vm.sade.organisaatio.service.util.OptionalUtil.ifPresentOrElse;
 import static fi.vm.sade.organisaatio.service.util.PredicateUtil.not;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 
 /**
@@ -86,9 +93,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     @Autowired
     private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
-    @Value("${root.organisaatio.oid}")
-    private String rootOrganisaatioOid;
-
     private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
 
     @Override
@@ -98,16 +102,20 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
         StringPath qNimiArvo = Expressions.stringPath("nimiArvo");
         StringPath qKieli = Expressions.stringPath("kieli");
-        StringPath qParentOid = Expressions.stringPath("parentOid");
 
-        JPAQuery<Organisaatio> query = new JPAQuery<>(getEntityManager())
+        JPAQuery<OrganisaatioPerustietoRivi> query = new JPAQuery<>(getEntityManager())
                 .from(qOrganisaatio)
-                .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi).fetchJoin()
-                .leftJoin(qOrganisaatio.nimi, qNimi).fetchJoin()
-                .leftJoin(qNimi.values, qNimiArvo).fetchJoin()
-                .leftJoin(qOrganisaatio.kielet, qKieli).fetchJoin()
-                .leftJoin(qOrganisaatio.parentOids, qParentOid).fetchJoin()
-                .select(qOrganisaatio);
+                .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi)
+                .leftJoin(qOrganisaatio.nimi, qNimi)
+                .leftJoin(qNimi.values, qNimiArvo)
+                .leftJoin(qOrganisaatio.kielet, qKieli)
+                .select(Projections.constructor(OrganisaatioPerustietoRivi.class,
+                        qOrganisaatio.oid, qOrganisaatio.alkuPvm, qOrganisaatio.lakkautusPvm,
+                        qOrganisaatio.parentOidPath, qOrganisaatio.ytunnus, qOrganisaatio.virastoTunnus,
+                        qOrganisaatio.oppilaitosKoodi, qOrganisaatio.oppilaitosTyyppi, qOrganisaatio.toimipisteKoodi,
+                        Expressions.stringOperation(JPQLOps.KEY, qNimiArvo), qNimiArvo, qOrganisaatiotyyppi, qKieli,
+                        qOrganisaatio.kotipaikka
+                ));
 
         Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
 
@@ -143,7 +151,7 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
 
         Optional.ofNullable(criteria.getOidRestrictionList()).filter(not(Collection::isEmpty)).ifPresent(oids -> {
             BooleanBuilder parentOidPathPredicate = oids.stream()
-                    .map(qOrganisaatio.parentOids::contains)
+                    .map(oid -> qOrganisaatio.parentOidPath.contains(oid))
                     .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or);
             query.where(qOrganisaatio.oid.in(oids).or(parentOidPathPredicate));
         });
@@ -160,11 +168,46 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         Optional.ofNullable(criteria.getOid()).filter(not(Collection::isEmpty)).ifPresent(oids
                 -> query.where(qOrganisaatio.oid.in(oids)));
 
-        Optional.ofNullable(criteria.getParentOids()).filter(not(Collection::isEmpty)).ifPresent(parentOids
-                -> query.where(qOrganisaatio.parentOids.any().in(parentOids)));
+        Optional.ofNullable(criteria.getParentOidPaths()).filter(not(Collection::isEmpty)).ifPresent(parentOidPaths
+                -> query.where(parentOidPaths.stream().map(parentOidPath -> qOrganisaatio.parentOidPath.startsWith(parentOidPath))
+                        .reduce(new BooleanBuilder(), BooleanBuilder::or, BooleanBuilder::or)));
 
-        query.where(qOrganisaatio.oid.notEqualsIgnoreCase(rootOrganisaatioOid));
-        return query.fetch();
+        return query.fetch().stream()
+                .collect(groupingBy(OrganisaatioPerustietoRivi::getOid,
+                        reducing(new Organisaatio(), OrganisaatioDAOImpl::map, OrganisaatioDAOImpl::merge)))
+                .values();
+    }
+
+    private static Organisaatio map(OrganisaatioPerustietoRivi source) {
+        Organisaatio destination = new Organisaatio();
+        destination.setOid(source.getOid());
+        destination.setAlkuPvm(source.getAlkuPvm());
+        destination.setLakkautusPvm(source.getLakkautusPvm());
+        destination.setParentOidPath(source.getParentOidPath());
+        destination.setYtunnus(source.getYtunnus());
+        destination.setVirastoTunnus(source.getVirastotunnus());
+        destination.setOppilaitosKoodi(source.getOppilaitosKoodi());
+        destination.setOppilaitosTyyppi(source.getOppilaitostyyppi());
+        destination.setToimipisteKoodi(source.getToimipistekoodi());
+        destination.setNimi(new MonikielinenTeksti());
+        Optional.ofNullable(source.getNimiArvo()).ifPresent(nimiArvo -> destination.getNimi().addString(source.getNimiKieli(), nimiArvo));
+        destination.setTyypit(Stream.of(source.getTyyppi()).collect(toSet()));
+        Optional.ofNullable(source.getKieli()).ifPresent(kieli -> destination.setKielet(asList(kieli)));
+        destination.setKotipaikka(source.getKotipaikka());
+        return destination;
+    }
+
+    private static Organisaatio merge(Organisaatio o1, Organisaatio o2) {
+        Optional.ofNullable(o1.getTyypit()).ifPresent(tyypit
+                -> o2.setTyypit(Stream.concat(o2.getTyypit().stream(), tyypit.stream())
+                        .collect(toCollection(LinkedHashSet::new))));
+        Optional.ofNullable(o1.getNimi()).ifPresent(nimi
+                -> nimi.getValues().forEach((kieli, arvo)
+                        -> o2.getNimi().addString(kieli, arvo)));
+        Optional.ofNullable(o1.getKielet()).ifPresent(kielet
+                -> o2.setKielet(Stream.concat(o2.getKielet().stream(), kielet.stream())
+                        .collect(toCollection(LinkedHashSet::new))));
+        return o2;
     }
 
     private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio, Date now) {
@@ -523,14 +566,23 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
     public List<String> findParentOidsTo(String oid) {
         LOG.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
+        List<String> oids = Lists.newArrayList();
 
         Organisaatio org = findByOid(oid);
-        return Stream.concat(Stream.of(oid), org.getParentOids().stream()).collect(
-                Collectors.collectingAndThen(toList(), oids -> {
-                    Collections.reverse(oids);
-                    return oids;
-                })
-        );
+        final String parentOidPath = org.getParentOidPath();
+
+
+        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
+        QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
+
+
+        while (org != null) {
+            oids.add(org.getOid());
+            OrganisaatioSuhde curSuhde = organisaatioSuhdeDAO.findParentTo(org.getId(), new Date());
+            org = (curSuhde != null) ? curSuhde.getParent() : null;
+        }
+        Collections.reverse(oids);
+        return oids;
     }
 
     /**
@@ -905,8 +957,8 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
                     .where(qKayttoryhma.eq(kayttoryhma));
             query.where(qOrganisaatio.in(subquery));
         });
-        Optional.ofNullable(criteria.getParentOid()).ifPresent(parentOid -> {
-            query.where(qOrganisaatio.parentOids.get(0).eq(parentOid));
+        Optional.ofNullable(criteria.getParentOidPath()).ifPresent(parentOidPath -> {
+            query.where(qOrganisaatio.parentOidPath.eq(parentOidPath));
         });
         Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu -> {
             query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu));
@@ -931,54 +983,6 @@ public class OrganisaatioDAOImpl extends AbstractJpaDAOImpl<Organisaatio, Long> 
         List<String> childOids = namedParameterJdbcTemplate.query(sql, new BeanPropertySqlParameterSource(criteria),
                 (ResultSet rs, int rowNum) -> rs.getString("oid"));
         return childOids.stream().filter(childOid -> !childOid.equals(criteria.getOid())).collect(toSet());
-    }
-
-    @Override
-    public List<JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden) {
-        TypedQuery<JalkelaisetRivi> query = getEntityManager().createNamedQuery(
-                includeHidden ? "Organisaatio.findAllDescendantsInclHidden" : "Organisaatio.findAllDescendants",
-                JalkelaisetRivi.class);
-        query.setParameter("root", oid);
-        return query.getResultList();
-    }
-
-    public static class JalkelaisetRivi {
-        public final String oid;
-        public final Date alkuPvm;
-        public final Date lakkautusPvm;
-        public final String parentOid;
-        public final String ytunnus;
-        public final String virastotunnus;
-        public final String oppilaitoskoodi;
-        public final String oppilaitostyyppi;
-        public final String toimipistekoodi;
-        public final String kotipaikka;
-        public final String nimiKieli;
-        public final String nimiArvo;
-        public final String organisaatiotyyppi;
-        public final String kieli;
-        public final Integer taso;
-
-        public JalkelaisetRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOid,
-                               String ytunnus, String virastotunnus, String oppilaitoskoodi,
-                               String oppilaitostyyppi, String toimipistekoodi, String kotipaikka,
-                               String organisaatiotyyppi, String nimiKieli,  String nimiArvo, String kieli, Integer taso) {
-            this.oid = oid;
-            this.alkuPvm = alkuPvm;
-            this.lakkautusPvm = lakkautusPvm;
-            this.parentOid = parentOid;
-            this.ytunnus = ytunnus;
-            this.virastotunnus = virastotunnus;
-            this.oppilaitoskoodi = oppilaitoskoodi;
-            this.oppilaitostyyppi = oppilaitostyyppi;
-            this.toimipistekoodi = toimipistekoodi;
-            this.kotipaikka = kotipaikka;
-            this.nimiKieli = nimiKieli;
-            this.nimiArvo = nimiArvo;
-            this.organisaatiotyyppi = organisaatiotyyppi;
-            this.kieli = kieli;
-            this.taso = taso;
-        }
     }
 
 }
