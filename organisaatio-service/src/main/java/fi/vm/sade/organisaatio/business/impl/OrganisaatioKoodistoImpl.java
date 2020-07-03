@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fi.vm.sade.koodisto.service.types.common.KoodiMetadataType;
 import fi.vm.sade.koodisto.service.types.common.KoodiType;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
@@ -38,6 +39,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 /**
  * Päivittää organisaatiopalvelussa lisätyn tai muokatun organisaation tiedot
@@ -500,9 +504,10 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     @Override
-    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         Map<String, Object> parametrit = new HashMap<>();
-        parametrit.put("koodistoVersio", versio);
+        versio.ifPresent(value -> parametrit.put("koodistoVersio", value));
+        onlyValid.ifPresent(value -> parametrit.put("onlyValidKoodis", value));
         String url = properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
         return fetchKoodiTypeList(url)
                 .stream()
@@ -579,9 +584,15 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodi.setArvo(koodiType.getKoodiArvo());
             koodi.setUri(koodiType.getKoodiUri());
             koodi.setVersio(koodiType.getVersio());
+            koodi.setNimi(metadataTo(koodiType.getMetadata(), metadata -> metadata.getNimi()));
             return koodi;
         }
 
     }
 
+    private static Map<String, String> metadataTo(List<KoodiMetadataType> metadataList, Function<KoodiMetadataType, String> valueProvider) {
+        return metadataList.stream()
+                .filter(metadata -> metadata != null && isNotEmpty(metadata.getKieli().value()) && isNotEmpty(valueProvider.apply(metadata)))
+                .collect(toMap(metadata -> metadata.getKieli().value().toLowerCase(), valueProvider));
+    }
 }

@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -79,7 +76,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             throw new ValidationException("validation.Organisaatio.virastotunnus");
         }
 
-        List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, 1);
+        List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, Optional.ofNullable(1), null);
         KoodiPredicate kieliKoodiArvoPredicate = new KoodiPredicate(kieliKoodit, koodi -> koodi.getArvo().toLowerCase());
         KoodiPredicate kieliKoodiUriVersioPredicate = new KoodiPredicate(kieliKoodit, new KoodiToUriVersioMapper());
 

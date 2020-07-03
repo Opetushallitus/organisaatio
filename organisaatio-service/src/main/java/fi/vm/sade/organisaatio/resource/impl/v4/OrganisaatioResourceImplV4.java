@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
@@ -29,8 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@CrossOriginResourceSharing(allowAllOrigins = true)
+@RestController
+@RequestMapping("/organisaatio/v4")
 public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV4.class);
 

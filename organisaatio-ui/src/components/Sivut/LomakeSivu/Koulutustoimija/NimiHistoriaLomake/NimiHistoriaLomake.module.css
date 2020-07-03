@@ -1,0 +1,6 @@
+.UloinKehys {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
