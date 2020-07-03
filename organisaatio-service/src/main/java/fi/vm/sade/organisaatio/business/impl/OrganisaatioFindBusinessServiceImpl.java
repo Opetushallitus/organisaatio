@@ -53,10 +53,6 @@ import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-/**
- *
- * @author simok
- */
 @Transactional
 @Service("organisaatioFindBusinessService")
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {

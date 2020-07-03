@@ -1,13 +1,18 @@
 package fi.vm.sade.organisaatio.resource;
 
+import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/koodisto")
@@ -15,9 +20,11 @@ import java.util.Collection;
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;
+    private final OrganisaatioKoodisto organisaatioKoodisto;
 
-    public KoodistoResource(KoodistoService koodistoService) {
+    public KoodistoResource(KoodistoService koodistoService, OrganisaatioKoodisto organisaatioKoodisto) {
         this.koodistoService = koodistoService;
+        this.organisaatioKoodisto = organisaatioKoodisto;
     }
 
     @PostMapping(path= "/sync/v4", consumes = "application/json")
@@ -46,6 +53,14 @@ public class KoodistoResource {
     @ApiOperation("Poistaa organisaation koodistosynkronoinnista")
     public void removeKoodistoSyncByOid(@PathVariable String oid) {
         koodistoService.removeKoodistoSyncByOid(oid);
+    }
+
+    @GetMapping("/{koodisto}/koodi")
+    List<Koodi> getKoodi(@PathVariable OrganisaatioKoodisto.KoodistoUri koodisto,
+                         @RequestParam(required = false) Optional<Integer> versio,
+                         @RequestParam(required = false) Optional<Boolean> onlyValid
+    ) {
+        return organisaatioKoodisto.haeKoodit(koodisto, versio, onlyValid);
     }
 
 }

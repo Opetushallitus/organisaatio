@@ -1,0 +1,46 @@
+.UloinKehys {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.Rivi {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.Ruudukko {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: min-content auto;
+    padding-right: 2rem;
+}
+
+.Kentta {
+    margin-right: 2rem;
+    width: 26rem;
+}
+
+.AvainKevyestiBoldattu {
+    font-weight: 700;
+}
+
+.ReadOnly {
+    font-size: 16px;
+    -webkit-appearance: none;
+    border: none
+}
+
+.Nappi {
+    height: 2.5rem;
+}
+
+@media (min-width: 900px) {
+    .AvainKevyestiBoldattu {
+        white-space: nowrap;
+    }
+}

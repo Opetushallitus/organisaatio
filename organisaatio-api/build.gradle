@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
 	compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.4'
 	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.4'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.3'

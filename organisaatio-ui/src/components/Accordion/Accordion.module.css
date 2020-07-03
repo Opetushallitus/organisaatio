@@ -6,7 +6,13 @@
     padding-top: 1rem;
 }
 
+.AccordionItem:last-of-type {
+    padding-bottom: 1rem;
+}
+
+
 .AccordionHeadingItem {
+    height: 4.438rem;
     border: 1px solid #CCCCCC;
     box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.17);
     background-color: #FFFFFF;
@@ -14,7 +20,7 @@
 
 .AccordionButton {
     cursor: pointer;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     width: 100%;
     text-align: left;
 }

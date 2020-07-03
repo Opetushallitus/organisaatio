@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import styles from './Accordion.module.css';
 
 import {
@@ -10,34 +10,30 @@ import {
 } from 'react-accessible-accordion';
 
 type props = {
-    lomakkeet?: React.ReactNode,
+    lomakkeet: ReactElement<any>[],
+    otsikot: String[],
 }
 
 
 export default function OrganisaatioMuokkausAccordion(props: props) {
-    const Perustietolomake = props.lomakkeet;
+    const {lomakkeet, otsikot} = props;
     return (
         <Accordion className={styles.Accordion}>
-            <AccordionItem className={styles.AccordionItem}>
-                <AccordionItemHeading className={styles.AccordionHeadingItem}>
-                    <AccordionItemButton className={styles.AccordionButton}>
-                       <span className={styles.OtsikkoTeksti}>1. Perustiedot</span>
-                    </AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel className={styles.AccordionPanel}>
-                    {Perustietolomake}
-                </AccordionItemPanel>
-            </AccordionItem>
-            <AccordionItem className={styles.AccordionItem}>
-                <AccordionItemHeading className={styles.AccordionHeadingItem}>
-                    <AccordionItemButton className={styles.AccordionButton}>
-                        1. Perustiedot
-                    </AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel className={styles.AccordionPanel}>
-                      sfddfsfdsdfsdfsdfsffsdfsdf
-                </AccordionItemPanel>
-            </AccordionItem>
+            {lomakkeet.map((lomake, index) => {
+                return (
+                    <AccordionItem className={styles.AccordionItem}>
+                        <AccordionItemHeading className={styles.AccordionHeadingItem}>
+                            <AccordionItemButton className={styles.AccordionButton}>
+                                <span className={styles.OtsikkoTeksti}>{`${index + 1}. ${otsikot[index]}`}</span>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel className={styles.AccordionPanel}>
+                            {lomake}
+                        </AccordionItemPanel>
+                    </AccordionItem>
+                );
+            })
+            }
         </Accordion>
     );
 }

@@ -1,4 +1,5 @@
-import React,  {useContext}  from 'react';
+import React,  {useContext, useEffect, useState }  from 'react';
+import Axios from "axios";
 import styles from './TaulukkoSivu.module.css';
 import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
@@ -23,232 +24,32 @@ import {
     useExpanded,
     usePagination,
 } from 'react-table';
+import Spinner from "../../Spinner/Spinner";
 
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
 const mapPaginationSelectors = (index) => {
   if (index < 3) return [0, 5];
   return [index-2, index+3];
 }
 const TaulukkoSivu = (props) => {
-  const { i18n } = useContext(LanguageContext);
-
-  const data = React.useMemo(
-        () => [
-            {
-                name: 'Paavo Pesusieni',
-                kunta: 'Hämeenlinna',
-                organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-                tunniste: '122111-1',
-                oid: '1.2.12.212121121221222',
-                subRows: [ {
-                  name: 'Paavo pesupoika',
-                  kunta: 'Turku',
-                  organisaatioTyyppi: 'Oppilaitos',
-                  tunniste: '12345',
-                  oid: '1.2.231123123123',
-                }
-                ]
-            },
-            {
-                name: 'Miikka Testaa',
-                kunta: 'Helsinki',
-                organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-                tunniste: '122111-1',
-                oid: '1.2.12.222',
-            },
-          {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },            {
-            name: 'Paavo Pesusieni',
-            kunta: 'Hämeenlinna',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.212121121221222',
-            subRows: [ {
-              name: 'Paavo pesupoika',
-              kunta: 'Turku',
-              organisaatioTyyppi: 'Oppilaitos',
-              tunniste: '12345',
-              oid: '1.2.231123123123',
-            }
-            ]
-          },
-          {
-            name: 'Miikka Testaa',
-            kunta: 'Helsinki',
-            organisaatioTyyppi: 'Varhaiskasvatuksen toimija',
-            tunniste: '122111-1',
-            oid: '1.2.12.222',
-          },
-        ],
-        []
-    );
+  const { i18n, language } = useContext(LanguageContext);
+  const [organisaatiot, setOrganisaatiot] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function fetch() {
+      try {
+        const response = await Axios.get(`${urlPrefix}/organisaatio/v4/hierarkia/hae?noCache=1593282230071&aktiiviset=true&lakkautetut=false&searchstr=haagan&suunnitellut=true`);
+        const data = response.data;
+        console.log('data', data);
+        setOrganisaatiot([ ...data.organisaatiot ]);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('error fetching', error)
+      }
+    }
+    fetch();
+  }, []);
 
     const columns = React.useMemo(
         () => [
@@ -275,19 +76,19 @@ const TaulukkoSivu = (props) => {
           },
             {
                 Header: 'Nimi',
-                accessor: 'name',
+                Cell: ({ row }) => <a href={`/lomake/${row.original.oid}`}>{row.original.nimi[language] || row.original.nimi.fi || row.original.nimi.sv || row.original.nimi.fi || row.original.nimi.en}</a>
             },
             {
                 Header: 'Kunta',
-                accessor: 'kunta',
+                accessor: 'kotipaikkaUri',
             },
             {
                 Header: 'Tyyppi',
-                accessor: 'organisaatioTyyppi',
+                Cell: ({ row }) => row.original.organisaatiotyypit.map(ot => <span>ot</span>)
             },
             {
                 Header: 'Tunniste',
-                accessor: 'tunniste',
+                accessor: 'ytunnus',
             },
             {
                 Header: 'Oid',
@@ -303,7 +104,9 @@ const TaulukkoSivu = (props) => {
             }
         ],
         []
-    )
+    );
+
+    const data = organisaatiot;
 
     const {
         getTableProps,
@@ -325,7 +128,6 @@ const TaulukkoSivu = (props) => {
       state: { pageIndex, pageSize },
     } = useTable({ columns, data, initialState: { pageIndex: 0 } },
       useExpanded, usePagination);
-
     return(
         <PohjaSivu>
             <div className={styles.PaaOsio} >
@@ -362,7 +164,6 @@ const TaulukkoSivu = (props) => {
                         </thead>
                         <tbody {...getTableBodyProps()}>
                         {page.map((row, index) => {
-                            console.log('row', row, index);
                             prepareRow(row);
                             return (
                                 <tr {...row.getRowProps()}>
@@ -389,7 +190,6 @@ const TaulukkoSivu = (props) => {
                       <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map(option => {
-                      console.log('opt', option);
                       if (option === pageIndex) return (<Button onClick={() => gotoPage(option)}>
                         {option+1}
                       </Button>);

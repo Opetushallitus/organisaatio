@@ -71,8 +71,16 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         return children;
     }
 
+    @ApiModelProperty(value = "Organisaation alaorganisaatiot react taableen", required = true)
+    private Set<OrganisaatioPerustietoV4> subRows = new HashSet<>();
+
+    public Set<OrganisaatioPerustietoV4> getSubRows() {
+        return children;
+    }
+
     public void setChildren(Set<OrganisaatioPerustietoV4> children) {
         this.children = children;
+        this.subRows = children;
     }
 
     public Map<String, String> getNimi() {
