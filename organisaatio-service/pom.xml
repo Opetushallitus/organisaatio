@@ -19,6 +19,9 @@
         <webapp.port>7003</webapp.port>
         <skipDbDiagramGenerate>false</skipDbDiagramGenerate>
         <spring-profiles>default</spring-profiles>
+        <database.name>organisaatio</database.name>
+        <database.user>organisaatio</database.user>
+        <database.password>organisaatio</database.password>
     </properties>
 
     <build>
@@ -45,25 +48,6 @@
                         <configuration>
                             <outputDirectory>target/generated-sources/java</outputDirectory>
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>add-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <directory>target/generated-sources</directory>
-                            </sources>
                         </configuration>
                     </execution>
                 </executions>
@@ -107,15 +91,109 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <directory>target/generated-sources</directory>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>reserve-db-port</id>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <portNames>
+                                <portName>database.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.31.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <alias>database</alias>
+                            <name>postgres:10-alpine</name>
+                            <run>
+                                <env>
+                                    <POSTGRES_USER>${database.user}</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>${database.password}</POSTGRES_PASSWORD>
+                                    <POSTGRES_DB>${database.name}</POSTGRES_DB>
+                                </env>
+                                <ports>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <port>${database.port}:5432</port>
+                                </ports>
+                                <wait>
+                                    <!-- kantayhteyttä ei saa heti, pakko odotella hetki -->
+                                    <time>1750</time>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-db</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>6.4.2</version>
+                <executions>
+                    <execution>
+                        <id>test-migrations</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <schemas>
+                                <schema>public</schema>
+                            </schemas>
+                            <user>${database.user}</user>
+                            <password>${database.password}</password>
+                            <driver>org.postgresql.Driver</driver>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <url>jdbc:postgresql://localhost:${database.port}/${database.name}</url>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>io.github.divinespear</groupId>
-            <artifactId>jpa-schema-maven-plugin</artifactId>
-            <version>0.2.0</version>
-        </dependency>
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-distributed-ehcache</artifactId>
@@ -140,7 +218,7 @@
         <dependency>
             <groupId>com.googlecode.flyway</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>2.0.2</version>
+            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -285,6 +363,13 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodatime.version}</version>
+        </dependency>
+        <!-- Fix https://snyk.io/vuln/SNYK-JAVA-ORGCODEHAUSPLEXUS-31522 -->
+        <!-- cxf-java2swagger-plugin tuo haavoittuvaisen version ilman tätä -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.16</version>
         </dependency>
         <!--Provides javax.ws.rs-api:2.0-m10 if this is overwritten with newer version stops working!-->
         <dependency>
@@ -823,31 +908,6 @@
     </dependencies>
 
     <profiles>
-
-        <!--
-        Local schema preparation from maven. Set environment properties for this to work. (fyway.user & flyway.password)
-             mvn -Dflyway.user=XXX -Dflyway.password=XXX -P flyway flyway:migrate
-        -->
-        <profile>
-            <id>flyway</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.googlecode.flyway</groupId>
-                        <artifactId>flyway-maven-plugin</artifactId>
-                        <version>2.0.3</version>
-                        <configuration>
-                            <schemas>
-                                <schema>public</schema>
-                            </schemas>
-                            <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://127.0.0.1:5432/organisaatio</url>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
         <!-- profile for running service as standalone webapp - no other servers (like JMS) required-->
         <profile>
             <id>standalone</id>
