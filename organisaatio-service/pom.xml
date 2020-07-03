@@ -364,6 +364,13 @@
             <artifactId>joda-time</artifactId>
             <version>${jodatime.version}</version>
         </dependency>
+        <!-- Fix https://snyk.io/vuln/SNYK-JAVA-ORGCODEHAUSPLEXUS-31522 -->
+        <!-- cxf-java2swagger-plugin tuo haavoittuvaisen version ilman tätä -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.16</version>
+        </dependency>
         <!--Provides javax.ws.rs-api:2.0-m10 if this is overwritten with newer version stops working!-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
