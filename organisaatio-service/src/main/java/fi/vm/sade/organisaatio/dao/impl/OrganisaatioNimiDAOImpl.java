@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,9 +83,10 @@ public class OrganisaatioNimiDAOImpl extends AbstractJpaDAOImpl<OrganisaatioNimi
 
     @Override
     public List<OrganisaatioNimi> findNimet(String organisaatioOid) {
-        Organisaatio organisaatio = organisaatioDAO.findByOid(organisaatioOid);
-
-        return this.findNimet(organisaatio);
+        TypedQuery<OrganisaatioNimi> query = getEntityManager().createNamedQuery(
+                "OrganisaatioNimiDAO.findNimet", OrganisaatioNimi.class);
+        query.setParameter("organisaatioOid", organisaatioOid);
+        return query.getResultList();
     }
 
     @Override

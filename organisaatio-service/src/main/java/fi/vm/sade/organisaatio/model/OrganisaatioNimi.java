@@ -29,6 +29,10 @@ import java.util.Date;
 @Table(name = "organisaatio_nimi")
 @org.hibernate.annotations.Table(appliesTo = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
 @EntityListeners(XssFilterListener.class)
+@NamedQuery(
+        name = "OrganisaatioNimiDAO.findNimet",
+        query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
+)
 public class OrganisaatioNimi extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
