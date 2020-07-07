@@ -1,18 +1,27 @@
 import * as React from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from "../../../../Taulukot/YksinkertainenTaulukko";
+import useAxios from "axios-hooks";
+import {Koodi} from "../../../../../types/types";
 
 
+type organisaatioHistoriaProps = {
+  oid?: string
+}
 
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
-export default function OrganisaatioHistoriaLomake() {
+export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
+    const [{ data: historia, loading: historiaLoading, error: historiaError}] = useAxios(
+        `${urlPrefix}/organisaatio/v4/1.2.246.562.10.69981965515/historia`);
+    console.log('hist', historia);
     const liittyneetColumns = [
             {
                 Header: 'Nimen voimassaolo',
                 accessor: 'alkuPvm',
             },
             {
-                Header: 'Liittyneet orgnisaatiot',
+                Header: 'Liittyneet organisaatiot',
                 accessor: 'organisaatiot',
             }
         ];

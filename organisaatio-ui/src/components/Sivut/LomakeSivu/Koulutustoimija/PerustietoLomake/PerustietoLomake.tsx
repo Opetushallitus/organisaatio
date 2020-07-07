@@ -4,8 +4,15 @@ import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import CheckboxGroup from "@opetushallitus/virkailija-ui-components/CheckboxGroup";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {KuntaKoodistoContext} from "../../../../../contexts/contexts";
+import PohjaModaali from "../../../../Modaalit/PohjaModaali/PohjaModaali";
+import TNHeader from "../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader";
+import TNBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNBody";
+import TNFooter from "../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter";
+import TLHeader from "../../../../Modaalit/ToimipisteenLakkautus/TLHeader";
+import TLBody from "../../../../Modaalit/ToimipisteenLakkautus/TLBody";
+import TLFooter from "../../../../Modaalit/ToimipisteenLakkautus/TLFooter";
 
 type OrganisaatioProps = {
     organisaatio: any
@@ -17,11 +24,14 @@ type OrganisaatioProps = {
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
     const { organisaatio, language, organisaatioTyypit, maatJaValtiot, opetuskielet } = props;
+    const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
+    const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const kaikkiKunnat = kuntaKoodisto.koodit().map((k: any) => ({
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
+    console.log('o', organisaatio)
     return(
         <div className={styles.UloinKehys}>
                 <div className={styles.Rivi}>
@@ -34,7 +44,11 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         <span className={styles.ReadOnly}>{organisaatio.nimi[language] || organisaatio.nimi['fi'] || organisaatio.nimi['sv'] || organisaatio.nimi['en']}</span>
                     </div>
                     <div>
-                        <Button className={styles.Nappi} variant="outlined">Muokkaa organisaation nimeä</Button>
+                        <Button
+                            className={styles.Nappi}
+                            variant="outlined"
+                            onClick={() => setNimenmuutosModaaliAuki(true)}
+                        >Muokkaa organisaation nimeä</Button>
                     </div>
                 </div>
                 <div className={styles.Rivi}>
@@ -61,7 +75,11 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         <label>Organisaatio merkitty rekisteriin (perustamispäivämäärä)</label>
                         <Input value={organisaatio.alkuPvm} />
                     </div>
-                    <Button className={styles.Nappi} variant="outlined">Merkitse organisaatio lakkautetuksi</Button>
+                    <Button
+                        className={styles.Nappi}
+                        variant="outlined"
+                        onClick={() => setLakkautusModaaliAuki(true)}
+                    >Merkitse organisaatio lakkautetuksi</Button>
                 </div>
                 <div className={styles.Rivi}>
                     <div className={styles.Kentta}>
@@ -105,7 +123,23 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                                 value: mv.uri, label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en']
                             }))}/>
                     </div>
-                </div>
+                </div>{
+            nimenmuutosModaaliAuki &&
+            <PohjaModaali
+                header={<TNHeader/>}
+                body={<TNBody/>}
+                footer={<TNFooter/>}
+                suljeCallback={() => setNimenmuutosModaaliAuki(false)}
+            />
+            }
+            {lakkautusModaaliAuki &&
+            <PohjaModaali
+                header={<TLHeader/>}
+                body={<TLBody/>}
+                footer={<TLFooter/>}
+                suljeCallback={() => setLakkautusModaaliAuki(false)}
+            />
+        }
         </div>
     );
 }

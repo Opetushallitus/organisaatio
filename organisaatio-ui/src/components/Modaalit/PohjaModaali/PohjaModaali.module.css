@@ -1,0 +1,19 @@
+/* modaalin taustan väri tulee index.css:stä [role=dialog] > div > div perusteella */
+
+.ModaaliKehys.ModaaliKehys{
+    border: 1px solid #979797;
+    border-top: 3px solid #159ECB;
+    border-radius: 0px;
+    background-color: #FFFFFF;
+    box-shadow: 0 9px 7px 0 rgba(0,0,0,0.5);
+    padding-left: 2rem;
+    min-width: 65%;
+}
+
+.ModaaliOtsikkoKehys.ModaaliOtsikkoKehys {
+     border-bottom: none;
+}
+
+.ModaaliFooterKehys.ModaaliFooterKehys {
+    border-top: none;
+}
