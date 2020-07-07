@@ -92,14 +92,33 @@ const LomakeSivu = (props: any) => {
                         <YhteystietoLomake
                             yhteystiedot={organisaatio.yhteystiedot}
                         />,
-                        <NimiHistoriaLomake />,
-                        <OrganisaatioHistoriaLomake/>,
+                        <NimiHistoriaLomake
+                            nimet={organisaatio.nimet}
+                        />,
+                        <OrganisaatioHistoriaLomake
+                            oid={organisaatio.oid}
+                        />,
                     ]}
                     otsikot={['Perustiedot', 'Yhteystiedot', 'Nimihistoria', 'Organisaatiohistoria']}
                 />
             </div>
             <div className={styles.AlaBanneri}>
-
+                <div className={styles.VersioContainer}>
+                    <Button variant="outlined" className={styles.Versionappula}>
+                        <span className="material-icons">timeline</span>
+                        <span className={styles.VersionappulanTeksti}>{i18n.translate('VERSIOHISTORIA')}</span>
+                    </Button>
+                    <div className={styles.MuokattuKolumni}>
+                        <span>{i18n.translate('MUOKATTU_VIIMEKSI')}</span>
+                        <span>01.01.2020 16:39 ngo Schimpff</span>
+                    </div>
+                </div>
+                <div>
+                    <Button variant="outlined" className={styles.Versionappula}>{i18n.translate('SULJE_TIEDOT')}
+                    </Button>
+                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}
+                    </Button>
+                </div>
             </div>
         </PohjaSivu>
     );

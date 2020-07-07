@@ -36,6 +36,7 @@ export interface Organisaatio {
     oid?: string,
     ytunnus: string,
     nimi: any,
+    nimet: any,
     alkuPvm: LocalDate | null,
     yritysmuoto: string,
     tyypit: KoodiUri[],

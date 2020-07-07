@@ -43,7 +43,8 @@ public interface OrganisaatioKoodisto {
         TOIMIPISTE("opetuspisteet"),
         OPPILAITOS("oppilaitosnumero"),
         KOULUTUSTOIMIJA("koulutustoimija"),
-        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi");
+        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi"),
+        POSTI("posti");
         private final String uri;
 
         KoodistoUri(String koodistoUri) {
