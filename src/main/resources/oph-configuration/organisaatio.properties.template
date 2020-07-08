@@ -37,7 +37,7 @@ organisaatio-service.postgresql.password={{host_postgresql_organisaatio_app_pass
 organisaatio-service.postgresql.maxactive={{host_postgresql_organisaatio_max_active}}
 organisaatio-service.postgresql.maxwait={{host_postgresql_organisaatio_max_wait}}
 organisaatio-service.postgresql.maxlifetimemillis=60000
-organisaatio-service.hikaricp.leakDetectionThreshold={{organisaatio_hikaricp_leak_detection_threshold | default 0}}
+organisaatio-service.hikaricp.leakDetectionThreshold={{organisaatio_hikaricp_leak_detection_threshold | default(0)}}
 
 # Oletusarvoja
 activemq.queue.name.log.error=Sade.Log_Error
