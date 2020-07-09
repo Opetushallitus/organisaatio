@@ -63,6 +63,7 @@
         <property name="maximumPoolSize" value="${organisaatio-service.postgresql.maxactive}" />
         <property name="connectionTimeout" value="${organisaatio-service.postgresql.maxwait}" />
         <property name="maxLifetime" value="${organisaatio-service.postgresql.maxlifetimemillis}"/>
+        <property name="leakDetectionThreshold" value="${organisaatio-service.hikaricp.leakDetectionThreshold:0}"/>
 
         <property name="dataSourceProperties">
             <props>
