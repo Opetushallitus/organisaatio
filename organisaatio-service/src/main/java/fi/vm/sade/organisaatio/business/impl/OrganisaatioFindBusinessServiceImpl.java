@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
@@ -62,6 +63,12 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
     private static final int MAX_PARENT_OIDS = 2500;
+    private static final Pattern OID_PATTERN = Pattern.compile("\\d+(\\.\\d+)+");
+    // y-tunnus ja virastotunnus ovat samaa muotoa
+    private static final Pattern YTUNNUS_VIRASTOTUNNUS_PATTERN = Pattern.compile("\\d{7}-\\d");
+    private static final Pattern OPPILAITOSKOODI_PATTERN = Pattern.compile("\\d{5}");
+    // oppilaitoskoodi, plus 2 numeroa (tarvittaessa 0 edessä), tai oppilaitoksella pelkkä oppilaitoskoodi
+    private static final Pattern TOIMIPISTEKOODI_PATTERN = Pattern.compile("\\d{7}");
 
     @Autowired
     private OrganisaatioDAO organisaatioDAO;
@@ -263,19 +270,21 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public Organisaatio findById(String id) {
-        Organisaatio o = organisaatioDAO.findByOid(id);
-        if (o == null) {
-            o = organisaatioDAO.findByYTunnus(id);
-        }
-        if (o == null) {
-            o = organisaatioDAO.findByVirastoTunnus(id);
-        }
-        if (o == null) {
+        Organisaatio o = null;
+        if (OID_PATTERN.matcher(id).matches()) {
+            o = organisaatioDAO.findByOid(id);
+        } else if (OPPILAITOSKOODI_PATTERN.matcher(id).matches()) {
             o = organisaatioDAO.findByOppilaitoskoodi(id);
-        }
-        if (o == null) {
+        } else if (TOIMIPISTEKOODI_PATTERN.matcher(id).matches()) {
             o = organisaatioDAO.findByToimipistekoodi(id);
+        } else if (YTUNNUS_VIRASTOTUNNUS_PATTERN.matcher(id).matches()) {
+            o = organisaatioDAO.findByYTunnus(id);
+            if (o == null) {
+                o = organisaatioDAO.findByVirastoTunnus(id);
+            }
         }
+        // voitaisiin heittää IllegalArgumentException ja palauttaa 400 Bad Request,
+        // kun id:n formaatti ei natsaa mihinkään, mutta palautetaan null, koska näin rajapinta on toiminut ennenkin
         return o;
     }
 
