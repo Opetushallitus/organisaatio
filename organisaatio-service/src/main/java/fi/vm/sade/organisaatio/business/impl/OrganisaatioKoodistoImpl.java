@@ -99,7 +99,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         try {
             getClient().put(gson.toJson(koodi));
         } catch (OrganisaatioKoodistoException e) {
-            LOG.debug("Koodi update failed. Reason: " + e.getMessage());
+            LOG.debug("Koodi update failed. Reason: " + e.getMessage(), e);
             return false;
         }
         return true;
@@ -117,7 +117,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         try {
             getClient().post(gson.toJson(koodi), uri);
         } catch (OrganisaatioKoodistoException e) {
-            LOG.warn("Koodi insert failed. Reason: " + e.getMessage());
+            LOG.warn("Koodi insert failed. Reason: " + e.getMessage(), e);
             return false;
         }
         return true;
@@ -153,7 +153,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             try {
                 uk = haeKoodi(uri, tunniste);
             } catch (OrganisaatioKoodistoException e) {
-                LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
+                LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui", e);
                 return null;
             }
             return uk;
@@ -222,6 +222,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             try {
                 return Integer.parseInt(codeElementUriAndVersion[1]);
             } catch (NumberFormatException e) {
+                LOG.warn("Invalid version: {}", codeElementUriAndVersion[1], e);
             }
         }
         return 0;
@@ -246,9 +247,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                     }
                 }
             }
-            for (String kieli : entity.getKielet()) {
-                entityRelaatiot.add(kieli);
-            }
+            entityRelaatiot.addAll(entity.getKielet());
         }
         return paivitaCodeElements(entityRelaatiot, koodi.getIncludesCodeElements());
     }
@@ -297,7 +296,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     @Override
     public synchronized void paivitaKoodisto(Organisaatio entity) {
         if (entity==null || entity.isOrganisaatioPoistettu()) {
-            LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
+            LOG.warn("Organisaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return;
         }
         /*
@@ -318,7 +317,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         for (Object[] koodiAlkio : koodiLista) {
             String uri = (String) koodiAlkio[URI_INDEX];
             String tunniste = (String) koodiAlkio[TUNNISTE_INDEX];
-            OrganisaatioKoodistoKoodi koodi = null;
+            OrganisaatioKoodistoKoodi koodi;
             LOG.debug("KOODI uri: " + uri + ", tunniste: '" + tunniste + "'");
             if (tunniste != null && !tunniste.isEmpty()) {
                 // Tunniste on olemassa, haetaan koodistosta
@@ -419,8 +418,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                 muuttunut |= paivitaIncludesCodeElements(entity, koodi);
                 muuttunut |= paivitaWithinCodeElements(entity, koodi);
 
-                if (muuttunut == true) {
-                    if (paivitaKoodi(koodi) == true) {
+                if (muuttunut) {
+                    if (paivitaKoodi(koodi)) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
                     } else {
                         throw new RuntimeException("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
@@ -485,8 +484,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             muuttunut = true;
         }
 
-        if (muuttunut == true) {
-            if (paivitaKoodi(koodi) == true) {
+        if (muuttunut) {
+            if (paivitaKoodi(koodi)) {
                 LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
             } else {
                 LOG.warn("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
