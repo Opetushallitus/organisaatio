@@ -32,7 +32,7 @@ script:
   - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-war:jdk11"
+  - export BASE_IMAGE="baseimage-war-openjdk11:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
 
