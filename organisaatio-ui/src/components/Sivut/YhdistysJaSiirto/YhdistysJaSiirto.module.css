@@ -1,0 +1,15 @@
+.SiirtoLomake {
+    background-color: #ffffff;
+}
+
+.Rivi {
+    display: flex;
+    flex-direction: row;
+}
+
+.Kentta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding-right: 1rem;
+}

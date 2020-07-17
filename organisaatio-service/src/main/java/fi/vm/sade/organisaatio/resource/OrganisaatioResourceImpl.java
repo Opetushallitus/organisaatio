@@ -41,6 +41,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
@@ -50,9 +52,8 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 
-@Component
-@Transactional(readOnly = true)
-@CrossOriginResourceSharing(allowAllOrigins = true)
+@RestController
+@RequestMapping("/organisaatio")
 public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);

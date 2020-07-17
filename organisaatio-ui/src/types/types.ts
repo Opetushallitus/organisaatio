@@ -46,11 +46,33 @@ export interface Organisaatio {
     yhteystiedot: Yhteystiedot
 }
 
+export interface Ryhma {
+    nimi: any,
+    yritysmuoto: string,
+    tyypit: string[],
+    kayttoryhmat: string[]
+    kuvaus: any,
+    oid?: string,
+    parentOid: string,
+    parentOidPath?: string,
+    ryhmatyypit: string[],
+    status: string,
+    version: number,
+}
+
+export interface YhteystietoTyyppi {
+    allLisatietokenttas: any,
+    oid?: string,
+    nimi: any,
+    sovellettavatOppilaitostyyppis: string[],
+    sovellettavatOrganisaatios: string[],
+    version: number,
+}
+
 export interface OrganisaatioNimiJaOid {
     oid: string,
     nimi: any,
 }
-
 
 // kayttooikeus
 export type Kayttaja = {

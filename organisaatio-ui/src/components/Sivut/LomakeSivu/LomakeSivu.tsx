@@ -18,6 +18,7 @@ import {useEffect} from "react";
 import Axios from "axios";
 import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
+import YhdistysJaSiirto from "../YhdistysJaSiirto/YhdistysJaSiirto";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -80,6 +81,7 @@ const LomakeSivu = (props: any) => {
                 </div>
             </div>
             <div className={styles.PaaOsio} >
+                {/*<YhdistysJaSiirto />*/}
                 <Accordion
                     lomakkeet={[
                         <PerustietoLomake
@@ -101,6 +103,7 @@ const LomakeSivu = (props: any) => {
                     ]}
                     otsikot={['Perustiedot', 'Yhteystiedot', 'Nimihistoria', 'Organisaatiohistoria']}
                 />
+                 }
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>
