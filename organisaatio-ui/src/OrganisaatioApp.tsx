@@ -10,12 +10,13 @@ import {LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext} from './c
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {Koodi, Language, Lokalisointi} from './types/types';
 import useAxios from 'axios-hooks';
-import Spinner from './components/Spinner/Spinner';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import Axios from 'axios';
 import LomakeSivu from "./components/Sivut/LomakeSivu/LomakeSivu";
 import TaulukkoSivu from "./components/Sivut/TaulukkoSivu/TaulukkoSivu";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
+import Ryhmat from "./components/Sivut/Ryhmat/Ryhmat";
+import Tyypit from "./components/Sivut/Tyypit/Tyypit";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -62,6 +63,9 @@ const OrganisaatioApp: React.FC = () => {
             <Switch>
               <Route path="/" exact component={TaulukkoSivu} />
               <Route path="/lomake/:oid" component={LomakeSivu} />
+              <Route path="/ryhmat" component={Ryhmat} />
+              <Route path="/yhteystietotyypit" component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
+              <Route path="/lisatietotyypit" component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>

@@ -27,6 +27,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
@@ -36,9 +38,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
-@Transactional(readOnly = true)
-@CrossOriginResourceSharing(allowAllOrigins = true)
+@RestController
+@RequestMapping("/organisaatio/v3")
 public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV3.class);
