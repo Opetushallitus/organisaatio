@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +61,8 @@ import static java.util.stream.Collectors.toSet;
 @Transactional
 @Service("organisaatioFindBusinessService")
 public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusinessService {
+
+    public static final String JALKELAISET_CACHE_NAME = "jalkelaisetCache";
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
     private static final int MAX_PARENT_OIDS = 2500;
@@ -333,6 +336,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = JALKELAISET_CACHE_NAME)
     public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
         return organisaatioDAO.findAllDescendants(oid, includeHidden);
     }

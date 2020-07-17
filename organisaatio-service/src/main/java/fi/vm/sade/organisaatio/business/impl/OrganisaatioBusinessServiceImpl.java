@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,8 @@ import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static fi.vm.sade.organisaatio.business.impl.OrganisaatioFindBusinessServiceImpl.JALKELAISET_CACHE_NAME;
 
 @Transactional
 @Service("organisaatioBusinessService")
@@ -166,6 +169,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
@@ -173,6 +177,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
@@ -180,6 +185,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
@@ -769,6 +775,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) {
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
 
@@ -803,6 +810,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTOV2 nimidto) {
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
 
@@ -845,6 +853,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
         Organisaatio orgEntity = this.organisaatioDAO.findByOid(oid);
 
@@ -881,6 +890,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
         LOG.debug("bulkUpdatePvm():" + tiedot);
         OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
@@ -989,6 +999,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public Set<Organisaatio> processNewOrganisaatioSuhdeChanges() {
         Set<Organisaatio> results = new HashSet<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeDAO.findForDay(new Date());
@@ -1011,6 +1022,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa liittää itseensä
         if (organisaatio.getOid().equals(newParent.getOid())) {
@@ -1053,6 +1065,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa siirtää nykyisen parentin alle
         if (organisaatio.getParent().getOid().equals(newParent.getOid())) {
@@ -1135,6 +1148,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return nimi;
     }
 
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap) {
         oldParentNimiMap.forEach((oldParentNimikey, oldParentNimivalue) -> {
             String newParentNimi = newParentNimiMap.get(oldParentNimikey) != null ? newParentNimiMap.get(oldParentNimikey) : "";
@@ -1176,6 +1190,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public void updateCurrentOrganisaatioNimet() {
         // Haetaan organisaatiot, joiden nimi ei ole nimihistorian current nimi
         List<Organisaatio> organisaatiot = this.organisaatioNimiDAO.findNimiNotCurrentOrganisaatiot();

@@ -27,9 +27,11 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static fi.vm.sade.organisaatio.business.impl.OrganisaatioFindBusinessServiceImpl.JALKELAISET_CACHE_NAME;
 /**
  *
  * @author simok
@@ -47,6 +49,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
     private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Override
+    @CacheEvict(cacheNames = JALKELAISET_CACHE_NAME, allEntries = true)
     public Organisaatio deleteOrganisaatio(String oid) {
         Organisaatio parent;
 
