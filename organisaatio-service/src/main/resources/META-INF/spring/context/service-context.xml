@@ -2,9 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
     ">
 
     <context:annotation-config/>
@@ -43,6 +45,18 @@
                 <bean class="fi.vm.sade.organisaatio.service.converter.v4.YtjDtoToOrganisaatioConverter"/>
             </list>
         </property>
+    </bean>
+
+    <cache:annotation-driven cache-manager="organisaatioCacheManager"/>
+
+    <bean id="organisaatioCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="organisaatioEHCache"/>
+    </bean>
+    <bean id="organisaatioEHCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="cacheManagerName" value="organisaatioEHCache"/>
+        <property name="configLocation" value="classpath:organisaatio-cache.xml"/>
+        <property name="shared" value="${ehcache.shared:true}"/>
+        <property name="acceptExisting" value="${ehcache.acceptExisting:false}"/>
     </bean>
 
 </beans>

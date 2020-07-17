@@ -10,6 +10,9 @@
             <AppenderRef ref="STDOUT"/>
         </Root>
         <Logger name="org.springframework" level="warn"/>
+        <!-- enable to log Spring method caching (jalkelaiset)
+        <Logger name="org.springframework.cache" level="trace"/>
+        -->
         <Logger name="fi.vm" level="debug"/>
         <Logger name="org.hibernate.SQL" level="debug"/>
         <Logger name="org.hibernate.type" level="trace"/>
