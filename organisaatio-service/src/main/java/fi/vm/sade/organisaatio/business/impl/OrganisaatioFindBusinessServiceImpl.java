@@ -336,7 +336,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = JALKELAISET_CACHE_NAME)
+    @Cacheable(cacheNames = JALKELAISET_CACHE_NAME, sync = true)
     public List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
         return organisaatioDAO.findAllDescendants(oid, includeHidden);
     }
