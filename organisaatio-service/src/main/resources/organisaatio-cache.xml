@@ -2,7 +2,7 @@
          xsi:noNamespaceSchemaLocation="ehcache.xsd"
          updateCheck="false">
     <cache name="jalkelaisetCache"
-           maxEntriesLocalHeap="10"
-           timeToLiveSeconds="900"
+           maxBytesLocalHeap="256M"
+           timeToLiveSeconds="1200"
            memoryStoreEvictionPolicy="LFU" />
 </ehcache>
