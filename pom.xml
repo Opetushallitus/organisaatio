@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>2018-7-LEGACY</version>
+    <version>2018-7-J8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>
@@ -13,7 +13,7 @@
 
         <!-- OPH service versions -->
         <generic.version>9.4-SNAPSHOT</generic.version>
-        <koodisto.api.version>2019-09-LEGACY</koodisto.api.version>
+        <koodisto.api.version>2019-09-J8-SNAPSHOT</koodisto.api.version>
         <log.client.version>8.0</log.client.version>
         <oid.api.version>8.0</oid.api.version>
         <rajapinnat.ytj.version>13.0-SNAPSHOT</rajapinnat.ytj.version>
