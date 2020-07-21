@@ -168,6 +168,7 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
+                <updatePolicy>interval:15</updatePolicy>
             </snapshots>
         </repository>
         <repository>
