@@ -41,7 +41,7 @@ deploy:
     script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
     skip_cleanup: true
     on:
-      branch: master
+      branch: organisaatio_java8
   - provider: script
     script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
     on:
