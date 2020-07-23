@@ -39,9 +39,16 @@
 }
 
 .TaulukkoKehys {
-    margin-top: 2rem;
+    margin: 2rem;
     display: block;
     max-width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
+}
+
+.nimenMaksimiPituus {
+    display: block;
+    width: 20rem;
+    word-wrap:break-word;
+    white-space: normal
 }
