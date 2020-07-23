@@ -12,9 +12,10 @@ import YksinkertainenTaulukko from "../../Taulukot/YksinkertainenTaulukko";
 import {useEffect} from "react";
 import Axios from "axios";
 import {useState} from "react";
-import {Organisaatio, Ryhma} from "../../../types/types";
+import {Koodi, Organisaatio, Ryhma} from "../../../types/types";
 import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
+import useAxios from "axios-hooks";
 
 
 type Props = {
@@ -24,6 +25,10 @@ const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
 
 const Ryhmat: React.FC = (props) => {
+    const [{ data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError}] = useAxios<Koodi[]>(
+        `${urlPrefix}/koodisto/RYHMATYYPIT/koodi`);
+    const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError}] = useAxios<Koodi[]>(
+        `${urlPrefix}/koodisto/KAYTTORYHMAT/koodi`);
     const [ryhmat, setRyhmat] = useState<Ryhma[] | undefined>(undefined);
     useEffect(() => {
         async function fetch() {
@@ -40,7 +45,7 @@ const Ryhmat: React.FC = (props) => {
     }, []);
     const { i18n, language } = useContext(LanguageContext);
 
-    if(!ryhmat) {
+    if(!ryhmat || ryhmaTyypitLoading || ryhmaTyypitError || kayttoRyhmatLoading || kayttoRyhmatError) {
         return <Spin />;
     }
     const RyhmatColumns = [
@@ -48,20 +53,44 @@ const Ryhmat: React.FC = (props) => {
             Header: i18n.translate('RYHMAN_NIMI'),
             Cell: ({ row }: any) => {
                 console.log(row);
-                return row.original.nimi[language] || row.original.nimi['fi'] || row.original.nimi['sv'] || row.original.nimi['en']
+                return <span className={styles.nimenMaksimiPituus}>{row.original.nimi[language] || row.original.nimi['fi'] || row.original.nimi['sv'] || row.original.nimi['en']}</span>
             },
+            collapse: true,
         },
         {
             Header: i18n.translate('RYHMAN_TYYPPI'),
-            accessor: 'tyyppi',
+            Cell: ({ row }: any) => {
+                if (row.original.tyypit.length > 0 ) {
+                    return row.original.tyypit.map((tyyppi: string) => {
+                        const koodityyppi = ryhmaTyypit.find(rt => rt.uri === tyyppi.slice(0, -2));
+                        if (koodityyppi) {
+                            return koodityyppi.nimi[language] || koodityyppi.nimi['fi'] || koodityyppi.nimi['sv'] || koodityyppi.nimi['en']
+                        }
+                        return tyyppi
+                    }).join(', ');
+                }
+                return '';
+            },
+
         },
         {
             Header: i18n.translate('KAYTTOTARKOITUS'),
-            accessor: 'kayttotarkoitus',
+            Cell: ({ row }: any) => {
+                if (row.original.kayttoryhmat.length > 0 ) {
+                    return row.original.kayttoryhmat.map((tyyppi: string) => {
+                        const koodiRyhma = kayttoRyhmat.find(rt => rt.uri === tyyppi.slice(0, -2));
+                        if (koodiRyhma) {
+                            return koodiRyhma.nimi[language] || koodiRyhma.nimi['fi'] || koodiRyhma.nimi['sv'] || koodiRyhma.nimi['en']
+                        }
+                        return tyyppi
+                    }).join(', ');
+                }
+                return '';
+            },
         },
         {
             Header: i18n.translate('RYHMAN_TILA'),
-            accessor: 'tila',
+            accessor: 'status',
         },
         {
             Header: i18n.translate('OID'),

@@ -39,7 +39,7 @@
 }
 
 .TaulukkoKehys {
-    margin-top: 2rem;
+    margin: 2rem;
     display: block;
     max-width: 100%;
     overflow-x: scroll;

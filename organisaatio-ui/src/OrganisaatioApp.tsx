@@ -17,6 +17,8 @@ import TaulukkoSivu from "./components/Sivut/TaulukkoSivu/TaulukkoSivu";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 import Ryhmat from "./components/Sivut/Ryhmat/Ryhmat";
 import Tyypit from "./components/Sivut/Tyypit/Tyypit";
+import LisatietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus";
+import YhteystietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -64,8 +66,10 @@ const OrganisaatioApp: React.FC = () => {
               <Route path="/" exact component={TaulukkoSivu} />
               <Route path="/lomake/:oid" component={LomakeSivu} />
               <Route path="/ryhmat" component={Ryhmat} />
-              <Route path="/yhteystietotyypit" component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
-              <Route path="/lisatietotyypit" component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
+              <Route path="/yhteystietotyypit" exact component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
+              <Route path="/lisatietotyypit" exact component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
+              <Route path="/lisatietotyypit/muokkaus" component={LisatietotyypinMuokkaus} />
+              <Route path="/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>

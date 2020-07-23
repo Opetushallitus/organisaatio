@@ -1,10 +1,10 @@
-.TaulukkoContainer td {
+td {
     height: 3rem;
-    /* width: 1%; */
+    width: 1%;
 }
 
-.TaulukkoContainer td.collapse {
-    /* width: 0.0000000001%; */
+td.collapse.collapse, th.collapse.collapse {
+    width: 0.0000000001%;
 }
 
 .PaginationContainer {

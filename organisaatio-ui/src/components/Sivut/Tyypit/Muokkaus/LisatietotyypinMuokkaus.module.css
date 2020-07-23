@@ -1,0 +1,85 @@
+.YlaBanneri {
+    box-sizing: border-box;
+    height: 6rem;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    padding-left: 2rem;
+}
+
+.YlaBanneri > div {
+    padding-right: 1rem;
+}
+
+.AlaBanneri {
+    height: 6rem;
+    background-color: #FFFFFF;
+    border-top: 2px solid #159ECB;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10rem;
+}
+
+.PaaKehys {
+    flex-grow: 1;
+    margin: 1rem 5rem;
+}
+
+.PaaOsio {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: #ffffff;
+    border: 1px solid #CCCCCC;
+    padding-bottom: 2rem;
+
+}
+
+.ValiOtsikko {
+    display: flex;
+    flex-direction: column;
+}
+
+.OtsikkoRivi {
+    height: 4.5rem;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #CCCCCC;
+    align-items: center;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+.Otsikko {
+    margin-left: 1rem;
+}
+
+
+.Kentta {
+    margin-right: 1rem;
+    width: 26rem;
+}
+
+.Rivi {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    padding-left: 2rem;
+    flex-wrap: wrap;
+}
+
+.MonivalintaKentta {
+    margin-left: 5rem;
+}
+
+.MonivalintaKentta > div:last-child {
+    margin-left: 1.5rem;
+}
+
+.MonivalintaKentta > div {
+    margin-top: 0.5rem;
+}

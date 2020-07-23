@@ -44,7 +44,10 @@ public interface OrganisaatioKoodisto {
         OPPILAITOS("oppilaitosnumero"),
         KOULUTUSTOIMIJA("koulutustoimija"),
         YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi"),
-        POSTI("posti");
+        POSTI("posti"),
+        RYHMATYYPIT("ryhmatyypit"),
+        KAYTTORYHMAT("kayttoryhmat"),
+        OPPILAITOSTYYPPI("oppilaitostyyppi");
         private final String uri;
 
         KoodistoUri(String koodistoUri) {

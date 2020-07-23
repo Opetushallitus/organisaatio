@@ -57,7 +57,9 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <th
-                    {...column.getHeaderProps()}
+                    {...column.getHeaderProps({
+                      className: column.collapse ? styles.collapse : '',
+                    })}
                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)'}}
                   >
                     {column.render('Header')}
@@ -74,7 +76,9 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
                   {row.cells.map(cell => {
                     return (
                       <td
-                        {...cell.getCellProps()}
+                        {...cell.getCellProps({
+                          className: cell.column.collapse ? styles.collapse : '',
+                        })}
                         style={{
                           background: index % 2 === 0 ? '#F5F5F5': '#FFFFFF',
                         }}

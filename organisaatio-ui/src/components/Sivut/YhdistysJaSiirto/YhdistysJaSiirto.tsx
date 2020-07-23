@@ -11,11 +11,11 @@ export default function YhdistysJaSiirto(props: Props) {
     const { i18n } = useContext(LanguageContext);
     return(
         <div className={styles.SiirtoLomake}>
-        <div className={styles.Rivi}>
-            <h3>
-                {i18n.translate('ORGANISAATION_YHDISTAMINEN_OTSIKKO')}
-            </h3>
-        </div>
+            <div className={styles.Rivi}>
+                <h3>
+                    {i18n.translate('ORGANISAATION_YHDISTAMINEN_OTSIKKO')}
+                </h3>
+            </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('YHDISTETTAVA_KOULUTUSTOIMIJA')}</label>
