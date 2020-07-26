@@ -114,6 +114,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // GET /organisaatio/{oid}/children
     @Override
+    @Transactional
     public List<OrganisaatioRDTO> children(String oid, boolean includeImage) throws Exception {
         Preconditions.checkNotNull(oid);
         try {
@@ -212,6 +213,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // GET /organisaatio/{oid}
     @Override
+    @Transactional
     public OrganisaatioRDTO getOrganisaatioByOID(final String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
 
