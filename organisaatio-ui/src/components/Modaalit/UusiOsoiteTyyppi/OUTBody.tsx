@@ -3,11 +3,7 @@ import {LanguageContext} from "../../../contexts/contexts";
 import styles from './UusiOsoiteTyyppi.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 
-type Props = {
-
-}
-
-export default function OUTBody({ }: Props) {
+export default function OUTBody() {
     const { i18n} = useContext(LanguageContext);
     return (
         <div className={styles.BodyKehys}>

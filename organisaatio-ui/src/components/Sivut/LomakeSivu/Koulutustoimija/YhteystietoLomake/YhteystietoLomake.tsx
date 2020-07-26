@@ -59,6 +59,7 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
     if (postinumerotLoading || postinumerotError) {
        return <Spin />;
     }
+    console.log('todo postinumerot', postinumerot);
     return(
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>

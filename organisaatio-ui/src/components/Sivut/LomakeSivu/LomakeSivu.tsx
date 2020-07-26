@@ -18,7 +18,6 @@ import {useEffect} from "react";
 import Axios from "axios";
 import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
-import YhdistysJaSiirto from "../YhdistysJaSiirto/YhdistysJaSiirto";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -32,8 +31,8 @@ const LomakeSivu = (props: any) => {
         `${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
+    const { match: { params } } = props;
     useEffect(() => {
-        const { match: { params } } = props;
         async function fetch() {
             try {
                 const response = await Axios.get(`${urlPrefix}/organisaatio/v4/${params.oid}?includeImage=true`);
@@ -51,7 +50,7 @@ const LomakeSivu = (props: any) => {
             }
         }
         fetch();
-    }, []);
+    }, [params.oid]);
     if (!organisaatio || organisaatioTyypitLoading || organisaatioTyypitError || maatJaValtiotLoading || maatJaValtiotError || oppilaitoksenOpetuskieletLoading || oppilaitoksenOpetuskieletError) {
         return (<div className={styles.PaaOsio}>
             <Spin>ladataan sivua </Spin>
