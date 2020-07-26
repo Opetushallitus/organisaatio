@@ -53,9 +53,9 @@ const Tyypit = (props: Props) => {
             Header: i18n.translate('TYYPIT_NIMI'),
             Cell: ({row}: { row: any}) => {
                 if(typeof row.original === 'string'){
-                    return <a href={`/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus`}>{row.original}</a>
+                    return <a href={`/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${row.original}`}>{row.original}</a>
                 }
-                return <a href={`/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus`}>{nimiMapper(row.original.nimi, language)}</a>;
+                return <a href={`/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${nimiMapper(row.original.nimi, language)}`}>{nimiMapper(row.original.nimi, language)}</a>;
             },
         },
     ];

@@ -5,7 +5,7 @@ import Input from "@opetushallitus/virkailija-ui-components/Input";
 import CheckboxGroup from "@opetushallitus/virkailija-ui-components/CheckboxGroup";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
 import {useContext, useState} from "react";
-import {KuntaKoodistoContext} from "../../../../../contexts/contexts";
+import {KoodistoContext} from "../../../../../contexts/contexts";
 import PohjaModaali from "../../../../Modaalit/PohjaModaali/PohjaModaali";
 import TNHeader from "../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader";
 import TNBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNBody";
@@ -26,7 +26,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const { organisaatio, language, organisaatioTyypit, maatJaValtiot, opetuskielet } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
-    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { kuntaKoodisto } = useContext(KoodistoContext);
     const kaikkiKunnat = kuntaKoodisto.koodit().map((k: any) => ({
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],

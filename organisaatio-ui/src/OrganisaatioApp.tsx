@@ -6,7 +6,7 @@ import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 // import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
-import {LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext} from './contexts/contexts';
+import {LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext} from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {Koodi, Language, Lokalisointi} from './types/types';
 import useAxios from 'axios-hooks';
@@ -19,6 +19,7 @@ import Ryhmat from "./components/Sivut/Ryhmat/Ryhmat";
 import Tyypit from "./components/Sivut/Tyypit/Tyypit";
 import LisatietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus";
 import YhteystietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus";
+import RyhmanMuokkaus from "./components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -47,34 +48,42 @@ const OrganisaatioApp: React.FC = () => {
       `${urlPrefix}/lokalisointi`);
   const [{ data: kunnat, loading: kunnatLoading, error: kunnatError}] = useAxios<Koodi[]>(
       `${urlPrefix}/koodisto/KUNTA/koodi`);
-  if (languageLoading || lokalisointiLoading || kunnatLoading) {
+  const [{ data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError}] = useAxios<Koodi[]>(
+      `${urlPrefix}/koodisto/RYHMATYYPIT/koodi`);
+  const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError}] = useAxios<Koodi[]>(
+      `${urlPrefix}/koodisto/KAYTTORYHMAT/koodi`);
+  if (languageLoading || lokalisointiLoading || kunnatLoading || ryhmaTyypitLoading || kayttoRyhmatLoading) {
     return (<ThemeProvider theme={theme}>
       <Spin />
     </ThemeProvider>);
   }
-  if (lokalisointiError || kunnatError) {
+  if (lokalisointiError || kunnatError || ryhmaTyypitError || kayttoRyhmatError) {
     return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
   const i18n = new I18nImpl(lokalisointi, language);
   const kuntaKoodisto = new KoodistoImpl(kunnat, language);
+  const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, language);
+  const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
+
   return (
       <Router basename="/organisaatio-ui">
         <ThemeProvider theme={theme}>
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
-          <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
+          <KoodistoContext.Provider value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto }}>
             <Switch>
               <Route path="/" exact component={TaulukkoSivu} />
               <Route path="/lomake/:oid" component={LomakeSivu} />
-              <Route path="/ryhmat" component={Ryhmat} />
+              <Route path="/ryhmat" exact component={Ryhmat} />
               <Route path="/yhteystietotyypit" exact component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
               <Route path="/lisatietotyypit" exact component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
-              <Route path="/lisatietotyypit/muokkaus" component={LisatietotyypinMuokkaus} />
+              <Route path="/lisatietotyypit/muokkaus/:nimi" component={LisatietotyypinMuokkaus} />
               <Route path="/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
+              <Route path="/ryhmat/muokkaus/:oid" component={RyhmanMuokkaus} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>
             </Switch>
-          </KuntaKoodistoContext.Provider>
+          </KoodistoContext.Provider>
         </LanguageContext.Provider>
         </ThemeProvider>
       </Router>
