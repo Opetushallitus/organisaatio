@@ -11,20 +11,38 @@ import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
 import {useState} from "react";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
 import useAxios from "axios-hooks";
-import {Koodi} from "../../../../types/types";
+import {Koodi, Organisaatio} from "../../../../types/types";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
+import {useEffect} from "react";
+import Axios from "axios";
 
 const KAIKKIVALITTU = '1', RAJATUT_VALITTU = '0';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
 type Props = {
+    match: any
 }
 
 export default function LisatietotyypinMuokkaus(props: Props) {
     const { i18n, language } = useContext(LanguageContext);
+    const [lisatietotyyppi, setLisatietotyyppi ] = useState<undefined | any>();
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError}] = useAxios<Koodi[]>(
         `${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+
+    useEffect(() => {
+        const { match: { params } } = props;
+        async function fetch() {
+            try {
+                const response = await Axios.get(`${urlPrefix}/lisatieto/lisatietotyyppi/${params.nimi}`);
+                const lisatietotyyppi = response.data;
+                setLisatietotyyppi(lisatietotyyppi);
+            } catch (error) {
+                console.error('error fetching', error)
+            }
+        }
+        fetch();
+    }, []);
     const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
 
     if (oppilaitosTyypitLoading || oppilaitosTyypitError) {
@@ -35,6 +53,13 @@ export default function LisatietotyypinMuokkaus(props: Props) {
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
+    const valitutRajoitteet = lisatietotyyppi.rajoitteet.filter((r: any) => r.rajoitetyyppi === 'OPPILAITOSTYYPPI').map((r: any) => {
+        return oppilaitosTyypitOptions.find(oT => oT.value === r.arvo);
+    })
+    if(valitutRajoitteet.length > 0 && isKaikkiValittu === KAIKKIVALITTU) {
+        setIsKaikkiValittu(RAJATUT_VALITTU)
+    }
+
     console.log('otopts', oppilaitosTyypitOptions);
     return(
         <PohjaSivu>
@@ -64,7 +89,7 @@ export default function LisatietotyypinMuokkaus(props: Props) {
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('LISATIETOTYYPPI_NIMI')}</label>
-                            <Input value={''}/>
+                            <Input value={lisatietotyyppi ? lisatietotyyppi.nimi : ''}/>
                         </div>
                     </div>
                     <div className={styles.Rivi}>
@@ -82,7 +107,9 @@ export default function LisatietotyypinMuokkaus(props: Props) {
 
                                 <Select
                                     isMulti
-                                    value={[]}
+                                    value={lisatietotyyppi.rajoitteet.filter((r: any) => r.rajoitetyyppi === 'OPPILAITOSTYYPPI').map((r: any) => {
+                                        return oppilaitosTyypitOptions.find(oT => oT.value === r.arvo);
+                                    })}
                                     options={oppilaitosTyypitOptions}/>
                             </div>
                         </div>

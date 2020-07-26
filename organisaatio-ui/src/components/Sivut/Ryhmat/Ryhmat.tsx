@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './Ryhmat.module.css';
 import TyypitJaRyhmatKehys from "../TyypitJaRyhmatKehys/TyypitJaRyhmatKehys";
 import {useContext} from "react";
-import {LanguageContext} from "../../../contexts/contexts";
+import {KoodistoContext, LanguageContext} from "../../../contexts/contexts";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import {Icon} from "@iconify/react";
@@ -25,10 +25,7 @@ const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
 
 const Ryhmat: React.FC = (props) => {
-    const [{ data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError}] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/RYHMATYYPIT/koodi`);
-    const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError}] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/KAYTTORYHMAT/koodi`);
+    const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const [ryhmat, setRyhmat] = useState<Ryhma[] | undefined>(undefined);
     useEffect(() => {
         async function fetch() {
@@ -45,7 +42,7 @@ const Ryhmat: React.FC = (props) => {
     }, []);
     const { i18n, language } = useContext(LanguageContext);
 
-    if(!ryhmat || ryhmaTyypitLoading || ryhmaTyypitError || kayttoRyhmatLoading || kayttoRyhmatError) {
+    if(!ryhmat) {
         return <Spin />;
     }
     const RyhmatColumns = [
@@ -53,7 +50,7 @@ const Ryhmat: React.FC = (props) => {
             Header: i18n.translate('RYHMAN_NIMI'),
             Cell: ({ row }: any) => {
                 console.log(row);
-                return <span className={styles.nimenMaksimiPituus}>{row.original.nimi[language] || row.original.nimi['fi'] || row.original.nimi['sv'] || row.original.nimi['en']}</span>
+                return <a href={`/ryhmat/muokkaus/${row.original.oid}`} className={styles.nimenMaksimiPituus}>{row.original.nimi[language] || row.original.nimi['fi'] || row.original.nimi['sv'] || row.original.nimi['en']}</a>
             },
             collapse: true,
         },
@@ -62,7 +59,7 @@ const Ryhmat: React.FC = (props) => {
             Cell: ({ row }: any) => {
                 if (row.original.tyypit.length > 0 ) {
                     return row.original.tyypit.map((tyyppi: string) => {
-                        const koodityyppi = ryhmaTyypit.find(rt => rt.uri === tyyppi.slice(0, -2));
+                        const koodityyppi = ryhmaTyypitKoodisto.koodit().find(rt => rt.uri === tyyppi.slice(0, -2));
                         if (koodityyppi) {
                             return koodityyppi.nimi[language] || koodityyppi.nimi['fi'] || koodityyppi.nimi['sv'] || koodityyppi.nimi['en']
                         }
@@ -78,7 +75,7 @@ const Ryhmat: React.FC = (props) => {
             Cell: ({ row }: any) => {
                 if (row.original.kayttoryhmat.length > 0 ) {
                     return row.original.kayttoryhmat.map((tyyppi: string) => {
-                        const koodiRyhma = kayttoRyhmat.find(rt => rt.uri === tyyppi.slice(0, -2));
+                        const koodiRyhma = kayttoRyhmatKoodisto.koodit().find(rt => rt.uri === tyyppi.slice(0, -2));
                         if (koodiRyhma) {
                             return koodiRyhma.nimi[language] || koodiRyhma.nimi['fi'] || koodiRyhma.nimi['sv'] || koodiRyhma.nimi['en']
                         }

@@ -87,9 +87,13 @@ export class KoodistoImpl implements Koodisto {
 }
 
 type KoodistoContextType = {
-    koodisto: Koodisto
+    kuntaKoodisto: Koodisto
+    kayttoRyhmatKoodisto: Koodisto
+    ryhmaTyypitKoodisto: Koodisto
 }
 
-export const KuntaKoodistoContext = React.createContext<KoodistoContextType>({
-    koodisto: new KoodistoImpl([], "fi")
+export const KoodistoContext = React.createContext<KoodistoContextType>({
+    kuntaKoodisto: new KoodistoImpl([], "fi"),
+    kayttoRyhmatKoodisto: new KoodistoImpl([], "fi"),
+    ryhmaTyypitKoodisto: new KoodistoImpl([], "fi"),
 });
