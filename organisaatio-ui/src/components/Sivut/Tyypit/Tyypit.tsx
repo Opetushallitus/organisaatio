@@ -7,7 +7,7 @@ import Button from "@opetushallitus/virkailija-ui-components/Button";
 import {useEffect} from "react";
 import Axios from "axios";
 import {useState} from "react";
-import {Koodi, YhteystietoTyyppi} from "../../../types/types";
+import {YhteystietoTyyppi} from "../../../types/types";
 import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
@@ -43,7 +43,7 @@ const Tyypit = (props: Props) => {
             }
         }
         fetch();
-    }, []);
+    }, [props.tyyppi]);
 
     if(!tyypit) {
         return <Spin />;

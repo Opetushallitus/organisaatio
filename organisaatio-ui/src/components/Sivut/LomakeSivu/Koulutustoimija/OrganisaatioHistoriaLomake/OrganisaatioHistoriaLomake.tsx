@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from "../../../../Taulukot/YksinkertainenTaulukko";
 import useAxios from "axios-hooks";
-import {Koodi} from "../../../../../types/types";
+import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
 
 type organisaatioHistoriaProps = {
@@ -92,6 +92,9 @@ export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaPr
       accessor: 'organisaatiot',
     }
   ];
+  if (historiaLoading || historiaError) {
+      return <Spin />;
+  }
     return(
         <div className={styles.UloinKehys}>
           <div className={styles.Rivi}>

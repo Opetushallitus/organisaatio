@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from './RyhmanMuokkaus.module.css';
 import {useContext} from "react";
 import {KoodistoContext, LanguageContext} from "../../../../contexts/contexts";
-import PohjaModaali from "../../../Modaalit/PohjaModaali/PohjaModaali";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import PohjaSivu from "../../PohjaSivu/PohjaSivu";
 import Icon from "@iconify/react";
@@ -10,18 +9,11 @@ import homeIcon from "@iconify/icons-fa-solid/home";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import {useState} from "react";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
-import useAxios from "axios-hooks";
-import {Koodi, Organisaatio} from "../../../../types/types";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
-import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
-import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
-import UOTHeader from "../../../Modaalit/UusiOsoiteTyyppi/UOTHeader";
-import UOTBody from "../../../Modaalit/UusiOsoiteTyyppi/OUTBody";
-import UOTFooter from "../../../Modaalit/UusiOsoiteTyyppi/UOTFooter";
 import {useEffect} from "react";
 import Axios from "axios";
 
-const KAIKKIVALITTU = '1';
+// const KAIKKIVALITTU = '1';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
 
@@ -32,11 +24,11 @@ type Props = {
 export default function RyhmanMuokkaus(props: Props) {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
-    const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
+    // const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
     const [ryhma, setRyhma] = useState<undefined | any>();
-    const [isModaliAuki, setIsModaaliAuki ] = useState(false);
+    //const [isModaliAuki, setIsModaaliAuki ] = useState(false);
+    const { match: { params } } = props;
     useEffect(() => {
-        const { match: { params } } = props;
         async function fetch() {
             try {
                 const response = await Axios.get(`${urlPrefix}/organisaatio/v4/${params.oid}?includeImage=true`);
@@ -47,7 +39,7 @@ export default function RyhmanMuokkaus(props: Props) {
             }
         }
         fetch();
-    }, []);
+    }, [params.oid]);
 
 
     if (!ryhma || !ryhmaTyypitKoodisto || !kayttoRyhmatKoodisto) {

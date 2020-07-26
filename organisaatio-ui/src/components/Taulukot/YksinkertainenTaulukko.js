@@ -1,20 +1,16 @@
 import * as React from 'react';
-import styles from './YksinkertainenTaulukko.module.css';
 import {
     useTable,
 } from 'react-table';
 
-
-
-
 export default function YksinkertainenTaulukko({ data: inputData = [], tableColumns = [] }) {
     const columns = React.useMemo(
         () => tableColumns,
-        []
+        [tableColumns]
     );
   const data = React.useMemo(
     () => inputData,
-    []
+    [inputData]
   );
     const {
         getTableProps,

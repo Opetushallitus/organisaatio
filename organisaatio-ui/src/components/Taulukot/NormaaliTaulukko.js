@@ -11,22 +11,20 @@ import chevronRight from "@iconify/icons-fa-solid/chevron-right";
 import {useContext} from "react";
 import {LanguageContext} from "../../contexts/contexts";
 
-
-
 const mapPaginationSelectors = (index) => {
   if (index < 3) return [0, 5];
   return [index-2, index+3];
-}
+};
 
 export default function NormaaliTaulukko({ data: inputData = [], tableColumns = [] }) {
-    const { i18n, language } = useContext(LanguageContext);
+    const { i18n } = useContext(LanguageContext);
     const columns = React.useMemo(
         () => tableColumns,
-        []
+        [tableColumns],
     );
     const data = React.useMemo(
       () => inputData,
-      []
+      [inputData]
     );
     console.log('pöö', inputData, tableColumns);
     const {
@@ -41,7 +39,6 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
       canPreviousPage,
       canNextPage,
       pageOptions,
-      pageCount,
       gotoPage,
       nextPage,
       previousPage,

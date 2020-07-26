@@ -8,15 +8,12 @@ import Input from "@opetushallitus/virkailija-ui-components/Input";
 import {Icon} from "@iconify/react";
 import searchIcon from "@iconify/icons-fa-solid/search";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
-import YksinkertainenTaulukko from "../../Taulukot/YksinkertainenTaulukko";
 import {useEffect} from "react";
 import Axios from "axios";
 import {useState} from "react";
-import {Koodi, Organisaatio, Ryhma} from "../../../types/types";
+import {Ryhma} from "../../../types/types";
 import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
-import useAxios from "axios-hooks";
-
 
 type Props = {
 }

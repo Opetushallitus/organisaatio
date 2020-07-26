@@ -1,11 +1,7 @@
 import React, {useContext} from "react";
 import {LanguageContext} from "../../../contexts/contexts";
 
-type Props = {
-
-}
-
-export default function TLHeader({ }: Props) {
+export default function TLHeader() {
     const { i18n } = useContext(LanguageContext);
     return (
         <h3>{i18n.translate('TOIMIPISTEEN_LAKKAUTUS')}</h3>

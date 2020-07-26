@@ -3,11 +3,7 @@ import {LanguageContext} from "../../../contexts/contexts";
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 
-type Props = {
-
-}
-
-export default function TNBody({ }: Props) {
+export default function TNBody() {
     const { i18n} = useContext(LanguageContext);
     return (
         <div className={styles.BodyKehys}>

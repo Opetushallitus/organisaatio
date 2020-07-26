@@ -11,7 +11,7 @@ import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
 import {useState} from "react";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
 import useAxios from "axios-hooks";
-import {Koodi, Organisaatio} from "../../../../types/types";
+import {Koodi} from "../../../../types/types";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 import {useEffect} from "react";
 import Axios from "axios";
@@ -29,9 +29,8 @@ export default function LisatietotyypinMuokkaus(props: Props) {
     const [lisatietotyyppi, setLisatietotyyppi ] = useState<undefined | any>();
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError}] = useAxios<Koodi[]>(
         `${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
-
+    const { match: { params } } = props;
     useEffect(() => {
-        const { match: { params } } = props;
         async function fetch() {
             try {
                 const response = await Axios.get(`${urlPrefix}/lisatieto/lisatietotyyppi/${params.nimi}`);
@@ -42,7 +41,7 @@ export default function LisatietotyypinMuokkaus(props: Props) {
             }
         }
         fetch();
-    }, []);
+    }, [params.nimi]);
     const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
 
     if (oppilaitosTyypitLoading || oppilaitosTyypitError) {
