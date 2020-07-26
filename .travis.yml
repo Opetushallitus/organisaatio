@@ -27,8 +27,6 @@ install:
 
 script:
   - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-  - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-
   - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/organisaatio-service.jar
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
