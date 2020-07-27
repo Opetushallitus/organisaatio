@@ -30,9 +30,10 @@ script:
   - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/organisaatio-service.jar
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-war-openjdk11:master"
+  - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
   - ./ci-tools/common/pull-image.sh
-  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+  - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
+
 deploy:
   ##- provider: script
   ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
