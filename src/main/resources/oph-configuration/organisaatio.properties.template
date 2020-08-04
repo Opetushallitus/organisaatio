@@ -38,6 +38,9 @@ organisaatio-service.postgresql.maxactive={{host_postgresql_organisaatio_max_act
 organisaatio-service.postgresql.maxwait={{host_postgresql_organisaatio_max_wait}}
 organisaatio-service.postgresql.maxlifetimemillis=60000
 organisaatio-service.hikaricp.leakDetectionThreshold={{organisaatio_hikaricp_leak_detection_threshold | default(0)}}
+spring.datasource.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
+spring.datasource.username={{postgres_app_user}}
+spring.datasource.password={{host_postgresql_organisaatio_app_password}}
 
 # Oletusarvoja
 activemq.queue.name.log.error=Sade.Log_Error
