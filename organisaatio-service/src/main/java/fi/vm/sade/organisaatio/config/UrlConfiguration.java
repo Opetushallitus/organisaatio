@@ -16,6 +16,9 @@ public class UrlConfiguration {
     @Bean
     public OphProperties properties(Environment environment) {
         OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
+        //properties.addOptionalFiles("/dev.properties");
+        //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/common.properties").toString());
+        //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/organisaatio-service.properties").toString());
         properties.addDefault("host.virkailija", environment.getRequiredProperty("host.virkailija"));
         properties.addDefault("organisaatio.service.username", environment.getRequiredProperty("organisaatio.service.username"));
         properties.addDefault("organisaatio.service.password", environment.getRequiredProperty("organisaatio.service.password"));
