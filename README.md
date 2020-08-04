@@ -27,3 +27,4 @@ https://confluence.csc.fi/display/OPHPALV/Opetushallituksen+palvelukokonaisuus
 
 Täysin uusi versio Tärkeää:
 Flyway pitää ensin käyttää versiossa 4.2.0 ennen versioon 5 siirtymistä, jotta checksum virheet korjaantuu migraatioissa.
+Checksumit voi korjata käsin tietokantatauluun myös.
