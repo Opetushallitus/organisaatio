@@ -18,7 +18,7 @@ import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 type Props = {
 }
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
 
 const Ryhmat: React.FC = (props) => {

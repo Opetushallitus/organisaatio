@@ -26,7 +26,7 @@ type Props = {
     tyyppi: 'lisatietotyypit' | 'yhteystietojentyyppi'
 }
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : 'organisaatio-ui';
 
 const Tyypit = (props: Props) => {
     const { i18n, language } = useContext(LanguageContext);
