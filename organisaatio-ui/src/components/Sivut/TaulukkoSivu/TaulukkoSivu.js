@@ -17,7 +17,7 @@ import PohjaSivu from "../PohjaSivu/PohjaSivu";
 import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
 const TaulukkoSivu = (props) => {
   const { i18n, language } = useContext(LanguageContext);
@@ -62,7 +62,7 @@ const TaulukkoSivu = (props) => {
           },
             {
                 Header: 'Nimi',
-                Cell: ({ row }) => <a href={`/lomake/${row.original.oid}`}>{row.original.nimi[language] || row.original.nimi.fi || row.original.nimi.sv || row.original.nimi.fi || row.original.nimi.en}</a>
+                Cell: ({ row }) => <a href={`/organisaatio-ui/lomake/${row.original.oid}`}>{row.original.nimi[language] || row.original.nimi.fi || row.original.nimi.sv || row.original.nimi.fi || row.original.nimi.en}</a>
             },
             {
                 Header: 'Kunta',

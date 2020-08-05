@@ -19,7 +19,7 @@ import Axios from "axios";
 import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
 const LomakeSivu = (props: any) => {
     const { i18n, language } = useContext(LanguageContext);
