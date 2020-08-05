@@ -62,10 +62,10 @@ export default function RyhmanMuokkaus(props: Props) {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/ryhmat"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio-ui/ryhmat"><Icon icon={homeIcon} /></a>
                 </div>
                 <div>
-                    <a href="/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
+                    <a href="/organisaatio-ui/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>

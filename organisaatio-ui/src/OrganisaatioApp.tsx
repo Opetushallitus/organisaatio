@@ -66,19 +66,19 @@ const OrganisaatioApp: React.FC = () => {
   const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
 
   return (
-      <Router basename="/organisaatio-ui">
+      <Router >
         <ThemeProvider theme={theme}>
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
           <KoodistoContext.Provider value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto }}>
             <Switch>
-              <Route path="/" exact component={TaulukkoSivu} />
-              <Route path="/lomake/:oid" component={LomakeSivu} />
-              <Route path="/ryhmat" exact component={Ryhmat} />
-              <Route path="/yhteystietotyypit" exact component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
-              <Route path="/lisatietotyypit" exact component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
-              <Route path="/lisatietotyypit/muokkaus/:nimi" component={LisatietotyypinMuokkaus} />
-              <Route path="/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
-              <Route path="/ryhmat/muokkaus/:oid" component={RyhmanMuokkaus} />
+              <Route path="/organisaatio-ui/" exact component={TaulukkoSivu} />
+              <Route path="/organisaatio-ui/lomake/:oid" component={LomakeSivu} />
+              <Route path="/organisaatio-ui/ryhmat" exact component={Ryhmat} />
+              <Route path="/organisaatio-ui/yhteystietotyypit" exact component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />
+              <Route path="/organisaatio-ui/lisatietotyypit" exact component={() => <Tyypit tyyppi="lisatietotyypit"/>} />
+              <Route path="/organisaatio-ui/lisatietotyypit/muokkaus/:nimi" component={LisatietotyypinMuokkaus} />
+              <Route path="/organisaatio-ui/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
+              <Route path="/organisaatio-ui/ryhmat/muokkaus/:oid" component={RyhmanMuokkaus} />
               <Route path="*">
                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
               </Route>
