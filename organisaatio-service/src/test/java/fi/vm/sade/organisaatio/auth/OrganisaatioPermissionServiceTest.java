@@ -97,8 +97,6 @@ public class OrganisaatioPermissionServiceTest {
         Mockito.when(organisaatioDaoMock.customFindByOid(eq(otherOrgOid))).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
         Mockito.when(organisaatioDaoMock.customFindByOid(userOrgOid)).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
         Mockito.when(organisaatioDaoMock.customFindByOid(rootOrgOid)).thenReturn(withParentOids(Collections.emptyList()));
-        OidProvider oidProvider = new OidProvider(rootOrgOid, organisaatioDaoMock);
-        OrganisationHierarchyAuthorizer authorizer = new OrganisationHierarchyAuthorizer(oidProvider);
         permissionService.setAuthorizer(authorizer);
 
 

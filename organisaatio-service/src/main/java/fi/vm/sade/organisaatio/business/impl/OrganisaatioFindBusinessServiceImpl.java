@@ -29,6 +29,7 @@ import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -329,7 +330,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioResourceImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
+    public List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
         return organisaatioRepository.findAllDescendants(oid, includeHidden);
     }
 

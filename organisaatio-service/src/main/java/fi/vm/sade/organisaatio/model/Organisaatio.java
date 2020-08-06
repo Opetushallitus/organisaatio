@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.model;
-//TODO korjaa tama
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
-import fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.time.DateUtils;
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toSet;
         @SqlResultSetMapping(
                 name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
                 classes = @ConstructorResult(
-                        targetClass = OrganisaatioResourceImplV2.JalkelaisetRivi.class,
+                        targetClass = OrganisaatioRepositoryImpl.JalkelaisetRivi.class,
                         columns = {
                                 @ColumnResult(name = "oid"),
                                 @ColumnResult(name = "alkuPvm", type = Date.class),
@@ -229,7 +228,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     /**
      * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
      */
-    private String parentOidPath;
     private String parentIdPath;
 
     @ElementCollection(fetch = FetchType.EAGER)

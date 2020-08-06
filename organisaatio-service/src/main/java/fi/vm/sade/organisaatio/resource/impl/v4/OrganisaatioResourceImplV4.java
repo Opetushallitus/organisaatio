@@ -7,7 +7,7 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
@@ -15,13 +15,11 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -212,12 +210,12 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioDAOImpl.JalkelaisetRivi> rows) {
+    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
         final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
         Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
-        for (OrganisaatioDAOImpl.JalkelaisetRivi row : rows) {
+        for (OrganisaatioRepositoryImpl.JalkelaisetRivi row : rows) {
             if (current == null || !row.oid.equals(current.getOid())) {
                 if (current != null) { // edellinen valmis, asetetaan mappiin
                     finalizePerustieto(current, parentOids);

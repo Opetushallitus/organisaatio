@@ -131,8 +131,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                 if (child.getMetadata() != null) {
                     child.getMetadata().setIncludeImage(includeImage);
                 }
-                OrganisaatioRDTO converse = conversionService.convert(child, OrganisaatioRDTO.class);
-                childList.add(converse);
+
+                childList.add(conversionService.convert(child, OrganisaatioRDTO.class));
             }
         }
         return childList;

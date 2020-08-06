@@ -150,8 +150,6 @@ public interface OrganisaatioResourceV4 {
     OrganisaatioHakutulosV4 searchOrganisaatioHierarkia(@ApiParam(access = "hidden")
                                                                      OrganisaatioSearchCriteriaDTOV4 hakuEhdot);
 
-    @GET
-    @Path("/{oid}/jalkelaiset")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    OrganisaatioHakutulosV4 findDescendants(@ApiParam(value = "Organisaation oid", required = true) @PathParam("oid") String oid);
+    @GetMapping(path = "/{oid}/jalkelaiset", produces = "application/json;charset=UTF-8")
+    OrganisaatioHakutulosV4 findDescendants(@ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid);
 }

@@ -23,7 +23,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
@@ -53,6 +52,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -397,8 +397,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     @Override
     public Organisaatio customFindByOid(String oid) {
         LOG.debug("findByOid({})", oid);
-
-
         oid = oid != null ? oid.trim() : null;
         try {
             List<Organisaatio> organisaatios = organisaatioRepository.findByOid(oid);
@@ -530,7 +528,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         LOG.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
 
-        Organisaatio org = findByOid(oid);
+        Organisaatio org = customFindByOid(oid);
         return Stream.concat(Stream.of(oid), org.getParentOids().stream()).collect(
                 Collectors.collectingAndThen(toList(), oids -> {
                     Collections.reverse(oids);
@@ -941,7 +939,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
     @Override
     public List<JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden) {
-        TypedQuery<JalkelaisetRivi> query = getEntityManager().createNamedQuery(
+        TypedQuery<JalkelaisetRivi> query = em.createNamedQuery(
                 includeHidden ? "Organisaatio.findAllDescendantsInclHidden" : "Organisaatio.findAllDescendants",
                 JalkelaisetRivi.class);
         query.setParameter("root", oid);
