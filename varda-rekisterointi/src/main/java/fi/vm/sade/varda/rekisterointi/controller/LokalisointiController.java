@@ -19,16 +19,30 @@ public class LokalisointiController {
         this.lokalisointiClient = lokalisointiClient;
     }
 
+    /**
+     * Hakee &quot;varda-rekisterointi&quot; -kategorian lokalisoinnin.
+     *
+     * @return lokalisointitiedot (kieli -&gt; avain -&gt; arvo).
+     */
     @GetMapping
     public Map<String, Map<String, String>> getLokalisointi() {
         return lokalisointiClient.getByCategory("varda-rekisterointi");
     }
 
+    /**
+     * Hakee käyttäjän kielen.
+     *
+     * @param locale    käyttäjän lokaali
+     * @return käyttäjän kieli.
+     */
     @GetMapping("/kieli")
     public String getLocale(Locale locale) {
         return locale.getLanguage();
     }
 
+    /**
+     * Asettaa käyttäjän kielen.
+     */
     @PutMapping("/kieli")
     public void setLocale() {
         // nop (kts. LocaleConfiguration#localeChangeInterceptor)

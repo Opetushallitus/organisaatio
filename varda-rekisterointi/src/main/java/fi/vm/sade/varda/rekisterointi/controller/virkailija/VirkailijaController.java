@@ -47,6 +47,13 @@ public class VirkailijaController {
     private final RekisterointiService rekisterointiService;
     private final OphProperties properties;
 
+    /**
+     * Hakee organisaation y-tunnuksella.
+     *
+     * @param ytunnus   y-tunnus
+     *
+     * @return organisaatio (mahdollisesti tyhjä)
+     */
     @GetMapping(ORGANISAATIOT_PATH + "/ytunnus={ytunnus}")
     public Organisaatio getOrganisaatioByYtunnus(@PathVariable String ytunnus) {
         return organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(ytunnus)
@@ -54,6 +61,13 @@ public class VirkailijaController {
                 .orElseGet(() -> OrganisaatioV4Dto.of(ytunnus, "")));
     }
 
+    /**
+     * Luo rekisteröintihakemuksen.
+     *
+     * @param dto       rekisteröintihakemus
+     * @param request   HTTP-pyyntö
+     * @return paluuosoite.
+     */
     @PostMapping(REKISTEROINNIT_PATH)
     @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
     public String luoRekisterointi(@RequestBody @Validated RekisterointiDto dto, HttpServletRequest request) {
@@ -61,6 +75,15 @@ public class VirkailijaController {
         return properties.url("varda-rekisterointi.virkailija");
     }
 
+    /**
+     * Listaa rekisteröintihakemukset tilan perusteella. Tuloksia voi rajata antamalla
+     * organisaatioon kohdistuvan hakutermin.
+     *
+     * @param authentication    autentikointi
+     * @param tila              hakemusten tila
+     * @param hakutermi         hakutermi organisaatiolle
+     * @return löytyneet hakemukset.
+     */
     @GetMapping(REKISTEROINNIT_PATH)
     public Iterable<Rekisterointi> listaaRekisteroinnit(
             Authentication authentication,
@@ -80,12 +103,27 @@ public class VirkailijaController {
                 tila, kunnat.toArray(new String[0]), hakutermi);
     }
 
+    /**
+     * Luo päätöksen hakemukselle.
+     *
+     * @param authentication    autentikointi
+     * @param paatos            päätös
+     * @param request           HTTP-pyyntö
+     * @return rekisteröintihakemus, jolle päätös luotiin.
+     */
     @PostMapping(PAATOKSET_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public Rekisterointi luoPaatos(Authentication authentication, @RequestBody @Validated PaatosDto paatos, HttpServletRequest request) {
         return rekisterointiService.resolve(authentication.getName(), paatos, RequestContextImpl.of(request));
     }
 
+    /**
+     * Luo päätöksen useammalle hakemukselle kerralla.
+     *
+     * @param authentication    autentikointi
+     * @param paatokset         luotavat päätökset
+     * @param request           HTTP-pyyntö
+     */
     @PostMapping(PAATOKSET_BATCH_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public void luoPaatokset(Authentication authentication, @RequestBody @Validated PaatosBatch paatokset, HttpServletRequest request) {

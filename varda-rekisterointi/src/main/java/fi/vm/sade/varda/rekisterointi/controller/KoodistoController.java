@@ -18,6 +18,14 @@ public class KoodistoController {
         this.koodistoClient = koodistoClient;
     }
 
+    /**
+     * Hakee koodiston koodit.
+     *
+     * @param koodisto  haluttu koodisto
+     * @param versio    koodistoversio (ei pakollinen)
+     * @param onlyValid vain voimassaolevat (ei pakollinen)
+     * @return löydetyt koodit.
+     */
     @GetMapping("/{koodisto}/koodi")
     Collection<Koodi> getKoodi(@PathVariable KoodistoType koodisto,
                                @RequestParam(required = false) Optional<Integer> versio,
