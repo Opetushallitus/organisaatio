@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+/**
+ * Palvelu rekisteröintihakemusten käsittelemiseen.
+ */
 @Service
 @AllArgsConstructor
 public class RekisterointiService {
@@ -39,6 +42,13 @@ public class RekisterointiService {
     @Qualifier("luoTaiPaivitaOrganisaatioTask")
     private final Task<Long> luoTaiPaivitaOrganisaatioTask;
 
+    /**
+     * Listaa rekisteröintihakemukset tilan ja (valinnaisen) organisaatiohakutermin perusteella.
+     *
+     * @param tila          hakemusten tila
+     * @param organisaatio  organisaation nimi tai sen osa (ei pakollinen)
+     * @return ehtoihin täsmäävät rekisteröintihakemukset.
+     */
     public Iterable<Rekisterointi> listByTilaAndOrganisaatio(Rekisterointi.Tila tila, String organisaatio) {
         if (organisaatio == null || organisaatio.length() == 0) {
             return rekisterointiRepository.findByTila(tila.toString());
@@ -46,6 +56,13 @@ public class RekisterointiService {
         return rekisterointiRepository.findByTilaAndOrganisaatioContaining(tila.toString(), organisaatio);
     }
 
+    /**
+     * Listaa rekisteröintihakemukset tilan, käsittelykunnan ja (valinnaisen) organisaatiohakutermin perusteella.
+     * @param tila          hakemusten tila
+     * @param kunnat        käsittelykunnat
+     * @param organisaatio  organisaation nimi tai sen osa (ei pakollinen)
+     * @return ehtoihin täsmäävät rekisteröintihakemukset.
+     */
     public Iterable<Rekisterointi> listByTilaAndKunnatAndOrganisaatio(Rekisterointi.Tila tila, String[] kunnat,
                                                                       String organisaatio) {
         if (organisaatio == null || organisaatio.length() == 0) {
@@ -55,6 +72,12 @@ public class RekisterointiService {
                 tila.toString(), kunnat, organisaatio);
     }
 
+    /**
+     * Luo rekisteröintihakemuksen.
+     * @param rekisterointi     rekisteröinnin tiedot
+     * @param requestContext    kontekstitiedot
+     * @return luodun hakemuksen tunniste.
+     */
     @Transactional
     public long create(Rekisterointi rekisterointi, RequestContext requestContext) {
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi);
@@ -65,6 +88,13 @@ public class RekisterointiService {
         return saved.id;
     }
 
+    /**
+     * Luo päätöksen rekisteröintihakemukselle.
+     * @param paattajaOid       päätöken tekijän OID
+     * @param paatosDto         päätös
+     * @param requestContext    kontekstitiedot
+     * @return päätöksen saanut rekisteröintihakemus.
+     */
     @Transactional
     public Rekisterointi resolve(String paattajaOid, PaatosDto paatosDto, RequestContext requestContext) {
         Long rekisterointiId = paatosDto.rekisterointi;

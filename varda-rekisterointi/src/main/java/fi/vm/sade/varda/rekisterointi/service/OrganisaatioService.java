@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+/**
+ * Palvelu organisaatiotietojen muunnoksille.
+ */
 @Service
 public class OrganisaatioService {
 
@@ -40,6 +43,12 @@ public class OrganisaatioService {
                 koodi -> yritysmuotoUriToKoodi.put(koodi.uri, koodi));
     }
 
+    /**
+     * Muuntaa organisaatiopalvelun DTO:sta organisaatio-olioksi.
+     *
+     * @param dto DTO
+     * @return organisaatio-olio.
+     */
     public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
         return Organisaatio.of(
                 dto.ytunnus,
@@ -54,6 +63,12 @@ public class OrganisaatioService {
                 muunnaYhteystiedot(dto));
     }
 
+    /**
+     * Muuntaa organisaatio-oliosta DTO:ksi.
+     *
+     * @param organisaatio organisaatio-olio
+     * @return organisaatiopalvelun DTO.
+     */
     public OrganisaatioV4Dto muunnaOrganisaatio(Organisaatio organisaatio) {
         OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
         dto.ytunnus = organisaatio.ytunnus;
