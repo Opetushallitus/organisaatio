@@ -15,6 +15,9 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Client koodistopalvelun käyttämiseen.
+ */
 @Component
 @Profile("!test & !integration-test")
 public class KoodistoClient {
@@ -23,16 +26,39 @@ public class KoodistoClient {
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Alustaa clientin annetulla HTTP-clientillä, konfiguraatiolla ja <code>ObjectMapper</code>illa.
+     *
+     * @param httpClient    HTTP-client
+     * @param properties    konfiguraatio
+     * @param objectMapper  Jackson object mapper
+     */
     public KoodistoClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.properties = properties;
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Listaa annetun koodiston koodit.
+     *
+     * @param koodisto  haluttu koodisto
+     *
+     * @return koodiston koodit.
+     */
     public Collection<Koodi> listKoodit(KoodistoType koodisto) {
         return listKoodit(koodisto, Optional.empty(), Optional.empty());
     }
 
+    /**
+     * Lista annetun koodiston koodit.
+     *
+     * @param koodisto  haluttu koodisto
+     * @param versio    mikäli annettu, haetaan vain halutun version koodit
+     * @param onlyValid sisällytetäänkö vain voimassaolevat koodit?
+     *
+     * @return koodiston koodit.
+     */
     public Collection<Koodi> listKoodit(KoodistoType koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         Map<String, Object> parameters = new LinkedHashMap<>();
         versio.ifPresent(value -> parameters.put("koodistoVersio", value));

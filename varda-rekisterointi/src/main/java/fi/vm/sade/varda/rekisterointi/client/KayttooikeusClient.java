@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * Client käyttöoikeuspalvelun käyttämiseen.
+ */
 @Component
 public class KayttooikeusClient {
 
@@ -27,6 +30,13 @@ public class KayttooikeusClient {
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Alustaa clientin annetulla HTTP-clientilla, konfiguraatiolla ja <code>ObjectMapper</code>illä.
+     *
+     * @param httpClient    HTTP-client
+     * @param properties    konfiguraatio
+     * @param objectMapper  Jackson object mapper
+     */
     public KayttooikeusClient(@Qualifier("httpClientKayttooikeus") OphHttpClient httpClient,
                               OphProperties properties,
                               ObjectMapper objectMapper) {
@@ -51,6 +61,13 @@ public class KayttooikeusClient {
         }
     }
 
+    /**
+     * Listaa virkailijat annetuilla ehdoilla.
+     *
+     * @param criteria  hakuehdot
+     *
+     * @return  lista hakuehtoihin täsmäävistä virkailijoista
+     */
     public Collection<VirkailijaDto> listVirkailijaBy(VirkailijaCriteria criteria) {
         String url = properties.url("kayttooikeus-service.virkailija.haku");
         OphHttpEntity entity = new OphHttpEntity.Builder()
@@ -64,6 +81,14 @@ public class KayttooikeusClient {
                 .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
     }
 
+    /**
+     * Lähettää kutsun organisaation pääkäyttäjälle.
+     *
+     * @param kutsujaOid        kutsun lähettäjän OID
+     * @param kayttaja          kutsuttava käyttäjä
+     * @param organisaatioOid   käytäjän organisaation OID
+     * @param oikeusRyhmaId     käyttäjälle myönnettävän oikeusryhmän OID
+     */
     public void kutsuKayttaja(String kutsujaOid, Kayttaja kayttaja, String organisaatioOid, Long oikeusRyhmaId) {
         KayttooikeusKutsuDto dto = KayttooikeusKutsuDto.builder()
                 .kutsujaOid(kutsujaOid)
