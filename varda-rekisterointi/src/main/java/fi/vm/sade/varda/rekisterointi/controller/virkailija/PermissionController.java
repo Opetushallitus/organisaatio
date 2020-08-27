@@ -1,5 +1,8 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -18,17 +21,23 @@ public class PermissionController {
      * Tarkistaa, löytyykö käyttäjältä haluttu valtuus.
      *
      * @param authentication    autentikointitiedot
-     * @param targetType        valtuutuksen kohteen tyyppi
+     * @param targetType        valtuuden kohteen tyyppi
      * @param permission        tarkistettava valtuus
-     * @param targetId          valtuutuksen kohde
+     * @param targetId          valtuuden kohde
      *
      * @return onko käyttäjällä valtuus?
      */
     @GetMapping("{targetType}/{permission}")
+    @ApiOperation("Tarkista valtuus")
+    @ApiResponse(
+            code = 200,
+            message = "Onko valtuutta (true/false)",
+            response = Boolean.class
+    )
     public boolean hasPermission(Authentication authentication,
-                                 @PathVariable String targetType,
-                                 @PathVariable String permission,
-                                 @RequestParam(required = false) Serializable targetId) {
+                                 @ApiParam("valtuuden kohteen tyyppi") @PathVariable String targetType,
+                                 @ApiParam("tarkistettava valtuus") @PathVariable String permission,
+                                 @ApiParam("valtuuden kohteen tunniste") @RequestParam(required = false) Serializable targetId) {
         return permissionEvaluator.hasPermission(authentication, targetId, targetType, permission);
     }
 
