@@ -23,6 +23,14 @@ public class TemplateController {
         this.messageSource = messageSource;
     }
 
+    /**
+     * Lataa viestipohjan.
+     *
+     * @param template  viestipohja
+     * @param language  kieli
+     *
+     * @return viestipohja.
+     */
     @GetMapping(value = "/{template}", produces = "text/html")
     public String getTemplate(@PathVariable Template template,
                               @RequestParam(required = false, defaultValue = "fi") String language) {

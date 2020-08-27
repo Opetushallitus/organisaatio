@@ -13,6 +13,9 @@ import java.util.function.Supplier;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
+/**
+ * Client lokalisointipalvelun käyttämiseen.
+ */
 @Component
 public class LokalisointiClient {
 
@@ -20,13 +23,26 @@ public class LokalisointiClient {
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Alusta clientin annetulla HTTP-clientilla, konfiguraatiolla ja <code>ObjectMapper</code>illä.
+     *
+     * @param httpClient    HTTP-client
+     * @param properties    konfiguraatio
+     * @param objectMapper  Jackson object mapper
+     */
     public LokalisointiClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.properties = properties;
         this.objectMapper = objectMapper;
     }
 
-    // locale -> key -> value
+    /**
+     * Hakee annetun kategorian lokalisaatiot.
+     *
+     * @param category  haluttu kategoria.
+     *
+     * @return lokalisaatiot sisäkkäisinä <code>Map</code>peinä: lokaali -&gt; avain -&gt; arvo
+     */
     public Map<String, Map<String, String>> getByCategory(String category) {
         return getByUrl(properties.url("lokalisointi.v1.listByCategory", category));
     }

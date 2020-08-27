@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Client viestintäpalvelun käyttämiseen.
+ */
 @Component
 public class ViestintaClient {
 
@@ -20,6 +23,13 @@ public class ViestintaClient {
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Alustaa clientin HTTP-clientillä, konfiguraatiolla ja <code>ObjectMapper</code>illä.
+     *
+     * @param httpClient    HTTP-client
+     * @param properties    konfiguraatio
+     * @param objectMapper  Jackson object mapper
+     */
     public ViestintaClient(@Qualifier("httpClientViestinta") OphHttpClient httpClient,
                            OphProperties properties,
                            ObjectMapper objectMapper) {
@@ -44,10 +54,26 @@ public class ViestintaClient {
         }
     }
 
+    /**
+     * Tallentaa sähköpostiviestin lähetettäväksi. Sanitoi viestin.
+     *
+     * @param email lähetettävä sähköposti
+     *
+     * @return  tallennetun viestin tunniste.
+     * @see #save(EmailDto, boolean)
+     */
     public String save(EmailDto email) {
         return save(email, true);
     }
 
+    /**
+     * Tallentaa sähköpostiviestin lähetettäväksi.
+     *
+     * @param email     lähettettävä sähköposti
+     * @param sanitize  sanitoidaanko viestin sisältö
+     *
+     * @return  tallennetun viestin tunniste.
+     */
     public String save(EmailDto email, boolean sanitize) {
         String url = properties.url("ryhmasahkoposti-service.email", sanitize);
         OphHttpEntity entity = new OphHttpEntity.Builder()

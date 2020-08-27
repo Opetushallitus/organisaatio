@@ -34,12 +34,46 @@ public class EmailService {
     private final KayttooikeusClient kayttooikeusClient;
     private final OrganisaatioClient organisaatioClient;
 
+    /**
+     * Lähettää ilmoituksen rekisteröintihakemuksen luonnista.
+     *
+     * @param id rekisteröinnin id
+     */
     public void lahetaRekisterointiEmail(long id) {
         rekisterointiRepository.findById(id).ifPresentOrElse(rekisterointi -> {
             lahetaRekisterointiEmail(rekisterointi);
             lahetaRekisterointiEmail(rekisterointi.kayttaja);
         }, () -> LOGGER.warn(
                 "Rekisteröinti-ilmoituksen lähetys epäonnistui, rekisteröintiä ei löydy tunnisteella: {}", id));
+    }
+
+    /**
+     * Lähettää ilmoituksen rekisteröintihakemukselle annetusta päätöksestä.
+     *
+     * @param id rekisteröinnin id.
+     */
+    public void lahetaPaatosEmail(long id) {
+        rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
+            String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
+            EmailDto email = EmailDto.builder()
+                    .emails(rekisterointi.sahkopostit)
+                    .message(luoViesti(rekisterointi.paatos, organisaatioNimi))
+                    .build();
+            LOGGER.info("Lähetetään ilmoitus rekisteröinnin {} päätöksestä osoitteisiin: {}",
+                    id, String.join(", ", rekisterointi.sahkopostit));
+            viestintaClient.save(email, false);
+        });
+    }
+
+    /**
+     * Lähettää kuntien virkailijoille ilmoituksen käsittelemättömistä rekisteröintihakemuksista.
+     */
+    public void lahetaKuntaEmail() {
+        Iterable<Rekisterointi> kasittelemattomat = rekisterointiRepository.findByTila(Rekisterointi.Tila.KASITTELYSSA.toString());
+        Set<String> kunnat = StreamSupport.stream(kasittelemattomat.spliterator(), false)
+                .flatMap(rekisterointi -> rekisterointi.kunnat.stream()).collect(toSet());
+        Map<VirkailijaDto, Long> virkailijat = getVirkailijaByKunta(kunnat);
+        virkailijat.forEach(this::lahetaKuntaEmail);
     }
 
     private void lahetaRekisterointiEmail(Rekisterointi rekisterointi) {
@@ -78,19 +112,6 @@ public class EmailService {
         viestintaClient.save(email, false);
     }
 
-    public void lahetaPaatosEmail(long id) {
-        rekisterointiRepository.findById(id).ifPresent(rekisterointi -> {
-            String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
-            EmailDto email = EmailDto.builder()
-                    .emails(rekisterointi.sahkopostit)
-                    .message(luoViesti(rekisterointi.paatos, organisaatioNimi))
-                    .build();
-            LOGGER.info("Lähetetään ilmoitus rekisteröinnin {} päätöksestä osoitteisiin: {}",
-                    id, String.join(", ", rekisterointi.sahkopostit));
-            viestintaClient.save(email, false);
-        });
-    }
-
     private EmailMessageDto luoViesti(Paatos paatos, String organisaatioNimi) {
         if (paatos.hyvaksytty) {
             return EmailMessageDto.builder()
@@ -106,14 +127,6 @@ public class EmailService {
                         Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu)))
                 .html(true)
                 .build();
-    }
-
-    public void lahetaKuntaEmail() {
-        Iterable<Rekisterointi> kasittelemattomat = rekisterointiRepository.findByTila(Rekisterointi.Tila.KASITTELYSSA.toString());
-        Set<String> kunnat = StreamSupport.stream(kasittelemattomat.spliterator(), false)
-                .flatMap(rekisterointi -> rekisterointi.kunnat.stream()).collect(toSet());
-        Map<VirkailijaDto, Long> virkailijat = getVirkailijaByKunta(kunnat);
-        virkailijat.forEach(this::lahetaKuntaEmail);
     }
 
     private Map<VirkailijaDto, Long> getVirkailijaByKunta(Set<String> kunnat) {

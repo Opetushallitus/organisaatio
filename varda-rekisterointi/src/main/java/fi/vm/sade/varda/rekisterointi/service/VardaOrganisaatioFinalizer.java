@@ -23,6 +23,13 @@ public class VardaOrganisaatioFinalizer {
     private final OrganisaatioService organisaatioService;
     private final OrganisaatioClient organisaatioClient;
 
+    /**
+     * Luo tai päivitä organisaatio rekisteröinnin perusteella. Mikäli organisaatio on jo
+     * olemassa, sille lisätään tarvittaessa varhaiskasvatuksen organisaatiotyyppi.
+     *
+     * @param rekisterointi hyväksytty rekisteröinti
+     * @return organisaation OID.
+     */
     @Transactional
     public String luoTaiPaivitaOrganisaatio(Rekisterointi rekisterointi) {
         Organisaatio organisaatio = rekisterointi.organisaatio;
@@ -54,7 +61,7 @@ public class VardaOrganisaatioFinalizer {
             organisaatioClient.save(dto);
             LOGGER.info("Lisätty varhaiskasvatuksen organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
         } else {
-            LOGGER.debug("Organisaatiolla {} on jo ennestään varhaiskasvatuksen organisaatiotyyppi.", organisaatioOid);
+            LOGGER.debug("Organisaatiolla {} on jo ennestään varhaiskasvatuksen organisaatiotyyppi.", organisaatioOid);
         }
     }
 

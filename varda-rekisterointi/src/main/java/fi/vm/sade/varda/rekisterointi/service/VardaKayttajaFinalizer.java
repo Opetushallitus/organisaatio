@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Palvelu käyttäjän kutsumiseen.
+ */
 @Service
 public class VardaKayttajaFinalizer {
 
@@ -39,6 +42,12 @@ public class VardaKayttajaFinalizer {
         );
     }
 
+    /**
+     * Kutsuu käyttäjän. Käyttäjälle annetaan rekisteröitävän toimijan toimintamuodon mukainen
+     * käyttöoikeusryhmä.
+     *
+     * @param rekisterointi hyväksytty rekisteröinti, jolle kutsutaan käyttäjä.
+     */
     void kutsuKayttaja(Rekisterointi rekisterointi) {
         kayttooikeusClient.kutsuKayttaja(
                 rekisterointi.paatos.paattaja,

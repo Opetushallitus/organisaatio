@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Palvelu hyväksytyn rekisteröinnin käsittelemiseen.
+ */
 @Service
 @AllArgsConstructor
 public class RekisterointiFinalizer {
@@ -30,6 +33,11 @@ public class RekisterointiFinalizer {
     @Qualifier("paatosEmailTask")
     private final Task<Long> paatosEmailTask;
 
+    /**
+     * Luo tai päivittää organisaation, ja ajastaa käyttäjän kutsumisen.
+     *
+     * @param rekisterointiId hyväksytyn rekisteröintihakemuksen tunnus
+     */
     public void luoTaiPaivitaOrganisaatio(Long rekisterointiId) {
         Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
         String oid = vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
@@ -43,6 +51,11 @@ public class RekisterointiFinalizer {
         );
     }
 
+    /**
+     * Luo käyttäjäkutsun ja ajastaa sähköpostiviestin päätöksestä.
+     *
+     * @param rekisterointiId hyväksytyn rekisteröintihakemuksen tunnus.
+     */
     public void kutsuKayttaja(Long rekisterointiId) {
         Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
         vardaKayttajaFinalizer.kutsuKayttaja(rekisterointi);

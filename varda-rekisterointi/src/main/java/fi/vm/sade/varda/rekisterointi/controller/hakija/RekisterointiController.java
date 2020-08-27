@@ -40,6 +40,15 @@ public class RekisterointiController {
         this.properties = properties;
     }
 
+    /**
+     * Luo rekisteröintihakemuksen.
+     *
+     * @param dto               rekisteröintitiedot
+     * @param request           HTTP-pyyntö
+     * @param authentication    tunnistautumistiedot
+     *
+     * @return  osoite, jonne ohjataan rekisteröitymisen jälkeen.
+     */
     @PostMapping
     public String register(@RequestBody @Validated RekisterointiDto dto, HttpServletRequest request, Authentication authentication) {
         String ytunnus = findSessionAttribute(request, Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class).orElseThrow(

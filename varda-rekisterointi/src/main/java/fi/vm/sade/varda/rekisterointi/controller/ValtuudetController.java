@@ -36,6 +36,13 @@ public class ValtuudetController {
         this.valtuudetClient = valtuudetClient;
     }
 
+    /**
+     * Palauttaa valtuudet-uudelleenohjauksen.
+     *
+     * @param request   HTTP-pyyntö
+     * @param locale    lokaali
+     * @return uudelleenohjaus-view.
+     */
     @GetMapping("/valtuudet/redirect")
     public View getRedirect(HttpServletRequest request, Locale locale) {
         Principal principal = request.getUserPrincipal();
@@ -50,6 +57,12 @@ public class ValtuudetController {
         return new RedirectView(redirectUrl);
     }
 
+    /**
+     * Callback valtuuksien asettamiselle.
+     *
+     * @param request   HTTP-pyyntö
+     * @return view.
+     */
     @GetMapping("/valtuudet/callback")
     public View getCallback(HttpServletRequest request) {
         try {

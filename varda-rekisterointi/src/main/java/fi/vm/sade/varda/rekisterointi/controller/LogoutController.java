@@ -17,6 +17,13 @@ public class LogoutController {
         this.logoutService = logoutService;
     }
 
+    /**
+     * Kirjaa hakijan ulos.
+     *
+     * @param request   HTTP-pyyntö
+     *
+     * @return logout-view.
+     */
     @GetMapping("/hakija/logout")
     public View logout(HttpServletRequest request) {
         return new RedirectView(logoutService.logout(request));

@@ -14,6 +14,16 @@ public class PermissionController {
 
     private final PermissionEvaluator permissionEvaluator;
 
+    /**
+     * Tarkistaa, löytyykö käyttäjältä haluttu valtuus.
+     *
+     * @param authentication    autentikointitiedot
+     * @param targetType        valtuutuksen kohteen tyyppi
+     * @param permission        tarkistettava valtuus
+     * @param targetId          valtuutuksen kohde
+     *
+     * @return onko käyttäjällä valtuus?
+     */
     @GetMapping("{targetType}/{permission}")
     public boolean hasPermission(Authentication authentication,
                                  @PathVariable String targetType,

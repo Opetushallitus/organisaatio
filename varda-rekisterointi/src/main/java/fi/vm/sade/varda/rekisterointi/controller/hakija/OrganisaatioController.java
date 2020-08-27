@@ -27,6 +27,15 @@ public class OrganisaatioController {
     private final OrganisaatioClient organisaatioClient;
     private final OrganisaatioService organisaatioService;
 
+    /**
+     * Hakee organisaation sessio-attribuutin perusteella. Hakee ensin sessiosta y-tunnuksen,
+     * jonka jälkeen hakee sillä ensin organisaatiopalvelusta, ja mikäli ei löytynyt, vielä
+     * VTJ:stä.
+     *
+     * @param request   HTTP-pyyntö (session hakemiseksi)
+     *
+     * @return organisaatiotiedot (mahdollisesti tyhjät)
+     */
     @GetMapping
     public Organisaatio getOrganisaatio(HttpServletRequest request) {
         String businessId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class)
