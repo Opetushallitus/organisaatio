@@ -7,8 +7,10 @@ import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.model.RekisterointiDto;
 import fi.vm.sade.varda.rekisterointi.service.HakijaLogoutService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
-import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
+import static fi.vm.sade.varda.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID;
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 @RestController
@@ -50,8 +53,17 @@ public class RekisterointiController {
      * @return  osoite, jonne ohjataan rekisteröitymisen jälkeen.
      */
     @PostMapping
-    public String register(@RequestBody @Validated RekisterointiDto dto, HttpServletRequest request, Authentication authentication) {
-        String ytunnus = findSessionAttribute(request, Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class).orElseThrow(
+    @ApiOperation("Luo rekisteröintihakemus")
+    @ApiResponse(
+            code = 200,
+            message = "Hakemus luotu, palauttaa paluuosoitteen",
+            response = String.class
+    )
+    public String register(
+            @ApiParam(name = "dto", type = "RekisterointiDto") @RequestBody @Validated RekisterointiDto dto,
+            HttpServletRequest request,
+            Authentication authentication) {
+        String ytunnus = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class).orElseThrow(
                 () -> new DataInconsistencyException("Käyttäjälle ei löydy y-tunnusta istunnosta.")
         );
         if (!ytunnus.equals(dto.organisaatio.ytunnus)) {
