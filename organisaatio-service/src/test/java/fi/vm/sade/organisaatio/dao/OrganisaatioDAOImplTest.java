@@ -191,14 +191,18 @@ public class OrganisaatioDAOImplTest {
 
     @Test
     public void findModifedSinceLimitsByModificationTime() {
-        Date now = new Date();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        a.setPaivitysPvm(new Date(0L));
         organisaatioDAO.update(a);
+        Date before = new Date();
+        try {
+            Thread.sleep(100L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
         Organisaatio b = createOrganisaatio("B", null, false, null, null);
-        b.setPaivitysPvm((new Date(now.getTime() + 100)));
         organisaatioDAO.update(b);
-        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(false, now);
+        List<Organisaatio> tulokset = organisaatioDAO.findModifiedSince(false, before);
         assertThat(tulokset.size()).isEqualTo(1);
         assertThat(tulokset.get(0).getOid()).isEqualTo(b.getOid());
     }

@@ -8,6 +8,7 @@ import fi.vm.sade.security.xssfilter.FilterXss;
 import fi.vm.sade.security.xssfilter.XssFilterListener;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -221,6 +222,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     // OVT-7684
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     private Date paivitysPvm;
 
     // OVT-7684
