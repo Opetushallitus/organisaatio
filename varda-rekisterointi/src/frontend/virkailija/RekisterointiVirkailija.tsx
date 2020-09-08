@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect, useContext } from 'react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash';
 import Rekisterointi from '../hakija/Rekisterointi';
-import { KoodiUri, tyhjaOrganisaatio } from '../types';
+import { KoodiUri, Organisaatio, tyhjaOrganisaatio } from '../types';
 import { useParams } from 'react-router';
 import Axios from 'axios';
 import Spinner from '../Spinner';
@@ -54,7 +54,7 @@ export default function RekisterointiVirkailija() {
     return <Rekisterointi
                           isVirkailija
                           initialOrganisaatio={initialOrganisaatio}
-                          organisaatio={organisaatio}
+                          organisaatio={organisaatio as Organisaatio}
                           setOrganisaatio={setOrganisaatio}
                           rekisteroinnitUrl={rekisteroinnitUrl} />
 }

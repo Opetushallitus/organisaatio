@@ -34,6 +34,10 @@ const initialKayttaja: Kayttaja = {
     saateteksti: '',
 };
 
+const isKayttaja = (x: unknown): x is Kayttaja => {
+    return (x as Kayttaja).asiointikieli !== undefined;
+}
+
 function reducer<T>(state: T, data: Partial<T>): T {
     return { ...state, ...data };
 }
@@ -106,13 +110,22 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                 return Object.keys(organisaatioErrors).length === 0;
             case 2:
                 const kayttajaErrors: Record<string, string> = {};
-                ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
-                    .filter(field => !kayttaja[field])
-                    .forEach(field => kayttajaErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
-                if (!!kayttaja.sahkoposti && !EmailValidator.validate(kayttaja.sahkoposti)) {
-                    kayttajaErrors.sahkoposti = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
+                if(isKayttaja(kayttaja)) {
+                    ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
+                        .filter(field => !Reflect.get(kayttaja, field))
+                        .forEach(field => kayttajaErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
+                    if (!!kayttaja.sahkoposti && !EmailValidator.validate(kayttaja.sahkoposti)) {
+                        kayttajaErrors.sahkoposti = i18n.translate('VIRHEELLINEN_SAHKOPOSTI');
+                    }
+                    setKayttajaErrors(kayttajaErrors);
+                    return Object.keys(kayttajaErrors).length === 0;
                 }
-                setKayttajaErrors(kayttajaErrors);
+                setKayttajaErrors({
+                    etunimi: i18n.translate('PAKOLLINEN_TIETO'),
+                    sukunimi:i18n.translate('PAKOLLINEN_TIETO'),
+                    sahkoposti: i18n.translate('PAKOLLINEN_TIETO'),
+                    asiointikieli: i18n.translate('PAKOLLINEN_TIETO')
+                });
                 return Object.keys(kayttajaErrors).length === 0;
         }
         return true;

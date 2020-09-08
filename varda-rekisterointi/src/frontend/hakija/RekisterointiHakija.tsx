@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer, useContext } from 'react';
-import { cloneDeep } from 'lodash';
-import {KoodiUri, tyhjaOrganisaatio} from '../types';
+import { cloneDeep } from 'lodash';
+import { KoodiUri, Organisaatio, tyhjaOrganisaatio } from '../types';
 import Spinner from '../Spinner';
 import Axios from 'axios';
 import Rekisterointi from './Rekisterointi';
@@ -50,7 +50,7 @@ export default function RekisterointiHakija() {
     }
 
     return <Rekisterointi initialOrganisaatio={initialOrganisaatio}
-                          organisaatio={organisaatio}
+                          organisaatio={organisaatio as Organisaatio}
                           setOrganisaatio={setOrganisaatio}
                           rekisteroinnitUrl={rekisteroinnitUrl} />;
 }
