@@ -742,7 +742,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
                             }
                         }
-                        child.setPaivitysPvm(new Date());
+                        // update päivittää aikaleiman
                         organisaatioDAO.update(child);
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
@@ -1161,8 +1161,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään organisaation nimi
         organisaatio.setNimi(nimiEntity.getNimi());
 
-        organisaatio.setPaivitysPvm(new Date());
-
         LOG.info("updating " + organisaatio);
         try {
             // Päivitetään nimi
@@ -1188,7 +1186,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             Map<String, String> oldName;
             oldName = new HashMap<>(organisaatio.getNimi().getValues());
 
-            LOG.info("Orgnisaation nimen update tarve: " + organisaatio);
+            LOG.info("Organisaation nimen update tarve: " + organisaatio);
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);

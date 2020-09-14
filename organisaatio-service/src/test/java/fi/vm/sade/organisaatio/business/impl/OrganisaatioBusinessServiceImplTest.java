@@ -141,6 +141,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Organisaatio oppilaitos = service
                 .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos", koulutustoimija1.getOid()), false)
                 .getOrganisaatio();
+        Date oppilaitosPaivitetty = oppilaitos.getPaivitysPvm();
         assertThat(oppilaitos)
                 .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
@@ -156,9 +157,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos.getOid());
 
-        assertThat(organisaatioDAO.findByOid(oppilaitos.getOid()))
-                .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
-                .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
+        Organisaatio muokattuOppilaitos = organisaatioDAO.findByOid(oppilaitos.getOid());
+        assertThat(muokattuOppilaitos.getParentOidPath())
+                .isEqualTo(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|");
+        assertThat(muokattuOppilaitos.getParentIdPath())
+                .isEqualTo(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|");
+        assertThat(muokattuOppilaitos.getPaivitysPvm()).isAfter(oppilaitosPaivitetty);
         assertThat(organisaatioDAO.findByOid(toimipiste.getOid()))
                 .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
@@ -326,6 +330,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         OrganisaatioResult toimipisteResult1 = service.save(toimipiste, false);
         Date toimipisteModifiedDateBeforeOppilaitosSave = toimipisteResult1.getOrganisaatio().getPaivitysPvm();
 
+        try {
+            Thread.sleep(100L);
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+            throw new RuntimeException(e);
+        }
         oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
         oppilaitos.getNimi().put("en", "oppilaitos1-päivitetty (en)");
         OrganisaatioResult oppilaitosAfterNameSave = service.save(oppilaitos, true);
@@ -339,7 +349,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         );
         assertThat(oppilaitosAfterNameSave.getOrganisaatio().getPaivitysPvm()).isAfter(oppilaitosModifiedDateBeforeNameSave);
         // Oppilaitos save also updates toimipiste paivitysPvm
-        assertThat(organisaatio.getPaivitysPvm()).isAfter(toimipisteModifiedDateBeforeOppilaitosSave);
+        assertThat(oppilaitosAfterNameSave.getOrganisaatio().getPaivitysPvm()).isAfter(toimipisteModifiedDateBeforeOppilaitosSave);
     }
 
     @Test
@@ -438,7 +448,17 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void UpdateNimiValues() {
+    public void saveUpdatesPaivitysPvm() {
+        OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid);
+        OrganisaatioResult original = this.service.save(oppilaitosRdto, false);
+        Date paivitysPvmOnCreate = original.getOrganisaatio().getPaivitysPvm();
+        oppilaitosRdto.setKuvaus("Muutettu kuvaus");
+        OrganisaatioResult updated = this.service.save(oppilaitosRdto, true);
+        assertThat(updated.getOrganisaatio().getPaivitysPvm()).isAfter(original.getOrganisaatio().getPaivitysPvm());
+    }
+
+    @Test
+    public void updateNimiValues() {
         HashMap<String, String> oldParentNimi = new HashMap<>();
         oldParentNimi.put("fi", "Vanha parent oppilaitos");
         oldParentNimi.put("en", "Old parent oppilaitos");
