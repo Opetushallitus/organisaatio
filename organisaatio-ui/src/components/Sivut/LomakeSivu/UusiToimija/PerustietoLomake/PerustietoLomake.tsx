@@ -4,23 +4,22 @@ import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import CheckboxGroup from "@opetushallitus/virkailija-ui-components/CheckboxGroup";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
-import {useContext, useState} from "react";
+import {Dispatch, SetStateAction, useContext, useState} from "react";
 import {KoodistoContext, LanguageContext} from "../../../../../contexts/contexts";
 import PohjaModaali from "../../../../Modaalit/PohjaModaali/PohjaModaali";
 import TNHeader from "../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader";
 import TNBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNBody";
 import TNFooter from "../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter";
-import TLHeader from "../../../../Modaalit/ToimipisteenLakkautus/TLHeader";
-import TLBody from "../../../../Modaalit/ToimipisteenLakkautus/TLBody";
-import TLFooter from "../../../../Modaalit/ToimipisteenLakkautus/TLFooter";
 import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
-import {AccordionItemButton, AccordionItemHeading} from "react-accessible-accordion";
+import {AccordionItemButton} from "react-accessible-accordion";
+import {Organisaatio} from "../../../../../types/types";
 
 type OrganisaatioProps = {
     organisaatio: any
     organisaatioTyypit: any
     maatJaValtiot: any
     opetuskielet: any
+    setOrganisaatio?: Dispatch<SetStateAction<Organisaatio>>
 }
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {

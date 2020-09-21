@@ -11,17 +11,10 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import {LanguageContext} from "../../../../contexts/contexts";
 import {
     Koodi,
-    KoodiUri,
-    LocalDate,
     Organisaatio,
-    OrganisaatioNimiJaOid,
-    Osoite,
-    Yhteystiedot
 } from "../../../../types/types"
 import PerustietoLomake from "./PerustietoLomake/PerustietoLomake";
 import YhteystietoLomake from "./YhteystietoLomake/YhteystietoLomake";
-import {useEffect} from "react";
-import Axios from "axios";
 import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
 
@@ -55,7 +48,7 @@ const tyhjaOrganisaatio = {
 }
 
 const UusiToimijaLomake = (props: any) => {
-    const { i18n, language } = useContext(LanguageContext);
+    const { i18n } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError}] = useAxios<Koodi[]>(
         `${urlPrefix}/koodisto/ORGANISAATIOTYYPPI/koodi`);
     const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError}] = useAxios<Koodi[]>(
@@ -85,7 +78,7 @@ const UusiToimijaLomake = (props: any) => {
                 <Accordion
                     lomakkeet={[
                         <PerustietoLomake
-                            //setOrganisaatio={setOrganisaatio}
+                            setOrganisaatio={setOrganisaatio}
                             organisaatioTyypit={organisaatioTyypit}
                             organisaatio={organisaatio}
                             maatJaValtiot={maatJaValtiot}

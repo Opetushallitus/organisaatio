@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './NormaaliTaulukko.module.css';
 import {
   useExpanded, usePagination,
-  useTable, useFilters,
+  useTable,
 } from 'react-table';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import {Icon} from "@iconify/react";
