@@ -64,7 +64,7 @@ const TaulukkoSivu = (props) => {
               ) : null,
           },
             {
-                Header: 'Nimi',
+                Header: i18n.translate('NIMI'),
                 id: 'Nimi',
                 accessor: (values) => {
                   return values.nimi[language] || values.nimi.fi || values.nimi.sv || values.nimi.fi || values.nimi.en
@@ -75,19 +75,19 @@ const TaulukkoSivu = (props) => {
                 }
             },
             {
-                Header: 'Kunta',
+                Header: i18n.translate('KUNTA'),
                 accessor: (values) => {
                   const nimi = kuntaKoodisto.uri2Nimi(values.kotipaikkaUri);
                   return nimi || '';
                 },
             },
             {
-                Header: 'Tyyppi',
+                Header: i18n.translate('TYYPPI'),
                 accessor: (values) => values.organisaatiotyypit.map(ot =>ot),
                 Cell: ({ row }) => <span>{row.original.organisaatiotyypit.map(ot => organisaatioTyypitKoodisto.uri2Nimi(ot)).join(', ')}</span>
             },
             {
-                Header: 'Tunniste',
+                Header: i18n.translate('TUNNISTE'),
                 accessor: 'ytunnus',
             },
             {
@@ -95,7 +95,7 @@ const TaulukkoSivu = (props) => {
                 accessor: 'oid',
             },
             {
-              Header: 'Tarkistus',
+              Header: i18n.translate('TARKISTUS'),
               id: 'tarkistus',
               Cell: ({ row }) => <div className={styles.LippuNappi}><LippuIkoni /></div>,
             }
