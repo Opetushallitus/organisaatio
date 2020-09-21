@@ -20,6 +20,7 @@ import Tyypit from "./components/Sivut/Tyypit/Tyypit";
 import LisatietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus";
 import YhteystietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus";
 import RyhmanMuokkaus from "./components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus";
+import UusiToimijaLomake from "./components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
@@ -52,26 +53,30 @@ const OrganisaatioApp: React.FC = () => {
       `${urlPrefix}/koodisto/RYHMATYYPIT/koodi`);
   const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError}] = useAxios<Koodi[]>(
       `${urlPrefix}/koodisto/KAYTTORYHMAT/koodi`);
-  if (languageLoading || lokalisointiLoading || kunnatLoading || ryhmaTyypitLoading || kayttoRyhmatLoading) {
+  const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError}] = useAxios<Koodi[]>(
+      `${urlPrefix}/koodisto/ORGANISAATIOTYYPPI/koodi`);
+  if (languageLoading || lokalisointiLoading || kunnatLoading || ryhmaTyypitLoading || kayttoRyhmatLoading || organisaatioTyypitLoading) {
     return (<ThemeProvider theme={theme}>
       <Spin />
     </ThemeProvider>);
   }
-  if (lokalisointiError || kunnatError || ryhmaTyypitError || kayttoRyhmatError) {
+  if (lokalisointiError || kunnatError || ryhmaTyypitError || kayttoRyhmatError || organisaatioTyypitError) {
     return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>
   }
   const i18n = new I18nImpl(lokalisointi, language);
   const kuntaKoodisto = new KoodistoImpl(kunnat, language);
   const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, language);
   const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
+  const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
 
   return (
       <Router basename="/organisaatio-ui">
         <ThemeProvider theme={theme}>
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
-          <KoodistoContext.Provider value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto }}>
+          <KoodistoContext.Provider value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, organisaatioTyypitKoodisto }}>
             <Switch>
               <Route path="/" exact component={TaulukkoSivu} />
+              <Route exact path="/lomake/uusi" component={UusiToimijaLomake} />
               <Route path="/lomake/:oid" component={LomakeSivu} />
               <Route path="/ryhmat" exact component={Ryhmat} />
               <Route path="/yhteystietotyypit" exact component={() => <Tyypit tyyppi="yhteystietojentyyppi"/>} />

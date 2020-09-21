@@ -8,8 +8,8 @@ import {useEffect} from "react";
 import Axios from "axios";
 import {useState} from "react";
 import {YhteystietoTyyppi} from "../../../types/types";
-import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
+import NormaaliTaulukko from "../../Taulukot/NormaaliTaulukko";
 
 
 const nimiMapper = (nimi: any, language: string) => {

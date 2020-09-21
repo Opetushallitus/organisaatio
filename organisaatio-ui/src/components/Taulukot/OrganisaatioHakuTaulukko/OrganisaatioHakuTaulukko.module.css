@@ -1,39 +1,10 @@
-.PaaOsio {
-    margin: 3rem 5rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    border: 1px solid #CCCCCC;
-    background-color: #FFFFFF;
-}
-
-.OtsikkoContainer {
-    display: flex;
-    flex-direction:row;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #CCCCCC;
-    align-items: center;
-}
-
-.TaulukkoContainer {
-    padding: 2rem;
-    display: block;
-    max-width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
-}
-
-
-.TaulukkoContainer td {
+td {
     height: 3rem;
-   /* width: 1%; */
+    width: 1%;
 }
 
-.TaulukkoContainer td.collapse {
-   /* width: 0.0000000001%; */
+td.collapse.collapse, th.collapse.collapse {
+    width: 0.0000000001%;
 }
 
 .PaginationContainer {
@@ -61,16 +32,33 @@
     background-position-x: 0.7rem;
 }
 
-.LippuNappi {
+.FiltteriContainer {
+    display: flex;
+    flex-direction:row;
+    padding-bottom: 2rem;
+    justify-content: space-between;
+}
+
+.FiltteriInputOsa {
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    max-width: 60vw;
+    align-items: center;
+}
+.FiltteriInputOsa > div {
+    width: 100vw;
+}
+
+.FiltteriInputOsa > label {
+    padding-left: 2rem;
+}
+
+.LisatiedotNappi.LisatiedotNappi {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #159ECB;
-    border-radius: 50%;
+    border-radius: 100%;
     width: 2rem;
     height: 2rem;
-}
-
-.Expander.Expander {
-    padding-right: 1rem;
 }

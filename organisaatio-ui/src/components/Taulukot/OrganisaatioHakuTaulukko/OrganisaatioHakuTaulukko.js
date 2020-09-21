@@ -1,23 +1,65 @@
 import * as React from 'react';
-import styles from './NormaaliTaulukko.module.css';
+import styles from './OrganisaatioHakuTaulukko.module.css';
 import {
   useExpanded, usePagination,
-  useTable, useFilters,
+  useTable, useFilters, useAsyncDebounce, useGlobalFilter, useSortBy
 } from 'react-table';
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import {Icon} from "@iconify/react";
 import chevronLeft from "@iconify/icons-fa-solid/chevron-left";
 import chevronRight from "@iconify/icons-fa-solid/chevron-right";
 import {useContext} from "react";
-import {LanguageContext} from "../../contexts/contexts";
+import {LanguageContext} from "../../../contexts/contexts";
+import Input from "@opetushallitus/virkailija-ui-components/Input";
+import searchIcon from "@iconify/icons-fa-solid/search";
+import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
 
 const mapPaginationSelectors = (index) => {
   if (index < 3) return [0, 5];
   return [index-2, index+3];
 };
 
-export default function NormaaliTaulukko({ data: inputData = [], tableColumns = [] }) {
+function Hakufiltterit({
+                         preGlobalFilteredRows,
+                         globalFilter,
+                         setGlobalFilter,
+                         naytaPassivoidut,
+                         setNaytaPassivoidut,
+                        i18n
+                       }) {
+  return (
+    <div className={styles.FiltteriContainer}>
+      <div className={styles.FiltteriInputOsa}>
+        <Input
+          placeholder={i18n.translate('TOIMIJA_HAKU_PLACEHOLDER')}
+          onChange={e => {
+            setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+          }}
+          value={globalFilter}
+          suffix={<Icon color="#999999"
+                        icon={searchIcon}/>} />
+        <Checkbox type="checkbox" checked={naytaPassivoidut} onChange={(e) => {
+          console.log('e', e.target);
+          setNaytaPassivoidut(e.target.checked)
+        }}>
+          {i18n.translate('CHECKBOX_NAYTA_PASSIVOIDUT')}
+        </Checkbox>
+      </div>
+      <Button variant="outlined" className={styles.LisatiedotNappi}>?</Button>
+    </div>
+  )
+}
+
+export default function OrganisaatioHakuTaulukko({
+                                                   data: inputData = [],
+                                                   tableColumns = [],
+                                                   naytaPassivoidut = false,
+                                                   setNaytaPassivoidut,
+                                                   setSearchString,
+                                                   searchString,
+}) {
     const { i18n } = useContext(LanguageContext);
+    console.log('tablecolumns', tableColumns, inputData);
     const columns = React.useMemo(
         () => tableColumns,
         [tableColumns],
@@ -26,6 +68,24 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
       () => inputData,
       [inputData]
     );
+
+  /*const filterTypes = React.useMemo(
+    () => ({
+      text: (rows, id, filterValue) => {
+        return rows.filter(row => {
+          const rowValue = row.values[id];
+          return rowValue !== undefined
+            ? String(rowValue)
+              .toLowerCase()
+              .startsWith(String(filterValue).toLowerCase())
+            : true;
+        });
+      }
+    }),
+    []
+  );
+
+   */
     console.log('pöö', inputData, tableColumns);
     const {
       getTableProps,
@@ -34,6 +94,9 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
       prepareRow,
       page, // Instead of using 'rows', we'll use page,
       // which has only the rows for the active page
+      globalFilter,
+      preGlobalFilteredRows,
+      setGlobalFilter,
 
       // The rest of these things are super handy, too ;)
       canPreviousPage,
@@ -44,10 +107,27 @@ export default function NormaaliTaulukko({ data: inputData = [], tableColumns = 
       previousPage,
       setPageSize,
       state: { pageIndex, pageSize },
-    } = useTable({ columns, data, initialState: { pageIndex: 0 } },
-      useExpanded, usePagination);
+    } = useTable({
+        columns,
+        data,
+        initialState: {
+          pageIndex: 0,
+          sortBy: [{
+            id: 'Nimi',
+            desc: false
+            }]
+        }},
+      useGlobalFilter,useSortBy, useExpanded, usePagination);
       return(
         <div>
+          <Hakufiltterit
+            i18n={i18n}
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            naytaPassivoidut={naytaPassivoidut}
+            setNaytaPassivoidut={setNaytaPassivoidut}
+          />
           <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
             <thead>
             {headerGroups.map(headerGroup => (

@@ -90,10 +90,12 @@ type KoodistoContextType = {
     kuntaKoodisto: Koodisto
     kayttoRyhmatKoodisto: Koodisto
     ryhmaTyypitKoodisto: Koodisto
+    organisaatioTyypitKoodisto : Koodisto
 }
 
 export const KoodistoContext = React.createContext<KoodistoContextType>({
     kuntaKoodisto: new KoodistoImpl([], "fi"),
     kayttoRyhmatKoodisto: new KoodistoImpl([], "fi"),
     ryhmaTyypitKoodisto: new KoodistoImpl([], "fi"),
+    organisaatioTyypitKoodisto: new KoodistoImpl([], 'fi'),
 });

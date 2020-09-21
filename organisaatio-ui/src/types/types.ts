@@ -43,7 +43,7 @@ export interface Organisaatio {
     kotipaikkaUri: KoodiUri,
     maaUri: KoodiUri,
     kieletUris: KoodiUri[],
-    yhteystiedot: Yhteystiedot
+    yhteystiedot: Yhteystiedot[]
 }
 
 export interface Ryhma {
