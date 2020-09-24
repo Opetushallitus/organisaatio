@@ -14,6 +14,12 @@ import {ReactComponent as LippuIkoni} from '../../../img/outlined_flag-white-18d
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
+const tarkastaLipunVari = (tarkastusPvm) => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 1);
+  return (!!tarkastusPvm ? (tarkastusPvm - date.getTime() > 0) : false);
+};
+
 const TaulukkoSivu = (props) => {
   const handleLisaaUusiToimija = () => {
     return props.history.push('/lomake/uusi');
@@ -97,7 +103,8 @@ const TaulukkoSivu = (props) => {
             {
               Header: i18n.translate('TARKISTUS'),
               id: 'tarkistus',
-              Cell: ({ row }) => <div className={styles.LippuNappi}><LippuIkoni /></div>,
+              accessor: (values) => tarkastaLipunVari(values.tarkastusPvm) ? null: 'tarkistus',
+              Cell: ({ row }) => <div className={`${styles.LippuNappi} ${tarkastaLipunVari(row.original.tarkastusPvm) ? styles.SininenTausta : styles.PunainenTausta}`}><LippuIkoni /></div>,
             }
         ];
 

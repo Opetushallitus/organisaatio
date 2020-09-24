@@ -48,6 +48,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter implements Converter<Orga
         target.setMuutKotipaikatUris(convertCollectionToSet(source.getMuutKotipaikatUris()));
         target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
         target.setLakkautusPvm(source.getLakkautusPvm());
+        target.setTarkastusPvm(source.getTarkastusPvm());
         target.setMaa(source.getMaaUri());
         target.setMetadata(MetadataConverterUtils.convertMetadata(source.getMetadata()));
         target.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getNimi()));

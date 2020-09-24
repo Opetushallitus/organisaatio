@@ -65,11 +65,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #159ECB;
     border-radius: 50%;
     width: 2rem;
     height: 2rem;
 }
+
+.SininenTausta {
+    background: #159ECB;
+}
+.PunainenTausta {
+    background: #e44e4e;
+}
+
 
 .Expander.Expander {
     padding-right: 1rem;

@@ -19,6 +19,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements Converter<
         destination.setOid(source.getOid());
         // java.sql.Date -> java.util.Date jotta json-formaatti sama kuin solr-toteutuksessa
         destination.setAlkuPvm(clone(source.getAlkuPvm()));
+        destination.setTarkastusPvm(clone(source.getTarkastusPvm()));
         destination.setLakkautusPvm(clone(source.getLakkautusPvm()));
         List<String> parentOids = Optional.ofNullable(source.getParentOidPath())
                 .map(parentOidPath -> Arrays.stream(parentOidPath.split("\\|")))

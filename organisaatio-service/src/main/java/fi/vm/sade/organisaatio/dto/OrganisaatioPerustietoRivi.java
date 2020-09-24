@@ -8,6 +8,7 @@ public class OrganisaatioPerustietoRivi {
     private String oid;
     private Date alkuPvm;
     private Date lakkautusPvm;
+    private Date tarkastusPvm;
     private String parentOidPath;
     private String parentOid;
     private String ytunnus;
@@ -24,7 +25,7 @@ public class OrganisaatioPerustietoRivi {
     public OrganisaatioPerustietoRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOidPath,
                                       String parentOid, String ytunnus, String virastotunnus, String oppilaitosKoodi,
                                       String oppilaitostyyppi, String toimipistekoodi, String nimiKieli,
-                                      String nimiArvo, String tyyppi, String kieli, String kotipaikka) {
+                                      String nimiArvo, String tyyppi, String kieli, String kotipaikka, Date tarkastusPvm) {
         this.oid = oid;
         this.alkuPvm = alkuPvm;
         this.lakkautusPvm = lakkautusPvm;
@@ -40,6 +41,7 @@ public class OrganisaatioPerustietoRivi {
         this.tyyppi = tyyppi;
         this.kieli = kieli;
         this.kotipaikka = kotipaikka;
+        this.tarkastusPvm = tarkastusPvm;
     }
 
     public String getOid() {
@@ -162,4 +164,11 @@ public class OrganisaatioPerustietoRivi {
         this.kotipaikka = kotipaikka;
     }
 
+    public Date getTarkastusPvm() {
+        return tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Date tarkastusPvm) {
+        this.tarkastusPvm = tarkastusPvm;
+    }
 }

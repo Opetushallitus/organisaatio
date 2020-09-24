@@ -27,6 +27,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date lakkautusPvm;
 
+    @ApiModelProperty(value = "TarkastusPäivämäärä", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Date tarkastusPvm;
+
     @ApiModelProperty(value = "Yläorganisaation oid", required = true)
     private String parentOid;
 
@@ -71,7 +75,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         return children;
     }
 
-    @ApiModelProperty(value = "Organisaation alaorganisaatiot react taableen", required = true)
+    @ApiModelProperty(value = "Organisaation alaorganisaatiot react tableen", required = true)
     private Set<OrganisaatioPerustietoV4> subRows = new HashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getSubRows() {
@@ -391,5 +395,13 @@ public class OrganisaatioPerustietoV4 implements Serializable {
             return OrganisaatioStatus.SUUNNITELTU;
         }
         return OrganisaatioStatus.AKTIIVINEN;
+    }
+
+    public Date getTarkastusPvm() {
+        return tarkastusPvm;
+    }
+
+    public void setTarkastusPvm(Date tarkastusPvm) {
+        this.tarkastusPvm = tarkastusPvm;
     }
 }
