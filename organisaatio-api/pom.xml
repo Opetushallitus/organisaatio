@@ -17,7 +17,7 @@ Union Public Licence for more details. -->
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2018-7-SNAPSHOT</version>
+        <version>2020.01-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-api</artifactId>
@@ -30,6 +30,10 @@ Union Public Licence for more details. -->
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -96,18 +100,4 @@ Union Public Licence for more details. -->
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <inherited>true</inherited>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

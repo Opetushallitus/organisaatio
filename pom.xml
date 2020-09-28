@@ -4,13 +4,16 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>2018-7-SNAPSHOT</version>
+    <version>2020.01-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
-
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
         <!-- OPH service versions -->
         <generic.version>9.4-SNAPSHOT</generic.version>
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
@@ -29,33 +32,27 @@
         <jmeter.password>xxx</jmeter.password>
         <jmeter.resultDir>/data00/bamboo/home/www/jmeter/fi.vm.sade.organisaatio/</jmeter.resultDir>
 
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <jetty.module>${project.artifactId}</jetty.module>
         <jetty.webApp>../${jetty.module}/target/${jetty.module}.war</jetty.webApp>
-        <jetty.version>9.3.10.v20160621</jetty.version>
-        <daemon>false</daemon>
+        <jetty.version>9.4.30.v20200611</jetty.version>
         <daemon>false</daemon>
 
         <!-- UI libraries -->
         <servlet.version>3.1.0</servlet.version>
         <google.map.widget.version>0.9.13</google.map.widget.version>
-        <swagger.version>1.5.17</swagger.version>
-        <frontend-plugin.version>1.5</frontend-plugin.version>
+        <swagger.version>1.6.0</swagger.version>
+        <frontend-plugin.version>1.9.1</frontend-plugin.version>
 
         <!-- ServiceMix components / frameworks -->
-        <cxf.version>3.2.4</cxf.version>
+        <cxf.version>3.4.0</cxf.version>
         <wss4j.version>1.6.4</wss4j.version>
-        <spring.version>4.3.17.RELEASE</spring.version>
-        <spring.security.version>4.2.6.RELEASE</spring.security.version>
-        <spring.session.version>2.0.3.RELEASE</spring.session.version>
+        <spring.version>4.3.26.RELEASE</spring.version>
+        <spring.security.version>4.2.15.RELEASE</spring.security.version>
+        <spring.session.version>2.1.11.RELEASE</spring.session.version>
 
         <!-- Logging -->
-        <slf4j.version>1.7.22</slf4j.version>
-        <slf4j-api.scope>compile</slf4j-api.scope>
-        <log4j.version>1.2.17</log4j.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <log4j.version>2.13.3</log4j.version>
 
         <!-- Database -->
         <postgresql.version>42.2.5</postgresql.version>
@@ -64,26 +61,25 @@
         <hsqldb.version>2.0.0</hsqldb.version>
         <commons-dbcp.version>1.4_1</commons-dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <querydsl.version>4.2.1</querydsl.version>
+        <querydsl.version>4.2.2</querydsl.version>
         <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
-        <hibernate.validator.version>5.4.2.Final</hibernate.validator.version>
+        <hibernate.validator.version>5.4.3.Final</hibernate.validator.version>
         <el-api.version>2.2.4</el-api.version>
-        <hibernate.version>5.2.17.Final</hibernate.version>
-        <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
-        <ehcache.version>2.5.2</ehcache.version>
+        <hibernate.version>5.4.21.Final</hibernate.version>
+        <hibernate.jpa.version>1.0.2.Final</hibernate.jpa.version>
+        <ehcache.version>2.6.11</ehcache.version>
         <cas-client-support-distributed-ehcache.version>3.4.1</cas-client-support-distributed-ehcache.version>
 
 
         <!-- Utils -->
         <commons-codec.version>1.6</commons-codec.version>
+        <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <jodatime.version>2.9.4</jodatime.version>
         <aopalliance.version>1.0</aopalliance.version>
-        <antisamy.version>1.4.5</antisamy.version>
-        <java.version>1.8</java.version>
+        <antisamy.version>1.5.9</antisamy.version>
         <aspectj.version>1.7.0</aspectj.version>
-        <modelmapper.version>2.2.0</modelmapper.version>
-        <jackson.version>2.9.5</jackson.version>
-        <asm.version>5.0.2</asm.version>
+        <modelmapper.version>2.3.6</modelmapper.version>
+        <jackson.version>2.10.0</jackson.version>
         <httpcomponents.version>4.4.5</httpcomponents.version>
         <httpcomponents.client.version>4.5.2</httpcomponents.client.version>
         <gson.version>2.2.2</gson.version>
@@ -271,8 +267,6 @@ buildTtime=${maven.build.timestamp}
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <debug>${compiler.debug}</debug>
                 </configuration>
             </plugin>
@@ -315,6 +309,11 @@ buildTtime=${maven.build.timestamp}
 
     <dependencyManagement>
         <dependencies>
+            <dependency><!-- required on JDK 8+-->
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.3.1</version>
+            </dependency>
             <dependency>
                 <groupId>fi.vm.sade.java-utils</groupId>
                 <artifactId>java-cas</artifactId>

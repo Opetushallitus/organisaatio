@@ -20,15 +20,18 @@
                 <version>${jetty.version}</version>
 
                 <configuration>
+                    <supportedPackagings>
+                        <supportedPackaging>pom</supportedPackaging>
+                    </supportedPackagings>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
                     <systemPropertiesFile>${user.home}/oph-configuration/organisaatio-service.properties</systemPropertiesFile>
                     <systemProperties>
                         <systemProperty>
-                            <name>log4j.configuration</name>
+                            <name>log4j.configurationFile</name>
                             <!-- have to use file:/// url since -->
                             <!-- Jetty is using classloader -->
                             <!-- before the webapp classloader is ready -->
-                            <value>file:///${basedir}/src/main/resources/log4j.properties</value>
+                            <value>file:///${basedir}/src/main/resources/log4j2.xml</value>
                         </systemProperty>
                     </systemProperties>
                     <webAppConfig>
@@ -97,22 +100,6 @@
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-servlets</artifactId>
                         <version>${jetty.version}</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>org.javassist</groupId>
-                                <artifactId>javassist</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.ow2.asm</groupId>
-                        <artifactId>asm</artifactId>
-                        <version>${asm.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.ow2.asm</groupId>
-                        <artifactId>asm-commons</artifactId>
-                        <version>${asm.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.postgresql</groupId>

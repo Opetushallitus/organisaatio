@@ -7,7 +7,7 @@
     <parent>
         <groupId>fi.vm.sade.organisaatio</groupId>
         <artifactId>organisaatio</artifactId>
-        <version>2018-7-SNAPSHOT</version>
+        <version>2020.01-SNAPSHOT</version>
     </parent>
 
     <artifactId>organisaatio-service</artifactId>
@@ -51,45 +51,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.github.divinespear</groupId>
-                <artifactId>jpa-schema-maven-plugin</artifactId>
-                <version>0.2.0</version>
-                <configuration>
-                    <scriptAction>create</scriptAction>
-                    <createOutputFileName>schema.ddl</createOutputFileName>
-                    <databaseProductName>PostgreSQL</databaseProductName>
-
-                    <databaseMajorVersion>9</databaseMajorVersion>
-                    <databaseMinorVersion>3</databaseMinorVersion>
-                    <format>true</format>
-                    <lineSeparator>LF</lineSeparator>
-                    <packageToScan>
-                        <scan>fi.vm.sade.organisaatio.model</scan>
-                    </packageToScan>
-                    <vendor>hibernate</vendor>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.eclipse.persistence</groupId>
-                        <artifactId>org.eclipse.persistence.jpa</artifactId>
-                        <version>2.6.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-entitymanager</artifactId>
-                        <version>5.0.7.Final</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -243,6 +204,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency><!-- no longer shipped with JDK -->
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
         <!--For javax.annotation.Nullable-->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -263,11 +229,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpcomponents.client.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>${httpcomponents.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -287,7 +254,6 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
@@ -366,11 +332,19 @@
         </dependency>
         <!-- Fix https://snyk.io/vuln/SNYK-JAVA-ORGCODEHAUSPLEXUS-31522 -->
         <!-- cxf-java2swagger-plugin tuo haavoittuvaisen version ilman tätä -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
             <version>3.0.16</version>
-        </dependency>
+        </dependency>-->
+        <!-- Fix https://snyk.io/vuln/SNYK-JAVA-ORGAPACHEMAVENSHARED-570592 -->
+        <!-- cxf-java2swagger-plugin tuo haavoittuvaisen version ilman tätä -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-shared-utils</artifactId>
+        <version>3.3.3</version>
+</dependency>
+
         <!--Provides javax.ws.rs-api:2.0-m10 if this is overwritten with newer version stops working!-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -406,8 +380,29 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-java2swagger-plugin</artifactId>
             <version>${cxf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-rewrite</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
@@ -451,7 +446,7 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.3.2</version>
+            <version>${commons-fileupload.version}</version>
         </dependency>
 
         <!-- CachingRestClient -->
@@ -459,6 +454,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-cache</artifactId>
             <version>${httpcomponents.client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -479,6 +480,10 @@
                     <artifactId>spring-jms</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -491,6 +496,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -596,6 +607,12 @@
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-common</artifactId>
             <version>${generic.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.viestintapalvelu</groupId>
@@ -677,6 +694,10 @@
             <version>5.3.2</version>
             <exclusions>
                 <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
@@ -684,34 +705,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-rewrite</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
             <version>1.11-8</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- satunnainen bugi ilmenee jaxb 2.2.4:lla: http://java.net/projects/jaxb/lists/users/archive/2011-09/message/3 -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <!--<version>2.2.4-1</version>-->
-            <version>2.2.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -776,17 +772,24 @@
             <version>${modelmapper.version}</version>
         </dependency>
 
-        <!-- todo: depsukat, pelkän jettyn takia tämän joutuu urheilemaan näin.. -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <!-- ei käytännössä kuitenkaan ollut pelkällä test-scopella, koska ei käänny ilman (tullut api-moduulin xml-riippuvuuden kautta)-->
-            <!--<scope>${slf4j-api.scope}</scope>-->
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
@@ -819,6 +822,10 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -834,6 +841,12 @@
             <groupId>fi.vm.sade.oid</groupId>
             <artifactId>oid-api</artifactId>
             <version>${oid.api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- java-utils -->
