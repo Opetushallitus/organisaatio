@@ -24,7 +24,7 @@
     "moment": "2.19.3",
     "ng-idle": "1.3.2",
     "script-loader": "^0.6.1",
-    "tinymce": "4.9.7",
+    "tinymce": "4.9.11",
     "ui-select": "0.16.1",
     "webpack": "^1.12.14"
   }
