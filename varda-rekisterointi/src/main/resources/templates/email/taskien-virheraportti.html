@@ -6,8 +6,8 @@
 <body>
 <div layout:fragment="sisalto">
     <span th:text="#{taskien-virheraportti.teksti(${epaonnistuneetLkm})}">teksti</span>
-    <ul th:each="task: ${epaonnistuneet}">
-        <li th:text="#{taskien-virheraportti.lisatieto(${task.virhe.tyyppi}, ${task.rekisterointi.organisaatio.ytunnus})}">lisätieto</li>
+    <ul>
+        <li th:each="task: ${epaonnistuneet}" th:text="#{taskien-virheraportti.lisatieto(${task.virhe.tyyppi}, ${task.rekisterointi.organisaatio.ytunnus})}">lisätieto</li>
     </ul>
 </div>
 </body>
