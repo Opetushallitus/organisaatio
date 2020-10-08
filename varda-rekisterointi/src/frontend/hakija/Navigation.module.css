@@ -25,13 +25,13 @@
 
 .nav div.step.current .circle {
     background-color: #ffffff;
-    border: 1px solid #159ecb;
-    color: #159ecb;
+    border: 1px solid #0A789C;
+    color: #0A789C;
 }
 
 .nav div.step.previous .circle {
-    background-color: #159ecb;
-    border: 1px solid #159ecb;
+    background-color: #0A789C;
+    border: 1px solid #0A789C;
     color: #ffffff;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .nav div.line.previous {
-    border-top: 2px solid #159ecb;
+    border-top: 2px solid #0A789C;
 }
 
 .ariaLabel {

@@ -43,7 +43,7 @@ export default function RekisterointiAloitus() {
                 </a>
             </p>
             <p>
-                <a className="oph-button oph-button-primary" href="/varda-rekisterointi/hakija">
+                <a className={`oph-button oph-button-primary ${styles.varimuutos}`} href="/varda-rekisterointi/hakija">
                     {i18n.translateWithLang('HAKIJA_ALOITA_REKISTEROITYMINEN', data.kieli)}
                 </a>
             </p>
