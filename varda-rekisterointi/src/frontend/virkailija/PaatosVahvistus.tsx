@@ -131,7 +131,7 @@ export default function PaatosVahvistus({ valitut, hyvaksytty, nayta, valitutKas
                     className={styles.lisattyMargin}
                     error={perusteluError}
                     value={perustelu}
-                    onChange={(event: any) => asetaPerustelu(event.target.value)}
+                    onChange={(event: { target: HTMLTextAreaElement; }) => asetaPerustelu(event.target.value)}
                 />
             ]
             }

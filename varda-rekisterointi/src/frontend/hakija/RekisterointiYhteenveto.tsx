@@ -14,7 +14,7 @@ type Props = {
     kunnat: string[],
     sahkopostit: string[],
     toimintamuoto: string,
-    kayttaja: Kayttaja | any,
+    kayttaja: Kayttaja,
 }
 
 function nop() {

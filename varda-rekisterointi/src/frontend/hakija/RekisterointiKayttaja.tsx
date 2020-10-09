@@ -8,7 +8,7 @@ import AriaVirheMapper from "../virhe/AriaVirheMapper";
 type Props = {
     toimintamuoto: string,
     setToimintamuoto: (toimintamuoto: string) => void,
-    kayttaja: Kayttaja | any,
+    kayttaja: Kayttaja,
     setKayttaja: (kayttaja: Partial<Kayttaja>) => void,
     errors: Record<string, string>,
 }
