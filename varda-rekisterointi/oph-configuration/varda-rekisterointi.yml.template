@@ -39,6 +39,7 @@ varda-rekisterointi:
         password: {{ varda_rekisterointi_service_password }}
     schedule:
         kunta-email-task: {{ varda_rekisterointi_schedule_kunta_email_task | default('DAILY|06:00') }}
+        raportoi-epaonnistumiset-task: {{ varda_rekisterointi_schedule_raportoi_epaonnistumiset_task | default('DAILY|07:00') }}
     valtuudet:
         host: {{ varda_rekisterointi_valtuudet_host }}
         client-id: {{ varda_rekisterointi_valtuudet_client_id }}

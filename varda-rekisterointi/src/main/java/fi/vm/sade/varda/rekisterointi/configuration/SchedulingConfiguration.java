@@ -4,6 +4,7 @@ import com.github.kagkarlsson.scheduler.task.Task;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
 import fi.vm.sade.varda.rekisterointi.service.EmailService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiFinalizer;
+import fi.vm.sade.varda.rekisterointi.service.TaskMonitoringService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,14 @@ import static com.github.kagkarlsson.scheduler.task.schedule.Schedules.parseSche
 public class SchedulingConfiguration {
 
     private final EmailService emailService;
+    private final TaskMonitoringService taskMonitoringService;
     private final RekisterointiFinalizer rekisterointiFinalizer;
 
     public SchedulingConfiguration(EmailService emailService,
+                                   TaskMonitoringService taskMonitoringService,
                                    @Lazy RekisterointiFinalizer rekisterointiFinalizer) {
         this.emailService = emailService;
+        this.taskMonitoringService = taskMonitoringService;
         this.rekisterointiFinalizer = rekisterointiFinalizer;
     }
 
@@ -56,6 +60,14 @@ public class SchedulingConfiguration {
         return Tasks.oneTime("kutsu-kayttaja-task", Long.class).execute(
                 (instance, ctx) -> rekisterointiFinalizer.kutsuKayttaja(instance.getData())
         );
+    }
+
+    @Bean
+    @ConditionalOnProperty("varda-rekisterointi.schedule.raportoi-epaonnistumiset-task")
+    public Task<Void> raportoiEpaonnistumisetTask(Environment environment) {
+        String scheduleString = environment.getRequiredProperty("varda-rekisterointi.schedule.raportoi-epaonnistumiset-task");
+        return Tasks.recurring("raportoi-epaonnistumiset-task", parseSchedule(scheduleString))
+                .execute((instance, ctx) -> taskMonitoringService.raportoiEpaonnistumiset());
     }
 
 }

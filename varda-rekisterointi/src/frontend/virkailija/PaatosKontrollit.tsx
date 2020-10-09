@@ -28,11 +28,11 @@ export default function PaatosKontrollit({ valitut, valitutKasiteltyCallback }: 
 
     return (
         <Box className={styles.paatosKontrollit}>
-            <Button id="hylkaaButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={_ => vahvista(false)}
+            <Button id="hylkaaButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={() => vahvista(false)}
                     variant="outlined" color="secondary">
                 <i className="material-icons md-18">&#xe14c;</i> {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
             </Button>
-            <Button id="hyvaksyButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={_ => vahvista(true)}>
+            <Button id="hyvaksyButton" className={styles.paatosKontrollit} disabled={!kaytossa} onClick={() => vahvista(true)}>
                 <i className="material-icons md-18">&#xe5ca;</i> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
             {naytaVahvistus &&
