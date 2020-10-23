@@ -41,7 +41,8 @@ export default function RekisterointiAloitus() {
                 <a className="oph-link" href={i18n.translateWithLang('LUE_LISAA_OHJE_URL', data.kieli)} target="_blank" rel="noopener noreferrer">
                     {i18n.translateWithLang('LUE_LISAA_OHJE', data.kieli)}
                 </a>
-                &nbsp;
+                <br />
+                <br />
                 <a className="oph-link" href={i18n.translateWithLang('LUE_LISAA_SAAVUTETTAVUUS_URL', data.kieli)} target="_blank" rel="noopener noreferrer">
                     {i18n.translateWithLang('LUE_LISAA_SAAVUTETTAVUUS', data.kieli)}
                 </a>
