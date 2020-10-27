@@ -4,17 +4,12 @@ import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import CheckboxGroup from "@opetushallitus/virkailija-ui-components/CheckboxGroup";
 import Select from "@opetushallitus/virkailija-ui-components/Select";
-import {Dispatch, SetStateAction, useContext, useState} from "react";
+import { useContext, useState} from "react";
 import {KoodistoContext, LanguageContext} from "../../../../../contexts/contexts";
 import PohjaModaali from "../../../../Modaalit/PohjaModaali/PohjaModaali";
 import TNHeader from "../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader";
-import TNBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNBody";
 import TNFooter from "../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter";
 import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
-import {AccordionItemButton} from "react-accessible-accordion";
-import {Organisaatio} from "../../../../../types/types";
-import {ValueType} from "react-select";
-import {stringify} from "querystring";
 import TNUusiBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody";
 import DatePickerInput from "@opetushallitus/virkailija-ui-components/DatePickerInput";
 

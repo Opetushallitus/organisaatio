@@ -13,7 +13,7 @@ type yhteystietoProps = {
     handleOnChange: ({ name, value }: { name: string; value: any; }) => void
 }
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 export default function YhteystietoLomake(props: yhteystietoProps) {
     const [kieleksi, setKieleksi ] = useState('kieli_fi#1');

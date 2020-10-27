@@ -1,4 +1,4 @@
-import React, {FormEvent, ReactElement, ReactText} from 'react';
+import React, {FormEvent, ReactElement } from 'react';
 import styles from './Accordion.module.css';
 
 import {

@@ -15,7 +15,7 @@ import Axios from "axios";
 
 // const KAIKKIVALITTU = '1';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 type Props = {
     match: any
@@ -62,10 +62,10 @@ export default function RyhmanMuokkaus(props: Props) {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio-ui/ryhmat"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio/ryhmat"><Icon icon={homeIcon} /></a>
                 </div>
                 <div>
-                    <a href="/organisaatio-ui/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
+                    <a href="/organisaatio/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>

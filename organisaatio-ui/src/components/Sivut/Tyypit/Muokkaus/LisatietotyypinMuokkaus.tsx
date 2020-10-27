@@ -18,7 +18,7 @@ import Axios from "axios";
 
 const KAIKKIVALITTU = '1', RAJATUT_VALITTU = '0';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 type Props = {
     match: any

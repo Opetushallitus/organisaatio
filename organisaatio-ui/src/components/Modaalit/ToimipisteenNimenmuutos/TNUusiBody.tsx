@@ -1,8 +1,7 @@
-import React, {Dispatch, SetStateAction, useContext, useState} from "react";
+import React, { useContext } from "react";
 import {LanguageContext} from "../../../contexts/contexts";
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
-import {stringify} from "querystring";
 
 interface NimiType {
     fi:"fi",

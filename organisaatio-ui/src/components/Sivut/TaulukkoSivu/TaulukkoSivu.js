@@ -12,7 +12,7 @@ import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
 import {ReactComponent as LippuIkoni} from '../../../img/outlined_flag-white-18dp.svg';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
   const date = new Date();

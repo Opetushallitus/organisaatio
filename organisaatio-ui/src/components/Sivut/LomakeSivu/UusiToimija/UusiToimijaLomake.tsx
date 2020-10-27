@@ -19,7 +19,7 @@ import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
 import Axios from "axios";
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 const tyhjaOrganisaatio = {
     ytunnus: '',
@@ -79,6 +79,7 @@ const UusiToimijaLomake = (props: any) => {
     async function postOrganisaatio() {
         try {
             const response = await Axios.post( `${urlPrefix}/organisaatio/v4/`, organisaatio);
+            console.error('saved org response', response)
             props.history.push('/')
         } catch (error) {
             console.error('error while posting org', error)

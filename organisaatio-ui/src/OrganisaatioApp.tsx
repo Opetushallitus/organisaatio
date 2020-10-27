@@ -22,7 +22,7 @@ import YhteystietotyypinMuokkaus from "./components/Sivut/Tyypit/Muokkaus/Yhteys
 import RyhmanMuokkaus from "./components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus";
 import UusiToimijaLomake from "./components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake";
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 const theme = createTheme();
 
@@ -70,7 +70,7 @@ const OrganisaatioApp: React.FC = () => {
   const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
 
   return (
-      <Router basename="/organisaatio-ui">
+      <Router basename="/organisaatio">
         <ThemeProvider theme={theme}>
         <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
           <KoodistoContext.Provider value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, organisaatioTyypitKoodisto }}>

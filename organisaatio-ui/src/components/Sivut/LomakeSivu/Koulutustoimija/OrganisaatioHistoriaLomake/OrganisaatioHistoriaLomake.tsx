@@ -9,7 +9,7 @@ type organisaatioHistoriaProps = {
   oid?: string
 }
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
     const [{ data: historia, loading: historiaLoading, error: historiaError}] = useAxios(

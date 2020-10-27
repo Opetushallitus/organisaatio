@@ -21,7 +21,7 @@ import UOTFooter from "../../../Modaalit/UusiOsoiteTyyppi/UOTFooter";
 
 const KAIKKIVALITTU = '1';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 type Props = {
 }
