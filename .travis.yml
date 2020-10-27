@@ -21,7 +21,7 @@ env:
 install:
   - git clone https://github.com/Opetushallitus/ci-tools.git
   - source ci-tools/common/setup-tools.sh
-  - export ARTIFACT_NAME="organisaatio"
+  - export ARTIFACT_NAME="organisaatio2"
   - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
   - export TZ=Europe/Helsinki # TODO: fix tests
 

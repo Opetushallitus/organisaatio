@@ -21,16 +21,24 @@ export type KielistettyNimi = {
 }
 
 export type Osoite = {
-    katuosoite: string,
-    postinumeroUri: KoodiUri,
-    postitoimipaikka: string
+    osoite?: string,
+    postinumeroUri?: KoodiUri,
+    postitoimipaikka?: string
+    email?: string
+    www?: string
+    numero?: string
 }
 
 export type Yhteystiedot = {
-    puhelinnumero: string,
-    sahkoposti: string,
-    postiosoite: Osoite,
-    kayntiosoite: Osoite
+    tyyppi?: string
+    osoiteTyyppi?: string
+    kieli: string
+    osoite?: string,
+    postinumeroUri?: KoodiUri,
+    postitoimipaikka?: string
+    email?: string
+    www?: string
+    numero?: string
 }
 export interface Organisaatio {
     oid?: string,

@@ -108,9 +108,9 @@ public class PermissionChecker {
                 checkPermission(permissionService.userCanEditDates(authContext));
             }
             checkPermission(permissionService.userCanUpdateOrganisation(authContext));
-        } else {
-            checkPermission(permissionService.userCanCreateOrganisation(authContext));
-        }
+        } // TODO else {
+            // checkPermission(permissionService.userCanCreateOrganisation(authContext));
+        //}
     }
 
     private void checkPermission(boolean result) {

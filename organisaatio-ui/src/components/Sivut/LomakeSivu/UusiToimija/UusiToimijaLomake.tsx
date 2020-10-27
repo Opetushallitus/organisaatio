@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useState} from "react";
+import {useContext, useReducer, useState} from "react";
 import styles from './UusiToimijaLomake.module.css';
 import PohjaSivu from "../../PohjaSivu/PohjaSivu";
 import Accordion from "../../../Accordion/Accordion"
@@ -17,6 +17,7 @@ import PerustietoLomake from "./PerustietoLomake/PerustietoLomake";
 import YhteystietoLomake from "./YhteystietoLomake/YhteystietoLomake";
 import Icon from "@iconify/react";
 import useAxios from "axios-hooks";
+import Axios from "axios";
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio-ui';
 
@@ -31,21 +32,36 @@ const tyhjaOrganisaatio = {
     muutKotipaikatUris: [],
     maaUri: '',
     kieletUris: [] ,
-    yhteystiedot: [{
-        puhelinnumero: '',
-        sahkoposti: '',
-        postiosoite: {
-            katuosoite: '',
-            postinumeroUri: '',
-            postitoimipaikka: ''
+    yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1'].map((kieli) => ([
+        {
+            kieli,
+            tyyppi: 'puhelin',
+            numero: '',
         },
-        kayntiosoite: {
-            katuosoite: '',
-            postinumeroUri: '',
-            postitoimipaikka: ''
+        {
+            kieli,
+        email: '',
+        },
+        {
+            kieli,
+        www: '',
+        },
+        {
+            kieli,
+        osoiteTyyppi: 'posti',
+        osoite: '',
+        postinumeroUri: '',
+        postitoimipaikka: ''
+        },
+        {
+            kieli,
+        osoiteTyyppi: 'kaynti',
+        osoite: '',
+        postinumeroUri: '',
+        postitoimipaikka: ''
         }
-    }]
-}
+        ])).flat(),
+};
 
 const UusiToimijaLomake = (props: any) => {
     const { i18n } = useContext(LanguageContext);
@@ -55,7 +71,26 @@ const UusiToimijaLomake = (props: any) => {
         `${urlPrefix}/koodisto/MAATJAVALTIOT1/koodi`);
     const [{ data: oppilaitoksenOpetuskielet, loading: oppilaitoksenOpetuskieletLoading, error: oppilaitoksenOpetuskieletError}] = useAxios<Koodi[]>(
         `${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
-    const [organisaatio, setOrganisaatio] = useState<Organisaatio>(tyhjaOrganisaatio);
+    const [organisaatio, setOrganisaatio] = useReducer(
+        (state: Organisaatio , newState: Organisaatio) => ({ ...state, ...newState }),
+        tyhjaOrganisaatio
+    );
+
+    async function postOrganisaatio() {
+        try {
+            const response = await Axios.post( `${urlPrefix}/organisaatio/v4/`, organisaatio);
+            props.history.push('/')
+        } catch (error) {
+            console.error('error while posting org', error)
+        } finally {
+        }
+    }
+
+    const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
+
+    const handleOnChange = ({ name, value } : { name: string, value: any}) => {
+        setOrganisaatio({ [name]: value } as Organisaatio);
+    }
     if (organisaatioTyypitLoading || organisaatioTyypitError || maatJaValtiotLoading || maatJaValtiotError || oppilaitoksenOpetuskieletLoading || oppilaitoksenOpetuskieletError) {
         return (<div className={styles.PaaOsio}>
             <Spin>ladataan sivua </Spin>
@@ -76,15 +111,23 @@ const UusiToimijaLomake = (props: any) => {
             </div>
             <div className={styles.PaaOsio} >
                 <Accordion
+                    preExpanded={lomakeAvoinna}
+                    handlePreExpanded={setLomakeAvoinna}
+                    handleChange={(event) => {
+                        console.log('accordionevent', event)
+                        //setLomakeAvoinna(avoinnaIndex[0] + 1)
+                    }}
                     lomakkeet={[
                         <PerustietoLomake
-                            setOrganisaatio={setOrganisaatio}
+                            handleJatka={() => setLomakeAvoinna(1)}
+                            handleOnChange={handleOnChange}
                             organisaatioTyypit={organisaatioTyypit}
                             organisaatio={organisaatio}
                             maatJaValtiot={maatJaValtiot}
                             opetuskielet={oppilaitoksenOpetuskielet}
                         />,
                         <YhteystietoLomake
+                            handleOnChange={handleOnChange}
                             yhteystiedot={organisaatio.yhteystiedot}
                         />,
                     ]}
@@ -93,9 +136,14 @@ const UusiToimijaLomake = (props: any) => {
             </div>
             <div className={styles.AlaBanneri}>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>{i18n.translate('SULJE_TIEDOT')}
+                    <Button
+                        variant="outlined"
+                        className={styles.Versionappula}
+                        onClick={() => setOrganisaatio(Object.assign({}, tyhjaOrganisaatio))}
+                    >
+                        {i18n.translate('SULJE_TIEDOT')}
                     </Button>
-                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}
+                    <Button className={styles.Versionappula} onClick={postOrganisaatio}>{i18n.translate('TALLENNA')}
                     </Button>
                 </div>
             </div>

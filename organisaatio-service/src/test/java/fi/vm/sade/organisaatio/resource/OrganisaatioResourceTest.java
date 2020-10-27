@@ -28,7 +28,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,12 +48,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@org.springframework.test.context.jdbc.Sql(
+        scripts = "classpath:data/basic_organisaatio_data.sql",
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
+@org.springframework.test.context.jdbc.Sql(
+        scripts = "classpath:data/truncate_tables.sql",
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+)
+@ActiveProfiles("dev")
 @RunWith(SpringRunner.class)
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-public class OrganisaatioResourceTest extends SecurityAwareTestBase {
+public class OrganisaatioResourceTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -64,18 +77,9 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
-    @Override
-    @Before
-    public void before() {
-        super.before();
-        Locale.setDefault(Locale.US); // because of validaton messages
-        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
-    }
 
-    @Override
-    @After
-    public void after() {
-        executeSqlScript("classpath:data/truncate_tables.sql", false);
+    public OrganisaatioResourceTest() {
+        Locale.setDefault(Locale.US);
     }
 
     @Test
@@ -106,6 +110,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
     public void testChangeParentOid() throws Exception {
         String oldParentOid = "1.2.2004.1";
         String parentOid = "1.2.2004.5";
@@ -126,6 +131,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
     public void testSearchOrganisaatios() throws Exception {
         //Finding all koulutustoimijat
         OrganisaatioSearchCriteria searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), null, null, true, null);
@@ -174,6 +180,7 @@ public class OrganisaatioResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
     public void testSearchHierarchyReturnsToimipistekoodi() throws Exception {
         // Get the hierarchy
         OrganisaatioSearchCriteriaDTOV2 searchCriteria = createOrgSearchCriteriaDTOV2();

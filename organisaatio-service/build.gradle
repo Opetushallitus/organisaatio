@@ -30,11 +30,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.1'
 	implementation 'com.google.guava:guava:29.0-jre'
 	implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
 	implementation 'fi.vm.sade.java-utils:java-http:0.6.0-SNAPSHOT'
 	implementation 'fi.vm.sade.java-utils:oid-generator:0.1.0-SNAPSHOT'
+	implementation 'fi.vm.sade.java-utils:opintopolku-cas-servlet-filter:0.1.2-SNAPSHOT'
+	implementation 'fi.vm.sade.java-utils:opintopolku-user-details-service:0.2.0-SNAPSHOT'
 	implementation 'fi.vm.sade:auditlogger:8.3.0-SNAPSHOT'
+	compile group: 'org.jasig.cas.client', name: 'cas-client-core', version: '3.5.0'
 	implementation('org.postgresql:postgresql')
 	compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
@@ -93,6 +97,8 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '1.1.7.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.3.0.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.0.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-cas', version: '5.3.0.RELEASE'
 
 
 	// compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.3.0.RELEASE'

@@ -38,6 +38,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 
 //TODO combine permission service tests and make this a proper unit test
+/*
 @RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
@@ -222,6 +223,7 @@ public class OrganisaatioPermissionServiceTest {
 
     }
 
+
     private void assertEditOrganisation(OrganisaatioTyyppi tyyppi, boolean expectedResult) {
         OrganisaatioRDTO org = getOrganisaatio(userOid, userOrgOid, tyyppi);
         Assert.assertEquals(expectedResult, permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
@@ -254,3 +256,5 @@ public class OrganisaatioPermissionServiceTest {
     }
     
 }
+
+ */

@@ -28,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -52,7 +53,7 @@ import org.mockito.MockitoAnnotations;
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
+public class OrganisaatioDeleteTest {
 
     private OrganisaatioRDTO a, ab, abc, ad;
 
@@ -77,7 +78,13 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
 
     @Before
     public void setUp() {
-        LOG.info("setUp()...");
+    }
+
+    @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001", "APP_ORGANISAATIOHALLINTA_CRUD"})
+    public void testParentDelete() throws Exception {
+        LOG.info("testParentDelete()...");
+
 
         //      A
         //     / \
@@ -96,11 +103,6 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
         when(tarjontaMock.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
         when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
         when(tarjontaMock.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
-    }
-
-    @Test
-    public void testParentDelete() throws Exception {
-        LOG.info("testParentDelete()...");
 
         // Organisaatiota ei saa poistaa, jos sillä on aliorganisaatioita
         try {
@@ -113,8 +115,27 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001", "APP_ORGANISAATIOHALLINTA_CRUD"})
     public void testAlkaviaKoulutuksiaDelete() throws Exception {
         LOG.info("testAlkaviaKoulutuksiaDelete()...");
+
+        //      A
+        //     / \
+        //   AB  AD (koulutuksia)
+        //   /
+        // ABC
+
+        a   = createOrganisaatio("A", null);
+        ab  = createOrganisaatio("AB", a);
+        abc = createOrganisaatio("ABC", ab);
+        ad  = createOrganisaatio("AD", a);
+
+        //MockitoAnnotations.initMocks(this);
+
+        // Mock toteutukset alkavien koulutusten pyynnöille
+        when(tarjontaMock.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
+        when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
+        when(tarjontaMock.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
 
         // Organisaatiota ei saa poistaa, jos sillä on alkavia koulutuksia
         try {
@@ -127,8 +148,28 @@ public class OrganisaatioDeleteTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001", "APP_ORGANISAATIOHALLINTA_CRUD"})
     public void testSuccessfulDelete() throws Exception {
         LOG.info("testSuccessfulDelete()...");
+
+
+        //      A
+        //     / \
+        //   AB  AD (koulutuksia)
+        //   /
+        // ABC
+
+        a   = createOrganisaatio("A", null);
+        ab  = createOrganisaatio("AB", a);
+        abc = createOrganisaatio("ABC", ab);
+        ad  = createOrganisaatio("AD", a);
+
+        //MockitoAnnotations.initMocks(this);
+
+        // Mock toteutukset alkavien koulutusten pyynnöille
+        when(tarjontaMock.alkaviaKoulutuksia(ab.getOid())).thenReturn(false);
+        when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
+        when(tarjontaMock.alkaviaKoulutuksia(abc.getOid())).thenReturn(false);
 
         // Organisaatiolla ei ole aliorganisaatioita eikä alkavia koulutuksia
         // --> saa poistaa

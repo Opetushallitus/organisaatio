@@ -279,7 +279,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     // DELETE /organisaatio/{oid}
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public String deleteOrganisaatio(String oid) {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
