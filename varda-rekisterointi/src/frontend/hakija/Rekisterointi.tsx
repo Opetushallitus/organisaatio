@@ -80,8 +80,8 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
             case 1:
                 const organisaatioErrors: Record<string, string> = {};
                 if (!organisaatio.oid) {
-                    ['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm']
-                        .filter(field => !(organisaatio as any)[field])
+                    (['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm'] as const)
+                        .filter(field => !(organisaatio)[field])
                         .forEach(field => organisaatioErrors[field] = i18n.translate('PAKOLLINEN_TIETO'));
                     if (organisaatio.ytunnus && !YtunnusValidator.validate(organisaatio.ytunnus)) {
                         organisaatioErrors.ytunnus = i18n.translate('VIRHEELLINEN_YTUNNUS');
@@ -156,7 +156,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                 <RekisterointiKayttaja
                     toimintamuoto={toimintamuoto}
                     setToimintamuoto={setToimintamuoto}
-                    kayttaja={kayttaja}
+                    kayttaja={kayttaja as Kayttaja}
                     setKayttaja={setKayttaja}
                     errors={kayttajaErrors} />
                 <RekisterointiYhteenveto
@@ -165,7 +165,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                     kunnat={kunnat}
                     sahkopostit={sahkopostit}
                     toimintamuoto={toimintamuoto}
-                    kayttaja={kayttaja} />
+                    kayttaja={kayttaja as Kayttaja} />
             </Wizard>
             <Footer />
         </div>

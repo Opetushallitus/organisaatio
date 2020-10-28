@@ -84,7 +84,7 @@ export default function Rekisteroinnit() {
                                        placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
                                        value={hakutermiInput}
                                        prefix={<FilterVariantIcon className={styles.suodataIcon}/>}
-                                       onChange={(e: any) => vaihdaHakutermi(e.target.value)} />
+                                       onChange={(e: { target: HTMLInputElement; }) => vaihdaHakutermi(e.target.value)} />
                             </div>
                             <div>
                                 <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
@@ -102,7 +102,7 @@ export default function Rekisteroinnit() {
                             <Input type="text"
                                    placeholder={i18n.translate('YTUNNUS')}
                                    value={ytunnus}
-                                   onChange={(event: any) => setYtunnus(event.currentTarget.value)} />
+                                   onChange={(event: { currentTarget: HTMLInputElement; }) => setYtunnus(event.currentTarget.value)} />
                            <div>
                                 <Link to={`/virkailija/rekisterointi/luonti/${ytunnusTrimmed}`}
                                     className={ytunnusClassNames}
