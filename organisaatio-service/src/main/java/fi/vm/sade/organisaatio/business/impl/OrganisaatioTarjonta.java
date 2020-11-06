@@ -25,7 +25,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.googlecode.flyway.core.util.logging.Log;
+//import org.flywaydb.core.internal.util.logging.Log;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
 import fi.vm.sade.organisaatio.config.UrlConfiguration;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakukohdeHakutulosV1RDTO;

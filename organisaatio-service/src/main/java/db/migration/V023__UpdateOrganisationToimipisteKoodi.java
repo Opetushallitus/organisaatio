@@ -14,7 +14,7 @@
  */
 package db.migration;
 
-import com.googlecode.flyway.core.api.migration.spring.SpringJdbcMigration;
+import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
