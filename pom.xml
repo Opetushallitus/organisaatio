@@ -34,7 +34,7 @@
 
         <jetty.module>${project.artifactId}</jetty.module>
         <jetty.webApp>../${jetty.module}/target/${jetty.module}.war</jetty.webApp>
-        <jetty.version>9.4.30.v20200611</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
         <daemon>false</daemon>
 
         <!-- UI libraries -->
