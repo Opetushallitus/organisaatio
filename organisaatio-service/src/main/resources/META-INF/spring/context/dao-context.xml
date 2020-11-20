@@ -21,6 +21,22 @@
         <constructor-arg index="0" ref="jdbcTemplate" />
     </bean>
 
+    <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
+        <property name="baselineOnMigrate" value="${flyway.initOnMigrate:true}" />
+        <property name="validateOnMigrate" value="${flyway.validateOnMigrate:false}"/>
+        <property name="locations" value="classpath:db/migration" />
+        <property name="outOfOrder" value="true" />
+        <property name="dataSource">
+            <bean id="dbDataSource"
+                  class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+                <property name="targetDataSource" ref="dbDataSource" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg ref="flywayConfig"/>
+    </bean>
     <!-- Add EntityManagerFactory (required by jta) support -->
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
         <property name="loadTimeWeaver">
@@ -43,18 +59,6 @@
     </bean>
     <!-- enable spring annotation driven transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" />
-
-    <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
-        <property name="initOnMigrate" value="${flyway.initOnMigrate:true}"/>
-        <property name="validateOnMigrate" value="${flyway.validateOnMigrate:false}"/>
-        <property name="dataSource">
-            <bean id="dbDataSource"
-                  class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
-                <property name="targetDataSource" ref="dbDataSource" />
-            </bean>
-        </property>
-        <property name="outOfOrder" value="true" />
-    </bean>
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="poolName" value="springHikariCP" />
