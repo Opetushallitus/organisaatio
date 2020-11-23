@@ -26,6 +26,7 @@
         <property name="validateOnMigrate" value="${flyway.validateOnMigrate:false}"/>
         <property name="locations" value="classpath:db/migration" />
         <property name="outOfOrder" value="true" />
+        <property name="table" value="schema_version_history" />     <!-- TODO correct format for version 5, but wrong name :( This needs to be fixed later -->
         <property name="dataSource">
             <bean id="dbDataSource"
                   class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
