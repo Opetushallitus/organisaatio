@@ -129,7 +129,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/public(/.*)?").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class)
+                //.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(casAuthenticationEntryPoint());
