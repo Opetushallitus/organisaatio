@@ -33,8 +33,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private CasProperties casProperties;
     private OphProperties ophProperties;
     private Environment environment;
-
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     public WebSecurityConfiguration(CasProperties casProperties, OphProperties ophProperties, Environment environment, UserDetailsService userDetailsService) {
@@ -69,7 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public TicketValidator ticketValidator() {
-        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(ophProperties.url("cas.base"));
+        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(this.ophProperties.url("cas.base"));
         ticketValidator.setAcceptAnyProxy(true);
         return ticketValidator;
     }
@@ -77,7 +76,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     //
     // CAS filter
     //
-
     @Bean
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
@@ -102,7 +100,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     //
     // CAS entry point
     //
-
     @Bean
     public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
@@ -113,9 +110,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-        requestCache.setPortResolver(request -> request.getServerPort());
-        http.requestCache().requestCache(requestCache);
         http
                 .headers().disable()
                 .csrf().disable()
@@ -126,13 +120,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/public(/.*)?").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                //.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(casAuthenticationEntryPoint());
+                .addFilter(casAuthenticationFilter())
+                .exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
     }
 
     @Override

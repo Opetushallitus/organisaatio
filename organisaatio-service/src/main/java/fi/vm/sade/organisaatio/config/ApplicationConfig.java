@@ -52,16 +52,4 @@ public class ApplicationConfig {
         ConverterFactory converterFactory = new ConverterFactory();
         return converterFactory;
     }
-    /*
-    @Bean(initMethod = "migrate")
-    Flyway flyway() {
-        Flyway flyway = new Flyway();
-        flyway.setBaselineOnMigrate(true);
-        //flyway.setInitOnMigrate(true);
-        flyway.setTable("schema_version");
-        flyway.setDataSource("jdbc:postgresql://localhost:5432/organisaatio", "app", "ophoph");
-        return flyway;
-    }
-
-   */
 }
