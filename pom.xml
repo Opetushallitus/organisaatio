@@ -81,7 +81,7 @@
         <modelmapper.version>2.3.6</modelmapper.version>
         <jackson.version>2.10.0</jackson.version>
         <httpcomponents.version>4.4.5</httpcomponents.version>
-        <httpcomponents.client.version>4.5.2</httpcomponents.client.version>
+        <httpcomponents.client.version>4.5.13</httpcomponents.client.version>
         <gson.version>2.2.2</gson.version>
         <webapp.port>8180</webapp.port>
         <beanvalidation.version>1.1.0.Final</beanvalidation.version>
@@ -123,7 +123,7 @@
         <clover.outputDirectory>${bamboo.data.home}/www/clover/${project.groupId}</clover.outputDirectory>
         <clover.base>${bamboo.data.home}/clover/${project.groupId}</clover.base>
 
-        <buildversion_prefix />
+        <buildversion_prefix/>
 
         <checkstyle.excludes>**/generated/**/*,**/com/**/*,**/org/**/*,**/net/**/*,**/*Mock.java</checkstyle.excludes>
         <checkstyle.skip>false</checkstyle.skip>
@@ -244,7 +244,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
+                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
@@ -254,8 +254,8 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
-                                <echo message="${buildversiontxt}" />
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
                         </configuration>
@@ -524,25 +524,25 @@ buildTtime=${maven.build.timestamp}
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
                                         <if>
-                                            <available file="${project.build.directory}/classes/fi" />
+                                            <available file="${project.build.directory}/classes/fi"/>
                                             <then>
-                                                <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="maven.plugin.classpath" />
+                                                <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="maven.plugin.classpath"/>
 
-                                                <property name="findbugsclasspath" refid="maven.plugin.classpath" />
-                                                <property name="runtime_classpath" refid="maven.runtime.classpath" />
-                                                <property name="compile_classpath" refid="maven.compile.classpath" />
+                                                <property name="findbugsclasspath" refid="maven.plugin.classpath"/>
+                                                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                                                <property name="compile_classpath" refid="maven.compile.classpath"/>
 
-                                                <mkdir dir="${project.build.directory}/findbugs" />
+                                                <mkdir dir="${project.build.directory}/findbugs"/>
                                                 <echo>Using localRepository: ${settings.localRepository}</echo>
                                                 <findbugs output="html" outputFile="${project.build.directory}/findbugs/findbugs.html" classpath="${findbugsclasspath}" pluginlist="${settings.localRepository}/net/sourceforge/findbugs/coreplugin/${findbugs.version}/coreplugin-${findbugs.version}.jar" jvmargs="-Xmx256m" reportLevel="medium" effort="default" failOnError="true">
-                                                    <sourcePath location="${project.basedir}/src/main/java" />
-                                                    <class location="${project.build.directory}/classes" />
+                                                    <sourcePath location="${project.basedir}/src/main/java"/>
+                                                    <class location="${project.build.directory}/classes"/>
                                                     <auxClasspath>
-                                                        <path refid="maven.compile.classpath" />
-                                                        <path refid="maven.runtime.classpath" />
-                                                        <path refid="maven.plugin.classpath" />
+                                                        <path refid="maven.compile.classpath"/>
+                                                        <path refid="maven.runtime.classpath"/>
+                                                        <path refid="maven.plugin.classpath"/>
                                                     </auxClasspath>
                                                 </findbugs>
                                             </then>
@@ -628,7 +628,7 @@ buildTtime=${maven.build.timestamp}
                                     <target>
                                         <delete includeemptydirs="true" failonerror="false">
                                             <fileset dir="${clover.outputDirectory}_old">
-                                                <include name="**/**" />
+                                                <include name="**/**"/>
                                             </fileset>
                                         </delete>
                                     </target>
@@ -673,11 +673,11 @@ buildTtime=${maven.build.timestamp}
                                         <echo>Clean clover output directory from ${clover.base}.</echo>
                                         <delete includeemptydirs="true" failonerror="false">
                                             <fileset dir="${clover.base}">
-                                                <include name="**/**" />
-                                                <exclude name="history/**" />
+                                                <include name="**/**"/>
+                                                <exclude name="history/**"/>
                                             </fileset>
                                         </delete>
-                                        <move failonerror="false" file="${clover.outputDirectory}" tofile="${clover.outputDirectory}_old" />
+                                        <move failonerror="false" file="${clover.outputDirectory}" tofile="${clover.outputDirectory}_old"/>
                                     </target>
                                 </configuration>
                             </execution>
@@ -771,7 +771,7 @@ buildTtime=${maven.build.timestamp}
                                         <echo>Remove Scala files from target/clover directory.</echo>
                                         <delete failonerror="false" verbose="true">
                                             <fileset dir="target/clover">
-                                                <include name="**/*.scala" />
+                                                <include name="**/*.scala"/>
                                             </fileset>
                                         </delete>
                                     </target>
