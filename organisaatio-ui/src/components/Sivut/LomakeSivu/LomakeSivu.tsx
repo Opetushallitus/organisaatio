@@ -64,7 +64,7 @@ const LomakeSivu = (props: any) => {
                 </div>
                 {organisaatioNimiPolku.map((o, index) => ([
                     <div>
-                        <a href={`/organisaatio-ui/lomake/${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</a>
+                        <a href={`/organisaatio/lomake/${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</a>
                     </div>,
                     (organisaatioNimiPolku.length - 1) !== index && <div> > </div>])
                 )}
