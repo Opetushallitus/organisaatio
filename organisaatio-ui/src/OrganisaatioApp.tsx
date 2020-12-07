@@ -9,9 +9,9 @@ import { fi, sv, enGB } from 'date-fns/locale';
 import {LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext} from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {Koodi, Language, Lokalisointi} from './types/types';
-import useAxios from 'axios-hooks';
+import useAxios, { configure } from 'axios-hooks';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import Axios from 'axios';
+import axios from 'axios';
 import LomakeSivu from "./components/Sivut/LomakeSivu/LomakeSivu";
 import TaulukkoSivu from "./components/Sivut/TaulukkoSivu/TaulukkoSivu";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
@@ -26,6 +26,14 @@ const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaat
 
 const theme = createTheme();
 
+const axiosInstanceWithCallerId = axios.create({
+  headers: {
+    ['Caller-Id']: '1.2.246.562.10.00000000001.organisaatio-ui'
+  }
+});
+
+configure({ axios: axiosInstanceWithCallerId });
+
 const OrganisaatioApp: React.FC = () => {
   registerLocale('fi', fi);
   registerLocale('sv', sv);
@@ -35,7 +43,7 @@ const OrganisaatioApp: React.FC = () => {
   useEffect(() => {
     async function fetchLanguage() {
       try {
-        const response = await Axios.get(`${urlPrefix}/lokalisointi/kieli`);
+        const response = await axiosInstanceWithCallerId.get(`${urlPrefix}/lokalisointi/kieli`);
         setLanguage(response.data);
       } catch (error) {
         console.log(error);
