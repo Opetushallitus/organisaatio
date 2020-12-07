@@ -6,21 +6,35 @@
     <parent>
         <groupId>fi.vm.sade.rajapinnat</groupId>
         <artifactId>ytj-parent</artifactId>
-        <version>13.0-SNAPSHOT</version>
+        <version>14.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
     <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
     <artifactId>ytj-generated-model</artifactId>
     <name>Rajapinnat :: YTJ :: generated-model - ${project.version}</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.jws</groupId>
+            <artifactId>javax.jws-api</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <sourceDirectory>target/generated-sources/cxf</sourceDirectory>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>${cxf.codegen.version}</version>
+                <version>${cxf.version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -33,7 +47,6 @@
                                     <wsdlLocation>classpath:wsdl/yritystiedot.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-xjc-Xbg</extraarg>
-                                        <extraarg>-xjc-Xsetters</extraarg>
                                         <extraarg>-verbose</extraarg>
                                     </extraargs>
                                 </wsdlOption>
@@ -55,11 +68,6 @@
                         <artifactId>cxf-xjc-boolean</artifactId>
                         <version>2.6.0</version>
                     </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics</artifactId>
-                        <version>0.6.4</version>
-                    </dependency>
                 </dependencies>
             </plugin>
 
@@ -75,10 +83,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
-    <dependencies>
-    </dependencies>
 </project>

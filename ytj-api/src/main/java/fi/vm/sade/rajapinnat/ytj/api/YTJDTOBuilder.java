@@ -37,9 +37,7 @@ public class YTJDTOBuilder {
         this.yritysTunnus = new YTunnusDTO() {{
             setYTunnus(ytunnus);
         }};
-        this.yritysTunnusHistoria = new ArrayOfYritysTunnusHistoriaDTO() {{
-            setYritysTunnusHistoriaDTO(new ArrayList<>());
-        }};
+        this.yritysTunnusHistoria = new ArrayOfYritysTunnusHistoriaDTO();
     }
 
     public YTJDTOBuilder kieli(YTJKieli kieli) {
