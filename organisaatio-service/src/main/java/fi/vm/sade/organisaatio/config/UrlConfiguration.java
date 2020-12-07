@@ -20,6 +20,7 @@ public class UrlConfiguration {
         //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/common.properties").toString());
         //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/organisaatio-service.properties").toString());
         properties.addDefault("host.virkailija", environment.getRequiredProperty("host.virkailija"));
+        properties.addDefault("host.alb", environment.getRequiredProperty("host.alb"));
         properties.addDefault("organisaatio.service.username", environment.getRequiredProperty("organisaatio.service.username"));
         properties.addDefault("organisaatio.service.password", environment.getRequiredProperty("organisaatio.service.password"));
         properties.addDefault("organisaatio.service.username.to.koodisto", environment.getRequiredProperty("organisaatio.service.username.to.koodisto"));

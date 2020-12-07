@@ -59,7 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService);
+        casAuthenticationProvider.setUserDetailsService(this.userDetailsService);
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
         casAuthenticationProvider.setKey(casProperties.getKey());

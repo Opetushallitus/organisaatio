@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Configuration
 @Profile("!dev")
+@Configuration
 public class UserDetailsServiceConfiguration {
 
     private final OphProperties ophProperties;
@@ -19,7 +19,7 @@ public class UserDetailsServiceConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        String host = ophProperties.url("url-virkailija");
+        String host = ophProperties.url("host.alb");
         return new OphUserDetailsServiceImpl(host, "1.2.246.562.10.00000000001.organisaatio-service");
     }
 
