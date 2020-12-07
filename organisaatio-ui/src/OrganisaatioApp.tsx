@@ -28,7 +28,7 @@ const theme = createTheme();
 
 const axiosInstanceWithCallerId = axios.create({
   headers: {
-    ['Caller-Id']: '1.2.246.562.10.00000000001.organisaatio-ui'
+    'Caller-Id': '1.2.246.562.10.00000000001.organisaatio-ui'
   }
 });
 
