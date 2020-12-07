@@ -26,11 +26,13 @@ const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaat
 
 const theme = createTheme();
 
-const axiosInstanceWithCallerId = axios.create({
+export const axiosInstanceWithCallerId = axios.create({
   headers: {
     'Caller-Id': '1.2.246.562.10.00000000001.organisaatio-ui'
   }
 });
+
+axios.defaults.headers.common['Caller-Id'] = '1.2.246.562.10.00000000001.organisaatio-ui';
 
 configure({ axios: axiosInstanceWithCallerId });
 
