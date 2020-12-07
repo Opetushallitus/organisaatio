@@ -26,7 +26,7 @@ type Props = {
     tyyppi: 'lisatietotyypit' | 'yhteystietojentyyppi'
 }
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : 'organisaatio-ui';
+const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : 'organisaatio';
 
 const Tyypit = (props: Props) => {
     const { i18n, language } = useContext(LanguageContext);
@@ -53,9 +53,9 @@ const Tyypit = (props: Props) => {
             Header: i18n.translate('TYYPIT_NIMI'),
             Cell: ({row}: { row: any}) => {
                 if(typeof row.original === 'string'){
-                    return <a href={`/organisaatio-ui/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${row.original}`}>{row.original}</a>
+                    return <a href={`/organisaatio/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${row.original}`}>{row.original}</a>
                 }
-                return <a href={`/organisaatio-ui/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${nimiMapper(row.original.nimi, language)}`}>{nimiMapper(row.original.nimi, language)}</a>;
+                return <a href={`/organisaatio/${props.tyyppi === 'yhteystietojentyyppi' ? 'yhteystietotyypit' : 'lisatietotyypit'}/muokkaus/${nimiMapper(row.original.nimi, language)}`}>{nimiMapper(row.original.nimi, language)}</a>;
             },
         },
     ];

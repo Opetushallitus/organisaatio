@@ -77,7 +77,7 @@ const TaulukkoSivu = (props) => {
                 },
                 Cell: ({ row }) => {
                   return <a
-                    href={`/organisaatio-ui/lomake/${row.original.oid}`}>{row.original.nimi[language] || row.original.nimi.fi || row.original.nimi.sv || row.original.nimi.fi || row.original.nimi.en}</a>
+                    href={`/organisaatio/lomake/${row.original.oid}`}>{row.original.nimi[language] || row.original.nimi.fi || row.original.nimi.sv || row.original.nimi.fi || row.original.nimi.en}</a>
                 }
             },
             {

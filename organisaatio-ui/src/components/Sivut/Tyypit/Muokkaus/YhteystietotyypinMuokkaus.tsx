@@ -47,10 +47,10 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio-ui/yhteystietotyypit"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio/yhteystietotyypit"><Icon icon={homeIcon} /></a>
                 </div>
                 <div>
-                    <a href="/organisaatio-ui/yhteystietotyypit">{i18n.translate('KAIKKI_YHTEYSTIETOTYYPIT')}</a>
+                    <a href="/organisaatio/yhteystietotyypit">{i18n.translate('KAIKKI_YHTEYSTIETOTYYPIT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>

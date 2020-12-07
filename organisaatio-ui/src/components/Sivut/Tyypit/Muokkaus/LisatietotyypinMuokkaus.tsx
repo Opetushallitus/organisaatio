@@ -64,10 +64,10 @@ export default function LisatietotyypinMuokkaus(props: Props) {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio-ui/lisatietotyypit"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio/lisatietotyypit"><Icon icon={homeIcon} /></a>
                 </div>
                 <div>
-                    <a href="/organisaatio-ui/lisatietotyypit">{i18n.translate('KAIKKI_LISATIETOTYYPIT')}</a>
+                    <a href="/organisaatio/lisatietotyypit">{i18n.translate('KAIKKI_LISATIETOTYYPIT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
