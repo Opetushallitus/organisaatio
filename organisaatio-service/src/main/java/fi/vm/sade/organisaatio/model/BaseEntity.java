@@ -16,6 +16,7 @@
  */
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,12 +37,11 @@ public class BaseEntity implements Serializable {
     public static final String VERSION_COLUMN_NAME = "version";
 
     @Id
-    @Column(name = ID_COLUMN_NAME, unique = true, nullable = false)
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment" )
     private Long id;
 
     @Version
-    @Column(name = VERSION_COLUMN_NAME, nullable = false)
     private Long version;
 
     public Long getId() {

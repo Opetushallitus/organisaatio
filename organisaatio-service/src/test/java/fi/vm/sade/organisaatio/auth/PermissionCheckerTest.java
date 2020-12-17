@@ -1,3 +1,4 @@
+/* TODO
 package fi.vm.sade.organisaatio.auth;
 
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
@@ -72,3 +73,5 @@ public class PermissionCheckerTest {
     }
 
 }
+
+ */
