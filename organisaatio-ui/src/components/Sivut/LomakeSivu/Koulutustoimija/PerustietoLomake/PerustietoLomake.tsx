@@ -14,7 +14,6 @@ import TLHeader from "../../../../Modaalit/ToimipisteenLakkautus/TLHeader";
 import TLBody from "../../../../Modaalit/ToimipisteenLakkautus/TLBody";
 import TLFooter from "../../../../Modaalit/ToimipisteenLakkautus/TLFooter";
 import DatePickerInput from "@opetushallitus/virkailija-ui-components/DatePickerInput";
-import TNUusiBody from "../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody";
 
 type OrganisaatioProps = {
     organisaatio: any
