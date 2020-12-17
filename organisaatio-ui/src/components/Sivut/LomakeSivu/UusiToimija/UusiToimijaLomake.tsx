@@ -87,6 +87,11 @@ const UusiToimijaLomake = (props: any) => {
         }
     }
 
+    function handleCancel() {
+        setOrganisaatio(Object.assign({}, tyhjaOrganisaatio));
+        props.history.push('/')
+    }
+
     const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {
@@ -140,7 +145,7 @@ const UusiToimijaLomake = (props: any) => {
                     <Button
                         variant="outlined"
                         className={styles.Versionappula}
-                        onClick={() => setOrganisaatio(Object.assign({}, tyhjaOrganisaatio))}
+                        onClick={handleCancel}
                     >
                         {i18n.translate('SULJE_TIEDOT')}
                     </Button>

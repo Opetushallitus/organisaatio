@@ -5,6 +5,8 @@ import YksinkertainenTaulukko from "../../../../Taulukot/YksinkertainenTaulukko"
 
 type nimiHistoriaProps = {
     nimet: any
+    handleOnChange: ({ name, value }: { name: string; value: any; }) => void
+
 }
 
 export default function NimiHistoriaLomake(props: nimiHistoriaProps) {

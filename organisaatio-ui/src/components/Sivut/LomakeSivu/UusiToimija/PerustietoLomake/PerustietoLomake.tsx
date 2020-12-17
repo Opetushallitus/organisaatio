@@ -131,7 +131,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         value={kaikkiKunnat.find(kk => kk.value === organisaatio.kotipaikkaUri)}
                         options={kaikkiKunnat}
                         onChange={(option) => handleOnChange({ name: 'kotipaikkaUri', value: (option as iOption).value })}
-
                     />
                 </div>
                 <div className={styles.Kentta}>

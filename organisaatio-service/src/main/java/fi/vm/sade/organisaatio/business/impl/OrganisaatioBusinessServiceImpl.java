@@ -247,7 +247,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Asetetaan päivittäjä ja päivityksen aikaleima
         try {
-            entity.setPaivittaja(getCurrentUser());
+            // TODO entity.setPaivittaja(getCurrentUser());
+            entity.setPaivittaja("useristesti");
             entity.setPaivitysPvm(new Date());
         } catch (Throwable t) {
             LOG.error("Could not set updater for organisation!", t);

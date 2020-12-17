@@ -16,7 +16,6 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,14 +37,7 @@ public class BaseEntity implements Serializable {
 
     @Id
     @Column(name = ID_COLUMN_NAME, unique = true, nullable = false)
-    @GeneratedValue(
-            strategy= GenerationType.AUTO,
-            generator="native"
-    )
-    @GenericGenerator(
-            name = "native",
-            strategy = "native"
-    )
+    @GeneratedValue
     private Long id;
 
     @Version

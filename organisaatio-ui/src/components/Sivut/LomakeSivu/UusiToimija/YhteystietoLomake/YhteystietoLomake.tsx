@@ -111,6 +111,12 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
                 </div>
             </div>
             <div className={styles.Rivi}>
+                <Checkbox
+                    checked={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
+                    onChange={handlePostiOsSamaKuinKaynti}
+                >Postiosoite on sama kuin käyntiosoite</Checkbox>
+            </div>
+            <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>Postiosoite</label>
                     <Input
@@ -147,12 +153,6 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
                         name="kaynti.postinumeroUri"
                     />
                 </div>
-            </div>
-            <div className={styles.Rivi}>
-                <Checkbox
-                    checked={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
-                    onChange={handlePostiOsSamaKuinKaynti}
-                >Postiosoite on sama kuin käyntiosoite</Checkbox>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>

@@ -44,13 +44,34 @@ const LomakeSivu = (props: any) => {
                     const organisaatioNimiPolku = idArr.map((oid: String) => ({ oid, nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi }));
                     setOrganisaatioNimiPolku(organisaatioNimiPolku);
                 }
-                setOrganisaatio(organisaatio);
+                setOrganisaatio(Object.assign({}, organisaatio));
             } catch (error) {
                 console.error('error fetching', error)
             }
         }
         fetch();
     }, [params.oid]);
+
+    async function putOrganisaatio() {
+        try {
+            if (organisaatio && organisaatio.oid) {
+                const response = await Axios.put( `${urlPrefix}/organisaatio/v4/${organisaatio.oid}`, organisaatio);
+                console.error('updated org response', response);
+                props.history.push('/')
+            }
+        } catch (error) {
+            console.error('error while posting org', error)
+        } finally {
+        }
+    }
+
+    const handleOnChange = ({ name, value } : { name: string, value: any}) => {
+        setOrganisaatio((organisaatio) => {
+            const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
+            console.log('päiv', updatedOrg);
+            return updatedOrg;
+        });
+    }
     if (!organisaatio || organisaatioTyypitLoading || organisaatioTyypitError || maatJaValtiotLoading || maatJaValtiotError || oppilaitoksenOpetuskieletLoading || oppilaitoksenOpetuskieletError) {
         return (<div className={styles.PaaOsio}>
             <Spin>ladataan sivua </Spin>
@@ -84,6 +105,7 @@ const LomakeSivu = (props: any) => {
                 <Accordion
                     lomakkeet={[
                         <PerustietoLomake
+                            handleOnChange={handleOnChange}
                             organisaatioTyypit={organisaatioTyypit}
                             organisaatio={organisaatio}
                             language={language}
@@ -91,12 +113,15 @@ const LomakeSivu = (props: any) => {
                             opetuskielet={oppilaitoksenOpetuskielet}
                         />,
                         <YhteystietoLomake
+                            handleOnChange={handleOnChange}
                             yhteystiedot={organisaatio.yhteystiedot}
                         />,
                         <NimiHistoriaLomake
+                            handleOnChange={handleOnChange}
                             nimet={organisaatio.nimet}
                         />,
                         <OrganisaatioHistoriaLomake
+                            handleOnChange={handleOnChange}
                             oid={organisaatio.oid}
                         />,
                     ]}
@@ -116,9 +141,14 @@ const LomakeSivu = (props: any) => {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>{i18n.translate('SULJE_TIEDOT')}
+                    <Button
+                        variant="outlined"
+                        className={styles.Versionappula}
+                        onClick={() => props.history.push('/')}
+                    >
+                        {i18n.translate('SULJE_TIEDOT')}
                     </Button>
-                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}
+                    <Button className={styles.Versionappula} onClick={putOrganisaatio}>{i18n.translate('TALLENNA')}
                     </Button>
                 </div>
             </div>

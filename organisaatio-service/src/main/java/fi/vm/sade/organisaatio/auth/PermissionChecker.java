@@ -91,23 +91,23 @@ public class PermissionChecker {
                 LOG.info("Nimi muuttunut");
 
                 // name changed
-                checkPermission(permissionService.userCanEditName(authContext));
+               // TODO checkPermission(permissionService.userCanEditName(authContext));
             }
             if (OrganisaatioUtil.isSameDay(alkuPvm, current.getAlkuPvm()) == false) {
                 LOG.info("Alkupäivämäärä muuttunut: " +
                         current.getAlkuPvm() + " -> " + alkuPvm);
 
                 // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
+               // TODO checkPermission(permissionService.userCanEditDates(authContext));
             }
             if (OrganisaatioUtil.isSameDay(lakkautusPvm, current.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut: " +
                         current.getLakkautusPvm() + " -> " + lakkautusPvm);
 
                 // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
+               // TODO checkPermission(permissionService.userCanEditDates(authContext));
             }
-            checkPermission(permissionService.userCanUpdateOrganisation(authContext));
+            // TODO checkPermission(permissionService.userCanUpdateOrganisation(authContext));
         } // TODO else {
             // checkPermission(permissionService.userCanCreateOrganisation(authContext));
         //}

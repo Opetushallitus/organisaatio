@@ -6,7 +6,8 @@ import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 
 
 type organisaatioHistoriaProps = {
-  oid?: string
+    oid?: string
+    handleOnChange: ({ name, value }: { name: string; value: any; }) => void
 }
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
