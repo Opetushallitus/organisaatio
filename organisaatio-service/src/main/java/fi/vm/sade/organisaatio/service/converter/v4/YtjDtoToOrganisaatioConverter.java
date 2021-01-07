@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.service.converter.v4;
 
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
-import fi.vm.sade.rajapinnat.ytj.api.YTJOsoiteDTO;
-import fi.vm.sade.rajapinnat.ytj.service.YtjDtoMapperHelper;
+import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
+import fi.vm.sade.organisaatio.ytj.api.YTJOsoiteDTO;
+import fi.vm.sade.organisaatio.ytj.service.YtjDtoMapperHelper;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Date;

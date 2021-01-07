@@ -17,7 +17,7 @@
   <modules>
     <module>ytj-api</module>
     <module>ytj-generated-model</module>
-    <module>ytj-service</module>
+    <module>ytj-webservice</module>
   </modules>
 
   <dependencyManagement>

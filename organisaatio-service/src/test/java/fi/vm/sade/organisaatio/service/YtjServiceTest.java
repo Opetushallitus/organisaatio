@@ -2,7 +2,7 @@ package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl;
 import fi.vm.sade.organisaatio.resource.YTJResource;
-import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
+import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
