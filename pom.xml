@@ -141,6 +141,7 @@
         <module>organisaatio-api</module>
         <module>organisaatio-service</module>
         <module>organisaatio-ui</module>
+        <module>ytj-client</module>
     </modules>
 
     <distributionManagement>
@@ -367,6 +368,13 @@ buildTtime=${maven.build.timestamp}
                 <groupId>com.github.kagkarlsson</groupId>
                 <artifactId>db-scheduler</artifactId>
                 <version>6.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
