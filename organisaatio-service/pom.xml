@@ -793,26 +793,11 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <!-- Rajapinnat :: YTJ :: API -->
+        <!-- YTJ Client -->
         <dependency>
-            <groupId>fi.vm.sade.rajapinnat.ytj</groupId>
-            <artifactId>ytj-api</artifactId>
-            <version>${rajapinnat.ytj.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.rajapinnat</groupId>
-            <artifactId>ytj-service</artifactId>
-            <version>${rajapinnat.ytj.version}</version>
+            <groupId>fi.vm.sade.organisaatio.ytj</groupId>
+            <artifactId>ytj-webservice</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

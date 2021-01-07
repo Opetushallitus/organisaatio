@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio;
 
-import fi.vm.sade.rajapinnat.ytj.api.YTJService;
-import fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
+import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
