@@ -20,7 +20,7 @@ export default function YTJBody({ ytunnus= "" }: Props) {
         try {
             if (yTunnus) {
                 const response = await Axios.get( `${urlPrefix}/ytj/${yTunnus}`);
-                console.log('got ytjtieto', response);
+                console.log('got ytjtieto', response, yTiedot);
                 setyTiedot(response);
             }
         } catch (error) {
