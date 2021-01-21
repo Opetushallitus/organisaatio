@@ -14,6 +14,9 @@ import TLHeader from "../../../../Modaalit/ToimipisteenLakkautus/TLHeader";
 import TLBody from "../../../../Modaalit/ToimipisteenLakkautus/TLBody";
 import TLFooter from "../../../../Modaalit/ToimipisteenLakkautus/TLFooter";
 import DatePickerInput from "@opetushallitus/virkailija-ui-components/DatePickerInput";
+import YTJHeader from "../../../../Modaalit/YTJModaali/YTJHeader";
+import YTJBody from "../../../../Modaalit/YTJModaali/YTJBody";
+import YTJFooter from "../../../../Modaalit/YTJModaali/YTJFooter";
 
 type OrganisaatioProps = {
     organisaatio: any
@@ -38,6 +41,8 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const { organisaatio, organisaatioTyypit, maatJaValtiot, opetuskielet, handleOnChange, language } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
+
     const { kuntaKoodisto } = useContext(KoodistoContext);
     const kaikkiKunnat = kuntaKoodisto.koodit().map((k: any) => ({
         value: k.uri,
@@ -84,7 +89,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                             onChange={(e) => handleOnChange({name: e.target.name, value: e.target.value})}
                         />
                     </div>
-                    <Button className={styles.Nappi} variant="outlined">Päivitä YTJ-tiedot</Button>
+                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>Päivitä YTJ-tiedot</Button>
                 </div>
                 <div className={styles.Rivi}>
                     <div className={styles.Kentta}>
@@ -183,10 +188,26 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <PohjaModaali
                 header={<TLHeader/>}
                 body={<TLBody/>}
-                footer={<TLFooter/>}
+                footer={<TLFooter
+                    peruutaCallback={() => {
+                        setLakkautusModaaliAuki(false);
+                    }}
+                />}
                 suljeCallback={() => setLakkautusModaaliAuki(false)}
             />
         }
+            {YTJModaaliAuki && organisaatio && organisaatio.ytunnus &&
+            <PohjaModaali
+              header={<YTJHeader/>}
+              body={<YTJBody ytunnus={organisaatio.ytunnus}/>}
+              footer={<YTJFooter
+                  peruutaCallback={() => {
+                      setYTJModaaliAuki(false);
+                  }}
+              />}
+              suljeCallback={() => setYTJModaaliAuki(false)}
+            />
+            }
         </div>
     );
 }

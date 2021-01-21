@@ -29,19 +29,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/ytj")
-@Component("ytjResource")
-@Transactional(readOnly = true)
-@Api(value = "/ytj", description = "YTJ hakuoperaatiot")
+@RestController
+@RequestMapping("/ytj")
+@Api(value = "/ytj")
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
@@ -58,11 +55,9 @@ public class YTJResource {
      * @param ytunnus
      * @return
      */
-    @GET
-    @Path("{ytunnus}")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path= "/{ytunnus}", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = YTJDTO.class)
-    public YTJDTO findByYTunnus(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
+    public YTJDTO findByYTunnus(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
         YTJDTO ytj = new YTJDTO();
         try {
             ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
@@ -77,11 +72,9 @@ public class YTJResource {
         return ytj; 
     }
 
-    @GET
-    @Path("{ytunnus}/v4")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path= "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
-    public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
+    public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
         return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
     }
 
@@ -93,11 +86,9 @@ public class YTJResource {
         return conversionService.convert(ytjdto, Organisaatio.class);
     }
 
-    @GET
-    @Path("/hae")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path= "/hae", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee yritysten tiedot nimen perusteella", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden nimessä esiintyy annettu nimi.")
-    public List<YTJDTO> findByYNimi(@ApiParam(value = "nimi", required = true) @QueryParam("nimi") String nimi) {
+    public List<YTJDTO> findByYNimi(@ApiParam(value = "nimi", required = true) @RequestParam(required = true) String nimi) {
         List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
         if (nimi != null && nimi.length() > 0) {
             try {
@@ -113,13 +104,12 @@ public class YTJResource {
     }
 
     // Api for batch searches by y-tunnuses
-    @GET
-    @Path("/massahaku/{ytunnukset}")
+
+    @GetMapping(path= "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
     public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
-                                               @PathParam("ytunnukset") List<String> ytunnuses) {
+                                               @PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }
 

@@ -56,14 +56,15 @@ const LomakeSivu = (props: any) => {
         try {
             if (organisaatio && organisaatio.oid) {
                 const response = await Axios.put( `${urlPrefix}/organisaatio/v4/${organisaatio.oid}`, organisaatio);
-                console.error('updated org response', response);
+                console.log('updated org response', response);
                 props.history.push('/')
             }
         } catch (error) {
-            console.error('error while posting org', error)
+            console.error('error while updating org', error)
         } finally {
         }
     }
+
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {
         setOrganisaatio((organisaatio) => {
