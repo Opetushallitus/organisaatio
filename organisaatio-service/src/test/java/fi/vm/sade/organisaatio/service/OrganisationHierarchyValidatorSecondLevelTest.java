@@ -44,6 +44,7 @@ public class OrganisationHierarchyValidatorSecondLevelTest {
                 {OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA, true},
                 {OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA, false},
                 {OrganisaatioTyyppi.TYOELAMAJARJESTO, true},
+                {OrganisaatioTyyppi.KUNTA, true},
         });
     }
 
