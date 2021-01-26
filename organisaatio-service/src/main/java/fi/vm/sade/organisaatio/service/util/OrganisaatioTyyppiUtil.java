@@ -30,6 +30,7 @@ public final class OrganisaatioTyyppiUtil {
                 OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA, OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA));
         tmp.put(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue(), newHashSet(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA));
         tmp.put(OrganisaatioTyyppi.TYOELAMAJARJESTO.koodiValue(), newHashSet(OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        tmp.put(OrganisaatioTyyppi.KUNTA.koodiValue(), newHashSet());
         ORG_TYPE_LIMIT = unmodifiableMap(tmp);
     }
 

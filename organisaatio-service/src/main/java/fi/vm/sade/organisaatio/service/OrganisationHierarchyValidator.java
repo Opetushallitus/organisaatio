@@ -129,6 +129,15 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
         }
     };
 
+    Predicate<Entry<Organisaatio, Organisaatio>> kuntaRule = new Predicate<Entry<Organisaatio, Organisaatio>>() {
+        @Override
+        public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
+            return parentChild.getValue().getTyypit().contains(OrganisaatioTyyppi.KUNTA.koodiValue())
+                    && (parentChild.getKey() == null
+                    || ophOid.equals(parentChild.getKey().getOid()));
+        }
+    };
+
     public OrganisationHierarchyValidator(final String ophOid) {
         Preconditions.checkNotNull(ophOid);
         this.ophOid = ophOid;
@@ -141,7 +150,7 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
         Preconditions.checkNotNull(parentChild);
         return Predicates.or(oppilaitosRule, muuOrgRule, varhaiskasvatuksenJarjestajaRule,
                 varhaiskasvatuksenToimipaikkaRule, tyoelamajarjestoRule, toimipisteRule, koulutustoimijaRule,
-                oppisopimustoimipisteRule, ryhmaRule).apply(parentChild);
+                oppisopimustoimipisteRule, ryhmaRule, kuntaRule).apply(parentChild);
     }
 
 }
