@@ -1,4 +1,0 @@
-
-include 'ytj-webservice'
-include 'ytj-generated-model'
-include 'ytj-api'
