@@ -43,9 +43,9 @@ dependencies {
 	compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
 	compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
-	compile group: 'org.apache.cxf', name: 'cxf-rt-core', version: '2.7.18'
-	// compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.6.0' // TODO poistettava?
-	compile group: 'org.apache.cxf', name: 'cxf-api', version: '2.7.18'
+	compile group: 'org.apache.cxf', name: 'cxf-rt-core', version: '2.5.1'
+	compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.5.1'
+	compile group: 'org.apache.cxf', name: 'cxf-api', version: '2.5.1'
 	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-security-cors', version: '2.7.18'
 	compile "org.flywaydb:flyway-core:6.4.4" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
 	//compile group: 'org.flywaydb', name: 'flyway-core', version: '4.2.0'
