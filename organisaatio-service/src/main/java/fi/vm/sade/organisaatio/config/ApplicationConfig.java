@@ -8,16 +8,20 @@ import fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-//import org.flywaydb.core.Flyway; // versiosta 3.0 eteenpäin
-//import com.googlecode.flyway.core.Flyway;
 
 
 @Configuration
 public class ApplicationConfig {
+
+    @Value("${rajapinnat.ytj.asiakastunnus}")
+    private String ytjAsiakastunnus;
+
+    @Value("${rajapinnat.ytj.avain}")
+    private String ytjAvain;
+
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -33,6 +37,8 @@ public class ApplicationConfig {
     @Bean
     public YTJServiceImpl ytjService() {
         YTJServiceImpl ytjService = new YTJServiceImpl();
+        ytjService.setAsiakastunnus(ytjAsiakastunnus);
+        ytjService.setSalainenavain(ytjAvain);
         return ytjService;
     }
 
