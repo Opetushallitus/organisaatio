@@ -76,7 +76,8 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookies, $injector, $
                             } // Sallitut ylimmän tason organisaatiot
                             else if (model.organisaatio.parentOid === model.OPHOid &&
                                 (orgTyyppiKoodi.koodiArvo === "01" || orgTyyppiKoodi.koodiArvo === "06"
-                                || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07")) {
+                                || orgTyyppiKoodi.koodiArvo === "05" || orgTyyppiKoodi.koodiArvo === "07"
+                                || orgTyyppiKoodi.koodiArvo === "09")) {
                                 model.koodisto.organisaatiotyypit.push(orgTyyppiKoodi);
                             }
 
