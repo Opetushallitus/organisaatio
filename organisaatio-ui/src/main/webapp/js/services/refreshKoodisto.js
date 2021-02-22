@@ -63,7 +63,9 @@ koodisto.factory('RefreshKoodisto', function($filter, $q, $cookies, $injector, $
                         'organisaatiotyyppi_04': [], // Oppisopimustoimipiste
                         'organisaatiotyyppi_07': ["08"], // Varhaiskasvatuksen jarjestaja
                         'organisaatiotyyppi_08': ["08"], // Varhaiskasvatuksen toimipaikka
-                        'organisaatiotyyppi_06': ["06","03"]}; // Tyoelamajarjesto
+                        'organisaatiotyyppi_06': ["06","03"], // Tyoelamajarjesto
+                        'organisaatiotyyppi_09': [] // Kunta
+                    };
                     result.sort(function (a, b) {
                         return a.koodiArvo.localeCompare(b.koodiArvo);
                     }).forEach(function(orgTyyppiKoodi) {
