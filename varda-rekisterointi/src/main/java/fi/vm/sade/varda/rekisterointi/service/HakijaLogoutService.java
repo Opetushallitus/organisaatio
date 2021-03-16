@@ -33,15 +33,12 @@ public class HakijaLogoutService {
     /**
      * Kirjaa käyttäjän ulos.
      * @param request       HTTP-pyyntö
-     * @param callbackUrl   käytettävä uudelleenohjausosoite, mikäli Shibboleth-uloskirjaus ei käytössä
+     * @param callbackUrl   käytettävä uudelleenohjausosoite
      * @return uudelleenohjausosoite, johon ohjataan uloskirjautumisen jälkeen.
      */
     public String logout(HttpServletRequest request, String callbackUrl) {
         Optional.ofNullable(request.getSession(false)).ifPresent(HttpSession::invalidate);
-        if (Boolean.FALSE.equals(environment.getProperty("varda-rekisterointi.shibboleth.logout.enabled", Boolean.class))) {
-            return callbackUrl;
-        }
-        return properties.url("shibbolethVirkailija.logout", callbackUrl);
+        return properties.url("varda-rekisterointi.cas.oppija.logout", callbackUrl);
     }
 
 }
