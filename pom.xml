@@ -4,7 +4,7 @@
 
     <groupId>fi.vm.sade.organisaatio</groupId>
     <artifactId>organisaatio</artifactId>
-    <version>2020.01-SNAPSHOT</version>
+    <version>2021.01-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Organisaatio :: Parent</name>
     <properties>
@@ -19,7 +19,6 @@
         <koodisto.api.version>9.0-SNAPSHOT</koodisto.api.version>
         <log.client.version>8.0</log.client.version>
         <oid.api.version>8.0</oid.api.version>
-        <rajapinnat.ytj.version>13.0-SNAPSHOT</rajapinnat.ytj.version>
         <tarjonta.api.version>9.7-SNAPSHOT</tarjonta.api.version>
         <auditlogger.version>8.3.0-SNAPSHOT</auditlogger.version>
         <viestinta.version>14.8-SNAPSHOT</viestinta.version>
@@ -93,7 +92,7 @@
         <mockito.version>1.10.19</mockito.version>
         <springockito.version>1.0.9</springockito.version>
         <phantomjs-maven-plugin.version>0.7</phantomjs-maven-plugin.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.2</junit.version>
         <jmeter.version>1.10.1</jmeter.version>
         <assertj.version>3.11.1</assertj.version>
 
@@ -141,6 +140,7 @@
         <module>organisaatio-api</module>
         <module>organisaatio-service</module>
         <module>organisaatio-ui</module>
+        <module>ytj-client</module>
     </modules>
 
     <distributionManagement>
@@ -367,6 +367,13 @@ buildTtime=${maven.build.timestamp}
                 <groupId>com.github.kagkarlsson</groupId>
                 <artifactId>db-scheduler</artifactId>
                 <version>6.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

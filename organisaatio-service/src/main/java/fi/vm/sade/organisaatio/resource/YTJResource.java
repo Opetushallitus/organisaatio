@@ -17,10 +17,10 @@ package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
-import fi.vm.sade.rajapinnat.ytj.api.YTJKieli;
-import fi.vm.sade.rajapinnat.ytj.api.YTJService;
-import fi.vm.sade.rajapinnat.ytj.api.exception.YtjConnectionException;
+import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
+import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
+import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
