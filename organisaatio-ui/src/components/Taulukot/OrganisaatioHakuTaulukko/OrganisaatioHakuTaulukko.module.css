@@ -62,3 +62,16 @@ td.collapse.collapse, th.collapse.collapse {
     width: 2rem;
     height: 2rem;
 }
+
+.KoulutustoimijaNappi:first-of-type {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    height: 3rem;
+}
+
+.KoulutustoimijaNappi:last-of-type {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 3rem;
+    margin-bottom: 2rem;
+}

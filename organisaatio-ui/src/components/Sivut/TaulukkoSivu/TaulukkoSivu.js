@@ -30,11 +30,15 @@ const TaulukkoSivu = (props) => {
   const [organisaatiot, setOrganisaatiot] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
+  const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
+  const [omatOrganisaatiotSelected, setOmatOrganisaatiotSelected] = React.useState(true);
   useEffect(() => {
     async function fetch() {
+      // TODO tämä on vielä auki että mistä osoitteesta haetaan, kun haetaan omia organisaatioita?
       try {
         setIsLoading(true);
-        const response = await Axios.get(`${urlPrefix}/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`);
+        const response = isOPHVirkailija || (!isOPHVirkailija &&  !omatOrganisaatiotSelected)? await Axios.get(`${urlPrefix}/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`)
+          : await Axios.get(`${urlPrefix}/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`);
         const data = response.data;
         console.log('data', data);
         setOrganisaatiot([ ...data.organisaatiot ]);
@@ -44,7 +48,7 @@ const TaulukkoSivu = (props) => {
       }
     }
     fetch();
-  }, [naytaPassivoidut]);
+  }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
 
     const columns = [
           {
@@ -109,25 +113,28 @@ const TaulukkoSivu = (props) => {
         ];
 
     const data = organisaatiot;
-    if(isLoading) {
-      return <Spin/>;
-    }
     return(
         <PohjaSivu>
-            <div className={styles.PaaOsio} >
-                <div className={styles.OtsikkoContainer}>
-                    <h2>Organisaatiot</h2>
-                    <Button style={{ height: '3rem'}}
-                      onClick={handleLisaaUusiToimija}> + {i18n.translate('LISAA_UUSI_TOIMIJA')}
-                    </Button>
+          <Button color={isOPHVirkailija ? 'success' : 'danger'} onClick={() => setIsOPHVirkailija(!isOPHVirkailija)}> OphVirkailija? </Button>
+          <div className={styles.PaaOsio} >
+              <div className={styles.OtsikkoContainer}>
+                <h2>Organisaatiot</h2>
+                  {isOPHVirkailija &&
+                      <Button style={{ height: '3rem'}}
+                        onClick={handleLisaaUusiToimija}> + {i18n.translate('LISAA_UUSI_TOIMIJA')}
+                      </Button>}
                 </div>
                 <div className={styles.TaulukkoContainer}>
+                  {isLoading ? <Spin/> :
                     <OrganisaatioHakuTaulukko
+                      omatOrganisaatiotSelected={omatOrganisaatiotSelected}
+                      setOmatOrganisaatiotSelected={setOmatOrganisaatiotSelected}
+                      isOPHVirkailija={isOPHVirkailija}
                       data={data}
                       tableColumns={columns}
                       naytaPassivoidut={naytaPassivoidut}
                       setNaytaPassivoidut={setNaytaPassivoidut}
-                    />
+                    /> }
                 </div>
             </div>
         </PohjaSivu>

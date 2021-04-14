@@ -57,14 +57,13 @@ const LomakeSivu = (props: any) => {
             if (organisaatio && organisaatio.oid) {
                 const response = await Axios.put( `${urlPrefix}/organisaatio/v4/${organisaatio.oid}`, organisaatio);
                 console.log('updated org response', response);
-                props.history.push('/')
+                props.history.push(`/lomake/${organisaatio.oid}`)
             }
         } catch (error) {
             console.error('error while updating org', error)
         } finally {
         }
     }
-
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {
         setOrganisaatio((organisaatio) => {
@@ -78,6 +77,7 @@ const LomakeSivu = (props: any) => {
             <Spin>ladataan sivua </Spin>
         </div>);
     }
+
     return(
         <PohjaSivu>
             <div className={styles.YlaBanneri}>

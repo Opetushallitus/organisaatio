@@ -25,38 +25,68 @@ function Hakufiltterit({
                          setGlobalFilter,
                          naytaPassivoidut,
                          setNaytaPassivoidut,
-                        i18n
+                         i18n,
+                         isOPHVirkailija,
+                         omatOrganisaatiotSelected,
+                         setOmatOrganisaatiotSelected
                        }) {
+
   return (
-    <div className={styles.FiltteriContainer}>
-      <div className={styles.FiltteriInputOsa}>
-        <Input
-          placeholder={i18n.translate('TOIMIJA_HAKU_PLACEHOLDER')}
-          onChange={e => {
-            setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-          }}
-          value={globalFilter}
-          suffix={<Icon color="#999999"
-                        icon={searchIcon}/>} />
-        <Checkbox type="checkbox" checked={naytaPassivoidut} onChange={(e) => {
-          console.log('e', e.target);
-          setNaytaPassivoidut(e.target.checked)
-        }}>
-          {i18n.translate('CHECKBOX_NAYTA_PASSIVOIDUT')}
-        </Checkbox>
+    <div>
+      {!isOPHVirkailija &&
+      <div>
+        <Button
+          className={styles.KoulutustoimijaNappi}
+          color={'primary'}
+          variant={!omatOrganisaatiotSelected ? 'outlined': 'contained'}
+          onClick={() => setOmatOrganisaatiotSelected(true)}
+        >
+          {i18n.translate('OMAT_ORGANISAATIOT')}
+        </Button>
+        <Button
+          onClick={() => setOmatOrganisaatiotSelected(false)}
+          className={styles.KoulutustoimijaNappi}
+          color={'primary'}
+          variant={omatOrganisaatiotSelected ? 'outlined': 'contained'}
+        >
+          {i18n.translate('KAIKKI_ORGANISAATIOT')}
+        </Button>
       </div>
-      <Button variant="outlined" className={styles.LisatiedotNappi}>?</Button>
+      }
+      <div className={styles.FiltteriContainer}>
+        <div className={styles.FiltteriInputOsa}>
+          <Input
+            placeholder={i18n.translate('TOIMIJA_HAKU_PLACEHOLDER')}
+            onChange={e => {
+              setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+            }}
+            value={globalFilter}
+            suffix={<Icon color="#999999"
+                          icon={searchIcon}/>} />
+          <Checkbox type="checkbox" checked={naytaPassivoidut} onChange={(e) => {
+            console.log('e', e.target);
+            setNaytaPassivoidut(e.target.checked)
+          }}>
+            {i18n.translate('CHECKBOX_NAYTA_PASSIVOIDUT')}
+          </Checkbox>
+        </div>
+        <Button variant="outlined" className={styles.LisatiedotNappi}>?</Button>
+      </div>
     </div>
   )
 }
 
 export default function OrganisaatioHakuTaulukko({
+                                                   isOPHVirkailija,
                                                    data: inputData = [],
                                                    tableColumns = [],
                                                    naytaPassivoidut = false,
                                                    setNaytaPassivoidut,
                                                    setSearchString,
                                                    searchString,
+                                                   omatOrganisaatiotSelected,
+                                                   setOmatOrganisaatiotSelected
+
 }) {
     const { i18n } = useContext(LanguageContext);
     console.log('tablecolumns', tableColumns, inputData);
@@ -121,6 +151,9 @@ export default function OrganisaatioHakuTaulukko({
       return(
         <div>
           <Hakufiltterit
+            omatOrganisaatiotSelected={omatOrganisaatiotSelected}
+            setOmatOrganisaatiotSelected={setOmatOrganisaatiotSelected}
+            isOPHVirkailija={isOPHVirkailija}
             i18n={i18n}
             preGlobalFilteredRows={preGlobalFilteredRows}
             globalFilter={globalFilter}
