@@ -26,11 +26,8 @@ spring:
     store-type: jdbc
 varda-rekisterointi:
   url-virkailija: http://localhost:${server.port}
-  url-tunnistus: http://localhost:${server.port}
+  url-oppija: http://localhost:${server.port}
   url-alb: http://localhost:${server.port}
-  shibboleth:
-    logout:
-      enabled: false
   service:
     username: varda-rekisterointi
     password: varda-rekisterointi
