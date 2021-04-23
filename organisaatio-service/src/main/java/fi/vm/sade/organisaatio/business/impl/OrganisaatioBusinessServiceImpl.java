@@ -56,6 +56,7 @@ import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Transactional
 @Service("organisaatioBusinessService")
@@ -342,6 +343,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setToimipisteKoodi(oldOrg.getToimipisteKoodi());
         }
 
+        // jos yritysmuoto on kunta, varmistetaan että se on myös organisaatiotyypeissä
+        addKuntaOrganisaatioTyyppiIfNeeded(entity);
+
         // call super.insert OR update which saves & validates jpa
         if (updating) {
             LOG.info("updating " + entity);
@@ -381,6 +385,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         koodistoService.addKoodistoSyncByOid(entity.getOid());
 
         return new OrganisaatioResult(entity, info);
+    }
+
+    private void addKuntaOrganisaatioTyyppiIfNeeded(Organisaatio organisaatio) {
+        if (OrganisaatioTyyppi.KUNTA.value().equals(organisaatio.getYritysmuoto())) {
+            organisaatio.setTyypit(
+                    Stream.concat(
+                            organisaatio.getTyypit().stream(), Stream.of(OrganisaatioTyyppi.KUNTA.koodiValue())
+                    ).collect(Collectors.toSet())
+            );
+        }
     }
 
     private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {

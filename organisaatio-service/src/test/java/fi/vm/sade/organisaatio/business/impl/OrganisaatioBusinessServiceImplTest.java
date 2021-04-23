@@ -314,6 +314,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     }
 
+    @Test
+    public void saveAddsKuntaOrganisaatioTyyppi() {
+        OrganisaatioRDTO kunta = OrganisaatioRDTOTestUtil.createOrganisaatio("Testilän Kunta", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), rootOid);
+        kunta.setYritysmuoto(OrganisaatioTyyppi.KUNTA.value());
+        OrganisaatioResult result = service.save(kunta, false);
+        Assert.assertTrue(result.getOrganisaatio().getTyypit().contains(OrganisaatioTyyppi.KUNTA.koodiValue()));
+    }
+
     @Transactional
     @Test
     public void updateOppilaitosShouldUpdateToimipisteNames() {
