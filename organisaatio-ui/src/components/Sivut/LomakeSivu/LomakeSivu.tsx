@@ -65,9 +65,9 @@ const LomakeSivu = (props: any) => {
         }
     }
 
-    const setYtjDataFetched = {
-
-    }
+//    const setYtjDataFetched = {
+//
+//    }
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {
         setOrganisaatio((organisaatio) => {
