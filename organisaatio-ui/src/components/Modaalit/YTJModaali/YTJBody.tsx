@@ -4,7 +4,7 @@ import styles from './YTJModaali.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Axios from "axios";
-import {Organisaatio, YtjOrganisaatio} from "../../../types/types";
+import {YtjOrganisaatio} from "../../../types/types";
 
 type Props = {
     ytunnus: string

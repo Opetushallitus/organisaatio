@@ -5,7 +5,6 @@ import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
 import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
 import {useState} from "react";
 import {Koodi, Osoite, Yhteystiedot} from "../../../../../types/types";
-import useAxios from "axios-hooks";
 import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 import {SyntheticEvent} from "react";
 
@@ -14,7 +13,6 @@ type yhteystietoProps = {
     handleOnChange: ({ name, value }: { name: string; value: any; }) => void
     postinumerot: Koodi[]
 }
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 export default function YhteystietoLomake(props: yhteystietoProps) {
     const [kieleksi, setKieleksi ] = useState('kieli_fi#1');
