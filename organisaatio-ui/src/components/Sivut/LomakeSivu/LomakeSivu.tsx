@@ -9,7 +9,7 @@ import Spin from "@opetushallitus/virkailija-ui-components/Spin";
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import {LanguageContext} from "../../../contexts/contexts";
-import {Koodi, Organisaatio, OrganisaatioNimiJaOid} from "../../../types/types"
+import {Koodi, Organisaatio, OrganisaatioNimiJaOid, YtjOrganisaatio} from "../../../types/types"
 import PerustietoLomake from "./Koulutustoimija/PerustietoLomake/PerustietoLomake";
 import YhteystietoLomake from "./Koulutustoimija/YhteystietoLomake/YhteystietoLomake";
 import NimiHistoriaLomake from "./Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake";
@@ -29,7 +29,10 @@ const LomakeSivu = (props: any) => {
         `${urlPrefix}/koodisto/MAATJAVALTIOT1/koodi`);
     const [{ data: oppilaitoksenOpetuskielet, loading: oppilaitoksenOpetuskieletLoading, error: oppilaitoksenOpetuskieletError}] = useAxios<Koodi[]>(
         `${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
+    const [{data: postinumerot, loading: postinumerotLoading, error: postinumerotError}]
+        = useAxios<Koodi[]>(`${urlPrefix}/koodisto/POSTI/koodi?onlyValid=true`);
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
+    const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const { match: { params } } = props;
     useEffect(() => {
@@ -65,9 +68,32 @@ const LomakeSivu = (props: any) => {
         }
     }
 
-//    const setYtjDataFetched = {
-//
-//    }
+    // TODO täytyy tarkastaa mitä kaikkea tietoa tuolta Ytj:ltä tuleekaan? esim yrityksen lopetuksesta.
+    const setYtjDataFetched = (ytjOrganisaatio: YtjOrganisaatio) => {
+        const { nimi, postiOsoite, kayntiOsoite, yritysmuoto, yritysTunnus: { alkupvm, ytunnus }} = ytjOrganisaatio;
+        const alkuPvm = alkupvm.split('.');
+        [alkuPvm[0], alkuPvm[2]] = [alkuPvm[2], alkuPvm[0]] // reverse date to YYYY-MM-DD format
+        setStashedOrganisaatio(Object.assign({}, organisaatio));
+        console.log("tallennettu alkuperäinen org muistiin", stashedOrganisaatio);
+        organisaatio && organisaatio.yhteystiedot.filter(yT => yT.kieli === 'kieli_fi#1')
+            .forEach((yT: any) => {
+                if (yT.osoiteTyyppi && yT.osoiteTyyppi=== 'posti') {
+                    const { katu: osoite, postinumero, toimipaikka: postitoimipaikka} = postiOsoite;
+                    const postinumeroKoodi = postinumerot.find(p => p.arvo === postinumero);
+                    yT = Object.assign(yT, { osoite, postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || "", postitoimipaikka});
+                } else if (yT.osoiteTyyppi && yT.osoiteTyyppi=== 'kaynti') {
+                    console.log(yT, ytjOrganisaatio);
+                    const { katu: osoite, postinumero, toimipaikka: postitoimipaikka} = kayntiOsoite;
+                    const postinumeroKoodi = postinumerot.find(p => p.arvo === postinumero);
+                    yT = Object.assign(yT, { osoite, postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || "", postitoimipaikka});
+                } else if (yT.tyyppi && yT.tyyppi=== 'puhelin') {
+                    console.log(yT, ytjOrganisaatio);
+                    yT.numero = ytjOrganisaatio.puhelin;
+                }
+        });
+        setOrganisaatio(Object.assign({}, organisaatio, { nimi: { fi: nimi }, alkuPvm: alkuPvm.join('-'), ytunnus, yritysmuoto })); // TODO nimet?
+        console.log('Korvattu org ytj:stä tulevalla datalla ainakin suurelta osin', organisaatio);
+    }
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {
         setOrganisaatio((organisaatio) => {
@@ -76,7 +102,7 @@ const LomakeSivu = (props: any) => {
             return updatedOrg;
         });
     }
-    if (!organisaatio || organisaatioTyypitLoading || organisaatioTyypitError || maatJaValtiotLoading || maatJaValtiotError || oppilaitoksenOpetuskieletLoading || oppilaitoksenOpetuskieletError) {
+    if (!organisaatio || organisaatioTyypitLoading || organisaatioTyypitError || maatJaValtiotLoading || maatJaValtiotError || oppilaitoksenOpetuskieletLoading || oppilaitoksenOpetuskieletError || postinumerotLoading || postinumerotError) {
         return (<div className={styles.PaaOsio}>
             <Spin>ladataan sivua </Spin>
         </div>);
@@ -110,6 +136,7 @@ const LomakeSivu = (props: any) => {
                 <Accordion
                     lomakkeet={[
                         <PerustietoLomake
+                            setYtjDataFetched={setYtjDataFetched}
                             handleOnChange={handleOnChange}
                             organisaatioTyypit={organisaatioTyypit}
                             organisaatio={organisaatio}
@@ -118,6 +145,7 @@ const LomakeSivu = (props: any) => {
                             opetuskielet={oppilaitoksenOpetuskielet}
                         />,
                         <YhteystietoLomake
+                            postinumerot={postinumerot}
                             handleOnChange={handleOnChange}
                             yhteystiedot={organisaatio.yhteystiedot}
                         />,

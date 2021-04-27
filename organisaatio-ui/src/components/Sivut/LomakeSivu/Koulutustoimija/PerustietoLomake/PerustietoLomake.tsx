@@ -17,6 +17,7 @@ import DatePickerInput from "@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from "../../../../Modaalit/YTJModaali/YTJHeader";
 import YTJBody from "../../../../Modaalit/YTJModaali/YTJBody";
 import YTJFooter from "../../../../Modaalit/YTJModaali/YTJFooter";
+import {YtjOrganisaatio} from "../../../../../types/types";
 
 type OrganisaatioProps = {
     organisaatio: any
@@ -25,6 +26,7 @@ type OrganisaatioProps = {
     maatJaValtiot: any
     opetuskielet: any
     handleOnChange: ({ name, value }: { name: string; value: any; }) => void
+    setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void
 }
 
 type Nimi = {
@@ -38,7 +40,7 @@ interface iOption { label: string; value: string; }
 
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
-    const { organisaatio, organisaatioTyypit, maatJaValtiot, opetuskielet, handleOnChange, language } = props;
+    const { organisaatio, organisaatioTyypit, maatJaValtiot, opetuskielet, handleOnChange, language, setYtjDataFetched } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
@@ -54,6 +56,11 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         handleOnChange({ name: 'nimet', value: [nimet]});
         handleOnChange({ name: 'nimi', value: nimi})
     };
+
+    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
+        setYtjDataFetched(ytjOrg);
+        setYTJModaaliAuki(false);
+    }
 
     const kielistetytOpetuskielet = opetuskielet.map((mv: any) => ({
         value: `${mv.uri}#${mv.versio}`, label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en']
@@ -201,7 +208,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
               header={<YTJHeader/>}
               body={<YTJBody
                   ytunnus={organisaatio.ytunnus}
-                  korvaaOrganisaatio={() => {}}
+                  korvaaOrganisaatio={handleKorvaaOrganisaatio}
               />}
               footer={<YTJFooter
                   peruutaCallback={() => {

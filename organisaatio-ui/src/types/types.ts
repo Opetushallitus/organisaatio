@@ -29,6 +29,22 @@ export type Osoite = {
     numero?: string
 }
 
+export type ytjOsoite = {
+    katu: string,
+    postinumero: string,
+    toimipaikka: string
+    maa: string
+    kieli: boolean
+}
+
+export type ytjYtunnus = {
+    status?: string,
+    alkupvm: LocalDate,
+    loppupvm: LocalDate
+    yritysLopetettu: boolean
+    ytunnus: string
+}
+
 export type Yhteystiedot = {
     tyyppi?: string
     osoiteTyyppi?: string
@@ -53,6 +69,26 @@ export interface Organisaatio {
     kieletUris: KoodiUri[],
     yhteystiedot: Yhteystiedot[]
 }
+
+export interface YtjOrganisaatio {
+    ytunnus: string,
+    nimi: string,
+    aloitusPvm: LocalDate | null,
+    yritysmuoto: string,
+    yritysmuotoKoodi: string
+    yritystunnusHistoria: any // TODO?
+    kayntiOsoite: ytjOsoite
+    kotiPaikka: string
+    kotiPaikkaKoodi?: string
+    postiOsoite: ytjOsoite
+    puhelin: string
+    toimiala: string
+    toimialaKoodi?: string
+    versio?: boolean
+    yrityksenKieli?: string
+    yritysTunnus: ytjYtunnus
+}
+
 
 export interface Ryhma {
     nimi: any,

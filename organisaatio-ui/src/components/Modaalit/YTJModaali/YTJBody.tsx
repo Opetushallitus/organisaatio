@@ -4,19 +4,19 @@ import styles from './YTJModaali.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Axios from "axios";
-import {Organisaatio} from "../../../types/types";
+import {Organisaatio, YtjOrganisaatio} from "../../../types/types";
 
 type Props = {
     ytunnus: string
-    korvaaOrganisaatio: (ytiedot: Organisaatio) => void
+    korvaaOrganisaatio: (ytiedot: YtjOrganisaatio) => void
 }
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
-export default function YTJBody({ ytunnus= ""}: Props) {
+export default function YTJBody({ ytunnus= "", korvaaOrganisaatio}: Props) {
     const { i18n} = useContext(LanguageContext);
     const [yTunnus, setyTunnus] = useState(ytunnus);
-    const [ytjTiedot, setYtjTiedot] = useState<Organisaatio | undefined>(undefined);
+    const [ytjTiedot, setYtjTiedot] = useState<YtjOrganisaatio | undefined>(undefined);
 
     async function haeYtjTiedot() {
         try {
@@ -36,7 +36,7 @@ export default function YTJBody({ ytunnus= ""}: Props) {
                     <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
                 </div>
                 <div className={styles.BodyKentta}>
-                    {ytjTiedot && <Button onClick={() => {}} variant="text">
+                    {ytjTiedot && <Button onClick={() => korvaaOrganisaatio(ytjTiedot)} variant="text">
                         {`${ytjTiedot.nimi} Mitä tietoja tähän?`}
                     </Button>}
                 </div>

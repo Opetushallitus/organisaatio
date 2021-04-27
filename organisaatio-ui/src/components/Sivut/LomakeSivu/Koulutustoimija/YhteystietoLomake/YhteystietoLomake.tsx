@@ -12,16 +12,15 @@ import {SyntheticEvent} from "react";
 type yhteystietoProps = {
     yhteystiedot: Yhteystiedot[]
     handleOnChange: ({ name, value }: { name: string; value: any; }) => void
+    postinumerot: Koodi[]
 }
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 export default function YhteystietoLomake(props: yhteystietoProps) {
     const [kieleksi, setKieleksi ] = useState('kieli_fi#1');
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi, onSama: false });
-    const [{data: postinumerot, loading: postinumerotLoading, error: postinumerotError}]
-        = useAxios<Koodi[]>(`${urlPrefix}/koodisto/POSTI/koodi?onlyValid=true`);
 
-    const { yhteystiedot, handleOnChange } = props;
+    const { yhteystiedot, handleOnChange, postinumerot } = props;
 
     const currentVisibleYhteystiedot = { posti: { osoite: '', postinumeroUri: ''}, kaynti: { osoite: '', postinumeroUri: ''}, puhelin: { numero: ''}, www: { www: ''}, email: { email: ''}};
     yhteystiedot.forEach((yT: any) => {
@@ -77,12 +76,10 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
             }
         }
         handleOnChange({ name: 'yhteystiedot', value: yhteystiedot});
-
     };
-    if (postinumerotLoading || postinumerotError) {
+    if (!postinumerot) {
        return <Spin />;
     }
-    console.log('postinumerot', postinumerot);
     return(
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
