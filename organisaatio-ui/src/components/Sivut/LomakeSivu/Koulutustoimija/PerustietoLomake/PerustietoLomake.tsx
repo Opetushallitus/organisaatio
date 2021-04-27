@@ -60,7 +60,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     }));
 
     const [nimi, setNimi] = useState(organisaatio.nimi);
-    console.log('orgkiele', organisaatio.kieletUris)
+    console.log('orgkiele', organisaatio.kieletUris);
     return(
         <div className={styles.UloinKehys}>
                 <div className={styles.Rivi}>
@@ -199,7 +199,10 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             {YTJModaaliAuki && organisaatio && organisaatio.ytunnus &&
             <PohjaModaali
               header={<YTJHeader/>}
-              body={<YTJBody ytunnus={organisaatio.ytunnus}/>}
+              body={<YTJBody
+                  ytunnus={organisaatio.ytunnus}
+                  korvaaOrganisaatio={() => {}}
+              />}
               footer={<YTJFooter
                   peruutaCallback={() => {
                       setYTJModaaliAuki(false);

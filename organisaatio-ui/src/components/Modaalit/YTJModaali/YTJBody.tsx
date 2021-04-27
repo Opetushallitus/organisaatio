@@ -4,24 +4,26 @@ import styles from './YTJModaali.module.css';
 import Input from "@opetushallitus/virkailija-ui-components/Input";
 import Button from "@opetushallitus/virkailija-ui-components/Button";
 import Axios from "axios";
+import {Organisaatio} from "../../../types/types";
 
 type Props = {
     ytunnus: string
+    korvaaOrganisaatio: (ytiedot: Organisaatio) => void
 }
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
-export default function YTJBody({ ytunnus= "" }: Props) {
+export default function YTJBody({ ytunnus= ""}: Props) {
     const { i18n} = useContext(LanguageContext);
     const [yTunnus, setyTunnus] = useState(ytunnus);
-    const [yTiedot, setyTiedot] = useState({});
+    const [ytjTiedot, setYtjTiedot] = useState<Organisaatio | undefined>(undefined);
 
     async function haeYtjTiedot() {
         try {
             if (yTunnus) {
-                const response = await Axios.get( `${urlPrefix}/ytj/${yTunnus}`);
-                console.log('got ytjtieto', response, yTiedot);
-                setyTiedot(response);
+                const { data } = await Axios.get( `${urlPrefix}/ytj/${yTunnus}`);
+                console.log('got ytjtieto', data);
+                setYtjTiedot(data);
             }
         } catch (error) {
             console.error('error while getting ytjtieto', error)
@@ -29,14 +31,15 @@ export default function YTJBody({ ytunnus= "" }: Props) {
     }
     return (
         <div className={styles.BodyKehys}>
-                <div className={styles.BodyKentta}>
+                <div className={styles.BodyRivi}>
                     <Input onChange={((e) => setyTunnus(e.target.value))} value={yTunnus}/>
                     <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
                 </div>
-            <div className={styles.BodyKentta}>
-                <p>fsdddsf
-                </p>
-            </div>
+                <div className={styles.BodyKentta}>
+                    {ytjTiedot && <Button onClick={() => {}} variant="text">
+                        {`${ytjTiedot.nimi} Mitä tietoja tähän?`}
+                    </Button>}
+                </div>
         </div>
     );
 }

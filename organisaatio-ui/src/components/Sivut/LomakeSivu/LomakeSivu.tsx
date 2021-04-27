@@ -40,7 +40,7 @@ const LomakeSivu = (props: any) => {
                 if (organisaatio.parentOidPath) {
                     const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== "");
                     const orgTree = await Axios.post(`${urlPrefix}/organisaatio/v4/findbyoids`, idArr);
-                    console.log('äorgtee', orgTree.data, idArr, organisaatio.parentOidPath);
+                    console.log('orgtee', orgTree.data, idArr, organisaatio.parentOidPath);
                     const organisaatioNimiPolku = idArr.map((oid: String) => ({ oid, nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi }));
                     setOrganisaatioNimiPolku(organisaatioNimiPolku);
                 }
@@ -63,6 +63,10 @@ const LomakeSivu = (props: any) => {
             console.error('error while updating org', error)
         } finally {
         }
+    }
+
+    const setYtjDataFetched = {
+
     }
 
     const handleOnChange = ({ name, value } : { name: string, value: any}) => {

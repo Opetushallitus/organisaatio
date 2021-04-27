@@ -1,14 +1,19 @@
 .BodyKehys {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
 }
 
-.BodyKentta {
+.BodyRivi {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: nowrap;
     padding-right: 1rem;
+    padding-bottom: 1rem;
+}
+
+.BodyRivi > div {
+    margin-right: 1rem;
 }
 
 .FooterRivi {
