@@ -34,14 +34,17 @@
     "universal-cookie": "4.0.4"
   },
   "devDependencies": {
+    "concurrently": "^6.0.2",
     "prettier": "2.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
+    "nginx": "docker-compose -f nginx/docker-compose.yml up",
+    "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "npx eslint --ext .ts,.tsx src",
+    "lint": "eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "prettier": "prettier --check 'src/**/*{ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*{ts,tsx}'"
@@ -49,6 +52,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:8080",
   "browserslist": {
     "production": [
       ">0.2%",
