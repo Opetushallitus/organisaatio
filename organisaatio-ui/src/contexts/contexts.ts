@@ -1,13 +1,12 @@
-import * as React from 'react'
-import {Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi} from '../types/types';
+import * as React from 'react';
+import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi } from '../types/types';
 
 export interface I18n {
-    translate: (key: string) => string,
-    translateWithLang: (key: string, language: Language) => string,
+    translate: (key: string) => string;
+    translateWithLang: (key: string, language: Language) => string;
 }
 
 export class I18nImpl implements I18n {
-
     _data: Lokalisointi;
     _language: Language;
 
@@ -23,49 +22,40 @@ export class I18nImpl implements I18n {
     translateWithLang(key: string, language: Language): string {
         return this._data[language][key] || key;
     }
-
 }
 
 type LanguageContextType = {
-    language: Language,
-    setLanguage: (language: Language) => void,
-    i18n: I18n,
-}
+    language: Language;
+    setLanguage: (language: Language) => void;
+    i18n: I18n;
+};
 
 export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
     setLanguage: (language: Language) => {},
-    i18n: new I18nImpl({fi: {}, sv: {}, en: {}}, 'fi'),
+    i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
 });
 
-type ConfigurationContextType = {
-    virkailijaRaamitUrl: string
-}
-
-//export const ConfigurationContext = React.createContext<ConfigurationContextType>({
-//    virkailijaRaamitUrl: "/virkailija-raamit/apply-raamit.js"
-//});
-
 export interface Koodisto {
-    uri2Nimi: (uri: KoodiUri) => string
-    arvo2Nimi: (arvo: KoodiArvo) => string
-    nimet: () => string[]
-    koodit: () => Koodi[]
+    uri2Nimi: (uri: KoodiUri) => string;
+    arvo2Nimi: (arvo: KoodiArvo) => string;
+    nimet: () => string[];
+    koodit: () => Koodi[];
 }
 
 export class KoodistoImpl implements Koodisto {
     constructor(private readonly koodisto: Koodi[], private readonly kieli: Language) {}
 
     uri2Nimi(uri: KoodiUri): string {
-        return this.nimi(koodi => koodi.uri === uri);
+        return this.nimi((koodi) => koodi.uri === uri);
     }
 
     arvo2Nimi(arvo: KoodiArvo): string {
-        return this.nimi(koodi => koodi.arvo === arvo);
+        return this.nimi((koodi) => koodi.arvo === arvo);
     }
 
     nimet(): string[] {
-        return this.koodisto.map(koodi => this.kielistettyNimi(koodi));
+        return this.koodisto.map((koodi) => this.kielistettyNimi(koodi));
     }
 
     koodit(): Koodi[] {
@@ -74,7 +64,7 @@ export class KoodistoImpl implements Koodisto {
 
     private nimi(predikaatti: (koodi: Koodi) => boolean): string {
         const koodi = this.koodisto.find(predikaatti);
-        let nimi = "";
+        let nimi = '';
         if (koodi) {
             nimi = this.kielistettyNimi(koodi);
         }
@@ -82,20 +72,20 @@ export class KoodistoImpl implements Koodisto {
     }
 
     private kielistettyNimi(koodi: Koodi): string {
-        return koodi.nimi[this.kieli] || (this.kieli === "fi" ? "" : (koodi.nimi["fi"] || ""));
+        return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
     }
 }
 
 type KoodistoContextType = {
-    kuntaKoodisto: Koodisto
-    kayttoRyhmatKoodisto: Koodisto
-    ryhmaTyypitKoodisto: Koodisto
-    organisaatioTyypitKoodisto : Koodisto
-}
+    kuntaKoodisto: Koodisto;
+    kayttoRyhmatKoodisto: Koodisto;
+    ryhmaTyypitKoodisto: Koodisto;
+    organisaatioTyypitKoodisto: Koodisto;
+};
 
 export const KoodistoContext = React.createContext<KoodistoContextType>({
-    kuntaKoodisto: new KoodistoImpl([], "fi"),
-    kayttoRyhmatKoodisto: new KoodistoImpl([], "fi"),
-    ryhmaTyypitKoodisto: new KoodistoImpl([], "fi"),
+    kuntaKoodisto: new KoodistoImpl([], 'fi'),
+    kayttoRyhmatKoodisto: new KoodistoImpl([], 'fi'),
+    ryhmaTyypitKoodisto: new KoodistoImpl([], 'fi'),
     organisaatioTyypitKoodisto: new KoodistoImpl([], 'fi'),
 });

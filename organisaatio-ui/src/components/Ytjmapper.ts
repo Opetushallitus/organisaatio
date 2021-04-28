@@ -1,10 +1,7 @@
-
-
-export default function(yritystiedot: any, alkuperainenOrg: any) {
+const ytjMapper = (yritystiedot: any, alkuperainenOrg: any) => {
     const nimi: any = {
-        "nimi" : {
-        },
-        "alkuPvm" : ""
+        nimi: {},
+        alkuPvm: '',
     };
 
     // Tarkistetaan "kenttien" olemassaolo, sillä yritystiedot voidaan täyttää myöhemminkin
@@ -36,7 +33,7 @@ export default function(yritystiedot: any, alkuperainenOrg: any) {
     if (yritystiedot.aloitusPvm) {
         let pvm = new Date(yritystiedot.aloitusPvm);
         const offset = pvm.getTimezoneOffset();
-        pvm = new Date(pvm.getTime() - (offset*60*1000));
+        pvm = new Date(pvm.getTime() - offset * 60 * 1000);
         const yYYMMDDdate = pvm.toISOString().split('T')[0];
         alkuperainenOrg.organisaatio.alkuPvm = yYYMMDDdate;
     }
@@ -44,7 +41,7 @@ export default function(yritystiedot: any, alkuperainenOrg: any) {
     // TODO ???
     //  YTunnuksella luotu organisaatio on oletusarvoisesti koulutustoimija
     // Ei kuitenkaan poisteta "Koulutustoimija" tyyppiä, jos se on jo asetettu
-     //const organisaatiotyyppi = "organisaatiotyyppi_01"; // Koulutustoimija
+    //const organisaatiotyyppi = "organisaatiotyyppi_01"; // Koulutustoimija
     //if (alkuperainenOrg.organisaatio.tyypit.indexOf(organisaatiotyyppi) === -1) {
     //    this.toggleCheckOrganisaatio(organisaatiotyyppi);
     //}
@@ -61,7 +58,7 @@ export default function(yritystiedot: any, alkuperainenOrg: any) {
     // asetetaan päivitys timestamp
     let pvm = new Date();
     const offset = pvm.getTimezoneOffset();
-    pvm = new Date(pvm.getTime() - (offset*60*1000));
+    pvm = new Date(pvm.getTime() - offset * 60 * 1000);
     const yYYMMDDdate = pvm.toISOString().split('T')[0];
 
     alkuperainenOrg.organisaatio.ytjpaivitysPvm = yYYMMDDdate;
@@ -86,10 +83,9 @@ export default function(yritystiedot: any, alkuperainenOrg: any) {
     }
 
      */
-
 };
 
-export function deepEquals(x: any, y : any) {
+export function deepEquals(x: any, y: any) {
     if (x === y) {
         return true; // if both x and y are null or undefined and exactly the same
     } else if (!(x instanceof Object) || !(y instanceof Object)) {
@@ -109,7 +105,7 @@ export function deepEquals(x: any, y : any) {
             if (x[p] === y[p]) {
                 continue; // if they have the same strict value or identity then they are equal
             }
-            if (typeof (x[p]) !== 'object') {
+            if (typeof x[p] !== 'object') {
                 return false; // Numbers, Strings, Functions, Booleans must be strictly equal
             }
             if (!deepEquals(x[p], y[p])) {
@@ -124,3 +120,5 @@ export function deepEquals(x: any, y : any) {
         return true;
     }
 }
+
+export default ytjMapper;
