@@ -33,13 +33,18 @@
     "typescript": "3.6.4",
     "universal-cookie": "4.0.4"
   },
+  "devDependencies": {
+    "prettier": "2.2.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint --ext .ts,.tsx src",
-    "lint:fix": "eslint --ext .ts,.tsx src --fix"
+    "lint:fix": "eslint --ext .ts,.tsx src --fix",
+    "prettier": "prettier --check 'src/**/*{ts,tsx}'",
+    "prettier:fix": "prettier --write 'src/**/*{ts,tsx}'"
   },
   "eslintConfig": {
     "extends": "react-app"
