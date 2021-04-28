@@ -8,13 +8,13 @@ import { Koodi, Osoite, Yhteystiedot } from '../../../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { SyntheticEvent } from 'react';
 
-type yhteystietoProps = {
+export type yhteystietoProps = {
     yhteystiedot: Yhteystiedot[];
     handleOnChange: ({ name, value }: { name: string; value: any }) => void;
     postinumerot: Koodi[];
 };
 
-export default function YhteystietoLomake(props: yhteystietoProps) {
+export default function YhteystietoLomake(props: yhteystietoProps): React.ReactElement {
     const [kieleksi, setKieleksi] = useState('kieli_fi#1');
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi, onSama: false });
 

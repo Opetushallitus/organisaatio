@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`YhteystietoLomake Renders without crashing 1`] = `
+<div
+  className="UloinKehys"
+>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <Component
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "Suomeksi",
+              "value": "kieli_fi#1",
+            },
+            Object {
+              "label": "Ruotsiksi",
+              "value": "kieli_sv#1",
+            },
+            Object {
+              "label": "Englanniksi",
+              "value": "kieli_en#1",
+            },
+          ]
+        }
+        value="kieli_fi#1"
+      />
+    </div>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <ForwardRef
+      checked={false}
+      onChange={[Function]}
+    >
+      Postiosoite on sama kuin käyntiosoite
+    </ForwardRef>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <label>
+        Postiosoite
+      </label>
+      <ForwardRef
+        name="posti.osoite"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+    <div
+      className="KenttaLyhyt"
+    >
+      <label>
+        Postinumero
+      </label>
+      <ForwardRef
+        name="posti.postinumeroUri"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <label>
+        Käyntiosoite
+      </label>
+      <ForwardRef
+        disabled={false}
+        name="kaynti.osoite"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+    <div
+      className="KenttaLyhyt"
+    >
+      <label>
+        Postinumero
+      </label>
+      <ForwardRef
+        disabled={false}
+        name="kaynti.postinumeroUri"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <label>
+        Puhelinnumero
+      </label>
+      <ForwardRef
+        name="numero"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <label>
+        Sähköpostiosoite
+      </label>
+      <ForwardRef
+        name="email"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="Rivi"
+  >
+    <div
+      className="Kentta"
+    >
+      <label>
+        Www-osoite
+      </label>
+      <ForwardRef
+        name="www"
+        onChange={[Function]}
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;
