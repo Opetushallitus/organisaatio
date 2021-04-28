@@ -3,17 +3,25 @@ plugins {
 	id 'java'
 }
 
-
 node {
 	version = '12.9.1'
 	download = true
 }
-task bundle(type: NpmTask, dependsOn: npmInstall) {
-	args = ['run', 'build']
+task audit(type: NpmTask, dependsOn: npmInstall) {
+	args = ['audit']
 }
-task uiTest(type: NpmTask) {
+task lint(type: NpmTask, dependsOn: audit) {
+	args = ['run', 'lint']
+}
+task checkFormatting(type: NpmTask, dependsOn: lint) {
+	args = ['run', 'prettier']
+}
+task uiTest(type: NpmTask, dependsOn: checkFormatting) {
 	environment = ['CI': 'true']
 	args = ['run', 'test']
+}
+task bundle(type: NpmTask, dependsOn: uiTest) {
+	args = ['run', 'build']
 }
 task run(type: NpmTask) {
 	args = ['start']
