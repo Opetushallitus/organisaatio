@@ -1,70 +1,85 @@
 import * as React from 'react';
 import styles from './YhteystietoLomake.module.css';
-import Input from "@opetushallitus/virkailija-ui-components/Input";
-import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
-import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
-import {useState} from "react";
-import {Koodi, Osoite, Yhteystiedot} from "../../../../../types/types";
-import Spin from "@opetushallitus/virkailija-ui-components/Spin";
-import {SyntheticEvent} from "react";
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
+import { useState } from 'react';
+import { Koodi, Osoite, Yhteystiedot } from '../../../../../types/types';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { SyntheticEvent } from 'react';
 
 type yhteystietoProps = {
-    yhteystiedot: Yhteystiedot[]
-    handleOnChange: ({ name, value }: { name: string; value: any; }) => void
-    postinumerot: Koodi[]
-}
+    yhteystiedot: Yhteystiedot[];
+    handleOnChange: ({ name, value }: { name: string; value: any }) => void;
+    postinumerot: Koodi[];
+};
 
 export default function YhteystietoLomake(props: yhteystietoProps) {
-    const [kieleksi, setKieleksi ] = useState('kieli_fi#1');
+    const [kieleksi, setKieleksi] = useState('kieli_fi#1');
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi, onSama: false });
 
     const { yhteystiedot, handleOnChange, postinumerot } = props;
 
-    const currentVisibleYhteystiedot = { posti: { osoite: '', postinumeroUri: ''}, kaynti: { osoite: '', postinumeroUri: ''}, puhelin: { numero: ''}, www: { www: ''}, email: { email: ''}};
+    const currentVisibleYhteystiedot = {
+        posti: { osoite: '', postinumeroUri: '' },
+        kaynti: { osoite: '', postinumeroUri: '' },
+        puhelin: { numero: '' },
+        www: { www: '' },
+        email: { email: '' },
+    };
     yhteystiedot.forEach((yT: any) => {
         if (yT.kieli === kieleksi) {
-            if (yT.osoiteTyyppi && yT.osoiteTyyppi=== 'posti') {
+            if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'posti') {
                 currentVisibleYhteystiedot.posti = yT;
-            } else if (yT.osoiteTyyppi && yT.osoiteTyyppi=== 'kaynti') {
+            } else if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'kaynti') {
                 currentVisibleYhteystiedot.kaynti = yT;
-            } else if (yT.tyyppi && yT.tyyppi=== 'puhelin') {
+            } else if (yT.tyyppi && yT.tyyppi === 'puhelin') {
                 currentVisibleYhteystiedot.puhelin = yT;
             } else if (yT.www) {
                 currentVisibleYhteystiedot.www = yT;
-            }  else if (yT.email) {
+            } else if (yT.email) {
                 currentVisibleYhteystiedot.email = yT;
             }
         }
     });
     const handlePostiOsSamaKuinKaynti = (event: SyntheticEvent) => {
         const element = event.target as HTMLInputElement;
-        const postiYt = Object.assign({}, yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'posti'));
+        const postiYt = Object.assign(
+            {},
+            yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'posti')
+        );
         const kayntiYt = yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'kaynti');
         if (postiYt && kayntiYt && element.checked) {
             kayntiYt.osoite = postiYt.osoite;
             kayntiYt.postinumeroUri = postiYt.postinumeroUri;
-            handleOnChange({ name: 'yhteystiedot', value: yhteystiedot});
+            handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
         }
-        setPostiSamakuinKaynti({kieleksi: kieleksi, onSama: !postiSamakuinKaynti.onSama})
-    }
+        setPostiSamakuinKaynti({ kieleksi: kieleksi, onSama: !postiSamakuinKaynti.onSama });
+    };
     const handleYhteystietoOnChange = (event: SyntheticEvent) => {
         const element = event.target as HTMLInputElement;
         const name = element.name;
         const oikeankieliset = yhteystiedot.filter((yt: Yhteystiedot) => yt.kieli === kieleksi);
-        if( oikeankieliset.length > 0) {
+        if (oikeankieliset.length > 0) {
             if (name === 'www' || name === 'email' || name === 'numero') {
-                const oikea = oikeankieliset.find(yt => yt.hasOwnProperty(name));
-                if(oikea) oikea[name] = element.value;
-                else yhteystiedot.push({ kieli: kieleksi, [name]: element.value, })
+                const oikea = oikeankieliset.find((yt) => yt.hasOwnProperty(name));
+                if (oikea) oikea[name] = element.value;
+                else yhteystiedot.push({ kieli: kieleksi, [name]: element.value });
             } else {
                 const jaettu = name.split('.');
                 const pohja = jaettu[0] as keyof Yhteystiedot;
                 const avain = jaettu[1] as keyof Osoite;
-                const oikea = oikeankieliset.find(yt => yt.osoiteTyyppi && yt.osoiteTyyppi === pohja);
-                if(oikea) {
+                const oikea = oikeankieliset.find((yt) => yt.osoiteTyyppi && yt.osoiteTyyppi === pohja);
+                if (oikea) {
                     oikea[avain] = element.value;
-                    if (oikea.osoiteTyyppi === 'posti' && kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama) {
-                        const kayntiYt = yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'kaynti');
+                    if (
+                        oikea.osoiteTyyppi === 'posti' &&
+                        kieleksi === postiSamakuinKaynti.kieleksi &&
+                        postiSamakuinKaynti.onSama
+                    ) {
+                        const kayntiYt = yhteystiedot.find(
+                            (yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'kaynti'
+                        );
                         if (kayntiYt) {
                             kayntiYt.osoite = oikea.osoite;
                             kayntiYt.postinumeroUri = oikea.postinumeroUri;
@@ -73,12 +88,12 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
                 }
             }
         }
-        handleOnChange({ name: 'yhteystiedot', value: yhteystiedot});
+        handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
     };
     if (!postinumerot) {
-       return <Spin />;
+        return <Spin />;
     }
-    return(
+    return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
@@ -89,7 +104,7 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
                             { value: 'kieli_sv#1', label: 'Ruotsiksi' },
                             { value: 'kieli_en#1', label: 'Englanniksi' },
                         ]}
-                        onChange={e => setKieleksi(e.target.value)}
+                        onChange={(e) => setKieleksi(e.target.value)}
                     />
                 </div>
             </div>
@@ -97,7 +112,9 @@ export default function YhteystietoLomake(props: yhteystietoProps) {
                 <Checkbox
                     checked={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                     onChange={handlePostiOsSamaKuinKaynti}
-                >Postiosoite on sama kuin käyntiosoite</Checkbox>
+                >
+                    Postiosoite on sama kuin käyntiosoite
+                </Checkbox>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>

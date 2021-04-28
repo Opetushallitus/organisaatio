@@ -1,4 +1,4 @@
-import React, {FormEvent, ReactElement } from 'react';
+import React, { FormEvent, ReactElement } from 'react';
 import styles from './Accordion.module.css';
 
 import {
@@ -10,17 +10,16 @@ import {
 } from 'react-accessible-accordion';
 
 type props = {
-    lomakkeet: ReactElement<any>[],
-    otsikot: String[],
-    preExpanded?: number,
-    handlePreExpanded?: (number: number) => void
-    handleChange?: (event: FormEvent<HTMLDivElement>) => void
-}
-
+    lomakkeet: ReactElement<any>[];
+    otsikot: String[];
+    preExpanded?: number;
+    handlePreExpanded?: (number: number) => void;
+    handleChange?: (event: FormEvent<HTMLDivElement>) => void;
+};
 
 export default function OrganisaatioMuokkausAccordion(props: props) {
-    const {lomakkeet, otsikot, preExpanded, handleChange, handlePreExpanded = () => {}}  = props;
-    console.log('oasddsa', preExpanded)
+    const { lomakkeet, otsikot, preExpanded, handleChange, handlePreExpanded = () => {} } = props;
+    console.log('oasddsa', preExpanded);
     const isPreExpandedInUse = !!preExpanded;
     return (
         <Accordion className={styles.Accordion}>
@@ -28,7 +27,10 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
                 return (
                     <AccordionItem
                         {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === index } : {})}
-                        onChange={handleChange} uuid={`${index}`} className={styles.AccordionItem}>
+                        onChange={handleChange}
+                        uuid={`${index}`}
+                        className={styles.AccordionItem}
+                    >
                         <AccordionItemHeading
                             className={styles.AccordionHeadingItem}
                             {...(isPreExpandedInUse ? { onClick: () => handlePreExpanded(index) } : {})}
@@ -37,13 +39,10 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
                                 <span className={styles.OtsikkoTeksti}>{`${index + 1}. ${otsikot[index]}`}</span>
                             </AccordionItemButton>
                         </AccordionItemHeading>
-                        <AccordionItemPanel className={styles.AccordionPanel}>
-                            {lomake}
-                        </AccordionItemPanel>
+                        <AccordionItemPanel className={styles.AccordionPanel}>{lomake}</AccordionItemPanel>
                     </AccordionItem>
                 );
-            })
-            }
+            })}
         </Accordion>
     );
 }

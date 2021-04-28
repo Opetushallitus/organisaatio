@@ -1,38 +1,37 @@
 import * as React from 'react';
 import styles from './YhteystietotyypinMuokkaus.module.css';
-import {useContext} from "react";
-import {LanguageContext} from "../../../../contexts/contexts";
-import PohjaModaali from "../../../Modaalit/PohjaModaali/PohjaModaali";
-import Input from "@opetushallitus/virkailija-ui-components/Input";
-import PohjaSivu from "../../PohjaSivu/PohjaSivu";
-import Icon from "@iconify/react";
-import homeIcon from "@iconify/icons-fa-solid/home";
-import Button from "@opetushallitus/virkailija-ui-components/Button";
-import {useState} from "react";
-import Select from "@opetushallitus/virkailija-ui-components/Select";
-import useAxios from "axios-hooks";
-import {Koodi} from "../../../../types/types";
-import Spin from "@opetushallitus/virkailija-ui-components/Spin";
-import Checkbox from "@opetushallitus/virkailija-ui-components/Checkbox";
-import RadioGroup from "@opetushallitus/virkailija-ui-components/RadioGroup";
-import UOTHeader from "../../../Modaalit/UusiOsoiteTyyppi/UOTHeader";
-import UOTBody from "../../../Modaalit/UusiOsoiteTyyppi/OUTBody";
-import UOTFooter from "../../../Modaalit/UusiOsoiteTyyppi/UOTFooter";
+import { useContext } from 'react';
+import { LanguageContext } from '../../../../contexts/contexts';
+import PohjaModaali from '../../../Modaalit/PohjaModaali/PohjaModaali';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import PohjaSivu from '../../PohjaSivu/PohjaSivu';
+import Icon from '@iconify/react';
+import homeIcon from '@iconify/icons-fa-solid/home';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+import { useState } from 'react';
+import Select from '@opetushallitus/virkailija-ui-components/Select';
+import useAxios from 'axios-hooks';
+import { Koodi } from '../../../../types/types';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
+import UOTHeader from '../../../Modaalit/UusiOsoiteTyyppi/UOTHeader';
+import UOTBody from '../../../Modaalit/UusiOsoiteTyyppi/OUTBody';
+import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
 
 const KAIKKIVALITTU = '1';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
-type Props = {
-}
+type Props = {};
 
 export default function YhteystietotyypinMuokkaus(props: Props) {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError}] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
-    const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
-    const [isModaliAuki, setIsModaaliAuki ] = useState(false);
-
+    const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
+        Koodi[]
+    >(`${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+    const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
+    const [isModaliAuki, setIsModaaliAuki] = useState(false);
 
     if (oppilaitosTyypitLoading || oppilaitosTyypitError) {
         return <Spin />;
@@ -43,11 +42,13 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
     console.log('yhtopts', oppilaitosTyypitOptions);
-    return(
+    return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio/yhteystietotyypit"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio/yhteystietotyypit">
+                        <Icon icon={homeIcon} />
+                    </a>
                 </div>
                 <div>
                     <a href="/organisaatio/yhteystietotyypit">{i18n.translate('KAIKKI_YHTEYSTIETOTYYPIT')}</a>
@@ -60,12 +61,10 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
                         <h1>{i18n.translate('UUDEN_YHTEYSTIETOTYYPIN_LISAAMINEN')}</h1>
                     </div>
                 </div>
-                <div className={styles.PaaOsio} >
+                <div className={styles.PaaOsio}>
                     <div className={styles.OtsikkoRivi}>
                         <div className={styles.Otsikko}>
-                            <h3>
-                                {i18n.translate('YHTEYSTIETOTYYPPI_TIEDOT_OTSIKKO')}
-                            </h3>
+                            <h3>{i18n.translate('YHTEYSTIETOTYYPPI_TIEDOT_OTSIKKO')}</h3>
                         </div>
                     </div>
                     <div className={styles.Rivi}>
@@ -158,10 +157,7 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
                             <div>{i18n.translate('YHTEYSTIETOTYYPPIA_KAYTTAVAT')}</div>
                             <div className={styles.OrganisaatioMonivalinta}>
                                 <label>{i18n.translate('ORGANISAATIOT')}</label>
-                                <Select
-                                    isMulti
-                                    value={[]}
-                                    options={oppilaitosTyypitOptions}/>
+                                <Select isMulti value={[]} options={oppilaitosTyypitOptions} />
                             </div>
                         </div>
                     </div>
@@ -175,13 +171,10 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
                                         { value: '1', label: i18n.translate('KAIKKI') },
                                         { value: '0', label: i18n.translate('RAJATUT_OPPILAITOSTYYPIT') },
                                     ]}
-                                    onChange={e => setIsKaikkiValittu(e.target.value)}
+                                    onChange={(e) => setIsKaikkiValittu(e.target.value)}
                                 />
 
-                                <Select
-                                    isMulti
-                                    value={[]}
-                                    options={oppilaitosTyypitOptions}/>
+                                <Select isMulti value={[]} options={oppilaitosTyypitOptions} />
                             </div>
                         </div>
                     </div>
@@ -199,20 +192,20 @@ export default function YhteystietotyypinMuokkaus(props: Props) {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>{i18n.translate('SULJE_TIEDOT')}
+                    <Button variant="outlined" className={styles.Versionappula}>
+                        {i18n.translate('SULJE_TIEDOT')}
                     </Button>
-                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}
-                    </Button>
+                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}</Button>
                 </div>
             </div>
-            {isModaliAuki &&
-            <PohjaModaali
-                header={<UOTHeader/>}
-                body={<UOTBody/>}
-                footer={<UOTFooter/>}
-                suljeCallback={() => setIsModaaliAuki(false)}
-            />
-            }
+            {isModaliAuki && (
+                <PohjaModaali
+                    header={<UOTHeader />}
+                    body={<UOTBody />}
+                    footer={<UOTFooter />}
+                    suljeCallback={() => setIsModaaliAuki(false)}
+                />
+            )}
         </PohjaSivu>
     );
 }

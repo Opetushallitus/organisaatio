@@ -1,25 +1,25 @@
 import * as React from 'react';
 import styles from './RyhmanMuokkaus.module.css';
-import {useContext} from "react";
-import {KoodistoContext, LanguageContext} from "../../../../contexts/contexts";
-import Input from "@opetushallitus/virkailija-ui-components/Input";
-import PohjaSivu from "../../PohjaSivu/PohjaSivu";
-import Icon from "@iconify/react";
-import homeIcon from "@iconify/icons-fa-solid/home";
-import Button from "@opetushallitus/virkailija-ui-components/Button";
-import {useState} from "react";
-import Select from "@opetushallitus/virkailija-ui-components/Select";
-import Spin from "@opetushallitus/virkailija-ui-components/Spin";
-import {useEffect} from "react";
-import Axios from "axios";
+import { useContext } from 'react';
+import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import PohjaSivu from '../../PohjaSivu/PohjaSivu';
+import Icon from '@iconify/react';
+import homeIcon from '@iconify/icons-fa-solid/home';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+import { useState } from 'react';
+import Select from '@opetushallitus/virkailija-ui-components/Select';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { useEffect } from 'react';
+import Axios from 'axios';
 
 // const KAIKKIVALITTU = '1';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
 type Props = {
-    match: any
-}
+    match: any;
+};
 
 export default function RyhmanMuokkaus(props: Props) {
     const { i18n, language } = useContext(LanguageContext);
@@ -27,7 +27,9 @@ export default function RyhmanMuokkaus(props: Props) {
     // const [isKaikkiValittu, setIsKaikkiValittu ] = useState(KAIKKIVALITTU);
     const [ryhma, setRyhma] = useState<undefined | any>();
     //const [isModaliAuki, setIsModaaliAuki ] = useState(false);
-    const { match: { params } } = props;
+    const {
+        match: { params },
+    } = props;
     useEffect(() => {
         async function fetch() {
             try {
@@ -35,12 +37,11 @@ export default function RyhmanMuokkaus(props: Props) {
                 const ryhma = response.data;
                 setRyhma(ryhma);
             } catch (error) {
-                console.error('error fetching', error)
+                console.error('error fetching', error);
             }
         }
         fetch();
     }, [params.oid]);
-
 
     if (!ryhma || !ryhmaTyypitKoodisto || !kayttoRyhmatKoodisto) {
         return <Spin />;
@@ -55,14 +56,24 @@ export default function RyhmanMuokkaus(props: Props) {
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
-    console.log('yhtopts', ryhmaTyypitOptions,kayttoRyhmatOptions, 'ryhma', ryhma);
-    const kayttoRyhmat = kayttoRyhmatOptions.filter(rt => ryhma.kayttoryhmat.map((k: string) => k.slice(0, -2)).includes(rt.value) || ryhma.kayttoryhmat.includes(rt.value));
-    const ryhmaTyypit = ryhmaTyypitOptions.filter(rt => ryhma.ryhmatyypit.map((k: string) => k.slice(0, -2)).includes(rt.value) || ryhma.ryhmatyypit.includes(rt.value));
-    return(
+    console.log('yhtopts', ryhmaTyypitOptions, kayttoRyhmatOptions, 'ryhma', ryhma);
+    const kayttoRyhmat = kayttoRyhmatOptions.filter(
+        (rt) =>
+            ryhma.kayttoryhmat.map((k: string) => k.slice(0, -2)).includes(rt.value) ||
+            ryhma.kayttoryhmat.includes(rt.value)
+    );
+    const ryhmaTyypit = ryhmaTyypitOptions.filter(
+        (rt) =>
+            ryhma.ryhmatyypit.map((k: string) => k.slice(0, -2)).includes(rt.value) ||
+            ryhma.ryhmatyypit.includes(rt.value)
+    );
+    return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio/ryhmat"><Icon icon={homeIcon} /></a>
+                    <a href="/organisaatio/ryhmat">
+                        <Icon icon={homeIcon} />
+                    </a>
                 </div>
                 <div>
                     <a href="/organisaatio/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
@@ -75,12 +86,10 @@ export default function RyhmanMuokkaus(props: Props) {
                         <h1>{i18n.translate('UUDEN_RYHMAN_LISAAMINEN')}</h1>
                     </div>
                 </div>
-                <div className={styles.PaaOsio} >
+                <div className={styles.PaaOsio}>
                     <div className={styles.OtsikkoRivi}>
                         <div className={styles.Otsikko}>
-                            <h3>
-                                {i18n.translate('RYHMAN_TIEDOT_OTSIKKO')}
-                            </h3>
+                            <h3>{i18n.translate('RYHMAN_TIEDOT_OTSIKKO')}</h3>
                         </div>
                     </div>
                     <div className={styles.OidRivi}>
@@ -93,21 +102,19 @@ export default function RyhmanMuokkaus(props: Props) {
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('SUOMEKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.nimi['fi'] || ''}/>
+                                    <Input value={ryhma.nimi['fi'] || ''} />
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('RUOTSIKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.nimi['sv'] || ''}/>
-
+                                    <Input value={ryhma.nimi['sv'] || ''} />
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('ENGLANNIKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.nimi['en'] || ''}/>
-
+                                    <Input value={ryhma.nimi['en'] || ''} />
                                 </div>
                             </div>
                         </div>
@@ -118,19 +125,19 @@ export default function RyhmanMuokkaus(props: Props) {
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('SUOMEKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.kuvaus2['kieli_fi#1'] || ''}/>
+                                    <Input value={ryhma.kuvaus2['kieli_fi#1'] || ''} />
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('RUOTSIKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.kuvaus2['kieli_sv#1'] || ''}/>
+                                    <Input value={ryhma.kuvaus2['kieli_sv#1'] || ''} />
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
                                 <label>{i18n.translate('ENGLANNIKSI')}</label>
                                 <div className={styles.PitkaInput}>
-                                    <Input value={ryhma.kuvaus2['kieli_en#1'] || ''}/>
+                                    <Input value={ryhma.kuvaus2['kieli_en#1'] || ''} />
                                 </div>
                             </div>
                         </div>
@@ -138,19 +145,13 @@ export default function RyhmanMuokkaus(props: Props) {
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_TYYPPI')}</label>
-                            <Select
-                                isMulti
-                                value={ryhmaTyypit}
-                                options={ryhmaTyypitOptions}/>
+                            <Select isMulti value={ryhmaTyypit} options={ryhmaTyypitOptions} />
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KAYTTOTARKOITUS')}</label>
-                            <Select
-                                isMulti
-                                value={kayttoRyhmat}
-                                options={kayttoRyhmatOptions}/>
+                            <Select isMulti value={kayttoRyhmat} options={kayttoRyhmatOptions} />
                         </div>
                     </div>
                     <div className={styles.AlinRivi}>
@@ -171,10 +172,10 @@ export default function RyhmanMuokkaus(props: Props) {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>{i18n.translate('SULJE_TIEDOT')}
+                    <Button variant="outlined" className={styles.Versionappula}>
+                        {i18n.translate('SULJE_TIEDOT')}
                     </Button>
-                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}
-                    </Button>
+                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}</Button>
                 </div>
             </div>
         </PohjaSivu>
