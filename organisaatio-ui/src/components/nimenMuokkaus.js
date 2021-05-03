@@ -1,40 +1,39 @@
 import moment from 'moment';
-import nimiHistoria from "./nimiHistoria";
+import nimiHistoria from './nimiHistoria';
 
-import { deepEquals } from "./Ytjmapper";
+import { deepEquals } from './Ytjmapper';
 
 export default {
-//    emptyNimi = {
-//        "nimi" : {
-//            "fi" : "",
-//            "sv" : "",
-//            "en" : ""
-//        },
-//        "alkuPvm" : ""
-//    };
-
+    //    emptyNimi = {
+    //        "nimi" : {
+    //            "fi" : "",
+    //            "sv" : "",
+    //            "en" : ""
+    //        },
+    //        "alkuPvm" : ""
+    //    };
 
     model: {
-        oid : "",
-        minAlkuPvm : "",
-        nimi : {},
-        muokattavaNimihistoria : [],
-        mode : "new",
-        historiaModel : nimiHistoria,
-        parentNimi : {},
-        uusinNimi : {},
-        uusinNimiOrig : {},
-        toimipiste : false,
-        suunniteltuOrganisaatio : false,
-        ajastettuMuutos : false,
+        oid: '',
+        minAlkuPvm: '',
+        nimi: {},
+        muokattavaNimihistoria: [],
+        mode: 'new',
+        historiaModel: nimiHistoria,
+        parentNimi: {},
+        uusinNimi: {},
+        uusinNimiOrig: {},
+        toimipiste: false,
+        suunniteltuOrganisaatio: false,
+        ajastettuMuutos: false,
 
         // Tyhjenneteään mallin tiedot
-        clear: function() {
+        clear: function () {
             console.debug('clear()');
-            this.oid = "";
-            this.minAlkuPvm = "";
+            this.oid = '';
+            this.minAlkuPvm = '';
             this.nimi = {};
-            this.mode = "new";
+            this.mode = 'new';
             this.parentNimi = {};
             this.uusinNimi = {};
             this.uusinNimiOrig = {};
@@ -44,7 +43,7 @@ export default {
         },
 
         // Asetetaan nimihistoria, jota tullaan muokkaamaan
-        setNimihistoria: function(nimihistoria) {
+        setNimihistoria: function (nimihistoria) {
             console.debug('setNimihistoria()');
             this.muokattavaNimihistoria = Object.assign({}, nimihistoria);
             this.uusinNimi = this.historiaModel.getUusinNimi(this.muokattavaNimihistoria);
@@ -56,8 +55,7 @@ export default {
             var nimi = this.historiaModel.getNimi(this.muokattavaNimihistoria);
             if (this.historiaModel.isAjastettuMuutos(nimi)) {
                 this.suunniteltuOrganisaatio = true;
-            }
-            else {
+            } else {
                 this.suunniteltuOrganisaatio = false;
             }
 
@@ -67,17 +65,16 @@ export default {
             }
         },
 
-        isSuunniteltuOrganisaatio: function() {
+        isSuunniteltuOrganisaatio: function () {
             return this.suunniteltuOrganisaatio;
         },
 
         // Asetetaan muokattu versio ogranisaation nykyisestä nimestä
-        setEditedNimi: function(nimi) {
+        setEditedNimi: function (nimi) {
             console.debug('setEditedNimi()', nimi);
             var emptyNimi = {
-                "nimi" : {
-                },
-                "alkuPvm" : ""
+                nimi: {},
+                alkuPvm: '',
             };
 
             if (nimi === null) {
@@ -93,31 +90,30 @@ export default {
         },
 
         // Haetaan muokattu versio ogranisaation nykyisestä nimestä
-        getEditedNimi: function() {
+        getEditedNimi: function () {
             return this.editedNimi;
         },
 
         // Palautetaan muokattu nimihistoria
-        getNimihistoria: function() {
+        getNimihistoria: function () {
             console.debug('getNimiHistoria()');
             return this.muokattavaNimihistoria;
         },
 
         // Haetaan uuden nimen minimialkupäivämäärä
         // Viimeisimmän voimassaolevan nimen alkupäivämäärä tai organisaation alkupäiviämäärä.
-        getMinAlkuPvm: function(organisaatioAlkuPvm) {
+        getMinAlkuPvm: function (organisaatioAlkuPvm) {
             var voimassaolevaNimi = this.historiaModel.getCurrentNimi(this.muokattavaNimihistoria);
-            var minAlkuPvm = "";
+            var minAlkuPvm = '';
 
             // Uuden organisaation tapaus
             if (voimassaolevaNimi === null) {
                 return minAlkuPvm;
             }
-            if('alkuPvm' in voimassaolevaNimi && moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').isValid()) {
+            if ('alkuPvm' in voimassaolevaNimi && moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').isValid()) {
                 // Uuden nimen alkupäivämäärä ei voi olla sama kuin vanhan
-                minAlkuPvm = moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').add(1,'d').toDate();
-            }
-            else {
+                minAlkuPvm = moment(voimassaolevaNimi.alkuPvm, 'YYYY-MM-DD').add(1, 'd').toDate();
+            } else {
                 minAlkuPvm = organisaatioAlkuPvm;
             }
             $log.debug('getMinAlkuPvm() ' + minAlkuPvm);
@@ -126,15 +122,15 @@ export default {
         },
 
         // Laitetaan uusin nimi näkyville / editoitavaksi
-        setEditedNimiVisible: function() {
+        setEditedNimiVisible: function () {
             this.nimi = this.uusinNimi;
             this.setNimi(this.editedNimi);
         },
 
         // Laitetaan annettu nimi editoitavaksi
-        setNimi: function(nimi) {
+        setNimi: function (nimi) {
             console.debug('setNimi()', nimi);
-            for(var i=0; i < this.muokattavaNimihistoria.length; i++) {
+            for (var i = 0; i < this.muokattavaNimihistoria.length; i++) {
                 if (this.nimi === this.muokattavaNimihistoria[i]) {
                     this.muokattavaNimihistoria[i].nimi = nimi.nimi;
                     this.muokattavaNimihistoria[i].alkuPvm = nimi.alkuPvm;
@@ -145,7 +141,7 @@ export default {
         },
 
         // Tarkistetaan onko uusin nimi muuttunut
-        isEditedNimiChanged: function() {
+        isEditedNimiChanged: function () {
             if (deepEquals(this.editedNimi, this.originalEditedNimi)) {
                 return false;
             }
@@ -153,21 +149,20 @@ export default {
         },
 
         // Luodaan organisaatiolle uusi nimi
-        createNewNimi: function() {
+        createNewNimi: function () {
             var emptyNimi = {
-                "nimi" : {
-                },
-                "alkuPvm" : ""
+                nimi: {},
+                alkuPvm: '',
             };
             this.nimi = emptyNimi;
             this.muokattavaNimihistoria.push(this.nimi);
         },
 
         // Poistetaan uusin nimi historiasta
-        deleteUusinNimi: function() {
+        deleteUusinNimi: function () {
             this.nimi = Object.assign({}, this.uusinNimi);
 
-            for(var i=0; i < this.muokattavaNimihistoria.length; i++) {
+            for (var i = 0; i < this.muokattavaNimihistoria.length; i++) {
                 if (this.uusinNimi === this.muokattavaNimihistoria[i]) {
                     this.muokattavaNimihistoria.splice(i, 1);
                 }
@@ -176,19 +171,19 @@ export default {
         },
 
         // Tarkastetaan onko annettu nimi ajastettu nimenmuutos
-        isAjastettuMuutos: function(nimi) {
+        isAjastettuMuutos: function (nimi) {
             return this.historiaModel.isAjastettuMuutos(nimi);
         },
 
         // Poistetaan parent prefix nimestä
-        removeParentPrefix: function(nimi) {
+        removeParentPrefix: function (nimi) {
             if (this.toimipiste) {
                 console.log('removeParentPrefix()');
 
                 if (this.parentNimi && nimi) {
-                    ['fi', 'sv', 'en'].forEach(function(key) {
+                    ['fi', 'sv', 'en'].forEach(function (key) {
                         if (nimi.nimi[key] && this.parentNimi[key]) {
-                            nimi.nimi[key] = nimi.nimi[key].replace(this.parentNimi[key] + ", ", "");
+                            nimi.nimi[key] = nimi.nimi[key].replace(this.parentNimi[key] + ', ', '');
                         }
                     });
                 }
@@ -196,9 +191,9 @@ export default {
         },
 
         // Poistetaan tyhjät nimet
-        removeEmptyNimi: function(nimi) {
+        removeEmptyNimi: function (nimi) {
             if (nimi) {
-                ['fi', 'sv', 'en'].forEach(function(key) {
+                ['fi', 'sv', 'en'].forEach(function (key) {
                     if (typeof nimi.nimi[key] === 'undefined') {
                         delete nimi.nimi[key];
                     }
@@ -207,18 +202,20 @@ export default {
         },
 
         // Lisätään parent prefix nimeen
-        addParentPrefix: function(nimi) {
+        addParentPrefix: function (nimi) {
             this.removeEmptyNimi(nimi);
 
             if (this.toimipiste) {
-                 console.log('addParentPrefix()');
+                console.log('addParentPrefix()');
 
                 if (this.model.parentNimi && nimi) {
-                    ['fi', 'sv', 'en'].forEach(function(key) {
+                    ['fi', 'sv', 'en'].forEach(function (key) {
                         if (nimi.nimi[key] && this.model.parentNimi[key]) {
-                            if (!nimi.nimi[key].startsWith(this.model.parentNimi[key] + ", ") &&
-                                    nimi.nimi[key] !== this.model.parentNimi[key]) {
-                                nimi.nimi[key] = this.model.parentNimi[key] + ", " + nimi.nimi[key];
+                            if (
+                                !nimi.nimi[key].startsWith(this.model.parentNimi[key] + ', ') &&
+                                nimi.nimi[key] !== this.model.parentNimi[key]
+                            ) {
+                                nimi.nimi[key] = this.model.parentNimi[key] + ', ' + nimi.nimi[key];
                             }
                         }
                     });
@@ -226,12 +223,16 @@ export default {
             }
         },
 
-
         // Ennekuin NimenMuokkausModel:a voidaan käyttää pitää se alustaa
-        refresh: function(oid, nimihistoria, organisaatioAlkuPvm,
-                          //koulutustoimija, oppilaitos,
-                          toimipiste, parentNimi,
-                          nameFormat) {
+        refresh: function (
+            oid,
+            nimihistoria,
+            organisaatioAlkuPvm,
+            //koulutustoimija, oppilaitos,
+            toimipiste,
+            parentNimi,
+            nameFormat
+        ) {
             console.log('refresh()');
 
             this.setNimihistoria(nimihistoria);
@@ -244,7 +245,7 @@ export default {
             this.nameFormat = nameFormat;
             this.parentNimi = parentNimi;
 
-           /* if (/new$/.test($location.path())) {
+            /* if (/new$/.test($location.path())) {
                 this.uusiOrganisaatio = true;
             }
             else {
@@ -255,17 +256,14 @@ export default {
 
             this.minAlkuPvm = this.getMinAlkuPvm(organisaatioAlkuPvm);
 
-            if (this.mode==="update") {
+            if (this.mode === 'update') {
                 this.setUusinNimiVisible();
             }
         },
 
-        accept: function() {
+        accept: function () {
             this.addParentPrefix(this.model.nimi);
             this.addParentPrefix(this.model.uusinNimi);
-        }
-    }
+        },
+    },
 };
-
-
-

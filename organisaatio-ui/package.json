@@ -55,8 +55,8 @@
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
-    "prettier": "prettier --check 'src/**/*{ts,tsx}'",
-    "prettier:fix": "prettier --write 'src/**/*{ts,tsx}'"
+    "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
+    "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'"
   },
   "eslintConfig": {
     "extends": "react-app",
