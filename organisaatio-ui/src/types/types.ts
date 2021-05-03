@@ -84,6 +84,7 @@ export interface Organisaatio {
     yritysmuoto: string;
     tyypit: KoodiUri[];
     kotipaikkaUri: KoodiUri;
+    muutKotipaikatUris: KoodiUri[];
     maaUri: KoodiUri;
     kieletUris: KoodiUri[];
     yhteystiedot: Yhteystiedot[];

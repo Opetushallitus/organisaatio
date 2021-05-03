@@ -1,10 +1,11 @@
 import * as React from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
+import { Organisaatio } from '../../../../../types/types';
 
 type nimiHistoriaProps = {
     nimet: any;
-    handleOnChange: ({ name, value }: { name: string; value: any }) => void;
+    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
 export default function NimiHistoriaLomake(props: nimiHistoriaProps) {

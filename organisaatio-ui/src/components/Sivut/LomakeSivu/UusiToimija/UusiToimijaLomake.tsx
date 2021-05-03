@@ -26,6 +26,7 @@ const tyhjaOrganisaatio: Organisaatio = {
     yritysmuoto: '',
     tyypit: [],
     kotipaikkaUri: '',
+    muutKotipaikatUris: [],
     maaUri: '',
     kieletUris: [],
     yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']

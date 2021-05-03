@@ -33,8 +33,8 @@
     "@types/react-select": "3.0.14",
     "@types/react-table": "7.0.19",
     "@types/styled-components": "4.4.0",
-    "@typescript-eslint/parser": "^4.22.0",
     "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "concurrently": "^6.0.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
@@ -44,7 +44,8 @@
     "http-proxy-middleware": "1.0.4",
     "jest-enzyme": "^7.1.2",
     "prettier": "2.2.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "typescript-plugin-css-modules": "^3.2.0"
   },
   "scripts": {
     "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
