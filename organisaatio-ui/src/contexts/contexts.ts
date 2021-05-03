@@ -44,7 +44,13 @@ export interface Koodisto {
 }
 
 export class KoodistoImpl implements Koodisto {
-    constructor(private readonly koodisto: Koodi[], private readonly kieli: Language) {}
+    private readonly koodisto: Koodi[];
+    private readonly kieli: Language;
+
+    constructor(koodisto: Koodi[], kieli: Language) {
+        this.koodisto = koodisto;
+        this.kieli = kieli;
+    }
 
     uri2Nimi(uri: KoodiUri): string {
         return this.nimi((koodi) => koodi.uri === uri);

@@ -54,7 +54,7 @@ const LomakeSivu = (props: any) => {
                     const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
                     const orgTree = await Axios.post(`${urlPrefix}/organisaatio/v4/findbyoids`, idArr);
                     console.log('orgtee', orgTree.data, idArr, organisaatio.parentOidPath);
-                    const organisaatioNimiPolku = idArr.map((oid: String) => ({
+                    const organisaatioNimiPolku = idArr.map((oid: string) => ({
                         oid,
                         nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
                     }));

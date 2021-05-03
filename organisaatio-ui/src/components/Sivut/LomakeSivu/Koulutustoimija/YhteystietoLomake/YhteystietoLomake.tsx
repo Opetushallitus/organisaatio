@@ -15,7 +15,7 @@ export type yhteystietoProps = {
 };
 
 export default function YhteystietoLomake(props: yhteystietoProps): React.ReactElement {
-    const [kieleksi, setKieleksi] = useState('kieli_fi#1');
+    const [kieleksi, setKieleksi] = useState<string>('kieli_fi#1');
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi, onSama: false });
 
     const { yhteystiedot, handleOnChange, postinumerot } = props;
