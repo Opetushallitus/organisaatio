@@ -4,14 +4,12 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { useState } from 'react';
-import type { Organisaatio, Koodi, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
 import { SyntheticEvent } from 'react';
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
     handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
-    postinumerot: Koodi[];
 };
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
@@ -64,7 +62,7 @@ const getYhteystieto = (
     ...yhteystiedot.find((yhteystieto: Yhteystiedot) => yhteystieto.kieli === kieli && !!yhteystieto[tyyppi]),
 });
 
-const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props): React.ReactElement => {
+const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.ReactElement => {
     const [kieleksi, setKieleksi] = useState<string>(DEFAULT_LANGUAGE_CODE);
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi: DEFAULT_LANGUAGE_CODE, onSama: false });
 
@@ -100,18 +98,13 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                     postiSamakuinKaynti.onSama
                 ) {
                     const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
-                    if (!!Object.keys(kayntiYt).length) {
-                        kayntiYt.osoite = osoite.osoite;
-                        kayntiYt.postinumeroUri = osoite.postinumeroUri;
-                    }
+                    kayntiYt.osoite = osoite.osoite;
+                    kayntiYt.postinumeroUri = osoite.postinumeroUri;
                 }
             }
         }
         handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
     };
-    if (!postinumerot) {
-        return <Spin />;
-    }
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>

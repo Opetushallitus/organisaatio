@@ -11,7 +11,7 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import { LanguageContext } from '../../../../contexts/contexts';
 import { Koodi, Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
-import YhteystietoLomake from './YhteystietoLomake/YhteystietoLomake';
+import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import Axios from 'axios';

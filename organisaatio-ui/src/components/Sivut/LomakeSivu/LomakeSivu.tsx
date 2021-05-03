@@ -196,11 +196,7 @@ const LomakeSivu = (props: any) => {
                             maatJaValtiot={maatJaValtiot}
                             opetuskielet={oppilaitoksenOpetuskielet}
                         />,
-                        <YhteystietoLomake
-                            postinumerot={postinumerot}
-                            handleOnChange={handleOnChange}
-                            yhteystiedot={organisaatio.yhteystiedot}
-                        />,
+                        <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />,
                         <NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />,
                         <OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />,
                     ]}

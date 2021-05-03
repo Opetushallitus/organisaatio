@@ -6,7 +6,6 @@ import YhteystietoLomake, { Props } from './YhteystietoLomake';
 const MINIMAL_PROPS: Props = {
     yhteystiedot: [],
     handleOnChange: jest.fn,
-    postinumerot: [],
 };
 
 describe('YhteystietoLomake', () => {
