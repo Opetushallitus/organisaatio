@@ -45,17 +45,36 @@ export type ytjYtunnus = {
     ytunnus: string;
 };
 
-export type Yhteystiedot = {
-    tyyppi?: string;
-    osoiteTyyppi?: string;
+type YhteystiedotBase = {
+    id?: string;
+    yhteystietoOid?: string;
     kieli: string;
-    osoite?: string;
-    postinumeroUri?: KoodiUri;
-    postitoimipaikka?: string;
-    email?: string;
-    www?: string;
-    numero?: string;
 };
+
+type YhteystiedotEmail = YhteystiedotBase & {
+    email: string;
+};
+
+type YhteystiedotPhone = YhteystiedotBase & {
+    tyyppi: 'puhelin';
+    numero: string;
+};
+
+type YhteystiedotWww = YhteystiedotBase & {
+    www: string;
+};
+
+export type OsoiteType = 'posti' | 'kaynti' | 'ulkomainern_posti' | 'ulkomainen_kaynti' | 'muu';
+
+export type YhteystiedotOsoite = YhteystiedotBase & {
+    osoiteTyyppi: OsoiteType;
+    postinumeroUri: KoodiUri;
+    postitoimipaikka: string;
+    osoite: string;
+};
+
+export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
+
 export interface Organisaatio {
     oid?: string;
     ytunnus: string;

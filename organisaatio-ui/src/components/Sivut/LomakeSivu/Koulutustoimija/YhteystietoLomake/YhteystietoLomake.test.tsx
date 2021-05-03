@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import YhteystietoLomake, { yhteystietoProps } from './YhteystietoLomake';
+import YhteystietoLomake, { Props } from './YhteystietoLomake';
 
-const MINIMAL_PROPS: yhteystietoProps = {
+const MINIMAL_PROPS: Props = {
     yhteystiedot: [],
     handleOnChange: jest.fn,
     postinumerot: [],

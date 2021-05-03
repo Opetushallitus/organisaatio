@@ -53,7 +53,7 @@
     "build": "CI='' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --ext .ts,.tsx src",
+    "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "prettier": "prettier --check 'src/**/*{ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*{ts,tsx}'"
