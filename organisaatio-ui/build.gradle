@@ -29,6 +29,7 @@ task run(type: NpmTask) {
 
 task webjar(type: Jar, dependsOn: 'jar') {
 	from(fileTree('build')) {
+		exclude 'libs/'
 		into 'META-INF/resources'
 	}
 }
