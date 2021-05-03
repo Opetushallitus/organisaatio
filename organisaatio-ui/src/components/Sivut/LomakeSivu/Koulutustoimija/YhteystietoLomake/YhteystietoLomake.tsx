@@ -29,6 +29,14 @@ const SUPPORTED_LANGUAGES = [
     { value: 'kieli_en#1', label: 'Englanniksi' },
 ];
 
+const initializeOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): YhteystiedotOsoite => ({
+    kieli,
+    osoiteTyyppi,
+    postinumeroUri: '',
+    postitoimipaikka: '',
+    osoite: '',
+});
+
 const isOsoite = (yhteystieto: Yhteystiedot): yhteystieto is YhteystiedotOsoite =>
     yhteystieto.hasOwnProperty('osoiteTyyppi');
 
@@ -36,12 +44,17 @@ const getOsoite = (
     yhteystiedot: Yhteystiedot[],
     kieli: string,
     osoiteTyyppi: SupportedOsoiteType
-): YhteystiedotOsoite | Record<string, string> => ({
-    ...yhteystiedot.find(
+): YhteystiedotOsoite => {
+    const found = yhteystiedot.find(
         (yhteystieto: Yhteystiedot) =>
             isOsoite(yhteystieto) && yhteystieto.kieli === kieli && yhteystieto.osoiteTyyppi === osoiteTyyppi
-    ),
-});
+    );
+    if (found) {
+        return found as YhteystiedotOsoite;
+    }
+    yhteystiedot.push(initializeOsoite(kieli, osoiteTyyppi));
+    return getOsoite(yhteystiedot, kieli, osoiteTyyppi);
+};
 
 const getYhteystieto = (
     yhteystiedot: Yhteystiedot[],
@@ -78,22 +91,18 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                 } else yhteystiedot.push({ kieli: kieleksi, [name]: element.value } as Yhteystiedot);
             } else {
                 const [osoiteTyyppi, attribute] = [...name.split('.')] as [SupportedOsoiteType, keyof Osoite];
+                const osoite = getOsoite(yhteystiedot, kieleksi, osoiteTyyppi);
 
-                const osoitteet = oikeankieliset.filter((yt: Yhteystiedot) => isOsoite(yt)) as YhteystiedotOsoite[];
-                const osoite = osoitteet.find((yt) => yt.osoiteTyyppi === osoiteTyyppi);
-
-                if (osoite) {
-                    osoite[attribute] = element.value;
-                    if (
-                        osoite.osoiteTyyppi === 'posti' &&
-                        kieleksi === postiSamakuinKaynti.kieleksi &&
-                        postiSamakuinKaynti.onSama
-                    ) {
-                        const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
-                        if (!!Object.keys(kayntiYt).length) {
-                            kayntiYt.osoite = osoite.osoite;
-                            kayntiYt.postinumeroUri = osoite.postinumeroUri;
-                        }
+                osoite[attribute] = element.value;
+                if (
+                    osoite.osoiteTyyppi === 'posti' &&
+                    kieleksi === postiSamakuinKaynti.kieleksi &&
+                    postiSamakuinKaynti.onSama
+                ) {
+                    const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
+                    if (!!Object.keys(kayntiYt).length) {
+                        kayntiYt.osoite = osoite.osoite;
+                        kayntiYt.postinumeroUri = osoite.postinumeroUri;
                     }
                 }
             }
@@ -128,7 +137,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                     <Input
                         name="posti.osoite"
                         onChange={handleYhteystietoOnChange}
-                        value={getOsoite(yhteystiedot, kieleksi, 'posti').osoite || ''}
+                        value={getOsoite(yhteystiedot, kieleksi, 'posti').osoite}
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
@@ -136,7 +145,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                     <Input
                         name="posti.postinumeroUri"
                         onChange={handleYhteystietoOnChange}
-                        value={getOsoite(yhteystiedot, kieleksi, 'posti').postinumeroUri || ''}
+                        value={getOsoite(yhteystiedot, kieleksi, 'posti').postinumeroUri}
                     />
                 </div>
             </div>
@@ -147,7 +156,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         name="kaynti.osoite"
                         onChange={handleYhteystietoOnChange}
-                        value={getOsoite(yhteystiedot, kieleksi, 'kaynti').osoite || ''}
+                        value={getOsoite(yhteystiedot, kieleksi, 'kaynti').osoite}
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
@@ -155,7 +164,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange, postinumerot }: Props
                     <Input
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         onChange={handleYhteystietoOnChange}
-                        value={getOsoite(yhteystiedot, kieleksi, 'posti').postinumeroUri || ''}
+                        value={getOsoite(yhteystiedot, kieleksi, 'kaynti').postinumeroUri}
                         name="kaynti.postinumeroUri"
                     />
                 </div>

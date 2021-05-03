@@ -126,7 +126,7 @@ const LomakeSivu = (props: any) => {
         console.log('Korvattu org ytj:stä tulevalla datalla ainakin suurelta osin', organisaatio);
     };
 
-    const handleOnChange = ({ name, value }: { name: string; value: any }) => {
+    const handleOnChange = ({ name, value }: { name: keyof Organisaatio; value: any }) => {
         setOrganisaatio((organisaatio) => {
             const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
             console.log('päiv', updatedOrg);
