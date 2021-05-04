@@ -59,7 +59,7 @@ const OrganisaatioApp: React.FC = () => {
         Koodi[]
     >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
     const [{ data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError }] = useAxios<Koodi[]>(
-        `organisaatio/koodisto/RYHMANTILA/koodi`
+        `/organisaatio/koodisto/RYHMANTILA/koodi`
     );
     if (
         languageLoading ||
