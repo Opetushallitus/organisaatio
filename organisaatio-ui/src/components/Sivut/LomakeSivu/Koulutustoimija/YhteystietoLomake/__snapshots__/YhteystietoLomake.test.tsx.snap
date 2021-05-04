@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`YhteystietoLomake Renders without crashing 1`] = `
+exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
 <div
   className="UloinKehys"
 >

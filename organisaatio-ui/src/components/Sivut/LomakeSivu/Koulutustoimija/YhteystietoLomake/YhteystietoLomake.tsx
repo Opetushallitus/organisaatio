@@ -3,9 +3,8 @@ import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { useState } from 'react';
+import { useState, SyntheticEvent } from 'react';
 import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
-import { SyntheticEvent } from 'react';
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
@@ -38,7 +37,10 @@ const initializeOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): Yht
 const isOsoite = (yhteystieto: Yhteystiedot): yhteystieto is YhteystiedotOsoite =>
     yhteystieto.hasOwnProperty('osoiteTyyppi');
 
-const getOsoite = (
+const isSupportedYhteystietoType = (name: string): name is SupportedYhteystietoType =>
+    [NAME_EMAIL, NAME_PHONE, NAME_WWW].includes(name);
+
+export const getOsoite = (
     yhteystiedot: Yhteystiedot[],
     kieli: string,
     osoiteTyyppi: SupportedOsoiteType
@@ -54,57 +56,61 @@ const getOsoite = (
     return getOsoite(yhteystiedot, kieli, osoiteTyyppi);
 };
 
-const getYhteystieto = (
+export const getYhteystieto = (
     yhteystiedot: Yhteystiedot[],
     kieli: string,
-    tyyppi: SupportedYhteystietoType
-): Yhteystiedot | Record<string, string> => ({
-    ...yhteystiedot.find((yhteystieto: Yhteystiedot) => yhteystieto.kieli === kieli && !!yhteystieto[tyyppi]),
-});
+    osoiteTyyppi: SupportedYhteystietoType
+): Yhteystiedot => {
+    const found = yhteystiedot.find(
+        (yhteystieto: Yhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
+    );
+    if (found) {
+        return found as Yhteystiedot;
+    }
+    yhteystiedot.push({ kieli, [osoiteTyyppi]: '' } as Yhteystiedot);
+    return getYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
+};
 
 const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.ReactElement => {
     const [kieleksi, setKieleksi] = useState<string>(DEFAULT_LANGUAGE_CODE);
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi: DEFAULT_LANGUAGE_CODE, onSama: false });
 
     const handlePostiOsSamaKuinKaynti = (event: SyntheticEvent) => {
-        if ((event.target as HTMLInputElement).checked) {
+        const element = event.target as HTMLInputElement;
+        setPostiSamakuinKaynti({ kieleksi: kieleksi, onSama: element.checked });
+        copyAddress(element.checked);
+    };
+
+    const copyAddress = (copy: boolean) => {
+        if (copy) {
             const postiYt = getOsoite(yhteystiedot, kieleksi, 'posti');
             const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
             kayntiYt.osoite = postiYt.osoite;
             kayntiYt.postinumeroUri = postiYt.postinumeroUri;
-            handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
         }
-        setPostiSamakuinKaynti({ kieleksi: kieleksi, onSama: !postiSamakuinKaynti.onSama });
+        handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
     };
 
     const handleYhteystietoOnChange = (event: SyntheticEvent) => {
         const element = event.target as HTMLInputElement;
-        const name = element.name;
-        const oikeankieliset = yhteystiedot.filter((yt: Yhteystiedot) => yt.kieli === kieleksi);
-        if (oikeankieliset.length > 0) {
-            if (name === NAME_WWW || name === NAME_EMAIL || name === NAME_PHONE) {
-                const oikea = oikeankieliset.find((yt) => yt.hasOwnProperty(name));
-                if (oikea) {
-                    oikea[name] = element.value;
-                } else yhteystiedot.push({ kieli: kieleksi, [name]: element.value } as Yhteystiedot);
-            } else {
-                const [osoiteTyyppi, attribute] = [...name.split('.')] as [SupportedOsoiteType, keyof Osoite];
-                const osoite = getOsoite(yhteystiedot, kieleksi, osoiteTyyppi);
+        yhteystietoOnChange(element.name, element.value);
+    };
 
-                osoite[attribute] = element.value;
-                if (
-                    osoite.osoiteTyyppi === 'posti' &&
-                    kieleksi === postiSamakuinKaynti.kieleksi &&
-                    postiSamakuinKaynti.onSama
-                ) {
-                    const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
-                    kayntiYt.osoite = osoite.osoite;
-                    kayntiYt.postinumeroUri = osoite.postinumeroUri;
-                }
-            }
-        }
+    const yhteystietoOnChange = (name: string, value: string) => {
+        isSupportedYhteystietoType(name) ? updateField(name, value) : updateAddress(name, value);
+    };
+
+    const updateField = (name: SupportedYhteystietoType, value: string) => {
+        getYhteystieto(yhteystiedot, kieleksi, name)[name] = value;
         handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
     };
+
+    const updateAddress = (name: string, value: string) => {
+        const [osoiteTyyppi, attribute] = [...name.split('.')] as [SupportedOsoiteType, keyof Osoite];
+        getOsoite(yhteystiedot, kieleksi, osoiteTyyppi)[attribute] = value;
+        copyAddress(postiSamakuinKaynti.onSama);
+    };
+
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -166,7 +172,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                 <div className={styles.Kentta}>
                     <label>Puhelinnumero</label>
                     <Input
-                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_PHONE)[NAME_PHONE] || ''}
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_PHONE)[NAME_PHONE]}
                         name={NAME_PHONE}
                         onChange={handleYhteystietoOnChange}
                     />
@@ -176,7 +182,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                 <div className={styles.Kentta}>
                     <label>Sähköpostiosoite</label>
                     <Input
-                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_EMAIL)[NAME_EMAIL] || ''}
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_EMAIL)[NAME_EMAIL]}
                         name={NAME_EMAIL}
                         onChange={handleYhteystietoOnChange}
                     />
@@ -186,7 +192,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                 <div className={styles.Kentta}>
                     <label>Www-osoite</label>
                     <Input
-                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_WWW)[NAME_WWW] || ''}
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_WWW)[NAME_WWW]}
                         name={NAME_WWW}
                         onChange={handleYhteystietoOnChange}
                     />
